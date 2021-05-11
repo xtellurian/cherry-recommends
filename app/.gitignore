@@ -1,0 +1,7 @@
+## SQLite files to ignore
+**/*.db-shm
+**/*.db-wal
+**/*.session.sql
+
+
+**/*.db

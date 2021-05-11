@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>This is the title of the webpage!</title>
+    <script>
+      function fetchSignalBoxCredentials() {
+        window.signalBox = {};
+        fetch("_SignalBox")
+          .then((r) => r.json())
+          .then((j) =>{ 
+              window.signalBox = j
+              console.log(j)
+            })
+          .catch((e) => (window.signalBox.error = e));
+      }
+      fetchSignalBoxCredentials();
+    </script>
+    <script>
+      function fetchTrackedUsers() {
+        console.log(window.signalBox.baseUrl);
+        // alert(JSON.stringify(window.signalBox));
+        fetch(`${window.signalBox.baseUrl}api/trackedUsers`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${window.signalBox.auth.accessToken}`,
+          },
+        })
+          .then((r) => r.json())
+          .then((j) => {
+            const resultsDiv = document.getElementById("trackedUsers");
+
+            j.forEach(function (trackedUser) {
+              resultsDiv.innerHTML += `
+			<div class="card" data-id=${trackedUser.id}>
+                <h2>${trackedUser.name}</h2>
+			</div>
+		`;
+            });
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <p>
+      This is a basic demo of how to consume SignalBox in a JavaScript application. 
+      This application does the following:
+    </p>
+    <ul>
+        <li>Authenticated with the SignalBox server using the Client Credentials OAuth flow.</li>
+        <li>Provides a token, with lifetime, </li>
+    </ul>
+    <button onclick="fetchTrackedUsers()">Fetch Tracked Users</button>
+    <div id="trackedUsers"></div>
+  </body>
+</html>
