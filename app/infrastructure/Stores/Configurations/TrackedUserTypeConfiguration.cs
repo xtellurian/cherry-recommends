@@ -10,8 +10,11 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             base.Configure(builder);
 
-            builder.HasIndex(u => u.ExternalId)
+            builder.HasIndex(u => u.CommonUserId)
                 .IsUnique();
+
+            builder.Property(_ => _.Properties)
+                .HasJsonConversion();
         }
     }
 }

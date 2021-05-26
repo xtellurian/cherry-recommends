@@ -1,10 +1,16 @@
 config:
+  appsvc:sku-name: B1
+  appsvc:sku-tier: Basic
   auth0:clientId: cT3UPVNDzNim39AMgCZHYZpqgaIymr0x
   auth0:clientSecret:
     secure: AAABAKbCIOUcfbxI+lV0GUQbanmlEsDq0/ZVQT5XMzjDsOaQzRJBlkRtzbbPNLtu3DeyldQ85fK9IC2phNotSp8CmAFlX02Qm2EaRxTQEFg/KagzJ0QQo149zM/RXkBM
   auth0:domain: signalbox-dev.us.auth0.com
+  azure-ml:description: Dev env
+  azure-ml:friendlyname: DevEnvML
+  azure-ml:name: SignalBoxMLDev
   azure-native:location: westus2
   azure-native:subscriptionId: ad2a181b-b804-4179-904a-012445b7d1f5
   azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
   signalbox:sqlPassword:
     secure: AAABAD6DocAHNTUipnB2trgYOep66/QmTPl/cPWo9tOUamfnFYKt9WiE
+  signalbox:environment: Development

@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Link } from "react-router-dom";
-import AuthorizeRoute from "../../api-authorization/AuthorizeRoute";
+import AuthorizeRoute from "../../auth0/ProtectedRoute";
 import { CancelSoftwareSubscription } from "./CancelSoftwareSubscription";
 import { LandingPage } from "./Landing";
 import { Results } from "./Results";

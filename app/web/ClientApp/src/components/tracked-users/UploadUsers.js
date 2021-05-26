@@ -66,24 +66,24 @@ export const UploadTrackedUserComponent = () => {
     const userIdColumn = radioState;
     const payload = {};
     payload.users = csvRows.map((row) => ({
-      externalId: row[userIdColumn],
+      commonUserId: row[userIdColumn],
     }));
     const listsOfEvents = csvRows.map((row) => {
       // TODO: this might be a problem
       const events = [];
       for (const [key, value] of Object.entries(row)) {
-        const trackedUserExternalId = row[userIdColumn];
+        const commonUserId = row[userIdColumn];
         if (key === userIdColumn) {
           continue;
         } else if (typeof value === "number") {
           events.push({
-            trackedUserExternalId,
+            commonUserId,
             key,
             numericValue: value,
           });
         } else {
           events.push({
-            trackedUserExternalId,
+            commonUserId,
             key,
             logicalValue: value,
           });

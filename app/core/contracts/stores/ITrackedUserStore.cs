@@ -5,10 +5,10 @@ namespace SignalBox.Core
 {
     public interface ITrackedUserStore : IEntityStore<TrackedUser>
     {
-        Task<long> GetInternalId(string externalId);
-        Task<string> GetExternalId(long internalId);
-        Task<TrackedUser> ReadFromExternalId(string externalId);
-        Task<IEnumerable<TrackedUser>> CreateIfNotExists(IEnumerable<string> externalIds);
-        Task<bool> ExistsExternalId(string externalId);
+        Task<long> GetInternalId(string commonUserId);
+        Task<string> GetCommonUserId(long internalId);
+        Task<TrackedUser> ReadFromCommonUserId(string commonUserId);
+        Task<IEnumerable<TrackedUser>> CreateIfNotExists(IEnumerable<string> commonUserIds);
+        Task<bool> ExistsCommonUserId(string commonId);
     }
 }

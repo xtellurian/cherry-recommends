@@ -14,7 +14,6 @@ namespace Signalbox.Azure
             var password = config.RequireSecret("sqlPassword");
             var sqlServer = new Server("sqlserver", new ServerArgs
             {
-                // Location = tempLocation,
                 ResourceGroupName = rg.Name,
                 AdministratorLogin = username,
                 AdministratorLoginPassword = password,

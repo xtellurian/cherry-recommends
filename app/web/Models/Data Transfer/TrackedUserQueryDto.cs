@@ -6,6 +6,6 @@ namespace SignalBox.Web.Dto
     public class TrackedUserQueryDto : DtoBase
     {
         [Required]
-        public IEnumerable<string> ExternalIds { get; set; }
+        public IEnumerable<string> CommonUserIds { get; set; }
     }
 }

@@ -35,22 +35,22 @@ namespace SignalBox.Core
             var usersRejected = new ConcurrentBag<(TrackedUser user, Offer offer)>();
 
 
-            var acceptedIds = offerAcceptEvents.Select(_ => _.Recommendation.TrackedUserExternalId);
-            var rejectedIds = offerRejectEvents.Select(_ => _.Recommendation.TrackedUserExternalId);
+            var acceptedIds = offerAcceptEvents.Select(_ => _.Recommendation.CommonUserId);
+            var rejectedIds = offerRejectEvents.Select(_ => _.Recommendation.CommonUserId);
 
             foreach (var user in users)
             {
-                if (acceptedIds.Contains(user.ExternalId))
+                if (acceptedIds.Contains(user.CommonUserId))
                 {
-                    var offer = offerAcceptEvents.First(_ => _.Recommendation.TrackedUserExternalId == user.ExternalId).Offer;
+                    var offer = offerAcceptEvents.First(_ => _.Recommendation.CommonUserId == user.CommonUserId).Offer;
                     usersAccepted.Add((user, offer));
                 }
                 else
                 {
-                    var rejected = offerRejectEvents.FirstOrDefault(_ => _.Recommendation.TrackedUserExternalId == user.ExternalId);
+                    var rejected = offerRejectEvents.FirstOrDefault(_ => _.Recommendation.CommonUserId == user.CommonUserId);
                     if (rejected != null)
                     {
-                        var offer = offerRejectEvents.First(_ => _.Recommendation.TrackedUserExternalId == user.ExternalId).Offer;
+                        var offer = offerRejectEvents.First(_ => _.Recommendation.CommonUserId == user.CommonUserId).Offer;
                         usersRejected.Add((user, offer));
                     }
                 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, useRouteMatch } from "react-router-dom";
-import AuthorizeRoute from "../api-authorization/AuthorizeRoute";
+import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { BeerDemoComponent } from "./beer/BeerDemoComponent";
 import { ShampooCancelationComponent } from "./shampoo-cancelation/ShampooCancelationComponent"
 import { SoftwareDemoComponent } from "./software/SoftwareDemoComponent";

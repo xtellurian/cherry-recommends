@@ -72,8 +72,8 @@ namespace SignalBox.Test.Stores
             var users = new List<TrackedUser>();
             for (var i = 0; i < 10; i++)
             {
-                var externalId = i.ToString();
-                users.Add(await userStore.Create(new TrackedUser(externalId)));
+                var commonId = i.ToString();
+                users.Add(await userStore.Create(new TrackedUser(commonId)));
             }
 
             return users;

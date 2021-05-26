@@ -20,7 +20,7 @@
 // export const trackEvent = async ({ success, error, events }) => {
 //   const user = await authService.getUser();
 //   events = events.map((e) => {
-//     return { ...e, trackedUserExternalId: user.name };
+//     return { ...e, commonUserId: user.name };
 //   });
 
 //   const token = await authService.getAccessToken();

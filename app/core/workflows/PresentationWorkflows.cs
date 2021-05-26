@@ -35,14 +35,14 @@ namespace SignalBox.Core.Workflows
         }
 
         public async Task<OfferRecommendation> RecommendOffer(long experimentId,
-                                                                        string? externalUserId,
+                                                                        string? commonUserId,
                                                                         Dictionary<string, object>? features)
         {
             var experiment = await experimentStore.Read(experimentId);
             TrackedUser? trackedUser = null;
-            if (externalUserId != null)
+            if (commonUserId != null)
             {
-                trackedUser = (await userStore.CreateIfNotExists(new List<string> { externalUserId })).First();
+                trackedUser = (await userStore.CreateIfNotExists(new List<string> { commonUserId })).First();
             }
             var context = new PresentationContext(trackedUser, experiment, features);
             var presenter = GetRecommender();

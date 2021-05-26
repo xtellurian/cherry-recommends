@@ -48,18 +48,18 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpGet("events")]
-        public async Task<IEnumerable<TrackedUserEvent>> GetEvents(string trackedUserExternalId)
+        public async Task<IEnumerable<TrackedUserEvent>> GetEvents(string commonUserId)
         {
-            return await eventStore.ReadEventsForUser(trackedUserExternalId);
+            return await eventStore.ReadEventsForUser(commonUserId);
         }
 
         [HttpPost("query")]
         public async Task<IList<TrackedUser>> Create(TrackedUserQueryDto dto)
         {
             var users = new List<TrackedUser>();
-            foreach (var id in dto.ExternalIds)
+            foreach (var id in dto.CommonUserIds)
             {
-                var user = await userStore.ReadFromExternalId(id);
+                var user = await userStore.ReadFromCommonUserId(id);
                 users.Add(user);
             }
 
@@ -67,18 +67,22 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<object> Create([FromBody] CreateTrackedUserDto dto)
+        public async Task<object> Create([FromBody] CreateOrUpdateTrackedUserDto dto)
         {
-            return await workflows.CreateTrackedUser(dto.ExternalId, dto.Name);
+            return await workflows.CreateTrackedUser(dto.CommonUserId, dto.Name, dto.Properties);
         }
 
-        [HttpPost("batch")]
-        public async Task<object> CreateBatch([FromBody] CreateTrackedUsersDto dto)
+        [HttpPut("{id}/properties")]
+        public async Task<object> Create(string id, [FromBody] Dictionary<string, object> dto)
         {
-            await workflows.CreateMultipleTrackedUsers(
-                dto.Users.Select(u => (u.ExternalId, u.Name)),
-                dto.Events.Select(e => (e.TrackedUserExternalId, e.Key, e.LogicalValue, e.NumericValue)));
+            return await workflows.MergeTrackedUserProperties(id, dto);
+        }
 
+        [HttpPut]
+        public async Task<object> CreateBatch([FromBody] BatchCreateOrUpdateUsersDto dto)
+        {
+            await workflows.CreateOrUpdateMultipleTrackedUsers(
+                dto.Users.Select(u => (u.CommonUserId, u.Name, u.Properties)));
             return new object();
         }
     }

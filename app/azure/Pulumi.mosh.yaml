@@ -1,0 +1,16 @@
+config:
+  appsvc:sku-name: B1
+  appsvc:sku-tier: Basic
+  auth0:clientId: 2Jyaz6bNXrB9H4Qer34QNtmHFhU3L9p1
+  auth0:clientSecret:
+    secure: AAABAE3Qx25NWKA8e0tEVGPlZSYiCqvDUmye+e5C9NQZSMTWYW7qg+yJ1yiZtYMwS+CuvmBUjHy0gkjMEeYdGQY2z+N4sFzs76ZKok+7KMAxWLrUmFy5kdqG+0Tn1Qjg
+  auth0:domain: signalbox.us.auth0.com
+  azure-ml:description: MOSH Production Machine Learning
+  azure-ml:friendlyname: MoshML
+  azure-ml:name: SignalBoxMLDev
+  azure-native:location: westus2
+  azure-native:subscriptionId: 04b1ca0e-558c-48d0-ba28-fee796a82076
+  azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
+  signalbox:sqlPassword:
+    secure: AAABAEq1PGnf6i6CGgaCK3NsFLjPQW2bq8p0XLvMpLTSnIP1yh+DKyTB
+  signalbox:environment: Production

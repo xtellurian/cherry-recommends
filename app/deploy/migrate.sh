@@ -14,6 +14,6 @@ echo "Provider: $PROVIDER"
 MIGRATIONS_DIR="SignalBox"
 CONTEXT="SignalBoxDbContext"
 
-dotnet ef migrations add Create --context $CONTEXT --output-dir "$MIGRATIONS_DIR" --project "../migrations/$PROVIDER" -- --provider $PROVIDER
+dotnet ef migrations add IntegratedSystems --context $CONTEXT --output-dir "$MIGRATIONS_DIR" --project "../migrations/$PROVIDER" -- --provider $PROVIDER
 
 echo "Done"

@@ -9,43 +9,21 @@ namespace SignalBox.Infrastructure
     {
         private List<TrackedUserEvent> eventStore = new List<TrackedUserEvent>();
 
-        public Task AddTrackedUserEvents(IEnumerable<TrackedUserEvent> events)
+        public Task<IEnumerable<TrackedUserEvent>> AddTrackedUserEvents(IEnumerable<TrackedUserEvent> events)
         {
             events = events.Where(_ => _ != null); // remove nulls
             eventStore.AddRange(events);
-            return Task.CompletedTask;
+            return Task.FromResult(events);
         }
 
-        public Task<IEnumerable<TrackedUserEvent>> ReadEventsForUser(string trackedUserExternalId)
+        public Task<IEnumerable<TrackedUserEvent>> ReadEventsForUser(string commonUserId)
         {
-            return Task.FromResult(eventStore.Where(_ => _.TrackedUserExternalId == trackedUserExternalId));
+            return Task.FromResult(eventStore.Where(_ => _.CommonUserId == commonUserId));
         }
 
-#nullable enable
-        public Task<IEnumerable<TrackedUserEvent>> ReadEventsForKey(string key, string? value = null)
+        public Task<IEnumerable<TrackedUserEvent>> ReadEventsOfType(string eventType)
         {
-            IEnumerable<TrackedUserEvent> values;
-            if (key == null)
-            {
-                values = eventStore.ToList();
-            }
-            else if (value == null)
-            {
-                // no value required, just any with this key
-                values = eventStore
-                   .Where(p => p.Key == key)
-                   .ToList();
-            }
-            else
-            {
-                values = eventStore
-                   .Where(p => p.Key == key && string.Equals(p.LogicalValue, value))
-                   .ToList();
-            }
-
-            return Task.FromResult(values);
+            return Task.FromResult(eventStore.Where(_ => _.EventType == eventType));
         }
-
-
     }
 }

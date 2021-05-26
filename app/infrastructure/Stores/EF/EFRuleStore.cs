@@ -1,6 +1,6 @@
 using SignalBox.Core;
 
-namespace SignalBox.Infrastructure
+namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFRuleStore : EFEntityStoreBase<Rule>, IRuleStore
     {

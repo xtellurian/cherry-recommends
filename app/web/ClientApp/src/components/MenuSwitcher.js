@@ -7,7 +7,7 @@ import {
   NavItem,
   NavLink,
 } from "reactstrap";
-import { LoginMenu } from "./api-authorization/LoginMenu";
+import LoginMenu from "./auth0/AuthNav"
 
 const DemoNavbar = () => {
   return (
@@ -25,7 +25,7 @@ const DemoNavbar = () => {
                 Home
               </NavLink>
             </NavItem>
-            <LoginMenu></LoginMenu>
+            <LoginMenu/>
           </ul>
         </Container>
       </Navbar>

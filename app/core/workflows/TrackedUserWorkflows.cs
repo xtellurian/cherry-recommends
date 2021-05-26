@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,35 +25,57 @@ namespace SignalBox.Core.Workflows
             this.dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<TrackedUser> CreateTrackedUser(string externalId, string? name = null)
+        public async Task<TrackedUser> CreateTrackedUser(string commonUserId, string? name = null, Dictionary<string, object>? properties = null)
         {
-            if (await userStore.ExistsExternalId(externalId))
+            if (await userStore.ExistsCommonUserId(commonUserId))
             {
-                throw new System.ArgumentException($"Tracked User externalId={externalId} already exists.");
+                throw new System.ArgumentException($"Tracked User commonUserId={commonUserId} already exists.");
             }
 
-            var trackedUser = await userStore.Create(new TrackedUser(externalId, name));
+            var trackedUser = await userStore.Create(new TrackedUser(commonUserId, name, new DynamicPropertyDictionary(properties)));
             await storageContext.SaveChanges();
             return trackedUser;
         }
 
-        public async Task<IEnumerable<TrackedUser>> CreateMultipleTrackedUsers(
-            IEnumerable<(string externalId, string? name)> newUsers,
-            IEnumerable<(string externalId, string? key, string? logicalValue, double? numericValue)>? newEvents)
+        public async Task<TrackedUser> MergeTrackedUserProperties(string commonUserId, Dictionary<string, object> properties)
+        {
+            var trackedUser = await userStore.ReadFromCommonUserId(commonUserId);
+            foreach (var kvp in properties)
+            {
+                trackedUser.Properties[kvp.Key] = kvp.Value;
+            }
+            await storageContext.SaveChanges();
+
+            return trackedUser;
+        }
+
+        public async Task<IEnumerable<TrackedUser>> CreateOrUpdateMultipleTrackedUsers(
+            IEnumerable<(string commonUserId, string? name, Dictionary<string, object>? properties)> newUsers)
         {
             var users = new List<TrackedUser>();
             foreach (var u in newUsers)
             {
-                var user = await userStore.Create(new TrackedUser(u.externalId, u.name));
-                users.Add(user);
+                if (await userStore.ExistsCommonUserId(u.commonUserId))
+                {
+                    // then update
+                    var user = await userStore.ReadFromCommonUserId(u.commonUserId);
+                    if (u.properties != null)
+                    {
+                        foreach (var kvp in u.properties)
+                        {
+                            user.Properties[kvp.Key] = kvp.Value;
+                        }
+                    }
+                    user.Name = u.name; // update the name too.
+                    users.Add(user);
+                }
+                else
+                {
+                    var user = await userStore.Create(new TrackedUser(u.commonUserId, u.name, new DynamicPropertyDictionary(u.properties)));
+                    users.Add(user);
+                }
             }
 
-            if (newEvents != null)
-            {
-                var trackedEvents = newEvents.Where(e => e.key != null).Select(e =>
-                      new TrackedUserEvent(e.externalId, dateTimeProvider.Now, e.key!, e.logicalValue, e.numericValue));
-                await eventStore.AddTrackedUserEvents(trackedEvents);
-            }
 
             await storageContext.SaveChanges();
             return users;

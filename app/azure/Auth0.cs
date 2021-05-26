@@ -42,9 +42,18 @@ namespace Signalbox.Azure
                 }
             });
 
+            var m2mApiGrant = new ClientGrant("m2mAiGrant", new ClientGrantArgs
+            {
+                ClientId = m2mApp.ClientId,
+                Audience = apiResource.Identifier!,
+                Scopes = {
+                    "webAPI"
+                }
+            });
+
             var clientApp = new Client("reactApp", new ClientArgs
             {
-                Name = $"{stackName}-SignalBoxReact",
+                Name = "Signal Box",
                 Description = "React Application frontend",
                 AppType = "spa",
                 IsFirstParty = true,
@@ -68,7 +77,9 @@ namespace Signalbox.Azure
                 },
                 ClientMetadata = new InputMap<object>
                 {
-                    {"foo", "zoo"}
+                    {"project", Pulumi.Deployment.Instance.ProjectName},
+                    {"stack", Pulumi.Deployment.Instance.StackName},
+                    {"application", "reactApp"}
                 }
             });
 
@@ -81,6 +92,7 @@ namespace Signalbox.Azure
 
             this.M2MClientId = m2mApp.ClientId;
             this.M2MClientSecret = m2mApp.ClientSecret;
+            this.M2MEndpoint = $"https://{Pulumi.Auth0.Config.Domain}/oauth/token";
 
         }
 
@@ -91,5 +103,6 @@ namespace Signalbox.Azure
         public string ReactManagementAudience { get; }
         public Output<string> M2MClientId { get; }
         public Output<string> M2MClientSecret { get; }
+        public string M2MEndpoint { get; }
     }
 }

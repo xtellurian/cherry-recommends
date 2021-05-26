@@ -31,27 +31,28 @@ namespace SignalBox.Core.Workflows
             return segment;
         }
 
-        public async Task ProcessRule(Rule rule, List<TrackedUserEvent> events)
+        public Task ProcessRule(Rule rule, List<TrackedUserEvent> events)
         {
-            var segment = await segmentStore.Read(rule.SegmentId);
-            var ruleEvents = events.Where(_ => _.Key == rule.EventKey);
-            if (ruleEvents.Any())
-            {
-                await ProcessEventsForSegmentingRule(segment, ruleEvents);
-                await segmentStore.Update(segment);
-                await storageContext.SaveChanges();
-            }
+            throw new System.NotImplementedException();
+            // var segment = await segmentStore.Read(rule.SegmentId);
+            // var ruleEvents = events.Where(_ => _.Key == rule.EventKey);
+            // if (ruleEvents.Any())
+            // {
+            //     await ProcessEventsForSegmentingRule(segment, ruleEvents);
+            //     await segmentStore.Update(segment);
+            //     await storageContext.SaveChanges();
+            // }
         }
 
         private async Task ProcessEventsForSegmentingRule(Segment segment, IEnumerable<TrackedUserEvent> events)
         {
             foreach (var e in events)
             {
-                var trackedUser = await userStore.ReadFromExternalId(e.TrackedUserExternalId);
+                var trackedUser = await userStore.ReadFromCommonUserId(e.CommonUserId);
                 if (trackedUser == null)
                 {
                     // means the user doesn't exist yet. create them.
-                    trackedUser = await userStore.Create(new TrackedUser(e.TrackedUserExternalId));
+                    trackedUser = await userStore.Create(new TrackedUser(e.CommonUserId));
                 }
 
                 segment.InSegment.Add(trackedUser);

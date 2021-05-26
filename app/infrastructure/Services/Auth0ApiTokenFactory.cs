@@ -30,12 +30,11 @@ namespace SignalBox.Infrastructure.Services
             };
 
             var response = await httpClient.PostAsJsonAsync(options.Value.Endpoint, request);
-            var xx = await response.RequestMessage.Content.ReadAsStringAsync();
+            
+            response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
-
             var tokenResponse = JsonSerializer.Deserialize<Auth0TokenResponse>(responseContent);
-
             return tokenResponse.AccessToken;
         }
     }

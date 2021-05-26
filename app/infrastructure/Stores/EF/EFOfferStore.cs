@@ -1,6 +1,6 @@
 using SignalBox.Core;
 
-namespace SignalBox.Infrastructure
+namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFOfferStore : EFEntityStoreBase<Offer>, IOfferStore
     {

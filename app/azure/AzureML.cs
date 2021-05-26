@@ -17,7 +17,8 @@ namespace Signalbox.Azure
 
         public AzureML(ResourceGroup rg, DatabaseComponent db)
         {
-            var config = new Config("azure-native");
+            var azureConfig = new Config("azure-native");
+            var config = new Config("azure-ml");
 
             var storageAccount = new StorageAccount("sa", new StorageAccountArgs
             {
@@ -31,19 +32,15 @@ namespace Signalbox.Azure
             });
 
             this.PrimaryStorageKey = Output.Tuple(rg.Name, storageAccount.Name).Apply(names =>
-               Output.CreateSecret(GetStorageAccountPrimaryKey(names.Item1, names.Item2)));
+                Output.CreateSecret(GetStorageAccountPrimaryKey(names.Item1, names.Item2)));
 
 
             var appInsights = new AzureNative.Insights.Component("MLAppInsights", new AzureNative.Insights.ComponentArgs
             {
                 ApplicationType = "web",
-                // FlowType = "",
                 Kind = "web",
-                // Location = "South Central US",
-                // RequestSource = "rest",
                 ResourceGroupName = rg.Name,
                 Tags = tags
-                // ResourceName = "my-component",
             });
 
             var containerRegistry = new AzureNative.ContainerRegistry.Registry("MLResgistry", new AzureNative.ContainerRegistry.RegistryArgs
@@ -52,6 +49,7 @@ namespace Signalbox.Azure
                 {
                     Name = "standard",
                 },
+                AdminUserEnabled = true,
                 ResourceGroupName = rg.Name,
                 Tags = tags
 
@@ -63,34 +61,34 @@ namespace Signalbox.Azure
                 Tags = tags,
                 Properties = new AzureNative.KeyVault.Inputs.VaultPropertiesArgs
                 {
-                    TenantId = config.Require("tenantId"),
+                    TenantId = azureConfig.Require("tenantId"),
                     EnabledForDeployment = true,
                     EnabledForDiskEncryption = true,
                     EnabledForTemplateDeployment = true,
                     AccessPolicies =
+    {
+        new AzureNative.KeyVault.Inputs.AccessPolicyEntryArgs
+        {
+            ObjectId = Output.Create(AzureNative.Authorization.GetClientConfig.InvokeAsync()).Apply(_ => _.ObjectId),
+            Permissions = new AzureNative.KeyVault.Inputs.PermissionsArgs
+            {
+                Certificates =
                 {
-                    new AzureNative.KeyVault.Inputs.AccessPolicyEntryArgs
-                    {
-                        ObjectId = Output.Create(AzureNative.Authorization.GetClientConfig.InvokeAsync()).Apply(_ => _.ObjectId),
-                        Permissions = new AzureNative.KeyVault.Inputs.PermissionsArgs
-                        {
-                            Certificates =
-                            {
-                                "all"
-                            },
-                            Keys =
-                            {
-                              "all"
-                            },
-                            Secrets =
-                            {
-                                "all"
-
-                            },
-                        },
-                        TenantId = config.Require("tenantId"),
-                    },
+                    "all"
                 },
+                Keys =
+                {
+                    "all"
+                },
+                Secrets =
+                {
+                    "all"
+
+                },
+            },
+            TenantId = azureConfig.Require("tenantId"),
+        },
+    },
                     Sku = new AzureNative.KeyVault.Inputs.SkuArgs
                     {
                         Name = AzureNative.KeyVault.SkuName.Standard,
@@ -105,8 +103,8 @@ namespace Signalbox.Azure
             {
                 ApplicationInsights = appInsights.Id,
                 ContainerRegistry = containerRegistry.Id,
-                Description = "Azure ML Workspace for SignalBox Dev",
-                FriendlyName = "SignalBox Dev ML",
+                Description = config.Get("description") ?? "Azure ML Workspace for SignalBox Dev",
+                FriendlyName = config.Get("friendlyname") ?? "SignalBox Dev ML",
                 HbiWorkspace = false,
                 Identity = new AzureNative.MachineLearningServices.Inputs.IdentityArgs
                 {
@@ -114,42 +112,14 @@ namespace Signalbox.Azure
                 },
                 KeyVault = keyVault.Id,
                 ResourceGroupName = rg.Name,
-                //     SharedPrivateLinkResources =
-                // {
-                //     new AzureNative.MachineLearningServices.Inputs.SharedPrivateLinkResourceArgs
-                //     {
-                //         GroupId = "Sql",
-                //         Name = "testdbresource",
-                //         PrivateLinkResourceId = "/subscriptions/00000000-1111-2222-3333-444444444444/resourceGroups/workspace-1234/providers/Microsoft.DocumentDB/databaseAccounts/testdbresource/privateLinkResources/Sql",
-                //         RequestMessage = "Please approve",
-                //         Status = "Approved",
-                //     },
-                // },
                 Sku = new AzureNative.MachineLearningServices.Inputs.SkuArgs
                 {
                     Name = "Basic",
                     Tier = "Basic",
                 },
                 StorageAccount = storageAccount.Id,
-                WorkspaceName = "SignalBoxMLDev",
+                WorkspaceName = config.Require("name"),
             });
-
-            // why doesn't this work :-(
-            // new AzureNative.MachineLearningServices.MachineLearningDatastore("sqlDb",
-            //     new AzureNative.MachineLearningServices.MachineLearningDatastoreArgs
-            //     {
-            //         ResourceGroupName = rg.Name,
-            //         WorkspaceName = workspace.Name,
-            //         DataStoreType = "AzureSqlDatabase",
-            //         // DatastoreName = "AzureSQL",
-            //         ServerName = db.ServerName,
-            //         DatabaseName = db.DatabaseName,
-            //         Name = "sqldb",
-            //         ResourceUrl = "https://database.windows.net/",
-            //         Password = db.Password,
-            //         UserName = db.UserName,
-            //         // IncludeSecret = true,
-            //     });
         }
 
 

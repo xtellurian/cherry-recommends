@@ -8,17 +8,26 @@ namespace SignalBox.Core
         public TrackedUser()
         { }
 
-        public TrackedUser(string externalId)
+        public TrackedUser(string commonUserId)
         {
-            ExternalId = externalId;
+            CommonUserId = commonUserId;
         }
 
-        public TrackedUser(string externalId, string name) : base(name)
+        public TrackedUser(string commonUserId, string name) : base(name)
         {
-            ExternalId = externalId;
+            CommonUserId = commonUserId;
         }
 
-        public string ExternalId { get; set; }
+        public TrackedUser(string commonUserId, string name, DynamicPropertyDictionary properties) : this(commonUserId, name)
+        {
+            if (properties != null)
+            {
+                this.Properties = properties;
+            }
+        }
+
+        public string CommonUserId { get; set; }
+        public DynamicPropertyDictionary Properties { get; set; } = new DynamicPropertyDictionary(); // not empty
 
         [JsonIgnore]
         public ICollection<Segment> Segments { get; set; }

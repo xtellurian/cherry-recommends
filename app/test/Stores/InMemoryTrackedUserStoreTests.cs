@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SignalBox.Core;
 using SignalBox.Infrastructure;
+using SignalBox.Infrastructure.EntityFramework;
 using SignalBox.Infrastructure.Services;
 using Xunit;
 
@@ -17,13 +18,13 @@ namespace SignalBox.Test.Stores
         public async Task CanStoreAndLoad()
         {
             var sut = new InMemoryTrackedUserStore();
-            var externalId = Guid.NewGuid().ToString();
-            var user = await sut.Create(new TrackedUser(externalId));
+            var commonId = Guid.NewGuid().ToString();
+            var user = await sut.Create(new TrackedUser(commonId));
 
             var res = await sut.Read(user.Id);
 
             Assert.Equal(res.Id, user.Id);
-            Assert.Equal(res.ExternalId, externalId);
+            Assert.Equal(res.CommonUserId, commonId);
         }
 
         [Fact]
@@ -40,7 +41,10 @@ namespace SignalBox.Test.Stores
             // Act
             // Add some events, empty this time.
             var updatedTime = dt.Now;
-            var trackedEvent = new TrackedUserEvent(userId, updatedTime, "Key", "Value");
+            var trackedEvent = new TrackedUserEvent(userId, Guid.NewGuid().ToString(), updatedTime, null, null, "common_event_type", new DynamicPropertyDictionary
+            {
+                 {"a key", "a logical value"}
+            });
             await sut.AddTrackedUserEvents(new List<TrackedUserEvent>() { trackedEvent });
 
             // Assert
@@ -48,7 +52,7 @@ namespace SignalBox.Test.Stores
             var returnedEvents = await sut.ReadEventsForUser(userId);
             foreach (var e in returnedEvents)
             {
-                Assert.Equal(userId, e.TrackedUserExternalId);
+                Assert.Equal(userId, e.CommonUserId);
                 Assert.Equal(updatedTime, e.Timestamp);
             }
         }
@@ -68,8 +72,15 @@ namespace SignalBox.Test.Stores
             // Add some properties, empty this time.
             var updatedTime = dt.Now;
 
-            var event1 = new TrackedUserEvent(userId, updatedTime, "a key", "a logical value");
-            var event2 = new TrackedUserEvent(userId, updatedTime, "a second key", null, 42);
+            var event1 = new TrackedUserEvent(userId, Guid.NewGuid().ToString(), updatedTime, null, null, "common_event_type", new DynamicPropertyDictionary
+            {
+                 {"a key", "a logical value"}
+            });
+            var event2 = new TrackedUserEvent(userId, Guid.NewGuid().ToString(), updatedTime, null, null, "common_event_type", new DynamicPropertyDictionary
+            {
+                 {"a key", "a logical value"}
+            });
+
             await sut.AddTrackedUserEvents(new List<TrackedUserEvent> { event1, event2 });
 
             // Assert
@@ -77,7 +88,7 @@ namespace SignalBox.Test.Stores
             var returnedProperties = await sut.ReadEventsForUser(userId);
             foreach (var p in returnedProperties)
             {
-                Assert.Equal(userId, p.TrackedUserExternalId);
+                Assert.Equal(userId, p.CommonUserId);
                 Assert.Equal(p.Timestamp, updatedTime);
             }
         }
@@ -98,19 +109,24 @@ namespace SignalBox.Test.Stores
 
             var updatedTime = dt.Now;
 
-            var maryProperties = new TrackedUserEvent(idMary, updatedTime, "name", "Mary");
-            var garyProperties = new TrackedUserEvent(idMary, updatedTime, "name", "Gary");
+            var maryProperties = new TrackedUserEvent(idMary, Guid.NewGuid().ToString(), updatedTime, null, null, "Set_Name", new DynamicPropertyDictionary
+            {
+                {"name", "Mary"}
+            });
 
+            var garyProperties = new TrackedUserEvent(idMary, Guid.NewGuid().ToString(), updatedTime, null, null, "Set_Name", new DynamicPropertyDictionary
+            {
+                {"name", "Gary"}
+            });
             await sut.AddTrackedUserEvents(new List<TrackedUserEvent> { maryProperties, garyProperties });
             // Act
-            var filteredProperties = (await sut.ReadEventsForKey("name", "Mary")).ToList();
+            var filteredEvents = (await sut.ReadEventsOfType("Set_Name")).ToList();
 
             //assert
-            Assert.Single(filteredProperties);
-            foreach (var p in filteredProperties)
+            Assert.Equal(2, filteredEvents.Count);
+            foreach (var e in filteredEvents)
             {
-                Assert.Equal("name", p.Key);
-                Assert.Equal("Mary", p.LogicalValue);
+                e.Properties.ContainsKey("Name");
             }
 
         }

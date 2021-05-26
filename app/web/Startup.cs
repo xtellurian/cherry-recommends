@@ -11,6 +11,8 @@ using SignalBox.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SignalBox.Core.Workflows;
 using SignalBox.Web.Config;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace SignalBox.Web
 {
@@ -88,7 +90,10 @@ namespace SignalBox.Web
             //         options.TokenValidationParameters.ValidateIssuer = false;
             //     });
 
-            services.AddControllersWithViews();
+            services.AddControllers().AddJsonOptions(o =>
+            {
+                o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+            });
             services.AddRazorPages();
 
             // In production, the React files will be served from this directory

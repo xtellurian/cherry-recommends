@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SignalBox.Core;
+using SignalBox.Infrastructure.EntityFramework;
 
 namespace SignalBox.Infrastructure
 {
@@ -28,24 +29,10 @@ namespace SignalBox.Infrastructure
                 options.UseInMemoryDatabase("Server"));
             return services;
         }
-        public static IServiceCollection AddBasicInMemoryStores(this IServiceCollection services)
-        {
-            services.AddSingleton<ITrackedUserEventStore, InMemoryEventStore>();
-            services.AddSingleton<ITrackedUserStore, InMemoryTrackedUserStore>();
-            services.AddSingleton<IExperimentStore, InMemoryExperimentStore>();
-            services.AddSingleton<ISegmentStore, InMemorySegmentStore>();
-            services.AddSingleton<IRuleStore, InMemoryRuleStore>();
-            services.AddSingleton<IOfferStore, InMemoryOfferStore>();
-
-            services.AddSingleton<IStorageContext, InMemoryStorageContext>();
-
-            return services;
-        }
 
         public static IServiceCollection AddEFStores(this IServiceCollection services)
         {
-            services.AddScoped<IHashedApiKeyStore, EFHashedAPIKeyStore>();
-            services.AddScoped<ITrackedUserEventStore, InMemoryEventStore>();
+            services.AddScoped<ITrackedUserEventStore, EFTrackedUserEventStore>();
             services.AddScoped<ITrackedUserStore, EFTrackedUserStore>();
             services.AddScoped<IExperimentStore, EFExperimentStore>();
             services.AddScoped<ISegmentStore, EFSegmentStore>();
@@ -53,6 +40,11 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IOfferStore, EFOfferStore>();
             services.AddScoped<IPresentationOutcomeStore, EFPresentationOutcomeStore>();
             services.AddScoped<IOfferRecommendationStore, EFOfferRecommendationStore>();
+            
+            services.AddScoped<IHashedApiKeyStore, EFHashedAPIKeyStore>();
+            services.AddScoped<IModelRegistrationStore, EFModelRegistrationStore>();
+            services.AddScoped<IIntegratedSystemStore, EFIntegratedSystemStore>();
+            services.AddScoped<ITrackedUserSystemMapStore, EFTrackedUserSystemMapStore>();
 
             services.AddScoped<IStorageContext, EFStorageContext>();
 

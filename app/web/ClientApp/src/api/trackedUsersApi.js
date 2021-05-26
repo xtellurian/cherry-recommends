@@ -71,7 +71,7 @@ export const fetchSelectedTrackedUsers = async ({
       ? defaultHeaders
       : { ...defaultHeaders, Authorization: `Bearer ${token}` },
     method: "post",
-    body: JSON.stringify({ externalIds: ids }),
+    body: JSON.stringify({ commonUserIds: ids }),
   });
   if (response.ok) {
     var data = await response.json();

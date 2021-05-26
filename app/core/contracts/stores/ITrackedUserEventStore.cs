@@ -5,8 +5,8 @@ namespace SignalBox.Core
 {
     public interface ITrackedUserEventStore
     {
-        Task AddTrackedUserEvents(IEnumerable<TrackedUserEvent> events);
-        Task<IEnumerable<TrackedUserEvent>> ReadEventsForUser(string trackedUserExternalId);
-        Task<IEnumerable<TrackedUserEvent>> ReadEventsForKey(string key, string value = null);
+        Task<IEnumerable<TrackedUserEvent>> AddTrackedUserEvents(IEnumerable<TrackedUserEvent> events);
+        Task<IEnumerable<TrackedUserEvent>> ReadEventsForUser(string commonUserId);
+        Task<IEnumerable<TrackedUserEvent>> ReadEventsOfType(string eventType);
     }
 }

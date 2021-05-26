@@ -37,7 +37,7 @@ namespace SignalBox.Test.Workflows
             var storedTrackedUser = await userStore.Read(results.Id);
             Assert.NotNull(storedTrackedUser);
             Assert.Equal(storedTrackedUser.Name, results.Name);
-            Assert.Equal(storedTrackedUser.ExternalId, results.ExternalId);
+            Assert.Equal(storedTrackedUser.CommonUserId, results.CommonUserId);
 
             //verify SaveChanges() runs exactly once
             mock.Verify((m => m.SaveChanges()), Times.Once());

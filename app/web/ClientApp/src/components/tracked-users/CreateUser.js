@@ -4,7 +4,7 @@ import { useAccessToken } from "../../api-hooks/token";
 import { Title } from "../molecules/PageHeadings";
 
 export const CreateUser = () => {
-  const [newUser, setNewUser] = React.useState({ externalId: "", name: "" });
+  const [newUser, setNewUser] = React.useState({ commonUserId: "", name: "" });
   const token = useAccessToken();
   return (
     <React.Fragment>
@@ -31,11 +31,11 @@ export const CreateUser = () => {
             type="text"
             className="form-control"
             placeholder="User ID"
-            value={newUser.externalId}
+            value={newUser.commonUserId}
             onChange={(e) =>
               setNewUser({
                 ...newUser,
-                externalId: e.target.value,
+                commonUserId: e.target.value,
               })
             }
           />

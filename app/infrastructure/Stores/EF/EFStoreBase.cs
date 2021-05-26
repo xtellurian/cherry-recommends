@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace SignalBox.Infrastructure
+namespace SignalBox.Infrastructure.EntityFramework
 {
     public abstract class EFStoreBase<T> where T : class
     {

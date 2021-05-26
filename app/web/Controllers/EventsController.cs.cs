@@ -18,49 +18,31 @@ namespace SignalBox.Web.Controllers
     public class EventsController : ControllerBase
     {
         private readonly ILogger<EventsController> _logger;
-        private readonly IDateTimeProvider dateTimeProvider;
-        private readonly SegmentWorkflows segmentWorkflows;
-        private readonly ITrackedUserStore userStore;
-        private readonly IRuleStore ruleStore;
+        private readonly TrackedUserEventsWorkflows workflows;
         private readonly ITrackedUserEventStore eventStore;
 
         public EventsController(ILogger<EventsController> logger,
-                                IDateTimeProvider dateTimeProvider,
-                                SegmentWorkflows segmentWorkflows,
-                                ITrackedUserStore userStore,
-                                IRuleStore ruleStore,
+                                TrackedUserEventsWorkflows workflows,
                                 ITrackedUserEventStore eventStore)
         {
             _logger = logger;
-            this.dateTimeProvider = dateTimeProvider;
-            this.segmentWorkflows = segmentWorkflows;
-            this.userStore = userStore;
-            this.ruleStore = ruleStore;
+            this.workflows = workflows;
             this.eventStore = eventStore;
         }
 
         [HttpPost]
-        public async Task<object> LogEvent([FromBody] List<EventDto> dto)
+        public async Task<object> LogEvents([FromBody] List<EventDto> dto)
         {
-            var events = new List<TrackedUserEvent>();
-            var newUsers = await userStore.CreateIfNotExists(dto.Select(_ => _.TrackedUserExternalId));
+            await workflows.TrackUserEvents(dto.Select(d =>
+            new TrackedUserEventsWorkflows.TrackedUserEventInput(d.CommonUserId,
+                                                                 d.EventId,
+                                                                 d.Timestamp,
+                                                                 d.SourceSystemId,
+                                                                 d.Kind,
+                                                                 d.EventType,
+                                                                 d.Properties)));
 
-            foreach (var d in dto)
-            {
-                events.Add(new TrackedUserEvent(d.TrackedUserExternalId, dateTimeProvider.Now, d.Key, d.LogicalValue, d.NumericValue));
-            }
-            await eventStore.AddTrackedUserEvents(events);
-            await ProcessRules(events);
             return new object();
-        }
-
-        private async Task ProcessRules(List<TrackedUserEvent> events)
-        {
-            var rules = await ruleStore.List();
-            foreach (var r in rules)
-            {
-                await segmentWorkflows.ProcessRule(r, events);
-            }
         }
     }
 }

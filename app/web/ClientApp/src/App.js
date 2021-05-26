@@ -11,7 +11,7 @@ import { ApplicationPaths } from "./components/api-authorization/ApiAuthorizatio
 import { SegmentsComponent } from "./components/segments/SegmentsComponent";
 import { OffersComponent } from "./components/offers/OffersComponent";
 import { Profile } from "./components/auth0/Profile";
-import { ApiKeyComponent } from "./components/apiKeys/ApiKeyComponent";
+import { SettingsComponent } from "./components/settings/SettingsComponent";
 
 // import some demo stuff
 import { DemoComponent } from "./components/demo-app/DemoComponent";
@@ -30,7 +30,7 @@ export default class App extends Component {
         <AuthorizeRoute path="/experiments" component={ExperimentsComponent} />
         <AuthorizeRoute path="/segments" component={SegmentsComponent} />
         <AuthorizeRoute path="/offers" component={OffersComponent} />
-        <AuthorizeRoute path="/api-keys" component={ApiKeyComponent} />
+        <AuthorizeRoute path="/settings" component={SettingsComponent} />
 
         <AuthorizeRoute path="/demo" component={DemoComponent} />
         <Route

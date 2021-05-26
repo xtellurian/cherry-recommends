@@ -2,6 +2,8 @@ set -e
 
 cd ../azure
 
+STACK=$(pulumi stack --show-name)
+echo "Using Pulumi Stack $STACK"
 CS=$(pulumi stack output DatabaseConnectionString --show-secrets)
 
 cd ../web

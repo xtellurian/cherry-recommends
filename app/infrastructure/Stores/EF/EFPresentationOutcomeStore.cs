@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
 
-namespace SignalBox.Infrastructure
+namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFPresentationOutcomeStore : EFEntityStoreBase<PresentationOutcome>, IPresentationOutcomeStore
     {

@@ -8,9 +8,10 @@ import {
   NavItem,
   NavLink,
 } from "reactstrap";
+import { GearFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 // import { LoginMenu } from "./api-authorization/LoginMenu";
-import LoginMenu from "./auth0/AuthNav"
+import LoginMenu from "./auth0/AuthNav";
 import "./NavMenu.css";
 
 export const NavMenu = () => {
@@ -47,11 +48,6 @@ export const NavMenu = () => {
           >
             <ul className="navbar-nav flex-grow">
               <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/">
-                  Home
-                </NavLink>
-              </NavItem>
-              <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/tracked-users">
                   Tracked Users
                 </NavLink>
@@ -71,7 +67,12 @@ export const NavMenu = () => {
                   Experiments
                 </NavLink>
               </NavItem>
-              <LoginMenu></LoginMenu>
+              <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/settings">
+                  <GearFill className="mr-1" />
+                </NavLink>
+              </NavItem>
+              <LoginMenu />
             </ul>
           </Collapse>
         </Container>

@@ -8,16 +8,16 @@ namespace SignalBox.Infrastructure
 {
     public class InMemoryTrackedUserStore : InMemoryStore<TrackedUser>, ITrackedUserStore
     {
-        private Task<bool> ExternalIdExists(string externalId)
+        private Task<bool> CommonUserIfExists(string commonUserId)
         {
-            return Task.FromResult(store.Values.Any(_ => _.ExternalId == externalId));
+            return Task.FromResult(store.Values.Any(_ => _.CommonUserId == commonUserId));
         }
 
-        public Task<string> GetExternalId(long internalId)
+        public Task<string> GetCommonUserId(long internalId)
         {
             if (store.ContainsKey(internalId))
             {
-                return Task.FromResult(store[internalId].ExternalId);
+                return Task.FromResult(store[internalId].CommonUserId);
             }
             else
             {
@@ -25,29 +25,29 @@ namespace SignalBox.Infrastructure
             }
         }
 
-        public Task<long> GetInternalId(string externalId)
+        public Task<long> GetInternalId(string commonUserId)
         {
-            var result = store.Values.FirstOrDefault(_ => _.ExternalId == externalId);
+            var result = store.Values.FirstOrDefault(_ => _.CommonUserId == commonUserId);
             return Task.FromResult(result.Id);
         }
 
-        public Task<TrackedUser> ReadFromExternalId(string externalId)
+        public Task<TrackedUser> ReadFromCommonUserId(string commonUserId)
         {
-            var result = store.Values.FirstOrDefault(_ => _.ExternalId == externalId);
+            var result = store.Values.FirstOrDefault(_ => _.CommonUserId == commonUserId);
             if (result == null)
             {
-                throw new EntityNotFoundException($"Tracked User with External ID {externalId}");
+                throw new EntityNotFoundException($"Tracked User with Common User ID {commonUserId}");
             }
 
             return Task.FromResult(result);
         }
 
-        public async Task<IEnumerable<TrackedUser>> CreateIfNotExists(IEnumerable<string> externalIds)
+        public async Task<IEnumerable<TrackedUser>> CreateIfNotExists(IEnumerable<string> commonUserIds)
         {
             var newUsers = new List<TrackedUser>();
-            foreach (var id in externalIds)
+            foreach (var id in commonUserIds)
             {
-                if (!await ExternalIdExists(id))
+                if (!await ExistsCommonUserId(id))
                 {
                     await this.Create(new TrackedUser(id));
                 }
@@ -56,9 +56,9 @@ namespace SignalBox.Infrastructure
             return newUsers;
         }
 
-        public Task<bool> ExistsExternalId(string externalId)
+        public Task<bool> ExistsCommonUserId(string commonUserId)
         {
-            return Task.FromResult(store.Values.Any(_ => _.ExternalId == externalId));
+            return Task.FromResult(store.Values.Any(_ => _.CommonUserId == commonUserId));
         }
     }
 }

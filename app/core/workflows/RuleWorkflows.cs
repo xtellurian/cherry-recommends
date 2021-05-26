@@ -18,7 +18,5 @@ namespace SignalBox.Core.Workflows
             await storageContext.SaveChanges();
             return rule;
         }
-
-        
     }
 }

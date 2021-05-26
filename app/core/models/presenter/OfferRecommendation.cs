@@ -10,7 +10,7 @@ namespace SignalBox.Core
 
         public OfferRecommendation(IList<Offer> offers, TrackedUser user, Experiment experiment, Dictionary<string, object> features = null)
         {
-            TrackedUserExternalId = user.ExternalId;
+            CommonUserId = user.CommonUserId;
             Offers = offers;
             ExperimentId = experiment.Id;
             var current = experiment.CurrentIteration;
@@ -19,7 +19,7 @@ namespace SignalBox.Core
             Features = features ?? new Dictionary<string, object>();
         }
 
-        public string TrackedUserExternalId { get; set; }
+        public string CommonUserId { get; set; }
         public IList<Offer> Offers { get; set; } // the order matters
         public long ExperimentId { get; set; }
         public string IterationId { get; set; }

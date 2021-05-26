@@ -62,7 +62,7 @@ export const fetchRecommendation = async ({
         ? defaultHeaders
         : { ...defaultHeaders, Authorization: `Bearer ${token}` },
       method: "post",
-      body: JSON.stringify({ externalTrackedUserId: userId, features }),
+      body: JSON.stringify({ commonUserId: userId, features }),
     }
   );
   if (response.ok) {

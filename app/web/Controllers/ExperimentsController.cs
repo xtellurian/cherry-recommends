@@ -56,6 +56,13 @@ namespace SignalBox.Web.Controllers
             return await experimentStore.Read(id);
         }
 
+        [HttpGet("{id}/offers")]
+        public async Task<IEnumerable<Offer>> GetExperimentOffers(long id)
+        {
+            var experiment = await experimentStore.Read(id);
+            return experiment.Offers;
+        }
+
         [HttpGet("{id}/results")]
         public async Task<ExperimentResults> GetExperimentResults(long id, string? scorer = null)
         {
@@ -66,7 +73,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost("{id}/recommendation")]
         public async Task<OfferRecommendation> PresentExperimentOffers(long id, [FromBody] RecommendationContextDto dto)
         {
-            return await presentationsWorkflows.RecommendOffer(id, dto.ExternalTrackedUserId, dto.Features);
+            return await presentationsWorkflows.RecommendOffer(id, dto.CommonUserId, dto.Features);
         }
 
         [HttpPost("{id}/outcome")]

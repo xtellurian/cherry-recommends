@@ -7,10 +7,10 @@ namespace SignalBox.Core
     {
         public string Name => "Random";
 
-        public Task<Score> ScoreOffer(Offer offer, IEnumerable<TrackedUser> accepted, IEnumerable<TrackedUser> rejected)
+        public Task<OfferScore> ScoreOffer(Offer offer, IEnumerable<TrackedUser> accepted, IEnumerable<TrackedUser> rejected)
         {
             var value = (new System.Random()).NextDouble();
-            return Task.FromResult(new Score
+            return Task.FromResult(new OfferScore
             {
                 Value = value
             });

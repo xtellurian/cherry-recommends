@@ -11,7 +11,7 @@ namespace SignalBox.Core
 
         public string Name => "Expected Value";
 
-        public Task<Score> ScoreOffer(Offer offer, IEnumerable<TrackedUser> accepted, IEnumerable<TrackedUser> rejected)
+        public Task<OfferScore> ScoreOffer(Offer offer, IEnumerable<TrackedUser> accepted, IEnumerable<TrackedUser> rejected)
         {
             var countAccepted = accepted.Count();
             var countRejected = rejected.Count();
@@ -19,9 +19,9 @@ namespace SignalBox.Core
             var maxValue = total * offer.Price;
             if (total == 0)
             {
-                return Task.FromResult(Score.DefaultScore);
+                return Task.FromResult(OfferScore.DefaultScore);
             }
-            return Task.FromResult(new Score
+            return Task.FromResult(new OfferScore
             {
                 Value = (countAccepted - countRejected) * offer.Price / total
             });

@@ -4,7 +4,7 @@ namespace SignalBox.Web.Dto
 {
     public class TrackPresentationDto : DtoBase
     {
-        public string TrackedUserExternalId { get; set; }
+        public string CommonUserId { get; set; }
         [Required]
         public long ExperimentId { get; set; }
         public string IterationId { get; set; }
