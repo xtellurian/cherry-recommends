@@ -1,21 +1,24 @@
 import React from "react";
 import { useAccessToken } from "./token";
+import { usePagination } from "../utility/utility";
 import { fetchSegments, fetchSegment } from "../api/segmentsApi";
 
 export const useSegments = () => {
   const token = useAccessToken();
-  const [segments, setState] = React.useState();
+  const page = usePagination();
+  const [result, setState] = React.useState();
   React.useEffect(() => {
     if (token) {
       fetchSegments({
         success: setState,
         error: console.log,
         token,
+        page,
       });
     }
-  }, [token]);
+  }, [token, page]);
 
-  return { segments };
+  return { result };
 };
 
 export const useSegment = ({ id }) => {
@@ -30,7 +33,7 @@ export const useSegment = ({ id }) => {
         id,
       });
     }
-  }, [token]);
+  }, [token, id]);
 
   return { segment };
 };

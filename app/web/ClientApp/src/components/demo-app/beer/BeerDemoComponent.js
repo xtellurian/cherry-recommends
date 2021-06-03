@@ -7,7 +7,6 @@ import { BeerSubscriptionConfirmation } from "./BeerSubscriptionConfirmation";
 
 export const BeerDemoComponent = () => {
   let { path } = useRouteMatch();
-  console.log(`${path}/confirm`)
   return (
     <React.Fragment>
       <Switch>

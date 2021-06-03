@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { useExperiments } from "../../api-hooks/experimentsApi";
 import { Spinner } from "../molecules/Spinner";
 import { CreateButton } from "../molecules/CreateButton";
+import { Paginator } from "../molecules/Paginator";
 
 export const ExperimentsSummary = () => {
-  const { experiments } = useExperiments();
+  const { result } = useExperiments();
 
   return (
     <React.Fragment>
@@ -16,10 +17,10 @@ export const ExperimentsSummary = () => {
       </div>
       <div>
         <h3>Experiments Summary</h3>
-        {experiments && (
+        {result && (
           <div>
-            There are {experiments.length} experiments
-            {experiments.map((exp) => (
+            There are {result.items.length} experiments
+            {result.items.map((exp) => (
               <div key={exp.id}>
                 <Link to={`/experiments/results/${exp.id}`}>
                   <button className="btn btn-outline-primary btn-block">
@@ -30,8 +31,9 @@ export const ExperimentsSummary = () => {
             ))}
           </div>
         )}
-        {!experiments && <Spinner />}
+        {!result && <Spinner />}
       </div>
+      {result && <Paginator {...result.pagination} />}
     </React.Fragment>
   );
 };

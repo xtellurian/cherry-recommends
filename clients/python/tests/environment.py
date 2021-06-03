@@ -1,4 +1,10 @@
+from dotenv import dotenv_values
 
-api_key = "Njc2YzlmZTktMWI2MC00MWU2LTg0MmEtNjcyYzVhOTM1MTQ1" # you need to create this at https://localhost:5001/api-keys
-host = "localhost"
-port = 5001
+config = dotenv_values(".local.env")
+
+api_key = config.get('api_key')
+host = config.get('host')
+port = config.get('port')
+
+print('host is ', host)
+print('port is ', port)

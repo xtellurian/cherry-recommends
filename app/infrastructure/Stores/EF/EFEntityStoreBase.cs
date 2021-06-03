@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
@@ -8,9 +10,15 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFEntityStoreBase<T> : EFStoreBase<T>, IEntityStore<T> where T : Entity
     {
+        protected const int PageSize = 100;
         public EFEntityStoreBase(SignalBoxDbContext context, Func<SignalBoxDbContext, DbSet<T>> selector)
         : base(context, selector)
         {
+        }
+
+        public async Task<int> Count(Expression<Func<T, bool>> predicate = null)
+        {
+            return await Set.CountAsync(predicate ?? ((x) => true));
         }
 
         public async Task<T> Create(T entity)
@@ -24,9 +32,26 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await Set.AnyAsync(_ => _.Id == id);
         }
 
-        public async Task<IEnumerable<T>> List()
+        public async Task<Paginated<T>> Query(int page, Expression<Func<T, bool>> predicate = null)
         {
-            return await Set.ToListAsync();
+            predicate ??= _ => true; // default to all entities
+            var itemCount = await Set.CountAsync(predicate);
+            List<T> results;
+
+            if (itemCount > 0) // check and let's see whether the query is worth running against the database
+            {
+                results = await Set
+                    .Where(predicate)
+                    .OrderByDescending(_ => _.LastUpdated)
+                    .Skip((page - 1) * PageSize).Take(PageSize)
+                    .ToListAsync();
+            }
+            else
+            {
+                results = new List<T>();
+            }
+            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
+            return new Paginated<T>(results, pageCount, itemCount, page);
         }
 
         public virtual async Task<T> Read(long id)

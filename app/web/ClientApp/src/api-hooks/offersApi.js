@@ -1,21 +1,24 @@
 import React from "react";
 import { useAccessToken } from "./token";
+import { usePagination } from "../utility/utility";
 import { fetchOffers, fetchOffer } from "../api/offersApi";
 
 export const useOffers = () => {
   const token = useAccessToken();
-  const [offers, setState] = React.useState();
+  const page = usePagination();
+  const [result, setState] = React.useState();
   React.useEffect(() => {
     if (token) {
       fetchOffers({
         success: setState,
         error: console.log,
         token,
+        page,
       });
     }
-  }, [token]);
+  }, [token, page]);
 
-  return { offers };
+  return { result };
 };
 
 export const useOffer = ({ id }) => {
@@ -30,7 +33,7 @@ export const useOffer = ({ id }) => {
         id,
       });
     }
-  }, [token]);
+  }, [token, id]);
 
   return { offer };
 };

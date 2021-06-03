@@ -4,7 +4,7 @@ using Pulumi;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Storage;
 
-namespace Signalbox.Azure
+namespace SignalBox.Azure
 {
     class AppStack : Stack
     {
@@ -34,7 +34,7 @@ namespace Signalbox.Azure
             var analytics = new AzureML(analyticsRg, db);
 
             // create the app svcs
-            var appSvc = new AppSvc(appRg, db, storage);
+            var appSvc = new AppSvc(appRg, db, storage, analytics);
 
             // set the stack outputs
             this.DatabaseConnectionString = db.DatabaseConnectionString;

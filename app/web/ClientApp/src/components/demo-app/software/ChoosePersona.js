@@ -9,15 +9,6 @@ const GoToCancelButton = ({ persona, children }) => {
   );
 };
 
-const bottomStyle = {
-  position: "absolute",
-  left: 0,
-  bottom: 0,
-  right: "vw",
-  marginRight: "20px",
-  marginBottom: "20px",
-};
-
 export const ChoosePersona = () => {
   return (
     <React.Fragment>

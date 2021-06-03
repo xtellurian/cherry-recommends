@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
@@ -15,15 +17,24 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<IEnumerable<TrackedUserEvent>> AddTrackedUserEvents(IEnumerable<TrackedUserEvent> events)
         {
-            var eventIds = events.Select(_ => _.EventId);
-            var toRemove = Set.Where(_ => eventIds.Contains(_.EventId));
-            if (toRemove.Any())
+            // need to chunk this query, because too many ids in a single Contains() breaks the db connection.
+            foreach (var chunks in events.ToChunks(255))
             {
-                Set.RemoveRange(await toRemove.ToListAsync());
+                var eventIds = chunks.Select(_ => _.EventId);
+                var toRemove = Set.Where(_ => eventIds.Contains(_.EventId));
+                if (toRemove.Any())
+                {
+                    Set.RemoveRange(await toRemove.ToListAsync());
+                }
             }
 
             await Set.AddRangeAsync(events);
             return events;
+        }
+
+        public async Task<int> CountTrackedUsers(Expression<Func<TrackedUserEvent, bool>> predicate = null)
+        {
+            return await Set.Where(predicate ?? ((x) => true)).Select(_ => _.CommonUserId).Distinct().CountAsync();
         }
 
         public async Task<IEnumerable<TrackedUserEvent>> ReadEventsForUser(string commonUserId)
@@ -31,9 +42,40 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await Set.Where(_ => _.CommonUserId == commonUserId).ToListAsync();
         }
 
-        public async Task<IEnumerable<TrackedUserEvent>> ReadEventsOfType(string eventType)
+        public async Task<IEnumerable<TrackedUserEvent>> ReadEventsOfType(string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
         {
-            return await Set.Where(_ => _.EventType == eventType).ToListAsync();
+            since ??= DateTimeOffset.MinValue;
+            until ??= DateTimeOffset.MaxValue;
+            return await Set.Where(_ => _.EventType == eventType && _.Timestamp > since && _.Timestamp < until).ToListAsync();
+        }
+
+        public async Task<IEnumerable<TrackedUserEvent>> ReadEventsOfType(string kind, string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
+        {
+            since ??= DateTimeOffset.MinValue;
+            until ??= DateTimeOffset.MaxValue;
+            return await Set.Where(_ => _.Kind == kind && _.EventType == eventType && _.Timestamp > since && _.Timestamp < until).ToListAsync();
+        }
+
+        public async Task<IEnumerable<TrackedUserEvent>> ReadEventsOfKind(string kind, DateTimeOffset? since = null, DateTimeOffset? until = null)
+        {
+            since ??= DateTimeOffset.MinValue;
+            until ??= DateTimeOffset.MaxValue;
+            return await Set.Where(_ => _.Kind == kind && _.Timestamp > since && _.Timestamp < until).ToListAsync();
+        }
+
+        public async Task<IEnumerable<string>> ReadUniqueEventTypes(string kind)
+        {
+            return await Set.Where(_ => _.Kind == kind).Select(_ => _.EventType).Distinct().ToListAsync();
+        }
+
+        public async Task<IEnumerable<string>> ReadUniqueEventTypes()
+        {
+            return await Set.Select(_ => _.EventType).Distinct().ToListAsync();
+        }
+
+        public async Task<IEnumerable<string>> ReadUniqueKinds()
+        {
+            return await Set.Select(_ => _.Kind).Distinct().ToListAsync();
         }
     }
 }

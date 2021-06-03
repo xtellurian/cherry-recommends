@@ -4,7 +4,7 @@ using Pulumi;
 using Pulumi.Auth0;
 using Pulumi.Auth0.Inputs;
 
-namespace Signalbox.Azure
+namespace SignalBox.Azure
 {
     class Auth0
     {
@@ -38,8 +38,14 @@ namespace Signalbox.Azure
                 },
                 ClientMetadata = new InputMap<object>
                 {
-                    {"xyz", "abc"}
-                }
+                    {"project", Pulumi.Deployment.Instance.ProjectName},
+                    {"stack", Pulumi.Deployment.Instance.StackName},
+                    {"application", "m2mapp"}
+                },
+                JwtConfiguration = new ClientJwtConfigurationArgs
+                {
+                    Alg = "RS256",
+                },
             });
 
             var m2mApiGrant = new ClientGrant("m2mAiGrant", new ClientGrantArgs
@@ -80,7 +86,11 @@ namespace Signalbox.Azure
                     {"project", Pulumi.Deployment.Instance.ProjectName},
                     {"stack", Pulumi.Deployment.Instance.StackName},
                     {"application", "reactApp"}
-                }
+                },
+                JwtConfiguration = new ClientJwtConfigurationArgs
+                {
+                    Alg = "RS256",
+                },
             });
 
             this.Authority = $"https://{Pulumi.Auth0.Config.Domain}";

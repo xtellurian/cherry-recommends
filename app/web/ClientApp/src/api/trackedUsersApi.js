@@ -1,17 +1,32 @@
+import { pageQuery } from "./paging";
 const defaultHeaders = { "Content-Type": "application/json" };
+const baseUrl = "api/trackedUsers";
 
-export const fetchTrackedUsers = async ({ success, error, token }) => {
-  const response = await fetch("api/trackedUsers", {
+export const fetchTrackedUsers = async ({ success, error, token, page }) => {
+  const response = await fetch(`${baseUrl}?${pageQuery(page)}`, {
     headers: !token ? {} : { Authorization: `Bearer ${token}` },
   });
   if (response.ok) {
     const trackedUsers = await response.json();
     success(trackedUsers);
   } else {
-    error(response.statusText);
+    error(await response.json());
   }
 };
 
+export const fetchTrackedUser = async ({ success, error, token, id }) => {
+  const response = await fetch(`${baseUrl}/${id}`, {
+    headers: !token ? {} : { Authorization: `Bearer ${token}` },
+  });
+  if (response.ok) {
+    const trackedUser = await response.json();
+    success(trackedUser);
+  } else {
+    error(await response.json());
+  }
+};
+
+// todo
 export const fetchTrackedUserEvents = async ({ success, error, token }) => {
   const response = await fetch("api/trackedUsers/events", {
     headers: !token
@@ -21,7 +36,7 @@ export const fetchTrackedUserEvents = async ({ success, error, token }) => {
   if (response.ok) {
     success(await response.json());
   } else {
-    error(response.statusText);
+    error(await response.json());
   }
 };
 
@@ -33,11 +48,10 @@ export const uploadUserData = async ({ success, error, token, payload }) => {
     method: "post",
     body: JSON.stringify(payload),
   });
-  var data = await response.json();
   if (response.ok) {
-    success(data);
+    success(response.json());
   } else {
-    error(data);
+    error(await response.json());
   }
 };
 
@@ -53,30 +67,6 @@ export const createSingleUser = async ({ success, error, token, user }) => {
     var data = await response.json();
     success(data);
   } else {
-    error(response.statusText);
-  }
-};
-
-export const fetchSelectedTrackedUsers = async ({
-  success,
-  error,
-  token,
-  ids,
-}) => {
-  if (ids.length === 0) {
-    success([]);
-  }
-  const response = await fetch("api/trackedUsers/query", {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
-    method: "post",
-    body: JSON.stringify({ commonUserIds: ids }),
-  });
-  if (response.ok) {
-    var data = await response.json();
-    success(data);
-  } else {
-    error(response);
+    error(await response.json());
   }
 };

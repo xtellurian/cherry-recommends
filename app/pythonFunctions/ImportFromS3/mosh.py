@@ -5,24 +5,28 @@ from signalboxclient import SignalBoxClient, Credentials, Configuration
 
 signalbox_timestamp_format = '%Y-%m-%dT%H:%M:%S.%f%z'
 
-# Define the kinds of events that can be produced in this file
 
 class Category:
+    # Define the kinds of events that can be produced in this file
     def __init__(self, kind: str, event_types):
         self.name = kind
         self.event_types = {}
         for e in event_types:
             self.event_types[e] = e
 
+
 class Categories:
     def __init__(self):
-        self.billing = Category('BILLING', [ 'SUBSCRIPTION_ACTIVATED', 'SUBSCRIPTION_CANCELED'])
-        self.ticket = Category('TICKET', ['TICKET_CREATED', 'TICKET_CLOSED' ])
+        self.billing = Category('BILLING', [
+                                'SUBSCRIPTION_ACTIVATED', 'SUBSCRIPTION_CANCELED', 'SUBSCRIPTION_TERM_STARTED'])
+        self.ticket = Category('TICKET', ['TICKET_CREATED', 'TICKET_CLOSED'])
+
 
 categories = Categories()
 
-# the entry function for this file
+
 def handle(input: dict, df: pd.DataFrame):
+    # the entry function for this file
     logging.info(f'MOSH is handling dataframe with columns: {df.columns}')
     source_config = input.get('source')
     client = create_signalbox_client(input.get('signalbox'))
@@ -41,7 +45,7 @@ def create_signalbox_client(config):
     return SignalBoxClient(Credentials(config['apiKey']), Configuration(config['host'], config['port']))
 
 
-def get_subscription_start_event(row, common_id_key):
+def get_subscription_activated_event(row, common_id_key):
     commonId = row[common_id_key]
 
     return pd.Series({
@@ -54,6 +58,24 @@ def get_subscription_start_event(row, common_id_key):
             'subscription_id': row['subscription_id'],
             'plan': row['plan'],
             'plan_price': row['plan_price'],
+        }
+    })
+
+
+def get_subscription_term_start_event(row, common_id_key):
+    commonId = row[common_id_key]
+
+    return pd.Series({
+        'commonUserId': commonId,
+        'eventId': str(row['subscription_id']) + str(row['current_term_end'].strftime(signalbox_timestamp_format)) + '_TERM_STARTED',
+        'kind': categories.billing.name,
+        'eventType': categories.billing.event_types['SUBSCRIPTION_TERM_STARTED'],
+        'timestamp': row['current_term_start'],
+        'properties': {
+            'subscription_id': row['subscription_id'],
+            'plan': row['plan'],
+            'plan_price': row['plan_price'],
+            'current_term_end': row['current_term_end'].strftime(signalbox_timestamp_format)
         }
     })
 
@@ -82,8 +104,15 @@ def handle_subscriptions(client: SignalBoxClient, df: pd.DataFrame):
                 (df[common_user_id_key] != "")]
     df['activated_at'] = pd.to_datetime(df['activated_at'], unit='s')
     df['cancelled_at'] = pd.to_datetime(df['cancelled_at'], unit='s')
-    activated_events_df = df.apply(lambda row: get_subscription_start_event(
+    df['current_term_start'] = pd.to_datetime(
+        df['current_term_start'], unit='s')
+    df['current_term_end'] = pd.to_datetime(df['current_term_end'], unit='s')
+    activated_events_df = df.apply(lambda row: get_subscription_activated_event(
         row, common_user_id_key), axis=1)
+    term_started_events_df = df.apply(lambda row: get_subscription_term_start_event(
+        row, common_user_id_key), axis=1)
+    term_started_events_df = term_started_events_df.loc[term_started_events_df.timestamp > pd.to_datetime(
+        '2018-01-01')]  # remove any 1970 datetimes
     canceled_events_df = df.apply(lambda row: get_subscription_cancel_event(
         row, common_user_id_key), axis=1)
     # clean them up
@@ -99,15 +128,23 @@ def handle_subscriptions(client: SignalBoxClient, df: pd.DataFrame):
     activate_events = []
     for index, row in activated_events_df.iterrows():
         e = client.construct_event(row['commonUserId'], row['eventId'], row['eventType'], row['kind'],
-                                   row['properties'], row['timestamp'].strftime('%Y-%m-%dT%H:%M:%S.%f%z'), None)
+                                   row['properties'], row['timestamp'].strftime(signalbox_timestamp_format), None)
         activate_events.append(e)
     print('Uploading', len(activate_events), ' activate events')
     client.log_events(activate_events)
 
+    term_start_events = []
+    for index, row in term_started_events_df.iterrows():
+        e = client.construct_event(row['commonUserId'], row['eventId'], row['eventType'], row['kind'],
+                                   row['properties'], row['timestamp'].strftime(signalbox_timestamp_format), None)
+        term_start_events.append(e)
+    print('Uploading', len(term_start_events), ' term start events')
+    client.log_events(term_start_events)
+
     cancel_events = []
     for index, row in canceled_events_df.iterrows():
         e = client.construct_event(row['commonUserId'], row['eventId'], row['eventType'], row['kind'],
-                                   row['properties'], row['timestamp'].strftime('%Y-%m-%dT%H:%M:%S.%f%z'), None)
+                                   row['properties'], row['timestamp'].strftime(signalbox_timestamp_format), None)
         cancel_events.append(e)
     print('Uploading', len(cancel_events), ' cancel events')
     client.log_events(cancel_events)

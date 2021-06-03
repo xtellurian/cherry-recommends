@@ -39,6 +39,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IRuleStore, EFRuleStore>();
             services.AddScoped<IOfferStore, EFOfferStore>();
             services.AddScoped<IPresentationOutcomeStore, EFPresentationOutcomeStore>();
+            services.AddScoped<IProductStore, EFProductStore>();
             services.AddScoped<IOfferRecommendationStore, EFOfferRecommendationStore>();
             
             services.AddScoped<IHashedApiKeyStore, EFHashedAPIKeyStore>();

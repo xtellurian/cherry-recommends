@@ -1,64 +1,57 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
+import React from "react";
+import { useAuth } from "../utility/useAuth";
+import { Title } from "./molecules/PageHeadings";
+import { Spinner } from "./molecules/Spinner";
+import { Dashboard } from "./dashboard/Dashboard";
+import LoginButton from "./auth0/LoginButton";
 
-const Profile = () => {
-  const { user, isAuthenticated, isLoading } = useAuth0();
-
-  if (isLoading) {
-    return <div>Loading ...</div>;
-  }
-
+const Top = () => {
   return (
-    isAuthenticated && (
-      <div>
-        <img src={user.picture} alt={user.name} />
-        <h2>{user.name}</h2>
-        <p>{user.email}</p>
-      </div>
-    )
+    <React.Fragment>
+      <Title>Four2 | SignalBox</Title>
+      <hr />
+    </React.Fragment>
   );
 };
 
-export class Home extends Component {
-  static displayName = Home.name;
-
-  render() {
-    return (
-      <div>
-        <h1>Hello, world!</h1>
-        <p>Welcome to to the prerelease version of Four2 SignalBox</p>
-
-        <p>With SignalBox you can</p>
-        <ul>
-          <li>
-            <strong>Optimise</strong> offers for different customers.
-          </li>
-          <li>
-            <strong>Track</strong> your best performing offers.
-          </li>
-          <li>
-            <strong>Segment</strong> users to enable differential journeys.
-          </li>
-          <li>
-            <strong>Learn</strong> from event data of users.
-          </li>
-        </ul>
-
-        <div>
-          <h3>Demo Apps</h3>
-
-          <Link to="/demo/beer">
-            <button>Beer</button>
-          </Link>
-          <Link to="/demo/shampoo">
-            <button>Shampoo</button>
-          </Link>
-          <Link to="/demo/software">
-            <button>Software</button>
-          </Link>
+const LandingUnauthenticated = () => {
+  return (
+    <div>
+      <div className="text-center">
+        <h1 className="display-3">Four 2</h1>
+        <p>
+          SignalBox is the world's first AI enabled customer intelligence
+          platform.
+        </p>
+      </div>
+      <div className="mt-5">
+        <div className="w-25 m-auto">
+          <LoginButton />
         </div>
       </div>
+    </div>
+  );
+};
+export const Home = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+  if (isLoading) {
+    return (
+      <React.Fragment>
+        <Top />
+        <Spinner />
+      </React.Fragment>
     );
   }
-}
+
+  if (isAuthenticated) {
+    return (
+      <React.Fragment>
+        <Title>Dashboard</Title>
+        <hr />
+        <Dashboard />
+      </React.Fragment>
+    );
+  } else {
+    return <LandingUnauthenticated />;
+  }
+};

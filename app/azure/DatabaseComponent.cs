@@ -3,7 +3,7 @@ using Pulumi;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Sql;
 
-namespace Signalbox.Azure
+namespace SignalBox.Azure
 {
     class DatabaseComponent
     {

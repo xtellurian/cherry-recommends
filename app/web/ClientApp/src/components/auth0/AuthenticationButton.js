@@ -3,10 +3,10 @@ import React from "react";
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButton";
 
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth } from "../../utility/useAuth";
 
 const AuthenticationButton = () => {
-  const { isAuthenticated, isLoading } = useAuth0();
+  const { isAuthenticated, isLoading } = useAuth();
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center">

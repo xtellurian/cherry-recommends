@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace SignalBox.Core
@@ -7,6 +9,12 @@ namespace SignalBox.Core
     public abstract class InMemoryStore<T> : IEntityStore<T> where T : Entity
     {
         protected Dictionary<long, T> store = new Dictionary<long, T>();
+
+        public Task<int> Count(Expression<Func<T, bool>> predicate = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<T> Create(T entity)
         {
             entity.Id = store.Keys.Any() ? store.Keys.Max() + 1 : 1;
@@ -19,9 +27,14 @@ namespace SignalBox.Core
             return Task.FromResult(store.ContainsKey(id));
         }
 
-        public Task<IEnumerable<T>> List()
+        public Task<IEnumerable<T>> List(int n = 100)
         {
             return Task.FromResult(store.Values.ToList() as IEnumerable<T>);
+        }
+
+        public Task<Paginated<T>> Query(int page, Expression<Func<T, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<T> Read(long id)

@@ -13,43 +13,22 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    public class SegmentsController : ControllerBase
+    public class SegmentsController : EntityControllerBase<Segment>
     {
         private readonly ILogger<SegmentsController> logger;
         private readonly SegmentWorkflows workflow;
-        private readonly ISegmentStore segmentStore;
 
-        public SegmentsController(ILogger<SegmentsController> logger, SegmentWorkflows workflow, ISegmentStore segmentStore)
+        public SegmentsController(ILogger<SegmentsController> logger, SegmentWorkflows workflow, ISegmentStore store): base(store)
         {
             this.logger = logger;
             this.workflow = workflow;
-            this.segmentStore = segmentStore;
         }
 
+        /// <summary>Creates a new segment.</summary>
         [HttpPost]
         public async Task<Segment> CreateSegment([FromBody] CreateSegmentDto dto)
         {
             return await workflow.CreateSegment(dto.Name);
         }
-
-        [HttpGet]
-        public async Task<IEnumerable<Segment>> ListSegment()
-        {
-            return await segmentStore.List();
-        }
-
-        [HttpGet("{id}")]
-        public async Task<Segment> GetSegment(long id)
-        {
-            return await segmentStore.Read(id);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<object> DeleteSegment(long id)
-        {
-            var result = await segmentStore.Remove(id);
-            return new { success = result };
-        }
     }
-
 }

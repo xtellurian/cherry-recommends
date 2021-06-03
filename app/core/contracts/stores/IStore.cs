@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace SignalBox.Core
@@ -9,7 +10,8 @@ namespace SignalBox.Core
         Task<T> Create(T entity);
         Task<T> Read(long id);
         Task<T> Update(T entity);
-        Task<IEnumerable<T>> List();
+        Task<int> Count(Expression<Func<T, bool>> predicate = null);
+        Task<Paginated<T>> Query(int page, Expression<Func<T, bool>> predicate = null);
         Task<bool> Remove(long id);
     }
 }

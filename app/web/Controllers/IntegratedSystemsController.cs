@@ -14,27 +14,20 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    public class IntegratedSystemsController : ControllerBase
+    public class IntegratedSystemsController : EntityControllerBase<IntegratedSystem>
     {
         private readonly IntegratedSystemWorkflows workflows;
-        private readonly IIntegratedSystemStore integratedSystemStore;
 
-        public IntegratedSystemsController(IntegratedSystemWorkflows workflows, IIntegratedSystemStore integratedSystemStore)
+        public IntegratedSystemsController(IntegratedSystemWorkflows workflows, IIntegratedSystemStore store) : base(store)
         {
             this.workflows = workflows;
-            this.integratedSystemStore = integratedSystemStore;
         }
 
+        /// <summary>Creates a new Integrated System.</summary>
         [HttpPost]
         public async Task<IntegratedSystem> CreateIntegratedSystem(CreateIntegratedSystemDto dto)
         {
             return await workflows.CreateIntegratedSystem(dto.Name, dto.SystemType);
-        }
-
-        [HttpGet]
-        public async Task<IEnumerable<IntegratedSystem>> ListIntegratedSystems()
-        {
-            return await integratedSystemStore.List();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    public class ApiKeysController : ControllerBase
+    public class ApiKeysController : SignalBoxControllerBase
     {
         private readonly ApiKeyWorkflows workflows;
         private readonly IHashedApiKeyStore store;
@@ -25,6 +25,7 @@ namespace SignalBox.Web.Controllers
             this.store = store;
         }
 
+        /// <summary>Exchange an API key for a token.</summary>
         [HttpPost("exchange")]
         [AllowAnonymous]
         public async Task<ApiKeyExchangeResponseDto> ExchangeApiKeyForToken(ApiKeyExchangeRequestDto dto)
@@ -33,6 +34,7 @@ namespace SignalBox.Web.Controllers
             return new ApiKeyExchangeResponseDto(token);
         }
 
+        /// <summary>Creates an API key.</summary>
         [HttpPost("create")]
         public async Task<CreateApiKeyResponseDto> CreateApiKey(CreateApiKeyDto dto)
         {
@@ -40,11 +42,16 @@ namespace SignalBox.Web.Controllers
             return new CreateApiKeyResponseDto(dto.Name, key);
         }
 
+        /// <summary>Lists the names of all API Keys.</summary>
         [HttpGet]
-        public async Task<IEnumerable<string>> ListApiKeyNames()
+        public async Task<Paginated<string>> ListApiKeyNames([FromQuery] PaginateRequest p)
         {
-            var allKeys = await store.List();
-            return allKeys.Select(_ => _.Name);
+            var result = await store.Query(p.Page);
+            return new Paginated<string>(
+                result.Items.Select(_ => _.Name),
+                result.Pagination.PageCount,
+                result.Pagination.TotalItemCount,
+                result.Pagination.PageNumber);
         }
     }
 }

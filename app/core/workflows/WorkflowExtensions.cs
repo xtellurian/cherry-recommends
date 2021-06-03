@@ -6,16 +6,19 @@ namespace SignalBox.Core.Workflows
     {
         public static IServiceCollection RegisterWorkflows(this IServiceCollection services)
         {
+            services.AddScoped<ApiKeyWorkflows>();
             services.AddScoped<ExperimentWorkflows>();
+            services.AddScoped<IntegratedSystemWorkflows>();
+            services.AddScoped<ModelRegistrationWorkflows>();
             services.AddScoped<OfferWorkflows>();
+            services.AddScoped<PresentationsWorkflows>();
+            services.AddScoped<ProductWorkflows>();
             services.AddScoped<RuleWorkflows>();
             services.AddScoped<SegmentWorkflows>();
             services.AddScoped<TrackedUserWorkflows>();
-            services.AddScoped<PresentationsWorkflows>();
-            services.AddScoped<ApiKeyWorkflows>();
-            services.AddScoped<IntegratedSystemWorkflows>();
             services.AddScoped<TrackedUserEventsWorkflows>();
-            services.AddScoped<ModelRegistrationWorkflows>();
+            services.AddScoped<DataSummaryWorkflows>();
+            services.AddScoped<ReportWorkflows>();
             return services;
         }
     }

@@ -1,8 +1,10 @@
-from client import Credentials, Four2Client, Configuration
+from context import signalboxclient
 import environment
 
-creds = Credentials(environment.api_key)
-config = Configuration(host= environment.host, port=environment.port)
+creds = signalboxclient.Credentials(environment.api_key)
+config = signalboxclient.Configuration(
+    host=environment.host, port=environment.port)
+client = signalboxclient.client.SignalBoxClient(creds)
 
 # create some offers
 offer_ids = []

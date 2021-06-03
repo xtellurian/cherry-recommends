@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using SignalBox.Core;
 
@@ -16,14 +18,54 @@ namespace SignalBox.Infrastructure
             return Task.FromResult(events);
         }
 
+        public Task<int> Count(Expression<Func<TrackedUserEvent, bool>> predicate = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> CountTrackedUsers(Expression<Func<TrackedUserEvent, bool>> predicate = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<TrackedUserEvent>> ReadEventsForUser(string commonUserId)
         {
             return Task.FromResult(eventStore.Where(_ => _.CommonUserId == commonUserId));
         }
 
-        public Task<IEnumerable<TrackedUserEvent>> ReadEventsOfType(string eventType)
+        public Task<IEnumerable<TrackedUserEvent>> ReadEventsForUser(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<TrackedUserEvent>> ReadEventsOfKind(string kind, DateTimeOffset? since = null, DateTimeOffset? until = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<TrackedUserEvent>> ReadEventsOfType(string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
         {
             return Task.FromResult(eventStore.Where(_ => _.EventType == eventType));
+        }
+
+        public Task<IEnumerable<TrackedUserEvent>> ReadEventsOfType(string kind, string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<string>> ReadUniqueEventTypes(string kind)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<IEnumerable<string>> ReadUniqueEventTypes()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<string>> ReadUniqueKinds()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,11 +1,12 @@
 import React from "react";
 import { useAccessToken } from "./token";
+import { usePagination } from "../utility/utility";
 import { fetchIntegratedSystems } from "../api/integratedSystemsApi";
 
 export const useIntegratedSystems = () => {
   const token = useAccessToken();
-  const [state, setState] = React.useState({
-    integratedSystems: null,
+  const page = usePagination();
+  const [result, setState] = React.useState({
     error: null,
     loading: true,
   });
@@ -13,20 +14,17 @@ export const useIntegratedSystems = () => {
   React.useEffect(() => {
     if (token) {
       fetchIntegratedSystems({
-        success: (_) =>
-          setState({
-            integratedSystems: _,
-            loading: false,
-          }),
+        success: setState,
         error: (_) =>
           setState({
             error: _,
             loading: false,
           }),
         token,
+        page,
       });
     }
-  }, [token]);
+  }, [token, page]);
 
-  return state;
+  return { result };
 };

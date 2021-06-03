@@ -15,19 +15,18 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    public class ModelRegistrationsController : ControllerBase
+    public class ModelRegistrationsController : EntityControllerBase<ModelRegistration>
     {
         private readonly IStorageContext storageContext;
         private readonly ModelRegistrationWorkflows workflows;
-        private readonly IModelRegistrationStore modelRegistrationStore;
 
-        public ModelRegistrationsController(IStorageContext storageContext, ModelRegistrationWorkflows workflows, IModelRegistrationStore modelRegistrationStore)
+        public ModelRegistrationsController(IStorageContext storageContext, ModelRegistrationWorkflows workflows, IModelRegistrationStore store) : base(store)
         {
             this.storageContext = storageContext;
             this.workflows = workflows;
-            this.modelRegistrationStore = modelRegistrationStore;
         }
 
+        /// <summary>Register a new model.</summary>
         [HttpPost]
         public async Task<ModelRegistration> RegisterNewModel(RegisterNewModelDto dto)
         {
@@ -39,18 +38,6 @@ namespace SignalBox.Web.Controllers
                                                     dto.Key);
             await storageContext.SaveChanges();
             return model;
-        }
-
-        [HttpPost("{id}/evaluation")]
-        public async Task<EvaluationResult> EvaluateModel(long id, [FromBody] Dictionary<string, object> features)
-        {
-            return await workflows.EvaluateModel(id, features);
-        }
-
-        [HttpGet]
-        public async Task<IEnumerable<ModelRegistration>> ListModelRegistrations()
-        {
-            return await modelRegistrationStore.List();
         }
     }
 }

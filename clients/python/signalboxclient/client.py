@@ -1,7 +1,10 @@
 import requests
 import warnings
 from .exceptions import CredentialsException, SignalBoxException
-from .client_functions import batch, construct_user, construct_event, get, post, put
+from .client_functions import batch, construct_user, construct_event, post, put
+from .experiments import create_experiment, get_experiment, get_offers_in_experiment, query_experiments
+from .products import create_product, query_products
+from .trackedusers import create_user, create_or_update_users
 
 
 class Configuration:
@@ -69,34 +72,17 @@ class SignalBoxClient:
         else:
             raise SignalBoxException(r.text)
 
-    def create_user(self, name: str, commonUserId: str):
-        json_params = {
-            "name": name,
-            "commonUserId": commonUserId
-        }
-        r = post(f'{self.base_url}/api/trackedUsers',
-                 json_params, self.access_token)
-        if r.ok:
-            return r.json()
-        else:
-            raise SignalBoxException(r.text)
+    def create_user(self, name: str, common_user_id: str):
+        return create_user(self.access_token, self.base_url, name=name, common_user_id=common_user_id)
 
     def create_or_update_users(self, users):
-        for u in users:
-            if 'commonUserId' not in u:
-                raise Exception("Tracked Users require a common user Id")
-        results = []
-        for u in batch(users):
-            json_params = {
-                "users": u
-            }
-            r = put(f'{self.base_url}/api/trackedUsers',
-                    json_params, self.access_token)
-            if r.ok:
-                results.append(r.json())
-            else:
-                raise SignalBoxException(r.text)
-        return results
+        return create_or_update_users(self.access_token, self.base_url,  users)
+
+    def create_product(self, name: str, product_id: str, description: str):
+        return create_product(self.access_token, self.base_url, name, product_id, description)
+    
+    def query_products(self, page: int):
+        return query_products(self.access_token, self.base_url, page)
 
     def create_segment(self, name: str):
         json_params = {
@@ -110,36 +96,18 @@ class SignalBoxClient:
         else:
             raise SignalBoxException(r.text)
 
-    def create_experiment(self, offerIds: list, name: str, concurrentOffers: int = 1, segmentId: str = None):
-        json_params = {
-            "offerIds": offerIds,
-            "segmentId": segmentId,
-            "name": name,
-            "concurrentOffers": concurrentOffers
-        }
-        r = post(f'{self.base_url}/api/experiments',
-                 json_params, self.access_token)
-        if r.ok:
-            return r.json()
-        else:
-            raise Exception(r.text)
+    def create_experiment(self, offer_ids: list, name: str, concurrent_offers: int = 1, segment_id: str = None):
+        return create_experiment(self.access_token, self.base_url,
+                                 offer_ids, name, concurrent_offers, segment_id)
 
-    def get_experiment(self, experimentId: str):
-        r = get(f'{self.base_url}/api/experiments/{experimentId}',
-                self.access_token)
+    def get_experiment(self, experiment_id: str):
+        return get_experiment(self.access_token, self.base_url, experiment_id)
 
-        if r.ok:
-            return r.json()
-        else:
-            raise SignalBoxException(r.text)
+    def query_experiments(self, page: int = None):
+        return query_experiments(self.access_token, self.base_url, page=page)
 
-    def get_offers(self, experimentId: str):
-        r = get(
-            f'{self.base_url}/api/experiments/{experimentId}/offers', self.access_token)
-        if r.ok:
-            return r.json()
-        else:
-            raise SignalBoxException(r.text)
+    def get_offers_in_experiment(self, experiment_id: str):
+        return get_offers_in_experiment(self.access_token, self.base_url, experiment_id)
 
     def recommend_offer(self, experimentId: str, commonUserId: str, features: dict = None):
         json_params = {

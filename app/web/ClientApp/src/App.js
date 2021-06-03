@@ -10,8 +10,12 @@ import ApiAuthorizationRoutes from "./components/api-authorization/ApiAuthorizat
 import { ApplicationPaths } from "./components/api-authorization/ApiAuthorizationConstants";
 import { SegmentsComponent } from "./components/segments/SegmentsComponent";
 import { OffersComponent } from "./components/offers/OffersComponent";
+import { ModelRegistrationsComponent } from "./components/models/ModelRegistrationsComponent";
+import { ApiDocs } from "./components/docs/ApiDocs";
 import { Profile } from "./components/auth0/Profile";
 import { SettingsComponent } from "./components/settings/SettingsComponent";
+import { DataViewComponent } from "./components/data/DataViewComponent";
+import { ReportsComponent } from "./components/reports/ReportsComponent";
 
 // import some demo stuff
 import { DemoComponent } from "./components/demo-app/DemoComponent";
@@ -30,13 +34,20 @@ export default class App extends Component {
         <AuthorizeRoute path="/experiments" component={ExperimentsComponent} />
         <AuthorizeRoute path="/segments" component={SegmentsComponent} />
         <AuthorizeRoute path="/offers" component={OffersComponent} />
+        <AuthorizeRoute
+          path="/models"
+          component={ModelRegistrationsComponent}
+        />
         <AuthorizeRoute path="/settings" component={SettingsComponent} />
 
         <AuthorizeRoute path="/demo" component={DemoComponent} />
+        <AuthorizeRoute path="/dataview" component={DataViewComponent} />
+        <AuthorizeRoute path="/reports" component={ReportsComponent} />
         <Route
           path={ApplicationPaths.ApiAuthorizationPrefix}
           component={ApiAuthorizationRoutes}
         />
+        <Route path="/docs/api" component={ApiDocs} />
       </Layout>
     );
   }

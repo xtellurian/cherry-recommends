@@ -16,7 +16,7 @@ namespace sqlserver.SignalBox
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("ExperimentOffer", b =>
@@ -32,6 +32,21 @@ namespace sqlserver.SignalBox
                     b.HasIndex("OffersId");
 
                     b.ToTable("ExperimentOffer");
+                });
+
+            modelBuilder.Entity("OfferOfferRecommendation", b =>
+                {
+                    b.Property<long>("OffersId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RecommendationsId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("OffersId", "RecommendationsId");
+
+                    b.HasIndex("RecommendationsId");
+
+                    b.ToTable("OfferOfferRecommendation");
                 });
 
             modelBuilder.Entity("SegmentTrackedUser", b =>
@@ -66,6 +81,11 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -94,6 +114,11 @@ namespace sqlserver.SignalBox
                     b.Property<string>("HashedKey")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -114,6 +139,11 @@ namespace sqlserver.SignalBox
 
                     b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
@@ -150,6 +180,11 @@ namespace sqlserver.SignalBox
 
                     b.Property<string>("Key")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("ModelType")
                         .IsRequired()
@@ -193,18 +228,18 @@ namespace sqlserver.SignalBox
                     b.Property<string>("DiscountCode")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("OfferRecommendationId")
-                        .HasColumnType("bigint");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OfferRecommendationId");
 
                     b.ToTable("Offers");
                 });
@@ -238,6 +273,11 @@ namespace sqlserver.SignalBox
                     b.Property<int>("IterationOrder")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                     b.HasKey("Id");
 
                     b.ToTable("Recommendations");
@@ -266,6 +306,11 @@ namespace sqlserver.SignalBox
                     b.Property<int>("IterationOrder")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                     b.Property<long?>("OfferId")
                         .HasColumnType("bigint");
 
@@ -284,6 +329,34 @@ namespace sqlserver.SignalBox
                     b.HasIndex("RecommendationId");
 
                     b.ToTable("PresentationOutcomes");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Product", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Rule", b =>
@@ -305,6 +378,11 @@ namespace sqlserver.SignalBox
 
                     b.Property<string>("EventLogicalValue")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -331,12 +409,52 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Segments");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Sku", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<long?>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("SkuId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Skus");
                 });
 
             modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
@@ -353,6 +471,11 @@ namespace sqlserver.SignalBox
 
                     b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
@@ -398,6 +521,11 @@ namespace sqlserver.SignalBox
                     b.Property<string>("Kind")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                     b.Property<string>("Properties")
                         .HasColumnType("nvarchar(max)");
 
@@ -435,6 +563,11 @@ namespace sqlserver.SignalBox
                     b.Property<long?>("IntegratedSystemId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                     b.Property<long?>("TrackedUserId")
                         .HasColumnType("bigint");
 
@@ -462,6 +595,21 @@ namespace sqlserver.SignalBox
                     b.HasOne("SignalBox.Core.Offer", null)
                         .WithMany()
                         .HasForeignKey("OffersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OfferOfferRecommendation", b =>
+                {
+                    b.HasOne("SignalBox.Core.Offer", null)
+                        .WithMany()
+                        .HasForeignKey("OffersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.OfferRecommendation", null)
+                        .WithMany()
+                        .HasForeignKey("RecommendationsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -506,13 +654,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("Iterations");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Offer", b =>
-                {
-                    b.HasOne("SignalBox.Core.OfferRecommendation", null)
-                        .WithMany("Offers")
-                        .HasForeignKey("OfferRecommendationId");
-                });
-
             modelBuilder.Entity("SignalBox.Core.PresentationOutcome", b =>
                 {
                     b.HasOne("SignalBox.Core.Experiment", "Experiment")
@@ -532,6 +673,15 @@ namespace sqlserver.SignalBox
                     b.Navigation("Offer");
 
                     b.Navigation("Recommendation");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Sku", b =>
+                {
+                    b.HasOne("SignalBox.Core.Product", "Product")
+                        .WithMany("Skus")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("SignalBox.Core.TrackedUserEvent", b =>
@@ -563,9 +713,9 @@ namespace sqlserver.SignalBox
                     b.Navigation("Outcomes");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.OfferRecommendation", b =>
+            modelBuilder.Entity("SignalBox.Core.Product", b =>
                 {
-                    b.Navigation("Offers");
+                    b.Navigation("Skus");
                 });
 #pragma warning restore 612, 618
         }

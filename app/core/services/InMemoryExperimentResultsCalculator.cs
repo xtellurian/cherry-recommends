@@ -14,7 +14,16 @@ namespace SignalBox.Core
             IOfferStore offerStore,
             IScorer scorer)
         {
-            var users = await trackedUserStore.List();// everyone is in the semgnet
+            var page = 1;
+            var hasNextPage = true;
+            var users = new List<TrackedUser>();
+            while (hasNextPage)
+            {
+                var results = await trackedUserStore.Query(page);
+                users.AddRange(results.Items);
+                hasNextPage = results.Pagination.HasNextPage;
+                page = results.Pagination.PageNumber + 1;
+            }
 
             if (experiment.Offers == null)
             {

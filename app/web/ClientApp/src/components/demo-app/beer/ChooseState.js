@@ -1,7 +1,10 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { trackEvent } from "../.././../api/eventsApi";
+// import { trackEvent } from "../.././../api/eventsApi";
 
+const trackEvent = () => {
+  alert('not implimented')
+}
 const StateCard = ({ state }) => {
   const history = useHistory();
   const handleSelectState = () => {

@@ -7,14 +7,74 @@ import {
   NavbarToggler,
   NavItem,
   NavLink,
+  DropdownMenu,
+  DropdownItem,
+  DropdownToggle,
+  UncontrolledDropdown,
 } from "reactstrap";
 import { GearFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
-// import { LoginMenu } from "./api-authorization/LoginMenu";
 import LoginMenu from "./auth0/AuthNav";
+import { useAuth } from "../utility/useAuth";
 import "./NavMenu.css";
 
+const AuthenticatedIA = [
+  {
+    name: "Data",
+    items: [
+      {
+        name: "Data Overiew",
+        to: "/dataview",
+      },
+      {
+        name: "Tracked Users",
+        to: "/tracked-users",
+      },
+      {
+        name: "Reports",
+        to: "/reports",
+      },
+    ],
+  },
+  {
+    name: "Segmentation",
+    items: [
+      {
+        name: "Segments",
+        to: "/segments",
+      },
+      {
+        name: "Models",
+        to: "/models",
+      },
+    ],
+  },
+  {
+    name: "Recommendation",
+    items: [
+      {
+        name: "Offers",
+        to: "/offers",
+      },
+      {
+        name: "Experiments",
+        to: "/experiments",
+      },
+    ],
+  },
+  {
+    name: "Resource",
+    items: [
+      {
+        name: "API Docs",
+        to: "/docs/api",
+      },
+    ],
+  },
+];
+
 export const NavMenu = () => {
+  const { isAuthenticated } = useAuth();
   const [state, setState] = React.useState({
     collapsed: true,
   });
@@ -28,13 +88,17 @@ export const NavMenu = () => {
   return (
     <header>
       <Navbar
-        className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3"
+        className="navbar-expand-md navbar-toggleable-md ng-white border-bottom box-shadow mb-3"
         light
       >
         <Container>
           {/* <NavbarBrand tag={Link} to="/">Four2</NavbarBrand> */}
           <NavbarBrand tag={Link} to="/">
             <img
+              style={{
+                maxWidth: 150,
+                maxHeight: 100,
+              }}
               className="img-fluid nav-logo"
               alt="The Four2 Logo"
               src="/images/Four2_logo_white_background.png"
@@ -42,36 +106,43 @@ export const NavMenu = () => {
           </NavbarBrand>
           <NavbarToggler onClick={toggleNavbar} className="mr-2" />
           <Collapse
-            className="d-sm-inline-flex flex-sm-row-reverse"
+            className="d-md-inline-flex flex-md-row-reverse"
             isOpen={!state.collapsed}
             navbar
           >
             <ul className="navbar-nav flex-grow">
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/tracked-users">
-                  Tracked Users
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/offers">
-                  Offers
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/segments">
-                  Segments
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/experiments">
-                  Experiments
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/settings">
-                  <GearFill className="mr-1" />
-                </NavLink>
-              </NavItem>
+              {isAuthenticated &&
+                AuthenticatedIA.map((section, index) => (
+                  <UncontrolledDropdown key={index} nav inNavbar>
+                    <DropdownToggle nav caret>
+                      {section.name}
+                    </DropdownToggle>
+                    <DropdownMenu right>
+                      {section.items.map((item) => (
+                        <DropdownItem key={item.to}>
+                          <NavItem>
+                            <NavLink
+                              tag={Link}
+                              className="text-dark"
+                              to={item.to}
+                            >
+                              {item.name}
+                            </NavLink>
+                          </NavItem>
+                        </DropdownItem>
+                      ))}
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                ))}
+
+              {isAuthenticated && (
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/settings">
+                    <GearFill className="mr-1" />
+                  </NavLink>
+                </NavItem>
+              )}
+
               <LoginMenu />
             </ul>
           </Collapse>

@@ -9,6 +9,7 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ReactConfigController : ControllerBase
     {
         private readonly IOptionsMonitor<Auth0ReactConfig> options;

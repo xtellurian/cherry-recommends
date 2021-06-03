@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTrackedUsers } from "../../api-hooks/trackedUserApi";
 import { Title } from "../molecules/PageHeadings";
 import { Spinner } from "../molecules/Spinner";
+import { Paginator } from "../molecules/Paginator";
 import { TrackedUserListItem } from "../molecules/TrackedUser";
 
 const CreateButton = () => {
@@ -12,12 +13,14 @@ const CreateButton = () => {
     </Link>
   );
 };
-export const TrackedUserSummary = (props) => {
-  const { trackedUsers } = useTrackedUsers();
+export const TrackedUserSummary = () => {
+  const { result } = useTrackedUsers();
 
-  if (!trackedUsers) {
+  if (!result) {
     return <Spinner />;
   }
+
+  const trackedUsers = result.items;
 
   return (
     <div>
@@ -29,7 +32,7 @@ export const TrackedUserSummary = (props) => {
       </div>
       <Title>Tracked Users</Title>
       <hr />
-      {trackedUsers.length === 0 && (
+      {result.totalItemCount === 0 && (
         <div className="text-center">
           There are no tracked users.
           <div className="mt-3">
@@ -46,6 +49,7 @@ export const TrackedUserSummary = (props) => {
           />
         ))}
       </div>
+      <Paginator {...result.pagination} />
     </div>
   );
 };

@@ -1,8 +1,14 @@
+import { pageQuery } from "./paging";
 const defaultHeaders = { "Content-Type": "application/json" };
 const basePath = "api/integratedSystems";
 
-export const fetchIntegratedSystems = async ({ success, error, token }) => {
-  const response = await fetch(basePath, {
+export const fetchIntegratedSystems = async ({
+  success,
+  error,
+  token,
+  page,
+}) => {
+  const response = await fetch(`${basePath}/${pageQuery(page)}`, {
     headers: !token
       ? defaultHeaders
       : { ...defaultHeaders, Authorization: `Bearer ${token}` },
@@ -11,7 +17,7 @@ export const fetchIntegratedSystems = async ({ success, error, token }) => {
     const results = await response.json();
     success(results);
   } else {
-    error(response.statusText);
+    error(await response.json());
   }
 };
 
@@ -32,6 +38,6 @@ export const createIntegratedSystem = async ({
     const data = await response.json();
     success(data);
   } else {
-    error(response.statusText);
+    error(await response.json());
   }
 };

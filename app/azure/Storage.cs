@@ -5,9 +5,9 @@ using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Storage;
 using Pulumi.AzureNative.Storage.Inputs;
 
-namespace Signalbox.Azure
+namespace SignalBox.Azure
 {
-    class Storage
+    class Storage : ComponentWithStorage
     {
         private static InputMap<string> tags = new InputMap<string>
             {
@@ -40,27 +40,7 @@ namespace Signalbox.Azure
         public Output<string> PrimaryStorageKey { get; }
         public Output<string> PrimaryConnectionString { get; }
 
-        private static async Task<string> GetStorageAccountPrimaryKey(string resourceGroupName, string accountName)
-        {
-            var accountKeys = await ListStorageAccountKeys.InvokeAsync(new ListStorageAccountKeysArgs
-            {
-                ResourceGroupName = resourceGroupName,
-                AccountName = accountName
-            });
-            return accountKeys.Keys[0].Value;
-        }
-
-        private static async Task<string> GetStorageAccountPrimaryConnectionString(string resourceGroupName, string accountName)
-        {
-            var accountKeys = await ListStorageAccountKeys.InvokeAsync(new ListStorageAccountKeysArgs
-            {
-                ResourceGroupName = resourceGroupName,
-                AccountName = accountName
-            });
-            var primaryStorageKey = accountKeys.Keys[0].Value;
-            return $"DefaultEndpointsProtocol=https;AccountName={accountName};AccountKey={primaryStorageKey};EndpointSuffix=core.windows.net";
-        }
-
+        
     }
 }
 

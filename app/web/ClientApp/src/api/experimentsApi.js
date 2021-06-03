@@ -1,14 +1,15 @@
+import { pageQuery } from "./paging";
 const defaultHeaders = { "Content-Type": "application/json" };
 
-export const fetchExperiments = async ({ success, error, token }) => {
-  const response = await fetch("api/experiments", {
+export const fetchExperiments = async ({ success, error, token, page }) => {
+  const response = await fetch(`api/experiments?${pageQuery(page)}`, {
     headers: !token ? {} : { Authorization: `Bearer ${token}` },
   });
   if (response.ok) {
     const results = await response.json();
     success(results);
   } else {
-    error(response.statusText);
+    error(response.json());
   }
 };
 
@@ -24,16 +25,11 @@ export const createExperiment = async ({ success, error, token, payload }) => {
     const data = await response.json();
     success(data);
   } else {
-    error(response.statusText);
+    error(response.json());
   }
 };
 
-export const fetchExperimentResults = async ({
-  success,
-  error,
-  token,
-  id,
-}) => {
+export const fetchExperimentResults = async ({ success, error, token, id }) => {
   const response = await fetch(`api/experiments/${id}/results`, {
     headers: !token
       ? defaultHeaders
@@ -43,7 +39,7 @@ export const fetchExperimentResults = async ({
     const data = await response.json();
     success(data);
   } else {
-    error(response.statusText);
+    error(response.json());
   }
 };
 
@@ -69,6 +65,6 @@ export const fetchRecommendation = async ({
     const data = await response.json();
     success(data);
   } else {
-    error(response.statusText);
+    error(await response.json());
   }
 };

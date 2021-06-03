@@ -1,39 +1,39 @@
 import React from "react";
+import { usePagination } from "../utility/utility";
 import { useAccessToken } from "./token";
-import {
-  fetchTrackedUsers,
-  fetchSelectedTrackedUsers,
-} from "../api/trackedUsersApi";
+import { fetchTrackedUsers, fetchTrackedUser } from "../api/trackedUsersApi";
 
 export const useTrackedUsers = () => {
   const token = useAccessToken();
-  const [trackedUsers, setTrackedUsers] = React.useState();
+  const page = usePagination();
+  const [result, setResults] = React.useState();
   React.useEffect(() => {
     if (token) {
       fetchTrackedUsers({
-        success: setTrackedUsers,
+        success: setResults,
         error: console.log,
         token,
+        page,
       });
     }
-  }, [token]);
+  }, [token, page]);
 
-  return { trackedUsers };
+  return { result };
 };
 
-export const useSelectedTrackedUsers = ({ ids }) => {
+export const useTrackedUser = ({ id }) => {
   const token = useAccessToken();
-  const [trackedUsers, setTrackedUsers] = React.useState();
+  const [result, setResults] = React.useState();
   React.useEffect(() => {
-    if (token) {
-      fetchSelectedTrackedUsers({
-        success: setTrackedUsers,
+    if (token && id) {
+      fetchTrackedUser({
+        success: setResults,
         error: console.log,
         token,
-        ids,
+        id,
       });
     }
-  }, [token]);
+  }, [token, id]);
 
-  return { trackedUsers };
+  return { trackedUser: result };
 };

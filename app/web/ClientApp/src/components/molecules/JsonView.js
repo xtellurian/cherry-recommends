@@ -1,6 +1,5 @@
-import React from 'react'
+import React from "react";
 import JSONTree from "react-json-tree";
-
 
 const ashes = {
   scheme: "ashes",
@@ -23,6 +22,6 @@ const ashes = {
   base0F: "#C79595",
 };
 
-export const JsonView = ({data}) => {
+export const JsonView = ({ data }) => {
   return <JSONTree data={data} theme={ashes} hideRoot={true} />;
 };

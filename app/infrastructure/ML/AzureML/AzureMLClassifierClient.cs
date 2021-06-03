@@ -23,7 +23,7 @@ namespace SignalBox.Infrastructure.ML.Azure
             this.httpClient = httpClient;
         }
 
-        public override async Task<EvaluationResult> Evaluate(ModelRegistration model, IDictionary<string, object> features)
+        public override async Task<EvaluationResult> Invoke(ModelRegistration model, IDictionary<string, object> features)
         {
             // convert to strings - Azure seems to want it that way?
             var res = await RequestScore(model, features.ToDictionary(pair => pair.Key, pair => pair.Value.ToString()));

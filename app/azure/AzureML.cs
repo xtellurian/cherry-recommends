@@ -6,9 +6,9 @@ using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Storage;
 using Pulumi.AzureNative.Storage.Inputs;
 
-namespace Signalbox.Azure
+namespace SignalBox.Azure
 {
-    class AzureML
+    class AzureML : ComponentWithStorage
     {
         private static InputMap<string> tags = new InputMap<string>
             {
@@ -31,8 +31,21 @@ namespace Signalbox.Azure
                 Tags = tags
             });
 
+            var container = new BlobContainer("reportContainer", new BlobContainerArgs
+            {
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name,
+                ContainerName = "reports",
+                Metadata = {
+                    {"facing", "client"}
+                }
+            });
+
             this.PrimaryStorageKey = Output.Tuple(rg.Name, storageAccount.Name).Apply(names =>
                 Output.CreateSecret(GetStorageAccountPrimaryKey(names.Item1, names.Item2)));
+
+            this.PrimaryStorageConnectionString = Output.Tuple(rg.Name, storageAccount.Name).Apply(names =>
+                Output.CreateSecret(GetStorageAccountPrimaryConnectionString(names.Item1, names.Item2)));
 
 
             var appInsights = new AzureNative.Insights.Component("MLAppInsights", new AzureNative.Insights.ComponentArgs
@@ -97,8 +110,6 @@ namespace Signalbox.Azure
                 },
             });
 
-
-
             var workspace = new AzureNative.MachineLearningServices.Workspace("workspace", new AzureNative.MachineLearningServices.WorkspaceArgs
             {
                 ApplicationInsights = appInsights.Id,
@@ -122,18 +133,7 @@ namespace Signalbox.Azure
             });
         }
 
-
-
-        private static async Task<string> GetStorageAccountPrimaryKey(string resourceGroupName, string accountName)
-        {
-            var accountKeys = await ListStorageAccountKeys.InvokeAsync(new ListStorageAccountKeysArgs
-            {
-                ResourceGroupName = resourceGroupName,
-                AccountName = accountName
-            });
-            return accountKeys.Keys[0].Value;
-        }
-
         public Output<string> PrimaryStorageKey { get; }
+        public Output<string> PrimaryStorageConnectionString { get; }
     }
 }

@@ -1,9 +1,14 @@
 import React from "react";
 
-export const Spinner = () => {
+export const Spinner = ({ children }) => {
   return (
-    <div className="spinner-border text-center" role="status">
-      <span className="sr-only">Loading...</span>
+    <div className="justify-content-center">
+      <div className="d-flex justify-content-center mt-3 text-info">
+        <div className="spinner-grow" role="status"></div>
+      </div>
+      <div className="mt-3 text-center text-muted">
+        {children || "Loading..."}
+      </div>
     </div>
   );
 };

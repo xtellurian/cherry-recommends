@@ -1,18 +1,9 @@
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { DropdownComponent, DropdownItem } from "../../molecules/Dropdown";
 import { Chart } from "./Chart";
 import { getResults } from "./resultsData";
 import "./timeline.css";
-
-const bottomStyle = {
-  position: "absolute",
-  left: 0,
-  bottom: 20,
-  right: 0,
-  marginRight: "20px",
-  marginBottom: "20px"
-};
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);

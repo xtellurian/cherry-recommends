@@ -21,8 +21,12 @@ namespace SignalBox.Core
         public double Price { get; set; } // paid by the user
         public double? Cost { get; set; } // paid by the business
         public string? DiscountCode { get; set; }
+
         [JsonIgnore]
         public ICollection<PresentationOutcome> Outcomes { get; set; } = null!;
+
+        [JsonIgnore]
+        public ICollection<OfferRecommendation> Recommendations { get; set; } = null!;
 
         [JsonIgnore]
         public ICollection<Experiment> Experiments { get; set; } = null!;

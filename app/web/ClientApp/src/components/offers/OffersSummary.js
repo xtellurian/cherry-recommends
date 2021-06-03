@@ -5,6 +5,7 @@ import { Title } from "../molecules/PageHeadings";
 import { ExpandableCard } from "../molecules/ExpandableCard";
 import { Spinner } from "../molecules/Spinner";
 import { CreateButton } from "../molecules/CreateButton";
+import { Paginator } from "../molecules/Paginator";
 
 const OfferRow = ({ offer }) => {
   return (
@@ -22,7 +23,7 @@ const OfferRow = ({ offer }) => {
 };
 export const OffersSummary = () => {
   let { path } = useRouteMatch();
-  const { offers } = useOffers();
+  const { result } = useOffers();
   return (
     <React.Fragment>
       <div>
@@ -34,12 +35,12 @@ export const OffersSummary = () => {
       </div>
       <hr />
       <div>
-        {offers &&
-          offers.length > 0 &&
-          offers.map((o) => <OfferRow key={o.id} offer={o} />)}
+        {result &&
+          result.items.length > 0 &&
+          result.items.map((o) => <OfferRow key={o.id} offer={o} />)}
       </div>
       <div>
-        {offers && offers.length === 0 && (
+        {result && result.items.length === 0 && (
           <div className="text-center p-5">
             <div>There are no offers.</div>
             <CreateButton to={`${path}/create`} className="mt-4">
@@ -48,7 +49,8 @@ export const OffersSummary = () => {
           </div>
         )}
       </div>
-      {!offers && <Spinner />}
+      {!result && <Spinner />}
+      {result && <Paginator {...result.pagination} />}
     </React.Fragment>
   );
 };

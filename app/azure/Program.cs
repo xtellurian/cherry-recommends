@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Pulumi;
 
-namespace Signalbox.Azure
+namespace SignalBox.Azure
 {
     class Program
     {

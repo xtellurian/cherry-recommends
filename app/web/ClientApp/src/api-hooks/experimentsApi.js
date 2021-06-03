@@ -1,5 +1,6 @@
 import React from "react";
 import { useAccessToken } from "./token";
+import { usePagination } from "../utility/utility";
 import {
   fetchExperiments,
   fetchExperimentResults,
@@ -7,18 +8,20 @@ import {
 
 export const useExperiments = () => {
   const token = useAccessToken();
-  const [experiments, setState] = React.useState();
+  const page = usePagination();
+  const [result, setState] = React.useState();
   React.useEffect(() => {
     if (token) {
       fetchExperiments({
         success: setState,
         error: console.log,
         token,
+        page,
       });
     }
-  }, [token]);
+  }, [token, page]);
 
-  return { experiments };
+  return { result };
 };
 
 export const useExperimentResults = ({ id }) => {
@@ -33,7 +36,7 @@ export const useExperimentResults = ({ id }) => {
         id,
       });
     }
-  }, [token]);
+  }, [token, id]);
 
   return { experimentResults };
 };

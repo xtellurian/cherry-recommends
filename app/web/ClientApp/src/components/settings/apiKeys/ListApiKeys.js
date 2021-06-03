@@ -5,7 +5,6 @@ import { CreateButton } from "../../molecules/CreateButton";
 
 export const ListApiKeys = () => {
   const { apiKeys } = useApiKeys();
-  console.log(apiKeys);
   return (
     <React.Fragment>
       <CreateButton to="/settings/api-keys/create" className="float-right">

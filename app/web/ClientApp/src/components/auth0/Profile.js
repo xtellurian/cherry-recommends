@@ -9,7 +9,7 @@ export const Profile = () => {
   const [userMetadata, setUserMetadata] = React.useState();
   const token = useAuth0AccessToken();
   React.useEffect(() => {
-    if (token && user && config.domain) {
+    if (token && user && config && config.domain) {
       const userDetailsByIdUrl = `https://${config.domain}/api/v2/users/${user.sub}`;
       fetch(userDetailsByIdUrl, {
         headers: {
@@ -20,7 +20,7 @@ export const Profile = () => {
         .then((res) => setUserMetadata(res))
         .catch(() => alert("broke"));
     }
-  }, [token, user, config?.domain]);
+  }, [token, user, config]);
 
   return (
     isAuthenticated && (

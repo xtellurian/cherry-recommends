@@ -3,6 +3,8 @@ import { Link, useRouteMatch } from "react-router-dom";
 import { useSegments } from "../../api-hooks/segmentsApi";
 import { DropdownComponent, DropdownItem } from "../molecules/Dropdown";
 import { CreateButton } from "../molecules/CreateButton";
+import { Spinner } from "../molecules/Spinner";
+import { Paginator } from "../molecules/Paginator";
 
 const SegmentRow = ({ segment }) => {
   let { path } = useRouteMatch();
@@ -24,14 +26,6 @@ const SegmentRow = ({ segment }) => {
               <DropdownItem>
                 <Link
                   className="btn btn-secondary btn-block"
-                  to={`${path}/${segment.id}/rules`}
-                >
-                  Rules
-                </Link>
-              </DropdownItem>
-              <DropdownItem>
-                <Link
-                  className="btn btn-secondary btn-block"
                   to={`experiments/create?segmentId=${segment.id}`}
                 >
                   Create an Experiment
@@ -47,18 +41,14 @@ const SegmentRow = ({ segment }) => {
 export const SegmentList = () => {
   let { path } = useRouteMatch();
 
-  const { segments } = useSegments();
+  const { result } = useSegments();
   return (
     <div>
       <h3>All Segments</h3>
       <hr />
-      {segments && segments.map((s) => <SegmentRow key={s.id} segment={s} />)}
-      {!segments && (
-        <div className="spinner-border text-center" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      )}
-      {segments && segments.length === 0 && (
+      {result && result.items.map((s) => <SegmentRow key={s.id} segment={s} />)}
+      {!result && <Spinner />}
+      {result && result.items.length === 0 && (
         <div className="text-center p-5">
           <div>There are no segments.</div>
           <CreateButton to={`${path}/create`} className="mt-4">
@@ -66,6 +56,7 @@ export const SegmentList = () => {
           </CreateButton>
         </div>
       )}
+      {result && <Paginator {...result.pagination} />}
     </div>
   );
 };

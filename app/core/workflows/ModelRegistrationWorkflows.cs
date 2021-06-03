@@ -56,13 +56,13 @@ namespace SignalBox.Core.Workflows
                                                                              swagger));
         }
 
-        public async Task<EvaluationResult> EvaluateModel(long id, IDictionary<string, object> features)
+        public async Task<EvaluationResult> InvokeModel(long id, IDictionary<string, object> features)
         {
             var model = await modelRegistrationStore.Read(id);
             if (model.ModelType == ModelTypes.SingleClassClassifier && model.HostingType == HostingTypes.AzureMLContainerInstance)
             {
                 var client = await modelClientFactory.GetClient(model);
-                return await client.Evaluate(model, features);
+                return await client.Invoke(model, features);
             }
             else
             {

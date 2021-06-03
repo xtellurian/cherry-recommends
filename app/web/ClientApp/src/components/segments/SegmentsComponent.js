@@ -1,11 +1,9 @@
 import React from "react";
-import { Link, Switch, useRouteMatch } from "react-router-dom";
+import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { CreateSegment } from "./CreateSegment";
 import { SegmentList } from "./SegmentList";
 import { SegmentMembers } from "./SegmentMembers";
-import { SegmentRules } from "./SegmentRules";
-import { CreateRule } from "./CreateRule";
 import { CreateButton } from "../molecules/CreateButton";
 
 const SegmentsHome = () => {
@@ -35,16 +33,6 @@ export const SegmentsComponent = () => {
           exact
           path={`${path}/:id/members`}
           component={SegmentMembers}
-        />
-        <AuthorizeRoute
-          exact
-          path={`${path}/:id/rules`}
-          component={SegmentRules}
-        />
-        <AuthorizeRoute
-          exact
-          path={`${path}/create-rule`}
-          component={CreateRule}
         />
       </Switch>
     </React.Fragment>

@@ -1,14 +1,11 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+// import { trackOfferAccepted } from "../../../api/eventsApi";
+import { useQuery } from "../../../utility/utility";
 
-import { trackOfferAccepted } from "../../../api/eventsApi";
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
+const trackOfferAccepted = () => {
+  alert('not implemented')
 }
-
 export const BeerSubscriptionConfirmation = () => {
-  console.log('loading confirm conponent')
   const query = useQuery();
   let offerId = query.get("offerId") || "";
 

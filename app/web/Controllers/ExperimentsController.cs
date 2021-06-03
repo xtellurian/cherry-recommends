@@ -16,27 +16,24 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    public class ExperimentsController : ControllerBase
+    public class ExperimentsController : EntityControllerBase<Experiment>
     {
         private readonly ILogger<ExperimentsController> logger;
         private readonly ExperimentWorkflows experimentWorkflows;
         private readonly PresentationsWorkflows presentationsWorkflows;
-        private readonly IExperimentStore experimentStore;
 
         public ExperimentsController(
             ILogger<ExperimentsController> logger,
             IExperimentStore experimentStore,
             ExperimentWorkflows experimentWorkflows,
-            PresentationsWorkflows presentationsWorkflows)
+            PresentationsWorkflows presentationsWorkflows) : base(experimentStore)
         {
             this.logger = logger;
-            this.experimentStore = experimentStore;
             this.experimentWorkflows = experimentWorkflows;
             this.presentationsWorkflows = presentationsWorkflows;
         }
 
-
-
+        /// <summary>Creates a new experiment resource.</summary>
         [HttpPost]
         public async Task<CreateExperimentResultDto> CreateExperiment([FromBody] CreateExperimentDto dto)
         {
@@ -44,31 +41,22 @@ namespace SignalBox.Web.Controllers
             return new CreateExperimentResultDto(experiment);
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<Experiment>> GetExperimentList()
-        {
-            return await experimentStore.List();
-        }
-
-        [HttpGet("{id}")]
-        public async Task<Experiment> GetExperiment(long id)
-        {
-            return await experimentStore.Read(id);
-        }
-
+        /// <summary>Returns the list of offers connected to the experiment.</summary>
         [HttpGet("{id}/offers")]
         public async Task<IEnumerable<Offer>> GetExperimentOffers(long id)
         {
-            var experiment = await experimentStore.Read(id);
+            var experiment = await store.Read(id);
             return experiment.Offers;
         }
 
+        /// <summary>Returns the results of the experiment.</summary>
         [HttpGet("{id}/results")]
         public async Task<ExperimentResults> GetExperimentResults(long id, string? scorer = null)
         {
             return await experimentWorkflows.CalculateResults(id, scorer);
         }
 
+        /// <summary>Presents the optimum offer for a given user with a set of features.</summary>
         [HttpPost("{id}/presentation")]
         [HttpPost("{id}/recommendation")]
         public async Task<OfferRecommendation> PresentExperimentOffers(long id, [FromBody] RecommendationContextDto dto)
@@ -76,6 +64,7 @@ namespace SignalBox.Web.Controllers
             return await presentationsWorkflows.RecommendOffer(id, dto.CommonUserId, dto.Features);
         }
 
+        /// <summary>Track the outcome of an offer that has been presented..</summary>
         [HttpPost("{id}/outcome")]
         public async Task<PresentationOutcome> TrackResults(long id, [FromBody] TrackPresentationDto dto)
         {

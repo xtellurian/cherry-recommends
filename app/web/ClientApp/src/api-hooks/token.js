@@ -16,7 +16,7 @@ export const useAccessToken = () => {
         .then(setAccessToken)
         .catch(console.log);
     }
-  }, [isAuthenticated, config]);
+  }, [isAuthenticated, config, getAccessTokenSilently]);
 
   return accessToken;
 };
@@ -36,7 +36,7 @@ export const useAuth0AccessToken = () => {
         .then(setAccessToken)
         .catch(console.log);
     }
-  }, [isAuthenticated, config, config?.managementAudience]);
+  }, [isAuthenticated, config, getAccessTokenSilently]);
 
   return accessToken;
 };

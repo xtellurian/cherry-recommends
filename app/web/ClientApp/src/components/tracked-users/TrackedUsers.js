@@ -1,8 +1,9 @@
 import React from "react";
 import { Switch, useRouteMatch } from "react-router-dom";
-import AuthorizeRoute from "../auth0/ProtectedRoute"
+import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { UploadTrackedUserComponent } from "./UploadUsers";
 import { TrackedUserSummary } from "./TrackedUserSummary";
+import { TrackedUserDetail } from "./TrackedUserDetail";
 import { CreateUser } from "./CreateUser";
 
 export const TrackedUsers = (props) => {
@@ -11,7 +12,11 @@ export const TrackedUsers = (props) => {
     <React.Fragment>
       <div>
         <Switch>
-          <AuthorizeRoute exact path={`${path}`} component={TrackedUserSummary} />
+          <AuthorizeRoute
+            exact
+            path={`${path}`}
+            component={TrackedUserSummary}
+          />
           <AuthorizeRoute
             exact
             path={`${path}/upload`}
@@ -24,8 +29,8 @@ export const TrackedUsers = (props) => {
           />
           <AuthorizeRoute
             exact
-            path={`${path}/summary`}
-            component={TrackedUserSummary}
+            path={`${path}/detail/:id`}
+            component={TrackedUserDetail}
           />
         </Switch>
       </div>

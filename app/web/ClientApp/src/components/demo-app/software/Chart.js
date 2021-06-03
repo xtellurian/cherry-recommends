@@ -6,7 +6,6 @@ import {
   CartesianGrid,
   Line,
   Legend,
-  YAxis,
 } from "recharts";
 
 export const Chart = ({ iterations }) => {

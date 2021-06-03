@@ -84,17 +84,8 @@ namespace SignalBox.Core
         public ServiceInputProperties Properties { get; set; }
 
         [JsonPropertyName("example")]
-        public Example Example { get; set; }
+        public AzureMLModelPayload Example { get; set; }
     }
-
-    public partial class Example
-    {
-        [JsonPropertyName("data")]
-        public Datum[] Data { get; set; }
-    }
-
-    public class Datum : Dictionary<string, object>
-    { }
 
     public partial class ServiceInputProperties
     {

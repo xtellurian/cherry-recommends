@@ -1,10 +1,8 @@
 const defaultHeaders = { "Content-Type": "application/json" };
 
-export const fetchRules = async ({ success, error, token, segmentId }) => {
-  let path = "api/rules";
-  if (segmentId) {
-    path = `${path}?segmentId=${segmentId}`;
-  }
+export const fetchEventSummary = async ({ success, error, token }) => {
+  let path = `api/datasummary/events`;
+
   const response = await fetch(path, {
     headers: !token
       ? defaultHeaders
@@ -14,12 +12,20 @@ export const fetchRules = async ({ success, error, token, segmentId }) => {
     const results = await response.json();
     success(results);
   } else {
-    error(response.statusText);
+    error(await response.json());
   }
 };
 
-export const fetchRule = async ({ success, error, token, ruleId }) => {
-  const response = await fetch(`api/rules/${ruleId}`, {
+export const fetchEventTimeline = async ({
+  success,
+  error,
+  token,
+  kind,
+  eventType,
+}) => {
+  let path = `api/datasummary/events/timeline/${kind}/${eventType}`;
+
+  const response = await fetch(path, {
     headers: !token
       ? defaultHeaders
       : { ...defaultHeaders, Authorization: `Bearer ${token}` },
@@ -28,22 +34,22 @@ export const fetchRule = async ({ success, error, token, ruleId }) => {
     const results = await response.json();
     success(results);
   } else {
-    error(response.status);
+    error(await response.json());
   }
 };
 
-export const createRule = async ({ success, error, token, payload }) => {
-  const response = await fetch("api/rules", {
+export const fetchDashboard = async ({ success, error, token }) => {
+  let path = `api/datasummary/dashboard`;
+
+  const response = await fetch(path, {
     headers: !token
       ? defaultHeaders
       : { ...defaultHeaders, Authorization: `Bearer ${token}` },
-    method: "post",
-    body: JSON.stringify(payload),
   });
   if (response.ok) {
     const results = await response.json();
     success(results);
   } else {
-    error(response);
+    error(await response.json());
   }
 };

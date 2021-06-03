@@ -1,8 +1,8 @@
-
+import { pageQuery } from "./paging";
 const defaultHeaders = { "Content-Type": "application/json" };
 
-export const fetchSegments = async ({ success, error, token}) => {
-  const response = await fetch("api/segments", {
+export const fetchSegments = async ({ success, error, token, page }) => {
+  const response = await fetch(`api/segments?${pageQuery(page)}`, {
     headers: !token
       ? defaultHeaders
       : { ...defaultHeaders, Authorization: `Bearer ${token}` },
@@ -11,7 +11,7 @@ export const fetchSegments = async ({ success, error, token}) => {
     const results = await response.json();
     success(results);
   } else {
-    error(response.statusText);
+    error(await response.json());
   }
 };
 
@@ -23,10 +23,9 @@ export const fetchSegment = async ({ success, error, token, id }) => {
   });
   if (response.ok) {
     const results = await response.json();
-    console.log(results)
     success(results);
   } else {
-    error(response.statusText);
+    error(await response.json());
   }
 };
 
@@ -43,6 +42,6 @@ export const createSegment = async ({ success, error, token, payload }) => {
     const results = await response.json();
     success(results);
   } else {
-    error(response.statusText);
+    error(await response.json());
   }
 };

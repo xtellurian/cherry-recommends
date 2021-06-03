@@ -3,15 +3,17 @@ using Pulumi;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Web.Inputs;
 using Pulumi.AzureNative.Web;
+using System.Collections.Generic;
 
-namespace Signalbox.Azure
+namespace SignalBox.Azure
 {
-    class AppSvc
+    class AppSvc : ComponentWithStorage
     {
-        public AppSvc(ResourceGroup rg, DatabaseComponent db, Storage storage)
+        public AppSvc(ResourceGroup rg, DatabaseComponent db, Storage storage, AzureML ml)
         {
             // create an app service plan
             var appSvcConfig = new Pulumi.Config("appsvc");
+            var corsOrigins = appSvcConfig.GetObject<List<string>>("corsorigins") ?? new List<string>();
 
             var plan = new AppServicePlan("asp", new AppServicePlanArgs
             {
@@ -35,10 +37,7 @@ namespace Signalbox.Azure
                     Cors = new CorsSettingsArgs
                     {
                         // Allowed Origins cannot be * if SupportCredentials = True
-                        AllowedOrigins = {
-                            "http://localhost:5000",
-                            "https://localhost:5001"
-                        },
+                        AllowedOrigins = corsOrigins,
                         SupportCredentials = true
                     },
                     AppSettings = {
@@ -51,18 +50,6 @@ namespace Signalbox.Azure
                             Name = "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
                             Value = "1",
                         },
-                //     new NameValuePairArgs{
-                //         Name = "APPINSIGHTS_INSTRUMENTATIONKEY",
-                //         Value = appInsights.InstrumentationKey
-                //     },
-                //     new NameValuePairArgs{
-                //         Name = "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                //         Value = appInsights.InstrumentationKey.Apply(key => $"InstrumentationKey={key}"),
-                //     },
-                //     new NameValuePairArgs{
-                //         Name = "ApplicationInsightsAgent_EXTENSION_VERSION",
-                //         Value = "~2",
-                //     },
                 },
                     LinuxFxVersion = "DOTNETCORE|5.0",
                     ConnectionStrings = {
@@ -131,6 +118,9 @@ namespace Signalbox.Azure
                     {"Auth0__M2M__ClientId", auth0.M2MClientId},
                     {"Auth0__M2M__ClientSecret", auth0.M2MClientSecret},
                     {"Auth0__M2M__Endpoint", auth0.M2MEndpoint},
+                    {"FileHosting__ConnectionString", ml.PrimaryStorageConnectionString},
+                    {"FileHosting__ContainerName", "reports"},
+                    {"FileHosting__Source", "blob"},
                     {"LastDeployed", System.DateTime.Now.ToString()} // so these always get re-deployed when run.
                 }
             }, new CustomResourceOptions

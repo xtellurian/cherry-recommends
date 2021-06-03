@@ -1,7 +1,8 @@
+import { pageQuery } from "./paging";
 const defaultHeaders = { "Content-Type": "application/json" };
 
-export const fetchApiKeys = async ({ success, error, token }) => {
-  let path = "api/apiKeys";
+export const fetchApiKeys = async ({ success, error, token, page }) => {
+  let path = `api/apiKeys?${pageQuery(page)}`;
 
   const response = await fetch(path, {
     headers: !token
@@ -12,7 +13,7 @@ export const fetchApiKeys = async ({ success, error, token }) => {
     const results = await response.json();
     success(results);
   } else {
-    error(response.statusText);
+    error(await response.json());
   }
 };
 
@@ -29,6 +30,6 @@ export const createApiKey = async ({ success, error, token, name }) => {
     const data = await response.json();
     success(data);
   } else {
-    error(response.statusText);
+    error(await response.json());
   }
 };

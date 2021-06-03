@@ -13,6 +13,13 @@ using SignalBox.Core.Workflows;
 using SignalBox.Web.Config;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Microsoft.OpenApi.Models;
+using Hellang.Middleware.ProblemDetails;
+using System;
+using System.Net.Http;
+using Hellang.Middleware.ProblemDetails.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using SignalBox.Infrastructure.Files;
 
 namespace SignalBox.Web
 {
@@ -45,6 +52,22 @@ namespace SignalBox.Web
                 services.UseMemory();
             }
 
+            // Configure file storage type
+            var fileSource = Configuration.GetSection("FileHosting").GetValue<string>("Source");
+            if (fileSource == "local")
+            {
+                services.AddScoped<IFileStore, LocalFileStore>();
+            }
+            else if (fileSource == "blob")
+            {
+                services.Configure<FileHosting>(Configuration.GetSection("FileHosting"));
+                services.AddScoped<IFileStore, AzureBlobFileStore>();
+            }
+            else
+            {
+                throw new NotImplementedException($"File Source {fileSource} is unknown");
+            }
+
             // add core services
             services.RegisterCoreServices();
 
@@ -62,8 +85,22 @@ namespace SignalBox.Web
                 o.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(ApiVersions.MAJOR_0, ApiVersions.MINOR_1);
             });
 
-            services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SignalBox API", Version = "v1" });
+                c.OperationFilter<ErrorOperationFilter>();
 
+                // Set the comments path for the Open API JSON.
+                var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = System.IO.Path.Combine(System.AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
+
+            if (Env.IsDevelopment())
+            {
+                services.AddDatabaseDeveloperPageExceptionFilter();
+            }
+            services.AddMvcCore().AddApiExplorer(); // required for swashbuckle
 
             var auth0Config = Configuration.GetSection("Auth0");
             services.Configure<Auth0ReactConfig>(auth0Config.GetSection("ReactApp"));
@@ -78,23 +115,14 @@ namespace SignalBox.Web
                 options.Audience = auth0Config.GetValue<string>("Audience");
             });
 
-            // TODO: fix security problems with app service and identity server
-            // fixes inavlid issuer error when running in Azure App Service
-            // probably a security hole
-            // note the DEVELOPER certificate in appsettings.json when running in prod.
-            // that is BAD. 
-            // services.Configure<JwtBearerOptions>(
-            //     IdentityServerJwtConstants.IdentityServerJwtBearerScheme,
-            //     options =>
-            //     {
-            //         options.TokenValidationParameters.ValidateIssuer = false;
-            //     });
-
-            services.AddControllers().AddJsonOptions(o =>
-            {
-                o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-            });
-            services.AddRazorPages();
+            services
+                .AddProblemDetails(ConfigureProblemDetails)
+                .AddControllers()
+                .AddProblemDetailsConventions()
+                .AddJsonOptions(o =>
+                    {
+                        o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                    });
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -118,6 +146,7 @@ namespace SignalBox.Web
                 app.UseHsts();
             }
 
+            app.UseProblemDetails(); // must come after app.UseDeveloperExceptionPage()
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
@@ -125,14 +154,17 @@ namespace SignalBox.Web
             app.UseRouting();
 
             app.UseAuthentication();
-            // app.UseIdentityServer();
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = "api/docs/{documentName}/spec.json";
+            });
+
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
             });
 
             app.UseSpa(spa =>
@@ -144,6 +176,32 @@ namespace SignalBox.Web
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+        }
+
+
+        private void ConfigureProblemDetails(ProblemDetailsOptions options)
+        {
+            // Only include exception details in a development environment. There's really no nee
+            // to set this as it's the default behavior. It's just included here for completeness :)
+            options.IncludeExceptionDetails = (ctx, ex) => Env.IsDevelopment();
+            // You can configure the middleware to re-throw certain types of exceptions, all exceptions or based on a predicate.
+            // This is useful if you have upstream middleware that needs to do additional handling of exceptions.
+            options.Rethrow<NotSupportedException>();
+
+            options.Map<SignalBoxException>(_ => new ProblemDetails
+            {
+                Title = _.Title
+            });
+
+            // This will map NotImplementedException to the 501 Not Implemented status code.
+            options.MapToStatusCode<NotImplementedException>(Microsoft.AspNetCore.Http.StatusCodes.Status501NotImplemented);
+
+            // This will map HttpRequestException to the 503 Service Unavailable status code.
+            options.MapToStatusCode<HttpRequestException>(Microsoft.AspNetCore.Http.StatusCodes.Status503ServiceUnavailable);
+
+            // Because exceptions are handled polymorphically, this will act as a "catch all" mapping, which is why it's added last.
+            // If an exception other than NotImplementedException and HttpRequestException is thrown, this will handle it.
+            options.MapToStatusCode<Exception>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError);
         }
     }
 }

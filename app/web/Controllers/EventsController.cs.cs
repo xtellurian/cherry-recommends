@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +14,7 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    public class EventsController : ControllerBase
+    public class EventsController : SignalBoxControllerBase
     {
         private readonly ILogger<EventsController> _logger;
         private readonly TrackedUserEventsWorkflows workflows;
@@ -30,6 +29,7 @@ namespace SignalBox.Web.Controllers
             this.eventStore = eventStore;
         }
 
+        /// <summary>Stores event data about one or more tracked users.</summary>
         [HttpPost]
         public async Task<object> LogEvents([FromBody] List<EventDto> dto)
         {
@@ -43,6 +43,20 @@ namespace SignalBox.Web.Controllers
                                                                  d.Properties)));
 
             return new object();
+        }
+
+        /// <summary>Stores event data about one or more tracked users.</summary>
+        [HttpGet]
+        public async Task<EventsResponse> EventsForTrackedUser(string commonUserId)
+        {
+            if (commonUserId == null)
+            {
+                throw new BadRequestException("commonUserId cannot be null");
+            }
+            else
+            {
+                return new EventsResponse(await eventStore.ReadEventsForUser(commonUserId));
+            }
         }
     }
 }
