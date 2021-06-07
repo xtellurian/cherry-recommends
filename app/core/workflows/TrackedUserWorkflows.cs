@@ -52,6 +52,12 @@ namespace SignalBox.Core.Workflows
         public async Task<IEnumerable<TrackedUser>> CreateOrUpdateMultipleTrackedUsers(
             IEnumerable<(string commonUserId, string? name, Dictionary<string, object>? properties)> newUsers)
         {
+            // check for incoming duplicates
+            var numDistinct = newUsers.Select(_ => _.commonUserId).Distinct().Count();
+            if (numDistinct < newUsers.Count())
+            {
+                throw new BadRequestException("All CommonUserId must be unique when batch creating or updating.");
+            }
             var users = new List<TrackedUser>();
             foreach (var u in newUsers)
             {

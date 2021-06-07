@@ -1,4 +1,6 @@
 import { pageQuery } from "./paging";
+import { chunkArray } from "../utility/chunk";
+const MAX_ARRAY = 5000;
 const defaultHeaders = { "Content-Type": "application/json" };
 const baseUrl = "api/trackedUsers";
 
@@ -41,18 +43,25 @@ export const fetchTrackedUserEvents = async ({ success, error, token }) => {
 };
 
 export const uploadUserData = async ({ success, error, token, payload }) => {
-  const response = await fetch("api/trackedUsers/batch", {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
-    method: "post",
-    body: JSON.stringify(payload),
-  });
-  if (response.ok) {
-    success(response.json());
-  } else {
-    error(await response.json());
+  const payloads = chunkArray(payload.users, MAX_ARRAY).map((users) => ({
+    users,
+  }));
+  const responses = [];
+  for (const p of payloads) {
+    const response = await fetch("api/trackedUsers", {
+      headers: !token
+        ? defaultHeaders
+        : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+      method: "put",
+      body: JSON.stringify(p),
+    });
+    if (response.ok) {
+      responses.push(await response.json());
+    } else {
+      error(await response.json());
+    }
   }
+  success(responses);
 };
 
 export const createSingleUser = async ({ success, error, token, user }) => {

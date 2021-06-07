@@ -43,7 +43,6 @@
     "mobx": "^6.3.2",
     "oidc-client": "^1.9.0",
     "optimize-css-assets-webpack-plugin": "5.0.3",
-    "papaparse": "^5.3.0",
     "pnp-webpack-plugin": "1.6.4",
     "postcss-flexbugs-fixes": "4.1.0",
     "postcss-loader": "3.0.0",
@@ -56,6 +55,7 @@
     "react-dev-utils": "^10.2.1",
     "react-dom": "^16.14.0",
     "react-json-tree": "^0.15.0",
+    "react-papaparse": "^3.16.0",
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.1.2",
     "react-select": "^4.3.0",
@@ -82,14 +82,15 @@
   "devDependencies": {
     "ajv": "^6.9.1",
     "cross-env": "^5.2.0",
-    "typescript": "^3.7.5",
     "eslint": "^6.8.0",
     "eslint-config-react-app": "^5.2.0",
     "eslint-plugin-flowtype": "^4.6.0",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.3",
-    "nan": "^2.14.1"
+    "nan": "^2.14.1",
+    "typescript": "^3.7.5",
+    "webpack-cli": "^4.7.0"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -98,7 +99,8 @@
     "start": "rimraf ./build && node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "cross-env CI=true node scripts/test.js --env=jsdom",
-    "lint": "eslint ./src/"
+    "lint": "eslint ./src/",
+    "stats": "webpack --json stats.json"
   },
   "browserslist": {
     "production": [

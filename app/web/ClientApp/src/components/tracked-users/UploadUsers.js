@@ -1,127 +1,127 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import * as csvParser from "papaparse";
+import { CSVReader } from "react-papaparse";
 import { uploadUserData } from "../../api/trackedUsersApi";
 import { useAccessToken } from "../../api-hooks/token";
-import DragAndDrop from "./DragAndDrop";
-import "./dragdrop.css";
+import { ToggleSwitch } from "../molecules/ToggleSwitch";
+import { Spinner } from "../molecules/Spinner";
 
 export const UploadTrackedUserComponent = () => {
-  const token = useAccessToken()
+  const token = useAccessToken();
   const [csvRows, setCsvRows] = React.useState();
   const [fields, setFields] = React.useState();
-  const [processComplete, setProcessComplete] = React.useState(false);
+  const [hasHeader, setHasHeader] = React.useState(true);
 
-  const [radioState, setRadioState] = React.useState();
-
-  const parseCsvFile = (f) => {
-    if (f && f.name.endsWith("csv")) {
-      csvParser.parse(f, {
-        header: true,
-        dynamicTyping: true,
-        transformHeader: (header, index) => {
-          if (header && header.length > 0) {
-            return header;
-          } else {
-            return `Column ${index}`;
-          }
-        },
-        complete: (results, file) => {
-          console.log(results);
-          setCsvRows(results.data);
-          setFields(results.meta.fields);
-        },
-      });
-      console.log("finished this part");
-    } else {
-      console.log("not a csv file");
-    }
-  };
-
-  const fileDragAndDropReducer = (state, action) => {
-    switch (action.type) {
-      case "SET_DROP_DEPTH":
-        return { ...state, dropDepth: action.dropDepth };
-      case "SET_IN_DROP_ZONE":
-        return { ...state, inDropZone: action.inDropZone };
-      case "ADD_FILE_TO_LIST":
-        parseCsvFile(action.files[0]);
-        return { ...state, fileList: state.fileList.concat(action.files) };
-      default:
-        return state;
-    }
-  };
-
-  const [data, dispatch] = React.useReducer(fileDragAndDropReducer, {
-    dropDepth: 0,
-    inDropZone: false,
-    fileList: [],
+  const [radioState, setRadioState] = React.useState({
+    name: null,
+    index: null,
   });
 
-  const handleChange = (value) => {
-    setRadioState(value);
-  };
+  const [processState, setProcessState] = React.useState({
+    complete: false,
+    loading: false,
+  });
 
   const uploadTrackedUsers = () => {
-    const userIdColumn = radioState;
-    const payload = {};
-    payload.users = csvRows.map((row) => ({
-      commonUserId: row[userIdColumn],
-    }));
-    const listsOfEvents = csvRows.map((row) => {
-      // TODO: this might be a problem
-      const events = [];
-      for (const [key, value] of Object.entries(row)) {
-        const commonUserId = row[userIdColumn];
-        if (key === userIdColumn) {
-          continue;
-        } else if (typeof value === "number") {
-          events.push({
-            commonUserId,
-            key,
-            numericValue: value,
-          });
-        } else {
-          events.push({
-            commonUserId,
-            key,
-            logicalValue: value,
-          });
-        }
-      }
-      return events;
+    setProcessState({
+      loading: true,
     });
-    payload.events = [].concat.apply([], listsOfEvents);
+    const userIdColumnName = radioState.name;
+    let userIdColumn = radioState.index;
+    if (hasHeader) {
+      userIdColumn = radioState.name;
+    }
+    console.log("user id col:");
+    console.log(userIdColumn);
+    const payload = {};
+    console.log(csvRows[0]);
+    console.log(csvRows[0].data[userIdColumn]);
+    console.log(String(csvRows[0].data[userIdColumn]));
+    payload.users = csvRows
+      .map((row) => {
+        return {
+          commonUserId: row.data[userIdColumn]
+            ? String(row.data[userIdColumn])
+            : null,
+          properties: {
+            ...row.data,
+          },
+        };
+      })
+      .filter((_) => !!_.commonUserId);
 
     // Execute the created function directly
     uploadUserData({
       payload,
-      success: (data) => setProcessComplete(true),
-      error: () => alert("Something went wrong"),
-      token
+      success: (data) =>
+        setProcessState({
+          complete: true,
+        }),
+      error: (error) =>
+        setProcessState({
+          error,
+        }),
+      token,
     });
   };
 
-  if (processComplete) {
+  const handleSelectUserId = (value, index) => {
+    setRadioState({
+      name: value,
+      index,
+    });
+  };
+
+  const onUploaded = (results) => {
+    if (hasHeader) {
+      console.log(results[0].meta.fields);
+      setCsvRows(results);
+      setFields(results[0].meta.fields); // get the first fields
+    } else {
+      // console.log(results)
+      const fields = [...Array(results[0].data.length).keys()].map(
+        (n) => `Column ${n}`
+      );
+      console.log(fields);
+      setCsvRows(results);
+      setFields(fields);
+    }
+  };
+
+  if (processState.complete) {
     return (
       <div className="process-complete">
-        <Link to="/tracked-users/summary">
+        <Link to="/tracked-users">
           <button className="btn btn-primary">Go to Tracked Users</button>
         </Link>
       </div>
     );
+  } else if (processState.loading) {
+    return <Spinner />;
   }
 
   return (
     <div>
+      <div className="float-right">
+        Headers in first row
+        <ToggleSwitch id="1" checked={hasHeader} onChange={setHasHeader} />
+      </div>
       <h2> Step 1. </h2>
       <p>Upload a csv file of users.</p>
-      <DragAndDrop data={data} dispatch={dispatch} />
-      <ol className="dropped-files">
-        {data.fileList.map((f) => {
-          return <li key={f.name}>{f.name}</li>;
-        })}
-      </ol>
+      <CSVReader
+        onDrop={onUploaded}
+        onError={(x) => alert("Something went wrong")}
+        noDrag
+        addRemoveButton
+        config={{
+          header: hasHeader,
+          dynamicTyping: true,
+        }}
+        onRemoveFile={(x) => alert("Removed file")}
+      >
+        <span>Click to upload.</span>
+      </CSVReader>
+
       <hr />
       {fields && (
         <React.Fragment>
@@ -129,33 +129,32 @@ export const UploadTrackedUserComponent = () => {
           <p> Select the User ID column. </p>
           <ol className="dropped-files">
             {fields &&
-              fields.map((f) => {
+              fields.map((f, index) => {
                 return (
                   <li key={f}>
                     {" "}
                     <input
                       name="fields"
                       type="radio"
-                      checked={radioState === f}
-                      onChange={() => handleChange(f)}
+                      checked={f === radioState.name}
+                      onChange={() => handleSelectUserId(f, index)}
                     />{" "}
                     {f}
                   </li>
                 );
               })}
           </ol>
-          {radioState && (
-            <React.Fragment>Selected: {radioState}</React.Fragment>
+          {radioState && radioState.name && (
+            <React.Fragment>Selected: {radioState.name}</React.Fragment>
           )}
 
           <hr />
         </React.Fragment>
       )}
 
-      {radioState && (
+      {radioState && radioState.name && (
         <React.Fragment>
           <button className="btn btn-primary" onClick={uploadTrackedUsers}>
-            {" "}
             Click to Upload
           </button>
         </React.Fragment>
