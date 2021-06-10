@@ -3,20 +3,16 @@ using System.Text.Json.Serialization;
 
 namespace SignalBox.Core
 {
-    public class TrackedUser : NamedEntity
+    public class TrackedUser : CommonEntity
     {
         public TrackedUser()
         { }
 
-        public TrackedUser(string commonUserId)
-        {
-            CommonUserId = commonUserId;
-        }
+        public TrackedUser(string commonUserId) : base(commonUserId, null)
+        { }
 
-        public TrackedUser(string commonUserId, string name) : base(name)
-        {
-            CommonUserId = commonUserId;
-        }
+        public TrackedUser(string commonUserId, string name) : base(commonUserId, name)
+        { }
 
         public TrackedUser(string commonUserId, string name, DynamicPropertyDictionary properties) : this(commonUserId, name)
         {
@@ -26,10 +22,13 @@ namespace SignalBox.Core
             }
         }
 
-        public string CommonUserId { get; set; }
+        public string CommonUserId => CommonId;
         public DynamicPropertyDictionary Properties { get; set; } = new DynamicPropertyDictionary(); // not empty
 
         [JsonIgnore]
         public ICollection<Segment> Segments { get; set; }
+
+        [JsonIgnore]
+        public ICollection<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
     }
 }

@@ -34,6 +34,7 @@ namespace SignalBox.Infrastructure
                         modelBuilder
                             .Entity(entityType.Name)
                             .Property(property.Name)
+                            .HasDefaultValueSql("CURRENT_TIMESTAMP")
                             .HasConversion(new DateTimeOffsetToBinaryConverter());
                     }
                 }
@@ -51,11 +52,14 @@ namespace SignalBox.Infrastructure
         public DbSet<Segment> Segments { get; set; }
         public DbSet<TrackedUser> TrackedUsers { get; set; }
         public DbSet<TrackedUserEvent> TrackedUserEvents { get; set; }
+        public DbSet<Touchpoint> Touchpoints { get; set; }
+        public DbSet<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
 
         // system stuff
         public DbSet<HashedApiKey> ApiKeys { get; set; }
         public DbSet<ModelRegistration> ModelRegistrations { get; set; }
         public DbSet<IntegratedSystem> IntegratedSystems { get; set; }
+        public DbSet<WebhookReceiver> WebhookReceivers { get; set; }
         public DbSet<TrackedUserSystemMap> TrackUserSystemMaps { get; set; }
 
     }

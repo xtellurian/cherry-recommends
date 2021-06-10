@@ -1,11 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { useParams } from "react-router-dom";
 import { useModelRegistration } from "../../api-hooks/modelRegistrationsApi";
 
-import SwaggerUI from "swagger-ui-react";
+// import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
 import { Spinner } from "../molecules/Spinner";
 import { useAccessToken } from "../../api-hooks/token";
+
+const SwaggerUI = React.lazy(() => import("swagger-ui-react"));
 
 export const InvokeModel = () => {
   const { id } = useParams();
@@ -23,7 +25,13 @@ export const InvokeModel = () => {
   return (
     <React.Fragment>
       {model && (
-        <SwaggerUI spec={model.swagger} requestInterceptor={interceptor} showMutatedRequest={true} />
+        <Suspense fallback={<Spinner>Loading Swagger UI</Spinner>}>
+          <SwaggerUI
+            spec={model.swagger}
+            requestInterceptor={interceptor}
+            showMutatedRequest={true}
+          />
+        </Suspense>
       )}
       {!model && <Spinner />}
     </React.Fragment>

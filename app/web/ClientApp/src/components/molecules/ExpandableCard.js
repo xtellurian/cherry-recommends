@@ -1,7 +1,12 @@
 import React from "react";
 import { useSpring, animated } from "react-spring";
 
-export const ExpandableCard = ({ startExpanded, children, name }) => {
+export const ExpandableCard = ({
+  startExpanded,
+  children,
+  name,
+  headerClassName,
+}) => {
   const [expanded, setExpanded] = React.useState(!!startExpanded);
 
   const props = useSpring({ height: "auto", from: { height: 0 } });
@@ -9,12 +14,12 @@ export const ExpandableCard = ({ startExpanded, children, name }) => {
   return (
     <div className="card">
       <div
-        className="card-header"
+        className={`card-header ${headerClassName || ''}`}
         style={{ cursor: "pointer" }}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="float-right">{expanded ? "▲" : "▼"}</div>
-        <div>{name}</div>
+        <div className="text-truncate">{name}</div>
       </div>
       {expanded && (
         <animated.div style={props} className="card-body">

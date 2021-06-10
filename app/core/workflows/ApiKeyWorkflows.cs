@@ -7,13 +7,19 @@ namespace SignalBox.Core.Workflows
         private readonly IStorageContext storageContext;
         private readonly IApiTokenFactory tokenFactory;
         private readonly IHashedApiKeyStore keyStore;
+        private readonly IDateTimeProvider dateTimeProvider;
         private readonly IHasher hasher;
 
-        public ApiKeyWorkflows(IStorageContext storageContext, IApiTokenFactory tokenFactory, IHashedApiKeyStore keyStore, IHasher hasher)
+        public ApiKeyWorkflows(IStorageContext storageContext,
+                               IApiTokenFactory tokenFactory,
+                               IHashedApiKeyStore keyStore,
+                               IDateTimeProvider dateTimeProvider,
+                               IHasher hasher)
         {
             this.storageContext = storageContext;
             this.tokenFactory = tokenFactory;
             this.keyStore = keyStore;
+            this.dateTimeProvider = dateTimeProvider;
             this.hasher = hasher;
         }
 
@@ -23,6 +29,11 @@ namespace SignalBox.Core.Workflows
             var hashedKey = hasher.Hash(apiKey);
             if (await keyStore.HashExists(hashedKey))
             {
+                // update the last exchanged time for the token.
+                var key = await keyStore.ReadFromHash(hashedKey);
+                key.LastExchanged = dateTimeProvider.Now;
+                key.TotalExchanges++;
+                await storageContext.SaveChanges();
                 return await tokenFactory.GetToken();
             }
             else
@@ -35,17 +46,13 @@ namespace SignalBox.Core.Workflows
         public async Task<string> GenerateAndStoreApiKey(string name)
         {
             // generate a new key
-            var apiKey = Base64Encode(System.Guid.NewGuid().ToString());
+            var apiKey = System.Guid.NewGuid().ToBase64Encoded();
             var hashedKey = hasher.Hash(apiKey);
-            var storedKey = await keyStore.Create(new HashedApiKey(name, hasher.AlgorithmName, hashedKey));
+            var storedKey = await keyStore.Create(new HashedApiKey(name, hasher.DefaultAlgorithm, hashedKey));
             await storageContext.SaveChanges();
             return apiKey;
         }
 
-        private static string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
+        
     }
 }

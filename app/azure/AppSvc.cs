@@ -9,10 +9,15 @@ namespace SignalBox.Azure
 {
     class AppSvc : ComponentWithStorage
     {
-        public AppSvc(ResourceGroup rg, DatabaseComponent db, Storage storage, AzureML ml)
+        public AppSvc(ResourceGroup rg,
+                      DatabaseComponent db,
+                      Storage storage,
+                      AzureML ml,
+                      Pulumi.AzureNative.Insights.Component insights)
         {
             // create an app service plan
             var appSvcConfig = new Pulumi.Config("appsvc");
+            var environment = new Pulumi.Config().Require("environment");
             var corsOrigins = appSvcConfig.GetObject<List<string>>("corsorigins") ?? new List<string>();
 
             var plan = new AppServicePlan("asp", new AppServicePlanArgs
@@ -107,6 +112,10 @@ namespace SignalBox.Azure
                 ResourceGroupName = rg.Name,
                 Properties = {
                     {"CURRENT_STACK", "dotnetcore"},
+                    {"Deployment__Stack", Pulumi.Deployment.Instance.StackName},
+                    {"Deployment__Project", Pulumi.Deployment.Instance.ProjectName},
+                    {"Deployment__Environment", environment},
+                    {"ApplicationInsights__InstrumentationKey", insights.InstrumentationKey},
                     {"WEBSITE_HTTPLOGGING_RETENTION_DAYS", "1"},
                     {"Auth0__Authority", auth0.Authority},
                     {"Auth0__Audience", auth0.Audience},

@@ -3,6 +3,7 @@ import { Switch, Link, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { ApiKeyComponent } from "./apiKeys/ApiKeyComponent";
 import { IntegrationsComponent } from "./integrations/IntegrationsComponent";
+import { DeploymentInfo } from "./deployment/DeploymentInfo";
 
 const SettingsHome = () => {
   const { path } = useRouteMatch();
@@ -29,7 +30,18 @@ export const SettingsComponent = () => {
       <Switch>
         <AuthorizeRoute exact path={`${path}`} component={SettingsHome} />
         <AuthorizeRoute path={`${path}/api-keys`} component={ApiKeyComponent} />
-        <AuthorizeRoute path={`${path}/integrations`} component={IntegrationsComponent} />
+        <AuthorizeRoute
+          path={`${path}/integrations`}
+          component={IntegrationsComponent}
+        />
+        <AuthorizeRoute
+          path={`${path}/integrations`}
+          component={IntegrationsComponent}
+        />
+        <AuthorizeRoute
+          path={`${path}/info`}
+          component={DeploymentInfo}
+        />
       </Switch>
     </React.Fragment>
   );

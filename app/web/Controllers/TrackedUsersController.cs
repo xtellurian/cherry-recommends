@@ -14,7 +14,7 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    public class TrackedUsersController : EntityControllerBase<TrackedUser>
+    public class TrackedUsersController : CommonEntityControllerBase<TrackedUser>
     {
         private readonly ILogger<TrackedUsersController> _logger;
         private readonly IDateTimeProvider dateTimeProvider;

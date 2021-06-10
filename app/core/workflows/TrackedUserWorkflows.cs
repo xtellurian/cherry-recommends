@@ -27,7 +27,7 @@ namespace SignalBox.Core.Workflows
 
         public async Task<TrackedUser> CreateTrackedUser(string commonUserId, string? name = null, Dictionary<string, object>? properties = null)
         {
-            if (await userStore.ExistsCommonUserId(commonUserId))
+            if (await userStore.ExistsFromCommonId(commonUserId))
             {
                 throw new System.ArgumentException($"Tracked User commonUserId={commonUserId} already exists.");
             }
@@ -39,7 +39,7 @@ namespace SignalBox.Core.Workflows
 
         public async Task<TrackedUser> MergeTrackedUserProperties(string commonUserId, Dictionary<string, object> properties)
         {
-            var trackedUser = await userStore.ReadFromCommonUserId(commonUserId);
+            var trackedUser = await userStore.ReadFromCommonId(commonUserId);
             foreach (var kvp in properties)
             {
                 trackedUser.Properties[kvp.Key] = kvp.Value;
@@ -61,10 +61,10 @@ namespace SignalBox.Core.Workflows
             var users = new List<TrackedUser>();
             foreach (var u in newUsers)
             {
-                if (await userStore.ExistsCommonUserId(u.commonUserId))
+                if (await userStore.ExistsFromCommonId(u.commonUserId))
                 {
                     // then update
-                    var user = await userStore.ReadFromCommonUserId(u.commonUserId);
+                    var user = await userStore.ReadFromCommonId(u.commonUserId);
                     if (u.properties != null)
                     {
                         foreach (var kvp in u.properties)

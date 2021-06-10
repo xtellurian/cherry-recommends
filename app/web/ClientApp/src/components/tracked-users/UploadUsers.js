@@ -26,7 +26,6 @@ export const UploadTrackedUserComponent = () => {
     setProcessState({
       loading: true,
     });
-    const userIdColumnName = radioState.name;
     let userIdColumn = radioState.index;
     if (hasHeader) {
       userIdColumn = radioState.name;

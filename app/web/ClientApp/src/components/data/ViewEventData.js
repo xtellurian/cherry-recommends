@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col, Card, CardBody } from "reactstrap";
-import { Title } from "../molecules/PageHeadings";
+import { Subtitle } from "../molecules/PageHeadings";
 import { useEventDataSummary } from "../../api-hooks/dataSummaryApi";
 import { Spinner } from "../molecules/Spinner";
 import { JsonView } from "../molecules/JsonView";
@@ -19,8 +19,7 @@ const SelectableCard = ({ children, onToggled, isSelected }) => {
 const Top = () => {
   return (
     <React.Fragment>
-      <Title>Event Data</Title>
-      <hr />
+      <Subtitle>Event Data</Subtitle>
     </React.Fragment>
   );
 };

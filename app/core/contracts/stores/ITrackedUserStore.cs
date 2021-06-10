@@ -3,12 +3,10 @@ using System.Threading.Tasks;
 #nullable enable
 namespace SignalBox.Core
 {
-    public interface ITrackedUserStore : IEntityStore<TrackedUser>
+    public interface ITrackedUserStore : ICommonEntityStore<TrackedUser>
     {
         Task<long> GetInternalId(string commonUserId);
-        Task<string> GetCommonUserId(long internalId);
-        Task<TrackedUser> ReadFromCommonUserId(string commonUserId);
         Task<IEnumerable<TrackedUser>> CreateIfNotExists(IEnumerable<string> commonUserIds);
-        Task<bool> ExistsCommonUserId(string commonId);
+        Task<TrackedUser> CreateIfNotExists(string commonId);
     }
 }

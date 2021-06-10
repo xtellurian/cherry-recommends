@@ -1,33 +1,31 @@
 import React from "react";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createIntegratedSystem } from "../../../api/integratedSystemsApi";
-import { BackArrow } from "../../molecules/NavigationButtons";
+import { BackButton } from "../../molecules/BackButton";
 import { Title } from "../../molecules/PageHeadings";
 import { DropdownComponent, DropdownItem } from "../../molecules/Dropdown";
 
-const systemTypes = ["HUBSPOT"];
+const systemTypes = ["Segment", "Hubspot"];
 
 export const CreateIntegration = () => {
   const token = useAccessToken();
   const [integratedSystem, setIntegratedSystem] = React.useState({
     name: "",
-    systemType: "HUBSPOT",
+    systemType: systemTypes[0],
   });
 
   const handleCreate = () => {
     createIntegratedSystem({
       payload: integratedSystem,
-      success: s => alert("created new system"),
+      success: (s) => alert("created new system"),
       error: alert,
       token,
     });
   };
   return (
     <React.Fragment>
-      <Title>
-        <BackArrow />
-        Create new Integration
-      </Title>
+      <BackButton to="/settings/integrations" className="float-right">Integrations</BackButton>
+      <Title>Create new Integration</Title>
       <hr />
       <div className="input-group">
         <input

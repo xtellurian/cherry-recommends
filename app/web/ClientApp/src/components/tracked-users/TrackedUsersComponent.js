@@ -5,8 +5,10 @@ import { UploadTrackedUserComponent } from "./UploadUsers";
 import { TrackedUserSummary } from "./TrackedUserSummary";
 import { TrackedUserDetail } from "./TrackedUserDetail";
 import { CreateUser } from "./CreateUser";
+import { TrackedUserTouchpoints } from "./TrackedUserTouchpoints";
+import { CreateTouchpointData } from "./CreateTouchpointData";
 
-export const TrackedUsers = (props) => {
+export const TrackedUsersComponent = (props) => {
   let { path } = useRouteMatch();
   return (
     <React.Fragment>
@@ -31,6 +33,16 @@ export const TrackedUsers = (props) => {
             exact
             path={`${path}/detail/:id`}
             component={TrackedUserDetail}
+          />
+          <AuthorizeRoute
+            exact
+            path={`${path}/touchpoints/:id`}
+            component={TrackedUserTouchpoints}
+          />
+          <AuthorizeRoute
+            exact
+            path={`${path}/create-touchpoint-data/:id`}
+            component={CreateTouchpointData}
           />
         </Switch>
       </div>

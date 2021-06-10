@@ -20,6 +20,7 @@ using System.Net.Http;
 using Hellang.Middleware.ProblemDetails.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using SignalBox.Infrastructure.Files;
+using Microsoft.Extensions.Logging;
 
 namespace SignalBox.Web
 {
@@ -67,6 +68,10 @@ namespace SignalBox.Web
             {
                 throw new NotImplementedException($"File Source {fileSource} is unknown");
             }
+
+            services.Configure<DeploymentInformation>(Configuration.GetSection("Deployment"));
+
+            services.AddApplicationInsightsTelemetry();
 
             // add core services
             services.RegisterCoreServices();
@@ -187,7 +192,12 @@ namespace SignalBox.Web
             // You can configure the middleware to re-throw certain types of exceptions, all exceptions or based on a predicate.
             // This is useful if you have upstream middleware that needs to do additional handling of exceptions.
             options.Rethrow<NotSupportedException>();
-
+            options.OnBeforeWriteDetails = (context, problemDetails) =>
+            {
+                // log the errors to the logging system
+                var logger = context.RequestServices.GetService<ILogger<ProblemDetailsMiddleware>>();
+                logger.LogInformation($"{problemDetails.Title} | {problemDetails.Status} | {problemDetails.Detail}");
+            };
             options.Map<SignalBoxException>(_ => new ProblemDetails
             {
                 Title = _.Title

@@ -4,6 +4,7 @@ namespace SignalBox.Core
 {
     public class DynamicPropertyDictionary : Dictionary<string, object>
     {
+
         public DynamicPropertyDictionary()
         {
         }

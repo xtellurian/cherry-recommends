@@ -5,5 +5,6 @@ namespace SignalBox.Core
     public interface IHashedApiKeyStore : IEntityStore<HashedApiKey>
     {
         Task<bool> HashExists(string hashedKey);
+        Task<HashedApiKey> ReadFromHash(string hashedKey);
     }
 }

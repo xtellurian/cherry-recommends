@@ -15,7 +15,7 @@ namespace SignalBox.Core
                                 IntegratedSystem source,
                                 string kind,
                                 string eventType,
-                                DynamicPropertyDictionary properties)
+                                IDictionary<string, object> properties)
         {
             CommonUserId = commonUserId;
             EventId = eventId;
@@ -23,7 +23,7 @@ namespace SignalBox.Core
             Source = source;
             Kind = kind;
             EventType = eventType;
-            Properties = properties;
+            Properties = new DynamicPropertyDictionary(properties);
         }
 
         public string CommonUserId { get; set; }

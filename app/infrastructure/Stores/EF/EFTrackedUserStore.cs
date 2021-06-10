@@ -5,49 +5,43 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFTrackedUserStore : EFEntityStoreBase<TrackedUser>, ITrackedUserStore
+    public class EFTrackedUserStore : EFCommonEntityStoreBase<TrackedUser>, ITrackedUserStore
     {
         public EFTrackedUserStore(SignalBoxDbContext context) : base(context, (c) => c.TrackedUsers)
         { }
 
-        public async Task<IEnumerable<TrackedUser>> CreateIfNotExists(IEnumerable<string> commonUserIds)
+        public async Task<IEnumerable<TrackedUser>> CreateIfNotExists(IEnumerable<string> commonIds)
         {
             var users = new List<TrackedUser>();
-            foreach (var commonUserId in commonUserIds)
+            foreach (var commonId in commonIds)
             {
-                if (!await this.Set.AnyAsync(_ => _.CommonUserId == commonUserId))
-                {
-                    users.Add(await this.Create(new TrackedUser(commonUserId)));
-                }
-                else
-                {
-                    users.Add(await this.ReadFromCommonUserId(commonUserId));
-                }
+                users.Add(await CreateIfNotExists(commonId));
             }
 
             return users;
         }
 
-        public async Task<bool> ExistsCommonUserId(string commonUserId)
+        public async Task<TrackedUser> CreateIfNotExists(string commonId)
         {
-            return await this.Set.AnyAsync(_ => _.CommonUserId == commonUserId);
+            if (!await this.Set.AnyAsync(_ => _.CommonId == commonId))
+            {
+                return await this.Create(new TrackedUser(commonId));
+            }
+            else
+            {
+                return await this.ReadFromCommonId(commonId);
+            }
         }
 
-        public async Task<string> GetCommonUserId(long internalId)
+        public async Task<long> GetInternalId(string commonId)
         {
-            var entity = await Set.FindAsync(internalId);
-            return entity.CommonUserId;
-        }
-
-        public async Task<long> GetInternalId(string commonUserId)
-        {
-            var entity = await Set.SingleAsync(_ => _.CommonUserId == commonUserId);
+            var entity = await Set.SingleAsync(_ => _.CommonId == commonId);
             return entity.Id;
         }
 
-        public async Task<TrackedUser> ReadFromCommonUserId(string commonUserId)
+        public async Task<TrackedUser> ReadFromCommonUserId(string commonId)
         {
-            return await Set.SingleAsync(_ => _.CommonUserId == commonUserId);
+            return await Set.SingleAsync(_ => _.CommonId == commonId);
         }
     }
 }

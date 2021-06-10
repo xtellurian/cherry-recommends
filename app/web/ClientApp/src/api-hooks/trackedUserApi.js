@@ -23,17 +23,18 @@ export const useTrackedUsers = () => {
 
 export const useTrackedUser = ({ id }) => {
   const token = useAccessToken();
-  const [result, setResults] = React.useState();
+  const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
+    setState({ loading: true });
     if (token && id) {
       fetchTrackedUser({
-        success: setResults,
-        error: console.log,
+        success: setState,
+        error: (e) => setState({ error: e }),
         token,
         id,
       });
     }
   }, [token, id]);
 
-  return { trackedUser: result };
+  return result;
 };

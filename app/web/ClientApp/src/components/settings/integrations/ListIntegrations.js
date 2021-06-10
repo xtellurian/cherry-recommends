@@ -3,11 +3,35 @@ import { useIntegratedSystems } from "../../../api-hooks/integratedSystemsApi";
 import { Title } from "../../molecules/PageHeadings";
 import { CreateButton } from "../../molecules/CreateButton";
 import { Spinner } from "../../molecules/Spinner";
-export const ListIntegrations = () => {
-  const { integratedSystems, error, loading } = useIntegratedSystems();
+import { EmptyList } from "../../molecules/EmptyList";
+import { Link } from "react-router-dom";
 
-  if(error) {
-      alert(error)
+const IntegrationRow = ({ integration }) => {
+  return (
+    <div className="card">
+      <div className="row card-body">
+        <div className="col">
+          <h5>{integration.name}</h5>
+        </div>
+        <div className="col-2 text-center">{integration.systemType}</div>
+        <div className="col-2 text-right">
+          <Link to={`/settings/integrations/detail/${integration.id}`}>
+            <button className="btn btn-outline-primary">Detail</button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+export const ListIntegrations = () => {
+  const result = useIntegratedSystems();
+
+  if (result.error) {
+    return (
+      <React.Fragment>
+        <div>{JSON.stringify(result.error)}</div>
+      </React.Fragment>
+    );
   }
   return (
     <React.Fragment>
@@ -20,12 +44,20 @@ export const ListIntegrations = () => {
         </CreateButton>
         <Title>Integrations</Title>
         <hr />
-        {loading && <Spinner />}
-        {integratedSystems &&
-          integratedSystems.map((i) => <div key={i.id}>{i.name}</div>)}
+        {result.loading && <Spinner />}
+        {result.items &&
+          result.items.length > 0 &&
+          result.items.map((i) => (
+            <IntegrationRow key={i.id} integration={i} />
+          ))}
 
-        {integratedSystems && integratedSystems.length === 0 && (
-          <div>No Systems Yet.</div>
+        {result && result.items && result.items.length === 0 && (
+          <EmptyList>
+            No Integrated Systems.
+            <CreateButton to="/settings/integrations/create">
+              Create Integrated System
+            </CreateButton>
+          </EmptyList>
         )}
       </div>
     </React.Fragment>

@@ -18,6 +18,8 @@ namespace SignalBox.Azure
                 Name = $"{stackName}-SignalBoxAPI",
                 Identifier = Output.Format($"https://{webApp.DefaultHostName}"),
                 SigningAlg = "RS256",
+                TokenLifetime = 60 * 60 * 24 * 30, // 30 days for tokens from this endpoint
+                TokenLifetimeForWeb = 60 * 60 * 12, // 1/2 day for tokens via browser
                 Scopes = {
                     new ResourceServerScopeArgs
                     {

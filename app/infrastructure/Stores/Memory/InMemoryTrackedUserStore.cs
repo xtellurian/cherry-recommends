@@ -13,7 +13,7 @@ namespace SignalBox.Infrastructure
             return Task.FromResult(store.Values.Any(_ => _.CommonUserId == commonUserId));
         }
 
-        public Task<string> GetCommonUserId(long internalId)
+        public Task<string> FindCommonId(long internalId)
         {
             if (store.ContainsKey(internalId))
             {
@@ -31,12 +31,12 @@ namespace SignalBox.Infrastructure
             return Task.FromResult(result.Id);
         }
 
-        public Task<TrackedUser> ReadFromCommonUserId(string commonUserId)
+        public Task<TrackedUser> ReadFromCommonId(string commonId)
         {
-            var result = store.Values.FirstOrDefault(_ => _.CommonUserId == commonUserId);
+            var result = store.Values.FirstOrDefault(_ => _.CommonUserId == commonId);
             if (result == null)
             {
-                throw new EntityNotFoundException($"Tracked User with Common User ID {commonUserId}");
+                throw new EntityNotFoundException($"Tracked User with Common User ID {commonId}");
             }
 
             return Task.FromResult(result);
@@ -45,20 +45,25 @@ namespace SignalBox.Infrastructure
         public async Task<IEnumerable<TrackedUser>> CreateIfNotExists(IEnumerable<string> commonUserIds)
         {
             var newUsers = new List<TrackedUser>();
-            foreach (var id in commonUserIds)
+            foreach (var commonId in commonUserIds)
             {
-                if (!await ExistsCommonUserId(id))
+                if (!await ExistsFromCommonId(commonId))
                 {
-                    await this.Create(new TrackedUser(id));
+                    await this.Create(new TrackedUser(commonId));
                 }
             }
 
             return newUsers;
         }
 
-        public Task<bool> ExistsCommonUserId(string commonUserId)
+        public Task<bool> ExistsFromCommonId(string commonUserId)
         {
             return Task.FromResult(store.Values.Any(_ => _.CommonUserId == commonUserId));
+        }
+
+        public Task<TrackedUser> CreateIfNotExists(string commonId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

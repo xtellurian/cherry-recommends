@@ -1,0 +1,24 @@
+{
+  "name": "signalbox.js",
+  "version": "1.0.5",
+  "description": "API Client for Four2 SignalBox ",
+  "main": "dist/signalbox.umd.js",
+  "module": "src/index.js",
+  "scripts": {
+    "rollup": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Four2",
+    "SignalBox"
+  ],
+  "author": "Rian Finnegan",
+  "license": "MIT",
+  "readme": "README.md",
+  "devDependencies": {
+    "rollup": "^2.51.0"
+  },
+  "peerDependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}

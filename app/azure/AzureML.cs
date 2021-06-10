@@ -1,5 +1,4 @@
 
-using System.Threading.Tasks;
 using Pulumi;
 using AzureNative = Pulumi.AzureNative;
 using Pulumi.AzureNative.Resources;

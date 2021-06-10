@@ -114,6 +114,9 @@ namespace sqlserver.SignalBox
                     b.Property<string>("HashedKey")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTimeOffset?>("LastExchanged")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetimeoffset")
@@ -122,6 +125,9 @@ namespace sqlserver.SignalBox
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalExchanges")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -457,6 +463,40 @@ namespace sqlserver.SignalBox
                     b.ToTable("Skus");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CommonId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommonId")
+                        .IsUnique()
+                        .HasFilter("[CommonId] IS NOT NULL");
+
+                    b.ToTable("Touchpoints");
+                });
+
             modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
                 {
                     b.Property<long>("Id")
@@ -466,8 +506,9 @@ namespace sqlserver.SignalBox
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CommonUserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("CommonId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("CommonUserId");
 
                     b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
@@ -487,7 +528,7 @@ namespace sqlserver.SignalBox
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommonUserId")
+                    b.HasIndex("CommonId")
                         .IsUnique()
                         .HasFilter("[CommonUserId] IS NOT NULL");
 
@@ -582,6 +623,85 @@ namespace sqlserver.SignalBox
                     b.HasIndex("TrackedUserId");
 
                     b.ToTable("TrackUserSystemMaps");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.TrackedUserTouchpoint", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long?>("TouchpointId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("TrackedUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Values")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TouchpointId");
+
+                    b.HasIndex("TrackedUserId");
+
+                    b.ToTable("TrackedUserTouchpoints");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.WebhookReceiver", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("EndpointId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<long?>("IntegratedSystemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("SharedSecret")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EndpointId")
+                        .IsUnique()
+                        .HasFilter("[EndpointId] IS NOT NULL");
+
+                    b.HasIndex("IntegratedSystemId");
+
+                    b.ToTable("WebhookReceivers");
                 });
 
             modelBuilder.Entity("ExperimentOffer", b =>
@@ -708,6 +828,30 @@ namespace sqlserver.SignalBox
                     b.Navigation("TrackedUser");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.TrackedUserTouchpoint", b =>
+                {
+                    b.HasOne("SignalBox.Core.Touchpoint", "Touchpoint")
+                        .WithMany("TrackedUserTouchpoints")
+                        .HasForeignKey("TouchpointId");
+
+                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                        .WithMany("TrackedUserTouchpoints")
+                        .HasForeignKey("TrackedUserId");
+
+                    b.Navigation("Touchpoint");
+
+                    b.Navigation("TrackedUser");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.WebhookReceiver", b =>
+                {
+                    b.HasOne("SignalBox.Core.IntegratedSystem", "IntegratedSystem")
+                        .WithMany()
+                        .HasForeignKey("IntegratedSystemId");
+
+                    b.Navigation("IntegratedSystem");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Offer", b =>
                 {
                     b.Navigation("Outcomes");
@@ -716,6 +860,16 @@ namespace sqlserver.SignalBox
             modelBuilder.Entity("SignalBox.Core.Product", b =>
                 {
                     b.Navigation("Skus");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>
+                {
+                    b.Navigation("TrackedUserTouchpoints");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
+                {
+                    b.Navigation("TrackedUserTouchpoints");
                 });
 #pragma warning restore 612, 618
         }

@@ -23,12 +23,12 @@ const AuthenticatedIA = [
     name: "Data",
     items: [
       {
-        name: "Data Overiew",
-        to: "/dataview",
-      },
-      {
         name: "Tracked Users",
         to: "/tracked-users",
+      },
+      {
+        name: "Data Overiew",
+        to: "/dataview",
       },
       {
         name: "Reports",
@@ -53,6 +53,10 @@ const AuthenticatedIA = [
     name: "Recommendation",
     items: [
       {
+        name: "Touchpoints",
+        to: "/touchpoints",
+      },
+      {
         name: "Offers",
         to: "/offers",
       },
@@ -70,6 +74,21 @@ const AuthenticatedIA = [
         to: "/docs/api",
       },
     ],
+  },
+];
+
+const settingsItems = [
+  {
+    name: "Information",
+    to: "/settings/info",
+  },
+  {
+    name: "API Keys",
+    to: "/settings/api-keys",
+  },
+  {
+    name: "Integrations",
+    to: "/settings/integrations",
   },
 ];
 
@@ -136,11 +155,22 @@ export const NavMenu = () => {
                 ))}
 
               {isAuthenticated && (
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/settings">
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle nav caret>
                     <GearFill className="mr-1" />
-                  </NavLink>
-                </NavItem>
+                  </DropdownToggle>
+                  <DropdownMenu right>
+                    {settingsItems.map((i) => (
+                      <DropdownItem key={i.name}>
+                        <NavItem>
+                          <NavLink tag={Link} className="text-dark" to={i.to}>
+                            {i.name}
+                          </NavLink>
+                        </NavItem>
+                      </DropdownItem>
+                    ))}
+                  </DropdownMenu>
+                </UncontrolledDropdown>
               )}
 
               <LoginMenu />

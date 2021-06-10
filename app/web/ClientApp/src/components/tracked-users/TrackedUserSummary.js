@@ -5,6 +5,7 @@ import { Title } from "../molecules/PageHeadings";
 import { Spinner } from "../molecules/Spinner";
 import { Paginator } from "../molecules/Paginator";
 import { TrackedUserListItem } from "../molecules/TrackedUser";
+import { EmptyList } from "../molecules/EmptyList";
 
 const CreateButton = () => {
   return (
@@ -32,13 +33,13 @@ export const TrackedUserSummary = () => {
       </div>
       <Title>Tracked Users</Title>
       <hr />
-      {result.totalItemCount === 0 && (
-        <div className="text-center">
+      {result.items && result.items.length === 0 && (
+        <EmptyList>
           There are no tracked users.
           <div className="mt-3">
             <CreateButton />
           </div>
-        </div>
+        </EmptyList>
       )}
       <div>
         {trackedUsers.map((u) => (

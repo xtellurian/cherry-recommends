@@ -42,10 +42,14 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IProductStore, EFProductStore>();
             services.AddScoped<IOfferRecommendationStore, EFOfferRecommendationStore>();
             
+            services.AddScoped<ITouchpointStore, EFTouchpointStore>();
+            services.AddScoped<ITrackedUserTouchpointStore, EFTrackedUserTouchpointStore>();
+            
             services.AddScoped<IHashedApiKeyStore, EFHashedAPIKeyStore>();
             services.AddScoped<IModelRegistrationStore, EFModelRegistrationStore>();
             services.AddScoped<IIntegratedSystemStore, EFIntegratedSystemStore>();
             services.AddScoped<ITrackedUserSystemMapStore, EFTrackedUserSystemMapStore>();
+            services.AddScoped<IWebhookReceiverStore, EFSWebhookReceiverStore>();
 
             services.AddScoped<IStorageContext, EFStorageContext>();
 

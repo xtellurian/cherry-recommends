@@ -48,7 +48,7 @@ namespace SignalBox.Core.Workflows
         {
             foreach (var e in events)
             {
-                var trackedUser = await userStore.ReadFromCommonUserId(e.CommonUserId);
+                var trackedUser = await userStore.ReadFromCommonId(e.CommonUserId);
                 if (trackedUser == null)
                 {
                     // means the user doesn't exist yet. create them.

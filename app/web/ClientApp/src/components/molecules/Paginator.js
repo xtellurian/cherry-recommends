@@ -61,7 +61,7 @@ export const Paginator = ({
     return <div>?</div>;
   }
   return (
-    <div className="mt-3">
+    <div className="m-5">
       <nav aria-label="pagination bar" className="m-auto">
         <ul className="pagination justify-content-center">
           <FirstItem enabled={!isFirstPage && totalItemCount > 0} />

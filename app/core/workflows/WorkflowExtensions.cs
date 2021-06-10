@@ -19,6 +19,9 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<TrackedUserEventsWorkflows>();
             services.AddScoped<DataSummaryWorkflows>();
             services.AddScoped<ReportWorkflows>();
+            services.AddScoped<TouchpointWorkflows>();
+            services.AddScoped<WebhookWorkflows>();
+            services.AddScoped<IntegratedSystemWorkflows>();
             return services;
         }
     }

@@ -15,5 +15,10 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             return await Set.AnyAsync(_ => _.HashedKey == hashedKey);
         }
+
+        public async Task<HashedApiKey> ReadFromHash(string hashedKey)
+        {
+            return await Set.FirstAsync(_ => _.HashedKey == hashedKey);
+        }
     }
 }

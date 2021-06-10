@@ -17,10 +17,14 @@ namespace SignalBox.Web.Controllers
     public class IntegratedSystemsController : EntityControllerBase<IntegratedSystem>
     {
         private readonly IntegratedSystemWorkflows workflows;
+        private readonly IWebhookReceiverStore webhookReceiverStore;
 
-        public IntegratedSystemsController(IntegratedSystemWorkflows workflows, IIntegratedSystemStore store) : base(store)
+        public IntegratedSystemsController(IntegratedSystemWorkflows workflows,
+                                           IIntegratedSystemStore store,
+                                           IWebhookReceiverStore webhookReceiverStore) : base(store)
         {
             this.workflows = workflows;
+            this.webhookReceiverStore = webhookReceiverStore;
         }
 
         /// <summary>Creates a new Integrated System.</summary>
@@ -28,6 +32,20 @@ namespace SignalBox.Web.Controllers
         public async Task<IntegratedSystem> CreateIntegratedSystem(CreateIntegratedSystemDto dto)
         {
             return await workflows.CreateIntegratedSystem(dto.Name, dto.SystemType);
+        }
+
+        /// <summary>Creates a new webhook receiver on an existing integrated system.</summary>
+        [HttpPost("{id}/webhookreceivers")]
+        public async Task<WebhookReceiver> CreateWebhookReceiver(long id, bool? useSharedSecret = null)
+        {
+            return await workflows.AddWebhookReceiver(id, useSharedSecret);
+        }
+
+        /// <summary>Returned a paginated list of webhook receivers.</summary>
+        [HttpGet("{id}/webhookreceivers")]
+        public async Task<Paginated<WebhookReceiver>> QueryWebhookReceivers([FromQuery] PaginateRequest p)
+        {
+            return await webhookReceiverStore.Query(p.Page);
         }
     }
 }

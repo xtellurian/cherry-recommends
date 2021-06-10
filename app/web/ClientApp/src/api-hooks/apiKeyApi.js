@@ -6,8 +6,9 @@ import { usePagination } from "../utility/utility";
 export const useApiKeys = () => {
   const token = useAccessToken();
   const page = usePagination();
-  const [result, setState] = React.useState();
+  const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
+    setState({ loading: true });
     if (token) {
       fetchApiKeys({
         success: setState,

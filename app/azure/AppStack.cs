@@ -27,6 +27,15 @@ namespace SignalBox.Azure
             var appRg = new ResourceGroup("application", commonRgArgs);
             var analyticsRg = new ResourceGroup("analytics", commonRgArgs);
 
+            var appInsights = new Pulumi.AzureNative.Insights.Component("Insights",
+                new Pulumi.AzureNative.Insights.ComponentArgs
+                {
+                    ApplicationType = "web",
+                    Kind = "web",
+                    ResourceGroupName = appRg.Name,
+                    Tags = tags
+                });
+
             var storage = new Storage(appRg);
             var db = new DatabaseComponent(appRg);
 
@@ -34,7 +43,7 @@ namespace SignalBox.Azure
             var analytics = new AzureML(analyticsRg, db);
 
             // create the app svcs
-            var appSvc = new AppSvc(appRg, db, storage, analytics);
+            var appSvc = new AppSvc(appRg, db, storage, analytics, appInsights);
 
             // set the stack outputs
             this.DatabaseConnectionString = db.DatabaseConnectionString;

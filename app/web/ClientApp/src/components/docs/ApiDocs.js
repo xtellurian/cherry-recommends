@@ -1,6 +1,14 @@
-import React from "react";
-import { RedocStandalone } from "redoc";
+import React, { Suspense } from "react";
+import { Spinner } from "../molecules/Spinner";
+
+const RedocStandalone = React.lazy(() =>
+  import("redoc").then((module) => ({ default: module.RedocStandalone }))
+);
 
 export const ApiDocs = () => {
-  return <RedocStandalone specUrl="/api/docs/v1/spec.json" />;
+  return (
+    <Suspense fallback={<Spinner />}>
+      <RedocStandalone specUrl="/api/docs/v1/spec.json" />;
+    </Suspense>
+  );
 };

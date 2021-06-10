@@ -2,7 +2,8 @@ namespace SignalBox.Core
 {
     public interface IHasher
     {
+        string DefaultAlgorithm { get; }
         string Hash(string value);
-        string AlgorithmName { get; }
+        string Hash(string algorithm, string value);
     }
 }

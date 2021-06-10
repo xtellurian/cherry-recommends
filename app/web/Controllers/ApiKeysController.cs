@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -44,14 +42,15 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Lists the names of all API Keys.</summary>
         [HttpGet]
-        public async Task<Paginated<string>> ListApiKeyNames([FromQuery] PaginateRequest p)
+        public async Task<Paginated<ApiKeyDto>> ListApiKeyNames([FromQuery] PaginateRequest p)
         {
             var result = await store.Query(p.Page);
-            return new Paginated<string>(
-                result.Items.Select(_ => _.Name),
+            var x = new Paginated<ApiKeyDto>(
+                result.Items.Select(_ => new ApiKeyDto(_.Id, _.Name, _.LastExchanged, _.TotalExchanges)),
                 result.Pagination.PageCount,
                 result.Pagination.TotalItemCount,
                 result.Pagination.PageNumber);
+            return x;
         }
     }
 }

@@ -1,8 +1,9 @@
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useRouteMatch, Link } from "react-router-dom";
 import { useTrackedUser } from "../../api-hooks/trackedUserApi";
 import { useUserEvents } from "../../api-hooks/eventApi";
 import { Spinner } from "../molecules/Spinner";
+import { BackButton } from "../molecules/BackButton";
 import { Subtitle, Title } from "../molecules/PageHeadings";
 import { JsonView } from "../molecules/JsonView";
 import { EventTimelineChart } from "../molecules/EventTimelineChart";
@@ -10,12 +11,15 @@ import { EventTimelineChart } from "../molecules/EventTimelineChart";
 export const TrackedUserDetail = () => {
   const { params } = useRouteMatch();
   const id = params["id"];
-  const { trackedUser } = useTrackedUser({ id });
+  const trackedUser = useTrackedUser({ id });
   const { result } = useUserEvents({ commonUserId: trackedUser?.commonUserId });
 
-  if (!trackedUser) {
+  if (!trackedUser || trackedUser.loading) {
     return (
       <React.Fragment>
+        <BackButton className="float-right" to={`/tracked-users`}>
+          All Users
+        </BackButton>
         <Title>Tracked User</Title>
         <Subtitle>...</Subtitle>
         <hr />
@@ -25,6 +29,12 @@ export const TrackedUserDetail = () => {
   }
   return (
     <React.Fragment>
+      <Link to={`/tracked-users/touchpoints/${id}`}>
+        <button className="btn btn-primary ml-1 float-right">Touchpoints</button>
+      </Link>
+      <BackButton className="float-right" to={`/tracked-users`}>
+        All Users
+      </BackButton>
       <Title>Tracked User</Title>
       <Subtitle>{trackedUser.name || trackedUser.commonUserId}</Subtitle>
       <hr />
