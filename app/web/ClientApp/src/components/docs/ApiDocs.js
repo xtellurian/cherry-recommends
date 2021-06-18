@@ -8,7 +8,7 @@ const RedocStandalone = React.lazy(() =>
 export const ApiDocs = () => {
   return (
     <Suspense fallback={<Spinner />}>
-      <RedocStandalone specUrl="/api/docs/v1/spec.json" />;
+      <RedocStandalone specUrl="/api/docs/v1/spec.json" />
     </Suspense>
   );
 };

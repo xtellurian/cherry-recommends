@@ -23,7 +23,7 @@ const OfferRow = ({ offer }) => {
 };
 export const OffersSummary = () => {
   let { path } = useRouteMatch();
-  const { result } = useOffers();
+  const result = useOffers();
   return (
     <React.Fragment>
       <div>
@@ -35,12 +35,12 @@ export const OffersSummary = () => {
       </div>
       <hr />
       <div>
-        {result &&
+        {result && result.items &&
           result.items.length > 0 &&
           result.items.map((o) => <OfferRow key={o.id} offer={o} />)}
       </div>
       <div>
-        {result && result.items.length === 0 && (
+        {result && result.items && result.items.length === 0 && (
           <div className="text-center p-5">
             <div>There are no offers.</div>
             <CreateButton to={`${path}/create`} className="mt-4">

@@ -25,10 +25,9 @@ export const createExperiment = async ({ success, error, token, payload }) => {
     body: JSON.stringify(payload),
   });
   if (response.ok) {
-    const data = await response.json();
-    success(data);
+    success(await response.json());
   } else {
-    error(response.json());
+    error(await response.json());
   }
 };
 

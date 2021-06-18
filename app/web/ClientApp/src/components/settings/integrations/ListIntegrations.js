@@ -3,6 +3,7 @@ import { useIntegratedSystems } from "../../../api-hooks/integratedSystemsApi";
 import { Title } from "../../molecules/PageHeadings";
 import { CreateButton } from "../../molecules/CreateButton";
 import { Spinner } from "../../molecules/Spinner";
+import { ErrorCard } from "../../molecules/ErrorCard";
 import { EmptyList } from "../../molecules/EmptyList";
 import { Link } from "react-router-dom";
 
@@ -28,9 +29,7 @@ export const ListIntegrations = () => {
 
   if (result.error) {
     return (
-      <React.Fragment>
-        <div>{JSON.stringify(result.error)}</div>
-      </React.Fragment>
+      <ErrorCard error={result.error} />
     );
   }
   return (

@@ -1,11 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useAccessToken } from "../../api-hooks/token";
 import { useOffers } from "../../api-hooks/offersApi";
 import { createExperiment } from "../../api/experimentsApi";
 import { Selector } from "../molecules/Select";
+import { Title } from "../molecules/PageHeadings";
 import { ExpandableCard } from "../molecules/ExpandableCard";
+import { ErrorCard } from "../molecules/ErrorCard";
 import { DropdownItem, DropdownComponent } from "../molecules/Dropdown";
+
+
 const OfferCard = ({ offer }) => {
   return (
     <ExpandableCard name={offer.name}>
@@ -20,7 +24,8 @@ const OfferCard = ({ offer }) => {
 
 export const CreateExperiment = () => {
   const token = useAccessToken();
-  const [experimentId, setExperimentId] = React.useState();
+  const history = useHistory();
+  const [error, setError] = React.useState();
   const [experiment, setExperiment] = React.useState({
     name: "",
     offerIds: [],
@@ -30,23 +35,25 @@ export const CreateExperiment = () => {
   const [selectedOffers, setSelectedOffers] = React.useState(null);
   const [offerDict, setOfferDict] = React.useState({});
   const [offerOptions, setOfferOptions] = React.useState();
-  const { offers } = useOffers();
+  const result = useOffers();
   React.useEffect(() => {
-    if (offers) {
-      setOfferOptions(offers.map((o) => ({ value: o.id, label: o.name })));
+    if (result && result.items) {
+      setOfferOptions(
+        result.items.map((o) => ({ value: o.id, label: o.name }))
+      );
       // update our lookup dictionary of offers
       const newOfferDict = {};
-      offers.forEach((o) => {
+      result.items.forEach((o) => {
         newOfferDict[o.id] = o;
       });
       setOfferDict(newOfferDict);
     }
-  }, [offers]);
+  }, [result]);
 
   const createExperimentButton = () => {
     createExperiment({
-      success: (ex) => setExperimentId(ex.id),
-      error: (e) => alert(e),
+      success: (ex) => history.push(`/experiments/results/${ex.id}`),
+      error: (error) => setError({ error }),
       payload: experiment,
       token,
     });
@@ -54,26 +61,29 @@ export const CreateExperiment = () => {
   return (
     <React.Fragment>
       <div>
-        <h3>Create an experiment</h3>
-
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Experiment Name"
-          value={experiment.name}
-          onChange={(e) =>
-            setExperiment({
-              ...experiment,
-              name: e.target.value,
-            })
-          }
-        />
+        <Title>Create an Experiment</Title>
         <hr />
+        {error && <ErrorCard error={error} />}
 
         <div>
+          <input
+            type="text"
+            className="form-control mt-3"
+            placeholder="Experiment Name"
+            value={experiment.name}
+            onChange={(e) =>
+              setExperiment({
+                ...experiment,
+                name: e.target.value,
+              })
+            }
+          />
+        </div>
+        <div className="mt-3">
           <Selector
             isMulti
             isSearchable
+            placeholder="Select offers"
             noOptionsMessage={(inputValue) => "No Offers"}
             defaultValue={selectedOffers}
             onChange={(so) => {
@@ -120,14 +130,6 @@ export const CreateExperiment = () => {
           <button className="btn btn-primary" onClick={createExperimentButton}>
             Click to Create
           </button>
-        </div>
-
-        <div className="text-center">
-          {experimentId && (
-            <Link to={`/experiments/results/${experimentId}`}>
-              <button className="btn btn-success">View Experiment</button>
-            </Link>
-          )}
         </div>
       </div>
     </React.Fragment>

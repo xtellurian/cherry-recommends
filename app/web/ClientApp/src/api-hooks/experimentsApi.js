@@ -9,19 +9,20 @@ import {
 export const useExperiments = () => {
   const token = useAccessToken();
   const page = usePagination();
-  const [result, setState] = React.useState();
+  const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
+    setState({ loading: true });
     if (token) {
       fetchExperiments({
         success: setState,
-        error: console.log,
+        error: (error) => setState({ error }),
         token,
         page,
       });
     }
   }, [token, page]);
 
-  return { result };
+  return result;
 };
 
 export const useExperimentResults = ({ id }) => {

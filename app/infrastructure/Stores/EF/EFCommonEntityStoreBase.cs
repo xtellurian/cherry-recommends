@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
@@ -11,6 +12,18 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(context, selector)
         { }
 
+        public virtual async Task<T> ReadFromCommonId<TProperty>(string commonId, Expression<Func<T, TProperty>> include)
+        {
+            try
+            {
+                return await Set.Include(include).FirstAsync(_ => _.CommonId == commonId);
+            }
+            catch (Exception ex)
+            {
+                throw new StorageException($"Failed to retreive {typeof(T)} with commonId {commonId}", ex);
+            }
+        }
+
         public async Task<bool> ExistsFromCommonId(string commonId)
         {
             return await this.Set.AnyAsync(_ => _.CommonId == commonId);
@@ -18,7 +31,14 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public virtual async Task<T> ReadFromCommonId(string commonId)
         {
-            return await Set.FirstAsync(_ => _.CommonId == commonId);
+            try
+            {
+                return await Set.FirstAsync(_ => _.CommonId == commonId);
+            }
+            catch (Exception ex)
+            {
+                throw new StorageException($"Failed to retreive {typeof(T)} with commonId {commonId}", ex);
+            }
         }
 
         public virtual async Task<string> FindCommonId(long id)

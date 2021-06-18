@@ -6,34 +6,36 @@ import { fetchOffers, fetchOffer } from "../api/offersApi";
 export const useOffers = () => {
   const token = useAccessToken();
   const page = usePagination();
-  const [result, setState] = React.useState();
+  const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
+    setState({ loading: true });
     if (token) {
       fetchOffers({
         success: setState,
-        error: console.log,
+        error: (error) => setState({ error }),
         token,
         page,
       });
     }
   }, [token, page]);
 
-  return { result };
+  return result;
 };
 
 export const useOffer = ({ id }) => {
   const token = useAccessToken();
-  const [offer, setState] = React.useState();
+  const [offer, setState] = React.useState({ loading: true });
   React.useEffect(() => {
-    if (token) {
+    setState({ loading: true });
+    if (token && id) {
       fetchOffer({
         success: setState,
-        error: console.log,
+        error: (error) => setState({ error }),
         token,
         id,
       });
     }
   }, [token, id]);
 
-  return { offer };
+  return offer;
 };

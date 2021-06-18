@@ -7,7 +7,7 @@ import {
   NavItem,
   NavLink,
 } from "reactstrap";
-import LoginMenu from "./auth0/AuthNav"
+import LoginMenu from "../auth0/AuthNav"
 
 const DemoNavbar = () => {
   return (

@@ -16,7 +16,7 @@ namespace sqlserver.SignalBox
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.6")
+                .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("ExperimentOffer", b =>
@@ -143,10 +143,28 @@ namespace sqlserver.SignalBox
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ApiKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cache")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("CacheLastRefreshed")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CommonId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("IntegrationStatus")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValueSql("('NotConfigured')");
 
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
@@ -160,6 +178,12 @@ namespace sqlserver.SignalBox
                     b.Property<string>("SystemType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TokenResponse")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("TokenResponseUpdated")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
@@ -601,7 +625,7 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<long?>("IntegratedSystemId")
+                    b.Property<long>("IntegratedSystemId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTimeOffset>("LastUpdated")
@@ -609,18 +633,21 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<long?>("TrackedUserId")
+                    b.Property<long>("TrackedUserId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IntegratedSystemId");
 
                     b.HasIndex("TrackedUserId");
+
+                    b.HasIndex("UserId", "TrackedUserId", "IntegratedSystemId")
+                        .IsUnique();
 
                     b.ToTable("TrackUserSystemMaps");
                 });
@@ -647,7 +674,7 @@ namespace sqlserver.SignalBox
                     b.Property<long?>("TouchpointId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("TrackedUserId")
+                    b.Property<long>("TrackedUserId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Values")
@@ -817,11 +844,15 @@ namespace sqlserver.SignalBox
                 {
                     b.HasOne("SignalBox.Core.IntegratedSystem", "IntegratedSystem")
                         .WithMany()
-                        .HasForeignKey("IntegratedSystemId");
+                        .HasForeignKey("IntegratedSystemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
-                        .WithMany()
-                        .HasForeignKey("TrackedUserId");
+                        .WithMany("IntegratedSystemMaps")
+                        .HasForeignKey("TrackedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("IntegratedSystem");
 
@@ -836,7 +867,9 @@ namespace sqlserver.SignalBox
 
                     b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
                         .WithMany("TrackedUserTouchpoints")
-                        .HasForeignKey("TrackedUserId");
+                        .HasForeignKey("TrackedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Touchpoint");
 
@@ -846,10 +879,15 @@ namespace sqlserver.SignalBox
             modelBuilder.Entity("SignalBox.Core.WebhookReceiver", b =>
                 {
                     b.HasOne("SignalBox.Core.IntegratedSystem", "IntegratedSystem")
-                        .WithMany()
+                        .WithMany("WebhookReceivers")
                         .HasForeignKey("IntegratedSystemId");
 
                     b.Navigation("IntegratedSystem");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
+                {
+                    b.Navigation("WebhookReceivers");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Offer", b =>
@@ -869,6 +907,8 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
                 {
+                    b.Navigation("IntegratedSystemMaps");
+
                     b.Navigation("TrackedUserTouchpoints");
                 });
 #pragma warning restore 612, 618

@@ -8,12 +8,23 @@ namespace SignalBox.Core
     {
         public string DefaultAlgorithm => "SHA256"; // dont change this!
 
-        public string Hash(string algorithm, string value)
+        public string Hash(HashingAlgorithms algorithm, string value)
         {
             switch (algorithm)
             {
-                case "SHA256":
+                case HashingAlgorithms.SHA256:
                     return GetHashSha256String(value);
+                default:
+                    throw new ArgumentException($"{algorithm} is an unknown hashing algorithm");
+            }
+        }
+
+        public byte[] HashToBytes(HashingAlgorithms algorithm, string value)
+        {
+            switch (algorithm)
+            {
+                case HashingAlgorithms.SHA256:
+                    return GetHashSha256(value);
                 default:
                     throw new ArgumentException($"{algorithm} is an unknown hashing algorithm");
             }
@@ -39,6 +50,7 @@ namespace SignalBox.Core
             using (HashAlgorithm algorithm = SHA256.Create())
                 return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
         }
+
 
     }
 }

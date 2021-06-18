@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace SignalBox.Core
 {
     public class TrackedUserSystemMap : Entity
@@ -14,7 +16,12 @@ namespace SignalBox.Core
         }
 
         public string UserId { get; set; }
+        public long IntegratedSystemId { get; protected set; }
+        [JsonIgnore]
         public IntegratedSystem IntegratedSystem { get; set; }
+        [JsonIgnore]
+        public long TrackedUserId { get; protected set; }
+        [JsonIgnore]
         public TrackedUser TrackedUser { get; set; }
     }
 }

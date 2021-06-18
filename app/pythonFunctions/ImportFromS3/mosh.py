@@ -223,6 +223,9 @@ def handle_tickets(client: SignalBoxClient, df: pd.DataFrame):
     }
 
 
+hubspotIntegratedSystemId = 8
+
+
 def handle_contacts(client: SignalBoxClient, df: pd.DataFrame):
     logging.info('Handling contacts dataframe')
     common_user_id_key = 'chargebeecustomerid'
@@ -230,10 +233,12 @@ def handle_contacts(client: SignalBoxClient, df: pd.DataFrame):
                 (df[common_user_id_key] != "")].drop_duplicates(subset=[common_user_id_key]).set_index(common_user_id_key)
     users = []
     for index, row in df.iterrows():
-        users.append(client.construct_user(index, None, row.to_dict()))
+        users.append(client.construct_user(index, None, row.to_dict(),
+                     hubspotIntegratedSystemId, row['hsObjectId']))
     logging.info(f'Constructed {len(users)} user objects. Uploading...')
     results = client.create_or_update_users(users)
     logging.info('Completed contacts import.')
     return {
-        'Processed': len(results)
+        'Processed In': len(users),
+        'Processed Out': len(results),
     }

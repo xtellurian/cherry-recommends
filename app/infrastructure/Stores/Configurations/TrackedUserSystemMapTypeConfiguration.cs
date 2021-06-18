@@ -11,9 +11,9 @@ namespace SignalBox.Infrastructure.EntityFramework
             base.Configure(builder);
             builder.Property(_ => _.UserId)
                 .IsRequired();
-            // builder.HasOne(_ => _.TrackedUser);
-            // builder.HasOne(_ => _.IntegratedSystem);
-
+            builder
+                .HasIndex(_ => new { _.UserId, _.TrackedUserId, _.IntegratedSystemId })
+                .IsUnique();
         }
     }
 }

@@ -4,7 +4,7 @@ const defaultHeaders = { "Content-Type": "application/json" };
 
 export const fetchReports = async ({ success, error, token }) => {
   const url = getUrl("api/reports");
-  const response = await fetch(path, {
+  const response = await fetch(url, {
     headers: !token
       ? defaultHeaders
       : { ...defaultHeaders, Authorization: `Bearer ${token}` },

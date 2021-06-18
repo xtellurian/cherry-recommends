@@ -5,6 +5,7 @@ from .client_functions import batch, construct_user, construct_event, post, put
 from .experiments import create_experiment, get_experiment, get_offers_in_experiment, query_experiments
 from .products import create_product, query_products
 from .trackedusers import create_user, create_or_update_users
+from .touchpoints import create_touchpoint_on_tracked_user, get_touchpoint_on_tracked_user
 
 
 class Configuration:
@@ -75,12 +76,20 @@ class SignalBoxClient:
     def create_user(self, name: str, common_user_id: str):
         return create_user(self.access_token, self.base_url, name=name, common_user_id=common_user_id)
 
+    def create_touchpoint_on_tracked_user(self, tracked_user_id: str, touchpoint_id: str, values: dict):
+        return create_touchpoint_on_tracked_user(
+            self.access_token, self.base_url, tracked_user_id=tracked_user_id, touchpoint_id=touchpoint_id, values=values)
+
+    def get_touchpoint_on_tracked_user(self, tracked_user_id: str, touchpoint_id: str, version: int = None):
+        return get_touchpoint_on_tracked_user(
+            self.access_token, self.base_url, tracked_user_id=tracked_user_id, touchpoint_id=touchpoint_id, version=version)
+
     def create_or_update_users(self, users):
         return create_or_update_users(self.access_token, self.base_url,  users)
 
     def create_product(self, name: str, product_id: str, description: str):
         return create_product(self.access_token, self.base_url, name, product_id, description)
-    
+
     def query_products(self, page: int):
         return query_products(self.access_token, self.base_url, page)
 
@@ -142,8 +151,8 @@ class SignalBoxClient:
     def construct_event(self, commonUserId, event_id, event_type, kind, properties, timestamp=None, source_system_id=None):
         return construct_event(commonUserId, event_id, event_type, kind, properties, timestamp, source_system_id)
 
-    def construct_user(self, commonUserId: str, name: str = None, properties: str = None):
-        return construct_user(commonUserId, name=name, properties=properties)
+    def construct_user(self, commonUserId: str, name: str = None, properties: str = None, integratedSystemId: int = None, userId: str = None):
+        return construct_user(commonUserId, name=name, properties=properties, integratedSystemId=integratedSystemId, userId=userId)
 
     def log_events(self, events):
         results = []

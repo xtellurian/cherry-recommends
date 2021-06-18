@@ -33,7 +33,7 @@ namespace SignalBox.Core.Workflows
 
             if (Enum.TryParse(systemTypeName, out IntegratedSystemTypes systemType))
             {
-                var system = await integratedSystemStore.Create(new IntegratedSystem(name, systemType));
+                var system = await integratedSystemStore.Create(new IntegratedSystem("New System", name, systemType));
                 await storageContext.SaveChanges();
                 return system;
             }

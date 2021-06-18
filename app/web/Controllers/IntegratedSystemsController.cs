@@ -41,11 +41,11 @@ namespace SignalBox.Web.Controllers
             return await workflows.AddWebhookReceiver(id, useSharedSecret);
         }
 
-        /// <summary>Returned a paginated list of webhook receivers.</summary>
+        /// <summary>Returned a paginated list of webhook receivers for the given integrated system.</summary>
         [HttpGet("{id}/webhookreceivers")]
-        public async Task<Paginated<WebhookReceiver>> QueryWebhookReceivers([FromQuery] PaginateRequest p)
+        public async Task<IEnumerable<WebhookReceiver>> QueryWebhookReceivers(long id)
         {
-            return await webhookReceiverStore.Query(p.Page);
+            return await webhookReceiverStore.GetReceiversForIntegratedSystem(id);
         }
     }
 }

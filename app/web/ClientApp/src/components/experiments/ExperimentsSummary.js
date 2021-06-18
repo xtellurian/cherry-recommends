@@ -2,24 +2,26 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useExperiments } from "../../api-hooks/experimentsApi";
 import { Spinner } from "../molecules/Spinner";
+import { Title } from "../molecules/PageHeadings";
 import { CreateButton } from "../molecules/CreateButton";
+import { EmptyList } from "../molecules/EmptyList";
 import { Paginator } from "../molecules/Paginator";
 
 export const ExperimentsSummary = () => {
-  const { result } = useExperiments();
+  const result = useExperiments();
 
   return (
     <React.Fragment>
-      <div className="text-right">
-        <CreateButton to="/experiments/create" className="mt-4">
+      <div className="float-right">
+        <CreateButton to="/experiments/create">
           Create New Experiment
         </CreateButton>
       </div>
+      <Title>Experiments</Title>
+      <hr />
       <div>
-        <h3>Experiments Summary</h3>
-        {result && (
+        {result.items && (
           <div>
-            There are {result.items.length} experiments
             {result.items.map((exp) => (
               <div key={exp.id}>
                 <Link to={`/experiments/results/${exp.id}`}>
@@ -31,7 +33,17 @@ export const ExperimentsSummary = () => {
             ))}
           </div>
         )}
-        {!result && <Spinner />}
+        {result.items && result.items.length === 0 && (
+          <EmptyList>
+            <p>There are no experiments.</p>
+            <div>
+              <CreateButton to="/experiments/create">
+                Create New Experiment
+              </CreateButton>
+            </div>
+          </EmptyList>
+        )}
+        {result.loading && <Spinner />}
       </div>
       {result && <Paginator {...result.pagination} />}
     </React.Fragment>

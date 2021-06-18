@@ -1,0 +1,49 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { Subtitle, Title } from "../../../molecules/PageHeadings";
+import { Spinner } from "../../../molecules/Spinner";
+import { useIntegratedSystem } from "../../../../api-hooks/integratedSystemsApi";
+import { useHubspotClientAllContactProperties } from "../../../../api-hooks/hubspotApi";
+import { ErrorCard } from "../../../molecules/ErrorCard";
+import { ExpandableCard } from "../../../molecules/ExpandableCard";
+import { JsonView } from "../../../molecules/JsonView";
+import { BackButton } from "../../../molecules/BackButton";
+
+const Top = () => {
+  return (
+    <React.Fragment>
+      <BackButton className="float-right" to="/settings/integrations">
+        Integrations
+      </BackButton>
+      <Title>Test Hubspot Connection</Title>
+      <Subtitle>Available Contact Properties</Subtitle>
+    </React.Fragment>
+  );
+};
+
+const PropertyRow = ({ property }) => {
+  return (
+    <ExpandableCard name={property.label}>
+      <JsonView data={property} />
+    </ExpandableCard>
+  );
+};
+
+export const TestHubspotConnection = () => {
+  let { id } = useParams();
+  const integratedSystem = useIntegratedSystem({ id });
+  const properties = useHubspotClientAllContactProperties({ id });
+  return (
+    <React.Fragment>
+      <Top />
+      <hr />
+      {integratedSystem.loading && <Spinner>Loading Integrated System</Spinner>}
+      {properties.loading && <Spinner>Loading Hubspot Properties</Spinner>}
+      {properties.error && <ErrorCard error={properties.error} />}
+      {properties &&
+        properties.length &&
+        properties.length > 0 &&
+        properties.map((p) => <PropertyRow key={p.name} property={p} />)}
+    </React.Fragment>
+  );
+};

@@ -15,14 +15,30 @@ print('created user with id=', user_id)
 offer = test_client.create_offer('my_offer', 'AUD', 100, 50)
 offer_id = offer['id']
 
-# create a product
-product = test_client.create_product("Test Product Name", str(
-    uuid.uuid1()), "A test description.")
-assert product['id'] > 0
+# create a touchpoint
+touchpoint_id = "client_test.py"
+tp = test_client.create_touchpoint_on_tracked_user(
+    user_id, touchpoint_id, {"key": "value"})
 
-# query the products
-response = test_client.query_products(page=1)
-assert len(response.items) > 1
+assert tp['version'] > 0
+touchpoint_id = "client_test.py"
+tp = test_client.get_touchpoint_on_tracked_user(
+    user_id, touchpoint_id)
+
+assert tp["values"]["key"] == "value"
+# get the touchpoint
+
+
+# create a product
+# TODO: next sprint
+# product = test_client.create_product("Test Product Name", str(
+#     uuid.uuid1()), "A test description.")
+# assert product['id'] > 0
+
+# # query the products
+# response = test_client.query_products(page=1)
+
+# assert len(response.items) > 1
 
 experiment = test_client.create_experiment(
     [offer_id], name='Experiment Name', segment_id=None, concurrent_offers=1)
@@ -57,7 +73,7 @@ event_kinds = ["BILLING", "TICKET"]
 events = []
 for i in range(100):
     events.append(test_client.construct_event(
-        str(uuid.uuid1()), str(uuid.uuid1()), np.random.choice(event_types), np.random.choice(event_kinds), {} ))
+        str(uuid.uuid1()), str(uuid.uuid1()), np.random.choice(event_types), np.random.choice(event_kinds), {}))
     # commonUserId, event_id, event_type, kind, properties, timestamp, source_system_id
 
 print(f'logging {len(events)} events')

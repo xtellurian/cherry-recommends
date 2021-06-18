@@ -1,0 +1,75 @@
+import React from "react";
+import { useAccessToken } from "./token";
+import {
+  fetchHubspotAccount,
+  fetchHubspotAppInformation,
+  fetchHubspotClientAllContactProperties,
+  fetchHubspotContacts,
+} from "../api/hubspotApi";
+
+export const useHubspotAppInformation = () => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    if (token) {
+      setState({ loading: true });
+      fetchHubspotAppInformation({
+        success: setState,
+        error: (e) => setState({ error: e }),
+        token,
+      });
+    }
+  }, [token]);
+  return result;
+};
+
+export const useHubspotAccount = ({ id }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    if (token && id) {
+      setState({ loading: true });
+      fetchHubspotAccount({
+        success: setState,
+        error: (e) => setState({ error: e }),
+        token,
+        id,
+      });
+    }
+  }, [token, id]);
+  return result;
+};
+
+export const useHubspotClientAllContactProperties = ({ id }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    if (token && id) {
+      setState({ loading: true });
+      fetchHubspotClientAllContactProperties({
+        success: setState,
+        error: (e) => setState({ error: e }),
+        token,
+        id,
+      });
+    }
+  }, [token, id]);
+  return result;
+};
+
+export const useHubspotContacts = ({ id }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    if (token && id) {
+      setState({ loading: true });
+      fetchHubspotContacts({
+        success: setState,
+        error: (e) => setState({ error: e }),
+        token,
+        id,
+      });
+    }
+  }, [token, id]);
+  return result;
+};

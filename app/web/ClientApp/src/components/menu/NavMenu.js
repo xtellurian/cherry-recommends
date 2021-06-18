@@ -14,84 +14,49 @@ import {
 } from "reactstrap";
 import { GearFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
-import LoginMenu from "./auth0/AuthNav";
-import { useAuth } from "../utility/useAuth";
+import LoginMenu from "./../auth0/AuthNav";
+import { useAuth } from "../../utility/useAuth";
+import { AuthenticatedIA, settingsItems } from "./MenuIA";
 import "./NavMenu.css";
 
-const AuthenticatedIA = [
-  {
-    name: "Data",
-    items: [
-      {
-        name: "Tracked Users",
-        to: "/tracked-users",
-      },
-      {
-        name: "Data Overiew",
-        to: "/dataview",
-      },
-      {
-        name: "Reports",
-        to: "/reports",
-      },
-    ],
-  },
-  {
-    name: "Segmentation",
-    items: [
-      {
-        name: "Segments",
-        to: "/segments",
-      },
-      {
-        name: "Models",
-        to: "/models",
-      },
-    ],
-  },
-  {
-    name: "Recommendation",
-    items: [
-      {
-        name: "Touchpoints",
-        to: "/touchpoints",
-      },
-      {
-        name: "Offers",
-        to: "/offers",
-      },
-      {
-        name: "Experiments",
-        to: "/experiments",
-      },
-    ],
-  },
-  {
-    name: "Resource",
-    items: [
-      {
-        name: "API Docs",
-        to: "/docs/api",
-      },
-    ],
-  },
-];
+const DropdownMenuItem = ({ section }) => {
+  return (
+    <UncontrolledDropdown nav inNavbar>
+      <DropdownToggle nav caret>
+        {section.name}
+      </DropdownToggle>
+      <DropdownMenu right>
+        {section.items.map((item) => (
+          <DropdownItem key={item.to}>
+            <NavItem>
+              <NavLink tag={Link} className="text-dark" to={item.to}>
+                {item.name}
+              </NavLink>
+            </NavItem>
+          </DropdownItem>
+        ))}
+      </DropdownMenu>
+    </UncontrolledDropdown>
+  );
+};
 
-const settingsItems = [
-  {
-    name: "Information",
-    to: "/settings/info",
-  },
-  {
-    name: "API Keys",
-    to: "/settings/api-keys",
-  },
-  {
-    name: "Integrations",
-    to: "/settings/integrations",
-  },
-];
+const SingleMenuItem = ({ item }) => {
+  return (
+    <NavItem>
+      <NavLink tag={Link} className="text-dark" to={item.to}>
+        {item.name}
+      </NavLink>
+    </NavItem>
+  );
+};
 
+const SmartMenuItem = ({ section }) => {
+  if (section.items) {
+    return <DropdownMenuItem section={section} />;
+  } else {
+    return <SingleMenuItem item={section} />;
+  }
+};
 export const NavMenu = () => {
   const { isAuthenticated } = useAuth();
   const [state, setState] = React.useState({
@@ -132,26 +97,7 @@ export const NavMenu = () => {
             <ul className="navbar-nav flex-grow">
               {isAuthenticated &&
                 AuthenticatedIA.map((section, index) => (
-                  <UncontrolledDropdown key={index} nav inNavbar>
-                    <DropdownToggle nav caret>
-                      {section.name}
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      {section.items.map((item) => (
-                        <DropdownItem key={item.to}>
-                          <NavItem>
-                            <NavLink
-                              tag={Link}
-                              className="text-dark"
-                              to={item.to}
-                            >
-                              {item.name}
-                            </NavLink>
-                          </NavItem>
-                        </DropdownItem>
-                      ))}
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
+                  <SmartMenuItem key={index} section={section} />
                 ))}
 
               {isAuthenticated && (

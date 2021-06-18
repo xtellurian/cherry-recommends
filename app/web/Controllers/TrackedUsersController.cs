@@ -25,12 +25,28 @@ namespace SignalBox.Web.Controllers
                                       IDateTimeProvider dateTimeProvider,
                                       TrackedUserWorkflows workflows,
                                       ITrackedUserStore store,
-                                      ITrackedUserEventStore eventStore):base(store)
+                                      ITrackedUserEventStore eventStore) : base(store)
         {
             _logger = logger;
             this.dateTimeProvider = dateTimeProvider;
             this.workflows = workflows;
             this.eventStore = eventStore;
+        }
+
+        public override async Task<TrackedUser> GetEntity(string id, bool? useInternalId = null)
+        {
+            if ((useInternalId == null || useInternalId == true) && int.TryParse(id, out var internalId))
+            {
+                return await store.Read(internalId, _ => _.IntegratedSystemMaps);
+            }
+            else if (useInternalId == true)
+            {
+                throw new BadRequestException("Internal Ids must be integers");
+            }
+            else
+            {
+                return await store.ReadFromCommonId(id);
+            }
         }
 
         /// <summary>Returns a list of events for a given user.</summary>
@@ -40,13 +56,6 @@ namespace SignalBox.Web.Controllers
             return await eventStore.ReadEventsForUser(commonUserId);
         }
 
-        /// <summary>Creates a new tracked user.</summary>
-        [HttpPost]
-        public async Task<object> Create([FromBody] CreateOrUpdateTrackedUserDto dto)
-        {
-            return await workflows.CreateTrackedUser(dto.CommonUserId, dto.Name, dto.Properties);
-        }
-
         /// <summary>Updates the properties of a tracked user.</summary>
         [HttpPut("{id}/properties")]
         public async Task<object> Create(string id, [FromBody] Dictionary<string, object> dto)
@@ -54,12 +63,25 @@ namespace SignalBox.Web.Controllers
             return await workflows.MergeTrackedUserProperties(id, dto);
         }
 
+        /// <summary>Creates a new tracked user.</summary>
+        [HttpPost]
+        public async Task<object> CreateOrUpdate([FromBody] CreateOrUpdateTrackedUserDto dto)
+        {
+            return await workflows.CreateOrUpdateTrackedUser(dto.CommonUserId, dto.Name, dto.Properties,
+                                                     dto.IntegratedSystemReference?.IntegratedSystemId,
+                                                     dto.IntegratedSystemReference?.UserId);
+        }
+
         /// <summary>Creates or updates a set of users with properties.</summary>
         [HttpPut]
         public async Task<object> CreateBatch([FromBody] BatchCreateOrUpdateUsersDto dto)
         {
             await workflows.CreateOrUpdateMultipleTrackedUsers(
-                dto.Users.Select(u => (u.CommonUserId, u.Name, u.Properties)));
+                dto.Users.Select(u => new TrackedUserWorkflows.CreateOrUpdateTrackedUserModel(u.CommonUserId,
+                                                                                         u.Name,
+                                                                                         u.Properties,
+                                                                                         u.IntegratedSystemReference?.IntegratedSystemId,
+                                                                                         u.IntegratedSystemReference?.UserId)));
             return new object();
         }
     }

@@ -22,6 +22,10 @@ namespace SignalBox.Core
             }
         }
 
+        public TrackedUser(string commonUserId, string name, IDictionary<string, object> properties)
+        : this(commonUserId, name, new DynamicPropertyDictionary(properties))
+        { }
+
         public string CommonUserId => CommonId;
         public DynamicPropertyDictionary Properties { get; set; } = new DynamicPropertyDictionary(); // not empty
 
@@ -30,5 +34,7 @@ namespace SignalBox.Core
 
         [JsonIgnore]
         public ICollection<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
+        // this can be serialised and sent out
+        public ICollection<TrackedUserSystemMap> IntegratedSystemMaps { get; set; } = new List<TrackedUserSystemMap>(); // for initialising
     }
 }

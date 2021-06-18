@@ -65,7 +65,7 @@ export const useWebhookReceivers = ({ id }) => {
 
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchWebhookReceivers({
         success: setState,
         error: (e) =>
@@ -74,9 +74,10 @@ export const useWebhookReceivers = ({ id }) => {
           }),
         token,
         page,
+        id,
       });
     }
-  }, [token, page]);
+  }, [token, id, page]);
 
   return result;
 };

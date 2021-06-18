@@ -7,25 +7,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlite.SignalBox
+namespace sqlserver.SignalBox
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    [Migration("20210609015341_develop_prototype2")]
-    partial class develop_prototype2
+    [Migration("20210617064558_develop_hubspot")]
+    partial class develop_hubspot
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.6");
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.7")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("ExperimentOffer", b =>
                 {
                     b.Property<long>("ExperimentsId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<long>("OffersId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.HasKey("ExperimentsId", "OffersId");
 
@@ -37,10 +39,10 @@ namespace sqlite.SignalBox
             modelBuilder.Entity("OfferOfferRecommendation", b =>
                 {
                     b.Property<long>("OffersId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<long>("RecommendationsId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.HasKey("OffersId", "RecommendationsId");
 
@@ -52,10 +54,10 @@ namespace sqlite.SignalBox
             modelBuilder.Entity("SegmentTrackedUser", b =>
                 {
                     b.Property<long>("InSegmentId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<long>("SegmentsId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.HasKey("InSegmentId", "SegmentsId");
 
@@ -68,26 +70,26 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("ConcurrentOffers")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -98,38 +100,36 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AlgorithmName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("HashedKey")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("LastExchanged")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    b.Property<DateTimeOffset?>("LastExchanged")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TotalExchanges")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -140,28 +140,52 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("Created")
+                    b.Property<string>("ApiKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cache")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("CacheLastRefreshed")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CommonId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<string>("IntegrationStatus")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValueSql("('NotConfigured')");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SystemType")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TokenResponse")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("TokenResponseUpdated")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
@@ -172,40 +196,40 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("HostingType")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Key")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("ModelType")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ScoringUrl")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Swagger")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -216,36 +240,36 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<double?>("Cost")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Currency")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DiscountCode")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -256,34 +280,34 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CommonUserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<long>("ExperimentId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Features")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IterationId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IterationOrder")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
@@ -295,38 +319,38 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<long?>("ExperimentId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<string>("IterationId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IterationOrder")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<long?>("OfferId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Outcome")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("RecommendationId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -343,27 +367,24 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -374,32 +395,32 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("EventKey")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EventLogicalValue")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("SegmentId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -410,23 +431,23 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -437,32 +458,29 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.Property<long?>("ProductId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<string>("SkuId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -475,31 +493,32 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CommonId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CommonId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[CommonId] IS NOT NULL");
 
                     b.ToTable("Touchpoints");
                 });
@@ -508,35 +527,36 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CommonId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("CommonUserId");
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Properties")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CommonId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[CommonUserId] IS NOT NULL");
 
                     b.ToTable("TrackedUsers");
                 });
@@ -545,49 +565,48 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CommonUserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("EventId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("EventType")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Kind")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Properties")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("SourceId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
-                    b.Property<long>("Timestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    b.Property<DateTimeOffset>("Timestamp")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EventId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[EventId] IS NOT NULL");
 
                     b.HasIndex("SourceId");
 
@@ -598,36 +617,39 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<long?>("IntegratedSystemId")
-                        .HasColumnType("INTEGER");
+                    b.Property<long>("IntegratedSystemId")
+                        .HasColumnType("bigint");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<long?>("TrackedUserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<long>("TrackedUserId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IntegratedSystemId");
 
                     b.HasIndex("TrackedUserId");
+
+                    b.HasIndex("UserId", "TrackedUserId", "IntegratedSystemId")
+                        .IsUnique();
 
                     b.ToTable("TrackUserSystemMaps");
                 });
@@ -636,32 +658,32 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<long?>("TouchpointId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
-                    b.Property<long?>("TrackedUserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<long>("TrackedUserId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Values")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Version")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -676,34 +698,35 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("EndpointId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<long?>("IntegratedSystemId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
-                    b.Property<long>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("SharedSecret")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EndpointId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[EndpointId] IS NOT NULL");
 
                     b.HasIndex("IntegratedSystemId");
 
@@ -760,14 +783,14 @@ namespace sqlite.SignalBox
                     b.OwnsMany("SignalBox.Core.Iteration", "Iterations", b1 =>
                         {
                             b1.Property<long>("ExperimentId")
-                                .HasColumnType("INTEGER");
+                                .HasColumnType("bigint");
 
                             b1.Property<string>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("TEXT");
+                                .HasColumnType("nvarchar(450)");
 
                             b1.Property<int>("Order")
-                                .HasColumnType("INTEGER");
+                                .HasColumnType("int");
 
                             b1.HasKey("ExperimentId", "Id");
 
@@ -823,11 +846,15 @@ namespace sqlite.SignalBox
                 {
                     b.HasOne("SignalBox.Core.IntegratedSystem", "IntegratedSystem")
                         .WithMany()
-                        .HasForeignKey("IntegratedSystemId");
+                        .HasForeignKey("IntegratedSystemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
-                        .WithMany()
-                        .HasForeignKey("TrackedUserId");
+                        .WithMany("IntegratedSystemMaps")
+                        .HasForeignKey("TrackedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("IntegratedSystem");
 
@@ -842,7 +869,9 @@ namespace sqlite.SignalBox
 
                     b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
                         .WithMany("TrackedUserTouchpoints")
-                        .HasForeignKey("TrackedUserId");
+                        .HasForeignKey("TrackedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Touchpoint");
 
@@ -852,10 +881,15 @@ namespace sqlite.SignalBox
             modelBuilder.Entity("SignalBox.Core.WebhookReceiver", b =>
                 {
                     b.HasOne("SignalBox.Core.IntegratedSystem", "IntegratedSystem")
-                        .WithMany()
+                        .WithMany("WebhookReceivers")
                         .HasForeignKey("IntegratedSystemId");
 
                     b.Navigation("IntegratedSystem");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
+                {
+                    b.Navigation("WebhookReceivers");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Offer", b =>
@@ -875,6 +909,8 @@ namespace sqlite.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
                 {
+                    b.Navigation("IntegratedSystemMaps");
+
                     b.Navigation("TrackedUserTouchpoints");
                 });
 #pragma warning restore 612, 618

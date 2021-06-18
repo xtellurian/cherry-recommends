@@ -3,10 +3,12 @@ import { createApiKey } from "../../../api/apiKeyApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { Title } from "../../molecules/PageHeadings";
 import { Spinner } from "../../molecules/Spinner";
+import { ErrorCard } from "../../molecules/ErrorCard";
 
 export const CreateApiKey = () => {
   const [name, setName] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(false);
   const [keyResponse, setKeyResponse] = React.useState();
   const token = useAccessToken();
 
@@ -19,7 +21,7 @@ export const CreateApiKey = () => {
       },
       error: (e) => {
         setLoading(false);
-        alert(e);
+        setError(e);
       },
       token,
       name,
@@ -29,6 +31,7 @@ export const CreateApiKey = () => {
     <React.Fragment>
       <Title>Create an API Key</Title>
       <hr />
+      {error && <ErrorCard error={error} />}
       <div>
         <label className="form-label">Give the API Key a name.</label>
         <input

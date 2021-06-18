@@ -1,19 +1,15 @@
-import React, { Component } from "react";
+import React from "react";
 import { Container } from "reactstrap";
-import { NavMenu } from "./NavMenu";
-import { MenuSwitcher } from "./MenuSwitcher";
+import { NavMenu } from "./menu/NavMenu";
+import { MenuSwitcher } from "./menu/MenuSwitcher";
 
-export class Layout extends Component {
-  static displayName = Layout.name;
-
-  render() {
-    return (
-      <div>
-        <MenuSwitcher>
-          <NavMenu />
-        </MenuSwitcher>
-        <Container>{this.props.children}</Container>
-      </div>
-    );
-  }
-}
+export const Layout = ({ children }) => {
+  return (
+    <div>
+      <MenuSwitcher>
+        <NavMenu />
+      </MenuSwitcher>
+      <Container>{children}</Container>
+    </div>
+  );
+};

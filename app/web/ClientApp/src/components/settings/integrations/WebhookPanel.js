@@ -42,7 +42,7 @@ export const WebookPanel = ({ integratedSystemId, className }) => {
   const webhookReceivers = useWebhookReceivers({ id: integratedSystemId });
 
   return (
-    <div className={`${className || ""}`}>
+    <div className={`${className || "mt-2"}`}>
       <div className="m-3">
         <Top integratedSystemId={integratedSystemId} />
       </div>
@@ -51,13 +51,13 @@ export const WebookPanel = ({ integratedSystemId, className }) => {
         <EmptyList>No Webhook Receivers</EmptyList>
       )}
 
-      <div className="m-3">
+     
         {webhookReceivers.error && <ErrorCard error={webhookReceivers.error} />}
-        {webhookReceivers.items &&
-          webhookReceivers.items.map((wr) => (
+        {!webhookReceivers.loading &&
+          webhookReceivers.map((wr) => (
             <WebhookReceiverRow key={wr.id} wr={wr} />
           ))}
-      </div>
+ 
     </div>
   );
 };

@@ -43,9 +43,17 @@ def construct_event(commonUserId, event_id, event_type, kind, properties, timest
     }
 
 
-def construct_user(commonUserId: str, name: str = None, properties: dict = None):
-    return {
+def construct_user(commonUserId: str, name: str = None, properties: dict = None, integratedSystemId: int = None, userId: str = None):
+    model = {
         'commonUserId': commonUserId,
         'name': name,
         'properties': properties,
     }
+    if(integratedSystemId is not None):
+        assert userId is not None
+        model['integratedSystemReference'] = {
+            'integratedSystemId': integratedSystemId,
+            'userId': str(userId) # must be a string
+        }
+
+    return model

@@ -14,6 +14,11 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder.Property(t => t.SystemType)
                 .IsRequired()
                 .HasConversion<string>();
+            builder.Property(_ => _.TokenResponse)
+                .HasJsonConversion();
+            builder.Property(_ => _.IntegrationStatus)
+                .HasDefaultValueSql("('NotConfigured')")
+                .HasConversion<string>();
         }
     }
 }

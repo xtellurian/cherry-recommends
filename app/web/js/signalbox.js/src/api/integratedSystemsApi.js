@@ -64,11 +64,10 @@ export const fetchWebhookReceivers = async ({
   success,
   error,
   token,
-  page,
   id,
 }) => {
   const url = getUrl(`api/integratedSystems/${id}/webhookreceivers`);
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
+  const response = await fetch(url, {
     headers: !token
       ? defaultHeaders
       : { ...defaultHeaders, Authorization: `Bearer ${token}` },

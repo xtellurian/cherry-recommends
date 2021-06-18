@@ -53,8 +53,8 @@ export const uploadUserData = async ({ success, error, token, payload }) => {
   success(responses);
 };
 
-export const createSingleUser = async ({ success, error, token, user }) => {
-  const url = getUrl(`api/trackedUsers/${id}`);
+export const createOrUpdateTrackedUser = async ({ success, error, token, user }) => {
+  const url = getUrl(`api/trackedUsers/`);
   const response = await fetch(url, {
     headers: !token
       ? defaultHeaders

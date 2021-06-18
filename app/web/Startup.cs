@@ -21,6 +21,8 @@ using Hellang.Middleware.ProblemDetails.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using SignalBox.Infrastructure.Files;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core.Integrations;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace SignalBox.Web
 {
@@ -82,7 +84,9 @@ namespace SignalBox.Web
             services.AddHttpClient();
             services.RegisterAuth0M2M();
             services.Configure<Auth0M2MClient>(Configuration.GetSection("Auth0").GetSection("M2M"));
+            services.Configure<HubspotAppCredentials>(Configuration.GetSection("HubSpot").GetSection("AppCredentials"));
             services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();
+            services.AddScoped<IHubspotService, HubspotService>();
 
             services.AddApiVersioning(o =>
             {
@@ -137,8 +141,9 @@ namespace SignalBox.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TelemetryConfiguration configuration)
         {
+            configuration.DisableTelemetry = env.IsDevelopment(); // disable AppInights in dev
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -196,7 +201,7 @@ namespace SignalBox.Web
             {
                 // log the errors to the logging system
                 var logger = context.RequestServices.GetService<ILogger<ProblemDetailsMiddleware>>();
-                logger.LogInformation($"{problemDetails.Title} | {problemDetails.Status} | {problemDetails.Detail}");
+                logger.LogError($"{problemDetails.Title} | {problemDetails.Status} | {problemDetails.Detail}");
             };
             options.Map<SignalBoxException>(_ => new ProblemDetails
             {

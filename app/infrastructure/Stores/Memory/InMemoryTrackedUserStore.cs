@@ -65,5 +65,10 @@ namespace SignalBox.Infrastructure
         {
             throw new NotImplementedException();
         }
+
+        public Task<TrackedUser> ReadFromCommonId<TProperty>(string commonId, System.Linq.Expressions.Expression<Func<TrackedUser, TProperty>> include)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

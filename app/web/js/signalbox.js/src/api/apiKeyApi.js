@@ -20,13 +20,30 @@ export const fetchApiKeys = async ({ success, error, token, page }) => {
 };
 
 export const createApiKey = async ({ success, error, token, name }) => {
-  const url = getUrl("api/apiKeys/exchange");
+  const url = getUrl("api/apiKeys/create");
   const response = await fetch(url, {
     headers: !token
       ? defaultHeaders
       : { ...defaultHeaders, Authorization: `Bearer ${token}` },
     method: "post",
     body: JSON.stringify({ name }),
+  });
+  if (response.ok) {
+    const data = await response.json();
+    success(data);
+  } else {
+    error(await response.json());
+  }
+};
+
+export const exchangeApiKey = async ({ success, error, token, apiKey }) => {
+  const url = getUrl("api/apiKeys/exchange");
+  const response = await fetch(url, {
+    headers: !token
+      ? defaultHeaders
+      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    method: "post",
+    body: JSON.stringify({ apiKey }),
   });
   if (response.ok) {
     const data = await response.json();

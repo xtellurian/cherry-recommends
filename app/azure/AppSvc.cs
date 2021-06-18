@@ -17,6 +17,7 @@ namespace SignalBox.Azure
         {
             // create an app service plan
             var appSvcConfig = new Pulumi.Config("appsvc");
+            var hubspotConfig = new Pulumi.Config("hubspot");
             var environment = new Pulumi.Config().Require("environment");
             var corsOrigins = appSvcConfig.GetObject<List<string>>("corsorigins") ?? new List<string>();
 
@@ -130,6 +131,10 @@ namespace SignalBox.Azure
                     {"FileHosting__ConnectionString", ml.PrimaryStorageConnectionString},
                     {"FileHosting__ContainerName", "reports"},
                     {"FileHosting__Source", "blob"},
+                    {"HubSpot__AppCredentials__AppId", hubspotConfig.Require("appId")},
+                    {"HubSpot__AppCredentials__ClientId", hubspotConfig.Require("clientId")},
+                    {"HubSpot__AppCredentials__ClientSecret", hubspotConfig.Require("clientSecret")},
+                    {"HubSpot__AppCredentials__Scope", hubspotConfig.Get("scope") ?? "contacts oauth tickets" },
                     {"LastDeployed", System.DateTime.Now.ToString()} // so these always get re-deployed when run.
                 }
             }, new CustomResourceOptions

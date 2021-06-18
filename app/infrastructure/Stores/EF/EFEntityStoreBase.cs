@@ -54,11 +54,47 @@ namespace SignalBox.Infrastructure.EntityFramework
             return new Paginated<T>(results, pageCount, itemCount, page);
         }
 
+        public async Task<Paginated<T>> Query<TProperty>(int page,
+                                                         Expression<Func<T, TProperty>> include,
+                                                         Expression<Func<T, bool>> predicate = null)
+        {
+            predicate ??= _ => true; // default to all entities
+            var itemCount = await Set.CountAsync(predicate);
+            List<T> results;
+
+            if (itemCount > 0) // check and let's see whether the query is worth running against the database
+            {
+                results = await Set
+                    .Where(predicate)
+                    .Include(include)
+                    .OrderByDescending(_ => _.LastUpdated)
+                    .Skip((page - 1) * PageSize).Take(PageSize)
+                    .ToListAsync();
+            }
+            else
+            {
+                results = new List<T>();
+            }
+            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
+            return new Paginated<T>(results, pageCount, itemCount, page);
+        }
+
         public virtual async Task<T> Read(long id)
         {
             try
             {
                 return await Set.SingleAsync(_ => _.Id == id);
+            }
+            catch (Exception ex)
+            {
+                throw new StorageException($"An exception was thrown when finding type: s${typeof(T)} with Id:${id}", ex);
+            }
+        }
+        public virtual async Task<T> Read<TProperty>(long id, Expression<Func<T, TProperty>> include)
+        {
+            try
+            {
+                return await Set.Include(include).SingleAsync(_ => _.Id == id);
             }
             catch (Exception ex)
             {

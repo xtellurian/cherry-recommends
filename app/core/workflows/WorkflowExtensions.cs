@@ -22,6 +22,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<TouchpointWorkflows>();
             services.AddScoped<WebhookWorkflows>();
             services.AddScoped<IntegratedSystemWorkflows>();
+            services.AddScoped<HubspotWorkflows>();
             return services;
         }
     }

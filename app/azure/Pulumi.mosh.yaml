@@ -11,6 +11,10 @@ config:
   azure-native:location: westus2
   azure-native:subscriptionId: 04b1ca0e-558c-48d0-ba28-fee796a82076
   azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
+  hubspot:appId: "319510"
+  hubspot:clientId: 5fb5d0a3-1174-4689-b750-4147661972c1
+  hubspot:clientSecret:
+    secure: AAABAOBCVM9T+nzZCibaxAXo08VJca+cSQf0BCAYTJBDp5rPjvVwo8Ttq/yxiDDipN1BT3Pc6gfR0w0i9qh0E14ll2I=
+  signalbox:environment: Production
   signalbox:sqlPassword:
     secure: AAABAEq1PGnf6i6CGgaCK3NsFLjPQW2bq8p0XLvMpLTSnIP1yh+DKyTB
-  signalbox:environment: Production

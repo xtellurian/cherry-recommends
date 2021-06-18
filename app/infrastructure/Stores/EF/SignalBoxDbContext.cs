@@ -34,7 +34,6 @@ namespace SignalBox.Infrastructure
                         modelBuilder
                             .Entity(entityType.Name)
                             .Property(property.Name)
-                            .HasDefaultValueSql("CURRENT_TIMESTAMP")
                             .HasConversion(new DateTimeOffsetToBinaryConverter());
                     }
                 }
