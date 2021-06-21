@@ -53,7 +53,12 @@ export const uploadUserData = async ({ success, error, token, payload }) => {
   success(responses);
 };
 
-export const createOrUpdateTrackedUser = async ({ success, error, token, user }) => {
+export const createOrUpdateTrackedUser = async ({
+  success,
+  error,
+  token,
+  user,
+}) => {
   const url = getUrl(`api/trackedUsers/`);
   const response = await fetch(url, {
     headers: !token
@@ -63,8 +68,7 @@ export const createOrUpdateTrackedUser = async ({ success, error, token, user })
     body: JSON.stringify(user),
   });
   if (response.ok) {
-    var data = await response.json();
-    success(data);
+    success(await response.json());
   } else {
     error(await response.json());
   }

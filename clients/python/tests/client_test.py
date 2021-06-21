@@ -1,5 +1,6 @@
 from context import signalboxclient
 # import client
+import datetime
 import uuid
 import numpy as np
 import environment
@@ -10,8 +11,13 @@ my_token = test_client.access_token
 
 # create user
 user_id = str(uuid.uuid1())
-test_client.create_user('testuser', user_id)
+u = test_client.create_user('testuser', user_id)
 print('created user with id=', user_id)
+# update the user
+u['properties'] = {
+    'client_test.py': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+}
+test_client.create_or_update_users([u])
 offer = test_client.create_offer('my_offer', 'AUD', 100, 50)
 offer_id = offer['id']
 

@@ -39,13 +39,18 @@ namespace SignalBox.Core.Workflows
                                                          string? name = null,
                                                          Dictionary<string, object>? properties = null,
                                                          long? integratedSystemId = null,
-                                                         string? integratedSystemUserId = null)
+                                                         string? integratedSystemUserId = null,
+                                                         bool saveOnComplete = true)
         {
             TrackedUser trackedUser;
-            logger.LogInformation("Creating single tracked user");
             if (await userStore.ExistsFromCommonId(commonUserId))
             {
                 trackedUser = await userStore.ReadFromCommonId(commonUserId, _ => _.IntegratedSystemMaps);
+                logger.LogInformation($"Updating user {trackedUser.Id}");
+                if (!string.IsNullOrEmpty(name))
+                {
+                    trackedUser.Name = name;
+                }
                 if (properties != null && properties.Keys.Count > 0)
                 {
                     trackedUser.Properties = new DynamicPropertyDictionary(properties);
@@ -54,6 +59,7 @@ namespace SignalBox.Core.Workflows
             else
             {
                 trackedUser = await userStore.Create(new TrackedUser(commonUserId, name, new DynamicPropertyDictionary(properties)));
+                logger.LogInformation($"Created user {trackedUser.Id}");
             }
 
             if (integratedSystemId.HasValue && !trackedUser.IntegratedSystemMaps.Any(_ => _.IntegratedSystemId == integratedSystemId))
@@ -66,7 +72,12 @@ namespace SignalBox.Core.Workflows
             {
                 logger.LogWarning($"Not setting integratedSystemId for tracked user {trackedUser.Id}");
             }
-            await storageContext.SaveChanges();
+
+            if (saveOnComplete == true)
+            {
+                await storageContext.SaveChanges();
+            }
+
             return trackedUser;
         }
 
@@ -94,49 +105,8 @@ namespace SignalBox.Core.Workflows
             var users = new List<TrackedUser>();
             foreach (var u in newUsers)
             {
-                if (await userStore.ExistsFromCommonId(u.CommonUserId))
-                {
-                    // then update
-                    TrackedUser user;
-                    if (u.IntegratedSystemId != null)
-                    {
-                        user = await userStore.ReadFromCommonId(u.CommonUserId, _ => _.IntegratedSystemMaps);
-                    }
-                    else
-                    {
-                        user = await userStore.ReadFromCommonId(u.CommonUserId);
-                    }
-                    if (u.Properties != null)
-                    {
-                        foreach (var kvp in u.Properties)
-                        {
-                            user.Properties[kvp.Key] = kvp.Value;
-                        }
-                    }
-                    user.Name = u.Name; // update the name too.
-                    users.Add(user);
-                    if (u.IntegratedSystemId.HasValue)
-                    {
-                        var integratedSystem = await integratedSystemStore.Read(u.IntegratedSystemId.Value);
-                        var map = user.IntegratedSystemMaps.FirstOrDefault(_ => _.IntegratedSystem.Id == u.IntegratedSystemId);
-                        if (map == null)
-                        {
-                            map = new TrackedUserSystemMap(u.IntegratedSystemUserId, integratedSystem, user);
-                            map = await trackedUserSystemMapStore.Create(map);
-                        }
-                        else
-                        {
-                            map.UserId = u.IntegratedSystemUserId; // in that case ensure this value matches
-                        }
-                    }
-                }
-                else
-                {
-                    var user = await userStore.Create(new TrackedUser(u.CommonUserId, u.Name, u.Properties));
-                    users.Add(user);
-                }
+                var user = await this.CreateOrUpdateTrackedUser(u.CommonUserId, u.Name, u.Properties, u.IntegratedSystemId, u.IntegratedSystemUserId, false);
             }
-
 
             await storageContext.SaveChanges();
             return users;

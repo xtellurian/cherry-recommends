@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Core;
 using SignalBox.Infrastructure.EntityFramework;
@@ -16,7 +19,11 @@ namespace SignalBox.Infrastructure
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderTypeConfiguration).Assembly,
                 _ => _.Namespace.StartsWith(typeof(OrderTypeConfiguration).Namespace));
+            FixSqlLite(modelBuilder);
+        }
 
+        private void FixSqlLite(ModelBuilder modelBuilder)
+        {
             if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
             {
                 // SQLite does not have proper support for DateTimeOffset via Entity Framework Core, see the limitations
@@ -37,6 +44,23 @@ namespace SignalBox.Infrastructure
                             .HasConversion(new DateTimeOffsetToBinaryConverter());
                     }
                 }
+            }
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            GenerateLastUpdated();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void GenerateLastUpdated()
+        {
+            // ChangeTracker.DetectChanges(); // do we need this?
+            var now = DateTimeOffset.UtcNow;
+
+            foreach (var item in ChangeTracker.Entries<Entity>().Where(e => e.State == EntityState.Modified))
+            {
+                item.Property(nameof(Entity.LastUpdated)).CurrentValue = now;
             }
         }
 

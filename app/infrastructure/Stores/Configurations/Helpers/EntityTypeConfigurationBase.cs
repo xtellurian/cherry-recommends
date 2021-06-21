@@ -18,7 +18,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasDefaultValueSql("CURRENT_TIMESTAMP"); // works for both sqlite and sqlserver
 
             builder.Property(_ => _.LastUpdated)
-                .ValueGeneratedOnAddOrUpdate()
+                .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("CURRENT_TIMESTAMP"); // works for both sqlite and sqlserver
         }
     }
