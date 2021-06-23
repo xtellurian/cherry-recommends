@@ -73,7 +73,7 @@ namespace SignalBox.Core.Workflows
             return results;
         }
 
-        private IRecommender GetRecommender()
+        private IRecommender<OfferRecommendation> GetRecommender()
         {
             return new RandomRecommender();
         }

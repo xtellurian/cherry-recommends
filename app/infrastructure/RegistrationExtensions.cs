@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using SignalBox.Core;
+using SignalBox.Core.Recommenders;
 using SignalBox.Infrastructure.ML;
 using SignalBox.Infrastructure.Services;
 
@@ -11,6 +12,7 @@ namespace SignalBox.Infrastructure
         {
             services.AddScoped<IApiTokenFactory, Auth0ApiTokenFactory>();
             services.AddScoped<IModelClientFactory, ModelClientFactory>();
+            services.AddScoped<IRecommender<ParameterSetRecommendation>, HttpParameterSetRecommenderService>();
             return services;
         }
     }

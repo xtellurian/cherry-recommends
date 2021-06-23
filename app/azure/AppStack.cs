@@ -33,7 +33,7 @@ namespace SignalBox.Azure
                     ApplicationType = "web",
                     Kind = "web",
                     ResourceGroupName = appRg.Name,
-                    Tags = tags
+                    Tags = tags,
                 });
 
             var storage = new Storage(appRg);

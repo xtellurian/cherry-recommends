@@ -14,6 +14,8 @@ import { SettingsComponent } from "./components/settings/SettingsComponent";
 import { DataViewComponent } from "./components/data/DataViewComponent";
 import { ReportsComponent } from "./components/reports/ReportsComponent";
 import { TouchpointsComponent } from "./components/touchpoints/TouchpointsComponent";
+import { ParametersComponent } from "./components/parameters/ParametersComponent";
+import { RecommendersComponent } from "./components/recommenders/RecommendersComponent";
 
 // import some demo stuff
 import { DemoComponent } from "./components/demo-app/DemoComponent";
@@ -34,6 +36,8 @@ export default class App extends Component {
         <AuthorizeRoute path="/experiments" component={ExperimentsComponent} />
         <AuthorizeRoute path="/segments" component={SegmentsComponent} />
         <AuthorizeRoute path="/offers" component={OffersComponent} />
+        <AuthorizeRoute path="/parameters" component={ParametersComponent} />
+        <AuthorizeRoute path="/recommenders" component={RecommendersComponent} />
         <AuthorizeRoute
           path="/models"
           component={ModelRegistrationsComponent}

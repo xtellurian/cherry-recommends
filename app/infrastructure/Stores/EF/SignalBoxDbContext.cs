@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Core;
+using SignalBox.Core.Recommenders;
 using SignalBox.Infrastructure.EntityFramework;
 
 namespace SignalBox.Infrastructure
@@ -77,6 +78,9 @@ namespace SignalBox.Infrastructure
         public DbSet<TrackedUserEvent> TrackedUserEvents { get; set; }
         public DbSet<Touchpoint> Touchpoints { get; set; }
         public DbSet<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
+        public DbSet<Parameter> Parameters { get; set; }
+        public DbSet<ParameterSetRecommender> ParameterSetRecommenders { get; set; }
+        public DbSet<ParameterSetRecommendation> ParameterSetRecommendations { get; set; }
 
         // system stuff
         public DbSet<HashedApiKey> ApiKeys { get; set; }

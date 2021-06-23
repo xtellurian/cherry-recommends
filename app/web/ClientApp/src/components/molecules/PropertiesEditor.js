@@ -1,5 +1,6 @@
 import React from "react";
 import { Subtitle } from "./PageHeadings";
+import { EmptyList } from "./EmptyList";
 
 const PropertyRow = ({ entry, value, onChange, onRemove }) => {
   return (
@@ -46,6 +47,7 @@ const PropertyRow = ({ entry, value, onChange, onRemove }) => {
 export const PropertiesEditor = ({
   initialProperties,
   onPropertiesChanged,
+  placeholder,
 }) => {
   const [properties, setProperties] = React.useState(initialProperties);
   const handleChange = (oldEntry, newEntry, value) => {
@@ -80,6 +82,18 @@ export const PropertiesEditor = ({
   return (
     <React.Fragment>
       <Subtitle>Property Editor</Subtitle>
+      {Object.entries(properties).length === 0 && (
+        <EmptyList>
+          {placeholder || (
+            <button
+              className="btn btn-outline-success"
+              onClick={handleNewEntry}
+            >
+              Add Property
+            </button>
+          )}
+        </EmptyList>
+      )}
       {Object.entries(properties).map(([k, v], i) => (
         <PropertyRow
           key={i}

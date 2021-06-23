@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SignalBox.Core
 {
-    public class RandomRecommender : IRecommender
+    public class RandomRecommender : IRecommender<OfferRecommendation>
     {
         public static List<T> GetRandomElements<T>(IEnumerable<T> list, int elementsCount)
         {
@@ -16,6 +16,11 @@ namespace SignalBox.Core
         {
             var orderedResults = GetRandomElements(context.Experiment.Offers, context.Experiment.ConcurrentOffers);
             return Task.FromResult(new OfferRecommendation(orderedResults, context.TrackedUser, context.Experiment, context.Features));
+        }
+
+        public Task<OfferRecommendation> Recommend(RecommendationRequestArguments context)
+        {
+            return this.Recommend((PresentationContext)context);
         }
     }
 }

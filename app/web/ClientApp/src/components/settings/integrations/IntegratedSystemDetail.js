@@ -2,7 +2,6 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Check } from "react-bootstrap-icons";
 import { Subtitle } from "../../molecules/PageHeadings";
-import { useHubspotAccount } from "../../../api-hooks/hubspotApi";
 import { Top } from "./Top";
 import { WebookPanel } from "./WebhookPanel";
 import { useIntegratedSystem } from "../../../api-hooks/integratedSystemsApi";

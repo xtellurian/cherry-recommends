@@ -18,6 +18,8 @@ import * as reports from "./api/reportsApi";
 import * as segments from "./api/segmentsApi";
 import * as touchpoints from "./api/touchpointsApi";
 import * as trackedUsers from "./api/trackedUsersApi";
+import * as parameters from "./api/parametersApi";
+import * as parameterSetRecommenders from "./api/parameterSetRecommendersApi";
 
 import { setBaseUrl } from "./baseUrl";
 
@@ -31,6 +33,8 @@ export {
   modelRegistrations,
   offers,
   paging,
+  parameters,
+  parameterSetRecommenders,
   reactConfig,
   reports,
   segments,

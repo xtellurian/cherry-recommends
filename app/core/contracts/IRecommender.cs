@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SignalBox.Core
 {
-    public interface IRecommender
+    public interface IRecommender<T>
     {
-        Task<OfferRecommendation> Recommend(PresentationContext context);
+        Task<T> Recommend(RecommendationRequestArguments context);
     }
 }

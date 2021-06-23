@@ -47,6 +47,21 @@ namespace sqlite.SignalBox
                     b.ToTable("OfferOfferRecommendation");
                 });
 
+            modelBuilder.Entity("ParameterParameterSetRecommender", b =>
+                {
+                    b.Property<long>("ParameterSetRecommendersId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("ParametersId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ParameterSetRecommendersId", "ParametersId");
+
+                    b.HasIndex("ParametersId");
+
+                    b.ToTable("ParameterParameterSetRecommender");
+                });
+
             modelBuilder.Entity("SegmentTrackedUser", b =>
                 {
                     b.Property<long>("InSegmentId")
@@ -311,6 +326,49 @@ namespace sqlite.SignalBox
                     b.ToTable("Recommendations");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Parameter", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CommonId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("DefaultValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ParameterType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommonId")
+                        .IsUnique();
+
+                    b.ToTable("Parameters");
+                });
+
             modelBuilder.Entity("SignalBox.Core.PresentationOutcome", b =>
                 {
                     b.Property<long>("Id")
@@ -384,6 +442,65 @@ namespace sqlite.SignalBox
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommendation", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LastUpdated")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ParameterSetRecommendations");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommender", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Arguments")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CommonId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ParameterBounds")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ScoringUrl")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ParameterSetRecommenders");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Rule", b =>
@@ -749,6 +866,21 @@ namespace sqlite.SignalBox
                     b.HasOne("SignalBox.Core.OfferRecommendation", null)
                         .WithMany()
                         .HasForeignKey("RecommendationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ParameterParameterSetRecommender", b =>
+                {
+                    b.HasOne("SignalBox.Core.Recommenders.ParameterSetRecommender", null)
+                        .WithMany()
+                        .HasForeignKey("ParameterSetRecommendersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.Parameter", null)
+                        .WithMany()
+                        .HasForeignKey("ParametersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

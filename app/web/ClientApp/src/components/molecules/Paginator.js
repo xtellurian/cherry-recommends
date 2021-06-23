@@ -58,7 +58,9 @@ export const Paginator = ({
   isLastPage,
 }) => {
   if (!pageNumber || pageNumber === 0) {
-    return <div>?</div>;
+    return (
+      <div className="m-3 text-center text-muted">Pagination Unavailable</div>
+    );
   }
   return (
     <div className="m-5">

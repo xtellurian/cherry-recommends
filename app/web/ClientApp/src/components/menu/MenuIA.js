@@ -34,15 +34,28 @@ export const AuthenticatedIA = [
   //     ],
   //   },
   {
-    name: "Recommenders",
+    name: "Catalogs",
     items: [
       {
         name: "Touchpoints",
         to: "/touchpoints",
       },
       {
+        name: "Parameters",
+        to: "/parameters",
+      },
+      {
         name: "Offers",
         to: "/offers",
+      },
+    ],
+  },
+  {
+    name: "Recommenders",
+    items: [
+      {
+        name: "Parameter Sets",
+        to: "/recommenders/parameter-set-recommenders",
       },
       {
         name: "Experiments",
