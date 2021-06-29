@@ -2,23 +2,27 @@ import React from "react";
 import { useAccessToken } from "../../../api-hooks/token";
 import { useParameters } from "../../../api-hooks/parametersApi";
 import { createParameterSetRecommender } from "../../../api/parameterSetRecommendersApi";
-import { Title, Subtitle } from "../../molecules/PageHeadings";
+import {
+  BackButton,
+  Title,
+  Subtitle,
+  Selector,
+  ExpandableCard,
+  ErrorCard,
+} from "../../molecules";
 import { ArgumentsEditor } from "../../molecules/ArgumentsEditor";
-import { Selector } from "../../molecules/Select";
-import { ExpandableCard } from "../../molecules/ExpandableCard";
 import { useHistory } from "react-router-dom";
-import { ErrorCard } from "../../molecules/ErrorCard";
 
 const BoundRow = ({ bound, onChange }) => {
   if (bound.categoricalBounds) {
     return (
-      <ExpandableCard name={`${bound.commonId} (categorical)`}>
+      <ExpandableCard label={`${bound.commonId} (categorical)`}>
         set possible values
       </ExpandableCard>
     );
   } else if (bound.numericBounds) {
     return (
-      <ExpandableCard name={`${bound.commonId} (numerical)`}>
+      <ExpandableCard label={`${bound.commonId} (numerical)`}>
         <div className="row">
           <div className="col">
             <div className="input-group">
@@ -155,6 +159,9 @@ export const CreateParameterSetRecommender = () => {
   };
   return (
     <React.Fragment>
+      <BackButton to="/recommenders/parameter-set-recommenders" className="float-right">
+        Parameter Set Recommenders
+      </BackButton>
       <Title>Create Recommender</Title>
       <Subtitle>Parameter Sets</Subtitle>
       <hr />

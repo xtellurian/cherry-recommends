@@ -2,6 +2,8 @@ import { touchpoints } from "signalbox.js";
 
 export const fetchTouchpoints = touchpoints.fetchTouchpoints;
 
+export const fetchTouchpoint = touchpoints.fetchTouchpoint;
+
 export const createTouchpointMetadata = touchpoints.createTouchpointMetadata;
 
 export const fetchTrackedUserTouchpoints =
@@ -9,6 +11,9 @@ export const fetchTrackedUserTouchpoints =
 
 export const createTrackedUserTouchpoint =
   touchpoints.createTrackedUserTouchpoint;
+
+export const fetchTrackedUsersInTouchpoint =
+  touchpoints.fetchTrackedUsersInTouchpoint;
 
 export const fetchTrackedUserTouchpointValues =
   touchpoints.fetchTrackedUserTouchpointValues;

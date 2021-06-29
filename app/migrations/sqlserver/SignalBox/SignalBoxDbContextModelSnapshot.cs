@@ -461,6 +461,21 @@ namespace sqlserver.SignalBox
                     b.Property<DateTimeOffset>("LastUpdated")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("ModelInput")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelInputType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelOutput")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelOutputType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Version")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("ParameterSetRecommendations");
@@ -494,6 +509,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("ModelRegistrationId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -504,6 +522,8 @@ namespace sqlserver.SignalBox
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ModelRegistrationId");
 
                     b.ToTable("ParameterSetRecommenders");
                 });
@@ -954,6 +974,15 @@ namespace sqlserver.SignalBox
                     b.Navigation("Offer");
 
                     b.Navigation("Recommendation");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommender", b =>
+                {
+                    b.HasOne("SignalBox.Core.ModelRegistration", "ModelRegistration")
+                        .WithMany()
+                        .HasForeignKey("ModelRegistrationId");
+
+                    b.Navigation("ModelRegistration");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Sku", b =>

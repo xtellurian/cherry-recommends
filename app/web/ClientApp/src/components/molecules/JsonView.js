@@ -22,6 +22,6 @@ const ashes = {
   base0F: "#C79595",
 };
 
-export const JsonView = ({ data }) => {
-  return <JSONTree data={data} theme={ashes} hideRoot={true} />;
+export const JsonView = ({ data, shouldExpandNode }) => {
+  return <JSONTree data={data} theme={ashes} hideRoot={true} shouldExpandNode={shouldExpandNode} />;
 };

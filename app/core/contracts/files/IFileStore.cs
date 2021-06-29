@@ -7,5 +7,7 @@ namespace SignalBox.Core
     {
         Task<IEnumerable<FileInformation>> ListFiles(string subPath = null);
         Task<byte[]> ReadAllBytes(string path);
+        Task<string> ReadAsString(string path);
+        Task WriteFile(string contents, string name);
     }
 }

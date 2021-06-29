@@ -7,7 +7,8 @@ namespace SignalBox.Core.Adapters.Segment
     {
         public static TrackedUserEvent ToTrackedUserEvent(this SegmentModel model, IntegratedSystem sys)
         {
-            return new TrackedUserEvent(model.UserId, model.MessageId, model.Timestamp, sys, model.Type, model.Event, model.Properties);
+            return new TrackedUserEvent(
+                model.UserId, model.MessageId, model.Timestamp, sys, $"Segment|{model.Type}", model.Event, model.Properties);
         }
     }
 }

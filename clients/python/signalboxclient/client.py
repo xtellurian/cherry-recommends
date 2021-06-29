@@ -154,11 +154,13 @@ class SignalBoxClient:
     def construct_user(self, commonUserId: str, name: str = None, properties: str = None, integratedSystemId: int = None, userId: str = None):
         return construct_user(commonUserId, name=name, properties=properties, integratedSystemId=integratedSystemId, userId=userId)
 
-    def log_events(self, events):
+    def log_events(self, events, batch_size=1000, callback=None):
         results = []
-        for e in batch(events):
+        for e in batch(events, n=batch_size):
             r = post(f'{self.base_url}/api/events', e, self.access_token)
             if(r.ok):
+                if(callback != None):
+                    callback(r.json())
                 results.append(r.json())
             else:
                 raise SignalBoxException(r.text)

@@ -27,6 +27,27 @@ namespace SignalBox.Azure
                 Tags = tags
             });
 
+            var queueMessageBlobContainer = new BlobContainer("queueMessages", new BlobContainerArgs
+            {
+                AccountName = storageAccount.Name,
+                ContainerName = "queue-messages",
+                ResourceGroupName = rg.Name,
+            });
+
+            var trackedUserQueue = new Queue("newTrackedUsers", new QueueArgs
+            {
+                QueueName = "new-tracked-users",
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name
+            });
+            
+            var trackedUserEventsQueue = new Queue("trackedUserEvents", new QueueArgs
+            {
+                QueueName = "tracked-user-events",
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name
+            });
+
             this.StorageAccount = storageAccount;
 
             this.PrimaryStorageKey = Output.Tuple(rg.Name, storageAccount.Name).Apply(names =>
@@ -40,7 +61,7 @@ namespace SignalBox.Azure
         public Output<string> PrimaryStorageKey { get; }
         public Output<string> PrimaryConnectionString { get; }
 
-        
+
     }
 }
 

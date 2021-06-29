@@ -54,7 +54,7 @@ experiment_id = experiment['id']
 # list all experiments
 experiments_first_page = test_client.query_experiments(1)
 print('len experiments_first_page =', len(experiments_first_page.items))
-assert experiments_first_page.pagination.totalItemCount > 1
+assert experiments_first_page.pagination.totalItemCount > 0
 
 get_experiment_response = test_client.get_experiment(experiment_id)
 print('\nPrinting get_experiment test response: ', get_experiment_response)

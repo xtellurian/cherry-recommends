@@ -8,3 +8,9 @@ export const fetchParameterSetRecommender =
 
 export const createParameterSetRecommender =
   parameterSetRecommenders.createParameterSetRecommender;
+
+export const fetchLinkedRegisteredModel =
+  parameterSetRecommenders.fetchLinkedRegisteredModel;
+
+export const createLinkRegisteredModel =
+  parameterSetRecommenders.createLinkRegisteredModel;

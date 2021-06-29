@@ -38,6 +38,27 @@ export const fetchModelRegistration = async ({ success, error, token, id }) => {
   }
 };
 
+export const deleteModelRegistration = async ({
+  success,
+  error,
+  token,
+  id,
+}) => {
+  const url = getUrl(`api/ModelRegistrations/${id}`);
+  const response = await fetch(url, {
+    headers: !token
+      ? defaultHeaders
+      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    method: "delete",
+  });
+  if (response.ok) {
+    const results = await response.json();
+    success(results);
+  } else {
+    error(await response.json());
+  }
+};
+
 export const createModelRegistration = async ({
   success,
   error,
@@ -45,7 +66,7 @@ export const createModelRegistration = async ({
   payload,
 }) => {
   const url = getUrl("api/ModelRegistrations");
-  const response = await fetch(basePath, {
+  const response = await fetch(url, {
     headers: !token
       ? defaultHeaders
       : { ...defaultHeaders, Authorization: `Bearer ${token}` },

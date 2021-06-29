@@ -56,7 +56,7 @@ export const ExperimentResults = () => {
       )}
       <hr />
       <div>
-        <ExpandableCard name="Details">
+        <ExpandableCard label="Details">
           <JsonView data={experimentResults} />
         </ExpandableCard>
       </div>

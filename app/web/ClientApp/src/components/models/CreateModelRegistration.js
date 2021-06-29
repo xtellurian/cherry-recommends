@@ -1,27 +1,42 @@
 import React from "react";
-import { Title } from "../molecules/PageHeadings";
+import { useHistory } from "react-router-dom";
+import { ErrorCard, Title, BackButton } from "../molecules";
+import { NoteBox } from "../molecules/NoteBox";
 import { useAccessToken } from "../../api-hooks/token";
 import { createModelRegistration } from "../../api/modelRegistrationsApi";
 import { DropdownComponent, DropdownItem } from "../molecules/Dropdown";
 
-const modelTypes = ["SingleClassClassifier"];
+const modelTypes = [
+  { label: "Parameter Set Recommender", value: "ParameterSetRecommenderV1" },
+  { label: "Classifier", value: "SingleClassClassifier" },
+];
 const hostingTypes = ["AzureMLContainerInstance"];
 
 export const CreateModelRegistration = () => {
+  const history = useHistory();
   const token = useAccessToken();
+  const [error, setError] = React.useState();
   const [modelRegistration, setModelRegistration] = React.useState({
     name: "",
     scoringUrl: "",
     swaggerUrl: "",
     key: "",
-    hostingType: hostingTypes[0],
-    modelType: modelTypes[0],
+    hostingType: hostingTypes[0].value,
+    modelType: modelTypes[0].value,
   });
 
   return (
     <React.Fragment>
+      <BackButton className="float-right" to="/models">
+        Models
+      </BackButton>
       <Title>Register Model</Title>
-      <div>
+      <hr />
+      {error && <ErrorCard error={error} />}
+      <NoteBox className="m-auto w-50" label="Warning">
+        This area is for administrators only.
+      </NoteBox>
+      <div className="mt-3">
         <label className="form-label">
           Register a new model that will be available via the API.
         </label>
@@ -92,22 +107,22 @@ export const CreateModelRegistration = () => {
             <label className="form-label">Model Type</label>
             <DropdownComponent title={modelRegistration.modelType}>
               {modelTypes.map((c) => (
-                <DropdownItem key={c}>
+                <DropdownItem key={c.label}>
                   <div
                     onClick={() =>
                       setModelRegistration({
                         ...modelRegistration,
-                        modelType: c,
+                        modelType: c.value,
                       })
                     }
                   >
-                    {c}
+                    {c.label}
                   </div>
                 </DropdownItem>
               ))}
             </DropdownComponent>
           </div>
-          <div>
+          {/* <div>
             <div className="m-1">
               <label className="form-label">Hosting Type</label>
               <DropdownComponent title={modelRegistration.hostingType}>
@@ -127,7 +142,7 @@ export const CreateModelRegistration = () => {
                 ))}
               </DropdownComponent>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="mt-2">
           <button
@@ -135,8 +150,8 @@ export const CreateModelRegistration = () => {
             onClick={() => {
               createModelRegistration({
                 payload: modelRegistration,
-                success: () => alert("Registered New Model"),
-                error: () => alert("Something broke."),
+                success: (m) => history.push(`/models/test/${m.id}`),
+                error: setError,
                 token,
               });
             }}

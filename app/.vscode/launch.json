@@ -23,6 +23,12 @@
             "request": "attach",
             "port": 9091,
             "preLaunchTask": "func: host start"
-        }
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+         }
     ]
 }

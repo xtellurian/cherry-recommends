@@ -31,18 +31,16 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Stores event data about one or more tracked users.</summary>
         [HttpPost]
-        public async Task<object> LogEvents([FromBody] List<EventDto> dto)
+        public async Task<EventLoggingResponse> LogEvents([FromBody] List<EventDto> dto)
         {
-            await workflows.TrackUserEvents(dto.Select(d =>
+            return await workflows.TrackUserEvents(dto.Select(d =>
             new TrackedUserEventsWorkflows.TrackedUserEventInput(d.CommonUserId,
                                                                  d.EventId,
                                                                  d.Timestamp,
                                                                  d.SourceSystemId,
                                                                  d.Kind,
                                                                  d.EventType,
-                                                                 d.Properties)));
-
-            return new object();
+                                                                 d.Properties)), true); // add to queue if available
         }
 
         /// <summary>Stores event data about one or more tracked users.</summary>

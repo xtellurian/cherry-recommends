@@ -56,16 +56,16 @@ namespace SignalBox.Azure
                             Name = "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
                             Value = "1",
                         },
-                },
+                    },
                     LinuxFxVersion = "DOTNETCORE|5.0",
                     ConnectionStrings = {
-                    new ConnStringInfoArgs
-                    {
-                        Name = "Application",
-                        Type = ConnectionStringType.SQLAzure,
-                        ConnectionString = db.DatabaseConnectionString
+                        new ConnStringInfoArgs
+                        {
+                            Name = "Application",
+                            Type = ConnectionStringType.SQLAzure,
+                            ConnectionString = db.DatabaseConnectionString
+                        },
                     },
-                },
                 }
             });
 
@@ -77,7 +77,6 @@ namespace SignalBox.Azure
                 SiteConfig = new SiteConfigArgs
                 {
                     AppSettings = {
-                        // warning! these are overwritten below
                         new NameValuePairArgs{
                             Name = "AzureWebJobsStorage",
                             Value = storage.PrimaryConnectionString,
@@ -95,8 +94,48 @@ namespace SignalBox.Azure
                 },
             });
 
+            var dotnetFunctionApp = new WebApp("dotnetjobs", new WebAppArgs
+            {
+                ResourceGroupName = rg.Name,
+                ServerFarmId = plan.Id,
+                Kind = "functionapp",
+                SiteConfig = new SiteConfigArgs
+                {
+                    AlwaysOn = true, // recommended in the Azure portal.
+                    AppSettings = {
+                        new NameValuePairArgs{
+                            Name = "AzureWebJobsStorage",
+                            Value = storage.PrimaryConnectionString,
+                        },
+                        new NameValuePairArgs{
+                            Name = "FUNCTIONS_EXTENSION_VERSION",
+                            Value = "~3",
+                        },
+                        new NameValuePairArgs{
+                            Name = "FUNCTIONS_WORKER_RUNTIME",
+                            Value = "dotnet-isolated",
+                        },
+                        new NameValuePairArgs{
+                            Name = "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            Value = insights.InstrumentationKey,
+                        }
+                    },
+                    ConnectionStrings = {
+                        new ConnStringInfoArgs
+                        {
+                            Name = "Application",
+                            Type = ConnectionStringType.SQLAzure,
+                            ConnectionString = db.DatabaseConnectionString
+                        },
+                    },
+                    Http20Enabled = true,
+                    LinuxFxVersion = "dotnet|5.0"
+                },
+            });
+
             this.WebApp = webApp;
             this.FunctionApp = functionApp;
+            this.DotnetFunctionApp = dotnetFunctionApp;
             // include the functionApp Id in this method so it doesn't get called too early
             // also, dont think I actually need thissubs
             // this.FunctionAppDefaultKey = Output.Tuple(rg.Name, functionApp.Name, functionApp.Id).Apply(names =>
@@ -113,6 +152,7 @@ namespace SignalBox.Azure
                 ResourceGroupName = rg.Name,
                 Properties = {
                     {"CURRENT_STACK", "dotnetcore"},
+                    {"ASPNETCORE_HTTPS_PORT", "443"},
                     {"Deployment__Stack", Pulumi.Deployment.Instance.StackName},
                     {"Deployment__Project", Pulumi.Deployment.Instance.ProjectName},
                     {"Deployment__Environment", environment},
@@ -128,9 +168,13 @@ namespace SignalBox.Azure
                     {"Auth0__M2M__ClientId", auth0.M2MClientId},
                     {"Auth0__M2M__ClientSecret", auth0.M2MClientSecret},
                     {"Auth0__M2M__Endpoint", auth0.M2MEndpoint},
-                    {"FileHosting__ConnectionString", ml.PrimaryStorageConnectionString},
-                    {"FileHosting__ContainerName", "reports"},
-                    {"FileHosting__Source", "blob"},
+                    {"ReportFileHosting__ConnectionString", ml.PrimaryStorageConnectionString},
+                    {"ReportFileHosting__ContainerName", "reports"},
+                    {"ReportFileHosting__Source", "blob"},
+                    {"Queues__ConnectionString", storage.PrimaryConnectionString},
+                    {"Queues__ContainerName", "queue-messages"},
+                    {"Queues__EnableWriteQueue", true.ToString()},
+                    {"Queues__EnableReadQueue", false.ToString()},
                     {"HubSpot__AppCredentials__AppId", hubspotConfig.Get("appId") ?? ""},
                     {"HubSpot__AppCredentials__ClientId", hubspotConfig.Get("clientId") ?? ""},
                     {"HubSpot__AppCredentials__ClientSecret", hubspotConfig.Get("clientSecret") ?? ""},
@@ -145,6 +189,7 @@ namespace SignalBox.Azure
 
         public WebApp WebApp { get; }
         public WebApp FunctionApp { get; }
+        public WebApp DotnetFunctionApp { get; }
         // public Output<string> FunctionAppDefaultKey { get; }
 
         private static async Task<string> GetDefaultFunctionKey(string resourceGroupName, string name)

@@ -6,7 +6,7 @@ import { ExpandableCard } from "./ExpandableCard";
 import { Link } from "react-router-dom";
 export const TrackedUserListItem = ({ trackedUser }) => {
   return (
-    <ExpandableCard name={trackedUser.name || trackedUser.id}>
+    <ExpandableCard label={trackedUser.name || trackedUser.id}>
       <div>
         <Link to={`/tracked-users/detail/${trackedUser.id}`} className='float-right'>
           <button className="btn btn-primary">Detail</button>

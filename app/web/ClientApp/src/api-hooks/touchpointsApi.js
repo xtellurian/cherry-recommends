@@ -3,6 +3,8 @@ import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
 import {
   fetchTouchpoints,
+  fetchTouchpoint,
+  fetchTrackedUsersInTouchpoint,
   fetchTrackedUserTouchpoints,
   fetchTrackedUserTouchpointValues,
 } from "../api/touchpointsApi";
@@ -23,7 +25,25 @@ export const useTouchpoints = () => {
     }
   }, [token, page]);
 
-  return { result };
+  return result;
+};
+
+export const useTouchpoint = ({ id }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchTouchpoint({
+        success: setState,
+        error: (e) => setState({ error: e }),
+        token,
+        id,
+      });
+    }
+  }, [token, id]);
+
+  return result;
 };
 
 export const useTrackedUserTouchpoints = ({ id }) => {
@@ -64,6 +84,24 @@ export const useTrackedUserTouchpointValues = ({
       });
     }
   }, [token, id, touchpointCommonId, version]);
+
+  return result;
+};
+
+export const useTrackedUsersInTouchpoint = ({ id }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchTrackedUsersInTouchpoint({
+        success: setState,
+        error: (e) => setState({ error: e }),
+        id,
+        token,
+      });
+    }
+  }, [token, id]);
 
   return result;
 };

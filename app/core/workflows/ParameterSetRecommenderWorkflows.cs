@@ -10,21 +10,18 @@ namespace SignalBox.Core.Workflows
     {
         private readonly IStorageContext storageContext;
         private readonly IParameterSetRecommenderStore store;
-        private readonly IParameterSetRecommendationStore recommendationStore;
+        private readonly IModelRegistrationStore modelRegistrationStore;
         private readonly IParameterStore parameterStore;
-        private readonly IRecommender<ParameterSetRecommendation> recommender;
 
         public ParameterSetRecommenderWorkflows(IStorageContext storageContext,
                                                 IParameterSetRecommenderStore store,
-                                               IParameterSetRecommendationStore recommendationStore,
-                                                IParameterStore parameterStore,
-                                                IRecommender<ParameterSetRecommendation> recommender)
+                                                IModelRegistrationStore modelRegistrationStore,
+                                                IParameterStore parameterStore)
         {
             this.storageContext = storageContext;
             this.store = store;
-            this.recommendationStore = recommendationStore;
+            this.modelRegistrationStore = modelRegistrationStore;
             this.parameterStore = parameterStore;
-            this.recommender = recommender;
         }
 
         public async Task<ParameterSetRecommender> CreateParameterSetRecommender(CreateCommonEntityModel common,
@@ -55,13 +52,12 @@ namespace SignalBox.Core.Workflows
             return recommender;
         }
 
-        public async Task<ParameterSetRecommendation> GetParameterSetRecommendation(string commonId, Dictionary<string, object> args)
+        public async Task<ModelRegistration> LinkRegisteredModel(ParameterSetRecommender recommender, long modelId)
         {
-            var recommendation = await recommender.Recommend(new RecommendationRequestArguments(args));
-            // save the recommmendation before we return it.
-            recommendation = await recommendationStore.Create(recommendation);
+            var model = await modelRegistrationStore.Read(modelId);
+            recommender.ModelRegistration = model;
             await storageContext.SaveChanges();
-            return recommendation;
+            return model;
         }
     }
 }

@@ -23,6 +23,7 @@ using SignalBox.Infrastructure.Files;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Integrations;
 using Microsoft.ApplicationInsights.Extensibility;
+using SignalBox.Web.Services;
 
 namespace SignalBox.Web
 {
@@ -55,16 +56,21 @@ namespace SignalBox.Web
                 services.UseMemory();
             }
 
+            // configure storage queues
+            services.Configure<AzureQueueConfig>(Configuration.GetSection("Queues"));
+            services.Configure<QueueMessagesFileHosting>(Configuration.GetSection("Queues"));
+            services.AddScoped<IQueueMessagesFileStore, AzureBlobQueueMessagesFileStore>();
+
             // Configure file storage type
-            var fileSource = Configuration.GetSection("FileHosting").GetValue<string>("Source");
+            var fileSource = Configuration.GetSection("ReportFileHosting").GetValue<string>("Source");
             if (fileSource == "local")
             {
-                services.AddScoped<IFileStore, LocalFileStore>();
+                services.AddScoped<IReportFileStore, LocalFileStore>();
             }
             else if (fileSource == "blob")
             {
-                services.Configure<FileHosting>(Configuration.GetSection("FileHosting"));
-                services.AddScoped<IFileStore, AzureBlobFileStore>();
+                services.Configure<ReportFileHosting>(Configuration.GetSection("ReportFileHosting"));
+                services.AddScoped<IReportFileStore, AzureBlobReportFileStore>();
             }
             else
             {
@@ -74,15 +80,17 @@ namespace SignalBox.Web
             services.Configure<DeploymentInformation>(Configuration.GetSection("Deployment"));
 
             services.AddApplicationInsightsTelemetry();
+            services.AddScoped<ITelemetry, AppInsightsTelemetry>();
 
             // add core services
             services.RegisterCoreServices();
 
+            services.AddAzureStorageQueueStores();
             services.AddEFStores();
             // add our logical workflows from the Core project
             services.RegisterWorkflows();
             services.AddHttpClient();
-            services.RegisterAuth0M2M();
+            services.RegisterDefaultServices();
             services.Configure<Auth0M2MClient>(Configuration.GetSection("Auth0").GetSection("M2M"));
             services.Configure<HubspotAppCredentials>(Configuration.GetSection("HubSpot").GetSection("AppCredentials"));
             services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();

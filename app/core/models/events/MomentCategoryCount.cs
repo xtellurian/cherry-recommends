@@ -5,10 +5,11 @@ namespace SignalBox.Core
 {
     public class MomentCategoryCount : List<Dictionary<string, object>>
     {
+        public MomentCategoryCount()
+        { }
         // This should take moments that have already been grouped into buckets of timestamps
-        public MomentCategoryCount(IEnumerable<MomentCount> moments)
+        public MomentCategoryCount(IEnumerable<MomentCount> moments, IEnumerable<string> categories)
         {
-            var categories = moments.Select(_ => _.Category).Where(_ => _ != null).Distinct().ToList();
             var timestamps = moments.Select(_ => _.Timestamp).Distinct().ToList();
             timestamps.Sort();
             foreach (var t in timestamps)

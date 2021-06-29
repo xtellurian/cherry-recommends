@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Microsoft.Extensions.Options;
@@ -16,6 +17,16 @@ namespace SignalBox.Infrastructure.Files
         {
             this.hosting = options.Value;
             this.blobServiceClient = new BlobServiceClient(hosting.ConnectionString);
+        }
+
+        public async Task WriteFile(string contents, string name)
+        {
+            var fullPath = Path.Join(hosting.SubPath, name);
+            var containerClient = blobServiceClient.GetBlobContainerClient(hosting.ContainerName);
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(contents)))
+            {
+                var r = await containerClient.UploadBlobAsync(fullPath, stream);
+            }
         }
 
         public async Task<IEnumerable<FileInformation>> ListFiles(string subPath = null)
@@ -40,7 +51,13 @@ namespace SignalBox.Infrastructure.Files
             memStream.Seek(0, SeekOrigin.Begin);
             return memStream.GetBuffer();
         }
-        
+
+        public async Task<string> ReadAsString(string path)
+        {
+            var bytes = await ReadAllBytes(path);
+            return Encoding.UTF8.GetString(bytes).TrimEnd('\0');
+        }
+
         public async Task CopyTo(string path, Stream stream)
         {
             var fullPath = Path.Join(hosting.SubPath, path);

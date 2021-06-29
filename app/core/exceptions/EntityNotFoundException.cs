@@ -2,13 +2,13 @@ using System;
 
 namespace SignalBox.Core
 {
-    public class EntityNotFoundException : SignalBoxException
+    public class EntityNotFoundException<T> : SignalBoxException where T : Entity
     {
-        public EntityNotFoundException(string message) : base(message)
-        {
-        }
-        public EntityNotFoundException(Type entityType, long id) :
-        base($"An entity of type {entityType.Name} with Id {id} was not found")
-        {}
+        public EntityNotFoundException(string message) : base($"Entity of type {typeof(T).Name} not found", message)
+        { }
+        public EntityNotFoundException(long id) : base("Not Found", $"Entity of type {typeof(T).Name} with Id {id} not found")
+        { }
+        public EntityNotFoundException(long id, string message) : base($"Entity of type {typeof(T).Name} with Id {id} not found", message)
+        { }
     }
 }

@@ -35,6 +35,18 @@ namespace SignalBox.Core.Workflows
             this.dateTimeProvider = dateTimeProvider;
         }
 
+        public async Task<IEnumerable<TrackedUser>> CreateIfNotExist(IEnumerable<string> commonUserIds)
+        {
+            var newUsers = await userStore.CreateIfNotExists(commonUserIds);
+            foreach (var u in newUsers)
+            {
+                u.LastUpdated = dateTimeProvider.Now;
+            }
+
+            await storageContext.SaveChanges();
+            return newUsers;
+        }
+
         public async Task<TrackedUser> CreateOrUpdateTrackedUser(string commonUserId,
                                                          string? name = null,
                                                          Dictionary<string, object>? properties = null,

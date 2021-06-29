@@ -456,6 +456,21 @@ namespace sqlite.SignalBox
                     b.Property<long>("LastUpdated")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ModelInput")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ModelInputType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ModelOutput")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ModelOutputType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Version")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("ParameterSetRecommendations");
@@ -489,6 +504,9 @@ namespace sqlite.SignalBox
                         .HasColumnType("INTEGER")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("ModelRegistrationId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
@@ -499,6 +517,8 @@ namespace sqlite.SignalBox
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ModelRegistrationId");
 
                     b.ToTable("ParameterSetRecommenders");
                 });
@@ -944,6 +964,15 @@ namespace sqlite.SignalBox
                     b.Navigation("Offer");
 
                     b.Navigation("Recommendation");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommender", b =>
+                {
+                    b.HasOne("SignalBox.Core.ModelRegistration", "ModelRegistration")
+                        .WithMany()
+                        .HasForeignKey("ModelRegistrationId");
+
+                    b.Navigation("ModelRegistration");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Sku", b =>

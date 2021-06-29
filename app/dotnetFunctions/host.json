@@ -1,0 +1,18 @@
+{
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
+    },
+    "logLevel": {
+      "default": "Information",
+      "Microsoft.EntityFrameworkCore": "Warning",
+      "Host.Results": "Warning",
+      "Function": "Information",
+      "Host.Aggregator": "Warning"
+    }
+  }
+}

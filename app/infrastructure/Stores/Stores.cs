@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SignalBox.Core;
 using SignalBox.Infrastructure.EntityFramework;
+using SignalBox.Infrastructure.Queues;
 
 namespace SignalBox.Infrastructure
 {
@@ -30,6 +31,12 @@ namespace SignalBox.Infrastructure
             return services;
         }
 
+        public static IServiceCollection AddAzureStorageQueueStores(this IServiceCollection services)
+        {
+            services.AddScoped<ITrackedUserEventQueueStore, TrackedUserEventQueueStore>();
+            services.AddScoped<INewTrackedUserEventQueueStore, NewTrackedUserEventQueueStore>();
+            return services;
+        }
         public static IServiceCollection AddEFStores(this IServiceCollection services)
         {
             services.AddScoped<ITrackedUserEventStore, EFTrackedUserEventStore>();
@@ -44,10 +51,10 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IParameterStore, EFParameterStore>();
             services.AddScoped<IParameterSetRecommenderStore, EFParameterSetRecommenderStore>();
             services.AddScoped<IParameterSetRecommendationStore, EFParameterSetRecommendationStore>();
-            
+
             services.AddScoped<ITouchpointStore, EFTouchpointStore>();
             services.AddScoped<ITrackedUserTouchpointStore, EFTrackedUserTouchpointStore>();
-            
+
             services.AddScoped<IHashedApiKeyStore, EFHashedAPIKeyStore>();
             services.AddScoped<IModelRegistrationStore, EFModelRegistrationStore>();
             services.AddScoped<IIntegratedSystemStore, EFIntegratedSystemStore>();

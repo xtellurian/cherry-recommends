@@ -9,7 +9,7 @@ import { Paginator } from "../molecules/Paginator";
 
 const OfferRow = ({ offer }) => {
   return (
-    <ExpandableCard name={offer.name}>
+    <ExpandableCard label={offer.name}>
       <Link to={`/offers/${offer.id}`} className="float-right">
         <button className="btn btn-secondary">View</button>
       </Link>

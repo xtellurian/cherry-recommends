@@ -50,6 +50,11 @@ namespace SignalBox.Core.Workflows
             return touchpoint;
         }
 
+        public async Task<Paginated<TrackedUser>> GetTrackedUsers(Touchpoint touchpoint, int page)
+        {
+            return await touchpointStore.QueryTrackedUsers(page, touchpoint.Id);
+        }
+
         public async Task<TrackedUserTouchpoint> ReadTouchpointValues(TrackedUser trackedUser, string touchpointCommonId, int? version = null)
         {
             var touchpoint = await touchpointStore.ReadFromCommonId(touchpointCommonId);

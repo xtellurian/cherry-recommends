@@ -1,19 +1,79 @@
 import React from "react";
-import { Link, useRouteMatch } from "react-router-dom";
+import { useRouteMatch } from "react-router-dom";
 import { useModelRegistrations } from "../../api-hooks/modelRegistrationsApi";
+import { deleteModelRegistration } from "../../api/modelRegistrationsApi";
 import { Title } from "../molecules/PageHeadings";
 import { JsonView } from "../molecules/JsonView";
-import { ExpandableCard } from "../molecules/ExpandableCard";
-import { Spinner } from "../molecules/Spinner";
 import { CreateButton } from "../molecules/CreateButton";
-import { Paginator } from "../molecules/Paginator";
+import {
+  EmptyList,
+  Paginator,
+  Spinner,
+  ExpandableCard,
+  ErrorCard,
+} from "../molecules";
+import {
+  ActionsButton,
+  ActionItem,
+  ActionItemsGroup,
+} from "../molecules/ActionsButton";
+import { ConfirmationPopup } from "../molecules/ConfirmationPopup";
+import { useAccessToken } from "../../api-hooks/token";
 
-const ModelRow = ({ model }) => {
+const ModelRow = ({ model, onDeleted }) => {
+  const token = useAccessToken();
+  const [open, setOpen] = React.useState(false);
+  const [error, setError] = React.useState();
   return (
-    <ExpandableCard name={model.name}>
-      <Link to={`/models/invoke/${model.id}`} className="float-right">
-        <button className="btn btn-secondary">Test</button>
-      </Link>
+    <ExpandableCard label={model.name}>
+      <ActionsButton
+        label="Test"
+        to={`/models/test/${model.id}`}
+        className="float-right"
+      >
+        <ActionItemsGroup label="Actions">
+          <ActionItem onClick={() => setOpen(true)}>Delete</ActionItem>
+          <ConfirmationPopup
+            isOpen={open}
+            setIsOpen={setOpen}
+            label="Are you sure you want to delete this model?"
+          >
+            <div className="m-2">{model.name}</div>
+            {error && <ErrorCard error={error} />}
+            <div
+              className="btn-group"
+              role="group"
+              aria-label="Delete or cancel buttons"
+            >
+              <button
+                className="btn btn-secondary"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => {
+                  deleteModelRegistration({
+                    success: () => {
+                      if (onDeleted) {
+                        onDeleted();
+                      }
+                      setOpen(false);
+                    },
+                    error: setError,
+                    token,
+                    id: model.id,
+                  });
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </ConfirmationPopup>
+        </ActionItemsGroup>
+      </ActionsButton>
+
       <div>
         <div>Scoring URL: {model.scoringUrl}</div>
         <div>
@@ -25,7 +85,8 @@ const ModelRow = ({ model }) => {
 };
 export const ModelRegistrationsSummary = () => {
   let { path } = useRouteMatch();
-  const { result } = useModelRegistrations();
+  const [trigger, setTrigger] = React.useState({});
+  const result = useModelRegistrations({ trigger });
   return (
     <React.Fragment>
       <div>
@@ -38,21 +99,23 @@ export const ModelRegistrationsSummary = () => {
       <hr />
       <div>
         {result &&
-          result.items.length > 0 &&
-          result.items.map((m) => <ModelRow key={m.id} model={m} />)}
+          result.items &&
+          result.items.map((m) => (
+            <ModelRow key={m.id} model={m} onDeleted={() => setTrigger({})} />
+          ))}
       </div>
       <div>
-        {result && result.items.length === 0 && (
-          <div className="text-center p-5">
+        {result.items && result.items.length === 0 && (
+          <EmptyList>
             <div>There are no models registered.</div>
             <CreateButton to={`${path}/create`} className="mt-4">
               Create New Model
             </CreateButton>
-          </div>
+          </EmptyList>
         )}
       </div>
-      {!result && <Spinner />}
-      {result && <Paginator {...result.pagination} />}
+      {result.loading && <Spinner />}
+      {result.pagination && <Paginator {...result.pagination} />}
     </React.Fragment>
   );
 };

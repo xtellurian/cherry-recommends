@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
@@ -19,6 +20,16 @@ namespace SignalBox.Infrastructure.EntityFramework
         public async Task<int> Count(Expression<Func<T, bool>> predicate = null)
         {
             return await Set.CountAsync(predicate ?? ((x) => true));
+        }
+
+        public async Task<TResult> Min<TResult>(Expression<Func<T, TResult>> selector)
+        {
+            return await Set.MinAsync(selector);
+        }
+
+        public async Task<TResult> Max<TResult>(Expression<Func<T, TResult>> selector)
+        {
+            return await Set.MaxAsync(selector);
         }
 
         public async Task<T> Create(T entity)
@@ -104,9 +115,16 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<bool> Remove(long id)
         {
-            var entity = await Set.SingleAsync(_ => _.Id == id);
-            var result = Set.Remove(entity);
-            return result.State.HasFlag(EntityState.Deleted);
+            try
+            {
+                var entity = await Set.SingleAsync(_ => _.Id == id);
+                var result = Set.Remove(entity);
+                return result.State.HasFlag(EntityState.Deleted);
+            }
+            catch (Exception ex)
+            {
+                throw new StorageException($"Failed to delete entity {id} of type {typeof(T).Name}", ex);
+            }
         }
 
         public async Task<T> Update(T entity)

@@ -1,8 +1,8 @@
 namespace SignalBox.Core
 {
-    public class EvaluationResult
+    public class AzureMLClassifierOutput : IModelOutput
     {
-        public EvaluationResult(string result)
+        public AzureMLClassifierOutput(string result)
         {
             Result = result;
         }

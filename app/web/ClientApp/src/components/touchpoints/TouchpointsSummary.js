@@ -1,8 +1,7 @@
 import React from "react";
 import { useTouchpoints } from "../../api-hooks/touchpointsApi";
-import { Spinner } from "../molecules/Spinner";
-import { Title } from "../molecules/PageHeadings";
-import { EmptyList } from "../molecules/EmptyList";
+import { ActionsButton } from "../molecules/ActionsButton";
+import { Title, EmptyList, Spinner } from "../molecules";
 import { CreateButton } from "../molecules/CreateButton";
 import { Paginator } from "../molecules/Paginator";
 
@@ -11,7 +10,14 @@ const TouchpointRow = ({ touchpoint }) => {
     <div className="card">
       <div className="row card-body">
         <div className="col">{touchpoint.commonId}</div>
-        <div className="col">{touchpoint.name}</div>
+        <div className="col">
+          <ActionsButton
+            className="float-right"
+            to={`/touchpoints/users-in-touchpoint/${touchpoint.id}`}
+            label="Tracked Users"
+          />
+          {touchpoint.name}
+        </div>
       </div>
     </div>
   );
@@ -28,8 +34,8 @@ const Top = () => {
   );
 };
 export const TouchpointsSummary = () => {
-  const { result } = useTouchpoints();
-  if (!result || result.loading) {
+  const touchpoints = useTouchpoints();
+  if (touchpoints.loading) {
     return (
       <React.Fragment>
         <Top />
@@ -40,10 +46,10 @@ export const TouchpointsSummary = () => {
   return (
     <React.Fragment>
       <Top />
-      {result.items.map((t) => (
+      {touchpoints.items.map((t) => (
         <TouchpointRow key={t.id} touchpoint={t} />
       ))}
-      {result.items.length === 0 && (
+      {touchpoints.items.length === 0 && (
         <EmptyList>
           There are no Touchpoints yet.
           <CreateButton className="mt-3" to="/touchpoints/create">
@@ -51,7 +57,7 @@ export const TouchpointsSummary = () => {
           </CreateButton>
         </EmptyList>
       )}
-      <Paginator  {...result.pagination}/>
+      <Paginator {...touchpoints.pagination} />
     </React.Fragment>
   );
 };

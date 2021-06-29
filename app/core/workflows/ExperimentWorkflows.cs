@@ -47,7 +47,7 @@ namespace SignalBox.Core.Workflows
             {
                 if (!await offerStore.Exists(offerId))
                 {
-                    throw new EntityNotFoundException(typeof(Offer), offerId);
+                    throw new EntityNotFoundException<Offer>(offerId);
                 }
             }
             var offers = new List<Offer>();

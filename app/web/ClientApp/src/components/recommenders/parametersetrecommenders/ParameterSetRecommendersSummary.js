@@ -12,11 +12,11 @@ import { CopyableField } from "../../molecules/CopyableField";
 
 const ParameterSetRecommenderRow = ({ recommender }) => {
   return (
-    <ExpandableCard name={recommender.name}>
+    <ExpandableCard label={recommender.name}>
       <CopyableField label="Identifier" value={recommender.commonId} />
       <p>{recommender.description}</p>
       <Link to={`/recommenders/parameter-set-recommenders/detail/${recommender.id}`}>
-      <button className="btn btn-primary">
+      <button className="btn btn-primary float-right w-25">
         Detail
       </button>
       </Link>

@@ -12,7 +12,7 @@ import { DropdownItem, DropdownComponent } from "../molecules/Dropdown";
 
 const OfferCard = ({ offer }) => {
   return (
-    <ExpandableCard name={offer.name}>
+    <ExpandableCard label={offer.name}>
       <div>
         <div>Price: {offer.price}</div>
         <div>Cost: {offer.cost}</div>

@@ -9,11 +9,14 @@ namespace SignalBox.Core
         {
             Moments = moments.OrderByDescending(_ => _.Timestamp);
             Categories = moments.Select(_ => _.Category).Where(_ => _ != null).Distinct().ToList();
-            CategoricalMoments = new MomentCategoryCount(moments);
+            if (Categories.Any())
+            {
+                CategoricalMoments = new MomentCategoryCount(moments, Categories);
+            }
         }
 
         public IEnumerable<string> Categories { get; set; }
         public IEnumerable<MomentCount> Moments { get; set; }
-        public MomentCategoryCount CategoricalMoments { get; set; }
+        public MomentCategoryCount CategoricalMoments { get; set; } = new MomentCategoryCount();
     }
 }

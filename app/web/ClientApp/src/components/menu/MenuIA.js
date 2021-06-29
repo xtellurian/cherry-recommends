@@ -34,7 +34,7 @@ export const AuthenticatedIA = [
   //     ],
   //   },
   {
-    name: "Catalogs",
+    name: "Catalogue",
     items: [
       {
         name: "Touchpoints",
@@ -81,5 +81,9 @@ export const settingsItems = [
   {
     name: "Integrations",
     to: "/settings/integrations",
+  },
+  {
+    name: "Models",
+    to: "/models",
   },
 ];

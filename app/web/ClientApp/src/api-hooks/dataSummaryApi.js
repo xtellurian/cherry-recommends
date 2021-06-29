@@ -45,12 +45,13 @@ export const useEventTimeline = ({ kind, eventType }) => {
   return { result };
 };
 
-export const useDashboard = () => {
+export const useDashboard = ({ scope }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({
     loading: true,
   });
   React.useEffect(() => {
+    setState({ loading: true });
     if (token) {
       fetchDashboard({
         success: setState,
@@ -59,9 +60,10 @@ export const useDashboard = () => {
             error: e,
           }),
         token,
+        scope,
       });
     }
-  }, [token]);
+  }, [token, scope]);
 
-  return { result };
+  return result;
 };

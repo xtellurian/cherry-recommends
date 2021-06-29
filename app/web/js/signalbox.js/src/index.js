@@ -11,6 +11,7 @@ import * as events from "./api/eventsApi";
 import * as experiments from "./api/experimentsApi";
 import * as integratedSystems from "./api/integratedSystemsApi";
 import * as modelRegistrations from "./api/modelRegistrationsApi";
+import * as models from "./api/models/index";
 import * as offers from "./api/offersApi";
 import * as paging from "./api/paging";
 import * as reactConfig from "./api/reactConfigApi";
@@ -31,6 +32,7 @@ export {
   experiments,
   integratedSystems,
   modelRegistrations,
+  models,
   offers,
   paging,
   parameters,

@@ -6,23 +6,18 @@ import { DashboardEventChart } from "./DashboardEventChart";
 import { GetStarted } from "./GetStarted";
 
 export const Dashboard = () => {
-  const { result } = useDashboard();
+  const dashboard = useDashboard({scope: null}); // choose null, kind, or type
 
-  if (!result || result.loading) {
-    return <Spinner />;
-  }
   return (
     <React.Fragment>
-      <div className="row">
-        <div className="col">
-          <Subtitle>Latest Tracked Events</Subtitle>
-          <DashboardEventChart timeline={result.eventTimeline} />
-        </div>
-        <div className="col">
-          <Subtitle>Get Started</Subtitle>
-          <GetStarted />
-        </div>
-      </div>
+      <Subtitle>Get Started</Subtitle>
+      <GetStarted />
+      <hr />
+      <Subtitle>Latest Tracked Events</Subtitle>
+      {dashboard.loading && <Spinner>Loading Dashboard Data</Spinner>}
+      {dashboard.eventTimeline && (
+        <DashboardEventChart timeline={dashboard.eventTimeline} />
+      )}
     </React.Fragment>
   );
 };

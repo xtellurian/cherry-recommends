@@ -15,7 +15,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             var users = new List<TrackedUser>();
             foreach (var commonId in commonIds)
             {
-                users.Add(await CreateIfNotExists(commonId));
+                users.Add(await this.CreateIfNotExists(commonId));
             }
 
             return users;

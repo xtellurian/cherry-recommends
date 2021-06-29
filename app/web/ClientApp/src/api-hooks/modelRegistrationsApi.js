@@ -6,27 +6,30 @@ import {
   fetchModelRegistrations,
 } from "../api/modelRegistrationsApi";
 
-export const useModelRegistrations = () => {
+export const useModelRegistrations = (p) => {
+  const { trigger } = p || {}; // ensure this works in the case of p === undefinfed
   const token = useAccessToken();
   const page = usePagination();
-  const [result, setState] = React.useState();
+  const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
+    setState({ loading: true });
     if (token) {
       fetchModelRegistrations({
         success: setState,
-        error: console.log,
+        error: (error) => setState({ error }),
         token,
         page,
       });
     }
-  }, [token, page]);
-  return { result };
+  }, [token, page, trigger]);
+  return result;
 };
 
 export const useModelRegistration = ({ id }) => {
   const token = useAccessToken();
-  const [model, setState] = React.useState();
+  const [model, setState] = React.useState({ loading: true });
   React.useEffect(() => {
+    setState({ loading: true });
     if (token && id) {
       fetchModelRegistration({
         success: setState,
@@ -37,5 +40,5 @@ export const useModelRegistration = ({ id }) => {
     }
   }, [token, id]);
 
-  return { model };
+  return model;
 };

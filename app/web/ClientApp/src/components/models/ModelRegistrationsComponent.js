@@ -3,7 +3,7 @@ import {  Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { CreateModelRegistration } from "./CreateModelRegistration";
 import { ModelRegistrationsSummary } from "./ModelRegistrationsSummary";
-import { InvokeModel } from "./InvokeModel";
+import { TestModel } from "./TestModel";
 
 export const ModelRegistrationsComponent = () => {
   let { path } = useRouteMatch();
@@ -18,8 +18,8 @@ export const ModelRegistrationsComponent = () => {
         />
         <AuthorizeRoute
           exact
-          path={`${path}/invoke/:id`}
-          component={InvokeModel}
+          path={`${path}/test/:id`}
+          component={TestModel}
         />
 
       </Switch>

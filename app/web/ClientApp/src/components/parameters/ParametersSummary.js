@@ -12,7 +12,7 @@ const ParameterRow = ({ parameter }) => {
   return (
     <div className="row">
       <div className="col">
-        <ExpandableCard name={`${parameter.name} (${parameter.parameterType})`}>
+        <ExpandableCard label={`${parameter.name} (${parameter.parameterType})`}>
           <div>
             <CopyableField label="Identifier" value={parameter.commonId} />
             <p>{parameter.description}</p>

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using SignalBox.Infrastructure;
 
 namespace SignalBox.Core
 {
     public abstract class InMemoryStore<T> : IEntityStore<T> where T : Entity
     {
         protected Dictionary<long, T> store = new Dictionary<long, T>();
+
+        public IStorageContext Context => new InMemoryStorageContext();
 
         public Task<int> Count(Expression<Func<T, bool>> predicate = null)
         {
@@ -86,7 +89,7 @@ namespace SignalBox.Core
             }
             else
             {
-                throw new EntityNotFoundException(typeof(T), entity.Id);
+                throw new EntityNotFoundException<T>(entity.Id);
             }
         }
     }

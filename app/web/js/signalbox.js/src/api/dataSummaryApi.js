@@ -38,10 +38,10 @@ export const fetchEventTimeline = async ({
   }
 };
 
-export const fetchDashboard = async ({ success, error, token }) => {
+export const fetchDashboard = async ({ success, error, token, scope }) => {
   const url = getUrl(`api/datasummary/dashboard`);
 
-  const response = await fetch(url, {
+  const response = await fetch(`${url}?scope=${scope}`, {
     headers: !token
       ? defaultHeaders
       : { ...defaultHeaders, Authorization: `Bearer ${token}` },

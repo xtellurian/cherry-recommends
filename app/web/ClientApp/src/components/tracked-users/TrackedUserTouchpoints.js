@@ -28,7 +28,7 @@ const TouchpointRow = ({ trackedUser, touchpointMeta }) => {
   });
   return (
     <React.Fragment>
-      <ExpandableCard name={touchpointMeta.name || touchpointMeta.commonId}>
+      <ExpandableCard label={touchpointMeta.name || touchpointMeta.commonId}>
         {(!values || values.loading) && <Spinner />}
         {values && !values.loading && <JsonView data={values} />}
       </ExpandableCard>

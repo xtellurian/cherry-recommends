@@ -10,6 +10,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ExperimentWorkflows>();
             services.AddScoped<IntegratedSystemWorkflows>();
             services.AddScoped<ModelRegistrationWorkflows>();
+            services.AddScoped<InvokeModelWorkflows>();
             services.AddScoped<OfferWorkflows>();
             services.AddScoped<PresentationsWorkflows>();
             services.AddScoped<ProductWorkflows>();

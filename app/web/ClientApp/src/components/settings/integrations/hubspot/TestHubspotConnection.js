@@ -23,7 +23,7 @@ const Top = () => {
 
 const PropertyRow = ({ property }) => {
   return (
-    <ExpandableCard name={property.label}>
+    <ExpandableCard label={property.label}>
       <JsonView data={property} />
     </ExpandableCard>
   );

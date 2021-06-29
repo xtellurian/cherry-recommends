@@ -18,6 +18,20 @@ export const fetchTouchpoints = async ({ success, error, token, page }) => {
   }
 };
 
+export const fetchTouchpoint = async ({ success, error, token, id }) => {
+  const url = getUrl(`api/touchpoints/${id}`);
+  const response = await fetch(url, {
+    headers: !token
+      ? defaultHeaders
+      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+  });
+  if (response.ok) {
+    success(await response.json());
+  } else {
+    error(await response.json());
+  }
+};
+
 export const createTouchpointMetadata = async ({
   success,
   error,
@@ -53,6 +67,32 @@ export const fetchTrackedUserTouchpoints = async ({
     return;
   }
   const url = getUrl(`api/trackedusers/${id}/touchpoints`);
+  const response = await fetch(url, {
+    headers: !token
+      ? defaultHeaders
+      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+  });
+  if (response.ok) {
+    const results = await response.json();
+    success(results);
+  } else {
+    error(await response.json());
+  }
+};
+
+export const fetchTrackedUsersInTouchpoint = async ({
+  success,
+  error,
+  token,
+  id,
+}) => {
+  if (!id) {
+    error({
+      title: "Touchpoint ID is required.",
+    });
+    return;
+  }
+  const url = getUrl(`api/touchpoints/${id}/trackedusers`);
   const response = await fetch(url, {
     headers: !token
       ? defaultHeaders

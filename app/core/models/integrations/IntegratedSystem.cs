@@ -19,7 +19,7 @@ namespace SignalBox.Core
 
         public void SetCache<T>(T value) where T : IIntegratedSystemCache
         {
-            this.Cache = JsonSerializer.Serialize(value, typeof(T), new JsonSerializerOptions());
+            this.Cache = base.Serialize(value);
         }
 
         public T GetCache<T>() where T : IIntegratedSystemCache
@@ -28,7 +28,7 @@ namespace SignalBox.Core
             {
                 return default(T);
             }
-            return JsonSerializer.Deserialize<T>(this.Cache, new JsonSerializerOptions());
+            return base.Deserialize<T>(this.Cache);
         }
 
         public IntegratedSystemTypes SystemType { get; set; }

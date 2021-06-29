@@ -17,12 +17,10 @@ namespace SignalBox.Web.Controllers
     [Route("api/[controller]")]
     public class ModelRegistrationsController : EntityControllerBase<ModelRegistration>
     {
-        private readonly IStorageContext storageContext;
         private readonly ModelRegistrationWorkflows workflows;
 
-        public ModelRegistrationsController(IStorageContext storageContext, ModelRegistrationWorkflows workflows, IModelRegistrationStore store) : base(store)
+        public ModelRegistrationsController(ModelRegistrationWorkflows workflows, IModelRegistrationStore store) : base(store)
         {
-            this.storageContext = storageContext;
             this.workflows = workflows;
         }
 
@@ -32,11 +30,10 @@ namespace SignalBox.Web.Controllers
         {
             var model = await workflows.RegisterNewModel(dto.Name,
                                                     new Uri(dto.ScoringUrl),
-                                                    new Uri(dto.SwaggerUrl),
+                                                    dto.SwaggerUrl,
                                                     dto.ModelType,
                                                     dto.HostingType,
                                                     dto.Key);
-            await storageContext.SaveChanges();
             return model;
         }
     }

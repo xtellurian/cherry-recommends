@@ -11,7 +11,7 @@ import { CopyableField } from "../../molecules/CopyableField";
 const basePath = `${window.location.protocol}//${window.location.host}`;
 const WebhookReceiverRow = ({ wr }) => {
   return (
-    <ExpandableCard name={wr.endpointId}>
+    <ExpandableCard label={wr.endpointId}>
       <CopyableField label="Endpoint ID" value={wr.endpointId} />
       <CopyableField
         label="Endpoint"

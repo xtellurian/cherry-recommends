@@ -8,11 +8,10 @@ namespace SignalBox.Infrastructure
 {
     public static class RegistrationExtensions
     {
-        public static IServiceCollection RegisterAuth0M2M(this IServiceCollection services)
+        public static IServiceCollection RegisterDefaultServices(this IServiceCollection services)
         {
             services.AddScoped<IApiTokenFactory, Auth0ApiTokenFactory>();
             services.AddScoped<IModelClientFactory, ModelClientFactory>();
-            services.AddScoped<IRecommender<ParameterSetRecommendation>, HttpParameterSetRecommenderService>();
             return services;
         }
     }

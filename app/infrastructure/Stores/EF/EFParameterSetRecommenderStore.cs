@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
 using SignalBox.Core.Recommenders;
 
@@ -11,16 +13,34 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
         }
 
-        public override Task<ParameterSetRecommender> Read(long id)
+        public override async Task<ParameterSetRecommender> Read(long id)
         {
-            // always include parameters
-            return base.Read(id, _ => _.Parameters);
+            try
+            {
+                return await Set
+                    .Include(_ => _.Parameters)
+                    .Include(_ => _.ModelRegistration)
+                    .SingleAsync(_ => _.Id == id);
+            }
+            catch (Exception ex)
+            {
+                throw new StorageException($"An exception was thrown when finding {typeof(ParameterSetRecommender)} with Id:${id}", ex);
+            }
         }
 
-        public override Task<ParameterSetRecommender> ReadFromCommonId(string commonId)
+        public override async Task<ParameterSetRecommender> ReadFromCommonId(string commonId)
         {
-            // always include the parameters
-            return base.ReadFromCommonId(commonId, _ => _.Parameters);
+            try
+            {
+                return await Set
+                    .Include(_ => _.Parameters)
+                    .Include(_ => _.ModelRegistration)
+                    .SingleAsync(_ => _.CommonId == commonId);
+            }
+            catch (Exception ex)
+            {
+                throw new StorageException($"An exception was thrown when finding type: s${typeof(ParameterSetRecommender)} with commonId:${commonId}", ex);
+            }
         }
     }
 }

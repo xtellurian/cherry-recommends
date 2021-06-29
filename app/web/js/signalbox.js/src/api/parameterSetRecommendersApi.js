@@ -61,3 +61,48 @@ export const createParameterSetRecommender = async ({
     error(await response.json());
   }
 };
+
+export const createLinkRegisteredModel = async ({
+  success,
+  error,
+  token,
+  id,
+  modelId,
+}) => {
+  const url = getUrl(
+    `api/recommenders/ParameterSetRecommenders/${id}/ModelRegistration`
+  );
+  const response = await fetch(url, {
+    headers: !token
+      ? defaultHeaders
+      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    method: "post",
+    body: JSON.stringify({ modelId }),
+  });
+  if (response.ok) {
+    success(await response.json());
+  } else {
+    error(await response.json());
+  }
+};
+
+export const fetchLinkedRegisteredModel = async ({
+  success,
+  error,
+  token,
+  id,
+}) => {
+  const url = getUrl(
+    `api/recommenders/ParameterSetRecommenders/${id}/ModelRegistration`
+  );
+  const response = await fetch(url, {
+    headers: !token
+      ? defaultHeaders
+      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+  });
+  if (response.ok) {
+    success(await response.json());
+  } else {
+    error(await response.json());
+  }
+};

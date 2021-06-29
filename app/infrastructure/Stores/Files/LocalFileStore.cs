@@ -7,7 +7,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.Files
 {
-    public class LocalFileStore : IFileStore
+    public class LocalFileStore : IReportFileStore
     {
         private string rootPath = "~";
         public LocalFileStore(string rootPath = null)
@@ -39,6 +39,16 @@ namespace SignalBox.Infrastructure.Files
         {
             var fullPath = Path.Join(rootPath, path);
             return await File.ReadAllBytesAsync(fullPath);
+        }
+
+        public Task WriteFile(string contents, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> ReadAsString(string path)
+        {
+            throw new NotImplementedException();
         }
     }
 }

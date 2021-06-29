@@ -10,25 +10,24 @@ namespace SignalBox.Web.Controllers
     [Authorize]
     [ApiController]
     [ApiVersion("0.1")]
-    [Route("api/[controller]")]
-    public class ModelsController : SignalBoxControllerBase
+    [Route("api/models/[controller]")]
+    public class AzureSingleClassClassifierController : SignalBoxControllerBase
     {
-        private readonly IStorageContext storageContext;
-        private readonly ModelRegistrationWorkflows workflows;
+        private readonly InvokeModelWorkflows workflows;
         private readonly IModelRegistrationStore modelRegistrationStore;
 
-        public ModelsController(IStorageContext storageContext, ModelRegistrationWorkflows workflows, IModelRegistrationStore modelRegistrationStore)
+        public AzureSingleClassClassifierController(InvokeModelWorkflows workflows,
+                                                    IModelRegistrationStore modelRegistrationStore)
         {
-            this.storageContext = storageContext;
             this.workflows = workflows;
             this.modelRegistrationStore = modelRegistrationStore;
         }
 
         /// <summary>Invoke a model with some payload.</summary>
         [HttpPost("{id}/invoke")]
-        public async Task<EvaluationResult> InvokeModel(long id, [FromBody] AzureMLModelPayload azML)
+        public async Task<AzureMLClassifierOutput> InvokeModel(long id, string version, [FromBody] AzureMLModelInput input)
         {
-            return await workflows.InvokeModel(id, azML.Data.FirstOrDefault());
+            return await workflows.InvokeClassifierModel(id, version, input);
         }
     }
 }

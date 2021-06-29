@@ -26,6 +26,9 @@ namespace SignalBox.Core.Recommenders
             this.Arguments = arguments.ToList();
         }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public ModelRegistration ModelRegistration { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ICollection<Parameter> Parameters { get; set; }
         public List<ParameterBounds> ParameterBounds { get; set; }
         public List<RecommenderArgument> Arguments { get; set; }

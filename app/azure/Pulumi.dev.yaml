@@ -2,7 +2,7 @@ config:
   appsvc:corsorigins:
   - http://localhost:5000
   - https://localhost:5001
-  appsvc:sku-name: B1
+  appsvc:sku-name: B2
   appsvc:sku-tier: Basic
   auth0:clientId: cT3UPVNDzNim39AMgCZHYZpqgaIymr0x
   auth0:clientSecret:

@@ -2,7 +2,7 @@ import requests
 from typing import List
 
 
-def batch(iterable, n=5000):
+def batch(iterable, n=2500):
     l = len(iterable)
     for ndx in range(0, l, n):
         yield iterable[ndx:min(ndx + n, l)]

@@ -1,5 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
@@ -14,5 +15,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             this.context = context;
             this.selector = selector;
         }
+
+        public IStorageContext Context => new EFStorageContext(context);
     }
 }

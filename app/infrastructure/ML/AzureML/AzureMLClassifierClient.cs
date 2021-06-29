@@ -9,42 +9,36 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.ML.Azure
 {
-    public class AzureMLClassifierClient : TabularClassifier
+    public class AzureMLClassifierClient : MLModelClient, IModelClient<AzureMLModelInput, AzureMLClassifierOutput>
     {
-        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        };
-
         private readonly HttpClient httpClient;
 
         public AzureMLClassifierClient(HttpClient httpClient)
         {
             this.httpClient = httpClient;
+            base.SetApplicationJsonHeader(this.httpClient);
         }
 
-        public override async Task<EvaluationResult> Invoke(ModelRegistration model, IDictionary<string, object> features)
+        public async Task<AzureMLClassifierOutput> Invoke(ModelRegistration model, string version, AzureMLModelInput input)
         {
             // convert to strings - Azure seems to want it that way?
-            var res = await RequestScore(model, features.ToDictionary(pair => pair.Key, pair => pair.Value.ToString()));
+            var res = await RequestScore(model, input.Data.First().ToDictionary(pair => pair.Key, pair => pair.Value.ToString()));
             return ParseResults(res);
         }
 
-        private EvaluationResult ParseResults(string results)
+        private AzureMLClassifierOutput ParseResults(string results)
         {
             // Azure ML does a stupid thing where it doesn't serialise JSON properly
             var deStringed = JsonSerializer.Deserialize<string>(results);
             var r = JsonSerializer.Deserialize<AzureMLClassificationResponse>(deStringed, serializerOptions);
-            return new EvaluationResult(r.Result.FirstOrDefault());
+            return new AzureMLClassifierOutput(r.Result.FirstOrDefault());
         }
 
         private async Task<string> RequestScore(ModelRegistration model, params IDictionary<string, string>[] features)
         {
             var scoringPayload = new Dictionary<string, List<IDictionary<string, string>>>();
             scoringPayload["data"] = features.ToList();
-
-            this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", model.Key);
-            this.httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            SetKeyAsBearerToken(httpClient, model);
             var response = await httpClient.PostAsJsonAsync(model.ScoringUrl, scoringPayload);
             // response.EnsureSuccessStatusCode();
 

@@ -51,6 +51,7 @@ namespace SignalBox.Azure
             this.AppResourceGroup = appSvc.WebApp.ResourceGroup;
             this.WebappName = appSvc.WebApp.Name;
             this.FunctionAppName = appSvc.FunctionApp.Name;
+            this.DotnetFunctionAppName = appSvc.DotnetFunctionApp.Name;
             // this.FunctionAppDefaultKey = appSvc.FunctionAppDefaultKey;
         }
 
@@ -58,6 +59,8 @@ namespace SignalBox.Azure
         public Output<string> WebappName { get; set; }
         [Output]
         public Output<string> FunctionAppName { get; set; }
+        [Output]
+        public Output<string> DotnetFunctionAppName { get; set; }
         // [Output]
         // public Output<string> FunctionAppDefaultKey { get; set;}
         [Output]

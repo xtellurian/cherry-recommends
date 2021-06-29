@@ -15,11 +15,17 @@ namespace SignalBox.Infrastructure.ML
             this.httpClient = httpClient;
         }
 
-        public Task<IModelClient> GetClient(ModelRegistration model)
+        public Task<IModelClient<TInput, TOutput>> GetClient<TInput, TOutput>(ModelRegistration model)
+            where TInput : IModelInput
+            where TOutput : IModelOutput
         {
             if (model.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.SingleClassClassifier)
             {
-                return Task.FromResult<IModelClient>(new AzureMLClassifierClient(httpClient));
+                return Task.FromResult((IModelClient<TInput, TOutput>)new AzureMLClassifierClient(httpClient));
+            }
+            else if (model.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ParameterSetRecommenderV1)
+            {
+                return Task.FromResult((IModelClient<TInput, TOutput>)new AzureMLParameterSetRecommenderClient(httpClient));
             }
             else
             {

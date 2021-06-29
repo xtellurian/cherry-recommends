@@ -1,8 +1,11 @@
+using System.Text.Json.Serialization;
+
 namespace SignalBox.Core
 {
     public enum ModelTypes
     {
-        SingleClassClassifier
+        SingleClassClassifier,
+        ParameterSetRecommenderV1
     }
 
     public enum HostingTypes
@@ -32,6 +35,7 @@ namespace SignalBox.Core
         public ModelTypes ModelType { get; set; }
         public HostingTypes HostingType { get; set; }
         public string ScoringUrl { get; set; }
+        [JsonIgnore]
         public string Key { get; set; }
         public SwaggerDefinition Swagger { get; set; }
     }

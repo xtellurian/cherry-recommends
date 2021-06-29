@@ -23,7 +23,32 @@ namespace SignalBox.Infrastructure
             throw new NotImplementedException();
         }
 
+        public Task<long> CountEventsOfKind(string kind, DateTimeOffset? since = null, DateTimeOffset? until = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<long> CountEventsOfType(string kind, string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<long> CountEventsOfType(string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<int> CountTrackedUsers(Expression<Func<TrackedUserEvent, bool>> predicate = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TProperty> Max<TProperty>(Expression<Func<TrackedUserEvent, TProperty>> selector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TProperty> Min<TProperty>(Expression<Func<TrackedUserEvent, TProperty>> selector)
         {
             throw new NotImplementedException();
         }

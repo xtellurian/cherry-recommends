@@ -10,7 +10,11 @@ import {
 import { getColours } from "../../utility/colours";
 
 export const DashboardEventChart = ({ timeline }) => {
-  if (!timeline || timeline.categoricalMoments.length === 0) {
+  if (
+    !timeline ||
+    !timeline.categoricalMoments ||
+    timeline.categoricalMoments.length === 0
+  ) {
     return <div className="text-muted text-center">No data to show.</div>;
   }
   const colours = getColours();

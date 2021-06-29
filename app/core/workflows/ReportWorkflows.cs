@@ -5,9 +5,9 @@ namespace SignalBox.Core.Workflows
 {
     public class ReportWorkflows : IWorkflow
     {
-        private readonly IFileStore fileStore;
+        private readonly IReportFileStore fileStore;
 
-        public ReportWorkflows(IFileStore fileStore)
+        public ReportWorkflows(IReportFileStore fileStore)
         {
             this.fileStore = fileStore;
         }

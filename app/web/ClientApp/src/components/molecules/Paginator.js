@@ -47,6 +47,13 @@ const NextItem = ({ page, enabled }) => {
     </li>
   );
 };
+const LastPage = ({ pageCount, enabled }) => {
+  return (
+    <li className={`page-item ${!enabled && "disabled"}`}>
+      <PageLink page={pageCount}>Last</PageLink>
+    </li>
+  );
+};
 
 export const Paginator = ({
   pageCount,
@@ -73,6 +80,7 @@ export const Paginator = ({
           {hasNextPage && <PageNumberItem page={pageNumber + 1} />}
 
           <NextItem page={pageNumber + 1} enabled={hasNextPage} />
+          <LastPage pageCount={pageCount} enabled={!isLastPage} />
         </ul>
       </nav>
     </div>

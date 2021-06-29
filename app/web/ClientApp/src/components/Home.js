@@ -1,18 +1,8 @@
 import React from "react";
 import { useAuth } from "../utility/useAuth";
-import { Title } from "./molecules/PageHeadings";
-import { Spinner } from "./molecules/Spinner";
+import { Spinner } from "./molecules";
 import { Dashboard } from "./dashboard/Dashboard";
 import LoginButton from "./auth0/LoginButton";
-
-const Top = () => {
-  return (
-    <React.Fragment>
-      <Title>Four2 | SignalBox</Title>
-      <hr />
-    </React.Fragment>
-  );
-};
 
 const LandingUnauthenticated = () => {
   return (
@@ -20,8 +10,8 @@ const LandingUnauthenticated = () => {
       <div className="text-center">
         <h1 className="display-3">Four 2</h1>
         <p>
-          SignalBox is the world's first AI enabled customer intelligence
-          platform.
+          SignalBox is the leading Customer Recommendation Platform for
+          subscription companies.
         </p>
       </div>
       <div className="mt-5">
@@ -37,8 +27,7 @@ export const Home = () => {
   if (isLoading) {
     return (
       <React.Fragment>
-        <Top />
-        <Spinner />
+        <Spinner>Authenticating</Spinner>
       </React.Fragment>
     );
   }
@@ -46,8 +35,6 @@ export const Home = () => {
   if (isAuthenticated) {
     return (
       <React.Fragment>
-        <Title>Dashboard</Title>
-        <hr />
         <Dashboard />
       </React.Fragment>
     );

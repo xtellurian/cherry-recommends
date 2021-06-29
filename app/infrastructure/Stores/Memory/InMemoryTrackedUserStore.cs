@@ -21,7 +21,7 @@ namespace SignalBox.Infrastructure
             }
             else
             {
-                throw new EntityNotFoundException(typeof(TrackedUser), internalId);
+                throw new EntityNotFoundException<TrackedUser>(internalId);
             }
         }
 
@@ -36,7 +36,7 @@ namespace SignalBox.Infrastructure
             var result = store.Values.FirstOrDefault(_ => _.CommonUserId == commonId);
             if (result == null)
             {
-                throw new EntityNotFoundException($"Tracked User with Common User ID {commonId}");
+                throw new EntityNotFoundException<TrackedUser>(commonId);
             }
 
             return Task.FromResult(result);

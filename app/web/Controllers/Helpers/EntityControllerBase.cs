@@ -27,9 +27,18 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Returns the resource with this Id.</summary>
         [HttpGet("{id}")]
-        public virtual async Task<T> GetEntity(long id)
+        public virtual async Task<T> GetResource(long id)
         {
             return await store.Read(id);
+        }
+
+        /// <summary>Deletes the resource with this Id.</summary>
+        [HttpDelete("{id}")]
+        public virtual async Task<DeleteResponse> DeleteResource(long id)
+        {
+            var result = await store.Remove(id);
+            await store.Context.SaveChanges();
+            return new DeleteResponse(id, Request.Path.Value, result);
         }
     }
 }
