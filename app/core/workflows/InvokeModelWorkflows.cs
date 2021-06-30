@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core.Workflows
 {
@@ -18,6 +19,7 @@ namespace SignalBox.Core.Workflows
         private readonly ILogger<InvokeModelWorkflows> logger;
         private readonly HttpClient httpClient;
         private readonly IStorageContext storageContext;
+        private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
         private readonly IModelRegistrationStore modelRegistrationStore;
@@ -26,6 +28,7 @@ namespace SignalBox.Core.Workflows
         public InvokeModelWorkflows(ILogger<InvokeModelWorkflows> logger,
                                     HttpClient httpClient,
                                     IStorageContext storageContext,
+                                    IRecommendationCorrelatorStore correlatorStore,
                                     IParameterSetRecommenderStore parameterSetRecommenderStore,
                                     IParameterSetRecommendationStore parameterSetRecommendationStore,
                                     IModelRegistrationStore modelRegistrationStore,
@@ -34,6 +37,7 @@ namespace SignalBox.Core.Workflows
             this.logger = logger;
             this.httpClient = httpClient;
             this.storageContext = storageContext;
+            this.correlatorStore = correlatorStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
             this.parameterSetRecommendationStore = parameterSetRecommendationStore;
             this.modelRegistrationStore = modelRegistrationStore;
@@ -98,7 +102,8 @@ namespace SignalBox.Core.Workflows
             var output = await client.Invoke(model, version, input);
 
             // now save the result
-            var recommendation = new Recommenders.ParameterSetRecommendation(version);
+            var correlation = await correlatorStore.Create(new RecommendationCorrelator());
+            var recommendation = new ParameterSetRecommendation(correlation, version);
             recommendation.SetInput(input);
             recommendation.SetOutput(output);
             recommendation = await parameterSetRecommendationStore.Create(recommendation);

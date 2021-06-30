@@ -1,8 +1,11 @@
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Recommendations
 {
-    public class ParameterSetRecommendation : Entity
+    public class ParameterSetRecommendation : RecommendationEntity
     {
-        public ParameterSetRecommendation(string version)
+        protected ParameterSetRecommendation()
+        { }
+
+        public ParameterSetRecommendation(RecommendationCorrelator correlator, string version) : base(correlator)
         {
             this.Version = version;
         }

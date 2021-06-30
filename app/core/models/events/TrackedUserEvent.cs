@@ -15,7 +15,8 @@ namespace SignalBox.Core
                                 IntegratedSystem source,
                                 string kind,
                                 string eventType,
-                                IDictionary<string, object> properties)
+                                IDictionary<string, object> properties,
+                                long? recommendationCorrelatorId = null)
         {
             CommonUserId = commonUserId;
             EventId = eventId;
@@ -24,12 +25,14 @@ namespace SignalBox.Core
             Kind = kind;
             EventType = eventType;
             Properties = new DynamicPropertyDictionary(properties);
+            RecommendationCorrelatorId = recommendationCorrelatorId;
         }
 
         public string CommonUserId { get; set; }
         public string EventId { get; set; }
         public DateTimeOffset Timestamp { get; set; }
 # nullable enable
+        public long? RecommendationCorrelatorId { get; set; }
         public IntegratedSystem? Source { get; set; }
 #nullable disable
         public string Kind { get; set; }

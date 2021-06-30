@@ -11,6 +11,7 @@ namespace SignalBox.Web.Dto
         [Required]
         public string EventId { get; set; }
         public DateTimeOffset? Timestamp { get; set; }
+        public long? RecommendationCorrelatorId { get; set; }
         public long? SourceSystemId { get; set; }
         [Required]
         public string Kind { get; set; }

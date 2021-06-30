@@ -118,10 +118,10 @@
     }
   };
 
-  const fetchDashboard = async ({ success, error, token }) => {
+  const fetchDashboard = async ({ success, error, token, scope }) => {
     const url = getUrl(`api/datasummary/dashboard`);
 
-    const response = await fetch(url, {
+    const response = await fetch(`${url}?scope=${scope}`, {
       headers: !token
         ? defaultHeaders$f
         : { ...defaultHeaders$f, Authorization: `Bearer ${token}` },
@@ -191,9 +191,51 @@
     }
   };
 
+  const logUserEvents = async ({ success, error, token, events }) => {
+    const url = getUrl("api/events");
+    if (events.some((e) => !e.commonUserId)) {
+      error({
+        title: "Every Event requires a commonUserId",
+      });
+      return;
+    }
+    if (events.some((e) => !e.eventId)) {
+      error({
+        title: "Every Event requires a unique eventId",
+      });
+      return;
+    }
+    if (events.some((e) => !e.eventType)) {
+      error({
+        title: "Every Event requires an eventType",
+      });
+      return;
+    }
+    if (events.some((e) => !e.kind)) {
+      error({
+        title: "Every Event requires a kind",
+      });
+      return;
+    }
+
+    const response = await fetch(url, {
+      headers: !token
+        ? defaultHeaders$d
+        : { ...defaultHeaders$d, Authorization: `Bearer ${token}` },
+      method: "post",
+      body: JSON.stringify(events),
+    });
+    if (response.ok) {
+      success(await response.json());
+    } else {
+      error(await response.json());
+    }
+  };
+
   var eventsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchUserEvents: fetchUserEvents
+    fetchUserEvents: fetchUserEvents,
+    logUserEvents: logUserEvents
   });
 
   const defaultHeaders$c = { "Content-Type": "application/json" };
@@ -422,6 +464,27 @@
     }
   };
 
+  const deleteModelRegistration = async ({
+    success,
+    error,
+    token,
+    id,
+  }) => {
+    const url = getUrl(`api/ModelRegistrations/${id}`);
+    const response = await fetch(url, {
+      headers: !token
+        ? defaultHeaders$a
+        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
+      method: "delete",
+    });
+    if (response.ok) {
+      const results = await response.json();
+      success(results);
+    } else {
+      error(await response.json());
+    }
+  };
+
   const createModelRegistration = async ({
     success,
     error,
@@ -471,6 +534,7 @@
     __proto__: null,
     fetchModelRegistrations: fetchModelRegistrations,
     fetchModelRegistration: fetchModelRegistration,
+    deleteModelRegistration: deleteModelRegistration,
     createModelRegistration: createModelRegistration,
     invokeModel: invokeModel
   });
@@ -735,6 +799,20 @@
     }
   };
 
+  const fetchTouchpoint = async ({ success, error, token, id }) => {
+    const url = getUrl(`api/touchpoints/${id}`);
+    const response = await fetch(url, {
+      headers: !token
+        ? defaultHeaders$3
+        : { ...defaultHeaders$3, Authorization: `Bearer ${token}` },
+    });
+    if (response.ok) {
+      success(await response.json());
+    } else {
+      error(await response.json());
+    }
+  };
+
   const createTouchpointMetadata = async ({
     success,
     error,
@@ -770,6 +848,32 @@
       return;
     }
     const url = getUrl(`api/trackedusers/${id}/touchpoints`);
+    const response = await fetch(url, {
+      headers: !token
+        ? defaultHeaders$3
+        : { ...defaultHeaders$3, Authorization: `Bearer ${token}` },
+    });
+    if (response.ok) {
+      const results = await response.json();
+      success(results);
+    } else {
+      error(await response.json());
+    }
+  };
+
+  const fetchTrackedUsersInTouchpoint = async ({
+    success,
+    error,
+    token,
+    id,
+  }) => {
+    if (!id) {
+      error({
+        title: "Touchpoint ID is required.",
+      });
+      return;
+    }
+    const url = getUrl(`api/touchpoints/${id}/trackedusers`);
     const response = await fetch(url, {
       headers: !token
         ? defaultHeaders$3
@@ -849,8 +953,10 @@
   var touchpointsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchTouchpoints: fetchTouchpoints,
+    fetchTouchpoint: fetchTouchpoint,
     createTouchpointMetadata: createTouchpointMetadata,
     fetchTrackedUserTouchpoints: fetchTrackedUserTouchpoints,
+    fetchTrackedUsersInTouchpoint: fetchTrackedUsersInTouchpoint,
     createTrackedUserTouchpoint: createTrackedUserTouchpoint,
     fetchTrackedUserTouchpointValues: fetchTrackedUserTouchpointValues
   });

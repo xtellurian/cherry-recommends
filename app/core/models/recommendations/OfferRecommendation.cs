@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 
-namespace SignalBox.Core
+namespace SignalBox.Core.Recommendations
 {
-    public class OfferRecommendation : Entity
+    public class OfferRecommendation : RecommendationEntity
     {
         public OfferRecommendation()
-        {
-        }
+        { }
 
-        public OfferRecommendation(IList<Offer> offers, TrackedUser user, Experiment experiment, Dictionary<string, object> features = null)
+        public OfferRecommendation(RecommendationCorrelator correlator, IList<Offer> offers, TrackedUser user, Experiment experiment, Dictionary<string, object> features = null)
+        : base(correlator)
         {
             CommonUserId = user.CommonUserId;
             Offers = offers;

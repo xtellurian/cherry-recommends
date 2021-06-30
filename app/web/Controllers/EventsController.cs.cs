@@ -38,6 +38,7 @@ namespace SignalBox.Web.Controllers
             new TrackedUserEventsWorkflows.TrackedUserEventInput(d.CommonUserId,
                                                                  d.EventId,
                                                                  d.Timestamp,
+                                                                 d.RecommendationCorrelatorId,
                                                                  d.SourceSystemId,
                                                                  d.Kind,
                                                                  d.EventType,

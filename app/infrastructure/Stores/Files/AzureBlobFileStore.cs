@@ -11,12 +11,11 @@ namespace SignalBox.Infrastructure.Files
     public class AzureBlobFileStore : IFileStore
     {
         private FileHosting hosting;
-        private BlobServiceClient blobServiceClient;
+        private BlobServiceClient blobServiceClient => new BlobServiceClient(hosting.ConnectionString);
 
         public AzureBlobFileStore(IOptions<FileHosting> options)
         {
             this.hosting = options.Value;
-            this.blobServiceClient = new BlobServiceClient(hosting.ConnectionString);
         }
 
         public async Task WriteFile(string contents, string name)

@@ -1,3 +1,5 @@
+using SignalBox.Core.Recommendations;
+
 namespace SignalBox.Core
 {
     public class PresentationOutcome : Entity

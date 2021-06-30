@@ -287,45 +287,6 @@ namespace sqlite.SignalBox
                     b.ToTable("Offers");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.OfferRecommendation", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CommonUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long>("ExperimentId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Features")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("IterationId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("IterationOrder")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Recommendations");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Parameter", b =>
                 {
                     b.Property<long>("Id")
@@ -444,17 +405,68 @@ namespace sqlite.SignalBox
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommendation", b =>
+            modelBuilder.Entity("SignalBox.Core.Recommendations.OfferRecommendation", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CommonUserId")
+                        .HasColumnType("TEXT");
 
                     b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("ExperimentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Features")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("IterationId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("IterationOrder")
                         .HasColumnType("INTEGER");
 
                     b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long?>("RecommendationCorrelatorId")
                         .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecommendationCorrelatorId");
+
+                    b.ToTable("Recommendations");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.ParameterSetRecommendation", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("ModelInput")
                         .HasColumnType("TEXT");
@@ -468,12 +480,34 @@ namespace sqlite.SignalBox
                     b.Property<string>("ModelOutputType")
                         .HasColumnType("TEXT");
 
+                    b.Property<long?>("RecommendationCorrelatorId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Version")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RecommendationCorrelatorId");
+
                     b.ToTable("ParameterSetRecommendations");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.RecommendationCorrelator", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LastUpdated")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RecommendationCorrelators");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommender", b =>
@@ -725,6 +759,9 @@ namespace sqlite.SignalBox
                     b.Property<string>("Properties")
                         .HasColumnType("TEXT");
 
+                    b.Property<long?>("RecommendationCorrelatorId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long?>("SourceId")
                         .HasColumnType("INTEGER");
 
@@ -883,7 +920,7 @@ namespace sqlite.SignalBox
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SignalBox.Core.OfferRecommendation", null)
+                    b.HasOne("SignalBox.Core.Recommendations.OfferRecommendation", null)
                         .WithMany()
                         .HasForeignKey("RecommendationsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -955,7 +992,7 @@ namespace sqlite.SignalBox
                         .WithMany("Outcomes")
                         .HasForeignKey("OfferId");
 
-                    b.HasOne("SignalBox.Core.OfferRecommendation", "Recommendation")
+                    b.HasOne("SignalBox.Core.Recommendations.OfferRecommendation", "Recommendation")
                         .WithMany()
                         .HasForeignKey("RecommendationId");
 
@@ -964,6 +1001,24 @@ namespace sqlite.SignalBox
                     b.Navigation("Offer");
 
                     b.Navigation("Recommendation");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.OfferRecommendation", b =>
+                {
+                    b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
+                        .WithMany()
+                        .HasForeignKey("RecommendationCorrelatorId");
+
+                    b.Navigation("RecommendationCorrelator");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.ParameterSetRecommendation", b =>
+                {
+                    b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
+                        .WithMany()
+                        .HasForeignKey("RecommendationCorrelatorId");
+
+                    b.Navigation("RecommendationCorrelator");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommender", b =>

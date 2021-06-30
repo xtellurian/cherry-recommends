@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core.Recommendations;
 
 #nullable enable
 namespace SignalBox.Core.Workflows
@@ -38,7 +38,7 @@ namespace SignalBox.Core.Workflows
                                                        IEnumerable<long> offerIds,
                                                        int concurrentOffers)
         {
-           
+
             if (name == null)
             {
                 throw new NullReferenceException("Experiment Name cannot be null");
@@ -72,12 +72,6 @@ namespace SignalBox.Core.Workflows
             await storageContext.SaveChanges();
             return results;
         }
-
-        private IRecommender<OfferRecommendation> GetRecommender()
-        {
-            return new RandomRecommender();
-        }
-
         private IScorer GetScorer(string? name)
         {
             if (name == null)

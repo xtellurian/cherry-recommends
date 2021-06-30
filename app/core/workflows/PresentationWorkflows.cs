@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core.Recommendations;
 
 #nullable enable
 namespace SignalBox.Core.Workflows
@@ -15,6 +16,7 @@ namespace SignalBox.Core.Workflows
         private readonly IOfferRecommendationStore recommendationStore;
         private readonly IPresentationOutcomeStore presentationOutcomeStore;
         private readonly IExperimentStore experimentStore;
+        private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IOfferStore offerStore;
 
         public PresentationsWorkflows(ILogger<PresentationsWorkflows> logger,
@@ -23,6 +25,7 @@ namespace SignalBox.Core.Workflows
                                    IOfferRecommendationStore recommendationStore,
                                    IPresentationOutcomeStore presentationOutcomeStore,
                                    IExperimentStore experimentStore,
+                                   IRecommendationCorrelatorStore correlatorStore,
                                    IOfferStore offerStore)
         {
             this.logger = logger;
@@ -31,6 +34,7 @@ namespace SignalBox.Core.Workflows
             this.recommendationStore = recommendationStore;
             this.presentationOutcomeStore = presentationOutcomeStore;
             this.experimentStore = experimentStore;
+            this.correlatorStore = correlatorStore;
             this.offerStore = offerStore;
         }
 
@@ -71,7 +75,7 @@ namespace SignalBox.Core.Workflows
 
         private IRecommender<OfferRecommendation> GetRecommender()
         {
-            return new RandomRecommender();
+            return new RandomRecommender(correlatorStore);
         }
     }
 }

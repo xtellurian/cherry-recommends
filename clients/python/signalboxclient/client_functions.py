@@ -31,7 +31,7 @@ def get(api_endpoint, access_token):
     return requests.get(url=api_endpoint, headers=get_api_header((access_token)), verify=verify)
 
 
-def construct_event(commonUserId, event_id, event_type, kind, properties, timestamp=None, source_system_id=None):
+def construct_event(commonUserId, event_id, event_type, kind, properties, timestamp=None, source_system_id=None, recommendationCorrelatorId: int = None):
     return {
         'commonUserId': commonUserId,
         'eventId': event_id,
@@ -40,6 +40,7 @@ def construct_event(commonUserId, event_id, event_type, kind, properties, timest
         'properties': properties,
         'timestamp': timestamp,
         'sourceSystemId': source_system_id,
+        'recommendationCorrelatorId': recommendationCorrelatorId
     }
 
 
@@ -53,7 +54,7 @@ def construct_user(commonUserId: str, name: str = None, properties: dict = None,
         assert userId is not None
         model['integratedSystemReference'] = {
             'integratedSystemId': integratedSystemId,
-            'userId': str(userId) # must be a string
+            'userId': str(userId)  # must be a string
         }
 
     return model

@@ -6,6 +6,8 @@ from .experiments import create_experiment, get_experiment, get_offers_in_experi
 from .products import create_product, query_products
 from .trackedusers import create_user, create_or_update_users
 from .touchpoints import create_touchpoint_on_tracked_user, get_touchpoint_on_tracked_user
+from .parameters import create_parameter
+from .parameter_recommenders import create_parameterset_recommender
 
 
 class Configuration:
@@ -105,6 +107,10 @@ class SignalBoxClient:
         else:
             raise SignalBoxException(r.text)
 
+    def create_parameter(self, common_id: str, name: str, parameter_type: str = "Numerical", description: str = None):
+        return create_parameter(self.access_token, self.base_url,
+                                common_id, name, parameter_type, description)
+
     def create_experiment(self, offer_ids: list, name: str, concurrent_offers: int = 1, segment_id: str = None):
         return create_experiment(self.access_token, self.base_url,
                                  offer_ids, name, concurrent_offers, segment_id)
@@ -148,8 +154,8 @@ class SignalBoxClient:
         else:
             raise SignalBoxException(r.text)
 
-    def construct_event(self, commonUserId, event_id, event_type, kind, properties, timestamp=None, source_system_id=None):
-        return construct_event(commonUserId, event_id, event_type, kind, properties, timestamp, source_system_id)
+    def construct_event(self, commonUserId, event_id, event_type, kind, properties, timestamp=None, source_system_id=None, recommendationCorrelatorId: int = None):
+        return construct_event(commonUserId, event_id, event_type, kind, properties, timestamp, source_system_id, recommendationCorrelatorId)
 
     def construct_user(self, commonUserId: str, name: str = None, properties: str = None, integratedSystemId: int = None, userId: str = None):
         return construct_user(commonUserId, name=name, properties=properties, integratedSystemId=integratedSystemId, userId=userId)

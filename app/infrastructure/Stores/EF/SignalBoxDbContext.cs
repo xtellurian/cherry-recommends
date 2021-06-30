@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Core;
+using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommenders;
 using SignalBox.Infrastructure.EntityFramework;
 
@@ -68,7 +69,6 @@ namespace SignalBox.Infrastructure
         // core stuff
         public DbSet<Experiment> Experiments { get; set; }
         public DbSet<Offer> Offers { get; set; }
-        public DbSet<OfferRecommendation> Recommendations { get; set; }
         public DbSet<PresentationOutcome> PresentationOutcomes { get; set; }
         public DbSet<Rule> Rules { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -80,6 +80,10 @@ namespace SignalBox.Infrastructure
         public DbSet<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
         public DbSet<Parameter> Parameters { get; set; }
         public DbSet<ParameterSetRecommender> ParameterSetRecommenders { get; set; }
+
+        // recommendations
+        public DbSet<RecommendationCorrelator> RecommendationCorrelators { get; set; }
+        public DbSet<OfferRecommendation> Recommendations { get; set; }
         public DbSet<ParameterSetRecommendation> ParameterSetRecommendations { get; set; }
 
         // system stuff

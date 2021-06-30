@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
+using SignalBox.Core.Recommendations;
 using SignalBox.Core.Workflows;
 using SignalBox.Web.Dto;
 

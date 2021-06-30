@@ -24,7 +24,11 @@ const CustomTooltip = ({ active, payload, label }) => {
         <div className="capitalize">
           {eventData.kind} | {eventData.eventType}
         </div>
-        <JsonView data={eventData.properties} />
+        {Object.keys(eventData.properties).length < 5 ? (
+          <JsonView data={eventData.properties} />
+        ) : (
+          <div className="text-muted">Too many properties to render</div>
+        )}
       </div>
     );
   }

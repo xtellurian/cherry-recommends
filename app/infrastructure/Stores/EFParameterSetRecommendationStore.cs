@@ -1,5 +1,5 @@
 using SignalBox.Core;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {

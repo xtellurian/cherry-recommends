@@ -7,8 +7,8 @@ import environment
 
 creds = signalboxclient.client.Credentials(environment.api_key)
 test_client = signalboxclient.client.SignalBoxClient(creds)
-my_token = test_client.access_token
 
+my_token = test_client.access_token
 # create user
 user_id = str(uuid.uuid1())
 u = test_client.create_user('testuser', user_id)
@@ -46,6 +46,14 @@ assert tp["values"]["key"] == "value"
 
 # assert len(response.items) > 1
 
+# create a parameter
+parameter_id = str(uuid.uuid1())
+parameter = test_client.create_parameter(
+    common_id=parameter_id, name="client_test.py")
+assert parameter['id'] is not None
+assert parameter['commonId'] == parameter_id
+print("Created Parameter")
+
 experiment = test_client.create_experiment(
     [offer_id], name='Experiment Name', segment_id=None, concurrent_offers=1)
 print('created experiment')
@@ -66,12 +74,17 @@ assert len(offers_in_experiment) > 0
 print('\nPrinting create_offer test response: ', offer)
 print('\nPrinting create_experiment test response: ', experiment)
 
-presentation = test_client.recommend_offer(experiment_id, user_id)
-print(presentation)
+recommended_offer = test_client.recommend_offer(experiment_id, user_id)
+assert recommended_offer['recommendationCorrelatorId'] is not None
+
+# create an event with the correlatorId in it
+e = test_client.construct_event(user_id, str(uuid.uuid1()), "TestOffer", "View", {
+}, None, None, recommended_offer['recommendationCorrelatorId'])
+test_client.log_events([e])
 
 # choose accept or rekect
 tracked = test_client.track_recommendation_outcome(
-    presentation, presentation['offers'][0]['id'], 'accept')
+    recommended_offer, recommended_offer['offers'][0]['id'], 'accept')
 print(tracked)
 
 event_types = ["CREATED", "CANCELED"]

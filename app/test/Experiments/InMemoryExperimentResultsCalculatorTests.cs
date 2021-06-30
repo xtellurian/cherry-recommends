@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SignalBox.Core;
+using SignalBox.Core.Recommendations;
 using SignalBox.Infrastructure;
 using SignalBox.Infrastructure.Services;
 using Xunit;

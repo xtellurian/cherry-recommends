@@ -99,6 +99,7 @@ namespace SignalBox.Core.Workflows
             public TrackedUserEventInput(string commonUserId,
                                          string eventId,
                                          DateTimeOffset? timestamp,
+                                         long? recommendationCorrelatorId,
                                          long? sourceSystemId,
                                          string kind,
                                          string eventType,
@@ -107,6 +108,7 @@ namespace SignalBox.Core.Workflows
                 CommonUserId = commonUserId;
                 EventId = eventId;
                 Timestamp = timestamp;
+                RecommendationCorrelatorId = recommendationCorrelatorId;
                 SourceSystemId = sourceSystemId;
                 Kind = kind;
                 EventType = eventType;
@@ -116,6 +118,7 @@ namespace SignalBox.Core.Workflows
             public string CommonUserId { get; set; }
             public string EventId { get; set; }
             public DateTimeOffset? Timestamp { get; set; }
+            public long? RecommendationCorrelatorId { get; set; }
             public long? SourceSystemId { get; set; }
             public string Kind { get; set; }
             public string EventType { get; set; }
