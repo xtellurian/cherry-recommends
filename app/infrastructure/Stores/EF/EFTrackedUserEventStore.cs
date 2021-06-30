@@ -82,23 +82,22 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             since ??= DateTimeOffset.MinValue;
             until ??= DateTimeOffset.MaxValue;
-            return await Set.Where(_ => _.Kind == kind && _.Timestamp > since && _.Timestamp < until).CountAsync();
+            Expression<Func<TrackedUserEvent, bool>> predicate = _ => _.Kind == kind && _.Timestamp > since && _.Timestamp < until;
+            return await base.Count(predicate);
         }
         public async Task<long> CountEventsOfType(string kind, string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
         {
             since ??= DateTimeOffset.MinValue;
             until ??= DateTimeOffset.MaxValue;
-            return await Set
-                .Where(_ => _.Kind == kind && _.EventType == eventType && _.Timestamp > since && _.Timestamp < until)
-                .CountAsync();
+            Expression<Func<TrackedUserEvent, bool>> predicate = _ => _.Kind == kind && _.EventType == eventType && _.Timestamp > since && _.Timestamp < until;
+            return await base.Count(predicate);
         }
         public async Task<long> CountEventsOfType(string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
         {
             since ??= DateTimeOffset.MinValue;
             until ??= DateTimeOffset.MaxValue;
-            return await Set
-                .Where(_ => _.EventType == eventType && _.Timestamp > since && _.Timestamp < until)
-                .CountAsync();
+            Expression<Func<TrackedUserEvent, bool>> predicate = _ => _.EventType == eventType && _.Timestamp > since && _.Timestamp < until;
+            return await base.Count(predicate);
         }
     }
 }

@@ -19,7 +19,15 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<int> Count(Expression<Func<T, bool>> predicate = null)
         {
-            return await Set.CountAsync(predicate ?? ((x) => true));
+            if (await Set.AnyAsync(predicate ?? ((x) => true)))
+            {
+                return await Set
+                    .CountAsync(predicate ?? ((x) => true));
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public async Task<TResult> Min<TResult>(Expression<Func<T, TResult>> selector)
