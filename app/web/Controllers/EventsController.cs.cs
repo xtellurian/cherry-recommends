@@ -33,6 +33,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost]
         public async Task<EventLoggingResponse> LogEvents([FromBody] List<EventDto> dto)
         {
+            var enqueue = dto.Count > 100;
             return await workflows.TrackUserEvents(dto.Select(d =>
             new TrackedUserEventsWorkflows.TrackedUserEventInput(d.CommonUserId,
                                                                  d.EventId,
@@ -40,7 +41,7 @@ namespace SignalBox.Web.Controllers
                                                                  d.SourceSystemId,
                                                                  d.Kind,
                                                                  d.EventType,
-                                                                 d.Properties)), true); // add to queue if available
+                                                                 d.Properties)), enqueue, !enqueue); // add to queue if available
         }
 
         /// <summary>Stores event data about one or more tracked users.</summary>
