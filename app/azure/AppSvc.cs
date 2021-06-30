@@ -13,8 +13,10 @@ namespace SignalBox.Azure
                       DatabaseComponent db,
                       Storage storage,
                       AzureML ml,
-                      Pulumi.AzureNative.Insights.Component insights)
+                      Pulumi.AzureNative.Insights.Component insights,
+                      Dictionary<string, string>? tags = null)
         {
+            tags ??= new Dictionary<string, string>();
             // create an app service plan
             var appSvcConfig = new Pulumi.Config("appsvc");
             var hubspotConfig = new Pulumi.Config("hubspot");
@@ -30,11 +32,14 @@ namespace SignalBox.Azure
                 {
                     Tier = appSvcConfig.Get("sku-tier") ?? "Free",
                     Name = appSvcConfig.Get("sku-name") ?? "F1",
+                    Capacity = appSvcConfig.GetInt32("capacity") ?? 1
                 },
+                Tags = tags
             });
 
             var webApp = new WebApp("app", new WebAppArgs
             {
+                Tags = tags,
                 ResourceGroupName = rg.Name,
                 ServerFarmId = plan.Id,
                 Kind = "app,linux",
@@ -71,6 +76,7 @@ namespace SignalBox.Azure
 
             var functionApp = new WebApp("pythonJobs", new WebAppArgs
             {
+                Tags = tags,
                 ResourceGroupName = rg.Name,
                 ServerFarmId = plan.Id,
                 Kind = "functionapp",
@@ -96,6 +102,7 @@ namespace SignalBox.Azure
 
             var dotnetFunctionApp = new WebApp("dotnetjobs", new WebAppArgs
             {
+                Tags = tags,
                 ResourceGroupName = rg.Name,
                 ServerFarmId = plan.Id,
                 Kind = "functionapp",

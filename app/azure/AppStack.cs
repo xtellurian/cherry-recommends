@@ -43,8 +43,7 @@ namespace SignalBox.Azure
             var analytics = new AzureML(analyticsRg, db);
 
             // create the app svcs
-            var appSvc = new AppSvc(appRg, db, storage, analytics, appInsights);
-
+            var appSvc = new AppSvc(appRg, db, storage, analytics, appInsights, tags);
             // set the stack outputs
             this.DatabaseConnectionString = db.DatabaseConnectionString;
             this.PrimaryStorageKey = analytics.PrimaryStorageKey;
