@@ -1,4 +1,5 @@
 config:
+  appsvc:capacity: 2
   appsvc:sku-name: B2
   appsvc:sku-tier: Basic
   auth0:clientId: 2Jyaz6bNXrB9H4Qer34QNtmHFhU3L9p1
