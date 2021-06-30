@@ -33,7 +33,7 @@ namespace SignalBox.Web.Controllers
             this.eventStore = eventStore;
         }
 
-        public override async Task<TrackedUser> GetEntity(string id, bool? useInternalId = null)
+        public override async Task<TrackedUser> GetResource(string id, bool? useInternalId = null)
         {
             if ((useInternalId == null || useInternalId == true) && int.TryParse(id, out var internalId))
             {

@@ -37,12 +37,16 @@ export const AuthenticatedIA = [
     name: "Catalogue",
     items: [
       {
-        name: "Touchpoints",
-        to: "/touchpoints",
+        name: "Products",
+        to: "/products",
       },
       {
         name: "Parameters",
         to: "/parameters",
+      },
+      {
+        name: "Touchpoints",
+        to: "/touchpoints",
       },
       {
         name: "Offers",

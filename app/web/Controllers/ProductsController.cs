@@ -13,7 +13,7 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    public class ProductsController : EntityControllerBase<Product>
+    public class ProductsController : CommonEntityControllerBase<Product>
     {
         private readonly ProductWorkflows workflows;
 
@@ -26,15 +26,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost]
         public async Task<Product> Create(CreateProductDto dto)
         {
-            return await workflows.CreateProduct(dto.Name, dto.ProductId, dto.Description);
-        }
-
-        /// <summary>Adds or updates skus for the given product Id.</summary>
-        [HttpPut("{productId}/skus")]
-        public async Task<Product> SetSkus(string productId, IEnumerable<CreateOrUpdateSkuDto> skus)
-        {
-            return await workflows.UpdateProductSkusFromProductId(productId, 
-                skus.Select(_ => new ProductWorkflows.SkuInput(_.Name, _.SkuId, _.Description, _.Price)));
+            return await workflows.CreateProduct(dto.CommonId, dto.Name, dto.ListPrice, dto.Description, dto.DirectCost);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Returns the resource with this Id.</summary>
         [HttpGet("{id}")]
-        public virtual async Task<T> GetEntity(string id, bool? useInternalId = null)
+        public virtual async Task<T> GetResource(string id, bool? useInternalId = null)
         {
             if ((useInternalId == null || useInternalId == true) && int.TryParse(id, out var internalId))
             {
@@ -41,6 +41,15 @@ namespace SignalBox.Web.Controllers
             {
                 return await store.ReadFromCommonId(id);
             }
+        }
+
+        /// <summary>Deletes the resource with this Id.</summary>
+        [HttpDelete("{id}")]
+        public virtual async Task<DeleteResponse> DeleteResource(long id)
+        {
+            var result = await store.Remove(id);
+            await store.Context.SaveChanges();
+            return new DeleteResponse(id, Request.Path.Value, result);
         }
     }
 }

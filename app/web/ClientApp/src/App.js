@@ -16,6 +16,7 @@ import { ReportsComponent } from "./components/reports/ReportsComponent";
 import { TouchpointsComponent } from "./components/touchpoints/TouchpointsComponent";
 import { ParametersComponent } from "./components/parameters/ParametersComponent";
 import { RecommendersComponent } from "./components/recommenders/RecommendersComponent";
+import { ProductsComponent } from "./components/products/ProductsComponent";
 
 // import some demo stuff
 import { DemoComponent } from "./components/demo-app/DemoComponent";
@@ -38,6 +39,7 @@ export default class App extends Component {
         <AuthorizeRoute path="/offers" component={OffersComponent} />
         <AuthorizeRoute path="/parameters" component={ParametersComponent} />
         <AuthorizeRoute path="/recommenders" component={RecommendersComponent} />
+        <AuthorizeRoute path="/products" component={ProductsComponent} />
         <AuthorizeRoute
           path="/models"
           component={ModelRegistrationsComponent}

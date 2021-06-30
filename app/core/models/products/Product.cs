@@ -1,23 +1,19 @@
-using System.Collections.ObjectModel;
-using System.Text.Json.Serialization;
-
 namespace SignalBox.Core
 {
-    public class Product : NamedEntity
+    public class Product : CommonEntity
     {
-        public Product()
+        protected Product()
         { }
 
-        public Product(string name, string productId) : base(name)
+        public Product(string commonId, string name, double listPrice, double? directCost = null) : base(commonId, name)
         {
-            ProductId = productId;
+            ListPrice = listPrice;
+            DirectCost = directCost;
         }
 
+        public double ListPrice { get; set; }
+        public double? DirectCost { get; set; }
 #nullable enable
-        public string ProductId { get; set; }
         public string? Description { get; set; }
-
-        [JsonIgnore]
-        public Collection<Sku>? Skus { get; set; }
     }
 }

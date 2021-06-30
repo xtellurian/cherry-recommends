@@ -14,13 +14,14 @@ import * as modelRegistrations from "./api/modelRegistrationsApi";
 import * as models from "./api/models/index";
 import * as offers from "./api/offersApi";
 import * as paging from "./api/paging";
+import * as parameters from "./api/parametersApi";
+import * as parameterSetRecommenders from "./api/parameterSetRecommendersApi";
+import * as products from "./api/productsApi";
 import * as reactConfig from "./api/reactConfigApi";
 import * as reports from "./api/reportsApi";
 import * as segments from "./api/segmentsApi";
 import * as touchpoints from "./api/touchpointsApi";
 import * as trackedUsers from "./api/trackedUsersApi";
-import * as parameters from "./api/parametersApi";
-import * as parameterSetRecommenders from "./api/parameterSetRecommendersApi";
 
 import { setBaseUrl } from "./baseUrl";
 
@@ -37,6 +38,7 @@ export {
   paging,
   parameters,
   parameterSetRecommenders,
+  products,
   reactConfig,
   reports,
   segments,

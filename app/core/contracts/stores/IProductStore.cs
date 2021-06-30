@@ -1,5 +1,5 @@
 namespace SignalBox.Core
 {
-    public interface IProductStore : IEntityStore<Product>
+    public interface IProductStore : ICommonEntityStore<Product>
     { }
 }

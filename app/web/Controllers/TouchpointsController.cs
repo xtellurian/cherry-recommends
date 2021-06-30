@@ -34,7 +34,7 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}/TrackedUsers")]
         public async Task<Paginated<TrackedUser>> GetTouchpointUsers(string id, [FromQuery] PaginateRequest p)
         {
-            var touchpoint = await base.GetEntity(id);
+            var touchpoint = await base.GetResource(id);
             return await workflow.GetTrackedUsers(touchpoint, p.Page);
         }
     }

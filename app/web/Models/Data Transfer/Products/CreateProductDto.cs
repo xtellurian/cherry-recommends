@@ -2,12 +2,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SignalBox.Web.Dto
 {
-    public class CreateProductDto : DtoBase
+    public class CreateProductDto : CommonDtoBase
     {
         [Required]
-        public string Name { get; set; }
-        [Required]
-        public string ProductId { get; set; }
+        public double? ListPrice { get; set; }
+        public double? DirectCost { get; set; }
         public string Description { get; set; }
     }
 }

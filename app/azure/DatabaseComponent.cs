@@ -37,8 +37,8 @@ namespace SignalBox.Azure
                 {
                     ResourceGroupName = rg.Name,
                     ServerName = sqlServer.Name,
-                    StartIpAddress = "149.167.60.108",
-                    EndIpAddress = "149.167.60.108",
+                    StartIpAddress = "149.167.129.116",
+                    EndIpAddress = "149.167.129.116",
                 });
 
             var azureServicesRule = new Pulumi.AzureNative.Sql.FirewallRule("azureServices", new FirewallRuleArgs

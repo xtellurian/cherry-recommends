@@ -44,14 +44,14 @@ namespace SignalBox.Web.Controllers
         [HttpPost("{id}/ModelRegistration")]
         public async Task<ModelRegistration> LinkModel(string id, LinkModel dto)
         {
-            var parameterSetRecommender = await base.GetEntity(id);
+            var parameterSetRecommender = await base.GetResource(id);
             return await workflows.LinkRegisteredModel(parameterSetRecommender, dto.ModelId);
         }
 
         [HttpGet("{id}/ModelRegistration")]
         public async Task<ModelRegistration> GetLinkModel(string id)
         {
-            var parameterSetRecommender = await base.GetEntity(id);
+            var parameterSetRecommender = await base.GetResource(id);
             return parameterSetRecommender.ModelRegistration ?? throw new EntityNotFoundException<ModelRegistration>("Model not found");
 
         }

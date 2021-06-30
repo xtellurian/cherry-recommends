@@ -72,7 +72,6 @@ namespace SignalBox.Infrastructure
         public DbSet<PresentationOutcome> PresentationOutcomes { get; set; }
         public DbSet<Rule> Rules { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<Sku> Skus { get; set; }
         public DbSet<Segment> Segments { get; set; }
         public DbSet<TrackedUser> TrackedUsers { get; set; }
         public DbSet<TrackedUserEvent> TrackedUserEvents { get; set; }

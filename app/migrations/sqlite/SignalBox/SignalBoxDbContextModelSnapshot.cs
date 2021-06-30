@@ -382,25 +382,40 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CommonId")
+                        .HasColumnType("TEXT");
 
                     b.Property<long>("Created")
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<double?>("DirectCost")
+                        .HasColumnType("REAL");
+
                     b.Property<long>("LastUpdated")
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<double>("ListPrice")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("CommonId")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -618,40 +633,6 @@ namespace sqlite.SignalBox
                     b.HasKey("Id");
 
                     b.ToTable("Segments");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Sku", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("Created")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("LastUpdated")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("REAL");
-
-                    b.Property<long?>("ProductId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("SkuId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Skus");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>
@@ -1030,15 +1011,6 @@ namespace sqlite.SignalBox
                     b.Navigation("ModelRegistration");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Sku", b =>
-                {
-                    b.HasOne("SignalBox.Core.Product", "Product")
-                        .WithMany("Skus")
-                        .HasForeignKey("ProductId");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("SignalBox.Core.TrackedUserEvent", b =>
                 {
                     b.HasOne("SignalBox.Core.IntegratedSystem", "Source")
@@ -1101,11 +1073,6 @@ namespace sqlite.SignalBox
             modelBuilder.Entity("SignalBox.Core.Offer", b =>
                 {
                     b.Navigation("Outcomes");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Product", b =>
-                {
-                    b.Navigation("Skus");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>
