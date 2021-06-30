@@ -1,5 +1,3 @@
-
-using System.Threading.Tasks;
 using Pulumi;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Storage;
@@ -34,13 +32,49 @@ namespace SignalBox.Azure
                 ResourceGroupName = rg.Name,
             });
 
+            new ManagementPolicy("deleteOldQueueBlobs", new ManagementPolicyArgs
+            {
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name,
+                ManagementPolicyName = "default",
+                Policy = new ManagementPolicySchemaArgs
+                {
+                    Rules = {
+                        new ManagementPolicyRuleArgs
+                        {
+                            Enabled = true,
+                            Name = "DeleteOldQueueMessages",
+                            Type = RuleType.Lifecycle,
+                            Definition = new ManagementPolicyDefinitionArgs
+                            {
+                                Actions = new ManagementPolicyActionArgs
+                                {
+                                    BaseBlob = new ManagementPolicyBaseBlobArgs
+                                    {
+                                        Delete = new DateAfterModificationArgs
+                                        {
+                                            DaysAfterModificationGreaterThan = 14
+                                        }
+                                    }
+                                },
+                                Filters = new ManagementPolicyFilterArgs 
+                                {
+                                    PrefixMatch = { "queue-messages" },
+                                    BlobTypes = { "blockBlob" }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
             var trackedUserQueue = new Queue("newTrackedUsers", new QueueArgs
             {
                 QueueName = "new-tracked-users",
                 AccountName = storageAccount.Name,
                 ResourceGroupName = rg.Name
             });
-            
+
             var trackedUserEventsQueue = new Queue("trackedUserEvents", new QueueArgs
             {
                 QueueName = "tracked-user-events",
