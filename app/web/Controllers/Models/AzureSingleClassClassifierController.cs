@@ -13,10 +13,10 @@ namespace SignalBox.Web.Controllers
     [Route("api/models/[controller]")]
     public class AzureSingleClassClassifierController : SignalBoxControllerBase
     {
-        private readonly InvokeModelWorkflows workflows;
+        private readonly ClassifierModelWorkflows workflows;
         private readonly IModelRegistrationStore modelRegistrationStore;
 
-        public AzureSingleClassClassifierController(InvokeModelWorkflows workflows,
+        public AzureSingleClassClassifierController(ClassifierModelWorkflows workflows,
                                                     IModelRegistrationStore modelRegistrationStore)
         {
             this.workflows = workflows;

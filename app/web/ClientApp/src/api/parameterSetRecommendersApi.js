@@ -14,3 +14,6 @@ export const fetchLinkedRegisteredModel =
 
 export const createLinkRegisteredModel =
   parameterSetRecommenders.createLinkRegisteredModel;
+
+export const invokeParameterSetRecommender =
+  parameterSetRecommenders.invokeParameterSetRecommender;

@@ -8,5 +8,6 @@ namespace SignalBox.Core
         }
 
         public string Result { get; set; }
+        public long? CorrelatorId { get; set; }
     }
 }

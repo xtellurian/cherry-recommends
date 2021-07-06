@@ -3,22 +3,24 @@ import { usePagination } from "../utility/utility";
 import { useAccessToken } from "./token";
 import { fetchTrackedUsers, fetchTrackedUser } from "../api/trackedUsersApi";
 
-export const useTrackedUsers = () => {
+export const useTrackedUsers = ({ searchTerm }) => {
   const token = useAccessToken();
   const page = usePagination();
-  const [result, setResults] = React.useState();
+  const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
+    setState({ loading: true });
     if (token) {
       fetchTrackedUsers({
-        success: setResults,
+        success: setState,
         error: console.log,
         token,
         page,
+        searchTerm,
       });
     }
-  }, [token, page]);
+  }, [token, page, searchTerm]);
 
-  return { result };
+  return result;
 };
 
 export const useTrackedUser = ({ id }) => {

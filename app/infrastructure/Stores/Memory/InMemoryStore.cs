@@ -89,7 +89,7 @@ namespace SignalBox.Core
             }
             else
             {
-                throw new EntityNotFoundException<T>(entity.Id);
+                throw new EntityNotFoundException(typeof(T), entity.Id, "No user with that internal id");
             }
         }
     }

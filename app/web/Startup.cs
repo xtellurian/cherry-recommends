@@ -211,9 +211,23 @@ namespace SignalBox.Web
                 var logger = context.RequestServices.GetService<ILogger<ProblemDetailsMiddleware>>();
                 logger.LogError($"{problemDetails.Title} | {problemDetails.Status} | {problemDetails.Detail}");
             };
-            options.Map<SignalBoxException>(_ => new ProblemDetails
+
+            options.Map<SignalBoxException>(_ =>
             {
-                Title = _.Title
+                if (_ is ModelInvokationException modelInvokationException)
+                {
+                    return new ProblemDetails
+                    {
+                        Title = "Model invokation failed.",
+                        Status = 400,
+                        Detail = modelInvokationException.ModelResponseContent
+                    };
+                }
+                return new ProblemDetails
+                {
+                    Title = _.Title,
+                    Status = _.Status,
+                };
             });
 
             // This will map NotImplementedException to the 501 Not Implemented status code.

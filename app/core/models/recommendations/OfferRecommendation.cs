@@ -4,11 +4,12 @@ namespace SignalBox.Core.Recommendations
 {
     public class OfferRecommendation : RecommendationEntity
     {
+        // used once in a test.
         public OfferRecommendation()
         { }
 
         public OfferRecommendation(RecommendationCorrelator correlator, IList<Offer> offers, TrackedUser user, Experiment experiment, Dictionary<string, object> features = null)
-        : base(correlator)
+        : base(correlator, "v0")
         {
             CommonUserId = user.CommonUserId;
             Offers = offers;

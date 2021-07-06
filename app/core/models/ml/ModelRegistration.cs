@@ -5,7 +5,8 @@ namespace SignalBox.Core
     public enum ModelTypes
     {
         SingleClassClassifier,
-        ParameterSetRecommenderV1
+        ParameterSetRecommenderV1,
+        ProductRecommenderV1,
     }
 
     public enum HostingTypes

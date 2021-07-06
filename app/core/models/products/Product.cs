@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using SignalBox.Core.Recommenders;
+
 namespace SignalBox.Core
 {
     public class Product : CommonEntity
@@ -10,6 +14,10 @@ namespace SignalBox.Core
             ListPrice = listPrice;
             DirectCost = directCost;
         }
+
+        // required property for a many to many relationship
+        [JsonIgnore]
+        public ICollection<ProductRecommender> ProductRecommenders { get; set; }
 
         public double ListPrice { get; set; }
         public double? DirectCost { get; set; }

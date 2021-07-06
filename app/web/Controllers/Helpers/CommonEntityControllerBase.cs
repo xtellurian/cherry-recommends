@@ -20,9 +20,16 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Returned a paginated list of items for this resource.</summary>
         [HttpGet]
-        public virtual async Task<Paginated<T>> Query([FromQuery] PaginateRequest p)
+        public virtual async Task<Paginated<T>> Query([FromQuery] PaginateRequest p, [FromQuery] SearchEntities q)
         {
-            return await store.Query(p.Page);
+            if (string.IsNullOrEmpty(q.Term))
+            {
+                return await store.Query(p.Page);
+            }
+            else
+            {
+                return await store.Query(p.Page, q.Term);
+            }
         }
 
         /// <summary>Returns the resource with this Id.</summary>

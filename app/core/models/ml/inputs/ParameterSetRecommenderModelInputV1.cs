@@ -7,10 +7,9 @@ namespace SignalBox.Core
 #nullable enable
     public class ParameterSetRecommenderModelInputV1 : IModelInput
     {
+        public string CommonUserId { get; set; } = null!;
         [Required]
         public Dictionary<string, object> Arguments { get; set; } = null!;
-        [Required]
-        public long? ParameterSetRecommenderId { get; set; }
         public List<ParameterBounds>? ParameterBounds { get; set; }
     }
 }

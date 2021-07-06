@@ -58,6 +58,10 @@ export const AuthenticatedIA = [
     name: "Recommenders",
     items: [
       {
+        name: "Products",
+        to: "/recommenders/product-recommenders",
+      },
+      {
         name: "Parameter Sets",
         to: "/recommenders/parameter-set-recommenders",
       },

@@ -19,6 +19,7 @@ namespace SignalBox.Core
         public DefaultParameterValue DefaultValue { get; set; }
         public string Description { get; set; }
 
+        // required property for a many to many relationship
         [JsonIgnore]
         public ICollection<ParameterSetRecommender> ParameterSetRecommenders { get; set; }
 

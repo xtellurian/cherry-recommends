@@ -1,15 +1,13 @@
 import { pageQuery } from "./paging";
 import { getUrl } from "../baseUrl";
-const defaultHeaders = { "Content-Type": "application/json" };
+import { headers } from "./headers";
 
 export const fetchApiKeys = async ({ success, error, token, page }) => {
   const url = getUrl("api/apiKeys");
   let path = `${url}?${pageQuery(page)}`;
 
   const response = await fetch(path, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     const results = await response.json();
@@ -22,9 +20,7 @@ export const fetchApiKeys = async ({ success, error, token, page }) => {
 export const createApiKey = async ({ success, error, token, name }) => {
   const url = getUrl("api/apiKeys/create");
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
     method: "post",
     body: JSON.stringify({ name }),
   });
@@ -39,9 +35,7 @@ export const createApiKey = async ({ success, error, token, name }) => {
 export const exchangeApiKey = async ({ success, error, token, apiKey }) => {
   const url = getUrl("api/apiKeys/exchange");
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
     method: "post",
     body: JSON.stringify({ apiKey }),
   });

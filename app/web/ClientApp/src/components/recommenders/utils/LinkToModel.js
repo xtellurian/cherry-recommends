@@ -1,13 +1,9 @@
 import React from "react";
-import { useParams, useHistory, Link } from "react-router-dom";
-import {
-  useParameterSetRecommender,
-  useLinkedRegisteredModel,
-} from "../../../api-hooks/parameterSetRecommendersApi";
-import { createLinkRegisteredModel } from "../../../api/parameterSetRecommendersApi";
+import { useHistory, Link } from "react-router-dom";
 import { useModelRegistrations } from "../../../api-hooks/modelRegistrationsApi";
 import { BackButton } from "../../molecules/BackButton";
 import { Title, Spinner, ErrorCard, Selector } from "../../molecules";
+import { NoteBox } from "../../molecules/NoteBox";
 import { CopyableField } from "../../molecules/CopyableField";
 import { useAccessToken } from "../../../api-hooks/token";
 
@@ -18,21 +14,22 @@ const LinkedModelInfo = ({ linkedModel }) => {
       <div className="card-body">
         <CopyableField label="Model Name" value={linkedModel.name} />
         <Link to={`/models/test/${linkedModel.id}`}>
-          <button className="btn btn-secondary float-right">
-              Test Model
-          </button>
+          <button className="btn btn-secondary float-right">Test Model</button>
         </Link>
       </div>
     </div>
   );
 };
-export const LinkToModel = () => {
-  const { id } = useParams();
+export const LinkToModelUtility = ({
+  recommender,
+  linkedModel,
+  createLinkRegisteredModel,
+  rootPath,
+}) => {
   const history = useHistory();
   const token = useAccessToken();
-  const parameterSetRecommender = useParameterSetRecommender({ id });
+
   const [error, setError] = React.useState();
-  const linkedModel = useLinkedRegisteredModel({ id });
   const modelRegistrations = useModelRegistrations();
   const [modelRegistrationOptions, setModelRegistrationOptions] =
     React.useState();
@@ -49,11 +46,10 @@ export const LinkToModel = () => {
 
   const handleLink = () => {
     createLinkRegisteredModel({
-      success: () =>
-        history.push(`/recommenders/parameter-set-recommenders/detail/${id}`),
+      success: () => history.push(`${rootPath}/detail/${recommender.id}`),
       error: setError,
       token,
-      id,
+      id: recommender.id,
       modelId: selectedModel.id,
     });
   };
@@ -61,14 +57,17 @@ export const LinkToModel = () => {
     <React.Fragment>
       <BackButton
         className="float-right"
-        to={`/recommenders/parameter-set-recommenders/detail/${id}`}
+        to={`${rootPath}/detail/${recommender.id}`}
       >
         Back to Recommender
       </BackButton>
       <Title>Link to Model</Title>
       <hr />
+      <NoteBox className="m-auto w-50" label="Warning">
+        This area is for administrators only.
+      </NoteBox>
       {error && <ErrorCard error={error} />}
-      {(linkedModel.loading || parameterSetRecommender.loading) && <Spinner />}
+      {(linkedModel.loading || recommender.loading) && <Spinner />}
 
       {linkedModel.error && <div className="text-muted">No Model Linked</div>}
       {!linkedModel.error && !linkedModel.loading && (
@@ -76,14 +75,16 @@ export const LinkToModel = () => {
       )}
       <Selector
         isSearchable
-        placeholder="Select Model"
+        placeholder="Select a registered model to link to this recommender"
         noOptionsMessage={(inputValue) => "No Models Available"}
         onChange={(so) => setSelectedModel(so.value)}
         options={modelRegistrationOptions}
       />
-      <button onClick={handleLink} className="btn btn-primary">
-        Link Model
-      </button>
+      <div className="text-center m-3">
+        <button onClick={handleLink} className="btn btn-primary w-50">
+          Link Model
+        </button>
+      </div>
     </React.Fragment>
   );
 };

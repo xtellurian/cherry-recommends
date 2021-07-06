@@ -78,12 +78,16 @@ namespace SignalBox.Infrastructure
         public DbSet<Touchpoint> Touchpoints { get; set; }
         public DbSet<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
         public DbSet<Parameter> Parameters { get; set; }
+
+        // recommenders
+        public DbSet<ProductRecommender> ProductRecommenders { get; set; }
         public DbSet<ParameterSetRecommender> ParameterSetRecommenders { get; set; }
 
         // recommendations
         public DbSet<RecommendationCorrelator> RecommendationCorrelators { get; set; }
         public DbSet<OfferRecommendation> Recommendations { get; set; }
         public DbSet<ParameterSetRecommendation> ParameterSetRecommendations { get; set; }
+        public DbSet<ProductRecommendation> ProductRecommendations { get; set; }
 
         // system stuff
         public DbSet<HashedApiKey> ApiKeys { get; set; }

@@ -4,14 +4,29 @@ import { getUrl } from "../baseUrl";
 const MAX_ARRAY = 5000;
 const defaultHeaders = { "Content-Type": "application/json" };
 
-export const fetchTrackedUsers = async ({ success, error, token, page }) => {
+const searchEntities = (term) => {
+  if (term) {
+    return `&q.term=${term}`;
+  } else {
+    return "";
+  }
+};
+export const fetchTrackedUsers = async ({
+  success,
+  error,
+  token,
+  page,
+  searchTerm,
+}) => {
   const url = getUrl("api/trackedUsers");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: !token ? {} : { Authorization: `Bearer ${token}` },
-  });
+  const response = await fetch(
+    `${url}?${pageQuery(page)}${searchEntities(searchTerm)}`,
+    {
+      headers: !token ? {} : { Authorization: `Bearer ${token}` },
+    }
+  );
   if (response.ok) {
-    const trackedUsers = await response.json();
-    success(trackedUsers);
+    success(await response.json());
   } else {
     error(await response.json());
   }

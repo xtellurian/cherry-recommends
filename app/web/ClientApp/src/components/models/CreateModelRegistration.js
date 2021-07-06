@@ -8,6 +8,7 @@ import { DropdownComponent, DropdownItem } from "../molecules/Dropdown";
 
 const modelTypes = [
   { label: "Parameter Set Recommender", value: "ParameterSetRecommenderV1" },
+  { label: "Product Recommender", value: "ProductRecommenderV1" },
   { label: "Classifier", value: "SingleClassClassifier" },
 ];
 const hostingTypes = ["AzureMLContainerInstance"];

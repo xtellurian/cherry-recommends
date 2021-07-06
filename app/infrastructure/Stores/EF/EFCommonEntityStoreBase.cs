@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +14,31 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(context, selector)
         { }
 
+        public virtual async Task<Paginated<T>> Query(int page, string searchTerm)
+        {
+
+            Expression<Func<T, bool>> predicate = 
+                _ => EF.Functions.Like(_.CommonId, $"%{searchTerm}%") || EF.Functions.Like(_.Name, $"%{searchTerm}%");
+            var itemCount = await Set.CountAsync(predicate);
+            List<T> results;
+
+            if (itemCount > 0) // check and let's see whether the query is worth running against the database
+            {
+                results = await Set
+                    .Where(predicate)
+                    .OrderByDescending(_ => _.LastUpdated)
+                    .Skip((page - 1) * PageSize).Take(PageSize)
+                    .ToListAsync();
+            }
+            else
+            {
+                results = new List<T>();
+            }
+            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
+            return new Paginated<T>(results, pageCount, itemCount, page);
+
+        }
+
         public virtual async Task<T> ReadFromCommonId<TProperty>(string commonId, Expression<Func<T, TProperty>> include)
         {
             try
@@ -20,7 +47,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
             catch (Exception ex)
             {
-                throw new StorageException($"Failed to retreive {typeof(T)} with commonId {commonId}", ex);
+                throw new EntityNotFoundException(typeof(T), commonId, ex);
             }
         }
 
@@ -37,7 +64,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
             catch (Exception ex)
             {
-                throw new StorageException($"Failed to retreive {typeof(T)} with commonId {commonId}", ex);
+                throw new EntityNotFoundException(typeof(T), commonId, ex);
             }
         }
 
@@ -46,6 +73,5 @@ namespace SignalBox.Infrastructure.EntityFramework
             var entity = await Set.FindAsync(id);
             return entity.CommonId;
         }
-
     }
 }

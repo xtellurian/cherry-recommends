@@ -8,9 +8,8 @@ import {
 } from "reactstrap";
 import { useTrackedUser } from "../../api-hooks/trackedUserApi";
 import { useUserEvents } from "../../api-hooks/eventApi";
-import { Spinner } from "../molecules/Spinner";
 import { BackButton } from "../molecules/BackButton";
-import { Subtitle, Title } from "../molecules/PageHeadings";
+import { Subtitle, Title, ErrorCard, Spinner } from "../molecules";
 import { JsonView } from "../molecules/JsonView";
 import { EventTimelineChart } from "../molecules/EventTimelineChart";
 
@@ -48,7 +47,9 @@ export const TrackedUserDetail = () => {
           <DropdownToggle split color="primary" />
           <DropdownMenu>
             <DropdownItem header>More Options</DropdownItem>
-            <Link to={`/tracked-users/link-to-integrated-system/${trackedUser.id}`}>
+            <Link
+              to={`/tracked-users/link-to-integrated-system/${trackedUser.id}`}
+            >
               <DropdownItem>Link Integrated System</DropdownItem>
             </Link>
           </DropdownMenu>
@@ -61,6 +62,7 @@ export const TrackedUserDetail = () => {
       <Title>Tracked User</Title>
       <Subtitle>{trackedUser.name || trackedUser.commonUserId}</Subtitle>
       <hr />
+      {trackedUser.error && <ErrorCard error={trackedUser.error} />}
       <JsonView data={trackedUser} />
       <hr />
       <div className="mb-5">

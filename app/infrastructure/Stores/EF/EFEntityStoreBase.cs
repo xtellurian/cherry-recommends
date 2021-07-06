@@ -106,7 +106,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
             catch (Exception ex)
             {
-                throw new StorageException($"An exception was thrown when finding type: s${typeof(T)} with Id:${id}", ex);
+                throw new EntityNotFoundException(typeof(T), id, ex);
             }
         }
         public virtual async Task<T> Read<TProperty>(long id, Expression<Func<T, TProperty>> include)
@@ -117,7 +117,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
             catch (Exception ex)
             {
-                throw new StorageException($"An exception was thrown when finding type: s${typeof(T)} with Id:${id}", ex);
+                throw new EntityNotFoundException(typeof(T), id, ex);
             }
         }
 

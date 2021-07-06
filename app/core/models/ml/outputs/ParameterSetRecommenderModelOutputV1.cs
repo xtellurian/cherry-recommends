@@ -8,6 +8,6 @@ namespace SignalBox.Core
         { }
 
         public Dictionary<string, object> RecommendedParameters { get; set; }
-
+        public long? CorrelatorId { get; set; }
     }
 }

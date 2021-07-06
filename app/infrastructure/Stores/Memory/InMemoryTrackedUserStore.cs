@@ -21,7 +21,7 @@ namespace SignalBox.Infrastructure
             }
             else
             {
-                throw new EntityNotFoundException<TrackedUser>(internalId);
+                throw new EntityNotFoundException(typeof(TrackedUser), internalId, "No user with that internal Id");
             }
         }
 
@@ -36,7 +36,7 @@ namespace SignalBox.Infrastructure
             var result = store.Values.FirstOrDefault(_ => _.CommonUserId == commonId);
             if (result == null)
             {
-                throw new EntityNotFoundException<TrackedUser>(commonId);
+                throw new EntityNotFoundException(typeof(TrackedUser), commonId, null);
             }
 
             return Task.FromResult(result);
@@ -67,6 +67,11 @@ namespace SignalBox.Infrastructure
         }
 
         public Task<TrackedUser> ReadFromCommonId<TProperty>(string commonId, System.Linq.Expressions.Expression<Func<TrackedUser, TProperty>> include)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Paginated<TrackedUser>> Query(int page, string searchTerm)
         {
             throw new NotImplementedException();
         }

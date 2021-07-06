@@ -1,0 +1,134 @@
+import React from "react";
+import { useHistory, useParams } from "react-router-dom";
+import { useProductRecommender } from "../../../api-hooks/productRecommendersApi";
+import { deleteProductRecommender } from "../../../api/productRecommendersApi";
+import { ProductRow } from "../../products/ProductRow";
+import {
+  Title,
+  Subtitle,
+  BackButton,
+  Spinner,
+  ErrorCard,
+  EmptyList,
+} from "../../molecules";
+import { NoteBox } from "../../molecules/NoteBox";
+import {
+  ActionLink,
+  ActionItemsGroup,
+  ActionsButton,
+  ActionItem,
+} from "../../molecules/ActionsButton";
+import { ConfirmationPopup } from "../../molecules/ConfirmationPopup";
+import { CopyableField } from "../../molecules/CopyableField";
+import { useAccessToken } from "../../../api-hooks/token";
+
+export const ProductRecommenderDetail = () => {
+  const { id } = useParams();
+  const history = useHistory();
+  const token = useAccessToken();
+  const recommender = useProductRecommender({ id });
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [deleteError, setDeleteError] = React.useState();
+  const onDeleted = () => {
+    history.push("/recommenders/product-recommenders");
+  };
+  return (
+    <React.Fragment>
+      <ActionsButton
+        to={`/recommenders/product-recommenders/test/${id}`}
+        label="Test"
+      >
+        <ActionItemsGroup label="Actions">
+          <ActionLink
+            to={`/recommenders/product-recommenders/recommendations/${id}`}
+          >
+            Latest Recommendations
+          </ActionLink>
+          <ActionLink to={`/recommenders/product-recommenders/integrate/${id}`}>
+            Technical Integration
+          </ActionLink>
+          <ActionLink
+            to={`/recommenders/product-recommenders/link-to-model/${id}`}
+          >
+            Link to Model
+          </ActionLink>
+          <ActionItem onClick={() => setDeleteOpen(true)}>Delete</ActionItem>
+
+          <ConfirmationPopup
+            isOpen={deleteOpen}
+            setIsOpen={setDeleteOpen}
+            label="Are you sure you want to delete this model?"
+          >
+            <div className="m-2">{recommender.name}</div>
+            {deleteError && <ErrorCard error={deleteError} />}
+            <div
+              className="btn-group"
+              role="group"
+              aria-label="Delete or cancel buttons"
+            >
+              <button
+                className="btn btn-secondary"
+                onClick={() => setDeleteOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => {
+                  deleteProductRecommender({
+                    success: () => {
+                      setDeleteOpen(false);
+                      if (onDeleted) {
+                        onDeleted();
+                      }
+                    },
+                    error: setDeleteError,
+                    token,
+                    id: recommender.id,
+                  });
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </ConfirmationPopup>
+        </ActionItemsGroup>
+      </ActionsButton>
+      <BackButton
+        className="float-right mr-1"
+        to="/recommenders/product-recommenders"
+      >
+        Product Recommenders
+      </BackButton>
+      <Title>Product Recommender</Title>
+      <Subtitle>{recommender.name || "..."}</Subtitle>
+      <hr />
+      {!recommender.loading && !recommender.modelRegistration && (
+        <NoteBox className="m-2" label="Status">
+          This recommender's model is still in training.
+        </NoteBox>
+      )}
+      {recommender.loading && <Spinner>Loading Recommender</Spinner>}
+      {recommender.error && <ErrorCard error={recommender.error} />}
+      {recommender.commonId && (
+        <CopyableField label="Common Id" value={recommender.commonId} />
+      )}
+      {recommender.touchpoint && (
+        <CopyableField
+          label="Touchpoint Id"
+          value={recommender.touchpoint.commonId}
+        />
+      )}
+      <div className="mt-2">
+        <Subtitle>Associated Products</Subtitle>
+        {recommender.products &&
+          recommender.products.map((p) => (
+            <ProductRow product={p} key={p.id} />
+          ))}
+        {recommender.products && recommender.products.length === 0 && (
+          <EmptyList>This recommender works with all products.</EmptyList>
+        )}
+      </div>
+    </React.Fragment>
+  );
+};

@@ -8,5 +8,9 @@ namespace SignalBox.Core
         Task<IModelClient<TInput, TOutput>> GetClient<TInput, TOutput>(ModelRegistration model)
             where TInput : IModelInput
             where TOutput : IModelOutput;
+
+        Task<IModelClient<TInput, TOutput>> GetUnregisteredClient<TInput, TOutput>()
+            where TInput : IModelInput
+            where TOutput : IModelOutput;
     }
 }

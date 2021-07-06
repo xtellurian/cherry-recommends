@@ -8,7 +8,10 @@ export const TrackedUserListItem = ({ trackedUser }) => {
   return (
     <ExpandableCard label={trackedUser.name || trackedUser.id}>
       <div>
-        <Link to={`/tracked-users/detail/${trackedUser.id}`} className='float-right'>
+        <Link
+          to={`/tracked-users/detail/${trackedUser.id}`}
+          className="float-right"
+        >
           <button className="btn btn-primary">Detail</button>
         </Link>
         <JsonView data={trackedUser} />
@@ -19,7 +22,7 @@ export const TrackedUserListItem = ({ trackedUser }) => {
 
 export const TrackedUserList = ({ ids }) => {
   console.log("WARNING: THIS ISNt IMPLEMNTED");
-  const { trackedUsers } = useTrackedUsers();
+  const trackedUsers = useTrackedUsers({});
 
   if (!trackedUsers) {
     return <Spinner />;

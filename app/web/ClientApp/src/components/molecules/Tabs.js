@@ -12,7 +12,7 @@ const TabListItem = ({ active, tab, basePath }) => {
         aria-current="page"
         to={`${basePath}?${qs.toString()}`}
       >
-        {tab.name || tab.id}
+        {tab.label || tab.name || tab.id}
       </Link>
     </li>
   );

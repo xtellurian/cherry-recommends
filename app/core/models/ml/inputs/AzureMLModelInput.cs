@@ -8,6 +8,8 @@ namespace SignalBox.Core
         public string Version { get; set; } = "default";
         [JsonPropertyName("data")]
         public Datum[] Data { get; set; }
+        public string CommonUserId { get; set; }
+        public Dictionary<string, object> Arguments { get; set; }
     }
 
     public class Datum : Dictionary<string, object>

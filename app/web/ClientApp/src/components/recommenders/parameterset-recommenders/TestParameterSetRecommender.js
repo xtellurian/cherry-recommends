@@ -1,8 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
+import { invokeParameterSetRecommender } from "../../../api/parameterSetRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
-import { invokeParameterSetRecommenderModel } from "../../../api/modelsApi";
 import {
   AsyncButton,
   BackButton,
@@ -111,16 +111,15 @@ export const TestParameterSetRecommender = () => {
   const [response, setResponse] = React.useState();
   const handleInvoke = () => {
     setLoading(true);
-    invokeParameterSetRecommenderModel({
+    invokeParameterSetRecommender({
       success: setResponse,
       error: setError,
       onFinally: () => setLoading(false),
       token,
-      id: parameterSetRecommender.modelRegistration.id,
+      id: parameterSetRecommender.id,
       // version,
       input: {
         arguments: argValues,
-        parameterSetRecommenderId: parameterSetRecommender.id,
       },
     });
   };
@@ -132,7 +131,7 @@ export const TestParameterSetRecommender = () => {
     return (
       <React.Fragment>
         <Top id={id} />
-        <hr/>
+        <hr />
         <EmptyList>The model is still training. Check back later.</EmptyList>
       </React.Fragment>
     );

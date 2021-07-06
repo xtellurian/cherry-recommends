@@ -16,6 +16,7 @@ import * as offers from "./api/offersApi";
 import * as paging from "./api/paging";
 import * as parameters from "./api/parametersApi";
 import * as parameterSetRecommenders from "./api/parameterSetRecommendersApi";
+import * as productRecommenders from "./api/productRecommenders";
 import * as products from "./api/productsApi";
 import * as reactConfig from "./api/reactConfigApi";
 import * as reports from "./api/reportsApi";
@@ -38,6 +39,7 @@ export {
   paging,
   parameters,
   parameterSetRecommenders,
+  productRecommenders,
   products,
   reactConfig,
   reports,

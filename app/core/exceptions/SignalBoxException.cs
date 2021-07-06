@@ -6,6 +6,7 @@ namespace SignalBox.Core
     public abstract class SignalBoxException : System.Exception
     {
         private string? _title;
+        protected int? _status;
 
         protected SignalBoxException(string message) : base(message)
         {
@@ -23,6 +24,7 @@ namespace SignalBox.Core
             this._title = title;
         }
 
-        public string Title => this._title ?? "Internal Error";
+        public virtual string Title => this._title ?? "Internal Error";
+        public virtual int Status => this._status ?? 500;
     }
 }

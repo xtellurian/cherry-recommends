@@ -46,6 +46,7 @@ namespace SignalBox.Azure
             var appSvc = new AppSvc(appRg, db, storage, analytics, appInsights, tags);
             // set the stack outputs
             this.DatabaseConnectionString = db.DatabaseConnectionString;
+            this.DatabaseName = db.DatabaseName;
             this.PrimaryStorageKey = analytics.PrimaryStorageKey;
             this.AppResourceGroup = appSvc.WebApp.ResourceGroup;
             this.WebappName = appSvc.WebApp.Name;
@@ -69,6 +70,8 @@ namespace SignalBox.Azure
         public Output<string> PrimaryStorageKey { get; set; }
         [Output]
         public Output<string> DatabaseConnectionString { get; private set; }
+        [Output]
+        public Output<string> DatabaseName { get; private set; }
 
         private static async Task<string> GetStorageAccountPrimaryKey(string resourceGroupName, string accountName)
         {

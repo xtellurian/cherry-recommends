@@ -3,18 +3,30 @@ import { getUrl } from "../baseUrl";
 
 const defaultHeaders = { "Content-Type": "application/json" };
 
-export const fetchTouchpoints = async ({ success, error, token, page }) => {
-  const url = getUrl("api/touchpoints");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
-  });
-  if (response.ok) {
-    const results = await response.json();
-    success(results);
-  } else {
-    error(await response.json());
+export const fetchTouchpoints = async ({
+  success,
+  error,
+  token,
+  page,
+  onFinally,
+}) => {
+  try {
+    const url = getUrl("api/touchpoints");
+    const response = await fetch(`${url}?${pageQuery(page)}`, {
+      headers: !token
+        ? defaultHeaders
+        : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    });
+    if (response.ok) {
+      const results = await response.json();
+      success(results);
+    } else {
+      error(await response.json());
+    }
+  } finally {
+    if (onFinally) {
+      onFinally();
+    }
   }
 };
 
@@ -37,20 +49,27 @@ export const createTouchpointMetadata = async ({
   error,
   token,
   payload,
+  onFinally,
 }) => {
-  const url = getUrl("api/touchpoints");
-  const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
-    method: "post",
-    body: JSON.stringify(payload),
-  });
-  if (response.ok) {
-    const results = await response.json();
-    success(results);
-  } else {
-    error(await response.json());
+  try {
+    const url = getUrl("api/touchpoints");
+    const response = await fetch(url, {
+      headers: !token
+        ? defaultHeaders
+        : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+      method: "post",
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      const results = await response.json();
+      success(results);
+    } else {
+      error(await response.json());
+    }
+  } finally {
+    if (onFinally) {
+      onFinally();
+    }
   }
 };
 

@@ -1,14 +1,15 @@
 namespace SignalBox.Core
 {
+#nullable enable
     public abstract class NamedEntity : Entity
     {
         protected NamedEntity()
         { }
 
-        protected NamedEntity(string name)
+        protected NamedEntity(string? name)
         {
             Name = name;
         }
-        public string Name { get; set; } // settable by the creator
+        public string? Name { get; set; } // settable by the creator
     }
 }

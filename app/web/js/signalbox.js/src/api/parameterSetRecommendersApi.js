@@ -1,7 +1,6 @@
 import { pageQuery } from "./paging";
 import { getUrl } from "../baseUrl";
-
-const defaultHeaders = { "Content-Type": "application/json" };
+import { headers } from "./headers";
 
 export const fetchParameterSetRecommenders = async ({
   success,
@@ -11,9 +10,7 @@ export const fetchParameterSetRecommenders = async ({
 }) => {
   const url = getUrl("api/recommenders/ParameterSetRecommenders");
   const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     success(await response.json());
@@ -30,9 +27,7 @@ export const fetchParameterSetRecommender = async ({
 }) => {
   const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}`);
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     success(await response.json());
@@ -49,9 +44,7 @@ export const createParameterSetRecommender = async ({
 }) => {
   const url = getUrl("api/recommenders/ParameterSetRecommenders");
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
     method: "post",
     body: JSON.stringify(payload),
   });
@@ -73,9 +66,7 @@ export const createLinkRegisteredModel = async ({
     `api/recommenders/ParameterSetRecommenders/${id}/ModelRegistration`
   );
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
     method: "post",
     body: JSON.stringify({ modelId }),
   });
@@ -96,13 +87,39 @@ export const fetchLinkedRegisteredModel = async ({
     `api/recommenders/ParameterSetRecommenders/${id}/ModelRegistration`
   );
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     success(await response.json());
   } else {
     error(await response.json());
+  }
+};
+
+export const invokeParameterSetRecommender = async ({
+  success,
+  error,
+  onFinally,
+  token,
+  id,
+  version,
+  input,
+}) => {
+  try {
+    const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}/invoke`);
+    const result = await fetch(`${url}?version=${version || "default"}`, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(input),
+    });
+    if (result.ok) {
+      success(await result.json());
+    } else {
+      error(await result.json());
+    }
+  } finally {
+    if (onFinally) {
+      onFinally();
+    }
   }
 };

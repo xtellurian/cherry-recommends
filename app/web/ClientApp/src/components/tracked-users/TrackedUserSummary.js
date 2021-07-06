@@ -1,9 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useTrackedUsers } from "../../api-hooks/trackedUserApi";
-import { Title } from "../molecules/PageHeadings";
-import { Spinner } from "../molecules/Spinner";
-import { Paginator } from "../molecules/Paginator";
+import { Title, Spinner, Paginator } from "../molecules";
+import { SearchBox } from "../molecules/SearchBox";
 import { TrackedUserListItem } from "../molecules/TrackedUser";
 import { EmptyList } from "../molecules/EmptyList";
 
@@ -15,13 +14,8 @@ const CreateButton = () => {
   );
 };
 export const TrackedUserSummary = () => {
-  const { result } = useTrackedUsers();
-
-  if (!result) {
-    return <Spinner />;
-  }
-
-  const trackedUsers = result.items;
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const trackedUsers = useTrackedUsers({ searchTerm });
 
   return (
     <div>
@@ -33,7 +27,9 @@ export const TrackedUserSummary = () => {
       </div>
       <Title>Tracked Users</Title>
       <hr />
-      {result.items && result.items.length === 0 && (
+      {trackedUsers.loading && <Spinner />}
+      <SearchBox onSearch={setSearchTerm} />
+      {trackedUsers.items && trackedUsers.items.length === 0 && (
         <EmptyList>
           There are no tracked users.
           <div className="mt-3">
@@ -42,15 +38,16 @@ export const TrackedUserSummary = () => {
         </EmptyList>
       )}
       <div>
-        {trackedUsers.map((u) => (
-          <TrackedUserListItem
-            key={u.id}
-            trackedUser={u}
-            // events={eventDic && u.id in eventDic ? eventDic[u.id] : []}
-          />
-        ))}
+        {trackedUsers.items &&
+          trackedUsers.items.map((u) => (
+            <TrackedUserListItem
+              key={u.id}
+              trackedUser={u}
+              // events={eventDic && u.id in eventDic ? eventDic[u.id] : []}
+            />
+          ))}
       </div>
-      <Paginator {...result.pagination} />
+      <Paginator {...trackedUsers.pagination} />
     </div>
   );
 };

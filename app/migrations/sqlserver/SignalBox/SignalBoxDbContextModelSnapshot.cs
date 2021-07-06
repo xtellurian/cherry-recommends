@@ -64,6 +64,21 @@ namespace sqlserver.SignalBox
                     b.ToTable("ParameterParameterSetRecommender");
                 });
 
+            modelBuilder.Entity("ProductProductRecommender", b =>
+                {
+                    b.Property<long>("ProductRecommendersId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ProductsId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ProductRecommendersId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("ProductProductRecommender");
+                });
+
             modelBuilder.Entity("SegmentTrackedUser", b =>
                 {
                     b.Property<long>("InSegmentId")
@@ -168,6 +183,7 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CommonId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("Created")
@@ -299,6 +315,7 @@ namespace sqlserver.SignalBox
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CommonId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset>("Created")
@@ -327,8 +344,7 @@ namespace sqlserver.SignalBox
                     b.HasKey("Id");
 
                     b.HasIndex("CommonId")
-                        .IsUnique()
-                        .HasFilter("[CommonId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Parameters");
                 });
@@ -391,6 +407,7 @@ namespace sqlserver.SignalBox
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CommonId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset>("Created")
@@ -418,8 +435,7 @@ namespace sqlserver.SignalBox
                     b.HasKey("Id");
 
                     b.HasIndex("CommonId")
-                        .IsUnique()
-                        .HasFilter("[CommonId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -458,8 +474,23 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<string>("ModelInput")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelInputType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelOutput")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelOutputType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("RecommendationCorrelatorId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Version")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -502,6 +533,12 @@ namespace sqlserver.SignalBox
                     b.Property<long?>("RecommendationCorrelatorId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("RecommenderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("TrackedUserId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Version")
                         .HasColumnType("nvarchar(max)");
 
@@ -509,7 +546,70 @@ namespace sqlserver.SignalBox
 
                     b.HasIndex("RecommendationCorrelatorId");
 
+                    b.HasIndex("RecommenderId");
+
+                    b.HasIndex("TrackedUserId");
+
                     b.ToTable("ParameterSetRecommendations");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.ProductRecommendation", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("ModelInput")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelInputType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelOutput")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelOutputType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("RecommendationCorrelatorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("RecommenderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("TrackedUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Version")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("RecommendationCorrelatorId");
+
+                    b.HasIndex("RecommenderId");
+
+                    b.HasIndex("TrackedUserId");
+
+                    b.ToTable("ProductRecommendations");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.RecommendationCorrelator", b =>
@@ -543,6 +643,7 @@ namespace sqlserver.SignalBox
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CommonId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("Created")
@@ -575,6 +676,47 @@ namespace sqlserver.SignalBox
                     b.HasIndex("ModelRegistrationId");
 
                     b.ToTable("ParameterSetRecommenders");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommenders.ProductRecommender", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CommonId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long?>("ModelRegistrationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("TouchpointId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModelRegistrationId");
+
+                    b.HasIndex("TouchpointId");
+
+                    b.ToTable("ProductRecommenders");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Rule", b =>
@@ -650,6 +792,7 @@ namespace sqlserver.SignalBox
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CommonId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset>("Created")
@@ -668,8 +811,7 @@ namespace sqlserver.SignalBox
                     b.HasKey("Id");
 
                     b.HasIndex("CommonId")
-                        .IsUnique()
-                        .HasFilter("[CommonId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Touchpoints");
                 });
@@ -684,6 +826,7 @@ namespace sqlserver.SignalBox
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CommonId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("CommonUserId");
 
@@ -706,8 +849,7 @@ namespace sqlserver.SignalBox
                     b.HasKey("Id");
 
                     b.HasIndex("CommonId")
-                        .IsUnique()
-                        .HasFilter("[CommonUserId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("TrackedUsers");
                 });
@@ -932,6 +1074,21 @@ namespace sqlserver.SignalBox
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProductProductRecommender", b =>
+                {
+                    b.HasOne("SignalBox.Core.Recommenders.ProductRecommender", null)
+                        .WithMany()
+                        .HasForeignKey("ProductRecommendersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SegmentTrackedUser", b =>
                 {
                     b.HasOne("SignalBox.Core.TrackedUser", null)
@@ -1008,7 +1165,46 @@ namespace sqlserver.SignalBox
                         .WithMany()
                         .HasForeignKey("RecommendationCorrelatorId");
 
+                    b.HasOne("SignalBox.Core.Recommenders.ParameterSetRecommender", "Recommender")
+                        .WithMany("Recommendations")
+                        .HasForeignKey("RecommenderId");
+
+                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                        .WithMany()
+                        .HasForeignKey("TrackedUserId");
+
                     b.Navigation("RecommendationCorrelator");
+
+                    b.Navigation("Recommender");
+
+                    b.Navigation("TrackedUser");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.ProductRecommendation", b =>
+                {
+                    b.HasOne("SignalBox.Core.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
+                        .WithMany()
+                        .HasForeignKey("RecommendationCorrelatorId");
+
+                    b.HasOne("SignalBox.Core.Recommenders.ProductRecommender", "Recommender")
+                        .WithMany("Recommendations")
+                        .HasForeignKey("RecommenderId");
+
+                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                        .WithMany()
+                        .HasForeignKey("TrackedUserId");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("RecommendationCorrelator");
+
+                    b.Navigation("Recommender");
+
+                    b.Navigation("TrackedUser");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommender", b =>
@@ -1018,6 +1214,21 @@ namespace sqlserver.SignalBox
                         .HasForeignKey("ModelRegistrationId");
 
                     b.Navigation("ModelRegistration");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommenders.ProductRecommender", b =>
+                {
+                    b.HasOne("SignalBox.Core.ModelRegistration", "ModelRegistration")
+                        .WithMany()
+                        .HasForeignKey("ModelRegistrationId");
+
+                    b.HasOne("SignalBox.Core.Touchpoint", "Touchpoint")
+                        .WithMany()
+                        .HasForeignKey("TouchpointId");
+
+                    b.Navigation("ModelRegistration");
+
+                    b.Navigation("Touchpoint");
                 });
 
             modelBuilder.Entity("SignalBox.Core.TrackedUserEvent", b =>
@@ -1082,6 +1293,16 @@ namespace sqlserver.SignalBox
             modelBuilder.Entity("SignalBox.Core.Offer", b =>
                 {
                     b.Navigation("Outcomes");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommender", b =>
+                {
+                    b.Navigation("Recommendations");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommenders.ProductRecommender", b =>
+                {
+                    b.Navigation("Recommendations");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>

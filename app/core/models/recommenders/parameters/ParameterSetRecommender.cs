@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core.Recommenders
 {
@@ -32,6 +33,8 @@ namespace SignalBox.Core.Recommenders
         public ICollection<Parameter> Parameters { get; set; }
         public List<ParameterBounds> ParameterBounds { get; set; }
         public List<RecommenderArgument> Arguments { get; set; }
+        [JsonIgnore]
+        public ICollection<ParameterSetRecommendation> Recommendations { get; set; }
 
         [JsonIgnore]
         public string ScoringUrl { get; set; }

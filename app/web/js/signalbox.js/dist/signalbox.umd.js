@@ -19,16 +19,19 @@
 
   const getUrl = (path) => `${storedBaseUrl}/${path}`;
 
-  const defaultHeaders$h = { "Content-Type": "application/json" };
+  const defaultHeaders$e = { "Content-Type": "application/json" };
+
+  const headers = (token) =>
+    !token
+      ? defaultHeaders$e
+      : { ...defaultHeaders$e, Authorization: `Bearer ${token}` };
 
   const fetchApiKeys = async ({ success, error, token, page }) => {
     const url = getUrl("api/apiKeys");
     let path = `${url}?${pageQuery(page)}`;
 
     const response = await fetch(path, {
-      headers: !token
-        ? defaultHeaders$h
-        : { ...defaultHeaders$h, Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
       const results = await response.json();
@@ -41,9 +44,7 @@
   const createApiKey = async ({ success, error, token, name }) => {
     const url = getUrl("api/apiKeys/create");
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$h
-        : { ...defaultHeaders$h, Authorization: `Bearer ${token}` },
+      headers: headers(token),
       method: "post",
       body: JSON.stringify({ name }),
     });
@@ -58,9 +59,7 @@
   const exchangeApiKey = async ({ success, error, token, apiKey }) => {
     const url = getUrl("api/apiKeys/exchange");
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$h
-        : { ...defaultHeaders$h, Authorization: `Bearer ${token}` },
+      headers: headers(token),
       method: "post",
       body: JSON.stringify({ apiKey }),
     });
@@ -79,14 +78,10 @@
     exchangeApiKey: exchangeApiKey
   });
 
-  const defaultHeaders$g = { "Content-Type": "application/json" };
-
   const fetchEventSummary = async ({ success, error, token }) => {
     const url = getUrl("api/datasummary/events");
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$g
-        : { ...defaultHeaders$g, Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
       const results = await response.json();
@@ -106,9 +101,7 @@
     const url = getUrl(`api/datasummary/events/timeline/${kind}/${eventType}`);
 
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$g
-        : { ...defaultHeaders$g, Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
       const results = await response.json();
@@ -122,9 +115,7 @@
     const url = getUrl(`api/datasummary/dashboard`);
 
     const response = await fetch(`${url}?scope=${scope}`, {
-      headers: !token
-        ? defaultHeaders$g
-        : { ...defaultHeaders$g, Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
       const results = await response.json();
@@ -141,7 +132,7 @@
     fetchDashboard: fetchDashboard
   });
 
-  const defaultHeaders$f = { "Content-Type": "application/json" };
+  const defaultHeaders$d = { "Content-Type": "application/json" };
 
   const fetchDeploymentConfiguration = async ({
     success,
@@ -152,8 +143,8 @@
 
     const result = await fetch(url, {
       headers: !token
-        ? defaultHeaders$f
-        : { ...defaultHeaders$f, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$d
+        : { ...defaultHeaders$d, Authorization: `Bearer ${token}` },
     });
     if (result.ok) {
       success(await result.json());
@@ -167,7 +158,7 @@
     fetchDeploymentConfiguration: fetchDeploymentConfiguration
   });
 
-  const defaultHeaders$e = { "Content-Type": "application/json" };
+  const defaultHeaders$c = { "Content-Type": "application/json" };
 
   const fetchUserEvents = async ({
     success,
@@ -180,8 +171,8 @@
 
     const response = await fetch(path, {
       headers: !token
-        ? defaultHeaders$e
-        : { ...defaultHeaders$e, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$c
+        : { ...defaultHeaders$c, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       const results = await response.json();
@@ -220,8 +211,8 @@
 
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$e
-        : { ...defaultHeaders$e, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$c
+        : { ...defaultHeaders$c, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify(events),
     });
@@ -238,7 +229,7 @@
     logUserEvents: logUserEvents
   });
 
-  const defaultHeaders$d = { "Content-Type": "application/json" };
+  const defaultHeaders$b = { "Content-Type": "application/json" };
 
   const fetchExperiments = async ({ success, error, token, page }) => {
     const url = getUrl("api/experiments");
@@ -257,8 +248,8 @@
     const url = getUrl("api/experiments");
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$d
-        : { ...defaultHeaders$d, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$b
+        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify(payload),
     });
@@ -273,8 +264,8 @@
     const url = getUrl(`api/experiments/${id}/results`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$d
-        : { ...defaultHeaders$d, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$b
+        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       const data = await response.json();
@@ -295,8 +286,8 @@
     const url = getUrl(`api/experiments/${experimentId}/recommendation`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$d
-        : { ...defaultHeaders$d, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$b
+        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify({ commonUserId: userId, features }),
     });
@@ -316,7 +307,7 @@
     fetchRecommendation: fetchRecommendation
   });
 
-  const defaultHeaders$c = { "Content-Type": "application/json" };
+  const defaultHeaders$a = { "Content-Type": "application/json" };
 
   const fetchIntegratedSystems = async ({
     success,
@@ -327,8 +318,8 @@
     const url = getUrl("api/integratedSystems");
     const response = await fetch(`${url}?${pageQuery(page)}`, {
       headers: !token
-        ? defaultHeaders$c
-        : { ...defaultHeaders$c, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$a
+        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       const results = await response.json();
@@ -342,8 +333,8 @@
     const url = getUrl(`api/integratedSystems/${id}`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$c
-        : { ...defaultHeaders$c, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$a
+        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       const results = await response.json();
@@ -362,8 +353,8 @@
     const url = getUrl("api/integratedSystems");
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$c
-        : { ...defaultHeaders$c, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$a
+        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify(payload),
     });
@@ -384,8 +375,8 @@
     const url = getUrl(`api/integratedSystems/${id}/webhookreceivers`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$c
-        : { ...defaultHeaders$c, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$a
+        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       const data = await response.json();
@@ -405,8 +396,8 @@
     const url = getUrl(`api/integratedSystems/${id}/webhookreceivers`);
     const response = await fetch(`${url}?useSharedSecret=${useSharedSecret}`, {
       headers: !token
-        ? defaultHeaders$c
-        : { ...defaultHeaders$c, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$a
+        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify({}), // body is just empty for this
     });
@@ -427,7 +418,7 @@
     createWebhookReceiver: createWebhookReceiver
   });
 
-  const defaultHeaders$b = { "Content-Type": "application/json" };
+  const defaultHeaders$9 = { "Content-Type": "application/json" };
 
   const fetchModelRegistrations = async ({
     success,
@@ -438,8 +429,8 @@
     const url = getUrl("api/ModelRegistrations");
     const response = await fetch(`${url}?${pageQuery(page)}`, {
       headers: !token
-        ? defaultHeaders$b
-        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$9
+        : { ...defaultHeaders$9, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       const results = await response.json();
@@ -453,8 +444,8 @@
     const url = getUrl(`api/ModelRegistrations/${id}`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$b
-        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$9
+        : { ...defaultHeaders$9, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       const results = await response.json();
@@ -473,8 +464,8 @@
     const url = getUrl(`api/ModelRegistrations/${id}`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$b
-        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$9
+        : { ...defaultHeaders$9, Authorization: `Bearer ${token}` },
       method: "delete",
     });
     if (response.ok) {
@@ -494,8 +485,8 @@
     const url = getUrl("api/ModelRegistrations");
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$b
-        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$9
+        : { ...defaultHeaders$9, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify(payload),
     });
@@ -517,8 +508,8 @@
     const url = getUrl(`api/ModelRegistrations/${modelId}/invoke`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$b
-        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$9
+        : { ...defaultHeaders$9, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify(features),
     });
@@ -539,7 +530,7 @@
     invokeModel: invokeModel
   });
 
-  const defaultHeaders$a = { "Content-Type": "application/json" };
+  const defaultHeaders$8 = { "Content-Type": "application/json" };
 
   const invokeGenericModel = async ({
     success,
@@ -553,40 +544,8 @@
       const url = getUrl(`api/models/generic/${id}/invoke`);
       const result = await fetch(url, {
         headers: !token
-          ? defaultHeaders$a
-          : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
-        method: "post",
-        body: JSON.stringify(input),
-      });
-      if (result.ok) {
-        success(await result.json());
-      } else {
-        error(await result.json());
-      }
-    } finally {
-      if (onFinally) {
-        onFinally();
-      }
-    }
-  };
-
-  const defaultHeaders$9 = { "Content-Type": "application/json" };
-
-  const invokeParameterSetRecommenderModel = async ({
-    success,
-    error,
-    onFinally,
-    token,
-    id,
-    version,
-    input,
-  }) => {
-    try {
-      const url = getUrl(`api/models/ParameterSetRecommenders/${id}/invoke`);
-      const result = await fetch(`${url}?version=${version || "default"}`, {
-        headers: !token
-          ? defaultHeaders$9
-          : { ...defaultHeaders$9, Authorization: `Bearer ${token}` },
+          ? defaultHeaders$8
+          : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
         method: "post",
         body: JSON.stringify(input),
       });
@@ -604,19 +563,18 @@
 
   var index = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    invokeGenericModel: invokeGenericModel,
-    invokeParameterSetRecommenderModel: invokeParameterSetRecommenderModel
+    invokeGenericModel: invokeGenericModel
   });
 
-  const defaultHeaders$8 = { "Content-Type": "application/json" };
+  const defaultHeaders$7 = { "Content-Type": "application/json" };
 
   const fetchOffers = async ({ success, error, token, page }) => {
     const url = getUrl("api/offers");
     let path = `${url}?${pageQuery(page)}`;
     const response = await fetch(path, {
       headers: !token
-        ? defaultHeaders$8
-        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$7
+        : { ...defaultHeaders$7, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       const results = await response.json();
@@ -630,8 +588,8 @@
     var url = getUrl(`api/offers/${id}`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$8
-        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$7
+        : { ...defaultHeaders$7, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       const results = await response.json();
@@ -645,8 +603,8 @@
     var url = getUrl("api/offers");
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$8
-        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$7
+        : { ...defaultHeaders$7, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify(payload),
     });
@@ -665,14 +623,14 @@
     createOffer: createOffer
   });
 
-  const defaultHeaders$7 = { "Content-Type": "application/json" };
+  const defaultHeaders$6 = { "Content-Type": "application/json" };
 
   const fetchParameters = async ({ success, error, token, page }) => {
     const url = getUrl("api/parameters");
     const response = await fetch(`${url}?${pageQuery(page)}`, {
       headers: !token
-        ? defaultHeaders$7
-        : { ...defaultHeaders$7, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$6
+        : { ...defaultHeaders$6, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       success(await response.json());
@@ -685,8 +643,8 @@
     const url = getUrl(`api/parameters/${id}`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$7
-        : { ...defaultHeaders$7, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$6
+        : { ...defaultHeaders$6, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       success(await response.json());
@@ -699,8 +657,8 @@
     const url = getUrl("api/parameters");
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$7
-        : { ...defaultHeaders$7, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$6
+        : { ...defaultHeaders$6, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify(payload),
     });
@@ -719,8 +677,6 @@
     createParameter: createParameter
   });
 
-  const defaultHeaders$6 = { "Content-Type": "application/json" };
-
   const fetchParameterSetRecommenders = async ({
     success,
     error,
@@ -729,9 +685,7 @@
   }) => {
     const url = getUrl("api/recommenders/ParameterSetRecommenders");
     const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: !token
-        ? defaultHeaders$6
-        : { ...defaultHeaders$6, Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
       success(await response.json());
@@ -748,9 +702,7 @@
   }) => {
     const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}`);
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$6
-        : { ...defaultHeaders$6, Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
       success(await response.json());
@@ -767,9 +719,7 @@
   }) => {
     const url = getUrl("api/recommenders/ParameterSetRecommenders");
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$6
-        : { ...defaultHeaders$6, Authorization: `Bearer ${token}` },
+      headers: headers(token),
       method: "post",
       body: JSON.stringify(payload),
     });
@@ -777,6 +727,145 @@
       success(await response.json());
     } else {
       error(await response.json());
+    }
+  };
+
+  const createLinkRegisteredModel$1 = async ({
+    success,
+    error,
+    token,
+    id,
+    modelId,
+  }) => {
+    const url = getUrl(
+      `api/recommenders/ParameterSetRecommenders/${id}/ModelRegistration`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify({ modelId }),
+    });
+    if (response.ok) {
+      success(await response.json());
+    } else {
+      error(await response.json());
+    }
+  };
+
+  const fetchLinkedRegisteredModel$1 = async ({
+    success,
+    error,
+    token,
+    id,
+  }) => {
+    const url = getUrl(
+      `api/recommenders/ParameterSetRecommenders/${id}/ModelRegistration`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      success(await response.json());
+    } else {
+      error(await response.json());
+    }
+  };
+
+  const invokeParameterSetRecommender = async ({
+    success,
+    error,
+    onFinally,
+    token,
+    id,
+    version,
+    input,
+  }) => {
+    try {
+      const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}/invoke`);
+      const result = await fetch(`${url}?version=${version || "default"}`, {
+        headers: headers(token),
+        method: "post",
+        body: JSON.stringify(input),
+      });
+      if (result.ok) {
+        success(await result.json());
+      } else {
+        error(await result.json());
+      }
+    } finally {
+      if (onFinally) {
+        onFinally();
+      }
+    }
+  };
+
+  var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    fetchParameterSetRecommenders: fetchParameterSetRecommenders,
+    fetchParameterSetRecommender: fetchParameterSetRecommender,
+    createParameterSetRecommender: createParameterSetRecommender,
+    createLinkRegisteredModel: createLinkRegisteredModel$1,
+    fetchLinkedRegisteredModel: fetchLinkedRegisteredModel$1,
+    invokeParameterSetRecommender: invokeParameterSetRecommender
+  });
+
+  const fetchProductRecommenders = async ({
+    success,
+    error,
+    token,
+    page,
+  }) => {
+    const url = getUrl("api/recommenders/ProductRecommenders");
+    const response = await fetch(`${url}?${pageQuery(page)}`, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      success(await response.json());
+    } else {
+      error(await response.json());
+    }
+  };
+
+  const fetchProductRecommender = async ({
+    success,
+    error,
+    token,
+    id,
+  }) => {
+    const url = getUrl(`api/recommenders/ProductRecommenders/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      success(await response.json());
+    } else {
+      error(await response.json());
+    }
+  };
+
+  const createProductRecommender = async ({
+    success,
+    error,
+    token,
+    payload,
+    onFinally,
+  }) => {
+    try {
+      const url = getUrl("api/recommenders/ProductRecommenders");
+      const response = await fetch(url, {
+        headers: headers(token),
+        method: "post",
+        body: JSON.stringify(payload),
+      });
+      if (response.ok) {
+        success(await response.json());
+      } else {
+        error(await response.json());
+      }
+    } finally {
+      if (onFinally) {
+        onFinally();
+      }
     }
   };
 
@@ -788,12 +877,10 @@
     modelId,
   }) => {
     const url = getUrl(
-      `api/recommenders/ParameterSetRecommenders/${id}/ModelRegistration`
+      `api/recommenders/ProductRecommenders/${id}/ModelRegistration`
     );
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$6
-        : { ...defaultHeaders$6, Authorization: `Bearer ${token}` },
+      headers: headers(token),
       method: "post",
       body: JSON.stringify({ modelId }),
     });
@@ -811,12 +898,10 @@
     id,
   }) => {
     const url = getUrl(
-      `api/recommenders/ParameterSetRecommenders/${id}/ModelRegistration`
+      `api/recommenders/ProductRecommenders/${id}/ModelRegistration`
     );
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$6
-        : { ...defaultHeaders$6, Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
       success(await response.json());
@@ -825,13 +910,42 @@
     }
   };
 
-  var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
+  const invokeProductRecommender = async ({
+    success,
+    error,
+    onFinally,
+    token,
+    id,
+    version,
+    input,
+  }) => {
+    try {
+      const url = getUrl(`api/recommenders/ProductRecommenders/${id}/invoke`);
+      const result = await fetch(`${url}?version=${version || "default"}`, {
+        headers: headers(token),
+        method: "post",
+        body: JSON.stringify(input),
+      });
+      if (result.ok) {
+        success(await result.json());
+      } else {
+        error(await result.json());
+      }
+    } finally {
+      if (onFinally) {
+        onFinally();
+      }
+    }
+  };
+
+  var productRecommenders = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchParameterSetRecommenders: fetchParameterSetRecommenders,
-    fetchParameterSetRecommender: fetchParameterSetRecommender,
-    createParameterSetRecommender: createParameterSetRecommender,
+    fetchProductRecommenders: fetchProductRecommenders,
+    fetchProductRecommender: fetchProductRecommender,
+    createProductRecommender: createProductRecommender,
     createLinkRegisteredModel: createLinkRegisteredModel,
-    fetchLinkedRegisteredModel: fetchLinkedRegisteredModel
+    fetchLinkedRegisteredModel: fetchLinkedRegisteredModel,
+    invokeProductRecommender: invokeProductRecommender
   });
 
   const defaultHeaders$5 = { "Content-Type": "application/json" };
@@ -1022,18 +1136,30 @@
 
   const defaultHeaders$1 = { "Content-Type": "application/json" };
 
-  const fetchTouchpoints = async ({ success, error, token, page }) => {
-    const url = getUrl("api/touchpoints");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: !token
-        ? defaultHeaders$1
-        : { ...defaultHeaders$1, Authorization: `Bearer ${token}` },
-    });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
+  const fetchTouchpoints = async ({
+    success,
+    error,
+    token,
+    page,
+    onFinally,
+  }) => {
+    try {
+      const url = getUrl("api/touchpoints");
+      const response = await fetch(`${url}?${pageQuery(page)}`, {
+        headers: !token
+          ? defaultHeaders$1
+          : { ...defaultHeaders$1, Authorization: `Bearer ${token}` },
+      });
+      if (response.ok) {
+        const results = await response.json();
+        success(results);
+      } else {
+        error(await response.json());
+      }
+    } finally {
+      if (onFinally) {
+        onFinally();
+      }
     }
   };
 
@@ -1056,20 +1182,27 @@
     error,
     token,
     payload,
+    onFinally,
   }) => {
-    const url = getUrl("api/touchpoints");
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$1
-        : { ...defaultHeaders$1, Authorization: `Bearer ${token}` },
-      method: "post",
-      body: JSON.stringify(payload),
-    });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
+    try {
+      const url = getUrl("api/touchpoints");
+      const response = await fetch(url, {
+        headers: !token
+          ? defaultHeaders$1
+          : { ...defaultHeaders$1, Authorization: `Bearer ${token}` },
+        method: "post",
+        body: JSON.stringify(payload),
+      });
+      if (response.ok) {
+        const results = await response.json();
+        success(results);
+      } else {
+        error(await response.json());
+      }
+    } finally {
+      if (onFinally) {
+        onFinally();
+      }
     }
   };
 
@@ -1318,6 +1451,7 @@
   exports.paging = paging;
   exports.parameterSetRecommenders = parameterSetRecommendersApi;
   exports.parameters = parametersApi;
+  exports.productRecommenders = productRecommenders;
   exports.products = productsApi;
   exports.reactConfig = reactConfigApi;
   exports.reports = reportsApi;

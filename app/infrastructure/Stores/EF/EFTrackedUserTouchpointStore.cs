@@ -48,5 +48,16 @@ namespace SignalBox.Infrastructure.EntityFramework
             return trackedUser.TrackedUserTouchpoints.First(_ => _.Touchpoint == touchpoint && _.Version == version.Value);
 
         }
+
+        public async Task<bool> TouchpointExists(TrackedUser trackedUser, Touchpoint touchpoint, int? version = null)
+        {
+            version ??= await CurrentMaximumTouchpointVersion(trackedUser, touchpoint);
+            trackedUser = await context.TrackedUsers
+                .Include(_ => _.TrackedUserTouchpoints)
+                .ThenInclude(_ => _.Touchpoint)
+                .FirstAsync(_ => _.Id == trackedUser.Id);
+
+            return trackedUser.TrackedUserTouchpoints.Any(_ => _.Touchpoint == touchpoint && _.Version == version.Value);
+        }
     }
 }

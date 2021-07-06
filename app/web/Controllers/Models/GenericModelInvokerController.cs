@@ -13,11 +13,10 @@ namespace SignalBox.Web.Controllers
     [Route("api/models/generic")]
     public class GenericModelInvokerController : SignalBoxControllerBase
     {
-        private readonly InvokeModelWorkflows workflows;
+        private readonly GenericModelWorkflows workflows;
         private readonly IModelRegistrationStore modelRegistrationStore;
 
-        public GenericModelInvokerController(InvokeModelWorkflows workflows,
-                                                    IModelRegistrationStore modelRegistrationStore)
+        public GenericModelInvokerController(GenericModelWorkflows workflows, IModelRegistrationStore modelRegistrationStore)
         {
             this.workflows = workflows;
             this.modelRegistrationStore = modelRegistrationStore;

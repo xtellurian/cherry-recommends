@@ -1,12 +1,10 @@
 import { getUrl } from "../baseUrl";
-const defaultHeaders = { "Content-Type": "application/json" };
+import { headers } from "./headers";
 
 export const fetchEventSummary = async ({ success, error, token }) => {
   const url = getUrl("api/datasummary/events");
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     const results = await response.json();
@@ -26,9 +24,7 @@ export const fetchEventTimeline = async ({
   const url = getUrl(`api/datasummary/events/timeline/${kind}/${eventType}`);
 
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     const results = await response.json();
@@ -42,9 +38,7 @@ export const fetchDashboard = async ({ success, error, token, scope }) => {
   const url = getUrl(`api/datasummary/dashboard`);
 
   const response = await fetch(`${url}?scope=${scope}`, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     const results = await response.json();

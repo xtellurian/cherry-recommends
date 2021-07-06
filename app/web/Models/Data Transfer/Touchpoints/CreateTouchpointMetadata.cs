@@ -10,7 +10,7 @@ namespace SignalBox.Web.Dto
         public string CommonId { get; set; }
 
         /// <summary>Optional friendly name of the touchpoint.</summary>
-        [StringLength(maximumLength: 50)]
+        [StringLength(maximumLength: 100)]
         public string Name { get; set; }
     }
 }

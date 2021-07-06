@@ -10,7 +10,7 @@ import {
 import { invokeGenericModel } from "../../../api/modelsApi";
 import { JsonView } from "../../molecules/JsonView";
 import { useAccessToken } from "../../../api-hooks/token";
-
+import { getSampleInput } from "./sampleModelInputs";
 function isJson(str) {
   try {
     JSON.parse(str);
@@ -22,21 +22,13 @@ function isJson(str) {
 export const GenericModelTester = ({ model }) => {
   const token = useAccessToken();
   const [input, setInput] = React.useState(
-    JSON.stringify(
-      {
-        version: "testing",
-        payload: {
-          arguments: {
-            one: "one",
-            two: 2,
-          },
-          parameterBounds: {},
-        },
-      },
-      null,
-      2
-    )
+    JSON.stringify(getSampleInput(model), null, 2)
   );
+
+  // reload when model loads
+  React.useEffect(() => {
+    setInput(JSON.stringify(getSampleInput(model), null, 2));
+  }, [model]);
 
   const handleFormat = () => {
     if (isInputJson) {
@@ -74,6 +66,7 @@ export const GenericModelTester = ({ model }) => {
         Models
       </BackButton>
       <Title>Model Tester</Title>
+      <Subtitle>{model.name}</Subtitle>
       <hr />
       <ExpandableCard label="Model Information">
         <JsonView data={model} />

@@ -4,7 +4,7 @@ namespace SignalBox.Core
 {
     public class TrackedUserTouchpoint : Entity
     {
-        public TrackedUserTouchpoint()
+        protected TrackedUserTouchpoint()
         { }
 
         public TrackedUserTouchpoint(TrackedUser trackedUser, Touchpoint touchpoint, Dictionary<string, object> values, int version)

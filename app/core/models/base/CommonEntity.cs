@@ -4,7 +4,8 @@ namespace SignalBox.Core
     {
         protected CommonEntity()
         { }
-        protected CommonEntity(string commonId, string name) : base(name)
+#nullable enable
+        protected CommonEntity(string commonId, string? name) : base(name)
         {
             CommonId = commonId;
         }

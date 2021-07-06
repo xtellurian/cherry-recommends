@@ -330,3 +330,4 @@ ASALocalRun/
 .mfractor/
 .DS_Store
 app/web/ClientApp/stats.json
+ml/tutorial/*.pkl

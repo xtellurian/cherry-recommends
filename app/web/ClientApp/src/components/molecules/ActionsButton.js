@@ -28,7 +28,7 @@ export const ActionsButton = ({ to, label, className, children }) => {
 
 export const ActionItemsGroup = ({ label, children }) => {
   return (
-    <DropdownMenu>
+    <DropdownMenu right>
       {children && <DropdownItem header>{label}</DropdownItem>}
       {children}
     </DropdownMenu>

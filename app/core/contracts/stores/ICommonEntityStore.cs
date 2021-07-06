@@ -8,5 +8,6 @@ namespace SignalBox.Core
         Task<bool> ExistsFromCommonId(string commonId);
         Task<string> FindCommonId(long id);
         Task<T> ReadFromCommonId<TProperty>(string commonId, System.Linq.Expressions.Expression<System.Func<T, TProperty>> include);
+        Task<Paginated<T>> Query(int page, string searchTerm);
     }
 }

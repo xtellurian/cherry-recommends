@@ -48,12 +48,16 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IPresentationOutcomeStore, EFPresentationOutcomeStore>();
             services.AddScoped<IProductStore, EFProductStore>();
             services.AddScoped<IParameterStore, EFParameterStore>();
+
+            // recommenders
+            services.AddScoped<IProductRecommenderStore, EFProductRecommenderStore>();
             services.AddScoped<IParameterSetRecommenderStore, EFParameterSetRecommenderStore>();
 
             // recommendations
             services.AddScoped<IRecommendationCorrelatorStore, EFRecommendationCorrelatorStore>();
             services.AddScoped<IOfferRecommendationStore, EFOfferRecommendationStore>();
             services.AddScoped<IParameterSetRecommendationStore, EFParameterSetRecommendationStore>();
+            services.AddScoped<IProductRecommendationStore, EFProductRecommendationStore>();
 
             services.AddScoped<ITouchpointStore, EFTouchpointStore>();
             services.AddScoped<ITrackedUserTouchpointStore, EFTrackedUserTouchpointStore>();
