@@ -20,3 +20,11 @@ def get_touchpoint_on_tracked_user(access_token: str, base_url: str, tracked_use
         return r.json()
     else:
         raise SignalBoxException(r.text)
+
+
+def get_touchpoint(access_token: str, base_url: str, touchpoint_id: str):
+    r = get(f'{base_url}/api/touchpoints/{touchpoint_id}', access_token)
+    if r.ok:
+        return r.json()
+    else:
+        raise SignalBoxException(r.text)

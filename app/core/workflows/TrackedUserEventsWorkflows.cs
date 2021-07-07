@@ -17,6 +17,7 @@ namespace SignalBox.Core.Workflows
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ITrackedUserEventStore trackedUserEventStore;
         private readonly ITrackedUserEventQueueStore eventQueueStore;
+        private readonly TrackedUserActionWorkflows trackedUserActionWorkflows;
         private readonly INewTrackedUserEventQueueStore newTrackedUserQueue;
 
         public JsonSerializerOptions SerializerOptions => new JsonSerializerOptions();
@@ -28,6 +29,7 @@ namespace SignalBox.Core.Workflows
                                           IIntegratedSystemStore integratedSystemStore,
                                           ITrackedUserEventStore trackedUserEventStore,
                                           ITrackedUserEventQueueStore eventQueueStore,
+                                          TrackedUserActionWorkflows trackedUserActionWorkflows, // this comes in here for simplicity
                                           INewTrackedUserEventQueueStore newTrackedUserQueue)
         {
             this.storageContext = storageContext;
@@ -38,6 +40,7 @@ namespace SignalBox.Core.Workflows
             this.integratedSystemStore = integratedSystemStore;
             this.trackedUserEventStore = trackedUserEventStore;
             this.eventQueueStore = eventQueueStore;
+            this.trackedUserActionWorkflows = trackedUserActionWorkflows;
             this.newTrackedUserQueue = newTrackedUserQueue;
         }
 
@@ -53,7 +56,7 @@ namespace SignalBox.Core.Workflows
 
                 await eventQueueStore.Enqueue(new TrackedUserEventsQueueMessage(fileName));
                 await newTrackedUserQueue.Enqueue(new NewTrackedUserEventQueueMessage(input.Select(_ => _.CommonUserId).Distinct()));
-                return new EventLoggingResponse { Enqueued = input.Count() };
+                return new EventLoggingResponse { EventsEnqueued = input.Count() };
             }
             else
             {
@@ -87,8 +90,9 @@ namespace SignalBox.Core.Workflows
 
 
                 var results = await trackedUserEventStore.AddTrackedUserEvents(events);
+                var actions = await trackedUserActionWorkflows.StoreActionsFromEvents(events);
                 await storageContext.SaveChanges();
-                return new EventLoggingResponse { Processed = input.Count() }; ;
+                return new EventLoggingResponse { EventsProcessed = input.Count(), ActionsProcessed = actions.Count() };
             }
 
         }

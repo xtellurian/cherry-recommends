@@ -33,7 +33,8 @@ tp = test_client.get_touchpoint_on_tracked_user(
 
 assert tp["values"]["key"] == "value"
 # get the touchpoint
-
+touchpoint = test_client.get_touchpoint(touchpoint_id)
+assert touchpoint['commonId'] == touchpoint_id
 
 # create a product
 # TODO: next sprint
@@ -78,7 +79,7 @@ recommended_offer = test_client.recommend_offer(experiment_id, user_id)
 assert recommended_offer['recommendationCorrelatorId'] is not None
 
 # create an event with the correlatorId in it
-e = test_client.construct_event(user_id, str(uuid.uuid1()), "TestOffer", "View", {
+e = test_client.construct_event(user_id, str(uuid.uuid1()), "TestOffer", "ViewOffer", {
 }, None, None, recommended_offer['recommendationCorrelatorId'])
 test_client.log_events([e])
 
@@ -91,8 +92,10 @@ event_types = ["CREATED", "CANCELED"]
 event_kinds = ["BILLING", "TICKET"]
 events = []
 for i in range(100):
+    uid = str(uuid.uuid1())
+    print(f'Event User Id: ', uid)
     events.append(test_client.construct_event(
-        str(uuid.uuid1()), str(uuid.uuid1()), np.random.choice(event_types), np.random.choice(event_kinds), {}))
+        uid, str(uuid.uuid1()), np.random.choice(event_types), np.random.choice(event_kinds), {}))
     # commonUserId, event_id, event_type, kind, properties, timestamp, source_system_id
 
 print(f'logging {len(events)} events')

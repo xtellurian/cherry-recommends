@@ -12,7 +12,7 @@ export const DateTimeField = ({ label, date }) => {
 
   return (
     <div>
-      {label}:{dateValue.toLocaleString()}
+      {label}:{" "}{dateValue.toLocaleString()}
     </div>
   );
 };

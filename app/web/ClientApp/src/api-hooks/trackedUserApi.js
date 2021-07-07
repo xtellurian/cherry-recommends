@@ -1,7 +1,12 @@
 import React from "react";
 import { usePagination } from "../utility/utility";
 import { useAccessToken } from "./token";
-import { fetchTrackedUsers, fetchTrackedUser } from "../api/trackedUsersApi";
+import {
+  fetchTrackedUsers,
+  fetchTrackedUser,
+  fetchUniqueTrackedUserActions,
+  fetchTrackedUserAction,
+} from "../api/trackedUsersApi";
 
 export const useTrackedUsers = ({ searchTerm }) => {
   const token = useAccessToken();
@@ -37,6 +42,43 @@ export const useTrackedUser = ({ id }) => {
       });
     }
   }, [token, id]);
+
+  return result;
+};
+
+export const useTrackedUserUniqueActions = ({ id }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchUniqueTrackedUserActions({
+        success: setState,
+        error: (e) => setState({ error: e }),
+        token,
+        id,
+      });
+    }
+  }, [token, id]);
+
+  return result;
+};
+
+export const useTrackedUserAction = ({ id, actionName }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchTrackedUserAction({
+        success: setState,
+        error: (e) => setState({ error: e }),
+        token,
+        id,
+        actionName,
+      });
+    }
+  }, [token, id, actionName]);
 
   return result;
 };

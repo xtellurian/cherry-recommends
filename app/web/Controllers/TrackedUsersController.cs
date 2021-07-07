@@ -56,13 +56,6 @@ namespace SignalBox.Web.Controllers
             return await eventStore.ReadEventsForUser(commonUserId);
         }
 
-        /// <summary>Updates the properties of a tracked user.</summary>
-        [HttpPut("{id}/properties")]
-        public async Task<object> Create(string id, [FromBody] Dictionary<string, object> dto)
-        {
-            return await workflows.MergeTrackedUserProperties(id, dto);
-        }
-
         /// <summary>Creates a new tracked user.</summary>
         [HttpPost]
         public async Task<object> CreateOrUpdate([FromBody] CreateOrUpdateTrackedUserDto dto)

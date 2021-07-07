@@ -5,6 +5,7 @@ import { ParameterSetRecommendersSummary } from "./ParameterSetRecommendersSumma
 import { CreateParameterSetRecommender } from "./CreateParameterSetRecommender";
 import { ParameterSetRecommenderDetail } from "./ParameterSetRecommenderDetail";
 import { TestParameterSetRecommender } from "./TestParameterSetRecommender";
+import { IntegrateParameterSetRecommender } from "./IntegrateParameterSetRecommender";
 import { LinkToModel } from "./LinkToModel";
 
 export const ParameterSetRecommendersComponent = () => {
@@ -33,6 +34,10 @@ export const ParameterSetRecommendersComponent = () => {
         <AuthorizeRoute
           path={`${path}/link-to-model/:id`}
           component={LinkToModel}
+        />
+        <AuthorizeRoute
+          path={`${path}/integrate/:id`}
+          component={IntegrateParameterSetRecommender}
         />
       </Switch>
     </React.Fragment>

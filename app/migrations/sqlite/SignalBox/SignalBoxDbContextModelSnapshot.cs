@@ -851,6 +851,65 @@ namespace sqlite.SignalBox
                     b.ToTable("TrackedUsers");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.TrackedUserAction", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ActionName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ActionValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CommonUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("EventId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("IntegratedSystemId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long?>("RecommendationCorrelatorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("Timestamp")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ValueType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionName");
+
+                    b.HasIndex("CommonUserId");
+
+                    b.HasIndex("Timestamp");
+
+                    b.ToTable("TrackedUserActions");
+                });
+
             modelBuilder.Entity("SignalBox.Core.TrackedUserEvent", b =>
                 {
                     b.Property<long>("Id")

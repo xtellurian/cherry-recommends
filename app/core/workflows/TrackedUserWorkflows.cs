@@ -16,6 +16,7 @@ namespace SignalBox.Core.Workflows
         private readonly ITrackedUserEventStore eventStore;
         private readonly ITrackedUserSystemMapStore trackedUserSystemMapStore;
         private readonly IIntegratedSystemStore integratedSystemStore;
+        private readonly ITrackedUserActionStore trackedUserActionStore;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public TrackedUserWorkflows(IStorageContext storageContext,
@@ -24,6 +25,7 @@ namespace SignalBox.Core.Workflows
             ITrackedUserEventStore eventStore,
             ITrackedUserSystemMapStore trackedUserSystemMapStore,
             IIntegratedSystemStore integratedSystemStore,
+            ITrackedUserActionStore trackedUserActionStore,
             IDateTimeProvider dateTimeProvider)
         {
             this.storageContext = storageContext;
@@ -32,6 +34,7 @@ namespace SignalBox.Core.Workflows
             this.eventStore = eventStore;
             this.trackedUserSystemMapStore = trackedUserSystemMapStore;
             this.integratedSystemStore = integratedSystemStore;
+            this.trackedUserActionStore = trackedUserActionStore;
             this.dateTimeProvider = dateTimeProvider;
         }
 
@@ -85,22 +88,17 @@ namespace SignalBox.Core.Workflows
                 logger.LogWarning($"Not setting integratedSystemId for tracked user {trackedUser.Id}");
             }
 
+            var dynamicProperties = new DynamicPropertyDictionary(properties);
+            var actions = new List<TrackedUserAction>();
+            foreach (var a in dynamicProperties.ToActions(commonUserId, dateTimeProvider.Now, integratedSystemId))
+            {
+                actions.Add(await trackedUserActionStore.Create(a));
+            }
+
             if (saveOnComplete == true)
             {
                 await storageContext.SaveChanges();
             }
-
-            return trackedUser;
-        }
-
-        public async Task<TrackedUser> MergeTrackedUserProperties(string commonUserId, Dictionary<string, object> properties)
-        {
-            var trackedUser = await userStore.ReadFromCommonId(commonUserId);
-            foreach (var kvp in properties)
-            {
-                trackedUser.Properties[kvp.Key] = kvp.Value;
-            }
-            await storageContext.SaveChanges();
 
             return trackedUser;
         }

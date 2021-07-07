@@ -27,6 +27,11 @@ export const ParameterSetRecommenderDetail = () => {
       >
         <ActionItemsGroup label="Actions">
           <ActionLink
+            to={`/recommenders/parameter-set-recommenders/integrate/${id}`}
+          >
+            Technical Integration
+          </ActionLink>
+          <ActionLink
             to={`/recommenders/parameter-set-recommenders/link-to-model/${id}`}
           >
             Link to Model

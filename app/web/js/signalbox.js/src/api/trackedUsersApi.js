@@ -45,6 +45,43 @@ export const fetchTrackedUser = async ({ success, error, token, id }) => {
   }
 };
 
+export const fetchUniqueTrackedUserActions = async ({
+  success,
+  error,
+  token,
+  id,
+}) => {
+  const url = getUrl(`api/trackedUsers/${id}/actions`);
+  const response = await fetch(url, {
+    headers: !token ? {} : { Authorization: `Bearer ${token}` },
+  });
+  if (response.ok) {
+    const trackedUser = await response.json();
+    success(trackedUser);
+  } else {
+    error(await response.json());
+  }
+};
+
+export const fetchTrackedUserAction = async ({
+  success,
+  error,
+  token,
+  id,
+  actionName,
+}) => {
+  const url = getUrl(`api/trackedUsers/${id}/actions/${actionName}`);
+  const response = await fetch(url, {
+    headers: !token ? {} : { Authorization: `Bearer ${token}` },
+  });
+  if (response.ok) {
+    const trackedUser = await response.json();
+    success(trackedUser);
+  } else {
+    error(await response.json());
+  }
+};
+
 export const uploadUserData = async ({ success, error, token, payload }) => {
   const url = getUrl(`api/trackedUsers`);
   const payloads = chunkArray(payload.users, MAX_ARRAY).map((users) => ({

@@ -40,6 +40,7 @@ namespace SignalBox.Infrastructure
         public static IServiceCollection AddEFStores(this IServiceCollection services)
         {
             services.AddScoped<ITrackedUserEventStore, EFTrackedUserEventStore>();
+            services.AddScoped<ITrackedUserActionStore, EFTrackedUserActionStore>();
             services.AddScoped<ITrackedUserStore, EFTrackedUserStore>();
             services.AddScoped<IExperimentStore, EFExperimentStore>();
             services.AddScoped<ISegmentStore, EFSegmentStore>();

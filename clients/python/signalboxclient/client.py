@@ -5,9 +5,10 @@ from .client_functions import batch, construct_user, construct_event, post, put
 from .experiments import create_experiment, get_experiment, get_offers_in_experiment, query_experiments
 from .products import create_product, query_products
 from .trackedusers import create_user, create_or_update_users
-from .touchpoints import create_touchpoint_on_tracked_user, get_touchpoint_on_tracked_user
+from .touchpoints import create_touchpoint_on_tracked_user, get_touchpoint_on_tracked_user, get_touchpoint
 from .parameters import create_parameter
 from .parameter_recommenders import create_parameterset_recommender
+from .product_recommenders import get_product_recommender, invoke_product_recommender
 
 
 class Configuration:
@@ -86,6 +87,9 @@ class SignalBoxClient:
         return get_touchpoint_on_tracked_user(
             self.access_token, self.base_url, tracked_user_id=tracked_user_id, touchpoint_id=touchpoint_id, version=version)
 
+    def get_touchpoint(self, touchpoint_id: str):
+        return get_touchpoint(self.access_token, self.base_url, touchpoint_id=touchpoint_id)
+
     def create_or_update_users(self, users):
         return create_or_update_users(self.access_token, self.base_url,  users)
 
@@ -123,6 +127,12 @@ class SignalBoxClient:
 
     def get_offers_in_experiment(self, experiment_id: str):
         return get_offers_in_experiment(self.access_token, self.base_url, experiment_id)
+
+    def get_product_recommender(self, recommender_id):
+        return get_product_recommender(self.access_token, self.base_url, id=recommender_id)
+
+    def invoke_product_recommender(self, recommender_id: int, common_user_id: str):
+        return invoke_product_recommender(self.access_token, self.base_url, id=recommender_id, common_user_id=common_user_id)
 
     def recommend_offer(self, experimentId: str, commonUserId: str, features: dict = None):
         json_params = {
