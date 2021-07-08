@@ -65,7 +65,7 @@ namespace SignalBox.Core.Workflows
                 using (var hmacsha1 = new HMACSHA1(Encoding.UTF8.GetBytes(receiver.SharedSecret)))
                 {
                     var hash = hmacsha1.ComputeHash(Encoding.UTF8.GetBytes(webhookBody));
-                    digest = BitConverter.ToString(hash);
+                    digest = hash.ToHexString();
                 }
                 if (!string.Equals(digest, signature, StringComparison.InvariantCultureIgnoreCase))
                 {
