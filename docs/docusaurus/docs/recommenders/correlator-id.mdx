@@ -1,0 +1,59 @@
+---
+sidebar_position: 1
+title: Outcome Correlation
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Tracking recommendations outcomes using Correlator Id
+
+Explicitely linking events to a recommendation will improve the accuracy of the recommender, and the speed at which it learns.
+
+Every recommendation comes with a `correlatorId`
+
+```json
+{
+  ... // recommendation
+  "correlatorId": 104346873
+}
+```
+
+<Tabs
+  defaultValue="js"
+  values={[
+    { label: 'JavaScript', value: 'js', }
+  ]
+}>
+
+<TabItem value="js">
+
+```js
+signalbox.events.logUserEvents({
+  success: (s) => {
+    console.log("logged events");
+    console.log(s);
+  },
+  error: (e) => {
+    console.log("An error occurred");
+    console.log(e);
+  },
+  token,
+  events: [
+    {
+      recommendationCorrelatorId: 104346873, //
+      commonUserId: "test-common-user-id",
+      eventId: "unique event Id", // required
+      timestamp: new Date(), // optional - defaults to current time.
+      kind: "Purchases", // required - high level categorisation of event
+      eventType: "ItemPurchased", //required - specific categorisation of event
+      properties: {
+        value: 33.6,
+      },
+    },
+  ],
+});
+```
+
+</TabItem>
+</Tabs>

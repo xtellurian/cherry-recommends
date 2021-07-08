@@ -1,0 +1,60 @@
+---
+sidebar_position: 1
+title: Invoke
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Invoke a Parameter Set Recommender
+
+Once a Parameter-Set Recommender has been created, you can invoke it (i.e. get a recommendation) like so.
+
+<Tabs
+  defaultValue="js"
+  values={[
+    { label: 'JavaScript', value: 'js', }
+  ]}>
+
+<TabItem value="js">
+
+```js
+const signalbox = require("signalbox.js");
+
+signalbox.parameterSetRecommenders.invokeParameterSetRecommender({
+  success: (s) => console.log(s), // a success callback
+  error: (e) => console.log(e), // an error callback
+  id: 1, // the Id of the recommender
+  token: "Your Access Token",
+  input: {
+    commonUserId: "The identifier used to track the user",
+    arguments: {
+      // the arguments are defined upon creation of the recommender.
+      // You can include values here, or the defaults may be used if these are omitted.
+    },
+  },
+});
+```
+
+Response
+
+```json
+{
+  "recommendedParameters": {
+    "numeric_parameter": 10,
+    "categorical_parameter": "big"
+  },
+  "correlatorId": 10434637
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+## Tracking Outcomes with Correlator Id
+
+To explicitly link outcomes of recommendations to events, you can use the `correlatorId` value in the Recommendation response.
+
+[Read more about tracking outcomes](../correlator-id).
+

@@ -1,0 +1,3 @@
+name: docs
+runtime: dotnet
+description: Docs stack for SignalBox
