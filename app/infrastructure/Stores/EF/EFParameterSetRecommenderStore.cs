@@ -24,7 +24,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
             catch (Exception ex)
             {
-                throw new StorageException($"An exception was thrown when finding {typeof(ParameterSetRecommender)} with Id:${id}", ex);
+                throw new EntityNotFoundException(typeof(ParameterSetRecommender), id, ex);
             }
         }
 
@@ -39,7 +39,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
             catch (Exception ex)
             {
-                throw new StorageException($"An exception was thrown when finding type: s${typeof(ParameterSetRecommender)} with commonId:${commonId}", ex);
+                throw new EntityNotFoundException(typeof(ParameterSetRecommender), commonId, ex);
             }
         }
     }

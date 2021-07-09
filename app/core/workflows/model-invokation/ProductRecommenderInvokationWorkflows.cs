@@ -9,11 +9,11 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core.Workflows
 {
-    public class ProductRecommenderModelWorkflows : IWorkflow
+    public class ProductRecommenderInvokationWorkflows : IWorkflow
     {
-        private readonly ILogger<ProductRecommenderModelWorkflows> logger;
+        private readonly ILogger<ProductRecommenderInvokationWorkflows> logger;
         private readonly IStorageContext storageContext;
-        private readonly IModelClientFactory modelClientFactory;
+        private readonly IRecommenderModelClientFactory modelClientFactory;
         private readonly ITrackedUserStore trackedUserStore;
         private readonly ITrackedUserTouchpointStore trackedUserTouchpointStore;
         private readonly ITouchpointStore touchpointStore;
@@ -22,9 +22,9 @@ namespace SignalBox.Core.Workflows
         private readonly IProductRecommenderStore productRecommenderStore;
         private readonly IProductRecommendationStore productRecommendationStore;
 
-        public ProductRecommenderModelWorkflows(ILogger<ProductRecommenderModelWorkflows> logger,
+        public ProductRecommenderInvokationWorkflows(ILogger<ProductRecommenderInvokationWorkflows> logger,
                                     IStorageContext storageContext,
-                                    IModelClientFactory modelClientFactory,
+                                    IRecommenderModelClientFactory modelClientFactory,
                                     ITrackedUserStore trackedUserStore,
                                     ITrackedUserTouchpointStore trackedUserTouchpointStore,
                                     ITouchpointStore touchpointStore,
@@ -81,25 +81,24 @@ namespace SignalBox.Core.Workflows
                 input.Arguments = null;
             }
 
-            IModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1> client;
-            var model = recommender.ModelRegistration;
-            if (model == null)
+            IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1> client;
+            if (recommender.ModelRegistration == null)
             {
                 // create a random recommender here.
-                client = await modelClientFactory.GetUnregisteredClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>();
+                client = await modelClientFactory.GetUnregisteredClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(recommender);
                 logger.LogWarning($"Using unregistered model client for {recommender.Id}");
             }
-            else if (model.ModelType != ModelTypes.ProductRecommenderV1)
+            else if (recommender.ModelRegistration.ModelType != ModelTypes.ProductRecommenderV1)
             {
                 throw new BadRequestException("Model is not a ProductRecommenderV1");
             }
             else
             {
                 client = await modelClientFactory
-                   .GetClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(model);
+                   .GetClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(recommender);
             }
 
-            var output = await client.Invoke(model, version, input);
+            var output = await client.Invoke(recommender, version, input);
 
             // load the product
             if (output.ProductId.HasValue)

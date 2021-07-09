@@ -31,8 +31,8 @@ namespace SignalBox.Core.Workflows
             // model invokation
             services.AddScoped<GenericModelWorkflows>();
             services.AddScoped<ClassifierModelWorkflows>();
-            services.AddScoped<ProductRecommenderModelWorkflows>();
-            services.AddScoped<ParameterSetRecommenderModelWorkflows>();
+            services.AddScoped<ProductRecommenderInvokationWorkflows>();
+            services.AddScoped<ParameterSetRecommenderInvokationWorkflows>();
             return services;
         }
     }

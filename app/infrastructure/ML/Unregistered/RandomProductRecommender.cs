@@ -2,10 +2,11 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using SignalBox.Core;
+using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure
 {
-    public class RandomProductRecommender : IModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>
+    public class RandomProductRecommender : IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>
     {
         private readonly IProductStore productStore;
 
@@ -13,9 +14,10 @@ namespace SignalBox.Infrastructure
         {
             this.productStore = productStore;
         }
-        public async Task<ProductRecommenderModelOutputV1> Invoke(ModelRegistration model, string version, ProductRecommenderModelInputV1 input)
+        public async Task<ProductRecommenderModelOutputV1> Invoke(IRecommender recommender, string version, ProductRecommenderModelInputV1 input)
         {
             // model should be null
+            var productRecommender = (ProductRecommender)recommender;
             var random = new Random();
             var products = await productStore.Query(1);
             var productList = products.Items.ToList();

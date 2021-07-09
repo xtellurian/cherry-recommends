@@ -13,8 +13,8 @@ import {
   Spinner,
   BackButton,
 } from "../../molecules";
-import { NoteBox } from "../../molecules/NoteBox";
 import { JsonView } from "../../molecules/JsonView";
+import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
 
 export const ParameterSetRecommenderDetail = () => {
   const { id } = useParams();
@@ -47,21 +47,26 @@ export const ParameterSetRecommenderDetail = () => {
       <Title>Parameter Set Recommender</Title>
       <Subtitle>{parameterSetRecommender.name || "..."}</Subtitle>
       <hr />
-      {!parameterSetRecommender.loading &&
-        !parameterSetRecommender.modelRegistration && (
-          <NoteBox label="Status">
-            This recommender's model is still in training.
-          </NoteBox>
-        )}
       {parameterSetRecommender.loading && (
         <Spinner>Loading Recommender</Spinner>
       )}
       {parameterSetRecommender.error && (
         <ErrorCard error={parameterSetRecommender.error} />
       )}
-      {!parameterSetRecommender.loading && (
-        <JsonView data={parameterSetRecommender} />
-      )}
+
+      <div className="row">
+        <div className="col-md order-last">
+          {!parameterSetRecommender.loading &&
+            !parameterSetRecommender.error && (
+              <RecommenderStatusBox recommender={parameterSetRecommender} />
+            )}
+        </div>
+        <div className="col-8">
+          {!parameterSetRecommender.loading && (
+            <JsonView data={parameterSetRecommender} />
+          )}
+        </div>
+      </div>
     </React.Fragment>
   );
 };

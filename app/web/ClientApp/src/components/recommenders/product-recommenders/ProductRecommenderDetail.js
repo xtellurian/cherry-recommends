@@ -3,6 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { useProductRecommender } from "../../../api-hooks/productRecommendersApi";
 import { deleteProductRecommender } from "../../../api/productRecommendersApi";
 import { ProductRow } from "../../products/ProductRow";
+import { useAccessToken } from "../../../api-hooks/token";
 import {
   Title,
   Subtitle,
@@ -11,7 +12,7 @@ import {
   ErrorCard,
   EmptyList,
 } from "../../molecules";
-import { NoteBox } from "../../molecules/NoteBox";
+import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
 import {
   ActionLink,
   ActionItemsGroup,
@@ -20,7 +21,6 @@ import {
 } from "../../molecules/ActionsButton";
 import { ConfirmationPopup } from "../../molecules/ConfirmationPopup";
 import { CopyableField } from "../../molecules/CopyableField";
-import { useAccessToken } from "../../../api-hooks/token";
 
 export const ProductRecommenderDetail = () => {
   const { id } = useParams();
@@ -103,31 +103,36 @@ export const ProductRecommenderDetail = () => {
       <Title>Product Recommender</Title>
       <Subtitle>{recommender.name || "..."}</Subtitle>
       <hr />
-      {!recommender.loading && !recommender.modelRegistration && (
-        <NoteBox className="m-2" label="Status">
-          This recommender's model is still in training.
-        </NoteBox>
-      )}
       {recommender.loading && <Spinner>Loading Recommender</Spinner>}
       {recommender.error && <ErrorCard error={recommender.error} />}
-      {recommender.commonId && (
-        <CopyableField label="Common Id" value={recommender.commonId} />
-      )}
-      {recommender.touchpoint && (
-        <CopyableField
-          label="Touchpoint Id"
-          value={recommender.touchpoint.commonId}
-        />
-      )}
-      <div className="mt-2">
-        <Subtitle>Associated Products</Subtitle>
-        {recommender.products &&
-          recommender.products.map((p) => (
-            <ProductRow product={p} key={p.id} />
-          ))}
-        {recommender.products && recommender.products.length === 0 && (
-          <EmptyList>This recommender works with all products.</EmptyList>
-        )}
+
+      <div className="row">
+        <div className="col-md order-last">
+          {!recommender.loading && !recommender.error && (
+            <RecommenderStatusBox recommender={recommender} />
+          )}
+        </div>
+        <div className="col-8">
+          {recommender.commonId && (
+            <CopyableField label="Common Id" value={recommender.commonId} />
+          )}
+          {recommender.touchpoint && (
+            <CopyableField
+              label="Touchpoint Id"
+              value={recommender.touchpoint.commonId}
+            />
+          )}
+          <div className="mt-2">
+            <Subtitle>Associated Products</Subtitle>
+            {recommender.products &&
+              recommender.products.map((p) => (
+                <ProductRow product={p} key={p.id} />
+              ))}
+            {recommender.products && recommender.products.length === 0 && (
+              <EmptyList>This recommender works with all products.</EmptyList>
+            )}
+          </div>
+        </div>
       </div>
     </React.Fragment>
   );

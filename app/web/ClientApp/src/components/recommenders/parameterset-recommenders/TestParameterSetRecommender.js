@@ -124,18 +124,6 @@ export const TestParameterSetRecommender = () => {
     });
   };
 
-  if (
-    !parameterSetRecommender.loading &&
-    !parameterSetRecommender.modelRegistration
-  ) {
-    return (
-      <React.Fragment>
-        <Top id={id} />
-        <hr />
-        <EmptyList>The model is still training. Check back later.</EmptyList>
-      </React.Fragment>
-    );
-  }
   return (
     <React.Fragment>
       <Top id={id} />

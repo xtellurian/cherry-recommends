@@ -9,30 +9,30 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core.Workflows
 {
-    public class ParameterSetRecommenderModelWorkflows : IWorkflow
+    public class ParameterSetRecommenderInvokationWorkflows : IWorkflow
     {
         private JsonSerializerOptions serializerOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         };
 
-        private readonly ILogger<ParameterSetRecommenderModelWorkflows> logger;
+        private readonly ILogger<ParameterSetRecommenderInvokationWorkflows> logger;
         private readonly IStorageContext storageContext;
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
         private readonly IModelRegistrationStore modelRegistrationStore;
         private readonly ITrackedUserStore trackedUserStore;
-        private readonly IModelClientFactory modelClientFactory;
+        private readonly IRecommenderModelClientFactory modelClientFactory;
 
-        public ParameterSetRecommenderModelWorkflows(ILogger<ParameterSetRecommenderModelWorkflows> logger,
+        public ParameterSetRecommenderInvokationWorkflows(ILogger<ParameterSetRecommenderInvokationWorkflows> logger,
                                     IStorageContext storageContext,
                                     IRecommendationCorrelatorStore correlatorStore,
                                     IParameterSetRecommenderStore parameterSetRecommenderStore,
                                     IParameterSetRecommendationStore parameterSetRecommendationStore,
                                     IModelRegistrationStore modelRegistrationStore,
                                     ITrackedUserStore trackedUserStore,
-                                    IModelClientFactory modelClientFactory)
+                                    IRecommenderModelClientFactory modelClientFactory)
         {
             this.logger = logger;
             this.storageContext = storageContext;
@@ -55,20 +55,29 @@ namespace SignalBox.Core.Workflows
 
         public async Task<ParameterSetRecommenderModelOutputV1> InvokeParameterSetRecommender(long id, string version, ParameterSetRecommenderModelInputV1 input)
         {
-            var recommender = await parameterSetRecommenderStore.Read(id, _ => _.ModelRegistration);
+            var recommender = await parameterSetRecommenderStore.Read(id);
             var model = recommender.ModelRegistration;
             TrackedUser user = null;
             if (!string.IsNullOrEmpty(input.CommonUserId))
             {
                 user = await trackedUserStore.ReadFromCommonId(input.CommonUserId);
             }
+
+            IRecommenderModelClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1> client;
             if (model == null)
             {
-                throw new ConfigurationException($"Parameter Set Recommender {recommender.Id} has no attached model");
+                // create a random recommender here.
+                client = await modelClientFactory.GetUnregisteredClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1>(recommender);
+                logger.LogWarning($"Using unregistered model client for {recommender.Id}");
             }
-            if (model.ModelType != ModelTypes.ParameterSetRecommenderV1)
+            else if (model.ModelType != ModelTypes.ParameterSetRecommenderV1)
             {
                 throw new BadRequestException("Model is not a ParameterSetRecommenderV1");
+            }
+            else
+            {
+                client = await modelClientFactory
+                    .GetClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1>(recommender);
             }
             // enrich with the parameter bounds if not supplied.
             if (input.ParameterBounds == null || input.ParameterBounds.Count == 0)
@@ -92,9 +101,8 @@ namespace SignalBox.Core.Workflows
                 }
             }
 
-            var client = await modelClientFactory
-                .GetClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1>(model);
-            var output = await client.Invoke(model, version, input);
+            // invoke the model
+            var output = await client.Invoke(recommender, version, input);
 
             // now save the result
             var correlator = await correlatorStore.Create(new RecommendationCorrelator());

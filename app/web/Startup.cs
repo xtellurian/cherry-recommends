@@ -165,6 +165,8 @@ namespace SignalBox.Web
             }
 
             app.UseProblemDetails(); // must come after app.UseDeveloperExceptionPage()
+            app.UseMiddleware<ExceptionTelemetryMiddleware>(); // must come after UseProblemDetails()
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();

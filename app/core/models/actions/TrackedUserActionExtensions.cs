@@ -22,43 +22,12 @@ namespace SignalBox.Core
             }
             foreach (var kvp in e.Properties)
             {
-                if (kvp.Value is double f)
-                {
-                    actions.Add(new TrackedUserAction(e.CommonUserId,
-                                                      e.EventId,
-                                                      e.Timestamp,
-                                                      e.RecommendationCorrelatorId,
-                                                      e.Source?.Id,
-                                                      category,
-                                                      kvp.Key,
-                                                      f));
-                }
-                else if (kvp.Value is int n)
-                {
-                    actions.Add(new TrackedUserAction(e.CommonUserId,
-                                                      e.EventId,
-                                                      e.Timestamp,
-                                                      e.RecommendationCorrelatorId,
-                                                      e.Source?.Id,
-                                                      category,
-                                                      kvp.Key,
-                                                      n));
-                }
-                else if (kvp.Value is string s)
-                {
-                    actions.Add(new TrackedUserAction(e.CommonUserId,
-                                                      e.EventId,
-                                                      e.Timestamp,
-                                                      e.RecommendationCorrelatorId,
-                                                      e.Source?.Id,
-                                                      category,
-                                                      kvp.Key,
-                                                      s));
-                }
-                else
-                {
-                    throw new System.ArgumentException($"{kvp.Value} is an unknown action value type");
-                }
+                actions.Add(ToAction(e.CommonUserId,
+                                    e.EventId,
+                                    e.Timestamp,
+                                    e.RecommendationCorrelatorId,
+                                    e.Source?.Id,
+                                    category, kvp));
             }
             return actions;
         }
@@ -82,46 +51,61 @@ namespace SignalBox.Core
             var actions = new List<TrackedUserAction>();
             foreach (var kvp in properties)
             {
-                if (kvp.Value is double f)
+                actions.Add(ToAction(commonUserId, eventId, timestamp, null, integratedSystemId, "TrackedUser|Properties", kvp));
+            }
+            return actions;
+        }
+
+        private static TrackedUserAction ToAction(string commonUserId,
+                                     string eventId,
+                                     DateTimeOffset timestamp,
+                                     long? recommendationCorrelatorId,
+                                     long? integratedSystemId,
+                                     string category,
+                                     KeyValuePair<string, object> kvp)
+        {
+            if (kvp.Value is double f)
+            {
+                return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, f);
+            }
+            else if (kvp.Value is int n)
+            {
+                return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, n);
+            }
+            else if (kvp.Value is string s)
+            {
+                return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, s);
+            }
+            else if (kvp.Value is System.Text.Json.JsonElement jsonElement)
+            {
+                if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.String)
                 {
-                    actions.Add(new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, "TrackedUser|Properties", kvp.Key, f));
+                    return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, jsonElement.GetString());
                 }
-                else if (kvp.Value is int n)
+                if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Number)
                 {
-                    actions.Add(new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, "TrackedUser|Properties", kvp.Key, n));
-                }
-                else if (kvp.Value is string s)
-                {
-                    actions.Add(new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, "TrackedUser|Properties", kvp.Key, s));
-                }
-                else if (kvp.Value is System.Text.Json.JsonElement jsonElement)
-                {
-                    if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.String)
+                    if (jsonElement.TryGetInt32(out var i))
                     {
-                        actions.Add(new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, "TrackedUser|Properties", kvp.Key, jsonElement.GetString()));
+                        return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, i);
                     }
-                    if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Number)
+                    else if (jsonElement.TryGetDouble(out var d))
                     {
-                        if (jsonElement.TryGetInt32(out var i))
-                        {
-                            actions.Add(new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, "TrackedUser|Properties", kvp.Key, i));
-                        }
-                        else if (jsonElement.TryGetDouble(out var d))
-                        {
-                            actions.Add(new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, "TrackedUser|Properties", kvp.Key, d));
-                        }
-                        else
-                        {
-                            throw new System.ArgumentException($"{kvp.Value} JsonElement of ValueKind {jsonElement.ValueKind} is an unknown action value type");
-                        }
+                        return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, d);
+                    }
+                    else
+                    {
+                        throw new System.ArgumentException($"{kvp.Value} JsonElement of ValueKind {jsonElement.ValueKind} is an unknown action value type");
                     }
                 }
                 else
                 {
-                    throw new System.ArgumentException($"{kvp.Value} of type {kvp.Value.GetType()} is an unknown action value type");
+                    return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, $"{kvp.Value}");
                 }
             }
-            return actions;
+            else
+            {
+                throw new System.ArgumentException($"{kvp.Value} of type {kvp.Value.GetType()} is an unknown action value type");
+            }
         }
     }
 }

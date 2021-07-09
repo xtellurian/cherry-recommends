@@ -6,7 +6,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.ML.Azure
 {
-    public class AzureMLParameterSetRecommenderClient : MLModelClient, IModelClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1>
+    public class AzureMLParameterSetRecommenderClient : MLModelClient, IRecommenderModelClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1>
     {
         private readonly HttpClient httpClient;
 
@@ -16,12 +16,12 @@ namespace SignalBox.Infrastructure.ML.Azure
             base.SetApplicationJsonHeader(this.httpClient);
         }
 
-        public async Task<ParameterSetRecommenderModelOutputV1> Invoke(ModelRegistration model, string version, ParameterSetRecommenderModelInputV1 input)
+        public async Task<ParameterSetRecommenderModelOutputV1> Invoke(IRecommender recommender, string version, ParameterSetRecommenderModelInputV1 input)
         {
             try
             {
-                base.SetKeyAsBearerToken(httpClient, model);
-                var response = await httpClient.PostAsJsonAsync(model.ScoringUrl, 
+                base.SetKeyAsBearerToken(httpClient, recommender.ModelRegistration);
+                var response = await httpClient.PostAsJsonAsync(recommender.ModelRegistration.ScoringUrl, 
                     new ModelInputWrapper<ParameterSetRecommenderModelInputV1>(version, input), serializerOptions);
                 var body = await response.Content.ReadAsStringAsync();
                 response.EnsureSuccessStatusCode();
@@ -29,7 +29,7 @@ namespace SignalBox.Infrastructure.ML.Azure
             }
             catch (System.Exception ex)
             {
-                throw new ModelInvokationException(model, ex);
+                throw new ModelInvokationException(recommender.ModelRegistration, ex);
             }
         }
     }

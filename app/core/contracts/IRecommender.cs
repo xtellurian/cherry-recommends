@@ -2,8 +2,9 @@ using System.Threading.Tasks;
 
 namespace SignalBox.Core
 {
-    public interface IRecommender<T>
+#nullable enable
+    public interface IRecommender
     {
-        Task<T> Recommend(RecommendationRequestArguments context);
+        ModelRegistration? ModelRegistration { get; }
     }
 }

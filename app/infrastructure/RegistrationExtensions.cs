@@ -12,6 +12,7 @@ namespace SignalBox.Infrastructure
         {
             services.AddScoped<IApiTokenFactory, Auth0ApiTokenFactory>();
             services.AddScoped<IModelClientFactory, ModelClientFactory>();
+            services.AddScoped<IRecommenderModelClientFactory, RecommenderModelClientFactory>();
             return services;
         }
     }

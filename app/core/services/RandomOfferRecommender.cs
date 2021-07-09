@@ -6,11 +6,11 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core
 {
-    public class RandomRecommender : IRecommender<OfferRecommendation>
+    public class RandomOfferRecommender
     {
         private readonly IRecommendationCorrelatorStore correlatorStore;
 
-        public RandomRecommender(IRecommendationCorrelatorStore correlatorStore)
+        public RandomOfferRecommender(IRecommendationCorrelatorStore correlatorStore)
         {
             this.correlatorStore = correlatorStore;
         }

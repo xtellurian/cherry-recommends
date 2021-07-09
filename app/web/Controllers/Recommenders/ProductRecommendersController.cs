@@ -18,12 +18,12 @@ namespace SignalBox.Web.Controllers
     public class ProductRecommendersController : CommonEntityControllerBase<ProductRecommender>
     {
         private readonly ILogger<ProductRecommendersController> logger;
-        private readonly ProductRecommenderModelWorkflows modelWorkflows;
+        private readonly ProductRecommenderInvokationWorkflows modelWorkflows;
         private readonly ProductRecommenderWorkflows workflows;
 
         public ProductRecommendersController(ILogger<ProductRecommendersController> logger,
                                                  IProductRecommenderStore store,
-                                                 ProductRecommenderModelWorkflows modelWorkflows,
+                                                 ProductRecommenderInvokationWorkflows modelWorkflows,
                                                  ProductRecommenderWorkflows workflows) : base(store)
         {
             this.logger = logger;

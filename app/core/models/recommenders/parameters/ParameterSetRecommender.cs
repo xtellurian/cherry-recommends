@@ -5,7 +5,7 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core.Recommenders
 {
-    public class ParameterSetRecommender : CommonEntity
+    public class ParameterSetRecommender : CommonEntity, IRecommender
     {
         public ParameterSetRecommender()
         { }

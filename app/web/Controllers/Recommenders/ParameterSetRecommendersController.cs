@@ -18,12 +18,12 @@ namespace SignalBox.Web.Controllers
     public class ParameterSetRecommendersController : CommonEntityControllerBase<ParameterSetRecommender>
     {
         private readonly ILogger<ParameterSetRecommendersController> logger;
-        private readonly ParameterSetRecommenderModelWorkflows modelWorkflows;
+        private readonly ParameterSetRecommenderInvokationWorkflows modelWorkflows;
         private readonly ParameterSetRecommenderWorkflows workflows;
 
         public ParameterSetRecommendersController(ILogger<ParameterSetRecommendersController> logger,
                                                  IParameterSetRecommenderStore store,
-                                                 ParameterSetRecommenderModelWorkflows modelWorkflows,
+                                                 ParameterSetRecommenderInvokationWorkflows modelWorkflows,
                                                  ParameterSetRecommenderWorkflows workflows) : base(store)
         {
             this.logger = logger;

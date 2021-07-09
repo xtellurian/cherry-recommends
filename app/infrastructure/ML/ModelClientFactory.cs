@@ -21,17 +21,10 @@ namespace SignalBox.Infrastructure.ML
             where TInput : IModelInput
             where TOutput : IModelOutput
         {
+            // this is the only one that's not a recommender
             if (model.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.SingleClassClassifier)
             {
                 return Task.FromResult((IModelClient<TInput, TOutput>)new AzureMLClassifierClient(httpClient));
-            }
-            else if (model.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ParameterSetRecommenderV1)
-            {
-                return Task.FromResult((IModelClient<TInput, TOutput>)new AzureMLParameterSetRecommenderClient(httpClient));
-            }
-            else if (model.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ProductRecommenderV1)
-            {
-                return Task.FromResult((IModelClient<TInput, TOutput>)new AzureMLPProductRecommenderClient(httpClient));
             }
             else
             {
@@ -43,14 +36,8 @@ namespace SignalBox.Infrastructure.ML
             where TInput : IModelInput
             where TOutput : IModelOutput
         {
-            if (typeof(TInput) == typeof(ProductRecommenderModelInputV1) && typeof(TOutput) == typeof(ProductRecommenderModelOutputV1))
-            {
-                return Task.FromResult((IModelClient<TInput, TOutput>)new RandomProductRecommender(productStore));
-            }
-            else
-            {
-                throw new NotImplementedException("This type of client is not creatable");
-            }
+
+            throw new NotImplementedException("This type of client is not creatable");
         }
     }
 }

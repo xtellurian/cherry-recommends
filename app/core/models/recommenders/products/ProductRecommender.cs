@@ -4,7 +4,7 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core.Recommenders
 {
-    public class ProductRecommender : CommonEntity
+    public class ProductRecommender : CommonEntity, IRecommender
     {
         protected ProductRecommender()
         { }
