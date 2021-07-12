@@ -55,7 +55,12 @@ namespace SignalBox.Core.Workflows
                 // save the wholet
 
                 await eventQueueStore.Enqueue(new TrackedUserEventsQueueMessage(fileName));
-                await newTrackedUserQueue.Enqueue(new NewTrackedUserEventQueueMessage(input.Select(_ => _.CommonUserId).Distinct()));
+                // check the amount of users per message isn't too big (azure throws at messages > 64kB)
+                var uniqueUserIds = input.Select(_ => _.CommonUserId).Distinct();
+                foreach (var uIds in uniqueUserIds.Batch(512))
+                {
+                    await newTrackedUserQueue.Enqueue(new NewTrackedUserEventQueueMessage(uIds));
+                }
                 return new EventLoggingResponse { EventsEnqueued = input.Count() };
             }
             else
