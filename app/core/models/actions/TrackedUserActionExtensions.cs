@@ -64,7 +64,11 @@ namespace SignalBox.Core
                                      string category,
                                      KeyValuePair<string, object> kvp)
         {
-            if (kvp.Value is double f)
+            if (kvp.Value == null)
+            {
+                return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, (string)null);
+            }
+            else if (kvp.Value is double f)
             {
                 return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, f);
             }
