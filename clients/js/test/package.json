@@ -1,0 +1,15 @@
+{
+  "name": "test.signalbox.js",
+  "version": "1.0.0",
+  "description": "Testing SignalBoxjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "signalbox.js": "file:../src"
+  }
+}

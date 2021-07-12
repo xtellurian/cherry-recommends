@@ -52,7 +52,7 @@
     "rimraf": "^2.6.2",
     "sass-loader": "8.0.2",
     "semver": "6.3.0",
-    "signalbox.js": "file:../js/signalbox.js",
+    "signalbox.js": "file:../../../clients/js/src",
     "style-loader": "0.23.1",
     "styled-components": "^5.3.0",
     "swagger-ui-react": "^3.49.0",

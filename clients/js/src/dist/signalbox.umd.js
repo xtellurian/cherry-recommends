@@ -1529,8 +1529,15 @@
 
   // fix missing fetch is node environments
   const fetch$1 = require("node-fetch");
-  if (!globalThis.fetch) {
+  if (typeof globalThis === "object") {
+    // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis
     globalThis.fetch = fetch$1;
+  } else if (typeof global === "object") {
+    // For Node <12
+    global.fetch = fetch$1;
+  } else {
+    // Everything else is not supported
+    throw new Error("Unknown JavaScript environment: Not supported");
   }
 
   exports.apiKeys = apiKeyApi;
