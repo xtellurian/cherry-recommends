@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Azure.Functions.Worker.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SignalBox.Infrastructure;
 using SignalBox.Core;
@@ -58,8 +56,11 @@ namespace SignalBox.Functions
 
                     services.AddAzureStorageQueueStores();
                     services.AddEFStores();
+                    // add the workflows needed for backend processing
+                    services.AddScoped<TrackedUserActionWorkflows>();
                     services.AddScoped<TrackedUserEventsWorkflows>();
                     services.AddScoped<TrackedUserWorkflows>();
+                    // add some required services
                     services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();
                 })
                 .Build();
