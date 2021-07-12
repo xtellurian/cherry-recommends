@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SignalBox.Core.Workflows
@@ -9,27 +8,25 @@ namespace SignalBox.Core.Workflows
     public class DataSummaryWorkflows : IWorkflow
     {
         private readonly ITrackedUserEventStore eventStore;
+        private readonly ITrackedUserActionStore actionStore;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ITelemetry telemetry;
 
-        public DataSummaryWorkflows(ITrackedUserEventStore eventStore, IDateTimeProvider dateTimeProvider, ITelemetry telemetry)
+        public DataSummaryWorkflows(ITrackedUserEventStore eventStore,
+                                    ITrackedUserActionStore actionStore,
+                                    IDateTimeProvider dateTimeProvider,
+                                    ITelemetry telemetry)
         {
             this.eventStore = eventStore;
+            this.actionStore = actionStore;
             this.dateTimeProvider = dateTimeProvider;
             this.telemetry = telemetry;
         }
 
-        // private IEnumerable<MomentCount> EventsToMonthlyMoments(IEnumerable<TrackedUserEvent> events, string category = null)
-        // {
-        //     var stopwatch = new Stopwatch();
-        //     stopwatch.Start();
-        //     var moments = events
-        //         .GroupBy(_ => _.Timestamp.TruncateToMonthStart())
-        //         .Select(group => new MomentCount(category, group.Key, group.Count()));
-        //     stopwatch.Stop();
-        //     telemetry.TrackMetric("DataSummaryWorkflows_EventsToMonthlyMoments_ExecutionTimeSeconds", stopwatch.Elapsed.TotalSeconds);
-        //     return moments;
-        // }
+        public async Task<Paginated<TrackedUserAction>> LatestActions()
+        {
+            return await actionStore.Query(1);
+        }
 
         public async Task<TrackedUserEventSummary> GenerateSummary()
         {

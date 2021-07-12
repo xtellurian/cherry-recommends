@@ -47,3 +47,17 @@ export const fetchDashboard = async ({ success, error, token, scope }) => {
     error(await response.json());
   }
 };
+
+export const fetchLatestActionsAsync = async ({ token }) => {
+  const url = getUrl(`api/datasummary/actions`);
+
+  const response = await fetch(`${url}`, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    const content = await response.json();
+    throw content;
+  }
+};

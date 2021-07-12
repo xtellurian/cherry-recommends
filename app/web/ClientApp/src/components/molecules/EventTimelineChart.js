@@ -7,6 +7,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { DateTimeField } from "../molecules/DateTimeField";
 import { JsonView } from "./JsonView";
 
 var groupBy = function (xs, key) {
@@ -19,16 +20,25 @@ var groupBy = function (xs, key) {
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     const eventData = payload[0].payload;
+    let properties = {};
+    if (Object.keys(eventData.properties).length <= 5) {
+      properties = eventData.properties;
+    } else {
+      for (const k of Object.keys(eventData.properties)) {
+        properties[k] = eventData.properties[k];
+        if (Object.keys(properties).length >= 5) {
+          break;
+        }
+      }
+    }
+
     return (
       <div className="custom-tooltip">
+        <DateTimeField label="Timestamp" date={eventData.timestamp} />
         <div className="capitalize">
-          {eventData.kind} | {eventData.eventType}
+          {eventData.kind}|{eventData.eventType}
         </div>
-        {Object.keys(eventData.properties).length < 5 ? (
-          <JsonView data={eventData.properties} />
-        ) : (
-          <div className="text-muted">Too many properties to render</div>
-        )}
+        <JsonView data={properties} />
       </div>
     );
   }

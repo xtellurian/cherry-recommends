@@ -4,6 +4,7 @@ import {
   fetchEventSummary,
   fetchEventTimeline,
   fetchDashboard,
+  fetchLatestActionsAsync,
 } from "../api/dataSummaryApi";
 
 export const useEventDataSummary = () => {
@@ -22,6 +23,25 @@ export const useEventDataSummary = () => {
   }, [token]);
 
   return { result };
+};
+
+export const useLatestActions = () => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({
+    loading: true,
+  });
+  React.useEffect(() => {
+    if (token) {
+      setState({ loading: true });
+      fetchLatestActionsAsync({
+        token,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token]);
+
+  return state;
 };
 
 export const useEventTimeline = ({ kind, eventType }) => {
