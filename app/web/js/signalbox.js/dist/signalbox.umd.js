@@ -843,6 +843,44 @@
     }
   };
 
+  const fetchProductRecommendations = async ({
+    success,
+    error,
+    token,
+    page,
+    id,
+  }) => {
+    const url = getUrl(
+      `api/recommenders/ProductRecommenders/${id}/recommendations`
+    );
+    const response = await fetch(`${url}?${pageQuery(page)}`, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      success(await response.json());
+    } else {
+      error(await response.json());
+    }
+  };
+
+  const deleteProductRecommender = async ({
+    success,
+    error,
+    token,
+    id,
+  }) => {
+    const url = getUrl(`api/recommenders/ProductRecommenders/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "delete",
+    });
+    if (response.ok) {
+      success(await response.json());
+    } else {
+      error(await response.json());
+    }
+  };
+
   const createProductRecommender = async ({
     success,
     error,
@@ -942,6 +980,8 @@
     __proto__: null,
     fetchProductRecommenders: fetchProductRecommenders,
     fetchProductRecommender: fetchProductRecommender,
+    fetchProductRecommendations: fetchProductRecommendations,
+    deleteProductRecommender: deleteProductRecommender,
     createProductRecommender: createProductRecommender,
     createLinkRegisteredModel: createLinkRegisteredModel,
     fetchLinkedRegisteredModel: fetchLinkedRegisteredModel,
@@ -1355,14 +1395,29 @@
   const MAX_ARRAY = 5000;
   const defaultHeaders = { "Content-Type": "application/json" };
 
-  const fetchTrackedUsers = async ({ success, error, token, page }) => {
+  const searchEntities = (term) => {
+    if (term) {
+      return `&q.term=${term}`;
+    } else {
+      return "";
+    }
+  };
+  const fetchTrackedUsers = async ({
+    success,
+    error,
+    token,
+    page,
+    searchTerm,
+  }) => {
     const url = getUrl("api/trackedUsers");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: !token ? {} : { Authorization: `Bearer ${token}` },
-    });
+    const response = await fetch(
+      `${url}?${pageQuery(page)}${searchEntities(searchTerm)}`,
+      {
+        headers: !token ? {} : { Authorization: `Bearer ${token}` },
+      }
+    );
     if (response.ok) {
-      const trackedUsers = await response.json();
-      success(trackedUsers);
+      success(await response.json());
     } else {
       error(await response.json());
     }
@@ -1370,6 +1425,43 @@
 
   const fetchTrackedUser = async ({ success, error, token, id }) => {
     const url = getUrl(`api/trackedUsers/${id}`);
+    const response = await fetch(url, {
+      headers: !token ? {} : { Authorization: `Bearer ${token}` },
+    });
+    if (response.ok) {
+      const trackedUser = await response.json();
+      success(trackedUser);
+    } else {
+      error(await response.json());
+    }
+  };
+
+  const fetchUniqueTrackedUserActions = async ({
+    success,
+    error,
+    token,
+    id,
+  }) => {
+    const url = getUrl(`api/trackedUsers/${id}/actions`);
+    const response = await fetch(url, {
+      headers: !token ? {} : { Authorization: `Bearer ${token}` },
+    });
+    if (response.ok) {
+      const trackedUser = await response.json();
+      success(trackedUser);
+    } else {
+      error(await response.json());
+    }
+  };
+
+  const fetchTrackedUserAction = async ({
+    success,
+    error,
+    token,
+    id,
+    actionName,
+  }) => {
+    const url = getUrl(`api/trackedUsers/${id}/actions/${actionName}`);
     const response = await fetch(url, {
       headers: !token ? {} : { Authorization: `Bearer ${token}` },
     });
@@ -1429,6 +1521,8 @@
     __proto__: null,
     fetchTrackedUsers: fetchTrackedUsers,
     fetchTrackedUser: fetchTrackedUser,
+    fetchUniqueTrackedUserActions: fetchUniqueTrackedUserActions,
+    fetchTrackedUserAction: fetchTrackedUserAction,
     uploadUserData: uploadUserData,
     createOrUpdateTrackedUser: createOrUpdateTrackedUser
   });
