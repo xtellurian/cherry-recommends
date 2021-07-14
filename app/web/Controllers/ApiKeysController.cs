@@ -36,7 +36,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost("create")]
         public async Task<CreateApiKeyResponseDto> CreateApiKey(CreateApiKeyDto dto)
         {
-            var key = await workflows.GenerateAndStoreApiKey(dto.Name);
+            var key = await workflows.GenerateAndStoreApiKey(dto.Name, User, dto.Scope);
             return new CreateApiKeyResponseDto(dto.Name, key);
         }
 

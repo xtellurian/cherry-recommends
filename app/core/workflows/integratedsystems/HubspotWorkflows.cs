@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,6 +12,7 @@ namespace SignalBox.Core.Workflows
     public class HubspotWorkflows : IWorkflow
     {
         private readonly IIntegratedSystemStore integratedSystemStore;
+        private readonly ITrackedUserSystemMapStore systemMapStore;
         private readonly IStorageContext storageContext;
         private readonly IHubspotService hubspotService;
         private readonly IDateTimeProvider dateTimeProvider;
@@ -18,6 +20,7 @@ namespace SignalBox.Core.Workflows
         private readonly IOptions<HubspotAppCredentials> hubspotCreds;
 
         public HubspotWorkflows(IIntegratedSystemStore integratedSystemStore,
+                                ITrackedUserSystemMapStore systemMapStore,
                                 IStorageContext storageContext,
                                 IHubspotService hubspotService,
                                 IDateTimeProvider dateTimeProvider,
@@ -25,6 +28,7 @@ namespace SignalBox.Core.Workflows
                                 IOptions<HubspotAppCredentials> hubspotCreds)
         {
             this.integratedSystemStore = integratedSystemStore;
+            this.systemMapStore = systemMapStore;
             this.storageContext = storageContext;
             this.hubspotService = hubspotService;
             this.dateTimeProvider = dateTimeProvider;
@@ -63,6 +67,21 @@ namespace SignalBox.Core.Workflows
             var system = await integratedSystemStore.Read(integratedSystemId);
             await CheckAndRefreshCredentials(system);
             return await hubspotService.GetContacts(system);
+        }
+
+        public async Task<IEnumerable<TrackedUser>> GetAssociatedTrackedUsersFromTicket(string integratedSystemCommonId, string ticketId)
+        {
+            var system = await integratedSystemStore.ReadFromCommonId(integratedSystemCommonId);
+            await CheckAndRefreshCredentials(system);
+            var associations = await hubspotService.GetAssociatedContactsFromTicket(system, ticketId);
+            var contactIds = associations
+                .Where(_ => _.Type == "ticket_to_contact")
+                .Select(_ => _.Id);
+            var systemMaps = await systemMapStore.Query(1,  // first page
+                    _ => _.TrackedUser,
+                    _ => contactIds.Contains(_.UserId) && _.IntegratedSystemId == system.Id);
+
+            return systemMaps.Items.Select(_ => _.TrackedUser);
         }
 
         public Task<HubspotAppCredentials> GetHubspotCredentials()

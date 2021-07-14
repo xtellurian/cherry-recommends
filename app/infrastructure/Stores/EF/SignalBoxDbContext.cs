@@ -80,6 +80,10 @@ namespace SignalBox.Infrastructure
         public DbSet<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
         public DbSet<Parameter> Parameters { get; set; }
 
+        // features
+        public DbSet<Feature> Features { get; set; }
+        public DbSet<TrackedUserFeature> TrackedUserFeatures { get; set; }
+
         // recommenders
         public DbSet<ProductRecommender> ProductRecommenders { get; set; }
         public DbSet<ParameterSetRecommender> ParameterSetRecommenders { get; set; }

@@ -16,8 +16,9 @@ import { GearFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import LoginMenu from "./../auth0/AuthNav";
 import { useAuth } from "../../utility/useAuth";
-import { AuthenticatedIA, settingsItems } from "./MenuIA";
+import { getAuthenticatedIA, settingsItems } from "./MenuIA";
 import "./NavMenu.css";
+import { useTokenScopes } from "../../api-hooks/token";
 
 const DropdownMenuItem = ({ section }) => {
   return (
@@ -63,6 +64,8 @@ export const NavMenu = () => {
     collapsed: true,
   });
 
+  var scopes = useTokenScopes();
+
   const toggleNavbar = () => {
     setState({
       collapsed: !state.collapsed,
@@ -96,7 +99,7 @@ export const NavMenu = () => {
           >
             <ul className="navbar-nav flex-grow">
               {isAuthenticated &&
-                AuthenticatedIA.map((section, index) => (
+                getAuthenticatedIA(scopes).map((section, index) => (
                   <SmartMenuItem key={index} section={section} />
                 ))}
 

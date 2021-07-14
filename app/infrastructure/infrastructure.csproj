@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.*" />
     <!-- needed for xtellurian.hubspot -->
     <PackageReference Include="Newtonsoft.Json" Version="12.0.*" />
-    <PackageReference Include="xtellurian.HubSpot" Version="1.0.3" />
+    <PackageReference Include="xtellurian.HubSpot" Version="1.1.1" />
   </ItemGroup>
 
   <PropertyGroup>

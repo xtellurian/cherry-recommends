@@ -234,7 +234,7 @@ namespace SignalBox.Core
         public string Description { get; set; }
 
         [JsonPropertyName("security")]
-        public Security[] Security { get; set; }
+        public OpenApiSecurity[] Security { get; set; }
 
         [JsonPropertyName("parameters")]
         public Bearer[] Parameters { get; set; }
@@ -270,7 +270,7 @@ namespace SignalBox.Core
         public Default Default { get; set; }
     }
 
-    public partial class Security
+    public partial class OpenApiSecurity
     {
         [JsonPropertyName("Bearer")]
         public object[] Bearer { get; set; }

@@ -12,5 +12,6 @@ namespace SignalBox.Core
         Task<HubspotAccountDetails> GetAccountDetails(TokenResponse tokenResponse);
         Task<IEnumerable<HubspotContactProperty>> GetContactProperties(IntegratedSystem hubspotSystemReference);
         Task<IEnumerable<HubspotContact>> GetContacts(IntegratedSystem system);
+        Task<IEnumerable<HubspotAssociation>> GetAssociatedContactsFromTicket(IntegratedSystem system, string ticketId);
     }
 }

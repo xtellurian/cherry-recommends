@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useAuth0AccessToken } from "../../api-hooks/token";
+import { useAuth0AccessToken, useAccessToken } from "../../api-hooks/token";
 import { useAuth0Config } from "../../api-hooks/reactConfigApi";
 
 export const Profile = () => {
@@ -8,6 +8,7 @@ export const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
   const [userMetadata, setUserMetadata] = React.useState();
   const token = useAuth0AccessToken();
+  const accessToken = useAccessToken();
   React.useEffect(() => {
     if (token && user && config && config.domain) {
       const userDetailsByIdUrl = `https://${config.domain}/api/v2/users/${user.sub}`;
@@ -34,6 +35,8 @@ export const Profile = () => {
         ) : (
           "No user metadata defined"
         )}
+        <h4>Access Token</h4>
+        <div>{accessToken}</div>
       </div>
     )
   );

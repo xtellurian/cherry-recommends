@@ -1,5 +1,3 @@
-
-using System;
 using Pulumi;
 using Pulumi.Auth0;
 using Pulumi.Auth0.Inputs;
@@ -20,10 +18,21 @@ namespace SignalBox.Azure
                 SigningAlg = "RS256",
                 TokenLifetime = 60 * 60 * 24 * 30, // 30 days for tokens from this endpoint
                 TokenLifetimeForWeb = 60 * 60 * 12, // 1/2 day for tokens via browser
+                EnforcePolicies = true, // enables RBAC for this API
                 Scopes = {
                     new ResourceServerScopeArgs
                     {
                         Value = "webAPI"
+                    },
+                    new ResourceServerScopeArgs
+                    {
+                        Description = "Can read Tracked User features",
+                        Value = Core.Security.Scopes.Features.Read
+                    },
+                    new ResourceServerScopeArgs
+                    {
+                        Description = "Can create and write to Tracked User Features",
+                        Value = Core.Security.Scopes.Features.Write
                     }
                 }
             });
@@ -55,7 +64,9 @@ namespace SignalBox.Azure
                 ClientId = m2mApp.ClientId,
                 Audience = apiResource.Identifier!,
                 Scopes = {
-                    "webAPI"
+                    "webAPI",
+                    Core.Security.Scopes.Features.Read,
+                    Core.Security.Scopes.Features.Write,
                 }
             });
 
@@ -86,12 +97,44 @@ namespace SignalBox.Azure
                 ClientMetadata = new InputMap<object>
                 {
                     {"project", Pulumi.Deployment.Instance.ProjectName},
-                    {"stack", Pulumi.Deployment.Instance.StackName},
+                    {"stack", stackName},
                     {"application", "reactApp"}
                 },
                 JwtConfiguration = new ClientJwtConfigurationArgs
                 {
                     Alg = "RS256",
+                },
+            });
+
+            var adminRole = new Role("adminRole", new RoleArgs
+            {
+                Name = $"{stackName}-admin",
+                Description = "Can work with behind the scenes admin resources, like Features and Models",
+                Permissions = {
+                    new RolePermissionArgs{
+                        Name = "webAPI",
+                        ResourceServerIdentifier = apiResource.Identifier!
+                    },
+                    new RolePermissionArgs{
+                        Name = Core.Security.Scopes.Features.Read,
+                        ResourceServerIdentifier = apiResource.Identifier!
+                    },
+                    new RolePermissionArgs{
+                        Name = Core.Security.Scopes.Features.Write,
+                        ResourceServerIdentifier = apiResource.Identifier!
+                    }
+                }
+            });
+
+            var normalRole = new Role("standardRole", new RoleArgs
+            {
+                Name = $"{stackName}-standard",
+                Description = "The role all new client users should be assigned.",
+                Permissions = {
+                    new RolePermissionArgs{
+                        Name = "webAPI",
+                        ResourceServerIdentifier = apiResource.Identifier!
+                    }
                 },
             });
 

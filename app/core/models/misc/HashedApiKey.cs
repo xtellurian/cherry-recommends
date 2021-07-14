@@ -4,12 +4,15 @@ namespace SignalBox.Core
 {
     public class HashedApiKey : NamedEntity
     {
-        public HashedApiKey(string name, string algorithmName, string hashedKey) : base(name)
+        protected HashedApiKey() { }
+        public HashedApiKey(string name, string algorithmName, string hashedKey, string scope) : base(name)
         {
-            AlgorithmName = algorithmName;
-            HashedKey = hashedKey;
+            this.AlgorithmName = algorithmName;
+            this.HashedKey = hashedKey;
+            this.Scope = scope;
         }
         public string AlgorithmName { get; set; }
+        public string Scope { get; set; }
         public string HashedKey { get; set; }
         public DateTimeOffset? LastExchanged { get; set; }
         public int TotalExchanges { get; set; }

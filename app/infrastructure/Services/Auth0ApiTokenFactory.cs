@@ -18,7 +18,7 @@ namespace SignalBox.Infrastructure.Services
             this.httpClient = httpClient;
         }
 
-        public async Task<string> GetToken()
+        public async Task<string> GetToken(string scope = null)
         {
             var request = new Auth0TokenRequest()
             {
@@ -26,13 +26,14 @@ namespace SignalBox.Infrastructure.Services
                 GrantType = "client_credentials",
                 ClientId = options.Value.ClientId,
                 ClientSecret = options.Value.ClientSecret,
+                Scope = scope
             };
 
             var response = await httpClient.PostAsJsonAsync(options.Value.Endpoint, request);
-            
+            var responseContent = await response.Content.ReadAsStringAsync();
+
             response.EnsureSuccessStatusCode();
 
-            var responseContent = await response.Content.ReadAsStringAsync();
             var tokenResponse = JsonSerializer.Deserialize<Auth0TokenResponse>(responseContent);
             return tokenResponse.AccessToken;
         }

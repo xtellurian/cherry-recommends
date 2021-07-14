@@ -122,6 +122,40 @@ namespace sqlite.SignalBox
                     b.ToTable("Experiments");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Feature", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CommonId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommonId")
+                        .IsUnique();
+
+                    b.ToTable("Features");
+                });
+
             modelBuilder.Entity("SignalBox.Core.HashedApiKey", b =>
                 {
                     b.Property<long>("Id")
@@ -152,6 +186,9 @@ namespace sqlite.SignalBox
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Scope")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TotalExchanges")
@@ -964,6 +1001,50 @@ namespace sqlite.SignalBox
                     b.ToTable("TrackedUserEvents");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.TrackedUserFeature", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("FeatureId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<double?>("NumericValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("StringValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("TrackedUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TrackedUserId");
+
+                    b.HasIndex("FeatureId", "TrackedUserId", "Version")
+                        .IsUnique();
+
+                    b.ToTable("TrackedUserFeatures");
+                });
+
             modelBuilder.Entity("SignalBox.Core.TrackedUserSystemMap", b =>
                 {
                     b.Property<long>("Id")
@@ -1294,6 +1375,25 @@ namespace sqlite.SignalBox
                     b.Navigation("Source");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.TrackedUserFeature", b =>
+                {
+                    b.HasOne("SignalBox.Core.Feature", "Feature")
+                        .WithMany("TrackedUserFeatures")
+                        .HasForeignKey("FeatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                        .WithMany("TrackedUserFeatures")
+                        .HasForeignKey("TrackedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Feature");
+
+                    b.Navigation("TrackedUser");
+                });
+
             modelBuilder.Entity("SignalBox.Core.TrackedUserSystemMap", b =>
                 {
                     b.HasOne("SignalBox.Core.IntegratedSystem", "IntegratedSystem")
@@ -1339,6 +1439,11 @@ namespace sqlite.SignalBox
                     b.Navigation("IntegratedSystem");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Feature", b =>
+                {
+                    b.Navigation("TrackedUserFeatures");
+                });
+
             modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
                 {
                     b.Navigation("WebhookReceivers");
@@ -1367,6 +1472,8 @@ namespace sqlite.SignalBox
             modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
                 {
                     b.Navigation("IntegratedSystemMaps");
+
+                    b.Navigation("TrackedUserFeatures");
 
                     b.Navigation("TrackedUserTouchpoints");
                 });

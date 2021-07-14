@@ -17,6 +17,7 @@ import { TouchpointsComponent } from "./components/touchpoints/TouchpointsCompon
 import { ParametersComponent } from "./components/parameters/ParametersComponent";
 import { RecommendersComponent } from "./components/recommenders/RecommendersComponent";
 import { ProductsComponent } from "./components/products/ProductsComponent";
+import { AdminComponent } from "./components/admin/AdminComponent";
 
 // import some demo stuff
 import { DemoComponent } from "./components/demo-app/DemoComponent";
@@ -29,6 +30,7 @@ export default class App extends Component {
     return (
       <Layout>
         <Route exact path="/" component={Home} />
+        <AuthorizeRoute path="/admin" component={AdminComponent} />
         <AuthorizeRoute component={Profile} path="/profile" />
         <AuthorizeRoute
           path="/tracked-users"

@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAuth0Config } from "./reactConfigApi";
+import { decode } from "jsonwebtoken";
 
 export const useAccessToken = () => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
@@ -19,6 +20,12 @@ export const useAccessToken = () => {
   }, [isAuthenticated, config, getAccessTokenSilently]);
 
   return accessToken;
+};
+
+export const useTokenScopes = () => {
+  const token = useAccessToken();
+  const decoded = decode(token);
+  return decoded ? decoded.scope.split(" ") : [];
 };
 
 export const useAuth0AccessToken = () => {

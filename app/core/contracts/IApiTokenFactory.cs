@@ -4,6 +4,6 @@ namespace SignalBox.Core
 {
     public interface IApiTokenFactory
     {
-        Task<string> GetToken();
+        Task<string> GetToken(string scope = null);
     }
 }

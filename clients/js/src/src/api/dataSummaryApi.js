@@ -57,7 +57,6 @@ export const fetchLatestActionsAsync = async ({ token }) => {
   if (response.ok) {
     return await response.json();
   } else {
-    const content = await response.json();
-    throw content;
+    throw await response.json();
   }
 };

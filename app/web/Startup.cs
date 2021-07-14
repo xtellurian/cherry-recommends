@@ -24,6 +24,7 @@ using Microsoft.Extensions.Logging;
 using SignalBox.Core.Integrations;
 using Microsoft.ApplicationInsights.Extensibility;
 using SignalBox.Web.Services;
+using SignalBox.Core.Security;
 
 namespace SignalBox.Web
 {
@@ -130,6 +131,19 @@ namespace SignalBox.Web
             {
                 options.Authority = auth0Config.GetValue<string>("Authority");
                 options.Audience = auth0Config.GetValue<string>("Audience");
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.AdminOnlyPolicyName, policy =>
+                {
+                    policy.RequireClaim("scope");
+                    policy.RequireAssertion(_ =>
+                    {
+                        return _.User.FindFirst("scope").Value.Contains(Scopes.Features.Write);
+                    });
+                });
+
             });
 
             services

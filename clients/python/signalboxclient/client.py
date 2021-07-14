@@ -9,6 +9,7 @@ from .touchpoints import create_touchpoint_on_tracked_user, get_touchpoint_on_tr
 from .parameters import create_parameter
 from .parameter_recommenders import create_parameterset_recommender
 from .product_recommenders import get_product_recommender, invoke_product_recommender
+from .features import get_feature, create_feature, get_feature_value, set_feature_value
 
 
 class Configuration:
@@ -114,6 +115,19 @@ class SignalBoxClient:
     def create_parameter(self, common_id: str, name: str, parameter_type: str = "Numerical", description: str = None):
         return create_parameter(self.access_token, self.base_url,
                                 common_id, name, parameter_type, description)
+
+    # features
+    def create_feature(self, common_id, name):
+        return create_feature(self.access_token, self.base_url, common_id, name)
+
+    def get_feature(self, common_id):
+        return get_feature(self.access_token, self.base_url, common_id)
+
+    def get_feature_value(self, user_id, feature_id, version: int = None):
+        return get_feature_value(self.access_token, self.base_url, user_id, feature_id, version)
+
+    def set_feature_value(self, user_id, feature_id, value):
+        return set_feature_value(self.access_token, self.base_url, user_id, feature_id, value)
 
     def create_experiment(self, offer_ids: list, name: str, concurrent_offers: int = 1, segment_id: str = None):
         return create_experiment(self.access_token, self.base_url,

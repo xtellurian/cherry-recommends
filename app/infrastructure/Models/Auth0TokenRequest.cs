@@ -15,5 +15,7 @@ namespace SignalBox.Infrastructure
 
         [JsonPropertyName("client_secret")]
         public string ClientSecret { get; set; }
+        [JsonPropertyName("scope")]
+        public string Scope { get; set; }
     }
 }

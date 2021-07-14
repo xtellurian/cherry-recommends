@@ -1,4 +1,4 @@
-export const AuthenticatedIA = [
+const AuthenticatedIA = [
   {
     name: "Setup",
     to: "/",
@@ -44,14 +44,6 @@ export const AuthenticatedIA = [
         name: "Parameters",
         to: "/parameters",
       },
-      {
-        name: "Touchpoints",
-        to: "/touchpoints",
-      },
-      {
-        name: "Offers",
-        to: "/offers",
-      },
     ],
   },
   {
@@ -65,13 +57,41 @@ export const AuthenticatedIA = [
         name: "Parameter Sets",
         to: "/recommenders/parameter-set-recommenders",
       },
-      {
-        name: "Experiments",
-        to: "/experiments",
-      },
     ],
   },
 ];
+
+export const getAuthenticatedIA = (scopes) => {
+  let ia = AuthenticatedIA;
+  if (scopes.includes("write:features")) {
+    ia.splice(1, 0, {
+      name: "Admin",
+      items: [
+        {
+          name: "Features",
+          to: "/admin/features",
+        },
+        {
+          name: "Models",
+          to: "/models",
+        },
+        {
+          name: "Touchpoints",
+          to: "/touchpoints",
+        },
+        {
+          name: "Offers",
+          to: "/offers",
+        },
+        {
+          name: "Experiments",
+          to: "/experiments",
+        },
+      ],
+    });
+  }
+  return ia;
+};
 
 export const settingsItems = [
   {
@@ -89,9 +109,5 @@ export const settingsItems = [
   {
     name: "Integrations",
     to: "/settings/integrations",
-  },
-  {
-    name: "Models",
-    to: "/models",
   },
 ];

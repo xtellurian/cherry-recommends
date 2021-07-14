@@ -8,6 +8,7 @@ import { CreateUser } from "./CreateUser";
 import { TrackedUserTouchpoints } from "./TrackedUserTouchpoints";
 import { CreateTouchpointData } from "./CreateTouchpointData";
 import { LinkToIntegratedSystem } from "./LinkToIntegratedSystem";
+import { Features } from "./Features";
 
 export const TrackedUsersComponent = (props) => {
   let { path } = useRouteMatch();
@@ -49,6 +50,11 @@ export const TrackedUsersComponent = (props) => {
             exact
             path={`${path}/link-to-integrated-system/:id`}
             component={LinkToIntegratedSystem}
+          />
+          <AuthorizeRoute
+            exact
+            path={`${path}/features/:id`}
+            component={Features}
           />
         </Switch>
       </div>

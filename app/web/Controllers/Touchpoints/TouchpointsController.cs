@@ -30,7 +30,7 @@ namespace SignalBox.Web.Controllers
             return await workflow.CreateTouchpoint(dto.CommonId, dto.Name);
         }
 
-        /// <summary>Creates a new generic touchpoint that can used on any tracked user.</summary>
+        /// <summary>Gets tracked users in the touchpoint.</summary>
         [HttpGet("{id}/TrackedUsers")]
         public async Task<Paginated<TrackedUser>> GetTouchpointUsers(string id, [FromQuery] PaginateRequest p)
         {

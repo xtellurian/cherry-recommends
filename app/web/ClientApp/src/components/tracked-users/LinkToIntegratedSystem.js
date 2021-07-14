@@ -4,14 +4,16 @@ import { useTrackedUser } from "../../api-hooks/trackedUserApi";
 import { createOrUpdateTrackedUser } from "../../api/trackedUsersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { JsonView } from "../molecules/JsonView";
-import { Title } from "../molecules/PageHeadings";
-import { Spinner } from "../molecules/Spinner";
+import { Title, BackButton, Spinner } from "../molecules";
 import { Selector } from "../molecules/Select";
 import { useAccessToken } from "../../api-hooks/token";
 
-const Top = () => {
+const Top = ({id}) => {
   return (
     <React.Fragment>
+      <BackButton className="float-right" to={`/tracked-users/detail/${id}`}>
+        User Details
+      </BackButton>
       <Title>Link to Integrated System</Title>
     </React.Fragment>
   );
@@ -60,7 +62,7 @@ export const LinkToIntegratedSystem = () => {
   };
   return (
     <div>
-      <Top />
+      <Top id={id} />
       <hr />
       {trackedUser.loading && <Spinner>Loading Tracked User</Spinner>}
       <div className="row">

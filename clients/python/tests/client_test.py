@@ -55,6 +55,17 @@ assert parameter['id'] is not None
 assert parameter['commonId'] == parameter_id
 print("Created Parameter")
 
+# create a feature
+feat_id = f'client.py-{uuid.uuid1()}'
+feat = test_client.create_feature(feat_id, "Python Client Feature")
+feat_r = test_client.get_feature(feat_id)
+assert feat_r['id'] == feat['id']
+#check we can set a feature and get a feature on a user
+test_client.set_feature_value(user_id, feat_id, 5)
+feature_value = test_client.get_feature_value(user_id, feat_id)
+assert feature_value['value'] == 5
+print('tracked user with feature value:', user_id)
+
 experiment = test_client.create_experiment(
     [offer_id], name='Experiment Name', segment_id=None, concurrent_offers=1)
 print('created experiment')

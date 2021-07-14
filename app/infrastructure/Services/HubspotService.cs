@@ -10,10 +10,12 @@ using SignalBox.Core;
 using SignalBox.Core.Adapters.Hubspot;
 using SignalBox.Core.Integrations;
 using SignalBox.Core.OAuth;
+using xtellurian.HubSpot.Associations;
 using xtellurian.HubSpot.ContactProperties;
 using xtellurian.HubSpot.Contacts;
 using xtellurian.HubSpot.CrmExtensions;
 using xtellurian.HubSpot.OAuth;
+using xtellurian.HubSpot.Tickets;
 
 namespace SignalBox.Infrastructure.Services
 {
@@ -94,6 +96,24 @@ namespace SignalBox.Infrastructure.Services
             return res.Results.Select(_ => new HubspotContact(_.Id, _.Properties));
         }
 
+        public async Task<IEnumerable<HubspotAssociation>> GetAssociatedContactsFromTicket(IntegratedSystem system, string ticketId)
+        {
+            AuthorizeHttpClient(system);
+            var ticketsClient = new TicketsClient(httpClient);
+            try
+            {
+                var associations = await ticketsClient.CrmV3ObjectsTicketsAssociationsGetAsync(ticketId, "CONTACT", null, null);
+                logger.LogInformation($"Found {associations.Results.Count} associations");
+                return associations.Results.Select(_ => new HubspotAssociation(_.Id, _.Type));
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex.Message);
+                throw new IntegratedSystemException("Failed to get associated object", ex);
+            }
+
+        }
+
         public async Task CreateCard(IntegratedSystem system)
         {
             AuthorizeHttpClient(system);
@@ -101,8 +121,6 @@ namespace SignalBox.Infrastructure.Services
 
             try
             {
-
-
                 var response = await crmExtensionsClient.CrmV3ExtensionsCardsPostAsync(int.Parse(creds.AppId), new CardCreateRequest
                 {
                     Title = "Four2 Card Title - PET",

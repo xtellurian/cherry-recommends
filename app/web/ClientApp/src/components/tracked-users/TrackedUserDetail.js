@@ -63,6 +63,11 @@ export const TrackedUserDetail = () => {
       >
         <ActionItemsGroup label="Actions">
           <ActionLink
+            to={`/tracked-users/features/${trackedUser.id}`}
+          >
+            Features
+          </ActionLink>
+          <ActionLink
             to={`/tracked-users/link-to-integrated-system/${trackedUser.id}`}
           >
             Link to Integrated System

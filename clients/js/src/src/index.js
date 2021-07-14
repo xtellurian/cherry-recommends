@@ -16,6 +16,7 @@ import * as dataSummary from "./api/dataSummaryApi";
 import * as deployment from "./api/deploymentApi";
 import * as events from "./api/eventsApi";
 import * as experiments from "./api/experimentsApi";
+import * as features from "./api/featuresApi";
 import * as integratedSystems from "./api/integratedSystemsApi";
 import * as modelRegistrations from "./api/modelRegistrationsApi";
 import * as models from "./api/models/index";
@@ -39,6 +40,7 @@ export {
   deployment,
   events,
   experiments,
+  features,
   integratedSystems,
   modelRegistrations,
   models,

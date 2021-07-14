@@ -40,7 +40,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await Set.MaxAsync(selector);
         }
 
-        public async Task<T> Create(T entity)
+        public virtual async Task<T> Create(T entity)
         {
             var result = await Set.AddAsync(entity);
             return result.Entity;

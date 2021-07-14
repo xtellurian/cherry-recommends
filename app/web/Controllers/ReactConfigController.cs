@@ -22,7 +22,9 @@ namespace SignalBox.Web.Controllers
         [HttpGet("auth0")]
         public Auth0ReactConfig GetConfiguration()
         {
-            return options.CurrentValue;
+            var config = options.CurrentValue;
+            config.Scope = Core.Security.Scopes.AllScopes(config.Scope);
+            return config;
         }
     }
 }

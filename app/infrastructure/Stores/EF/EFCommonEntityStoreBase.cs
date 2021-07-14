@@ -14,10 +14,20 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(context, selector)
         { }
 
+        public override async Task<T> Create(T entity)
+        {
+            if (await Set.AnyAsync(_ => _.CommonId == entity.CommonId))
+            {
+                throw new StorageException($"CommonId {entity.CommonId} of type {typeof(T).Name} already exists in the database.");
+            }
+            else
+                return await base.Create(entity);
+        }
+
         public virtual async Task<Paginated<T>> Query(int page, string searchTerm)
         {
 
-            Expression<Func<T, bool>> predicate = 
+            Expression<Func<T, bool>> predicate =
                 _ => EF.Functions.Like(_.CommonId, $"%{searchTerm}%") || EF.Functions.Like(_.Name, $"%{searchTerm}%");
             var itemCount = await Set.CountAsync(predicate);
             List<T> results;

@@ -60,6 +60,9 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IParameterSetRecommendationStore, EFParameterSetRecommendationStore>();
             services.AddScoped<IProductRecommendationStore, EFProductRecommendationStore>();
 
+            services.AddScoped<IFeatureStore, EFFeatureStore>();
+            services.AddScoped<ITrackedUserFeatureStore, EFTrackedUserFeatureStore>();
+
             services.AddScoped<ITouchpointStore, EFTouchpointStore>();
             services.AddScoped<ITrackedUserTouchpointStore, EFTrackedUserTouchpointStore>();
 
