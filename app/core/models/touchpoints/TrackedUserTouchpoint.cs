@@ -18,6 +18,7 @@ namespace SignalBox.Core
         public int Version { get; set; }
         public long TrackedUserId { get; set; }
         public TrackedUser TrackedUser { get; set; }
+        public long TouchpointId { get; set; }
         public Touchpoint Touchpoint { get; set; }
         public Dictionary<string, object> Values { get; set; }
     }

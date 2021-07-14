@@ -14,27 +14,22 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<int> CurrentMaximumTouchpointVersion(TrackedUser trackedUser, Touchpoint touchpoint)
         {
-            trackedUser = await context.TrackedUsers
-               .Include(_ => _.TrackedUserTouchpoints)
-               .ThenInclude(_ => _.Touchpoint)
-               .FirstAsync(_ => _.Id == trackedUser.Id);
-
-            var existing = trackedUser.TrackedUserTouchpoints
-                .Where(_ => _.Touchpoint == touchpoint).ToList();
-            return existing
-                .Select(_ => _.Version)
-                .DefaultIfEmpty(0)
-                .Max();
+            // MaxAsync() w/ nullable int avoids 'Sequence contains no elements' error.
+            return await context.TrackedUsers
+               .Where(_ => _.Id == trackedUser.Id)
+               .SelectMany(_ => _.TrackedUserTouchpoints)
+               .Where(_ => _.TouchpointId == touchpoint.Id)
+               .MaxAsync(_ => (int?)_.Version) ?? 0;
         }
 
         public async Task<IEnumerable<Touchpoint>> GetTouchpointsFor(TrackedUser trackedUser)
         {
-            trackedUser = await context.TrackedUsers
-                .Include(_ => _.TrackedUserTouchpoints)
-                .ThenInclude(_ => _.Touchpoint)
-                .FirstAsync(_ => _.Id == trackedUser.Id);
-
-            return trackedUser.TrackedUserTouchpoints.Select(_ => _.Touchpoint).ToList();
+            return await context.TrackedUsers
+                .Where(_ => _.Id == trackedUser.Id)
+                .SelectMany(_ => _.TrackedUserTouchpoints)
+                .Select(_ => _.Touchpoint)
+                .Distinct() // ensure we only return each touchpoint once.
+                .ToListAsync();
         }
 
         public async Task<TrackedUserTouchpoint> ReadTouchpoint(TrackedUser trackedUser, Touchpoint touchpoint, int? version = null)
