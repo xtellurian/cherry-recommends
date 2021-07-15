@@ -10,6 +10,7 @@ cd ..
 
 cd docusaurus
 
+npm run build
 echo Deploying to Storage Account - $ACCOUNT_NAME
 az storage blob upload-batch -s './build' -d '$web' --account-name $ACCOUNT_NAME --account-key $KEY
 
