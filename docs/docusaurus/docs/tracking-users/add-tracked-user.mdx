@@ -1,0 +1,46 @@
+---
+sidebar_position: 1
+title: Add a Tracked User
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Add a tracked user
+
+All Tracked Users require a Common Id (i.e. CommonUserId).
+This should be a unique identifier, for example their email address, user Id, hashed email etc.
+
+To add a new Tracked User
+
+<Tabs
+  defaultValue="js"
+  values={[
+    { label: 'JavaScript', value: 'js', }
+  ]
+}>
+
+<TabItem value="js">
+
+```js
+const signalbox = require("signalbox.js");
+
+signalbox.trackedUsers.createOrUpdateTrackedUser({
+  user: {
+    commonUserId: "test-user@testing1234.org",
+    name: "Jonny Goldfish",
+  },
+  success: (u) => {
+    console.log("created a tracked user");
+    console.log(u);
+  },
+  error: (e) => {
+    console.log("An error occurred");
+    console.log(e);
+  },
+  token: "Your access token",
+});
+```
+
+</TabItem>
+</Tabs>
