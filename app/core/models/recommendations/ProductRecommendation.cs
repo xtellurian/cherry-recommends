@@ -16,10 +16,11 @@ namespace SignalBox.Core.Recommendations
             Product = product;
         }
 
+#nullable enable
         public TrackedUser TrackedUser { get; set; }
         public long? RecommenderId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public ProductRecommender Recommender { get; set; }
+        public ProductRecommender? Recommender { get; set; }
         public Product Product { get; set; }
     }
 }

@@ -1,6 +1,13 @@
-import { pageQuery } from "./paging";
-import { getUrl } from "../baseUrl";
-import { headers } from "./headers";
+import { pageQuery } from "../paging";
+import { getUrl } from "../../baseUrl";
+import { headers } from "../headers";
+
+import {
+  fetchLinkedRegisteredModelAsync,
+  createLinkedRegisteredModelAsync,
+} from "./common/linkRegisteredModels";
+
+import * as tv from "./common/targetvariables";
 
 export const fetchProductRecommenders = async ({
   success,
@@ -107,19 +114,14 @@ export const createLinkRegisteredModel = async ({
   id,
   modelId,
 }) => {
-  const url = getUrl(
-    `api/recommenders/ProductRecommenders/${id}/ModelRegistration`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
-    method: "post",
-    body: JSON.stringify({ modelId }),
-  });
-  if (response.ok) {
-    success(await response.json());
-  } else {
-    error(await response.json());
-  }
+  createLinkedRegisteredModelAsync({
+    recommenderApiName: "ProductRecommenders",
+    id,
+    modelId,
+    token,
+  })
+    .then(success)
+    .then(error);
 };
 
 export const fetchLinkedRegisteredModel = async ({
@@ -128,17 +130,13 @@ export const fetchLinkedRegisteredModel = async ({
   token,
   id,
 }) => {
-  const url = getUrl(
-    `api/recommenders/ProductRecommenders/${id}/ModelRegistration`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
-  });
-  if (response.ok) {
-    success(await response.json());
-  } else {
-    error(await response.json());
-  }
+  fetchLinkedRegisteredModelAsync({
+    recommenderApiName: "ProductRecommenders",
+    id,
+    token,
+  })
+    .then(success)
+    .catch(error);
 };
 
 export const invokeProductRecommender = async ({
@@ -167,4 +165,26 @@ export const invokeProductRecommender = async ({
       onFinally();
     }
   }
+};
+
+export const fetchTargetVariablesAsync = async ({ id, token, name }) => {
+  return await tv.fetchRecommenderTargetVariableValuesAsync({
+    recommenderApiName: "ProductRecommenders",
+    id,
+    token,
+    name,
+  });
+};
+
+export const createTargetVariableAsync = async ({
+  id,
+  token,
+  targetVariableValue,
+}) => {
+  return await tv.createRecommenderTargetVariableValueAsync({
+    recommenderApiName: "ProductRecommenders",
+    id,
+    token,
+    targetVariableValue,
+  });
 };

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace SignalBox.Core
 {
 #nullable enable
@@ -9,6 +11,7 @@ namespace SignalBox.Core
         public long? ProductId { get; set; }
         public string? ProductCommonId { get; set; }
         public Product? Product { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public long? CorrelatorId { get; set; }
     }
 }

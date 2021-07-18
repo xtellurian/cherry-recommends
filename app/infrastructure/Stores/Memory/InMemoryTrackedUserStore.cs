@@ -61,7 +61,7 @@ namespace SignalBox.Infrastructure
             return Task.FromResult(store.Values.Any(_ => _.CommonUserId == commonUserId));
         }
 
-        public Task<TrackedUser> CreateIfNotExists(string commonId)
+        public Task<TrackedUser> CreateIfNotExists(string commonId, string name = null)
         {
             throw new NotImplementedException();
         }

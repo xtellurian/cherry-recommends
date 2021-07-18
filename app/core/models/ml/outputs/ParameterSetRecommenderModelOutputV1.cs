@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SignalBox.Core
 {
@@ -8,6 +9,7 @@ namespace SignalBox.Core
         { }
 
         public Dictionary<string, object> RecommendedParameters { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public long? CorrelatorId { get; set; }
     }
 }

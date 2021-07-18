@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core.Recommendations
@@ -17,7 +18,10 @@ namespace SignalBox.Core.Recommendations
             TrackedUser = trackedUser;
         }
 
+#nullable enable
         public TrackedUser TrackedUser { get; set; }
-        public ParameterSetRecommender Recommender { get; set; }
+        public long? RecommenderId { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public ParameterSetRecommender? Recommender { get; set; }
     }
 }

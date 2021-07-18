@@ -23,3 +23,9 @@ export const createLinkRegisteredModel =
 
 export const invokeProductRecommender =
   productRecommenders.invokeProductRecommender;
+
+export const fetchTargetVariablesAsync =
+  productRecommenders.fetchTargetVariablesAsync;
+
+export const createTargetVariableAsync =
+  productRecommenders.createTargetVariableAsync;

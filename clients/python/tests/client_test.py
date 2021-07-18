@@ -1,6 +1,7 @@
 from context import signalboxclient
 # import client
 import datetime
+import random
 import uuid
 import numpy as np
 import environment
@@ -37,15 +38,35 @@ touchpoint = test_client.get_touchpoint(touchpoint_id)
 assert touchpoint['commonId'] == touchpoint_id
 
 # create a product
-# TODO: next sprint
-# product = test_client.create_product("Test Product Name", str(
-#     uuid.uuid1()), "A test description.")
-# assert product['id'] > 0
+product_id = str(uuid.uuid1())
+product = test_client.create_product(
+    product_id, "client_test.py Product", 10, None, "A test description.")
+assert product['id'] > 0
 
 # # query the products
-# response = test_client.query_products(page=1)
+response = test_client.query_products(page=1)
+assert len(response.items) > 1
 
-# assert len(response.items) > 1
+# create a product recommender
+product_recommender_id = str(uuid.uuid1())
+product_recommender = test_client.create_product_recommender(
+    product_recommender_id, "client_test.py Recommender", touchpoint_id)
+assert product_recommender['id'] is not None
+
+for i in range(1, 10):
+    start = datetime.datetime(2020, i, 1).strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+    end = datetime.datetime(2020, i+1, 1).strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+    test_client.create_product_recommender_target_variable_value(
+        product_recommender['id'], start, end, "LTV", i * 7 * random.randint(1, 3))
+
+target_variable_values = test_client.get_product_recommender_target_variable_values(product_recommender_id)
+assert len(target_variable_values) > 0
+
+# delete the recommender
+delete_response = test_client.delete_product_recommender(
+    product_recommender['id'])
+assert delete_response['id'] is not None
+
 
 # create a parameter
 parameter_id = str(uuid.uuid1())
@@ -60,7 +81,7 @@ feat_id = f'client.py-{uuid.uuid1()}'
 feat = test_client.create_feature(feat_id, "Python Client Feature")
 feat_r = test_client.get_feature(feat_id)
 assert feat_r['id'] == feat['id']
-#check we can set a feature and get a feature on a user
+# check we can set a feature and get a feature on a user
 test_client.set_feature_value(user_id, feat_id, 5)
 feature_value = test_client.get_feature_value(user_id, feat_id)
 assert feature_value['value'] == 5

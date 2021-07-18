@@ -4,6 +4,7 @@ import {
   fetchProductRecommender,
   fetchLinkedRegisteredModel,
   fetchProductRecommendations,
+  fetchTargetVariablesAsync,
 } from "../api/productRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -81,4 +82,23 @@ export const useLinkedRegisteredModel = ({ id }) => {
   }, [token, id]);
 
   return result;
+};
+
+export const useTargetVariables = ({ id, name }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchTargetVariablesAsync({
+        token,
+        id,
+        name,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, name]);
+
+  return state;
 };

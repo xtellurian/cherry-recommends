@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Recommendations;
@@ -44,20 +39,6 @@ namespace SignalBox.Core.Workflows
             this.productRecommenderStore = productRecommenderStore;
             this.productRecommendationStore = productRecommendationStore;
         }
-        private ModelTypes ParseModelType(string modelType)
-        {
-            return Enum.Parse<ModelTypes>(modelType);
-        }
-
-        private HostingTypes ParseHostingType(string hostingType)
-        {
-            return HostingTypes.AzureMLContainerInstance; // there's only 1
-        }
-
-        public async Task<Paginated<ProductRecommendation>> QueryRecommendations(long recommenderId, int page)
-        {
-            return await productRecommendationStore.QueryForRecommender(page, recommenderId);
-        }
 
         public async Task<ProductRecommenderModelOutputV1> InvokeProductRecommender(long id, string version, ProductRecommenderModelInputV1 input)
         {
@@ -70,7 +51,7 @@ namespace SignalBox.Core.Workflows
             input.Touchpoint ??= recommender.CommonId;
             // enrich values from the touchpoint
             var touchpoint = await touchpointStore.ReadFromCommonId(input.Touchpoint);
-            var user = await trackedUserStore.ReadFromCommonId(input.CommonUserId);
+            var user = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
             if (await trackedUserTouchpointStore.TouchpointExists(user, touchpoint))
             {
                 var tpValues = await trackedUserTouchpointStore.ReadTouchpoint(user, touchpoint);

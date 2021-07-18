@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
+using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommenders;
 using SignalBox.Core.Workflows;
 using SignalBox.Web.Dto;
@@ -15,7 +16,7 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/recommenders/[controller]")]
-    public class ParameterSetRecommendersController : CommonEntityControllerBase<ParameterSetRecommender>
+    public class ParameterSetRecommendersController : RecommenderControllerBase<ParameterSetRecommender>
     {
         private readonly ILogger<ParameterSetRecommendersController> logger;
         private readonly ParameterSetRecommenderInvokationWorkflows modelWorkflows;
@@ -67,5 +68,11 @@ namespace SignalBox.Web.Controllers
             return await modelWorkflows.InvokeParameterSetRecommender(id, version, input);
         }
 
+        /// <summary>Get the latest recommendations made by a recommender.</summary>
+        [HttpGet("{id}/recommendations")]
+        public async Task<Paginated<ParameterSetRecommendation>> GetRecommendations(long id, [FromQuery] PaginateRequest p)
+        {
+            return await workflows.QueryRecommendations(id, p.Page);
+        }
     }
 }

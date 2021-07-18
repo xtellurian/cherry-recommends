@@ -4,7 +4,7 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core.Recommenders
 {
-    public class ProductRecommender : CommonEntity, IRecommender
+    public class ProductRecommender : RecommenderEntityBase, IRecommender
     {
         protected ProductRecommender()
         { }
@@ -18,9 +18,6 @@ namespace SignalBox.Core.Recommenders
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ICollection<Product> Products { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public ModelRegistration? ModelRegistration { get; set; }
         [JsonIgnore]
         public ICollection<ProductRecommendation> Recommendations { get; set; } = null!;
 

@@ -6,7 +6,9 @@ import { CreateParameterSetRecommender } from "./CreateParameterSetRecommender";
 import { ParameterSetRecommenderDetail } from "./ParameterSetRecommenderDetail";
 import { TestParameterSetRecommender } from "./TestParameterSetRecommender";
 import { IntegrateParameterSetRecommender } from "./IntegrateParameterSetRecommender";
+import { RecommendationList } from "./RecommendationList";
 import { LinkToModel } from "./LinkToModel";
+import { TargetVariableValues } from "./TargetVariableValues";
 
 export const ParameterSetRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -36,8 +38,16 @@ export const ParameterSetRecommendersComponent = () => {
           component={LinkToModel}
         />
         <AuthorizeRoute
+          path={`${path}/recommendations/:id`}
+          component={RecommendationList}
+        />
+        <AuthorizeRoute
           path={`${path}/integrate/:id`}
           component={IntegrateParameterSetRecommender}
+        />
+        <AuthorizeRoute
+          path={`${path}/target-variable/:id`}
+          component={TargetVariableValues}
         />
       </Switch>
     </React.Fragment>

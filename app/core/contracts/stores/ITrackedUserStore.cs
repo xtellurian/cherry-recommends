@@ -7,6 +7,6 @@ namespace SignalBox.Core
     {
         Task<long> GetInternalId(string commonUserId);
         Task<IEnumerable<TrackedUser>> CreateIfNotExists(IEnumerable<string> commonUserIds);
-        Task<TrackedUser> CreateIfNotExists(string commonId);
+        Task<TrackedUser> CreateIfNotExists(string commonId, string? name = null);
     }
 }

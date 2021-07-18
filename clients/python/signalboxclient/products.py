@@ -3,10 +3,12 @@ from .pagination import pageQuery, PaginatedResponse
 from .exceptions import SignalBoxException
 
 
-def create_product(access_token: str, base_url: str, name: str, product_id: str, description: str):
+def create_product(access_token: str, base_url: str, common_id: str, name: str, list_price: float, direct_cost: float, description: str):
     json_params = {
+        "commonId": common_id,
         "name": name,
-        "productId": product_id,
+        "listPrice": list_price,
+        "directCost": direct_cost,
         "description": description,
     }
     r = post(f'{base_url}/api/products',
@@ -15,6 +17,7 @@ def create_product(access_token: str, base_url: str, name: str, product_id: str,
         return r.json()
     else:
         raise SignalBoxException(r.text)
+
 
 def query_products(access_token: str, base_url: str, page: int = None):
     r = get(f'{base_url}/api/products?{pageQuery(page)}', access_token)

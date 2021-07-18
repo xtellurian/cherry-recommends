@@ -24,8 +24,8 @@ import { CopyableField } from "../../molecules/CopyableField";
 
 export const ProductRecommenderDetail = () => {
   const { id } = useParams();
-  const history = useHistory();
   const token = useAccessToken();
+  const history = useHistory();
   const recommender = useProductRecommender({ id });
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState();
@@ -35,14 +35,17 @@ export const ProductRecommenderDetail = () => {
   return (
     <React.Fragment>
       <ActionsButton
-        to={`/recommenders/product-recommenders/test/${id}`}
-        label="Test"
+        to={`/recommenders/product-recommenders/recommendations/${id}`}
+        label="Latest Recommendations"
       >
         <ActionItemsGroup label="Actions">
+          <ActionLink to={`/recommenders/product-recommenders/test/${id}`}>
+            Test Page
+          </ActionLink>
           <ActionLink
-            to={`/recommenders/product-recommenders/recommendations/${id}`}
+            to={`/recommenders/product-recommenders/target-variable/${id}`}
           >
-            Latest Recommendations
+            Target Variable
           </ActionLink>
           <ActionLink to={`/recommenders/product-recommenders/integrate/${id}`}>
             Technical Integration

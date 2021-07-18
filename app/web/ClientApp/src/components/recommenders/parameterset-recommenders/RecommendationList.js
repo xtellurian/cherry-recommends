@@ -1,10 +1,10 @@
 import React from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Link45deg } from "react-bootstrap-icons";
 import {
-  useProductRecommender,
-  useProductRecommendations,
-} from "../../../api-hooks/productRecommendersApi";
+  useParameterSetRecommender,
+  useParameterSetRecommendations,
+} from "../../../api-hooks/parameterSetRecommendersApi";
 import {
   BackButton,
   Title,
@@ -19,14 +19,17 @@ import { JsonView } from "../../molecules/JsonView";
 import { DateTimeField } from "../../molecules/DateTimeField";
 
 const RecommendationRow = ({ recommendation }) => {
-  const dataSubset = {
-    recommendationCorrelatorId: recommendation.recommendationCorrelatorId,
+  const dataToShow = {
     trackedUser: recommendation.trackedUser,
-    product: recommendation.product,
+    modelOutput: JSON.parse(recommendation.modelOutput),
+    correlatorId: recommendation.recommendationCorrelatorId,
   };
+  dataToShow.modelOutput.CorrelatorId =
+    recommendation.recommendationCorrelatorId; // patch this value
+
   let label = `Correlator: ${recommendation.recommendationCorrelatorId}`;
-  if (recommendation.trackedUser && recommendation.product) {
-    label = `${recommendation.product.name} for ${
+  if (recommendation.trackedUser) {
+    label = `Recommendation for ${
       recommendation.trackedUser.name ||
       recommendation.trackedUser.commonId ||
       "user"
@@ -35,29 +38,26 @@ const RecommendationRow = ({ recommendation }) => {
   return (
     <ExpandableCard label={label}>
       {recommendation.trackedUser && (
-        <Link
-          target="_blank"
-          to={`/tracked-users/detail/${recommendation.trackedUser.id}`}
-        >
+        <Link to={`/tracked-users/detail/${recommendation.trackedUser.id}`}>
           <button className="btn btn-primary float-right">
             View Tracked User <Link45deg />
           </button>
         </Link>
       )}
       <DateTimeField label="Created" date={recommendation.created} />
-      <JsonView data={dataSubset}></JsonView>
+      <JsonView data={dataToShow}></JsonView>
     </ExpandableCard>
   );
 };
 export const RecommendationList = () => {
   const { id } = useParams();
-  const recommender = useProductRecommender({ id });
-  const recommendations = useProductRecommendations({ id });
+  const recommender = useParameterSetRecommender({ id });
+  const recommendations = useParameterSetRecommendations({ id });
   return (
     <React.Fragment>
       <BackButton
         className="float-right mr-1"
-        to={`/recommenders/product-recommenders/detail/${id}`}
+        to={`/recommenders/parameter-set-recommenders/detail/${id}`}
       >
         Recommender
       </BackButton>

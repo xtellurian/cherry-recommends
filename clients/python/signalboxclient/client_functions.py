@@ -31,6 +31,11 @@ def get(api_endpoint, access_token):
     return requests.get(url=api_endpoint, headers=get_api_header((access_token)), verify=verify)
 
 
+def delete(api_endpoint, access_token):
+    verify = "localhost" not in api_endpoint
+    return requests.delete(url=api_endpoint, headers=get_api_header((access_token)), verify=verify)
+
+
 def construct_event(commonUserId, event_id, event_type, kind, properties, timestamp=None, source_system_id=None, recommendationCorrelatorId: int = None):
     return {
         'commonUserId': commonUserId,

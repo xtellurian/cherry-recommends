@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommenders;
 
 #nullable enable
@@ -10,18 +11,21 @@ namespace SignalBox.Core.Workflows
     {
         private readonly IStorageContext storageContext;
         private readonly IProductRecommenderStore store;
+        private readonly IProductRecommendationStore recommendationStore;
         private readonly IModelRegistrationStore modelRegistrationStore;
         private readonly ITouchpointStore touchpointStore;
         private readonly IProductStore productStore;
 
         public ProductRecommenderWorkflows(IStorageContext storageContext,
                                                 IProductRecommenderStore store,
+                                                IProductRecommendationStore recommendationStore,
                                                 IModelRegistrationStore modelRegistrationStore,
                                                 ITouchpointStore touchpointStore,
                                                 IProductStore productStore)
         {
             this.storageContext = storageContext;
             this.store = store;
+            this.recommendationStore = recommendationStore;
             this.modelRegistrationStore = modelRegistrationStore;
             this.touchpointStore = touchpointStore;
             this.productStore = productStore;
@@ -53,6 +57,11 @@ namespace SignalBox.Core.Workflows
                 await storageContext.SaveChanges();
                 return recommender;
             }
+        }
+
+        public async Task<Paginated<ProductRecommendation>> QueryRecommendations(long recommenderId, int page)
+        {
+            return await recommendationStore.QueryForRecommender(page, recommenderId);
         }
 
         public async Task<ModelRegistration> LinkRegisteredModel(ProductRecommender recommender, long modelId)

@@ -8,6 +8,7 @@ import { TestProductRecommender } from "./TestProductRecommender";
 import { RecommendationList } from "./RecommendationList";
 import { IntegrateProductRecommender } from "./IntegrateProductRecommender";
 import { LinkToModel } from "./LinkToModel";
+import { TargetVariableValues } from "./TargetVariableValues";
 
 export const ProductRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -44,6 +45,10 @@ export const ProductRecommendersComponent = () => {
         <AuthorizeRoute
           path={`${path}/integrate/:id`}
           component={IntegrateProductRecommender}
+        />
+        <AuthorizeRoute
+          path={`${path}/target-variable/:id`}
+          component={TargetVariableValues}
         />
       </Switch>
     </React.Fragment>

@@ -1,9 +1,11 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
+import { deleteParameterSetRecommender } from "../../../api/parameterSetRecommendersApi";
 import {
   ActionsButton,
   ActionItemsGroup,
+  ActionItem,
   ActionLink,
 } from "../../molecules/ActionsButton";
 import {
@@ -13,19 +15,38 @@ import {
   Spinner,
   BackButton,
 } from "../../molecules";
+import { ConfirmationPopup } from "../../molecules/ConfirmationPopup";
 import { JsonView } from "../../molecules/JsonView";
 import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
+import { useAccessToken } from "../../../api-hooks/token";
 
 export const ParameterSetRecommenderDetail = () => {
   const { id } = useParams();
-  const parameterSetRecommender = useParameterSetRecommender({ id });
+  const token = useAccessToken();
+  const history = useHistory();
+  const recommender = useParameterSetRecommender({ id });
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [deleteError, setDeleteError] = React.useState();
+  const onDeleted = () => {
+    history.push("/recommenders/parameter-set-recommenders");
+  };
   return (
     <React.Fragment>
       <ActionsButton
-        to={`/recommenders/parameter-set-recommenders/test/${id}`}
-        label="Test"
+        to={`/recommenders/parameter-set-recommenders/recommendations/${id}`}
+        label="Latest Recommendations"
       >
         <ActionItemsGroup label="Actions">
+          <ActionLink
+            to={`/recommenders/parameter-set-recommenders/test/${id}`}
+          >
+            Test Page
+          </ActionLink>
+          <ActionLink
+            to={`/recommenders/parameter-set-recommenders/target-variable/${id}`}
+          >
+            Target Variable
+          </ActionLink>
           <ActionLink
             to={`/recommenders/parameter-set-recommenders/integrate/${id}`}
           >
@@ -36,6 +57,45 @@ export const ParameterSetRecommenderDetail = () => {
           >
             Link to Model
           </ActionLink>
+          <ActionItem onClick={() => setDeleteOpen(true)}>Delete</ActionItem>
+          <ConfirmationPopup
+            isOpen={deleteOpen}
+            setIsOpen={setDeleteOpen}
+            label="Are you sure you want to delete this model?"
+          >
+            <div className="m-2">{recommender.name}</div>
+            {deleteError && <ErrorCard error={deleteError} />}
+            <div
+              className="btn-group"
+              role="group"
+              aria-label="Delete or cancel buttons"
+            >
+              <button
+                className="btn btn-secondary"
+                onClick={() => setDeleteOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => {
+                  deleteParameterSetRecommender({
+                    success: () => {
+                      setDeleteOpen(false);
+                      if (onDeleted) {
+                        onDeleted();
+                      }
+                    },
+                    error: setDeleteError,
+                    token,
+                    id: recommender.id,
+                  });
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </ConfirmationPopup>
         </ActionItemsGroup>
       </ActionsButton>
       <BackButton
@@ -45,26 +105,19 @@ export const ParameterSetRecommenderDetail = () => {
         Parameter Set Recommenders
       </BackButton>
       <Title>Parameter Set Recommender</Title>
-      <Subtitle>{parameterSetRecommender.name || "..."}</Subtitle>
+      <Subtitle>{recommender.name || "..."}</Subtitle>
       <hr />
-      {parameterSetRecommender.loading && (
-        <Spinner>Loading Recommender</Spinner>
-      )}
-      {parameterSetRecommender.error && (
-        <ErrorCard error={parameterSetRecommender.error} />
-      )}
+      {recommender.loading && <Spinner>Loading Recommender</Spinner>}
+      {recommender.error && <ErrorCard error={recommender.error} />}
 
       <div className="row">
         <div className="col-md order-last">
-          {!parameterSetRecommender.loading &&
-            !parameterSetRecommender.error && (
-              <RecommenderStatusBox recommender={parameterSetRecommender} />
-            )}
+          {!recommender.loading && !recommender.error && (
+            <RecommenderStatusBox recommender={recommender} />
+          )}
         </div>
         <div className="col-8">
-          {!parameterSetRecommender.loading && (
-            <JsonView data={parameterSetRecommender} />
-          )}
+          {!recommender.loading && <JsonView data={recommender} />}
         </div>
       </div>
     </React.Fragment>

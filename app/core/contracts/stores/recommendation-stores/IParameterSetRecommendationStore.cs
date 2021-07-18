@@ -2,6 +2,6 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core
 {
-    public interface IParameterSetRecommendationStore : IEntityStore<ParameterSetRecommendation>
+    public interface IParameterSetRecommendationStore : IRecommendationStore<ParameterSetRecommendation>
     { }
 }

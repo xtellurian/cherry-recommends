@@ -125,11 +125,25 @@
     }
   };
 
+  const fetchLatestActionsAsync = async ({ token }) => {
+    const url = getUrl(`api/datasummary/actions`);
+
+    const response = await fetch(`${url}`, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   var dataSummaryApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchEventSummary: fetchEventSummary,
     fetchEventTimeline: fetchEventTimeline,
-    fetchDashboard: fetchDashboard
+    fetchDashboard: fetchDashboard,
+    fetchLatestActionsAsync: fetchLatestActionsAsync
   });
 
   const defaultHeaders$d = { "Content-Type": "application/json" };
@@ -305,6 +319,84 @@
     createExperiment: createExperiment,
     fetchExperimentResults: fetchExperimentResults,
     fetchRecommendation: fetchRecommendation
+  });
+
+  const fetchFeaturesAsync = async ({ token, page }) => {
+    const url = getUrl("api/features");
+    const response = await fetch(`${url}?${pageQuery(page)}`, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const fetchFeatureAsync = async ({ token, id }) => {
+    const url = getUrl(`api/features/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const createFeatureAsync = async ({ token, feature }) => {
+    const url = getUrl(`api/features/`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(feature),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const fetchTrackedUserFeaturesAsync = async ({ token, id }) => {
+    const url = getUrl(`api/TrackedUsers/${id}/features`);
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const fetchTrackedUserFeatureValuesAsync = async ({
+    token,
+    id,
+    feature,
+    version,
+  }) => {
+    const url = getUrl(
+      `api/TrackedUsers/${id}/features/${feature}?version=${version || ""}`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  var featuresApi = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    fetchFeaturesAsync: fetchFeaturesAsync,
+    fetchFeatureAsync: fetchFeatureAsync,
+    createFeatureAsync: createFeatureAsync,
+    fetchTrackedUserFeaturesAsync: fetchTrackedUserFeaturesAsync,
+    fetchTrackedUserFeatureValuesAsync: fetchTrackedUserFeatureValuesAsync
   });
 
   const defaultHeaders$a = { "Content-Type": "application/json" };
@@ -677,6 +769,87 @@
     createParameter: createParameter
   });
 
+  const fetchLinkedRegisteredModelAsync = async ({
+    recommenderApiName,
+    token,
+    id,
+  }) => {
+    const url = getUrl(
+      `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const createLinkedRegisteredModelAsync = async ({
+    recommenderApiName,
+    token,
+    id,
+    modelId,
+  }) => {
+    const url = getUrl(
+      `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify({ modelId }),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const fetchRecommenderTargetVariableValuesAsync = async ({
+    recommenderApiName,
+    name,
+    token,
+    id,
+  }) => {
+    const url = getUrl(
+      `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues?name=${
+      name || ""
+    }`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const createRecommenderTargetVariableValueAsync = async ({
+    recommenderApiName,
+    targetVariableValue,
+    token,
+    id,
+  }) => {
+    const url = getUrl(
+      `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(targetVariableValue),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const fetchParameterSetRecommenders = async ({
     success,
     error,
@@ -730,20 +903,16 @@
     }
   };
 
-  const createLinkRegisteredModel$1 = async ({
+  const deleteParameterSetRecommender = async ({
     success,
     error,
     token,
     id,
-    modelId,
   }) => {
-    const url = getUrl(
-      `api/recommenders/ParameterSetRecommenders/${id}/ModelRegistration`
-    );
+    const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}`);
     const response = await fetch(url, {
       headers: headers(token),
-      method: "post",
-      body: JSON.stringify({ modelId }),
+      method: "delete",
     });
     if (response.ok) {
       success(await response.json());
@@ -752,23 +921,54 @@
     }
   };
 
+  const fetchParameterSetRecommendationsAsync = async ({
+    token,
+    page,
+    id,
+  }) => {
+    const url = getUrl(
+      `api/recommenders/ParameterSetRecommenders/${id}/recommendations`
+    );
+    const response = await fetch(`${url}?${pageQuery(page)}`, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const createLinkRegisteredModel$1 = async ({
+    success,
+    error,
+    token,
+    id,
+    modelId,
+  }) => {
+    createLinkedRegisteredModelAsync({
+      recommenderApiName: "ParameterSetRecommenders",
+      id,
+      modelId,
+      token,
+    })
+      .then(success)
+      .catch(error);
+  };
+
   const fetchLinkedRegisteredModel$1 = async ({
     success,
     error,
     token,
     id,
   }) => {
-    const url = getUrl(
-      `api/recommenders/ParameterSetRecommenders/${id}/ModelRegistration`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
+    fetchLinkedRegisteredModelAsync({
+      recommenderApiName: "ParameterSetRecommenders",
+      id,
+      token,
+    })
+      .then(success)
+      .catch(error);
   };
 
   const invokeParameterSetRecommender = async ({
@@ -781,7 +981,9 @@
     input,
   }) => {
     try {
-      const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}/invoke`);
+      const url = getUrl(
+        `api/recommenders/ParameterSetRecommenders/${id}/invoke`
+      );
       const result = await fetch(`${url}?version=${version || "default"}`, {
         headers: headers(token),
         method: "post",
@@ -799,14 +1001,40 @@
     }
   };
 
+  const fetchTargetVariablesAsync$1 = async ({ id, token, name }) => {
+    return await fetchRecommenderTargetVariableValuesAsync({
+      recommenderApiName: "ParameterSetRecommenders",
+      id,
+      token,
+      name,
+    });
+  };
+
+  const createTargetVariableAsync$1 = async ({
+    id,
+    token,
+    targetVariableValue,
+  }) => {
+    return await createRecommenderTargetVariableValueAsync({
+      recommenderApiName: "ParameterSetRecommenders",
+      id,
+      token,
+      targetVariableValue,
+    });
+  };
+
   var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchParameterSetRecommenders: fetchParameterSetRecommenders,
     fetchParameterSetRecommender: fetchParameterSetRecommender,
     createParameterSetRecommender: createParameterSetRecommender,
+    deleteParameterSetRecommender: deleteParameterSetRecommender,
+    fetchParameterSetRecommendationsAsync: fetchParameterSetRecommendationsAsync,
     createLinkRegisteredModel: createLinkRegisteredModel$1,
     fetchLinkedRegisteredModel: fetchLinkedRegisteredModel$1,
-    invokeParameterSetRecommender: invokeParameterSetRecommender
+    invokeParameterSetRecommender: invokeParameterSetRecommender,
+    fetchTargetVariablesAsync: fetchTargetVariablesAsync$1,
+    createTargetVariableAsync: createTargetVariableAsync$1
   });
 
   const fetchProductRecommenders = async ({
@@ -914,19 +1142,14 @@
     id,
     modelId,
   }) => {
-    const url = getUrl(
-      `api/recommenders/ProductRecommenders/${id}/ModelRegistration`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
-      method: "post",
-      body: JSON.stringify({ modelId }),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
+    createLinkedRegisteredModelAsync({
+      recommenderApiName: "ProductRecommenders",
+      id,
+      modelId,
+      token,
+    })
+      .then(success)
+      .then(error);
   };
 
   const fetchLinkedRegisteredModel = async ({
@@ -935,17 +1158,13 @@
     token,
     id,
   }) => {
-    const url = getUrl(
-      `api/recommenders/ProductRecommenders/${id}/ModelRegistration`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
+    fetchLinkedRegisteredModelAsync({
+      recommenderApiName: "ProductRecommenders",
+      id,
+      token,
+    })
+      .then(success)
+      .catch(error);
   };
 
   const invokeProductRecommender = async ({
@@ -976,6 +1195,28 @@
     }
   };
 
+  const fetchTargetVariablesAsync = async ({ id, token, name }) => {
+    return await fetchRecommenderTargetVariableValuesAsync({
+      recommenderApiName: "ProductRecommenders",
+      id,
+      token,
+      name,
+    });
+  };
+
+  const createTargetVariableAsync = async ({
+    id,
+    token,
+    targetVariableValue,
+  }) => {
+    return await createRecommenderTargetVariableValueAsync({
+      recommenderApiName: "ProductRecommenders",
+      id,
+      token,
+      targetVariableValue,
+    });
+  };
+
   var productRecommenders = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchProductRecommenders: fetchProductRecommenders,
@@ -985,7 +1226,9 @@
     createProductRecommender: createProductRecommender,
     createLinkRegisteredModel: createLinkRegisteredModel,
     fetchLinkedRegisteredModel: fetchLinkedRegisteredModel,
-    invokeProductRecommender: invokeProductRecommender
+    invokeProductRecommender: invokeProductRecommender,
+    fetchTargetVariablesAsync: fetchTargetVariablesAsync,
+    createTargetVariableAsync: createTargetVariableAsync
   });
 
   const defaultHeaders$5 = { "Content-Type": "application/json" };
@@ -1545,6 +1788,7 @@
   exports.deployment = deploymentApi;
   exports.events = eventsApi;
   exports.experiments = experimentsApi;
+  exports.features = featuresApi;
   exports.integratedSystems = integratedSystemsApi;
   exports.modelRegistrations = modelRegistrationsApi;
   exports.models = index;

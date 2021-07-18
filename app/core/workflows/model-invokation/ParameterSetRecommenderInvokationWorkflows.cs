@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -43,25 +39,12 @@ namespace SignalBox.Core.Workflows
             this.trackedUserStore = trackedUserStore;
             this.modelClientFactory = modelClientFactory;
         }
-        private ModelTypes ParseModelType(string modelType)
-        {
-            return Enum.Parse<ModelTypes>(modelType);
-        }
-
-        private HostingTypes ParseHostingType(string hostingType)
-        {
-            return HostingTypes.AzureMLContainerInstance; // there's only 1
-        }
 
         public async Task<ParameterSetRecommenderModelOutputV1> InvokeParameterSetRecommender(long id, string version, ParameterSetRecommenderModelInputV1 input)
         {
             var recommender = await parameterSetRecommenderStore.Read(id);
             var model = recommender.ModelRegistration;
-            TrackedUser user = null;
-            if (!string.IsNullOrEmpty(input.CommonUserId))
-            {
-                user = await trackedUserStore.ReadFromCommonId(input.CommonUserId);
-            }
+            TrackedUser user = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
 
             IRecommenderModelClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1> client;
             if (model == null)

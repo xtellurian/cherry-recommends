@@ -15,7 +15,7 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/recommenders/[controller]")]
-    public class ProductRecommendersController : CommonEntityControllerBase<ProductRecommender>
+    public class ProductRecommendersController : RecommenderControllerBase<ProductRecommender>
     {
         private readonly ILogger<ProductRecommendersController> logger;
         private readonly ProductRecommenderInvokationWorkflows modelWorkflows;
@@ -68,8 +68,7 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}/recommendations")]
         public async Task<Paginated<ProductRecommendation>> GetRecommendations(long id, [FromQuery] PaginateRequest p)
         {
-            return await modelWorkflows.QueryRecommendations(id, p.Page);
+            return await workflows.QueryRecommendations(id, p.Page);
         }
-
     }
 }

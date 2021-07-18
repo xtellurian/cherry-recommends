@@ -1,3 +1,5 @@
+using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,9 +38,21 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}")]
         public virtual async Task<T> GetResource(string id, bool? useInternalId = null)
         {
+            return await GetEntity<string>(id, useInternalId, null);
+        }
+
+        protected async Task<T> GetEntity<TProperty>(string id, bool? useInternalId, Expression<Func<T, TProperty>> include = null)
+        {
             if ((useInternalId == null || useInternalId == true) && int.TryParse(id, out var internalId))
             {
-                return await store.Read(internalId);
+                if (include != null)
+                {
+                    return await store.Read(internalId, include);
+                }
+                else
+                {
+                    return await store.Read(internalId);
+                }
             }
             else if (useInternalId == true)
             {
@@ -46,7 +60,15 @@ namespace SignalBox.Web.Controllers
             }
             else
             {
-                return await store.ReadFromCommonId(id);
+                if (include != null)
+                {
+                    return await store.ReadFromCommonId(id, include);
+                }
+                else
+                {
+
+                    return await store.ReadFromCommonId(id);
+                }
             }
         }
 

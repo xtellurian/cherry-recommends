@@ -1,3 +1,4 @@
+from typing import List
 import requests
 import warnings
 from .exceptions import CredentialsException, SignalBoxException
@@ -7,8 +8,8 @@ from .products import create_product, query_products
 from .trackedusers import create_user, create_or_update_users
 from .touchpoints import create_touchpoint_on_tracked_user, get_touchpoint_on_tracked_user, get_touchpoint
 from .parameters import create_parameter
-from .parameter_recommenders import create_parameterset_recommender
-from .product_recommenders import get_product_recommender, invoke_product_recommender
+from .parameter_recommenders import create_parameterset_recommender, get_parameterset_recommender, delete_parameterset_recommender
+from .product_recommenders import create_product_recommender, get_product_recommender, delete_product_recommender, invoke_product_recommender, create_recommender_target_variable_value, get_recommender_target_variable_values
 from .features import get_feature, create_feature, get_feature_value, set_feature_value
 
 
@@ -94,8 +95,8 @@ class SignalBoxClient:
     def create_or_update_users(self, users):
         return create_or_update_users(self.access_token, self.base_url,  users)
 
-    def create_product(self, name: str, product_id: str, description: str):
-        return create_product(self.access_token, self.base_url, name, product_id, description)
+    def create_product(self, common_id: str, name: str, list_price: float, direct_cost: float, description: str):
+        return create_product(self.access_token, self.base_url, common_id, name, list_price, direct_cost, description)
 
     def query_products(self, page: int):
         return query_products(self.access_token, self.base_url, page)
@@ -142,11 +143,43 @@ class SignalBoxClient:
     def get_offers_in_experiment(self, experiment_id: str):
         return get_offers_in_experiment(self.access_token, self.base_url, experiment_id)
 
+    # Recommenders
+
+    # Product Recommenders
+    def create_product_recommender(self, common_id: str, name: str, touchpoint: str, product_ids: List[str] = None):
+        return create_product_recommender(self.access_token, self.base_url, common_id, name, touchpoint, product_ids)
+
     def get_product_recommender(self, recommender_id):
         return get_product_recommender(self.access_token, self.base_url, id=recommender_id)
 
+    def delete_product_recommender(self, id):
+        return delete_product_recommender(self.access_token, self.base_url, id)
+
     def invoke_product_recommender(self, recommender_id: int, common_user_id: str):
         return invoke_product_recommender(self.access_token, self.base_url, id=recommender_id, common_user_id=common_user_id)
+
+    def create_product_recommender_target_variable_value(self, recommender_id: int, start, end, name, value):
+        return create_recommender_target_variable_value(self.access_token, self.base_url, "ProductRecommenders", recommender_id, start, end, name, value)
+
+    def get_product_recommender_target_variable_values(self, recommender_id: int, name: str = None):
+        return get_recommender_target_variable_values(self.access_token, self.base_url, "ProductRecommenders", recommender_id, name)
+
+    # Parameter Set Recommenders
+    def create_parameterset_recommender(self, common_id: str, name: str, parameters: List[str], bounds, arguments):
+        return create_parameterset_recommender(
+            self.access_token, self.base_url, common_id, name, parameters, bounds, arguments)
+
+    def get_parameterset_recommender(self, common_id: str):
+        return get_parameterset_recommender(self.access_token, self.base_url, common_id)
+
+    def delete_parameterset_recommender(self, id):
+        return delete_parameterset_recommender(self.access_token, self.base_url, id)
+
+    def create_parameterset_recommender_target_variable_value(self, recommender_id: int, start, end, name, value):
+        return create_recommender_target_variable_value(self.access_token, self.base_url, "ParameterSetRecommenders", recommender_id, start, end, name, value)
+
+    def get_parameterset_recommender_target_variable_values(self, recommender_id: int, name: str = None):
+        return get_recommender_target_variable_values(self.access_token, self.base_url, "ParameterSetRecommenders", recommender_id, name)
 
     def recommend_offer(self, experimentId: str, commonUserId: str, features: dict = None):
         json_params = {

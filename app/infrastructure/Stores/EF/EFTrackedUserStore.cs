@@ -15,17 +15,21 @@ namespace SignalBox.Infrastructure.EntityFramework
             var users = new List<TrackedUser>();
             foreach (var commonId in commonIds)
             {
+                // Current behaviour is to not update the name.
+                // this is because the name is auto-generated when recommenders are called
+                // on a user that does not exist yet. 
+                // Updating the name here would overwrite existing names that might be valid.
                 users.Add(await this.CreateIfNotExists(commonId));
             }
 
             return users;
         }
 
-        public async Task<TrackedUser> CreateIfNotExists(string commonId)
+        public async Task<TrackedUser> CreateIfNotExists(string commonId, string name = null)
         {
             if (!await this.Set.AnyAsync(_ => _.CommonId == commonId))
             {
-                return await this.Create(new TrackedUser(commonId));
+                return await this.Create(new TrackedUser(commonId, name));
             }
             else
             {
