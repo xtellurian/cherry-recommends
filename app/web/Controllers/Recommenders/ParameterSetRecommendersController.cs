@@ -19,16 +19,16 @@ namespace SignalBox.Web.Controllers
     public class ParameterSetRecommendersController : RecommenderControllerBase<ParameterSetRecommender>
     {
         private readonly ILogger<ParameterSetRecommendersController> logger;
-        private readonly ParameterSetRecommenderInvokationWorkflows modelWorkflows;
+        private readonly ParameterSetRecommenderInvokationWorkflows invokationWorkflows;
         private readonly ParameterSetRecommenderWorkflows workflows;
 
         public ParameterSetRecommendersController(ILogger<ParameterSetRecommendersController> logger,
                                                  IParameterSetRecommenderStore store,
-                                                 ParameterSetRecommenderInvokationWorkflows modelWorkflows,
-                                                 ParameterSetRecommenderWorkflows workflows) : base(store)
+                                                 ParameterSetRecommenderInvokationWorkflows invokationWorkflows,
+                                                 ParameterSetRecommenderWorkflows workflows) : base(store, invokationWorkflows)
         {
             this.logger = logger;
-            this.modelWorkflows = modelWorkflows;
+            this.invokationWorkflows = invokationWorkflows;
             this.workflows = workflows;
         }
 
@@ -65,7 +65,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost("{id}/invoke")]
         public async Task<ParameterSetRecommenderModelOutputV1> InvokeModel(long id, string version, [FromBody] ParameterSetRecommenderModelInputV1 input)
         {
-            return await modelWorkflows.InvokeParameterSetRecommender(id, version, input);
+            return await invokationWorkflows.InvokeParameterSetRecommender(id, version, input);
         }
 
         /// <summary>Get the latest recommendations made by a recommender.</summary>

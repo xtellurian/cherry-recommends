@@ -524,6 +524,9 @@ namespace sqlite.SignalBox
                     b.Property<long?>("RecommendationCorrelatorId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("RecommenderType")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Version")
                         .HasColumnType("TEXT");
 
@@ -570,6 +573,9 @@ namespace sqlite.SignalBox
 
                     b.Property<long?>("RecommenderId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("RecommenderType")
+                        .HasColumnType("TEXT");
 
                     b.Property<long?>("TrackedUserId")
                         .HasColumnType("INTEGER");
@@ -628,6 +634,9 @@ namespace sqlite.SignalBox
                     b.Property<long?>("RecommenderId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("RecommenderType")
+                        .HasColumnType("TEXT");
+
                     b.Property<long?>("TrackedUserId")
                         .HasColumnType("INTEGER");
 
@@ -662,6 +671,71 @@ namespace sqlite.SignalBox
                     b.HasKey("Id");
 
                     b.ToTable("RecommendationCorrelators");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommenders.InvokationLogEntry", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("CorrelatorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long?>("InvokeEnded")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("InvokeStarted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("ParameterSetRecommenderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("ProductRecommenderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("RecommenderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("RecommenderType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool?>("Success")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("TrackedUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CorrelatorId");
+
+                    b.HasIndex("InvokeStarted");
+
+                    b.HasIndex("ParameterSetRecommenderId");
+
+                    b.HasIndex("ProductRecommenderId");
+
+                    b.HasIndex("TrackedUserId");
+
+                    b.ToTable("InvokationLogEntry");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommender", b =>
@@ -1053,6 +1127,8 @@ namespace sqlite.SignalBox
 
                     b.HasIndex("SourceId");
 
+                    b.HasIndex("Timestamp");
+
                     b.ToTable("TrackedUserEvents");
                 });
 
@@ -1399,6 +1475,31 @@ namespace sqlite.SignalBox
                     b.Navigation("TrackedUser");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Recommenders.InvokationLogEntry", b =>
+                {
+                    b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "Correlator")
+                        .WithMany()
+                        .HasForeignKey("CorrelatorId");
+
+                    b.HasOne("SignalBox.Core.Recommenders.ParameterSetRecommender", null)
+                        .WithMany("RecommenderInvokationLogs")
+                        .HasForeignKey("ParameterSetRecommenderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SignalBox.Core.Recommenders.ProductRecommender", null)
+                        .WithMany("RecommenderInvokationLogs")
+                        .HasForeignKey("ProductRecommenderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                        .WithMany()
+                        .HasForeignKey("TrackedUserId");
+
+                    b.Navigation("Correlator");
+
+                    b.Navigation("TrackedUser");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommender", b =>
                 {
                     b.HasOne("SignalBox.Core.ModelRegistration", "ModelRegistration")
@@ -1530,12 +1631,16 @@ namespace sqlite.SignalBox
                 {
                     b.Navigation("Recommendations");
 
+                    b.Navigation("RecommenderInvokationLogs");
+
                     b.Navigation("TargetVariableValues");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ProductRecommender", b =>
                 {
                     b.Navigation("Recommendations");
+
+                    b.Navigation("RecommenderInvokationLogs");
 
                     b.Navigation("TargetVariableValues");
                 });

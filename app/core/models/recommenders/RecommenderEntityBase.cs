@@ -14,5 +14,7 @@ namespace SignalBox.Core.Recommenders
         public ModelRegistration ModelRegistration { get; set; }
         [JsonIgnore]
         public ICollection<RecommenderTargetVariableValue> TargetVariableValues { get; set; }
+        [JsonIgnore]
+        public ICollection<InvokationLogEntry> RecommenderInvokationLogs { get; set; }
     }
 }

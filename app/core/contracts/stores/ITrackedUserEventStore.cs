@@ -7,6 +7,7 @@ namespace SignalBox.Core
 {
     public interface ITrackedUserEventStore
     {
+        Task<IEnumerable<TrackedUserEvent>> Latest(DateTimeOffset after);
         Task<int> Count(Expression<Func<TrackedUserEvent, bool>> predicate = null);
         Task<TProperty> Max<TProperty>(Expression<Func<TrackedUserEvent, TProperty>> selector);
         Task<TProperty> Min<TProperty>(Expression<Func<TrackedUserEvent, TProperty>> selector);

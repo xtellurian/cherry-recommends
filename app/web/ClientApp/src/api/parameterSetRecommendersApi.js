@@ -29,3 +29,6 @@ export const fetchTargetVariablesAsync =
 
 export const createTargetVariableAsync =
   parameterSetRecommenders.createTargetVariableAsync;
+
+export const fetchInvokationLogsAsync =
+  parameterSetRecommenders.fetchInvokationLogsAsync;

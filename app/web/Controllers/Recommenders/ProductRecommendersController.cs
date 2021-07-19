@@ -18,16 +18,16 @@ namespace SignalBox.Web.Controllers
     public class ProductRecommendersController : RecommenderControllerBase<ProductRecommender>
     {
         private readonly ILogger<ProductRecommendersController> logger;
-        private readonly ProductRecommenderInvokationWorkflows modelWorkflows;
+        private readonly ProductRecommenderInvokationWorkflows invokationWorkflows;
         private readonly ProductRecommenderWorkflows workflows;
 
         public ProductRecommendersController(ILogger<ProductRecommendersController> logger,
                                                  IProductRecommenderStore store,
-                                                 ProductRecommenderInvokationWorkflows modelWorkflows,
-                                                 ProductRecommenderWorkflows workflows) : base(store)
+                                                 ProductRecommenderInvokationWorkflows invokationWorkflows,
+                                                 ProductRecommenderWorkflows workflows) : base(store, invokationWorkflows)
         {
             this.logger = logger;
-            this.modelWorkflows = modelWorkflows;
+            this.invokationWorkflows = invokationWorkflows;
             this.workflows = workflows;
         }
 
@@ -61,7 +61,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost("{id}/invoke")]
         public async Task<ProductRecommenderModelOutputV1> InvokeModel(long id, string version, [FromBody] ProductRecommenderModelInputV1 input)
         {
-            return await modelWorkflows.InvokeProductRecommender(id, version, input);
+            return await invokationWorkflows.InvokeProductRecommender(id, version, input);
         }
 
         /// <summary>Get the latest recommendations made by a recommender.</summary>

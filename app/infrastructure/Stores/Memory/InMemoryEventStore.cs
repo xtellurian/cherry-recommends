@@ -43,6 +43,11 @@ namespace SignalBox.Infrastructure
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<TrackedUserEvent>> Latest(DateTimeOffset after)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<TProperty> Max<TProperty>(Expression<Func<TrackedUserEvent, TProperty>> selector)
         {
             throw new NotImplementedException();

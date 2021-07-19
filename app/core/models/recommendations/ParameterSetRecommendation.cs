@@ -12,7 +12,7 @@ namespace SignalBox.Core.Recommendations
                                           TrackedUser trackedUser,
                                           RecommendationCorrelator correlator,
                                           string version)
-        : base(correlator, version)
+        : base(correlator, RecommenderTypes.ParameterSet, version)
         {
             Recommender = recommender;
             TrackedUser = trackedUser;

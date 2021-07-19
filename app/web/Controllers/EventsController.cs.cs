@@ -18,14 +18,17 @@ namespace SignalBox.Web.Controllers
     {
         private readonly ILogger<EventsController> _logger;
         private readonly TrackedUserEventsWorkflows workflows;
+        private readonly IDateTimeProvider dateTimeProvider;
         private readonly ITrackedUserEventStore eventStore;
 
         public EventsController(ILogger<EventsController> logger,
                                 TrackedUserEventsWorkflows workflows,
+                                IDateTimeProvider dateTimeProvider,
                                 ITrackedUserEventStore eventStore)
         {
             _logger = logger;
             this.workflows = workflows;
+            this.dateTimeProvider = dateTimeProvider;
             this.eventStore = eventStore;
         }
 
@@ -45,13 +48,13 @@ namespace SignalBox.Web.Controllers
                                                                  d.Properties)), enqueue, !enqueue); // add to queue if available
         }
 
-        /// <summary>Stores event data about one or more tracked users.</summary>
+        /// <summary>Get events. Filter by commonUserId, otherwise latest events.</summary>
         [HttpGet]
-        public async Task<EventsResponse> EventsForTrackedUser(string commonUserId)
+        public async Task<EventsResponse> GetEvents(string commonUserId)
         {
             if (commonUserId == null)
             {
-                throw new BadRequestException("commonUserId cannot be null");
+                return new EventsResponse(await eventStore.Latest(dateTimeProvider.Now.AddMonths(-1)));
             }
             else
             {

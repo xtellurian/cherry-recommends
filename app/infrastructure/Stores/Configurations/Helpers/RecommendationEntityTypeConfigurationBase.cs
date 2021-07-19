@@ -10,6 +10,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         public override void Configure(EntityTypeBuilder<T> builder)
         {
             base.Configure(builder);
+            builder.Property(_ => _.RecommenderType).HasConversion<string>();
         }
     }
 }

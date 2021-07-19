@@ -9,10 +9,12 @@ namespace SignalBox.Web.Dto
         public EventsResponse(IEnumerable<TrackedUserEvent> events)
         {
             Events = events;
+            Items = events;
         }
 
         public IEnumerable<string> Kinds => Events.Select(_ => _.Kind).Distinct();
         public IEnumerable<string> EventTypes => Events.Select(_ => _.EventType).Distinct();
         public IEnumerable<TrackedUserEvent> Events { get; set; }
+        public IEnumerable<TrackedUserEvent> Items { get; set; }
     }
 }

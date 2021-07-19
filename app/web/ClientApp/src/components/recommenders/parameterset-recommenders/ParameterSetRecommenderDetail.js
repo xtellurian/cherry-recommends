@@ -53,6 +53,11 @@ export const ParameterSetRecommenderDetail = () => {
             Technical Integration
           </ActionLink>
           <ActionLink
+            to={`/recommenders/parameter-set-recommenders/invokation-logs/${id}`}
+          >
+            Invokation Logs
+          </ActionLink>
+          <ActionLink
             to={`/recommenders/parameter-set-recommenders/link-to-model/${id}`}
           >
             Link to Model

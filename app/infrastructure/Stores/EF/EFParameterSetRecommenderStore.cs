@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
@@ -6,7 +8,7 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFParameterSetRecommenderStore : EFCommonEntityStoreBase<ParameterSetRecommender>, IParameterSetRecommenderStore
+    public class EFParameterSetRecommenderStore : EFRecommenderStoreBase<ParameterSetRecommender>, IParameterSetRecommenderStore
     {
         public EFParameterSetRecommenderStore(SignalBoxDbContext context)
         : base(context, (c) => c.ParameterSetRecommenders)

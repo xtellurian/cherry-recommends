@@ -1,5 +1,5 @@
 import { getUrl } from "../baseUrl";
-const defaultHeaders = { "Content-Type": "application/json" };
+import { headers } from "./headers";
 
 export const fetchUserEvents = async ({
   success,
@@ -7,17 +7,16 @@ export const fetchUserEvents = async ({
   token,
   commonUserId,
 }) => {
-  const url = getUrl("api/events");
-  let path = `${url}?commonUserId=${commonUserId}`;
+  let url = getUrl("api/events");
+  if (commonUserId) {
+    url = `${url}?commonUserId=${commonUserId}`;
+  }
 
-  const response = await fetch(path, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+  const response = await fetch(url, {
+    headers: headers(token),
   });
   if (response.ok) {
-    const results = await response.json();
-    success(results);
+    success(await response.json());
   } else {
     error(await response.json());
   }
@@ -51,9 +50,7 @@ export const logUserEvents = async ({ success, error, token, events }) => {
   }
 
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
     method: "post",
     body: JSON.stringify(events),
   });

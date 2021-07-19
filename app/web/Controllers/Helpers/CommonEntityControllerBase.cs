@@ -41,6 +41,12 @@ namespace SignalBox.Web.Controllers
             return await GetEntity<string>(id, useInternalId, null);
         }
 
+        protected async Task<T> GetEntity(string id, bool? useInternalId)
+        {
+            // wrapper around the generic
+            return await this.GetEntity<object>(id, useInternalId, null);
+        }
+
         protected async Task<T> GetEntity<TProperty>(string id, bool? useInternalId, Expression<Func<T, TProperty>> include = null)
         {
             if ((useInternalId == null || useInternalId == true) && int.TryParse(id, out var internalId))

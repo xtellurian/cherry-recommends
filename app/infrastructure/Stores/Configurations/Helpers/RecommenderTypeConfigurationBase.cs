@@ -14,6 +14,10 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasMany(_ => _.TargetVariableValues)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+            builder
+                .HasMany(_ => _.RecommenderInvokationLogs)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

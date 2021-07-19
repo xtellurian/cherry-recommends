@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SignalBox.Core;
 using SignalBox.Core.Recommenders;
+using SignalBox.Core.Workflows;
 using SignalBox.Web.Dto;
 
 namespace SignalBox.Web.Controllers
@@ -13,11 +14,21 @@ namespace SignalBox.Web.Controllers
     [Authorize]
     [ApiController]
     [Produces("application/json")]
-    public class RecommenderControllerBase<T> : CommonEntityControllerBase<T> where T : RecommenderEntityBase
+    public abstract class RecommenderControllerBase<T> : CommonEntityControllerBase<T> where T : RecommenderEntityBase
     {
+        private readonly RecommenderInvokationWorkflowBase<T> workflows;
 
-        public RecommenderControllerBase(ICommonEntityStore<T> store) : base(store)
-        { }
+        protected RecommenderControllerBase(ICommonEntityStore<T> store, RecommenderInvokationWorkflowBase<T> workflows) : base(store)
+        {
+            this.workflows = workflows;
+        }
+
+        [HttpGet("{id}/InvokationLogs")]
+        public async Task<Paginated<InvokationLogEntry>> GetInvokationLogs(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
+        {
+            var recommender = await base.GetEntity(id, useInternalId);
+            return await workflows.QueryInvokationLogs(recommender, p.Page);
+        }
 
         [HttpGet("{id}/TargetVariableValues")]
         public async Task<IEnumerable<RecommenderTargetVariableValue>> TargetVariableValues(string id, string name = null)

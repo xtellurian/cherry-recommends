@@ -6,7 +6,7 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFProductRecommenderStore : EFCommonEntityStoreBase<ProductRecommender>, IProductRecommenderStore
+    public class EFProductRecommenderStore : EFRecommenderStoreBase<ProductRecommender>, IProductRecommenderStore
     {
         public EFProductRecommenderStore(SignalBoxDbContext context)
         : base(context, (c) => c.ProductRecommenders)

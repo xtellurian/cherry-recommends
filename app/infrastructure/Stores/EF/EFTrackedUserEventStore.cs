@@ -99,5 +99,14 @@ namespace SignalBox.Infrastructure.EntityFramework
             Expression<Func<TrackedUserEvent, bool>> predicate = _ => _.EventType == eventType && _.Timestamp > since && _.Timestamp < until;
             return await base.Count(predicate);
         }
+
+        public async Task<IEnumerable<TrackedUserEvent>> Latest(DateTimeOffset after)
+        {
+            return await Set
+                .Where(_ => _.Timestamp > after) // filtering by this column, has an index, and therefore is performant.
+                .OrderByDescending(_ => _.Created)
+                .Take(32).Skip(0)
+                .ToListAsync();
+        }
     }
 }

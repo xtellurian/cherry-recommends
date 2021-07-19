@@ -9,7 +9,7 @@ namespace SignalBox.Core.Recommendations
         { }
 
         public OfferRecommendation(RecommendationCorrelator correlator, IList<Offer> offers, TrackedUser user, Experiment experiment, Dictionary<string, object> features = null)
-        : base(correlator, "v0")
+        : base(correlator, Recommenders.RecommenderTypes.Offer, "v0")
         {
             CommonUserId = user.CommonUserId;
             Offers = offers;

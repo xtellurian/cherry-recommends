@@ -1,10 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Recommendations;
+using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core.Workflows
 {
-    public class ProductRecommenderInvokationWorkflows : IWorkflow
+    public class ProductRecommenderInvokationWorkflows : RecommenderInvokationWorkflowBase<ProductRecommender>, IWorkflow
     {
         private readonly ILogger<ProductRecommenderInvokationWorkflows> logger;
         private readonly IStorageContext storageContext;
@@ -19,6 +20,7 @@ namespace SignalBox.Core.Workflows
 
         public ProductRecommenderInvokationWorkflows(ILogger<ProductRecommenderInvokationWorkflows> logger,
                                     IStorageContext storageContext,
+                                    IDateTimeProvider dateTimeProvider,
                                     IRecommenderModelClientFactory modelClientFactory,
                                     ITrackedUserStore trackedUserStore,
                                     ITrackedUserTouchpointStore trackedUserTouchpointStore,
@@ -27,6 +29,7 @@ namespace SignalBox.Core.Workflows
                                     IRecommendationCorrelatorStore correlatorStore,
                                     IProductRecommenderStore productRecommenderStore,
                                     IProductRecommendationStore productRecommendationStore)
+                                     : base(storageContext, productRecommenderStore, dateTimeProvider)
         {
             this.logger = logger;
             this.storageContext = storageContext;
@@ -43,70 +46,83 @@ namespace SignalBox.Core.Workflows
         public async Task<ProductRecommenderModelOutputV1> InvokeProductRecommender(long id, string version, ProductRecommenderModelInputV1 input)
         {
             var recommender = await productRecommenderStore.Read(id, _ => _.ModelRegistration);
-            if (string.IsNullOrEmpty(input.CommonUserId))
+            var invokationEntry = await base.StartTrackInvokation(recommender);
+            TrackedUser user = null;
+            try
             {
-                throw new BadRequestException("ParameterSetRecommenderId is a required parameter.");
-            }
+                if (string.IsNullOrEmpty(input.CommonUserId))
+                {
+                    throw new BadRequestException("ParameterSetRecommenderId is a required parameter.");
+                }
 
-            input.Touchpoint ??= recommender.CommonId;
-            // enrich values from the touchpoint
-            var touchpoint = await touchpointStore.ReadFromCommonId(input.Touchpoint);
-            var user = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
-            if (await trackedUserTouchpointStore.TouchpointExists(user, touchpoint))
-            {
-                var tpValues = await trackedUserTouchpointStore.ReadTouchpoint(user, touchpoint);
-                input.Arguments = tpValues.Values;
-            }
-            else
-            {
-                input.Arguments = null;
-            }
+                input.Touchpoint ??= recommender.CommonId;
+                // enrich values from the touchpoint
+                var touchpoint = await touchpointStore.ReadFromCommonId(input.Touchpoint);
+                user = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
+                if (await trackedUserTouchpointStore.TouchpointExists(user, touchpoint))
+                {
+                    var tpValues = await trackedUserTouchpointStore.ReadTouchpoint(user, touchpoint);
+                    input.Arguments = tpValues.Values;
+                }
+                else
+                {
+                    input.Arguments = null;
+                }
 
-            IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1> client;
-            if (recommender.ModelRegistration == null)
-            {
-                // create a random recommender here.
-                client = await modelClientFactory.GetUnregisteredClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(recommender);
-                logger.LogWarning($"Using unregistered model client for {recommender.Id}");
-            }
-            else if (recommender.ModelRegistration.ModelType != ModelTypes.ProductRecommenderV1)
-            {
-                throw new BadRequestException("Model is not a ProductRecommenderV1");
-            }
-            else
-            {
-                client = await modelClientFactory
-                   .GetClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(recommender);
-            }
+                IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1> client;
+                if (recommender.ModelRegistration == null)
+                {
+                    // create a random recommender here.
+                    client = await modelClientFactory.GetUnregisteredClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(recommender);
+                    logger.LogWarning($"Using unregistered model client for {recommender.Id}");
+                }
+                else if (recommender.ModelRegistration.ModelType != ModelTypes.ProductRecommenderV1)
+                {
+                    throw new BadRequestException("Model is not a ProductRecommenderV1");
+                }
+                else
+                {
+                    client = await modelClientFactory
+                       .GetClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(recommender);
+                }
 
-            var output = await client.Invoke(recommender, version, input);
+                var output = await client.Invoke(recommender, version, input);
 
-            // load the product
-            if (output.ProductId.HasValue)
-            {
-                output.Product ??= await productStore.Read(output.ProductId.Value);
-            }
-            else if (!string.IsNullOrEmpty(output.ProductCommonId))
-            {
-                output.Product ??= await productStore.ReadFromCommonId(output.ProductCommonId);
-            }
-            else if (output.Product == null)
-            {
-                throw new ModelInvokationException("The model did not return a product.");
-            }
+                // load the product
+                if (output.ProductId.HasValue)
+                {
+                    output.Product ??= await productStore.Read(output.ProductId.Value);
+                }
+                else if (!string.IsNullOrEmpty(output.ProductCommonId))
+                {
+                    output.Product ??= await productStore.ReadFromCommonId(output.ProductCommonId);
+                }
+                else if (output.Product == null)
+                {
+                    throw new ModelInvokationException("The model did not return a product.");
+                }
 
-            // now save the result
-            var correlator = await correlatorStore.Create(new RecommendationCorrelator());
-            var recommendation = new ProductRecommendation(recommender, user, correlator, version, output.Product);
-            recommendation.SetInput(input);
-            recommendation.SetOutput(output);
-            // todo the recommendation store
-            recommendation = await productRecommendationStore.Create(recommendation);
+                // now save the result
+                var correlator = await correlatorStore.Create(new RecommendationCorrelator());
+                var recommendation = new ProductRecommendation(recommender, user, correlator, version, output.Product);
+                recommendation.SetInput(input);
+                recommendation.SetOutput(output);
+                // todo the recommendation store
+                recommendation = await productRecommendationStore.Create(recommendation);
+                await base.EndTrackInvokation(invokationEntry, true, user, correlator, $"Invoked successfully for {user.Name ?? user.CommonId}", false);
 
-            await storageContext.SaveChanges();
-            // set this after the context has been saved.
-            output.CorrelatorId = correlator.Id;
-            return output;
+                await storageContext.SaveChanges();
+
+                // set this after the context has been saved.
+                output.CorrelatorId = correlator.Id;
+                return output;
+            }
+            catch (System.Exception ex)
+            {
+                logger.LogError("Error invoking recommender", ex);
+                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId}", true);
+                throw; // rethrow the error to propagae to calling client
+            }
         }
     }
 }

@@ -1,16 +1,20 @@
 using System.Text.Json.Serialization;
+using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core.Recommendations
 {
     public abstract class RecommendationEntity : Entity
     {
-        public RecommendationEntity()
+        protected RecommendationEntity()
         { }
-        public RecommendationEntity(RecommendationCorrelator correlator, string version)
+        public RecommendationEntity(RecommendationCorrelator correlator, RecommenderTypes recommenderType, string version)
         {
             this.RecommendationCorrelator = correlator;
+            this.RecommenderType = recommenderType;
             this.Version = version;
         }
+
+        public RecommenderTypes? RecommenderType { get; set; } // nullable for backwards compat
 
         public long? RecommendationCorrelatorId { get; set; }
         [JsonIgnore]

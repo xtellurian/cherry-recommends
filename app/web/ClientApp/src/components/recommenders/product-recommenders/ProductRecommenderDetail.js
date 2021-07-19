@@ -50,6 +50,9 @@ export const ProductRecommenderDetail = () => {
           <ActionLink to={`/recommenders/product-recommenders/integrate/${id}`}>
             Technical Integration
           </ActionLink>
+          <ActionLink to={`/recommenders/product-recommenders/invokation-logs/${id}`}>
+            Invokation Logs
+          </ActionLink>
           <ActionLink
             to={`/recommenders/product-recommenders/link-to-model/${id}`}
           >

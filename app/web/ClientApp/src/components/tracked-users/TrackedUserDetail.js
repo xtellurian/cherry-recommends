@@ -52,7 +52,7 @@ export const TrackedUserDetail = () => {
   const id = params["id"];
   const trackedUser = useTrackedUser({ id });
   const actions = useTrackedUserUniqueActions({ id });
-  const { result } = useUserEvents({ commonUserId: trackedUser?.commonUserId });
+  const events = useUserEvents({ commonUserId: trackedUser?.commonUserId });
 
   return (
     <React.Fragment>
@@ -101,7 +101,7 @@ export const TrackedUserDetail = () => {
       <hr />
       <div className="mb-5">
         <h4>Events</h4>
-        <EventTimelineChart eventResponse={result} />
+        <EventTimelineChart eventResponse={events} />
       </div>
     </React.Fragment>
   );

@@ -4,6 +4,7 @@ import {
   fetchParameterSetRecommender,
   fetchParameterSetRecommendationsAsync,
   fetchLinkedRegisteredModel,
+  fetchInvokationLogsAsync,
   fetchTargetVariablesAsync,
 } from "../api/parameterSetRecommendersApi";
 import { useAccessToken } from "./token";
@@ -60,6 +61,26 @@ export const useParameterSetRecommendations = ({ id }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id]);
+
+  return result;
+};
+
+export const useInvokationLogs = ({ id }) => {
+  const token = useAccessToken();
+  const page = usePagination();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchInvokationLogsAsync({
+        token,
+        id,
+        page,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, page]);
 
   return result;
 };

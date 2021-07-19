@@ -1,17 +1,22 @@
 using System.Collections.Generic;
+using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core
 {
     public class Dashboard
     {
-        public Dashboard(IEnumerable<MomentCount> moments)
+        public Dashboard(IEnumerable<TrackedUserEvent> events,
+                         IEnumerable<TrackedUserAction> actions,
+                         IEnumerable<RecommendationEntity> recommendations)
         {
-            EventTimeline = new EventCountTimeline(moments);
+            this.Actions = actions;
+            this.Events = events;
+            this.Recommendations = recommendations;
         }
 
-        public Dashboard()
-        { }
 
-        public EventCountTimeline EventTimeline { get; set; }
+        public IEnumerable<TrackedUserEvent> Events { get; set; }
+        public IEnumerable<TrackedUserAction> Actions { get; set; }
+        public IEnumerable<RecommendationEntity> Recommendations { get; }
     }
 }

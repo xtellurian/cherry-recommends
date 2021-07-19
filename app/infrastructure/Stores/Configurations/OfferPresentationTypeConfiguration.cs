@@ -5,7 +5,7 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal class OfferPresentationTypeConfiguration : EntityTypeConfigurationBase<OfferRecommendation>, IEntityTypeConfiguration<OfferRecommendation>
+    internal class OfferPresentationTypeConfiguration : RecommendationEntityTypeConfigurationBase<OfferRecommendation>, IEntityTypeConfiguration<OfferRecommendation>
     {
         public override void Configure(EntityTypeBuilder<OfferRecommendation> builder)
         {

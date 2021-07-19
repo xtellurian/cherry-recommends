@@ -8,6 +8,7 @@ import {
 } from "./common/linkRegisteredModels";
 
 import * as tv from "./common/targetvariables";
+import * as il from "./common/invokationLogs";
 
 export const fetchParameterSetRecommenders = async ({
   success,
@@ -158,6 +159,15 @@ export const invokeParameterSetRecommender = async ({
       onFinally();
     }
   }
+};
+
+export const fetchInvokationLogsAsync = async ({ id, token, page }) => {
+  return await il.fetchRecommenderInvokationLogsAsync({
+    recommenderApiName: "ParameterSetRecommenders",
+    id,
+    token,
+    page,
+  });
 };
 
 export const fetchTargetVariablesAsync = async ({ id, token, name }) => {
