@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Adapters.Segment;
+using static SignalBox.Core.Workflows.TrackedUserEventsWorkflows;
 
 namespace SignalBox.Core.Workflows
 {
@@ -14,46 +15,46 @@ namespace SignalBox.Core.Workflows
         private readonly ILogger<WebhookWorkflows> logger;
         private readonly IWebhookReceiverStore receiverStore;
         private readonly ITrackedUserStore trackedUserStore;
-        private readonly ITrackedUserEventStore trackedUserEventStore;
+        private readonly TrackedUserEventsWorkflows eventsWorkflows;
         private readonly IStorageContext storageContext;
 
         public WebhookWorkflows(ILogger<WebhookWorkflows> logger,
                                 IWebhookReceiverStore receiverStore,
                                 ITrackedUserStore trackedUserStore,
-                                ITrackedUserEventStore trackedUserEventStore,
+                                TrackedUserEventsWorkflows eventsWorkflows,
                                 IStorageContext storageContext)
         {
             this.logger = logger;
             this.receiverStore = receiverStore;
             this.trackedUserStore = trackedUserStore;
-            this.trackedUserEventStore = trackedUserEventStore;
+            this.eventsWorkflows = eventsWorkflows;
             this.storageContext = storageContext;
         }
 
         public async Task ProcessWebhook(string endpointId, string webhookBody, string signature)
         {
             var receiver = await receiverStore.ReadFromEndpointId(endpointId);
+            EventLoggingResponse eventLoggingResponse = null;
             switch (receiver.IntegratedSystem.SystemType)
             {
                 case IntegratedSystemTypes.Segment:
-                    await ProcessSegmentWebhook(receiver, webhookBody, signature);
+                    eventLoggingResponse = await ProcessSegmentWebhook(receiver, webhookBody, signature);
                     break;
                 default:
+                    logger.LogCritical($"Unprocessable Webhook type: {receiver.IntegratedSystem.SystemType}");
                     throw new ArgumentException("Unprocessable Webhook type");
-
             }
+
+            logger.LogInformation($"Processed {eventLoggingResponse.EventsProcessed} events and {eventLoggingResponse.ActionsProcessed} actions");
         }
 
-        private async Task<IEnumerable<TrackedUserEvent>> ProcessSegmentWebhook(WebhookReceiver receiver, string webhookBody, string signature)
+        private async Task<EventLoggingResponse> ProcessSegmentWebhook(WebhookReceiver receiver, string webhookBody, string signature)
         {
             // first check if the receiver has a shared secret, and if yes, validate the thing
             AssertSegmentSignatureValid(receiver, webhookBody, signature);
-            var trackedUserEvent = JsonSerializer.Deserialize<SegmentModel>(webhookBody).ToTrackedUserEvent(receiver.IntegratedSystem);
-            var trackedUser = await trackedUserStore.CreateIfNotExists(trackedUserEvent.CommonUserId);
-
-            var results = await trackedUserEventStore.AddTrackedUserEvents(new List<TrackedUserEvent> { trackedUserEvent });
-            await storageContext.SaveChanges();
-            return results;
+            var trackedUserEventInput = JsonSerializer.Deserialize<SegmentModel>(webhookBody).ToTrackedUserEventInput(receiver.IntegratedSystem);
+            var res = await eventsWorkflows.TrackUserEvents(new List<TrackedUserEventInput> { trackedUserEventInput }, false, true);
+            return res;
         }
 
         private void AssertSegmentSignatureValid(WebhookReceiver receiver, string webhookBody, string signature)
