@@ -90,7 +90,8 @@ namespace SignalBox.Core.Workflows
                                                     sourceSystem,
                                                     d.Kind,
                                                     d.EventType,
-                                                    d.Properties));
+                                                    d.Properties,
+                                                    d.RecommendationCorrelatorId));
                 }
 
 
