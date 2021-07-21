@@ -35,6 +35,16 @@ namespace SignalBox.Core
             return Task.FromResult(store.Values.ToList() as IEnumerable<T>);
         }
 
+        public Task Load<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LoadMany<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Paginated<T>> Query(int page, Expression<Func<T, bool>> predicate)
         {
             throw new NotImplementedException();

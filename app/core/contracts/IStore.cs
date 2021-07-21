@@ -15,5 +15,7 @@ namespace SignalBox.Core
         Task<Paginated<T>> Query(int page, Expression<Func<T, bool>> predicate = null);
         Task<Paginated<T>> Query<TProperty>(int page, Expression<Func<T, TProperty>> include, Expression<Func<T, bool>> predicate = null);
         Task<bool> Remove(long id);
+        Task LoadMany<TProperty>(T entity, Expression<Func<T, System.Collections.Generic.IEnumerable<TProperty>>> propertyExpression) where TProperty : class;
+        Task Load<TProperty>(T entity, Expression<Func<T, System.Collections.Generic.IEnumerable<TProperty>>> propertyExpression) where TProperty : class;
     }
 }

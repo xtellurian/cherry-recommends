@@ -72,6 +72,8 @@ namespace SignalBox.Core.Workflows
                 IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1> client;
                 if (recommender.ModelRegistration == null)
                 {
+                    // load the products required for the random recommender
+                    await productRecommenderStore.LoadMany(recommender, _ => _.Products);
                     // create a random recommender here.
                     client = await modelClientFactory.GetUnregisteredClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(recommender);
                     logger.LogWarning($"Using unregistered model client for {recommender.Id}");

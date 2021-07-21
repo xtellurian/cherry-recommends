@@ -140,5 +140,19 @@ namespace SignalBox.Infrastructure.EntityFramework
             entity = await Set.SingleAsync(_ => _.Id == entity.Id);
             return entity;
         }
+
+        public async Task LoadMany<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class
+        {
+            await context.Entry(entity)
+                .Collection(propertyExpression)
+                .LoadAsync();
+        }
+
+        public async Task Load<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class
+        {
+            await context.Entry(entity)
+                .Reference(propertyExpression)
+                .LoadAsync();
+        }
     }
 }

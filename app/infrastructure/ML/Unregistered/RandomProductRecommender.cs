@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SignalBox.Core;
@@ -16,13 +17,20 @@ namespace SignalBox.Infrastructure
         }
         public async Task<ProductRecommenderModelOutputV1> Invoke(IRecommender recommender, string version, ProductRecommenderModelInputV1 input)
         {
-            // model should be null
-            var productRecommender = (ProductRecommender)recommender;
             var random = new Random();
-            var products = await productStore.Query(1);
-            var productList = products.Items.ToList();
-            var index = random.Next(productList.Count - 1);
-            var product = productList[index];
+            var productRecommender = (ProductRecommender)recommender;
+            var products = new List<Product>();
+            if (productRecommender.Products == null || !productRecommender.Products.Any())
+            {
+                products.AddRange((await productStore.Query(1)).Items);
+            }
+            else
+            {
+
+                products.AddRange(productRecommender.Products);
+            }
+            var index = random.Next(products.Count - 1);
+            var product = products[index];
             return new ProductRecommenderModelOutputV1
             {
                 ProductId = product.Id,
