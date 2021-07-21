@@ -26,6 +26,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 results = await Set
                     .Where(_ => _.Id == touchpointId)
                     .SelectMany(_ => _.TrackedUserTouchpoints.Select(_ => _.TrackedUser))
+                    .Distinct()
                     .OrderByDescending(_ => _.LastUpdated)
                     .Skip((page - 1) * PageSize).Take(PageSize)
                     .ToListAsync();

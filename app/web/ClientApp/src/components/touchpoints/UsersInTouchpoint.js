@@ -4,7 +4,14 @@ import {
   useTouchpoint,
   useTrackedUsersInTouchpoint,
 } from "../../api-hooks/touchpointsApi";
-import { Title, Subtitle, Paginator, Spinner, BackButton } from "../molecules";
+import {
+  Title,
+  Subtitle,
+  Paginator,
+  Spinner,
+  BackButton,
+  EmptyList,
+} from "../molecules";
 import { TrackedUserListItem } from "../molecules/TrackedUser";
 
 const Top = ({ touchpoint }) => {
@@ -32,6 +39,10 @@ export const UsersInTouchpoint = () => {
         trackedUsers.items.map((u) => (
           <TrackedUserListItem key={trackedUsers.id} trackedUser={u} />
         ))}
+
+      {trackedUsers.items && trackedUsers.items.length === 0 && (
+        <EmptyList>There are no Tracked Users for this touchpoint.</EmptyList>
+      )}
 
       <Paginator {...trackedUsers.pagination} />
     </React.Fragment>
