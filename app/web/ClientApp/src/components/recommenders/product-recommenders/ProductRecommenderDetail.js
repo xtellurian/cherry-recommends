@@ -13,12 +13,7 @@ import {
   EmptyList,
 } from "../../molecules";
 import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
-import {
-  ActionLink,
-  ActionItemsGroup,
-  ActionsButton,
-  ActionItem,
-} from "../../molecules/ActionsButton";
+import { ActionsButtonUtil } from "../utils/actionsButtonUtil";
 import { ConfirmationPopup } from "../../molecules/ConfirmationPopup";
 import { CopyableField } from "../../molecules/CopyableField";
 
@@ -34,72 +29,51 @@ export const ProductRecommenderDetail = () => {
   };
   return (
     <React.Fragment>
-      <ActionsButton
-        to={`/recommenders/product-recommenders/recommendations/${id}`}
-        label="Latest Recommendations"
+      <ActionsButtonUtil
+        id={id}
+        basePath="/recommenders/product-recommenders"
+        setDeleteOpen={setDeleteOpen}
       >
-        <ActionItemsGroup label="Actions">
-          <ActionLink to={`/recommenders/product-recommenders/test/${id}`}>
-            Test Page
-          </ActionLink>
-          <ActionLink
-            to={`/recommenders/product-recommenders/target-variable/${id}`}
+        <ConfirmationPopup
+          isOpen={deleteOpen}
+          setIsOpen={setDeleteOpen}
+          label="Are you sure you want to delete this model?"
+        >
+          <div className="m-2">{recommender.name}</div>
+          {deleteError && <ErrorCard error={deleteError} />}
+          <div
+            className="btn-group"
+            role="group"
+            aria-label="Delete or cancel buttons"
           >
-            Target Variable
-          </ActionLink>
-          <ActionLink to={`/recommenders/product-recommenders/integrate/${id}`}>
-            Technical Integration
-          </ActionLink>
-          <ActionLink to={`/recommenders/product-recommenders/invokation-logs/${id}`}>
-            Invokation Logs
-          </ActionLink>
-          <ActionLink
-            to={`/recommenders/product-recommenders/link-to-model/${id}`}
-          >
-            Link to Model
-          </ActionLink>
-          <ActionItem onClick={() => setDeleteOpen(true)}>Delete</ActionItem>
-
-          <ConfirmationPopup
-            isOpen={deleteOpen}
-            setIsOpen={setDeleteOpen}
-            label="Are you sure you want to delete this model?"
-          >
-            <div className="m-2">{recommender.name}</div>
-            {deleteError && <ErrorCard error={deleteError} />}
-            <div
-              className="btn-group"
-              role="group"
-              aria-label="Delete or cancel buttons"
+            <button
+              className="btn btn-secondary"
+              onClick={() => setDeleteOpen(false)}
             >
-              <button
-                className="btn btn-secondary"
-                onClick={() => setDeleteOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="btn btn-danger"
-                onClick={() => {
-                  deleteProductRecommender({
-                    success: () => {
-                      setDeleteOpen(false);
-                      if (onDeleted) {
-                        onDeleted();
-                      }
-                    },
-                    error: setDeleteError,
-                    token,
-                    id: recommender.id,
-                  });
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          </ConfirmationPopup>
-        </ActionItemsGroup>
-      </ActionsButton>
+              Cancel
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                deleteProductRecommender({
+                  success: () => {
+                    setDeleteOpen(false);
+                    if (onDeleted) {
+                      onDeleted();
+                    }
+                  },
+                  error: setDeleteError,
+                  token,
+                  id: recommender.id,
+                });
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        </ConfirmationPopup>
+      </ActionsButtonUtil>
+
       <BackButton
         className="float-right mr-1"
         to="/recommenders/product-recommenders"
