@@ -43,6 +43,7 @@ namespace SignalBox.Core.Workflows
                                                                  TrackedUser trackedUser,
                                                                  RecommendationCorrelator? correlator,
                                                                  string? message = null,
+                                                                 string? modelResponse = null,
                                                                  bool? saveOnComplete = true)
         {
             entry.InvokeEnded = dateTimeProvider.Now;
@@ -50,6 +51,7 @@ namespace SignalBox.Core.Workflows
             entry.Message = message;
             entry.Correlator = correlator;
             entry.TrackedUser = trackedUser;
+            entry.ModelResponse = modelResponse;
 
             if (saveOnComplete == true)
             {

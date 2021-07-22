@@ -19,6 +19,9 @@ namespace SignalBox.Core.Recommenders
         public string RecommenderType { get; set; }
         public long RecommenderId { get; set; }
         public bool? Success { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? ModelResponse { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Message { get; set; }
         public DateTimeOffset InvokeStarted { get; set; }
         public DateTimeOffset? InvokeEnded { get; set; }

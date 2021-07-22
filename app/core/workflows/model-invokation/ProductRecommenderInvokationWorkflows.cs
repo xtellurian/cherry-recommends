@@ -111,7 +111,13 @@ namespace SignalBox.Core.Workflows
                 recommendation.SetOutput(output);
                 // todo the recommendation store
                 recommendation = await productRecommendationStore.Create(recommendation);
-                await base.EndTrackInvokation(invokationEntry, true, user, correlator, $"Invoked successfully for {user.Name ?? user.CommonId}", false);
+                await base.EndTrackInvokation(invokationEntry,
+                                              true,
+                                              user,
+                                              correlator,
+                                              $"Invoked successfully for {user.Name ?? user.CommonId}",
+                                              null,
+                                              false);
 
                 await storageContext.SaveChanges();
 
@@ -119,10 +125,31 @@ namespace SignalBox.Core.Workflows
                 output.CorrelatorId = correlator.Id;
                 return output;
             }
+            catch (ModelInvokationException modelEx)
+            {
+                // TODO: return a default product on error
+                logger.LogError("Error invoking recommender", modelEx);
+                await base.EndTrackInvokation(
+                    invokationEntry,
+                    false,
+                    user,
+                    null,
+                    $"Invoke failed for {user?.Name ?? user?.CommonId}",
+                    modelEx.ModelResponseContent,
+                    true);
+                throw; // rethrow the error to propagae to calling client
+            }
             catch (System.Exception ex)
             {
                 logger.LogError("Error invoking recommender", ex);
-                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId}", true);
+                await base.EndTrackInvokation(
+                    invokationEntry,
+                    false,
+                    user,
+                    null,
+                    $"Invoke failed for {user?.Name ?? user?.CommonId}",
+                    null,
+                    true);
                 throw; // rethrow the error to propagae to calling client
             }
         }

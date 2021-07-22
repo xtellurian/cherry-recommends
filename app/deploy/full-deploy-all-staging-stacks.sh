@@ -4,7 +4,7 @@ az account show
 start_dir=$(pwd)
 echo $start_dir
 set -e
-for STACK in mosh upstreet vitable
+for STACK in upstreet-dev vitable-dev
 do
     echo $STACK
     cd $start_dir

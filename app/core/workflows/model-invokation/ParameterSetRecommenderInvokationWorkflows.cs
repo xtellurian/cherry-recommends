@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -105,14 +106,44 @@ namespace SignalBox.Core.Workflows
 
                 output.CorrelatorId = correlator.Id;
 
-                await base.EndTrackInvokation(invokationEntry, true, user, correlator, $"Invoked successfully for {user.Name ?? user.CommonId}", true);
+                await base.EndTrackInvokation(invokationEntry,
+                                              true,
+                                              user,
+                                              correlator,
+                                              $"Invoked successfully for {user.Name ?? user.CommonId}",
+                                              null,
+                                              true);
                 return output;
+            }
+            catch (ModelInvokationException modelEx)
+            {
+                logger.LogError("Error invoking recommender", modelEx);
+                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId}", modelEx.ModelResponseContent, true);
             }
             catch (System.Exception ex)
             {
                 logger.LogError("Error invoking recommender", ex);
-                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId}", true);
-                throw; // rethrow the error to propagae to calling client
+                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId}", null, true);
+            }
+
+            try
+            {
+                await parameterSetRecommenderStore.LoadMany(recommender, _ => _.Parameters);
+                var recommendedParams = new Dictionary<string, object>();
+                foreach (var p in recommender.Parameters)
+                {
+                    recommendedParams[p.CommonId] = p.DefaultValue?.Value;
+                }
+
+                return new ParameterSetRecommenderModelOutputV1
+                {
+                    RecommendedParameters = recommendedParams
+                };
+            }
+            catch (System.Exception ex)
+            {
+                logger.LogCritical($"Failed to return default parameters for parameterset recommender {recommender.Id}", ex);
+                throw;
             }
         }
     }

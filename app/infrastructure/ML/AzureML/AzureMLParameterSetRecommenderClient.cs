@@ -18,18 +18,19 @@ namespace SignalBox.Infrastructure.ML.Azure
 
         public async Task<ParameterSetRecommenderModelOutputV1> Invoke(IRecommender recommender, string version, ParameterSetRecommenderModelInputV1 input)
         {
+            string body = null;
             try
             {
                 base.SetKeyAsBearerToken(httpClient, recommender.ModelRegistration);
-                var response = await httpClient.PostAsJsonAsync(recommender.ModelRegistration.ScoringUrl, 
+                var response = await httpClient.PostAsJsonAsync(recommender.ModelRegistration.ScoringUrl,
                     new ModelInputWrapper<ParameterSetRecommenderModelInputV1>(version, input), serializerOptions);
-                var body = await response.Content.ReadAsStringAsync();
+                body = await response.Content.ReadAsStringAsync();
                 response.EnsureSuccessStatusCode();
                 return JsonSerializer.Deserialize<ParameterSetRecommenderModelOutputV1>(body, serializerOptions);
             }
             catch (System.Exception ex)
             {
-                throw new ModelInvokationException(recommender.ModelRegistration, ex);
+                throw new ModelInvokationException(recommender.ModelRegistration, ex, body);
             }
         }
     }

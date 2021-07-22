@@ -704,6 +704,9 @@ namespace sqlite.SignalBox
                     b.Property<string>("Message")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ModelResponse")
+                        .HasColumnType("TEXT");
+
                     b.Property<long?>("ParameterSetRecommenderId")
                         .HasColumnType("INTEGER");
 
