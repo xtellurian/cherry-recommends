@@ -4,6 +4,7 @@ import {
   fetchHubspotAccount,
   fetchHubspotAppInformation,
   fetchHubspotClientAllContactProperties,
+  fetchHubspotClientContactEventsAsync,
   fetchHubspotContacts,
 } from "../api/hubspotApi";
 
@@ -52,6 +53,23 @@ export const useHubspotClientAllContactProperties = ({ id }) => {
         token,
         id,
       });
+    }
+  }, [token, id]);
+  return result;
+};
+
+export const useHubspotContactEvents = ({ id }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    if (token && id) {
+      setState({ loading: true });
+      fetchHubspotClientContactEventsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
   return result;

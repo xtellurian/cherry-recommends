@@ -1,19 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using SignalBox.Core;
 using SignalBox.Core.Adapters.Hubspot;
 using SignalBox.Core.Integrations;
 using SignalBox.Core.OAuth;
-using xtellurian.HubSpot.Associations;
 using xtellurian.HubSpot.ContactProperties;
 using xtellurian.HubSpot.Contacts;
 using xtellurian.HubSpot.CrmExtensions;
+using xtellurian.HubSpot.Events;
 using xtellurian.HubSpot.OAuth;
 using xtellurian.HubSpot.Tickets;
 
@@ -21,6 +24,7 @@ namespace SignalBox.Infrastructure.Services
 {
     public class HubspotService : IHubspotService
     {
+        private string contactObjectType => "CONTACT";
         private static List<string> properties = new List<string>
         {
             "hs_object_id",
@@ -34,6 +38,8 @@ namespace SignalBox.Infrastructure.Services
         public HubspotService(HttpClient httpClient, IOptions<HubspotAppCredentials> creds, ILogger<HubspotService> logger)
         {
             this.httpClient = httpClient;
+            // use this for debugging the calls
+            // this.httpClient = new HttpClient(new HttpClientLoggingHandler(new HttpClientHandler(), logger));
             this.logger = logger;
             this.creds = creds.Value;
         }
@@ -72,8 +78,42 @@ namespace SignalBox.Infrastructure.Services
             SetAccessToken(tokenResponse);
             var response = await httpClient.GetAsync("https://api.hubapi.com/integrations/v1/me");
             response.EnsureSuccessStatusCode();
-            var details = JsonSerializer.Deserialize<HubspotAccountDetails>(await response.Content.ReadAsStringAsync());
+            var details = System.Text.Json.JsonSerializer.Deserialize<HubspotAccountDetails>(await response.Content.ReadAsStringAsync());
             return details;
+        }
+
+        public async Task<IEnumerable<HubspotEvent>> GetContactEvents(IntegratedSystem system,
+                                                                DateTimeOffset? occurredAfter,
+                                                                DateTimeOffset? occurredBefore,
+                                                                long? objectId,
+                                                                int? limit)
+        {
+            AuthorizeHttpClient(system);
+            var eventsClient = new EventsClient(httpClient);
+            // eventsClient.JsonSerializerSettings.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat;
+            eventsClient.JsonSerializerSettings.DateFormatString = @"yyyy-MM-dd";
+            // eventsClient.JsonSerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
+            // var x = JsonConvert.SerializeObject(new { d = occurredAfter }, eventsClient.JsonSerializerSettings);
+            // var y = JsonConvert.SerializeObject(new { d = occurredBefore }, eventsClient.JsonSerializerSettings);
+            // IsoDateTimeConverter converter = new IsoDateTimeConverter
+            // {
+            //     DateTimeStyles = DateTimeStyles.AdjustToUniversal
+            //     // DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK"
+            //     // 2017-03-15T11:45:42Z
+            // };
+            // eventsClient.JsonSerializerSettings.Converters.Add(converter);
+
+            var res = await eventsClient.EventsV3EventsAsync(occurredAfter?.ToString("yyyy-MM-dd"),
+                                                             occurredBefore?.ToString("yyyy-MM-dd"),
+                                                             objectType: contactObjectType,
+                                                             objectId: objectId,
+                                                             eventType: null,
+                                                             after: null,
+                                                             before: null,
+                                                             limit: limit,
+                                                             sort: null);
+
+            return res.Results.Select(_ => new HubspotEvent(_.ObjectId, _.ObjectType, DateTimeOffset.Parse(_.OccurredAt), _.Properties));
         }
 
         public async Task<IEnumerable<HubspotContactProperty>> GetContactProperties(IntegratedSystem system)
@@ -81,7 +121,7 @@ namespace SignalBox.Infrastructure.Services
             AuthorizeHttpClient(system);
             var contactPropertiesClient = new ContactPropertiesClient(httpClient);
 
-            var res = await contactPropertiesClient.CrmV3PropertiesGetAsync("contact", false);
+            var res = await contactPropertiesClient.CrmV3PropertiesGetAsync(contactObjectType, false);
             return res.Results.Select(_ => new HubspotContactProperty(_.Name, _.Label, _.Type, _.Description, _.HubspotDefined));
         }
 

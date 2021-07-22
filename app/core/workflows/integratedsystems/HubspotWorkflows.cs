@@ -12,6 +12,7 @@ namespace SignalBox.Core.Workflows
     public class HubspotWorkflows : IWorkflow
     {
         private readonly IIntegratedSystemStore integratedSystemStore;
+        private readonly ITrackedUserStore trackedUserStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
         private readonly IStorageContext storageContext;
         private readonly IHubspotService hubspotService;
@@ -20,6 +21,7 @@ namespace SignalBox.Core.Workflows
         private readonly IOptions<HubspotAppCredentials> hubspotCreds;
 
         public HubspotWorkflows(IIntegratedSystemStore integratedSystemStore,
+                                ITrackedUserStore trackedUserStore,
                                 ITrackedUserSystemMapStore systemMapStore,
                                 IStorageContext storageContext,
                                 IHubspotService hubspotService,
@@ -28,6 +30,7 @@ namespace SignalBox.Core.Workflows
                                 IOptions<HubspotAppCredentials> hubspotCreds)
         {
             this.integratedSystemStore = integratedSystemStore;
+            this.trackedUserStore = trackedUserStore;
             this.systemMapStore = systemMapStore;
             this.storageContext = storageContext;
             this.hubspotService = hubspotService;
@@ -42,6 +45,18 @@ namespace SignalBox.Core.Workflows
             {
                 await this.RefreshCredentials(system);
             }
+        }
+
+        private async Task<TrackedUserSystemMap> GetSystemMap(IntegratedSystem system, TrackedUser trackedUser)
+        {
+            await trackedUserStore.LoadMany(trackedUser, _ => _.IntegratedSystemMaps);
+            var map = trackedUser.IntegratedSystemMaps.FirstOrDefault(_ => _.IntegratedSystemId == system.Id);
+            if (map == null)
+            {
+                throw new ConfigurationException($"Tracked User {trackedUser.CommonId} is not lined to system {system.CommonId}");
+            }
+
+            return map;
         }
 
         public async Task<HubspotCache> GetCache(long integratedSystemId)
@@ -67,6 +82,37 @@ namespace SignalBox.Core.Workflows
             var system = await integratedSystemStore.Read(integratedSystemId);
             await CheckAndRefreshCredentials(system);
             return await hubspotService.GetContacts(system);
+        }
+
+        public async Task<IEnumerable<HubspotEvent>> LoadContactEvents(long integratedSystemId, string trackedUserId = null, int? limit = null)
+        {
+            var system = await integratedSystemStore.Read(integratedSystemId);
+            await CheckAndRefreshCredentials(system);
+            long? userId = null;
+            if (trackedUserId != null)
+            {
+                if (await trackedUserStore.ExistsFromCommonId(trackedUserId))
+                {
+                    var trackedUser = await trackedUserStore.ReadFromCommonId(trackedUserId);
+                    var map = await GetSystemMap(system, trackedUser);
+                    userId = int.Parse(map.UserId);
+                }
+                else
+                {
+                    if (int.TryParse(trackedUserId, out var id))
+                    {
+                        var trackedUser = await trackedUserStore.Read(id);
+                        var map = await GetSystemMap(system, trackedUser);
+                        userId = int.Parse(map.UserId);
+                    }
+                    else
+                    {
+                        throw new BadRequestException($"Unknown Tracked User {trackedUserId}");
+                    }
+                }
+            }
+
+            return await hubspotService.GetContactEvents(system, dateTimeProvider.Now.AddMonths(-3).DateTime, null, userId, limit);
         }
 
         public async Task<IEnumerable<TrackedUser>> GetAssociatedTrackedUsersFromTicket(string integratedSystemCommonId, string ticketId)

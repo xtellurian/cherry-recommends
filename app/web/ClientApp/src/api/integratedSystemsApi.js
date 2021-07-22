@@ -4,7 +4,7 @@ export const fetchIntegratedSystems = integratedSystems.fetchIntegratedSystems;
 
 export const fetchIntegratedSystem = integratedSystems.fetchIntegratedSystem;
 
-export const createIntegratedSystem = integratedSystems.createIntegratedSystem;
+export const createIntegratedSystemAsync = integratedSystems.createIntegratedSystemAsync;
 
 export const fetchWebhookReceivers = integratedSystems.fetchWebhookReceivers;
 

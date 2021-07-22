@@ -18,7 +18,7 @@ const DataViewHome = () => {
       <Title>Data View</Title>
       <Tabs tabs={tabs} />
       <hr />
-      <TabActivator tabId="events" defaultTab={defaultTab}>
+      <TabActivator tabId="events" defaultTabId={defaultTab}>
         <ViewEventData />
       </TabActivator>
     </div>

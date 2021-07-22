@@ -58,7 +58,7 @@ export const IntegrateProductRecommender = () => {
       </BackButton>
       <Title>Integrate Product Recommender</Title>
       <Subtitle>{recommender.name || "..."}</Subtitle>
-      <Tabs tabs={tabs} defaultTab={defaultTabId} />
+      <Tabs tabs={tabs} defaultTabId={defaultTabId} />
       <hr />
       {recommender.loading && <Spinner />}
       {recommender.error && <ErrorCard error={recommender.error} />}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SignalBox.Core.Adapters.Hubspot;
@@ -13,5 +14,10 @@ namespace SignalBox.Core
         Task<IEnumerable<HubspotContactProperty>> GetContactProperties(IntegratedSystem hubspotSystemReference);
         Task<IEnumerable<HubspotContact>> GetContacts(IntegratedSystem system);
         Task<IEnumerable<HubspotAssociation>> GetAssociatedContactsFromTicket(IntegratedSystem system, string ticketId);
+        Task<IEnumerable<HubspotEvent>> GetContactEvents(IntegratedSystem system,
+                                                         DateTimeOffset? occurredAfter,
+                                                         DateTimeOffset? occurredBefore,
+                                                         long? objectId,
+                                                         int? limit);
     }
 }

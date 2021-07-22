@@ -18,8 +18,8 @@ const TabListItem = ({ active, tab, basePath }) => {
   );
 };
 
-export const Tabs = ({ tabs, defaultTab }) => {
-  const currentTab = useTabs(defaultTab || tabs[0].id);
+export const Tabs = ({ tabs, defaultTabId }) => {
+  const currentTab = useTabs(defaultTabId || tabs[0].id);
   const { pathname } = useLocation();
   return (
     <ul className="nav nav-pills nav-fill">
@@ -36,8 +36,8 @@ export const Tabs = ({ tabs, defaultTab }) => {
   );
 };
 
-export const TabActivator = ({ tabId, defaultTab, children }) => {
-  const tab = useTabs(defaultTab);
+export const TabActivator = ({ tabId, defaultTabId, children }) => {
+  const tab = useTabs(defaultTabId);
   if (tab === tabId) {
     return <React.Fragment>{children}</React.Fragment>;
   } else {

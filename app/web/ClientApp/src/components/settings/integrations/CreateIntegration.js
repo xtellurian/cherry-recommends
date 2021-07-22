@@ -1,11 +1,12 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { useAccessToken } from "../../../api-hooks/token";
-import { createIntegratedSystem } from "../../../api/integratedSystemsApi";
+import { createIntegratedSystemAsync } from "../../../api/integratedSystemsApi";
 import { BackButton } from "../../molecules/BackButton";
 import { Title } from "../../molecules/PageHeadings";
 import { DropdownComponent, DropdownItem } from "../../molecules/Dropdown";
 import { ErrorCard } from "../../molecules/ErrorCard";
+import { AsyncButton } from "../../molecules/AsyncButton";
 
 const systemTypes = ["Hubspot", "Segment"];
 
@@ -18,15 +19,18 @@ export const CreateIntegration = () => {
   });
   const [error, setError] = React.useState();
 
+  const [creating, setCreating] = React.useState(false);
   const handleCreate = () => {
-    createIntegratedSystem({
+    setCreating(true);
+    createIntegratedSystemAsync({
       payload: integratedSystem,
-      success: (s) => {
-        history.push(`/settings/integrations/detail/${s.id}`);
-      },
-      error: setError,
       token,
-    });
+    })
+      .then((s) => {
+        history.push(`/settings/integrations/detail/${s.id}`);
+      })
+      .catch(setError)
+      .finally(() => setCreating(false));
   };
   return (
     <React.Fragment>
@@ -67,9 +71,13 @@ export const CreateIntegration = () => {
           ))}
         </DropdownComponent>
 
-        <button className="btn btn-primary w-25" onClick={handleCreate}>
+        <AsyncButton
+          loading={creating}
+          className="btn btn-primary w-25"
+          onClick={handleCreate}
+        >
           Create
-        </button>
+        </AsyncButton>
       </div>
     </React.Fragment>
   );

@@ -1,7 +1,6 @@
 import { pageQuery } from "./paging";
 import { getUrl } from "../baseUrl";
-
-const defaultHeaders = { "Content-Type": "application/json" };
+import { headers } from "./headers";
 
 export const fetchIntegratedSystems = async ({
   success,
@@ -11,9 +10,7 @@ export const fetchIntegratedSystems = async ({
 }) => {
   const url = getUrl("api/integratedSystems");
   const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     const results = await response.json();
@@ -26,9 +23,7 @@ export const fetchIntegratedSystems = async ({
 export const fetchIntegratedSystem = async ({ success, error, token, id }) => {
   const url = getUrl(`api/integratedSystems/${id}`);
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     const results = await response.json();
@@ -38,19 +33,24 @@ export const fetchIntegratedSystem = async ({ success, error, token, id }) => {
   }
 };
 
-export const createIntegratedSystem = async ({
-  success,
-  error,
-  token,
-  payload,
-}) => {
+export const createIntegratedSystemAsync = async ({ token, payload }) => {
   const url = getUrl("api/integratedSystems");
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
     method: "post",
     body: JSON.stringify(payload),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
+export const fetchWebhookReceivers = async ({ success, error, token, id }) => {
+  const url = getUrl(`api/integratedSystems/${id}/webhookreceivers`);
+  const response = await fetch(url, {
+    headers: headers(token),
   });
   if (response.ok) {
     const data = await response.json();
@@ -60,24 +60,8 @@ export const createIntegratedSystem = async ({
   }
 };
 
-export const fetchWebhookReceivers = async ({
-  success,
-  error,
-  token,
-  id,
-}) => {
-  const url = getUrl(`api/integratedSystems/${id}/webhookreceivers`);
-  const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
-  });
-  if (response.ok) {
-    const data = await response.json();
-    success(data);
-  } else {
-    error(await response.json());
-  }
+export const createIntegratedSystem = ({ success, error, token, payload }) => {
+  createIntegratedSystemAsync({ token, payload }).then(success).catch(error);
 };
 
 export const createWebhookReceiver = async ({
@@ -85,13 +69,11 @@ export const createWebhookReceiver = async ({
   error,
   token,
   id,
-  useSharedSecret
+  useSharedSecret,
 }) => {
   const url = getUrl(`api/integratedSystems/${id}/webhookreceivers`);
   const response = await fetch(`${url}?useSharedSecret=${useSharedSecret}`, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
     method: "post",
     body: JSON.stringify({}), // body is just empty for this
   });

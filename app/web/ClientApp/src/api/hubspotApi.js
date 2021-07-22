@@ -36,12 +36,22 @@ export const fetchHubspotClientAllContactProperties = async ({
   }
 };
 
-export const fetchHubspotAccount = async ({
-  success,
-  error,
-  token,
-  id,
-}) => {
+export const fetchHubspotClientContactEventsAsync = async ({ token, id }) => {
+  const url = `api/hubspotintegratedsystems/${id}/contact-events`;
+
+  const response = await fetch(url, {
+    headers: !token
+      ? defaultHeaders
+      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
+export const fetchHubspotAccount = async ({ success, error, token, id }) => {
   const url = `api/hubspotintegratedsystems/${id}/account`;
 
   const response = await fetch(url, {
@@ -56,12 +66,7 @@ export const fetchHubspotAccount = async ({
   }
 };
 
-export const fetchHubspotContacts = async ({
-  success,
-  error,
-  token,
-  id,
-}) => {
+export const fetchHubspotContacts = async ({ success, error, token, id }) => {
   const url = `api/hubspotintegratedsystems/${id}/contacts`;
 
   const response = await fetch(url, {

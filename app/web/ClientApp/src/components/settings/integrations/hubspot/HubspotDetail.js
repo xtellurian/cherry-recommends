@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useHubspotAccount } from "../../../../api-hooks/hubspotApi";
-import { TestHubspotConnectionPanel } from "./TestHubspotConnectionPanel";
+import { Tabs, TabActivator } from "../../../molecules/Tabs";
+// import { HubspotContactProperties } from "./HubspotContactProperties";
 
 export const HubspotDetail = ({ integratedSystem }) => {
   const hubspotAccount = useHubspotAccount({ id: integratedSystem.id });
@@ -14,7 +15,12 @@ export const HubspotDetail = ({ integratedSystem }) => {
         )}
       </div>
       <div className="col">
-        <TestHubspotConnectionPanel integratedSystem={integratedSystem} />
+        <Link to={`/settings/integrations/hubspot-detail/${integratedSystem.id}`}>
+          <button className="btn btn-primary">
+            Details
+          </button>
+        </Link>
+        {/* <HubspotContactProperties integratedSystem={integratedSystem} /> */}
       </div>
       <div className="col">
         <Link

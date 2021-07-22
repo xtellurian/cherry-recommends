@@ -15,7 +15,7 @@ const Top = () => {
       <BackButton className="float-right" to="/settings/integrations">
         Integrations
       </BackButton>
-      <Title>Test Hubspot Connection</Title>
+      <Title> Hubspot Contact Properties</Title>
       <Subtitle>Available Contact Properties</Subtitle>
     </React.Fragment>
   );
@@ -29,10 +29,8 @@ const PropertyRow = ({ property }) => {
   );
 };
 
-export const TestHubspotConnection = () => {
-  let { id } = useParams();
-  const integratedSystem = useIntegratedSystem({ id });
-  const properties = useHubspotClientAllContactProperties({ id });
+export const HubspotContactProperties = ({ integratedSystem }) => {
+  const properties = useHubspotClientAllContactProperties({ id: integratedSystem.id });
   return (
     <React.Fragment>
       <Top />

@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,16 +43,24 @@ namespace SignalBox.Web.Controllers
 
         [HttpGet("{id}/contactproperties")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<object> ContactProperties(long id)
+        public async Task<IEnumerable<HubspotContactProperty>> ContactProperties(long id)
         {
             return await hubspotWorkflows.LoadContactProperties(id);
         }
 
         [HttpGet("{id}/contacts")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<object> Contacts(long id)
+        public async Task<IEnumerable<HubspotContact>> Contacts(long id)
         {
             return await hubspotWorkflows.LoadContacts(id);
+        }
+
+        [HttpGet("{id}/contact-events")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<HubspotEvent>> ContactEvents(long id, string trackedUserId = null, int? limit = null)
+        {
+            limit ??= 100; // default limit to 100
+            return await hubspotWorkflows.LoadContactEvents(id, trackedUserId, limit);
         }
 
         [HttpPost("{id}/HubspotCode")]

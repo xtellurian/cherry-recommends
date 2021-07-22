@@ -73,19 +73,19 @@ export const IntegrateParameterSetRecommender = () => {
       </BackButton>
       <Title>Integrate Parameter-Set Recommender</Title>
       <Subtitle>{recommender.name || "..."}</Subtitle>
-      <Tabs tabs={tabs} defaultTab={defaultTabId} />
+      <Tabs tabs={tabs} defaultTabId={defaultTabId} />
       <hr />
       {recommender.loading && <Spinner />}
       {recommender.error && <ErrorCard error={recommender.error} />}
       {!recommender.loading && (
         <React.Fragment>
-          <TabActivator tabId="api" defaultTab={defaultTabId}>
+          <TabActivator tabId="api" defaultTabId={defaultTabId}>
             <CodeView
               language="bash"
               text={restIntegrate({ id, argumentsExample, basePath: origin })}
             ></CodeView>
           </TabActivator>
-          <TabActivator tabId="js" defaultTab={defaultTabId}>
+          <TabActivator tabId="js" defaultTabId={defaultTabId}>
             {id && (
               <CodeView
                 language="js"

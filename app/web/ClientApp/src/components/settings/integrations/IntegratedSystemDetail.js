@@ -12,7 +12,6 @@ import { HubspotDetail } from "./hubspot/HubspotDetail";
 export const IntegratedSystemDetail = () => {
   let { id } = useParams();
   const integratedSystem = useIntegratedSystem({ id });
-  
 
   return (
     <React.Fragment>
@@ -36,7 +35,7 @@ export const IntegratedSystemDetail = () => {
         </div>
       )}
 
-        <hr/>
+      <hr />
       {!integratedSystem.loading && !integratedSystem.error && (
         <div className="row">
           {integratedSystem &&
@@ -49,16 +48,10 @@ export const IntegratedSystemDetail = () => {
         </div>
       )}
 
-      <div className="row mt-3">
-        <div className="col">
-          {integratedSystem.error && (
-            <ErrorCard error={integratedSystem.error} />
-          )}
-          {integratedSystem.systemType === "hubspot" && (
-            <HubspotDetail integratedSystem={integratedSystem} />
-          )}
-        </div>
-      </div>
+      {integratedSystem.error && <ErrorCard error={integratedSystem.error} />}
+      {integratedSystem.systemType === "hubspot" && (
+        <HubspotDetail integratedSystem={integratedSystem} />
+      )}
     </React.Fragment>
   );
 };
