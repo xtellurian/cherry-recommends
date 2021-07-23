@@ -10,5 +10,6 @@ namespace SignalBox.Web.Dto.Parameters
         [RegularExpression("Numerical|Categorical", ErrorMessage = "ParameterType must be one of Numerical, Categorical")]
         public string ParameterType { get; set; }
         public string Description { get; set; }
+        public object DefaultValue { get; set; }
     }
 }

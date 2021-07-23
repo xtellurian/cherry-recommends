@@ -24,7 +24,7 @@ namespace SignalBox.Web.Controllers
         public async Task<Parameter> CreateParameter(CreateParameter dto)
         {
             var common = new CreateCommonEntityModel(dto.CommonId, dto.Name);
-            return await workflows.CreateParameter(new CreateParameterModel(common, dto.ParameterType, dto.Description));
+            return await workflows.CreateParameter(new CreateParameterModel(common, dto.ParameterType, dto.DefaultValue, dto.Description));
         }
     }
 }

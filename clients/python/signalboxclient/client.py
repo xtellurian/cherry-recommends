@@ -113,9 +113,9 @@ class SignalBoxClient:
         else:
             raise SignalBoxException(r.text)
 
-    def create_parameter(self, common_id: str, name: str, parameter_type: str = "Numerical", description: str = None):
+    def create_parameter(self, common_id: str, name: str, parameter_type: str = "Numerical", default_value = None, description: str = None):
         return create_parameter(self.access_token, self.base_url,
-                                common_id, name, parameter_type, description)
+                                common_id, name, parameter_type, default_value, description)
 
     # features
     def create_feature(self, common_id, name):

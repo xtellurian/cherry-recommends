@@ -23,6 +23,7 @@ namespace SignalBox.Core.Workflows
             if (Enum.TryParse<ParameterTypes>(model.ParameterType, out var parameterType))
             {
                 var p = await parameterStore.Create(new Parameter(model.Common, parameterType, model.Description));
+                p.SetDefaultValue(model.DefaultValue);
                 await storageContext.SaveChanges();
                 return p;
             }

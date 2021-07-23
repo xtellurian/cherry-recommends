@@ -71,7 +71,7 @@ assert delete_response['id'] is not None
 # create a parameter
 parameter_id = str(uuid.uuid1())
 parameter = test_client.create_parameter(
-    common_id=parameter_id, name="client_test.py")
+    common_id=parameter_id, name="client_test.py", default_value=5)
 assert parameter['id'] is not None
 assert parameter['commonId'] == parameter_id
 print("Created Parameter")
