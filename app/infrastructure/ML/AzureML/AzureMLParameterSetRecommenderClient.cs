@@ -13,6 +13,7 @@ namespace SignalBox.Infrastructure.ML.Azure
         public AzureMLParameterSetRecommenderClient(HttpClient httpClient)
         {
             this.httpClient = httpClient;
+            httpClient.Timeout = new System.TimeSpan(0, 0, 2); // 2 second timeout
             base.SetApplicationJsonHeader(this.httpClient);
         }
 
@@ -27,6 +28,10 @@ namespace SignalBox.Infrastructure.ML.Azure
                 body = await response.Content.ReadAsStringAsync();
                 response.EnsureSuccessStatusCode();
                 return JsonSerializer.Deserialize<ParameterSetRecommenderModelOutputV1>(body, serializerOptions);
+            }
+            catch (System.OperationCanceledException operationCancelled)
+            {
+                throw new ModelInvokationException(recommender.ModelRegistration, operationCancelled, "The underlying model request probably timed out.");
             }
             catch (System.Exception ex)
             {

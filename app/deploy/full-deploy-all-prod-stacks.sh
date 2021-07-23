@@ -4,7 +4,7 @@ az account show
 start_dir=$(pwd)
 echo $start_dir
 set -e
-for STACK in mosh upstreet vitable
+for STACK in mosh upstreet # vitable
 do
     echo $STACK
     cd $start_dir
@@ -15,3 +15,5 @@ do
 done
 
 echo "Completely done"
+
+echo "Vitable is skipped."

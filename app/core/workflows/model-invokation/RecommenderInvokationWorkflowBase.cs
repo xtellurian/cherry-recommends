@@ -26,9 +26,10 @@ namespace SignalBox.Core.Workflows
             return await store.QueryInvokationLogs(recommender.Id, page);
         }
 
-        public async Task<InvokationLogEntry> StartTrackInvokation(T recommender, string? message = null, bool? saveOnComplete = true)
+        public async Task<InvokationLogEntry> StartTrackInvokation(T recommender, string userId, bool? saveOnComplete = true)
         {
-            var entry = new InvokationLogEntry(recommender, dateTimeProvider.Now, message ?? "Invokation started");
+            var entry = new InvokationLogEntry(recommender, dateTimeProvider.Now);
+            entry.LogMessage($"Recomending for tracked user: {userId}");
             recommender.RecommenderInvokationLogs ??= new List<InvokationLogEntry>();
             recommender.RecommenderInvokationLogs.Add(entry);
             if (saveOnComplete == true)
@@ -48,11 +49,11 @@ namespace SignalBox.Core.Workflows
         {
             entry.InvokeEnded = dateTimeProvider.Now;
             entry.Success = success;
-            entry.Message = message;
+            entry.LogMessage(message);
             entry.Correlator = correlator;
             entry.TrackedUser = trackedUser;
             entry.ModelResponse = modelResponse;
-
+            entry.Status = "Complete";
             if (saveOnComplete == true)
             {
                 await storageContext.SaveChanges();

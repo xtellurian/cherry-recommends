@@ -707,6 +707,9 @@ namespace sqlserver.SignalBox
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Messages")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ModelResponse")
                         .HasColumnType("nvarchar(max)");
 
@@ -721,6 +724,9 @@ namespace sqlserver.SignalBox
 
                     b.Property<string>("RecommenderType")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("Success")

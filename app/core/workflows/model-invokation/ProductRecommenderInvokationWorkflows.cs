@@ -46,7 +46,7 @@ namespace SignalBox.Core.Workflows
         public async Task<ProductRecommenderModelOutputV1> InvokeProductRecommender(long id, string version, ProductRecommenderModelInputV1 input)
         {
             var recommender = await productRecommenderStore.Read(id, _ => _.ModelRegistration);
-            var invokationEntry = await base.StartTrackInvokation(recommender);
+            var invokationEntry = await base.StartTrackInvokation(recommender, input?.CommonUserId);
             TrackedUser user = null;
             try
             {
@@ -59,6 +59,7 @@ namespace SignalBox.Core.Workflows
                 // enrich values from the touchpoint
                 var touchpoint = await touchpointStore.ReadFromCommonId(input.Touchpoint);
                 user = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
+                invokationEntry.LogMessage("Create or Update Tracked User");
                 if (await trackedUserTouchpointStore.TouchpointExists(user, touchpoint))
                 {
                     var tpValues = await trackedUserTouchpointStore.ReadTouchpoint(user, touchpoint);

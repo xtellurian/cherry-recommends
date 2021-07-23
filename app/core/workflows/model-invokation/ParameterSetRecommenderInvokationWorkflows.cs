@@ -47,7 +47,7 @@ namespace SignalBox.Core.Workflows
         public async Task<ParameterSetRecommenderModelOutputV1> InvokeParameterSetRecommender(long id, string version, ParameterSetRecommenderModelInputV1 input)
         {
             var recommender = await parameterSetRecommenderStore.Read(id);
-            var invokationEntry = await base.StartTrackInvokation(recommender);
+            var invokationEntry = await base.StartTrackInvokation(recommender, input?.CommonUserId);
             TrackedUser user = null;
             try
             {
@@ -87,7 +87,8 @@ namespace SignalBox.Core.Workflows
                         }
                         else
                         {
-                            input.Arguments[r.CommonId] = r.DefaultValue;
+                            invokationEntry.LogMessage($"Using default value ({r.DefaultValue?.Value}) for argument {r.CommonId}"); ;
+                            input.Arguments[r.CommonId] = r.DefaultValue?.Value;
                         }
                     }
                 }
@@ -118,12 +119,12 @@ namespace SignalBox.Core.Workflows
             catch (ModelInvokationException modelEx)
             {
                 logger.LogError("Error invoking recommender", modelEx);
-                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId}", modelEx.ModelResponseContent, true);
+                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId}", modelEx.ModelResponseContent, saveOnComplete: true);
             }
             catch (System.Exception ex)
             {
                 logger.LogError("Error invoking recommender", ex);
-                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId}", null, true);
+                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId}", null, saveOnComplete: true);
             }
 
             try

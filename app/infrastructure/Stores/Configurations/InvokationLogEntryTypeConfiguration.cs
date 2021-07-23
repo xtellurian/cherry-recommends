@@ -10,6 +10,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             base.Configure(builder);
             builder.HasIndex(_ => _.InvokeStarted);
+            builder.Property(_ => _.Messages).HasJsonConversion();
         }
     }
 }
