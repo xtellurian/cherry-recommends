@@ -140,6 +140,25 @@ export const fetchLinkedRegisteredModel = async ({
     .catch(error);
 };
 
+export const invokeProductRecommenderAsync = async ({
+  token,
+  id,
+  version,
+  input,
+}) => {
+  const url = getUrl(`api/recommenders/ProductRecommenders/${id}/invoke`);
+  const result = await fetch(`${url}?version=${version || "default"}`, {
+    headers: headers(token),
+    method: "post",
+    body: JSON.stringify(input),
+  });
+  if (result.ok) {
+    return await result.json();
+  } else {
+    throw await result.json();
+  }
+};
+
 export const invokeProductRecommender = async ({
   success,
   error,
@@ -149,23 +168,10 @@ export const invokeProductRecommender = async ({
   version,
   input,
 }) => {
-  try {
-    const url = getUrl(`api/recommenders/ProductRecommenders/${id}/invoke`);
-    const result = await fetch(`${url}?version=${version || "default"}`, {
-      headers: headers(token),
-      method: "post",
-      body: JSON.stringify(input),
-    });
-    if (result.ok) {
-      success(await result.json());
-    } else {
-      error(await result.json());
-    }
-  } finally {
-    if (onFinally) {
-      onFinally();
-    }
-  }
+  invokeProductRecommenderAsync({ token, id, version, input })
+    .then(success)
+    .catch(error)
+    .finally(onFinally || (() => console.log()));
 };
 
 export const fetchInvokationLogsAsync = async ({ id, token, page }) => {

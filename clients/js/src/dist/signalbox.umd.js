@@ -19,12 +19,12 @@
 
   const getUrl = (path) => `${storedBaseUrl}/${path}`;
 
-  const defaultHeaders$e = { "Content-Type": "application/json" };
+  const defaultHeaders$c = { "Content-Type": "application/json" };
 
   const headers = (token) =>
     !token
-      ? defaultHeaders$e
-      : { ...defaultHeaders$e, Authorization: `Bearer ${token}` };
+      ? defaultHeaders$c
+      : { ...defaultHeaders$c, Authorization: `Bearer ${token}` };
 
   const fetchApiKeys = async ({ success, error, token, page }) => {
     const url = getUrl("api/apiKeys");
@@ -146,7 +146,7 @@
     fetchLatestActionsAsync: fetchLatestActionsAsync
   });
 
-  const defaultHeaders$d = { "Content-Type": "application/json" };
+  const defaultHeaders$b = { "Content-Type": "application/json" };
 
   const fetchDeploymentConfiguration = async ({
     success,
@@ -157,8 +157,8 @@
 
     const result = await fetch(url, {
       headers: !token
-        ? defaultHeaders$d
-        : { ...defaultHeaders$d, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$b
+        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
     });
     if (result.ok) {
       success(await result.json());
@@ -172,25 +172,22 @@
     fetchDeploymentConfiguration: fetchDeploymentConfiguration
   });
 
-  const defaultHeaders$c = { "Content-Type": "application/json" };
-
   const fetchUserEvents = async ({
     success,
     error,
     token,
     commonUserId,
   }) => {
-    const url = getUrl("api/events");
-    let path = `${url}?commonUserId=${commonUserId}`;
+    let url = getUrl("api/events");
+    if (commonUserId) {
+      url = `${url}?commonUserId=${commonUserId}`;
+    }
 
-    const response = await fetch(path, {
-      headers: !token
-        ? defaultHeaders$c
-        : { ...defaultHeaders$c, Authorization: `Bearer ${token}` },
+    const response = await fetch(url, {
+      headers: headers(token),
     });
     if (response.ok) {
-      const results = await response.json();
-      success(results);
+      success(await response.json());
     } else {
       error(await response.json());
     }
@@ -224,9 +221,7 @@
     }
 
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$c
-        : { ...defaultHeaders$c, Authorization: `Bearer ${token}` },
+      headers: headers(token),
       method: "post",
       body: JSON.stringify(events),
     });
@@ -243,7 +238,7 @@
     logUserEvents: logUserEvents
   });
 
-  const defaultHeaders$b = { "Content-Type": "application/json" };
+  const defaultHeaders$a = { "Content-Type": "application/json" };
 
   const fetchExperiments = async ({ success, error, token, page }) => {
     const url = getUrl("api/experiments");
@@ -262,8 +257,8 @@
     const url = getUrl("api/experiments");
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$b
-        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$a
+        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify(payload),
     });
@@ -278,8 +273,8 @@
     const url = getUrl(`api/experiments/${id}/results`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$b
-        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$a
+        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       const data = await response.json();
@@ -300,8 +295,8 @@
     const url = getUrl(`api/experiments/${experimentId}/recommendation`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$b
-        : { ...defaultHeaders$b, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$a
+        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify({ commonUserId: userId, features }),
     });
@@ -399,8 +394,6 @@
     fetchTrackedUserFeatureValuesAsync: fetchTrackedUserFeatureValuesAsync
   });
 
-  const defaultHeaders$a = { "Content-Type": "application/json" };
-
   const fetchIntegratedSystems = async ({
     success,
     error,
@@ -409,9 +402,7 @@
   }) => {
     const url = getUrl("api/integratedSystems");
     const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: !token
-        ? defaultHeaders$a
-        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
       const results = await response.json();
@@ -424,9 +415,7 @@
   const fetchIntegratedSystem = async ({ success, error, token, id }) => {
     const url = getUrl(`api/integratedSystems/${id}`);
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$a
-        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
       const results = await response.json();
@@ -436,19 +425,24 @@
     }
   };
 
-  const createIntegratedSystem = async ({
-    success,
-    error,
-    token,
-    payload,
-  }) => {
+  const createIntegratedSystemAsync = async ({ token, payload }) => {
     const url = getUrl("api/integratedSystems");
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$a
-        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
+      headers: headers(token),
       method: "post",
       body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const fetchWebhookReceivers = async ({ success, error, token, id }) => {
+    const url = getUrl(`api/integratedSystems/${id}/webhookreceivers`);
+    const response = await fetch(url, {
+      headers: headers(token),
     });
     if (response.ok) {
       const data = await response.json();
@@ -458,24 +452,8 @@
     }
   };
 
-  const fetchWebhookReceivers = async ({
-    success,
-    error,
-    token,
-    id,
-  }) => {
-    const url = getUrl(`api/integratedSystems/${id}/webhookreceivers`);
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$a
-        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      success(data);
-    } else {
-      error(await response.json());
-    }
+  const createIntegratedSystem = ({ success, error, token, payload }) => {
+    createIntegratedSystemAsync({ token, payload }).then(success).catch(error);
   };
 
   const createWebhookReceiver = async ({
@@ -483,13 +461,11 @@
     error,
     token,
     id,
-    useSharedSecret
+    useSharedSecret,
   }) => {
     const url = getUrl(`api/integratedSystems/${id}/webhookreceivers`);
     const response = await fetch(`${url}?useSharedSecret=${useSharedSecret}`, {
-      headers: !token
-        ? defaultHeaders$a
-        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
+      headers: headers(token),
       method: "post",
       body: JSON.stringify({}), // body is just empty for this
     });
@@ -505,8 +481,9 @@
     __proto__: null,
     fetchIntegratedSystems: fetchIntegratedSystems,
     fetchIntegratedSystem: fetchIntegratedSystem,
-    createIntegratedSystem: createIntegratedSystem,
+    createIntegratedSystemAsync: createIntegratedSystemAsync,
     fetchWebhookReceivers: fetchWebhookReceivers,
+    createIntegratedSystem: createIntegratedSystem,
     createWebhookReceiver: createWebhookReceiver
   });
 
@@ -850,6 +827,27 @@
     }
   };
 
+  const fetchRecommenderInvokationLogsAsync = async ({
+    recommenderApiName,
+    token,
+    id,
+    page
+  }) => {
+    const url = getUrl(
+      `api/recommenders/${recommenderApiName}/${id}/InvokationLogs?${pageQuery(
+      page
+    )}`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const fetchParameterSetRecommenders = async ({
     success,
     error,
@@ -1001,6 +999,15 @@
     }
   };
 
+  const fetchInvokationLogsAsync$1 = async ({ id, token, page }) => {
+    return await fetchRecommenderInvokationLogsAsync({
+      recommenderApiName: "ParameterSetRecommenders",
+      id,
+      token,
+      page,
+    });
+  };
+
   const fetchTargetVariablesAsync$1 = async ({ id, token, name }) => {
     return await fetchRecommenderTargetVariableValuesAsync({
       recommenderApiName: "ParameterSetRecommenders",
@@ -1033,6 +1040,7 @@
     createLinkRegisteredModel: createLinkRegisteredModel$1,
     fetchLinkedRegisteredModel: fetchLinkedRegisteredModel$1,
     invokeParameterSetRecommender: invokeParameterSetRecommender,
+    fetchInvokationLogsAsync: fetchInvokationLogsAsync$1,
     fetchTargetVariablesAsync: fetchTargetVariablesAsync$1,
     createTargetVariableAsync: createTargetVariableAsync$1
   });
@@ -1167,6 +1175,25 @@
       .catch(error);
   };
 
+  const invokeProductRecommenderAsync = async ({
+    token,
+    id,
+    version,
+    input,
+  }) => {
+    const url = getUrl(`api/recommenders/ProductRecommenders/${id}/invoke`);
+    const result = await fetch(`${url}?version=${version || "default"}`, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(input),
+    });
+    if (result.ok) {
+      return await result.json();
+    } else {
+      throw await result.json();
+    }
+  };
+
   const invokeProductRecommender = async ({
     success,
     error,
@@ -1176,23 +1203,19 @@
     version,
     input,
   }) => {
-    try {
-      const url = getUrl(`api/recommenders/ProductRecommenders/${id}/invoke`);
-      const result = await fetch(`${url}?version=${version || "default"}`, {
-        headers: headers(token),
-        method: "post",
-        body: JSON.stringify(input),
-      });
-      if (result.ok) {
-        success(await result.json());
-      } else {
-        error(await result.json());
-      }
-    } finally {
-      if (onFinally) {
-        onFinally();
-      }
-    }
+    invokeProductRecommenderAsync({ token, id, version, input })
+      .then(success)
+      .catch(error)
+      .finally(onFinally || (() => console.log()));
+  };
+
+  const fetchInvokationLogsAsync = async ({ id, token, page }) => {
+    return await fetchRecommenderInvokationLogsAsync({
+      recommenderApiName: "ProductRecommenders",
+      id,
+      token,
+      page,
+    });
   };
 
   const fetchTargetVariablesAsync = async ({ id, token, name }) => {
@@ -1226,7 +1249,9 @@
     createProductRecommender: createProductRecommender,
     createLinkRegisteredModel: createLinkRegisteredModel,
     fetchLinkedRegisteredModel: fetchLinkedRegisteredModel,
+    invokeProductRecommenderAsync: invokeProductRecommenderAsync,
     invokeProductRecommender: invokeProductRecommender,
+    fetchInvokationLogsAsync: fetchInvokationLogsAsync,
     fetchTargetVariablesAsync: fetchTargetVariablesAsync,
     createTargetVariableAsync: createTargetVariableAsync
   });

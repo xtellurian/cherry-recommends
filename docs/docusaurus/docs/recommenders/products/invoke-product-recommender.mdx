@@ -1,0 +1,70 @@
+---
+sidebar_position: 1
+title: Invoke
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Invoke a Product Recommender
+
+Once a Product Recommender has been created, you can invoke it (i.e. get a recommendation) like so.
+
+<Tabs
+  defaultValue="js"
+  values={[
+    { label: 'JavaScript', value: 'js', }
+  ]}>
+
+<TabItem value="js">
+
+```js
+const signalbox = require("signalbox.js");
+
+signalbox.productRecommenders
+  .invokeProductRecommenderAsync({
+    id: "recommender_id_123", // the recommender Id
+    input: {
+      commonUserId: "The User Id", // the user Id to recommend for
+    },
+    token: "Your access token",
+  })
+  .then((r) => {
+    console.log("Got a recommendation");
+    console.log(r);
+  })
+  .catch((e) => {
+    console.log("Server returned an error");
+    console.log(e);
+  });
+```
+
+Response
+
+```json
+{
+  productId: 7,
+  productCommonId: 'new_balance_12345',
+  product: {
+    listPrice: 100,
+    directCost: 77,
+    description: 'Brand new sneakers for the fly guys',
+    commonId: 'new_balance_12345',
+    name: 'New Balance Sneakers',
+    id: 7,
+    created: '2021-07-05T01:50:50.1366667+00:00',
+    lastUpdated: '2021-07-05T01:50:50.1366667+00:00'
+  },
+  correlatorId: 15
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+## Tracking Outcomes with Correlator Id
+
+To explicitly link outcomes of recommendations to events, you can use the `correlatorId` value in the Recommendation response.
+
+[Read more about tracking outcomes](../correlator-id).
