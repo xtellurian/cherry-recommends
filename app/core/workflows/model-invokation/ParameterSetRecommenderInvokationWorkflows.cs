@@ -44,9 +44,11 @@ namespace SignalBox.Core.Workflows
             this.modelClientFactory = modelClientFactory;
         }
 
-        public async Task<ParameterSetRecommenderModelOutputV1> InvokeParameterSetRecommender(long id, string version, ParameterSetRecommenderModelInputV1 input)
+        public async Task<ParameterSetRecommenderModelOutputV1> InvokeParameterSetRecommender(
+            ParameterSetRecommender recommender,
+            string version,
+            ParameterSetRecommenderModelInputV1 input)
         {
-            var recommender = await parameterSetRecommenderStore.Read(id);
             var invokationEntry = await base.StartTrackInvokation(recommender, input?.CommonUserId);
             TrackedUser user = null;
             try

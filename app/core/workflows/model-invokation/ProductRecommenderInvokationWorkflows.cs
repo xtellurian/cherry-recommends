@@ -43,9 +43,12 @@ namespace SignalBox.Core.Workflows
             this.productRecommendationStore = productRecommendationStore;
         }
 
-        public async Task<ProductRecommenderModelOutputV1> InvokeProductRecommender(long id, string version, ProductRecommenderModelInputV1 input)
+        public async Task<ProductRecommenderModelOutputV1> InvokeProductRecommender(
+            ProductRecommender recommender,
+            string version,
+            ProductRecommenderModelInputV1 input)
         {
-            var recommender = await productRecommenderStore.Read(id, _ => _.ModelRegistration);
+            await productRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             var invokationEntry = await base.StartTrackInvokation(recommender, input?.CommonUserId);
             TrackedUser user = null;
             try
@@ -110,7 +113,7 @@ namespace SignalBox.Core.Workflows
                 var recommendation = new ProductRecommendation(recommender, user, correlator, version, output.Product);
                 recommendation.SetInput(input);
                 recommendation.SetOutput(output);
-                // todo the recommendation store
+
                 recommendation = await productRecommendationStore.Create(recommendation);
                 await base.EndTrackInvokation(invokationEntry,
                                               true,

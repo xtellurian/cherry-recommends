@@ -59,9 +59,15 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Invoke a model with some input. Id is the recommender Id.</summary>
         [HttpPost("{id}/invoke")]
-        public async Task<ProductRecommenderModelOutputV1> InvokeModel(long id, string version, [FromBody] ProductRecommenderModelInputV1 input)
+        public async Task<ProductRecommenderModelOutputV1> InvokeModel(
+            string id,
+            string version,
+            [FromBody] ProductRecommenderModelInputV1 input,
+            bool? useInternalId = null)
         {
-            return await invokationWorkflows.InvokeProductRecommender(id, version, input);
+             var recommender = await base.GetResource(id, useInternalId);
+            return await invokationWorkflows.InvokeProductRecommender(recommender, version, input);
+
         }
 
         /// <summary>Get the latest recommendations made by a recommender.</summary>
