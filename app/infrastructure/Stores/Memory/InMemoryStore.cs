@@ -35,7 +35,7 @@ namespace SignalBox.Core
             return Task.FromResult(store.Values.ToList() as IEnumerable<T>);
         }
 
-        public Task Load<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class
+        public Task Load<TProperty>(T entity, Expression<Func<T, TProperty>> propertyExpression) where TProperty : class
         {
             throw new NotImplementedException();
         }

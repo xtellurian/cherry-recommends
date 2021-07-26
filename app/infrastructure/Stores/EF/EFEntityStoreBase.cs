@@ -147,7 +147,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .LoadAsync();
         }
 
-        public async Task Load<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class
+        public async Task Load<TProperty>(T entity, Expression<Func<T, TProperty>> propertyExpression) where TProperty : class
         {
             await context.Entry(entity)
                 .Reference(propertyExpression)
