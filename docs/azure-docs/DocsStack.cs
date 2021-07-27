@@ -22,6 +22,10 @@ class DocsStack : Stack
         // Create an Azure resource (Storage Account)
         var storageAccount = new StorageAccount("docshost", new StorageAccountArgs
         {
+            Tags = new Dictionary<string, string>
+            {
+                {"Public", true.ToString()}
+            },
             ResourceGroupName = resourceGroup.Name,
             Sku = new SkuArgs
             {
@@ -29,6 +33,14 @@ class DocsStack : Stack
             },
             EnableHttpsTrafficOnly = false,
             Kind = Kind.StorageV2,
+        });
+
+        var contentContainer = new BlobContainer("content", new BlobContainerArgs
+        {
+            AccountName = storageAccount.Name,
+            ContainerName = "content",
+            PublicAccess = PublicAccess.Container,
+            ResourceGroupName = resourceGroup.Name
         });
 
         var staticWebsite = new StorageAccountStaticWebsite("docs-web", new StorageAccountStaticWebsiteArgs

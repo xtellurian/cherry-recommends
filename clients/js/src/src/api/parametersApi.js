@@ -1,14 +1,11 @@
 import { pageQuery } from "./paging";
 import { getUrl } from "../baseUrl";
-
-const defaultHeaders = { "Content-Type": "application/json" };
+import { headers } from "./headers";
 
 export const fetchParameters = async ({ success, error, token, page }) => {
   const url = getUrl("api/parameters");
   const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     success(await response.json());
@@ -20,9 +17,7 @@ export const fetchParameters = async ({ success, error, token, page }) => {
 export const fetchParameter = async ({ success, error, token, id }) => {
   const url = getUrl(`api/parameters/${id}`);
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     success(await response.json());
@@ -31,19 +26,34 @@ export const fetchParameter = async ({ success, error, token, id }) => {
   }
 };
 
-export const createParameter = async ({ success, error, token, payload }) => {
+export const deleteParameterAsync = async ({ token, id }) => {
+  const url = getUrl(`api/parameters/${id}`);
+  const response = await fetch(url, {
+    headers: headers(token),
+    method: "delete",
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
+export const createParameterAsync = async ({ token, payload }) => {
   const url = getUrl("api/parameters");
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
     method: "post",
     body: JSON.stringify(payload),
   });
 
   if (response.ok) {
-    success(await response.json());
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
   }
+};
+
+export const createParameter = ({ success, error, token, payload }) => {
+  createParameterAsync({ token, payload }).then(success).catch(error);
 };

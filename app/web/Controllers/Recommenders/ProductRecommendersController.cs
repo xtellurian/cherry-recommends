@@ -65,7 +65,7 @@ namespace SignalBox.Web.Controllers
             [FromBody] ProductRecommenderModelInputV1 input,
             bool? useInternalId = null)
         {
-             var recommender = await base.GetResource(id, useInternalId);
+            var recommender = await base.GetResource(id, useInternalId);
             return await invokationWorkflows.InvokeProductRecommender(recommender, version, input);
 
         }
@@ -75,6 +75,11 @@ namespace SignalBox.Web.Controllers
         public async Task<Paginated<ProductRecommendation>> GetRecommendations(long id, [FromQuery] PaginateRequest p)
         {
             return await workflows.QueryRecommendations(id, p.Page);
+        }
+
+        protected override Task<(bool, string)> CanDelete(ProductRecommender entity)
+        {
+            return Task.FromResult((true, ""));
         }
     }
 }

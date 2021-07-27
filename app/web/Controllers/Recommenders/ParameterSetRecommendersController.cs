@@ -75,5 +75,10 @@ namespace SignalBox.Web.Controllers
         {
             return await workflows.QueryRecommendations(id, p.Page);
         }
+
+        protected override Task<(bool, string)> CanDelete(ParameterSetRecommender entity)
+        {
+            return Task.FromResult((true, ""));
+        }
     }
 }

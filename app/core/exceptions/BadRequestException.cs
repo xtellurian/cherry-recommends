@@ -5,8 +5,13 @@ namespace SignalBox.Core
     /// </summary>
     public class BadRequestException : SignalBoxException
     {
-        public BadRequestException(string message) : base(message)
+        public BadRequestException(string message) : base("Bad Request", message)
         {
+            this._status = 400;
+        }
+        public BadRequestException(string title, string message) : base(title, message)
+        {
+            this._status = 400;
         }
     }
 }

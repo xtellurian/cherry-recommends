@@ -1,5 +1,20 @@
 import React from "react";
 
+export const joinValidators = (validators) => {
+  return (value) => {
+    const allValidations = [];
+    for (let validator of validators) {
+      const validations = validator(value);
+      if (validations) {
+        for (let val of validations) {
+          allValidations.push(val);
+        }
+      }
+    }
+    return allValidations;
+  };
+};
+
 export const createLengthValidator = (minLength) => (value) => {
   if (!value || value.length === 0) {
     return [];

@@ -37,5 +37,10 @@ namespace SignalBox.Web.Controllers
             var touchpoint = await base.GetResource(id);
             return await workflow.GetTrackedUsers(touchpoint, p.Page);
         }
+
+        protected override Task<(bool, string)> CanDelete(Touchpoint entity)
+        {
+            return Task.FromResult((true, ""));
+        }
     }
 }

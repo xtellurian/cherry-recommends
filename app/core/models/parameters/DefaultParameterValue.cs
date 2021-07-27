@@ -7,7 +7,36 @@ namespace SignalBox.Core
         public DefaultParameterValue(ParameterTypes parameterType, object value)
         {
             ParameterType = parameterType;
-            Value = value;
+            if (!string.IsNullOrEmpty(value?.ToString()))
+            {
+                if (parameterType == ParameterTypes.Numerical)
+                {
+                    if (int.TryParse(value.ToString(), out var iVal))
+                    {
+                        this.Value = iVal;
+                    }
+                    else if (double.TryParse(value.ToString(), out var dVal))
+                    {
+                        this.Value = dVal;
+                    }
+                    else
+                    {
+                        throw new BadRequestException($"The default value {value} is not Numerical");
+                    }
+                }
+                else if (parameterType == ParameterTypes.Categorical)
+                {
+                    this.Value = value.ToString();
+                }
+                else
+                {
+                    throw new BadRequestException($"Unknown parameter type {parameterType}");
+                }
+            }
+            else if (value?.ToString() == "")
+            {
+                this.Value = value.ToString();
+            }
         }
 
         public ParameterTypes ParameterType { get; set; }

@@ -28,5 +28,18 @@ namespace SignalBox.Web.Controllers
         {
             return await workflows.CreateProduct(dto.CommonId, dto.Name, dto.ListPrice, dto.Description, dto.DirectCost);
         }
+
+        protected override async Task<(bool, string)> CanDelete(Product entity)
+        {
+            await store.LoadMany(entity, _ => _.ProductRecommenders);
+            if (entity.ProductRecommenders.Any())
+            {
+                return (false, "Product is used in a recommender. Delete the recommender first.");
+            }
+            else
+            {
+                return (true, null);
+            }
+        }
     }
 }

@@ -1,83 +1,89 @@
 import React from "react";
-import { Subtitle } from "../molecules/PageHeadings";
+import { Subtitle, ErrorCard, AsyncButton } from "../molecules";
 import { DropdownComponent, DropdownItem } from "../molecules/Dropdown";
-import { ErrorCard } from "../molecules/ErrorCard";
-import { createParameter } from "../../api/parametersApi";
+import { createParameterAsync } from "../../api/parametersApi";
 import { useAccessToken } from "../../api-hooks/token";
+import {
+  TextInput,
+  createServerErrorValidator,
+  joinValidators,
+} from "../molecules/TextInput";
 
 const parameterTypes = ["Numerical", "Categorical"];
 export const CreateParameterPanel = ({ onCreated }) => {
   const token = useAccessToken();
   const [error, setError] = React.useState();
+  const [loading, setLoading] = React.useState(false);
   const [parameter, setParameter] = React.useState({
     name: "",
     commonId: "",
     description: "",
+    defaultValue: "",
     parameterType: parameterTypes[0],
   });
+
   const handleCreate = () => {
+    setLoading(true);
     setError(null);
-    createParameter({
+    createParameterAsync({
       payload: parameter,
-      success: (r) => {
+      token,
+    })
+      .then((r) => {
         setParameter({
           name: "",
           commonId: "",
           description: "",
+          defaultValue: "",
           parameterType: parameterTypes[0],
         });
         if (onCreated) {
           onCreated(r);
         }
-      },
-      error: setError,
-      token,
-    });
+      })
+      .catch(setError)
+      .finally(() => setLoading(false));
   };
+
+  const commonIdValidator = joinValidators([
+    createServerErrorValidator("CommonId", error),
+    (val) => {
+      if (val && val.length < 3) {
+        return ["Common Id must be 3 or more characters"];
+      }
+    },
+  ]);
   return (
     <React.Fragment>
       <Subtitle>Create Parameter</Subtitle>
       {error && <ErrorCard error={error} />}
       <div>
-        <div className="input-group m-1">
-          <div className="input-group-prepend ml-1">
-            <span className="input-group-text" id="basic-addon3">
-              Friendly Name
-            </span>
-          </div>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Name"
-            value={parameter.name}
-            onChange={(e) =>
-              setParameter({
-                ...parameter,
-                name: e.target.value,
-              })
-            }
-          />
-        </div>
-        <div className="input-group m-1">
-          <div className="input-group-prepend ml-1">
-            <span className="input-group-text" id="basic-addon3">
-              Identity
-            </span>
-          </div>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Unique Id"
-            value={parameter.commonId}
-            onChange={(e) =>
-              setParameter({
-                ...parameter,
-                commonId: e.target.value,
-              })
-            }
-          />
-        </div>
-        <div className="input-group m-1">
+        <TextInput
+          label="Name"
+          placeholder="A human readable name"
+          value={parameter.name}
+          validator={createServerErrorValidator("Name", error)}
+          onChange={(e) =>
+            setParameter({
+              ...parameter,
+              name: e.target.value,
+            })
+          }
+        />
+        <TextInput
+          label="Common Id"
+          placeholder="An unique identifier"
+          value={parameter.commonId}
+          validator={commonIdValidator}
+          onChange={(e) =>
+            setParameter({
+              ...parameter,
+              commonId: e.target.value,
+            })
+          }
+        />
+
+        <div className="input-group m-2">
           <textarea
             className="form-control"
             placeholder="What is this parameter? Where is it used?"
@@ -90,8 +96,24 @@ export const CreateParameterPanel = ({ onCreated }) => {
             }
           />
         </div>
-        <div className="m-1 text-right">
-          <DropdownComponent title={parameter.parameterType}>
+        <TextInput
+          label="Default Value"
+          placeholder="Value will be recommended as a backup"
+          value={parameter.defaultValue}
+          // validator={commonIdValidator}
+          onChange={(e) =>
+            setParameter({
+              ...parameter,
+              defaultValue: e.target.value,
+            })
+          }
+        />
+
+        <div className="text-center">
+          <DropdownComponent
+            title={parameter.parameterType}
+            className="w-50 text-center"
+          >
             {parameterTypes.map((t) => (
               <DropdownItem key={t}>
                 <div
@@ -109,9 +131,13 @@ export const CreateParameterPanel = ({ onCreated }) => {
           </DropdownComponent>
         </div>
 
-        <button className="btn btn-primary w-100" onClick={handleCreate}>
+        <AsyncButton
+          loading={loading}
+          className="btn btn-primary btn-block mt-2"
+          onClick={handleCreate}
+        >
           Save
-        </button>
+        </AsyncButton>
       </div>
     </React.Fragment>
   );

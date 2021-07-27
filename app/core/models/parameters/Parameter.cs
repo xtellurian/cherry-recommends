@@ -17,6 +17,7 @@ namespace SignalBox.Core
 
         public ParameterTypes ParameterType { get; set; }
         public DefaultParameterValue DefaultValue { get; set; }
+        public object Default => DefaultValue?.Value;
         public string Description { get; set; }
 
         // required property for a many to many relationship

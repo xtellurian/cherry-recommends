@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,19 @@ namespace SignalBox.Web.Controllers
         {
             var common = new CreateCommonEntityModel(dto.CommonId, dto.Name);
             return await workflows.CreateParameter(new CreateParameterModel(common, dto.ParameterType, dto.DefaultValue, dto.Description));
+        }
+
+        protected override async Task<(bool, string)> CanDelete(Parameter entity)
+        {
+            await store.LoadMany(entity, _ => _.ParameterSetRecommenders);
+            if (entity.ParameterSetRecommenders.Any())
+            {
+                return (false, "Parameter is used in a recommender. Delete the recommender first.");
+            }
+            else
+            {
+                return (true, null);
+            }
         }
     }
 }

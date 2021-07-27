@@ -77,5 +77,10 @@ namespace SignalBox.Web.Controllers
                                                                                          u.IntegratedSystemReference?.UserId)));
             return new object();
         }
+
+        protected override Task<(bool, string)> CanDelete(TrackedUser entity)
+        {
+            return Task.FromResult((true, ""));
+        }
     }
 }

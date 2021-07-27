@@ -11,9 +11,10 @@ namespace SignalBox.Web.Controllers
     [Authorize]
     [ApiController]
     [Produces("application/json")]
-    public class CommonEntityControllerBase<T> : SignalBoxControllerBase where T : CommonEntity
+    public abstract class CommonEntityControllerBase<T> : SignalBoxControllerBase where T : CommonEntity
     {
         protected ICommonEntityStore<T> store { get; }
+        protected abstract Task<(bool, string)> CanDelete(T entity);
 
         public CommonEntityControllerBase(ICommonEntityStore<T> store)
         {
@@ -82,9 +83,18 @@ namespace SignalBox.Web.Controllers
         [HttpDelete("{id}")]
         public virtual async Task<DeleteResponse> DeleteResource(long id)
         {
-            var result = await store.Remove(id);
-            await store.Context.SaveChanges();
-            return new DeleteResponse(id, Request.Path.Value, result);
+            var entity = await store.Read(id);
+            var (canDelete, message) = await CanDelete(entity);
+            if (canDelete)
+            {
+                var result = await store.Remove(id);
+                await store.Context.SaveChanges();
+                return new DeleteResponse(id, Request.Path.Value, result);
+            }
+            else
+            {
+                throw new BadRequestException("Delete error", message);
+            }
         }
     }
 }

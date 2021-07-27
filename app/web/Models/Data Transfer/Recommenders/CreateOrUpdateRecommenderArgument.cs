@@ -6,7 +6,7 @@ namespace SignalBox.Web.Dto
     public class CreateOrUpdateRecommenderArgument
     {
         [Required]
-        [StringLength(100, MinimumLength = 5)]
+        [StringLength(100, MinimumLength = 4)]
         public string CommonId { get; set; } // use commonId for external API consistency
         public ArgumentTypes ArgumentType { get; set; }
         public string DefaultValue { get; set; }

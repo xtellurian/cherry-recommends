@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useHubspotAccount } from "../../../../api-hooks/hubspotApi";
-import { Tabs, TabActivator } from "../../../molecules/Tabs";
-// import { HubspotContactProperties } from "./HubspotContactProperties";
 
 export const HubspotDetail = ({ integratedSystem }) => {
   const hubspotAccount = useHubspotAccount({ id: integratedSystem.id });

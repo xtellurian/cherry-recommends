@@ -1,8 +1,6 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { Subtitle, Title } from "../../../molecules/PageHeadings";
 import { Spinner } from "../../../molecules/Spinner";
-import { useIntegratedSystem } from "../../../../api-hooks/integratedSystemsApi";
 import { useHubspotClientAllContactProperties } from "../../../../api-hooks/hubspotApi";
 import { ErrorCard } from "../../../molecules/ErrorCard";
 import { ExpandableCard } from "../../../molecules/ExpandableCard";

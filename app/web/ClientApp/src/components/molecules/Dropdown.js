@@ -6,14 +6,16 @@ import {
   DropdownItem as DTI,
 } from "reactstrap";
 
-export const DropdownComponent = ({ title, children }) => {
+export const DropdownComponent = ({ title, className, children }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   return (
     <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-      <DropdownToggle caret>{title}</DropdownToggle>
+      <DropdownToggle className={className || ""} caret>
+        {title}
+      </DropdownToggle>
       <DropdownMenu>
         {children}
         {/* <DropdownItem header>Header</DropdownItem>

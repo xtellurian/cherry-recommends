@@ -2,12 +2,6 @@ import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
 import { deleteParameterSetRecommender } from "../../../api/parameterSetRecommendersApi";
-import {
-  ActionsButton,
-  ActionItemsGroup,
-  ActionItem,
-  ActionLink,
-} from "../../molecules/ActionsButton";
 import { ActionsButtonUtil } from "../utils/actionsButtonUtil";
 import {
   Title,

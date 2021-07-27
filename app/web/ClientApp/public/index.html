@@ -13,7 +13,7 @@
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link
+    <!-- <link
       rel="shortcut icon"
       sizes="180x180"
       href="%PUBLIC_URL%/favicons/favicon.ico"
@@ -32,7 +32,7 @@
       rel="apple-touche-icon"
       sizes="180x180"
       href="%PUBLIC_URL%/favicons/apple-touch-icon.png"
-    />
+    /> -->
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -41,13 +41,38 @@
       Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
+
+      Below we are using the webapp created by the azure-docs project
     -->
+    <link
+      rel="shortcut icon"
+      sizes="180x180"
+      href="https://docshostcce3f6dc.blob.core.windows.net/content/web/favicons/favicon.ico"
+    />
+    <link
+      rel="icon"
+      sizes="32x32"
+      href="https://docshostcce3f6dc.blob.core.windows.net/content/web/favicons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      sizes="16x16"
+      href="https://docshostcce3f6dc.blob.core.windows.net/content/web/favicons/favicon-16x16.png"
+    />
+    <link
+      rel="apple-touche-icon"
+      sizes="180x180"
+      href="https://docshostcce3f6dc.blob.core.windows.net/content/web/favicons/apple-touch-icon.png"
+    />
+
     <title>Four2 | SignalBox</title>
   </head>
   <body>
     <noscript> You need to enable JavaScript to run this app. </noscript>
     <div id="root">
-      <div style="width: 50vw; margin: auto; text-align: center">
+      <div
+        style="width: 50vw; margin: auto; text-align: center; margin-top: 75px"
+      >
         <p>Loading...</p>
       </div>
     </div>

@@ -39,5 +39,10 @@ namespace SignalBox.Web.Controllers
             var feature = await base.GetResource(id);
             return await workflows.GetTrackedUsers(feature, p.Page);
         }
+
+        protected override Task<(bool, string)> CanDelete(Feature entity)
+        {
+            return Task.FromResult((true, ""));
+        }
     }
 }

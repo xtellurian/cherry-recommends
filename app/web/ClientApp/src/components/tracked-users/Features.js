@@ -14,7 +14,6 @@ import {
   BackButton,
 } from "../molecules";
 import { CopyableField } from "../molecules/CopyableField";
-import { JsonView } from "../molecules/JsonView";
 
 const FeatureValues = ({ userId, feature }) => {
   const values = useTrackedUserFeatureValues({

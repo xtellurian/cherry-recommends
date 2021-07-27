@@ -88,7 +88,8 @@ export const NavMenu = () => {
               }}
               className="img-fluid nav-logo"
               alt="The Four2 Logo"
-              src="/images/Four2_logo_white_background.png"
+              // src="/images/Four2_logo_white_background.png"
+              src="https://docshostcce3f6dc.blob.core.windows.net/content/images/Four2_logo_white_background.png"
             />
           </NavbarBrand>
           <NavbarToggler onClick={toggleNavbar} className="mr-2" />

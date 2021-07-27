@@ -11,15 +11,15 @@ import { DateTimeField } from "../molecules/DateTimeField";
 import { JsonView } from "../molecules/JsonView";
 import { GetStarted } from "./GetStarted";
 
-const ActionRow = ({ action }) => {
-  const ts = new Date(action.timestamp);
-  return (
-    <ExpandableCard label={`${action.category}  @  ${ts.toLocaleDateString()}`}>
-      <DateTimeField label="Timestamp" date={action.timestamp} />
-      <JsonView data={action} />
-    </ExpandableCard>
-  );
-};
+// const ActionRow = ({ action }) => {
+//   const ts = new Date(action.timestamp);
+//   return (
+//     <ExpandableCard label={`${action.category}  @  ${ts.toLocaleDateString()}`}>
+//       <DateTimeField label="Timestamp" date={action.timestamp} />
+//       <JsonView data={action} />
+//     </ExpandableCard>
+//   );
+// };
 const EventRow = ({ event }) => {
   const ts = new Date(event.timestamp);
   return (
