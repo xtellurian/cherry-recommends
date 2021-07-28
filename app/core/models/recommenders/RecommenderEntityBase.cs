@@ -5,13 +5,20 @@ namespace SignalBox.Core.Recommenders
 {
     public abstract class RecommenderEntityBase : CommonEntity, IRecommender
     {
-        public RecommenderEntityBase()
+        protected RecommenderEntityBase()
         { }
-        public RecommenderEntityBase(string commonId, string name) : base(commonId, name) { }
+        public RecommenderEntityBase(string commonId, string name, RecommenderErrorHandling errorHandling) : base(commonId, name)
+        {
+            this.ErrorHandling = errorHandling ?? new RecommenderErrorHandling();
+        }
 
+#nullable enable
+
+        public bool ShouldThrowOnBadInput() => this.ErrorHandling?.ThrowOnBadInput == true;
+        public RecommenderErrorHandling? ErrorHandling { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public ModelRegistration ModelRegistration { get; set; }
+        public ModelRegistration? ModelRegistration { get; set; }
         [JsonIgnore]
         public ICollection<RecommenderTargetVariableValue> TargetVariableValues { get; set; }
         [JsonIgnore]

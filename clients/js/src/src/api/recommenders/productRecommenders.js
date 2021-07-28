@@ -9,6 +9,7 @@ import {
 
 import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
+import * as eh from "./common/errorHandling";
 
 export const fetchProductRecommenders = async ({
   success,
@@ -125,6 +126,36 @@ export const createLinkRegisteredModel = async ({
     .then(error);
 };
 
+export const setDefaultProductAsync = async ({ token, id, productId }) => {
+  const url = getUrl(
+    `api/recommenders/ProductRecommenders/${id}/DefaultProduct`
+  );
+  const response = await fetch(url, {
+    headers: headers(token),
+    method: "post",
+    body: JSON.stringify({ productId }),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
+export const getDefaultProductAsync = async ({ token, id }) => {
+  const url = getUrl(
+    `api/recommenders/ProductRecommenders/${id}/DefaultProduct`
+  );
+  const response = await fetch(url, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
 export const fetchLinkedRegisteredModel = async ({
   success,
   error,
@@ -202,5 +233,18 @@ export const createTargetVariableAsync = async ({
     id,
     token,
     targetVariableValue,
+  });
+};
+
+export const updateErrorHandlingAsync = async ({
+  id,
+  token,
+  errorHandling,
+}) => {
+  return await eh.updateErrorHandlingAsync({
+    recommenderApiName: "ProductRecommenders",
+    id,
+    token,
+    errorHandling,
   });
 };

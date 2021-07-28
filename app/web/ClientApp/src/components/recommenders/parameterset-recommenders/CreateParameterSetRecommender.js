@@ -10,6 +10,12 @@ import {
   ExpandableCard,
   ErrorCard,
 } from "../../molecules";
+import {
+  InputGroup,
+  TextInput,
+  commonIdValidator,
+} from "../../molecules/TextInput";
+import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 import { ArgumentsEditor } from "../../molecules/ArgumentsEditor";
 import { useHistory } from "react-router-dom";
 
@@ -101,6 +107,7 @@ export const CreateParameterSetRecommender = () => {
   const [recommender, setRecommender] = React.useState({
     name: "",
     commonId: "",
+    throwOnBadInput: false,
     parameters: [],
     bounds: [],
     arguments: [],
@@ -159,27 +166,24 @@ export const CreateParameterSetRecommender = () => {
   };
   return (
     <React.Fragment>
-      <BackButton to="/recommenders/parameter-set-recommenders" className="float-right">
+      <BackButton
+        to="/recommenders/parameter-set-recommenders"
+        className="float-right"
+      >
         Parameter Set Recommenders
       </BackButton>
       <Title>Create Recommender</Title>
       <Subtitle>Parameter Sets</Subtitle>
       <hr />
       {error && <ErrorCard error={error} />}
-
-      <Subtitle>1. Set identifiers.</Subtitle>
+      <Subtitle>1. Set an ID and name.</Subtitle>
       <div className="m-1">
-        <div className="input-group">
-          <div className="input-group-prepend ml-1">
-            <span className="input-group-text" id="basic-addon3">
-              Identifier:
-            </span>
-          </div>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Common Id"
+        <InputGroup>
+          <TextInput
+            validator={commonIdValidator}
             value={recommender.commonId}
+            placeholder="Common Id"
+            label="ID"
             onChange={(e) =>
               setRecommender({
                 ...recommender,
@@ -187,16 +191,11 @@ export const CreateParameterSetRecommender = () => {
               })
             }
           />
-          <div className="input-group-prepend ml-1">
-            <span className="input-group-text" id="basic-addon3">
-              Friendly Name:
-            </span>
-          </div>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Name"
+
+          <TextInput
             value={recommender.name}
+            placeholder="Friendly Name"
+            label="Name"
             onChange={(e) =>
               setRecommender({
                 ...recommender,
@@ -204,9 +203,9 @@ export const CreateParameterSetRecommender = () => {
               })
             }
           />
-        </div>
+        </InputGroup>
       </div>
-      <Subtitle>2. Define arguments.</Subtitle>
+      <Subtitle>2. Define arguments</Subtitle>
       <div className="m-1">
         <ArgumentsEditor onArgumentsChanged={setArgs} initialArguments={args} />
       </div>
@@ -236,6 +235,20 @@ export const CreateParameterSetRecommender = () => {
           <BoundRow key={b.commonId} bound={b} onChange={onBoundChange} />
         ))}
       </div>
+      <div className="mt-1">
+        <Subtitle>4. Set error behaviour</Subtitle>
+        Throw an error on bad inputs? (Choose Yes for testing)
+        <ToggleSwitch
+          className="ml-5"
+          name="Throw on bad input"
+          id="throw-on-error-toggle"
+          checked={recommender.throwOnBadInput}
+          onChange={(v) =>
+            setRecommender({ ...recommender, throwOnBadInput: v })
+          }
+        />
+      </div>
+
       <hr />
       <button onClick={onSave} className="btn btn-primary w-25 mt-3">
         Save

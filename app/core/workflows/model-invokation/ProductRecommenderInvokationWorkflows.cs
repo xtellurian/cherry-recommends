@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Recommendations;
@@ -108,54 +109,85 @@ namespace SignalBox.Core.Workflows
                     throw new ModelInvokationException("The model did not return a product.");
                 }
 
-                // now save the result
-                var correlator = await correlatorStore.Create(new RecommendationCorrelator());
-                var recommendation = new ProductRecommendation(recommender, user, correlator, version, output.Product);
-                recommendation.SetInput(input);
-                recommendation.SetOutput(output);
-
-                recommendation = await productRecommendationStore.Create(recommendation);
-                await base.EndTrackInvokation(invokationEntry,
-                                              true,
-                                              user,
-                                              correlator,
-                                              $"Invoked successfully for {user.Name ?? user.CommonId}",
-                                              null,
-                                              false);
-
-                await storageContext.SaveChanges();
-
-                // set this after the context has been saved.
-                output.CorrelatorId = correlator.Id;
-                return output;
-            }
-            catch (ModelInvokationException modelEx)
-            {
-                // TODO: return a default product on error
-                logger.LogError("Error invoking recommender", modelEx);
-                await base.EndTrackInvokation(
-                    invokationEntry,
-                    false,
-                    user,
-                    null,
-                    $"Invoke failed for {user?.Name ?? user?.CommonId}",
-                    modelEx.ModelResponseContent,
-                    true);
-                throw; // rethrow the error to propagae to calling client
+                return await HandleRecommendation(recommender, version, input, invokationEntry, user, output);
             }
             catch (System.Exception ex)
             {
-                logger.LogError("Error invoking recommender", ex);
-                await base.EndTrackInvokation(
-                    invokationEntry,
-                    false,
-                    user,
-                    null,
-                    $"Invoke failed for {user?.Name ?? user?.CommonId}",
-                    null,
-                    true);
-                throw; // rethrow the error to propagae to calling client
+                string modelResponseContent = null;
+                if (ex is ModelInvokationException modelEx)
+                {
+                    logger.LogError("Error invoking recommender", modelEx);
+                    modelResponseContent = modelEx.ModelResponseContent;
+                }
+                else
+                {
+                    logger.LogError("Error invoking recommender model");
+                }
+
+                if (recommender.ShouldThrowOnBadInput())
+                {
+                    await base.EndTrackInvokation(
+                        invokationEntry,
+                        false,
+                        user,
+                        null,
+                        $"Invoke failed for {user?.Name ?? user?.CommonId}",
+                        modelResponseContent,
+                        true);
+                    throw; // rethrow the error to propagate to calling client
+                }
+                else if (recommender.DefaultProductId != null)
+                {
+                    // case: default product and the model returned error
+                    await productRecommenderStore.Load(recommender, _ => _.DefaultProduct);
+                    invokationEntry.LogMessage($"Model Error. Fallback to default product");
+                    var output = new ProductRecommenderModelOutputV1
+                    {
+                        ProductId = recommender.DefaultProductId,
+                        ProductCommonId = recommender.DefaultProduct.CommonId,
+                        Product = recommender.DefaultProduct
+                    };
+                    return await HandleRecommendation(recommender, version, input, invokationEntry, user, output);
+                }
+                else
+                {
+                    // case: no default and the model returned error
+                    var someProducts = await productStore.Query(1);
+                    var product = someProducts.Items.First();
+                    invokationEntry.LogMessage($"Model Error. Fallback to top product {product.CommonId}");
+                    var output = new ProductRecommenderModelOutputV1
+                    {
+                        ProductId = recommender.DefaultProductId,
+                        ProductCommonId = recommender.DefaultProduct.CommonId,
+                        Product = recommender.DefaultProduct
+                    };
+                    return await HandleRecommendation(recommender, version, input, invokationEntry, user, output);
+                }
             }
+        }
+
+        private async Task<ProductRecommenderModelOutputV1> HandleRecommendation(ProductRecommender recommender, string version, ProductRecommenderModelInputV1 input, InvokationLogEntry invokationEntry, TrackedUser user, ProductRecommenderModelOutputV1 output)
+        {
+            // now save the result
+            var correlator = await correlatorStore.Create(new RecommendationCorrelator());
+            var recommendation = new ProductRecommendation(recommender, user, correlator, version, output.Product);
+            recommendation.SetInput(input);
+            recommendation.SetOutput(output);
+
+            recommendation = await productRecommendationStore.Create(recommendation);
+            await base.EndTrackInvokation(invokationEntry,
+                                          true,
+                                          user,
+                                          correlator,
+                                          $"Invoked successfully for {user.Name ?? user.CommonId}",
+                                          null,
+                                          false);
+
+            await storageContext.SaveChanges();
+
+            // set this after the context has been saved.
+            output.CorrelatorId = correlator.Id;
+            return output;
         }
     }
 }

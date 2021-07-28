@@ -42,9 +42,10 @@ namespace SignalBox.Web.Controllers
                 CommonId = a.CommonId,
                 DefaultValue = new DefaultArgumentValue(a.ArgumentType, a.DefaultValue)
             });
-            return await workflows.CreateParameterSetRecommender(c, dto.Parameters, dto.Bounds, arguments);
+            return await workflows.CreateParameterSetRecommender(c, dto.Parameters, dto.Bounds, arguments,
+                 new RecommenderErrorHandling { ThrowOnBadInput = dto.ThrowOnBadInput });
         }
-
+        
         [HttpPost("{id}/ModelRegistration")]
         public async Task<ModelRegistration> LinkModel(string id, LinkModel dto)
         {

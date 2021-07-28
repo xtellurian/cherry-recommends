@@ -21,6 +21,9 @@ export const ActionsButtonUtil = ({
         <ActionLink to={`${basePath}/test/${id}`}>
           Recommender Testing
         </ActionLink>
+        <ActionLink to={`${basePath}/settings/${id}`}>
+          Settings
+        </ActionLink>
         <ActionLink to={`${basePath}/target-variable/${id}`}>
           Target Variable
         </ActionLink>

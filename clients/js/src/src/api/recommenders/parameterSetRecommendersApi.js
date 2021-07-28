@@ -7,6 +7,7 @@ import {
   createLinkedRegisteredModelAsync,
 } from "./common/linkRegisteredModels";
 
+import * as eh from "./common/errorHandling";
 import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
 
@@ -189,5 +190,14 @@ export const createTargetVariableAsync = async ({
     id,
     token,
     targetVariableValue,
+  });
+};
+
+export const updateErrorHandlingAsync = async ({ id, token, errorHandling }) => {
+  return await eh.updateErrorHandlingAsync({
+    recommenderApiName: "ParameterSetRecommenders",
+    id,
+    token,
+    errorHandling,
   });
 };

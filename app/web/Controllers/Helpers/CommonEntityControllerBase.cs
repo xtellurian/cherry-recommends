@@ -39,12 +39,12 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}")]
         public virtual async Task<T> GetResource(string id, bool? useInternalId = null)
         {
-            return await GetEntity<string>(id, useInternalId, null);
+            return await GetEntity<T>(id, useInternalId, null);
         }
 
         protected async Task<T> GetEntity(string id, bool? useInternalId)
         {
-            // wrapper around the generic
+            // wrapper around the generic, without an include selector
             return await this.GetEntity<object>(id, useInternalId, null);
         }
 

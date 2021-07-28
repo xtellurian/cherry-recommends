@@ -32,3 +32,6 @@ export const createTargetVariableAsync =
 
 export const fetchInvokationLogsAsync =
   parameterSetRecommenders.fetchInvokationLogsAsync;
+
+export const updateErrorHandlingAsync =
+  parameterSetRecommenders.updateErrorHandlingAsync;

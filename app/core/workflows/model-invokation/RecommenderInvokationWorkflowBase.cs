@@ -29,7 +29,8 @@ namespace SignalBox.Core.Workflows
         public async Task<InvokationLogEntry> StartTrackInvokation(T recommender, string userId, bool? saveOnComplete = true)
         {
             var entry = new InvokationLogEntry(recommender, dateTimeProvider.Now);
-            entry.LogMessage($"Recomending for tracked user: {userId}");
+            var errorsWillBe = recommender.ShouldThrowOnBadInput() ? "thrown" : "silently handled.";
+            entry.LogMessage($"Recomending for tracked user: {userId}. Errors will be {errorsWillBe} ");
             recommender.RecommenderInvokationLogs ??= new List<InvokationLogEntry>();
             recommender.RecommenderInvokationLogs.Add(entry);
             if (saveOnComplete == true)

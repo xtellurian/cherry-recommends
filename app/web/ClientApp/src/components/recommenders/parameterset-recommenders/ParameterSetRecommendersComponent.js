@@ -9,6 +9,7 @@ import { IntegrateParameterSetRecommender } from "./IntegrateParameterSetRecomme
 import { RecommendationList } from "./RecommendationList";
 import { LinkToModel } from "./LinkToModel";
 import { TargetVariableValues } from "./TargetVariableValues";
+import { Settings } from "./Settings";
 import { InvokationLogs } from "./InvokationLogs";
 
 export const ParameterSetRecommendersComponent = () => {
@@ -54,6 +55,7 @@ export const ParameterSetRecommendersComponent = () => {
           path={`${path}/invokation-logs/:id`}
           component={InvokationLogs}
         />
+        <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
       </Switch>
     </React.Fragment>
   );

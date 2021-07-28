@@ -7,6 +7,7 @@ import {
   TextInput,
   createServerErrorValidator,
   joinValidators,
+  InputGroup,
 } from "../molecules/TextInput";
 
 const parameterTypes = ["Numerical", "Categorical"];
@@ -58,30 +59,35 @@ export const CreateParameterPanel = ({ onCreated }) => {
       <Subtitle>Create Parameter</Subtitle>
       {error && <ErrorCard error={error} />}
       <div>
-        <TextInput
-          label="Name"
-          placeholder="A human readable name"
-          value={parameter.name}
-          validator={createServerErrorValidator("Name", error)}
-          onChange={(e) =>
-            setParameter({
-              ...parameter,
-              name: e.target.value,
-            })
-          }
-        />
-        <TextInput
-          label="Common Id"
-          placeholder="An unique identifier"
-          value={parameter.commonId}
-          validator={commonIdValidator}
-          onChange={(e) =>
-            setParameter({
-              ...parameter,
-              commonId: e.target.value,
-            })
-          }
-        />
+        <InputGroup>
+          <TextInput
+            label="Name"
+            placeholder="A human readable name"
+            value={parameter.name}
+            validator={createServerErrorValidator("Name", error)}
+            onChange={(e) =>
+              setParameter({
+                ...parameter,
+                name: e.target.value,
+              })
+            }
+          />
+        </InputGroup>
+        <InputGroup>
+          <TextInput
+            label="Common Id"
+            placeholder="An unique identifier"
+            value={parameter.commonId}
+            validator={commonIdValidator}
+            onChange={(e) =>
+              setParameter({
+                ...parameter,
+                commonId: e.target.value,
+              })
+            }
+            onHideErrors={() => setError(null)}
+          />
+        </InputGroup>
 
         <div className="input-group m-2">
           <textarea
@@ -96,18 +102,19 @@ export const CreateParameterPanel = ({ onCreated }) => {
             }
           />
         </div>
-        <TextInput
-          label="Default Value"
-          placeholder="Value will be recommended as a backup"
-          value={parameter.defaultValue}
-          // validator={commonIdValidator}
-          onChange={(e) =>
-            setParameter({
-              ...parameter,
-              defaultValue: e.target.value,
-            })
-          }
-        />
+        <InputGroup>
+          <TextInput
+            label="Default Value"
+            placeholder="Value will be recommended as a backup"
+            value={parameter.defaultValue}
+            onChange={(e) =>
+              setParameter({
+                ...parameter,
+                defaultValue: e.target.value,
+              })
+            }
+          />
+        </InputGroup>
 
         <div className="text-center">
           <DropdownComponent

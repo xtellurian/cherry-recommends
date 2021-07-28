@@ -18,6 +18,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasMany(_ => _.RecommenderInvokationLogs)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(_ => _.ErrorHandling).HasJsonConversion();
         }
     }
 }

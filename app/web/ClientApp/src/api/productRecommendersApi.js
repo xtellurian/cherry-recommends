@@ -30,5 +30,14 @@ export const fetchTargetVariablesAsync =
 export const createTargetVariableAsync =
   productRecommenders.createTargetVariableAsync;
 
-  export const fetchInvokationLogsAsync =
+export const fetchInvokationLogsAsync =
   productRecommenders.fetchInvokationLogsAsync;
+
+export const updateErrorHandlingAsync =
+  productRecommenders.updateErrorHandlingAsync;
+
+export const setDefaultProductAsync =
+  productRecommenders.setDefaultProductAsync;
+
+export const getDefaultProductAsync =
+  productRecommenders.getDefaultProductAsync;

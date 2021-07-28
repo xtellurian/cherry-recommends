@@ -10,11 +10,20 @@ namespace SignalBox.Core.Recommenders
         { }
 
 #nullable enable
-        public ProductRecommender(string commonId, string? name, Touchpoint? touchpoint, ICollection<Product>? products) : base(commonId, name)
+        public ProductRecommender(string commonId,
+                                  string? name,
+                                  Touchpoint? touchpoint,
+                                  Product? defaultProduct,
+                                  ICollection<Product>? products,
+                                  RecommenderErrorHandling? errorHandling) : base(commonId, name, errorHandling)
         {
             Products = products ?? new List<Product>();
             Touchpoint = touchpoint;
+            DefaultProduct = defaultProduct;
         }
+
+        public long? DefaultProductId { get; set; }
+        public Product? DefaultProduct { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ICollection<Product> Products { get; set; }

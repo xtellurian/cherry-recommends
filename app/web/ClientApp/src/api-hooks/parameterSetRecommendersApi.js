@@ -29,7 +29,7 @@ export const useParameterSetRecommenders = () => {
   return result;
 };
 
-export const useParameterSetRecommender = ({ id }) => {
+export const useParameterSetRecommender = ({ id, trigger }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
@@ -42,7 +42,7 @@ export const useParameterSetRecommender = ({ id }) => {
         id,
       });
     }
-  }, [token, id]);
+  }, [token, id, trigger]);
 
   return result;
 };

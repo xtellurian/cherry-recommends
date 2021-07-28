@@ -10,6 +10,7 @@ import { IntegrateProductRecommender } from "./IntegrateProductRecommender";
 import { LinkToModel } from "./LinkToModel";
 import { TargetVariableValues } from "./TargetVariableValues";
 import { InvokationLogs } from "./InvokationLogs";
+import { Settings } from "./Settings";
 
 export const ProductRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -55,6 +56,7 @@ export const ProductRecommendersComponent = () => {
           path={`${path}/invokation-logs/:id`}
           component={InvokationLogs}
         />
+        <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
       </Switch>
     </React.Fragment>
   );

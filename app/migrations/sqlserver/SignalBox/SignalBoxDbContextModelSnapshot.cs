@@ -771,6 +771,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<string>("ErrorHandling")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Key")
                         .HasColumnType("nvarchar(max)");
 
@@ -816,6 +819,12 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("DefaultProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ErrorHandling")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -831,6 +840,8 @@ namespace sqlserver.SignalBox
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DefaultProductId");
 
                     b.HasIndex("ModelRegistrationId");
 
@@ -1526,6 +1537,11 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ProductRecommender", b =>
                 {
+                    b.HasOne("SignalBox.Core.Product", "DefaultProduct")
+                        .WithMany()
+                        .HasForeignKey("DefaultProductId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("SignalBox.Core.ModelRegistration", "ModelRegistration")
                         .WithMany()
                         .HasForeignKey("ModelRegistrationId");
@@ -1533,6 +1549,8 @@ namespace sqlserver.SignalBox
                     b.HasOne("SignalBox.Core.Touchpoint", "Touchpoint")
                         .WithMany()
                         .HasForeignKey("TouchpointId");
+
+                    b.Navigation("DefaultProduct");
 
                     b.Navigation("ModelRegistration");
 

@@ -15,12 +15,17 @@ import {
   AsyncButton,
   ErrorCard,
 } from "../../molecules";
+import {
+  TextInput,
+  InputGroup,
+  commonIdValidator,
+} from "../../molecules/TextInput";
 
 export const CreateProductRecommender = () => {
   const token = useAccessToken();
   const history = useHistory();
-  const products = useProducts();
   const [error, setError] = React.useState();
+  const products = useProducts();
   const productOptions = products.items
     ? products.items.map((p) => ({ label: p.name, value: p.commonId }))
     : [];
@@ -31,6 +36,7 @@ export const CreateProductRecommender = () => {
     name: "",
     touchpoint: "",
     productIds: null,
+    defaultProductId: "",
   });
 
   const allTouchpoints = useTouchpoints();
@@ -86,17 +92,12 @@ export const CreateProductRecommender = () => {
       <Title>Create Product Recommender</Title>
       <hr />
       {error && <ErrorCard error={error} />}
-      <div className="input-group m-1">
-        <div className="input-group-prepend ml-1">
-          <span className="input-group-text" id="basic-addon3">
-            Display Name
-          </span>
-        </div>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="A memorable name that you recognise later."
+
+      <InputGroup>
+        <TextInput
+          label="Display Name"
           value={recommender.name}
+          placeholder="A memorable name that you recognise later."
           onChange={(e) =>
             setRecommender({
               ...recommender,
@@ -104,18 +105,14 @@ export const CreateProductRecommender = () => {
             })
           }
         />
-      </div>
-      <div className="input-group m-1">
-        <div className="input-group-prepend ml-1">
-          <span className="input-group-text" id="basic-addon3">
-            Identifier
-          </span>
-        </div>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="A unique Id for this recommender resource."
+      </InputGroup>
+
+      <InputGroup>
+        <TextInput
+          label="Common Id"
           value={recommender.commonId}
+          placeholder="A unique ID for this recommender resource."
+          validator={commonIdValidator}
           onChange={(e) =>
             setRecommender({
               ...recommender,
@@ -123,8 +120,9 @@ export const CreateProductRecommender = () => {
             })
           }
         />
-      </div>
-      <div className="m-1">
+      </InputGroup>
+
+      <div className="m-2">
         <Selector
           isMulti
           isSearchable
@@ -136,6 +134,22 @@ export const CreateProductRecommender = () => {
             setRecommender({
               ...recommender,
               productIds: so.map((o) => o.value),
+            });
+          }}
+          options={productOptions}
+        />
+      </div>
+
+      <div className="m-2">
+        Default Product
+        <Selector
+          isSearchable
+          placeholder="Choose a default product."
+          noOptionsMessage={(inputValue) => "No Products Available"}
+          onChange={(so) => {
+            setRecommender({
+              ...recommender,
+              defaultProductId: so.value,
             });
           }}
           options={productOptions}

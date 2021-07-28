@@ -31,11 +31,40 @@ namespace SignalBox.Web.Controllers
             this.workflows = workflows;
         }
 
+        /// <summary>Returns the resource with this Id.</summary>
+        [HttpGet("{id}")]
+        public override async Task<ProductRecommender> GetResource(string id, bool? useInternalId = null)
+        {
+            var recommender = await base.GetEntity(id, useInternalId, _ => _.DefaultProduct); // include the default product
+            await store.LoadMany(recommender, _ => _.Products);
+            return recommender;
+        }
+
         /// <summary>Creates a new product recommender.</summary>
         [HttpPost]
-        public async Task<ProductRecommender> Create(CreateProductRecommender dto)
+        public async Task<ProductRecommender> Create(CreateProductRecommender dto, bool? useInternalId = null)
         {
-            return await workflows.CreateProductRecommender(new CreateCommonEntityModel(dto.CommonId, dto.Name), dto.Touchpoint, dto.ProductIds);
+            return await workflows.CreateProductRecommender(
+                new CreateCommonEntityModel(dto.CommonId, dto.Name),
+                dto.Touchpoint, dto.DefaultProductId, dto.ProductIds,
+                new RecommenderErrorHandling { ThrowOnBadInput = dto.ThrowOnBadInput });
+        }
+
+        /// <summary>Sets the default product id.</summary>
+        [HttpPost("{id}/DefaultProduct")]
+        public async Task<Product> SetDefaultProduct(string id, [FromBody] DefaultProductDto dto, bool? useInternalId = null)
+        {
+            var recommender = await GetEntity(id, useInternalId);
+            return await workflows.SetDefaultProduct(recommender, dto.ProductId);
+        }
+
+        /// <summary>Sets the default product id.</summary>
+        [HttpGet("{id}/DefaultProduct")]
+        public async Task<Product> GetDefaultProduct(string id, bool? useInternalId = null)
+        {
+            var recommender = await GetEntity(id, useInternalId);
+            await store.Load(recommender, _ => _.DefaultProduct);
+            return recommender.DefaultProduct ?? throw new BadRequestException("Recommender has no default product");
         }
 
         /// <summary>Set the backing model information.</summary>

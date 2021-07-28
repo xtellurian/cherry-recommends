@@ -6,6 +6,7 @@ import {
   fetchInvokationLogsAsync,
   fetchProductRecommendations,
   fetchTargetVariablesAsync,
+  getDefaultProductAsync,
 } from "../api/productRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -25,6 +26,24 @@ export const useProductRecommenders = () => {
       });
     }
   }, [token, page]);
+
+  return result;
+};
+
+export const useDefaultProduct = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      getDefaultProductAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
 
   return result;
 };

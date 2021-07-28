@@ -31,7 +31,8 @@ namespace SignalBox.Core.Workflows
         public async Task<ParameterSetRecommender> CreateParameterSetRecommender(CreateCommonEntityModel common,
                                                                                  IEnumerable<string> parameterCommonIds,
                                                                                  IEnumerable<ParameterBounds> bounds,
-                                                                                 IEnumerable<RecommenderArgument> arguments)
+                                                                                 IEnumerable<RecommenderArgument> arguments,
+                                                                                 RecommenderErrorHandling errorHandling)
         {
             var parameters = new List<Parameter>();
             foreach (var p in parameterCommonIds)
@@ -51,7 +52,7 @@ namespace SignalBox.Core.Workflows
                 throw new BadRequestException("Bounds require an reference identifier");
             }
 
-            var recommender = await store.Create(new ParameterSetRecommender(common.CommonId, common.Name, parameters, bounds, arguments));
+            var recommender = await store.Create(new ParameterSetRecommender(common.CommonId, common.Name, parameters, bounds, arguments, errorHandling));
             await storageContext.SaveChanges();
             return recommender;
         }

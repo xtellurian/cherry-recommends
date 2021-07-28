@@ -10,6 +10,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             base.Configure(builder);
             builder.HasMany(_ => _.Products).WithMany(_ => _.ProductRecommenders);
+            builder.HasOne(_ => _.DefaultProduct).WithMany().OnDelete(DeleteBehavior.SetNull);
             builder.HasOne(_ => _.Touchpoint).WithMany();
             builder.HasMany(_ => _.Recommendations).WithOne(_ => _.Recommender).OnDelete(DeleteBehavior.SetNull);
         }

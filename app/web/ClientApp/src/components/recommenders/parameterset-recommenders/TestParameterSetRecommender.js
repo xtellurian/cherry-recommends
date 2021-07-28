@@ -61,10 +61,10 @@ const NumericalArgumentInput = ({ arg, value, onChange }) => {
             </span>
           </div>
           <input
-            type="number"
+            type="text"
             className="form-control"
             placeholder={arg.commonId}
-            value={value || 0}
+            value={value || ""}
             onChange={(e) => onChange(e.target.value)}
           />
         </div>
@@ -110,6 +110,7 @@ export const TestParameterSetRecommender = () => {
   const [response, setResponse] = React.useState();
   const handleInvoke = () => {
     setLoading(true);
+    setError(null);
     invokeParameterSetRecommender({
       success: setResponse,
       error: setError,

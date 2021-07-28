@@ -16,6 +16,7 @@ import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
 import { ActionsButtonUtil } from "../utils/actionsButtonUtil";
 import { ConfirmationPopup } from "../../molecules/ConfirmationPopup";
 import { CopyableField } from "../../molecules/CopyableField";
+import { EntityField } from "../../molecules/EntityField";
 
 export const ProductRecommenderDetail = () => {
   const { id } = useParams();
@@ -27,6 +28,7 @@ export const ProductRecommenderDetail = () => {
   const onDeleted = () => {
     history.push("/recommenders/product-recommenders");
   };
+
   return (
     <React.Fragment>
       <ActionsButtonUtil
@@ -100,6 +102,13 @@ export const ProductRecommenderDetail = () => {
             <CopyableField
               label="Touchpoint Id"
               value={recommender.touchpoint.commonId}
+            />
+          )}
+          {recommender.defaultProduct && (
+            <EntityField
+              label="Default Product"
+              entity={recommender.defaultProduct}
+              to={`/products/detail/${recommender.defaultProductId}`}
             />
           )}
           <div className="mt-2">

@@ -44,6 +44,17 @@ namespace SignalBox.Web.Controllers
             }
         }
 
+
+        [HttpPost("{id}/ErrorHandling")]
+        public async Task<RecommenderErrorHandling> SetErrorHandling(string id, RecommenderErrorHandling dto)
+        {
+            var recommender = await base.GetResource(id);
+            recommender.ErrorHandling = dto;
+            await store.Update(recommender);
+            await store.Context.SaveChanges();
+            return recommender.ErrorHandling;
+        }
+
         [HttpPost("{id}/TargetVariableValues")]
         [Authorize(Core.Security.Policies.AdminOnlyPolicyName)]
         public async Task<RecommenderTargetVariableValue> SetLatestTargetVariableValue(string id, CreateTargetVariableValue dto)

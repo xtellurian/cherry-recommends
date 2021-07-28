@@ -4,6 +4,7 @@ import { useAccessToken } from "../../../api-hooks/token";
 import { createFeatureAsync } from "../../../api/featuresApi";
 import { BackButton, ErrorCard, Title } from "../../molecules";
 import {
+  InputGroup,
   TextInput,
   createLengthValidator,
   createServerErrorValidator,
@@ -37,30 +38,34 @@ export const CreateFeature = () => {
       {error && <ErrorCard error={error} />}
 
       <div>
-        <TextInput
-          placeholder="Something human readable"
-          value={feature.name}
-          label="Friendly Name"
-          validator={createLengthValidator(5)}
-          onChange={(e) =>
-            setFeature({
-              ...feature,
-              name: e.target.value,
-            })
-          }
-        />
-        <TextInput
-          placeholder="Something unique"
-          value={feature.commonId}
-          label="Common Id"
-          validator={createServerErrorValidator("CommonId", error)}
-          onChange={(e) =>
-            setFeature({
-              ...feature,
-              commonId: e.target.value,
-            })
-          }
-        />
+        <InputGroup>
+          <TextInput
+            placeholder="Something human readable"
+            value={feature.name}
+            label="Friendly Name"
+            validator={createLengthValidator(5)}
+            onChange={(e) =>
+              setFeature({
+                ...feature,
+                name: e.target.value,
+              })
+            }
+          />
+        </InputGroup>
+        <InputGroup>
+          <TextInput
+            placeholder="Something unique"
+            value={feature.commonId}
+            label="Common Id"
+            validator={createServerErrorValidator("CommonId", error)}
+            onChange={(e) =>
+              setFeature({
+                ...feature,
+                commonId: e.target.value,
+              })
+            }
+          />
+        </InputGroup>
 
         <button className="btn btn-primary" onClick={handleCreate}>
           Create
