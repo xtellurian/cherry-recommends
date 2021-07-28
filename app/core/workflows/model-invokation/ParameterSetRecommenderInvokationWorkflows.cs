@@ -155,6 +155,16 @@ namespace SignalBox.Core.Workflows
                 logger.LogCritical($"Failed to return default parameters for parameterset recommender {recommender.Id}", ex);
                 throw;
             }
+            finally
+            {
+                await base.EndTrackInvokation(invokationEntry,
+                                              false,
+                                              user,
+                                              null,
+                                              message: $"Invoke failed for {user?.Name ?? user?.CommonId}",
+                                              modelResponse: null,
+                                              saveOnComplete: true);
+            }
         }
         /// <summary>
         /// It meant to throw in some situations.
@@ -196,6 +206,7 @@ namespace SignalBox.Core.Workflows
                         // the value was bad.
                         if (recommender.ShouldThrowOnBadInput())
                         {
+                            invokationEntry.LogMessage($"The argument {arg.CommonId} should be numeric, and the recommender is set to throw on errors.");
                             throw new BadRequestException("Bad recommender argument",
                                 $"The argument {arg.CommonId} should be numeric, and the recommender is set to throw on errors.");
                         }
