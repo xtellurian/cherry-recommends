@@ -23,5 +23,10 @@ namespace SignalBox.Web.Services
         {
             client.TrackMetric(name, value, properties);
         }
+
+        public void TrackEvent(string name, IDictionary<string, string> properties = null)
+        {
+            client.TrackEvent(name, properties);
+        }
     }
 }

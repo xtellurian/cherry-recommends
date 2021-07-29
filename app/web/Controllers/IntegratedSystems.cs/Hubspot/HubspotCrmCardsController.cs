@@ -1,15 +1,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SignalBox.Core;
 using SignalBox.Core.Integrations;
 using SignalBox.Core.Workflows;
@@ -25,6 +22,7 @@ namespace SignalBox.Web.Controllers
     {
         private readonly ILogger<HubspotCrmCardsController> logger;
         private readonly IHasher hasher;
+        private readonly ITelemetry telemetry;
         private readonly HubspotWorkflows hubspotWorkflows;
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
@@ -36,6 +34,7 @@ namespace SignalBox.Web.Controllers
         public HubspotCrmCardsController(ILogger<HubspotCrmCardsController> logger,
                                          IOptions<DeploymentInformation> deploymentOptions,
                                          IHasher hasher,
+                                         ITelemetry telemetry,
                                          HubspotWorkflows hubspotWorkflows,
                                          IOptions<HubspotAppCredentials> hubspotOptions,
                                          IIntegratedSystemStore integratedSystemStore,
@@ -45,6 +44,7 @@ namespace SignalBox.Web.Controllers
         {
             this.logger = logger;
             this.hasher = hasher;
+            this.telemetry = telemetry;
             this.hubspotWorkflows = hubspotWorkflows;
             this.integratedSystemStore = integratedSystemStore;
             this.systemMapStore = systemMapStore;
@@ -65,14 +65,23 @@ namespace SignalBox.Web.Controllers
                                                           string associatedObjectType,
                                                           string objectType)
         {
-            // return Generator.GetResponse();
             ValidateHubspotSignature();
+            telemetry.TrackEvent("Hubspot.CrmCard", new Dictionary<string, string>
+            {
+                {"portalId", portalId},
+                {"userId", userId},
+                {"userEmail", userEmail},
+                {"associatedObjectId", associatedObjectId},
+                {"associatedObjectType", associatedObjectType},
+                {"objectType", objectType},
+            });
+
             // portal id is actually a number, but we save it as the commonId of the integrated system.
             if (!await integratedSystemStore.ExistsFromCommonId(portalId))
             {
-                throw new ConfigurationException($"Hubspot Integrated system with portalId={portalId} does not exist");
+                throw new ConfigurationException($"Hubspot Integrated s ystem with portalId={portalId} does not exist");
             }
-            logger.LogInformation(Request.QueryString.ToString());
+
             switch (associatedObjectType)
             {
                 case "CONTACT":
@@ -89,11 +98,21 @@ namespace SignalBox.Web.Controllers
             try
             {
                 var trackedUsers = await hubspotWorkflows.GetAssociatedTrackedUsersFromTicket(portalId, ticketId);
-                return await HubspotTouchpointResponse(trackedUsers.First());
+                if (trackedUsers.Any())
+                {
+                    var tu = trackedUsers.First();
+                    logger.LogInformation($"Found a TrackedUser {tu.CommonId} for ticket {ticketId}");
+                    return await HubspotTouchpointResponse(tu);
+                }
+                else
+                {
+                    logger.LogWarning($"No tracked users associated with ticket {ticketId}");
+                    return DefaultCardResponse("No Tracked User linked to this ticket.");
+                }
             }
             catch (Exception ex)
             {
-                logger.LogError("Failed to access Hubspot analysis", ex);
+                logger.LogError($"Failed to access Hubspot analysis for ticketId {ticketId}", ex);
                 return DefaultCardResponse("Analysis unavailable");
             }
         }
@@ -128,7 +147,7 @@ namespace SignalBox.Web.Controllers
         private async Task<HubspotCrmCardResponse> HubspotTouchpointResponse(TrackedUser trackedUser)
         {
             var touchpoint = await touchpointStore.ReadFromCommonId("Hubspot");
-            if(await trackedUserTouchpointStore.TouchpointExists(trackedUser, touchpoint))
+            if (await trackedUserTouchpointStore.TouchpointExists(trackedUser, touchpoint))
             {
                 var touchpointValues = await trackedUserTouchpointStore.ReadTouchpoint(trackedUser, touchpoint);
                 // they always need an objectId and title

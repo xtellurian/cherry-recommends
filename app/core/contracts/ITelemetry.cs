@@ -6,5 +6,6 @@ namespace SignalBox.Core
     {
         void TrackMetric(string name, double value, IDictionary<string, string> properties = null);
         void TrackException(System.Exception exception);
+        void TrackEvent(string name, IDictionary<string, string> properties = null);
     }
 }
