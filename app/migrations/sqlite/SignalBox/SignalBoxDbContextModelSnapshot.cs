@@ -660,15 +660,27 @@ namespace sqlite.SignalBox
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<long>("Created")
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long?>("ModelRegistrationId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ModelRegistrationId");
 
                     b.ToTable("RecommendationCorrelators");
                 });
@@ -1493,6 +1505,16 @@ namespace sqlite.SignalBox
                     b.Navigation("Recommender");
 
                     b.Navigation("TrackedUser");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.RecommendationCorrelator", b =>
+                {
+                    b.HasOne("SignalBox.Core.ModelRegistration", "ModelRegistration")
+                        .WithMany()
+                        .HasForeignKey("ModelRegistrationId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("ModelRegistration");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.InvokationLogEntry", b =>

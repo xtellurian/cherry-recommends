@@ -9,11 +9,18 @@ namespace SignalBox.Infrastructure.ML
     public class RecommenderModelClientFactory : IRecommenderModelClientFactory
     {
         private readonly HttpClient httpClient;
+        private readonly ITelemetry telemetry;
+        private readonly IProductRecommenderStore productRecommenderStore;
         private readonly IProductStore productStore;
 
-        public RecommenderModelClientFactory(HttpClient httpClient, IProductStore productStore)
+        public RecommenderModelClientFactory(HttpClient httpClient,
+                                             ITelemetry telemetry,
+                                             IProductRecommenderStore productRecommenderStore,
+                                             IProductStore productStore)
         {
             this.httpClient = httpClient;
+            this.telemetry = telemetry;
+            this.productRecommenderStore = productRecommenderStore;
             this.productStore = productStore;
         }
 
@@ -28,11 +35,18 @@ namespace SignalBox.Infrastructure.ML
             }
             if (recommender.ModelRegistration.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ParameterSetRecommenderV1)
             {
-                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)new AzureMLParameterSetRecommenderClient(httpClient));
+                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)
+                    new AzureMLParameterSetRecommenderClient(httpClient));
             }
             else if (model.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ProductRecommenderV1)
             {
-                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)new AzureMLPProductRecommenderClient(httpClient));
+                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)
+                    new AzureMLPProductRecommenderClient(httpClient));
+            }
+            else if (model.HostingType == HostingTypes.AzurePersonalizer && model.ModelType == ModelTypes.ProductRecommenderV1)
+            {
+                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)
+                    new AzurePersonalizerRecommenderClient(httpClient, productRecommenderStore, productStore, telemetry));
             }
             else
             {

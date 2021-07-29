@@ -30,7 +30,7 @@ namespace SignalBox.Core.Workflows
 
         private HostingTypes ParseHostingType(string hostingType)
         {
-            return HostingTypes.AzureMLContainerInstance; // there's only 1
+            return Enum.Parse<HostingTypes>(hostingType);
         }
 
         public async Task<AzureMLClassifierOutput> InvokeClassifierModel(long id, string version, AzureMLModelInput input)

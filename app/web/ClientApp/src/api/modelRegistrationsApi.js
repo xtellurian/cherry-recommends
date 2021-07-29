@@ -5,8 +5,8 @@ export const fetchModelRegistrations =
 
 export const fetchModelRegistration = modelRegistrations.fetchModelRegistration;
 
-export const createModelRegistration =
-  modelRegistrations.createModelRegistration;
+export const createModelRegistrationAsync =
+  modelRegistrations.createModelRegistrationAsync;
 
 export const deleteModelRegistration =
   modelRegistrations.deleteModelRegistration;

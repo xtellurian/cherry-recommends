@@ -9,7 +9,9 @@ namespace SignalBox.Infrastructure
 {
     public class RandomParameterSetRecommender : IRecommenderModelClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1>
     {
-        public Task<ParameterSetRecommenderModelOutputV1> Invoke(IRecommender recommender, string version, ParameterSetRecommenderModelInputV1 input)
+        public Task<ParameterSetRecommenderModelOutputV1> Invoke(IRecommender recommender,
+                                                                 RecommendingContext recommendingContext,
+                                                                 ParameterSetRecommenderModelInputV1 input)
         {
             // model should be null
 

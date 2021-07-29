@@ -1,7 +1,6 @@
 import { pageQuery } from "./paging";
 import { getUrl } from "../baseUrl";
-
-const defaultHeaders = { "Content-Type": "application/json" };
+import { headers } from "./headers";
 
 export const fetchModelRegistrations = async ({
   success,
@@ -11,9 +10,7 @@ export const fetchModelRegistrations = async ({
 }) => {
   const url = getUrl("api/ModelRegistrations");
   const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     const results = await response.json();
@@ -26,9 +23,7 @@ export const fetchModelRegistrations = async ({
 export const fetchModelRegistration = async ({ success, error, token, id }) => {
   const url = getUrl(`api/ModelRegistrations/${id}`);
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
   });
   if (response.ok) {
     const results = await response.json();
@@ -46,9 +41,7 @@ export const deleteModelRegistration = async ({
 }) => {
   const url = getUrl(`api/ModelRegistrations/${id}`);
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
     method: "delete",
   });
   if (response.ok) {
@@ -59,26 +52,22 @@ export const deleteModelRegistration = async ({
   }
 };
 
-export const createModelRegistration = async ({
-  success,
-  error,
-  token,
-  payload,
-}) => {
+export const createModelRegistrationAsync = async ({ token, payload }) => {
   const url = getUrl("api/ModelRegistrations");
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
     method: "post",
     body: JSON.stringify(payload),
   });
   if (response.ok) {
-    const data = await response.json();
-    success(data);
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
   }
+};
+
+export const createModelRegistration = ({ success, error, token, payload }) => {
+  createModelRegistrationAsync({ token, payload }).then(success).catch(error);
 };
 
 export const invokeModel = async ({
@@ -90,9 +79,7 @@ export const invokeModel = async ({
 }) => {
   const url = getUrl(`api/ModelRegistrations/${modelId}/invoke`);
   const response = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    headers: headers(token),
     method: "post",
     body: JSON.stringify(features),
   });

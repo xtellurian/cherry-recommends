@@ -49,7 +49,11 @@ namespace SignalBox.Core.Workflows
             string version,
             ParameterSetRecommenderModelInputV1 input)
         {
-            var invokationEntry = await base.StartTrackInvokation(recommender, input?.CommonUserId);
+            // use the correlator to begin with because need to pass an event ID into some models
+            var correlator = await correlatorStore.Create(new RecommendationCorrelator());
+            var invokationEntry = await base.StartTrackInvokation(recommender, input?.CommonUserId, saveOnComplete: false);
+            await storageContext.SaveChanges(); // save the correlator and invokation entry
+            var recommendingContext = new RecommendingContext(version, correlator);
             TrackedUser user = null;
             try
             {
@@ -69,6 +73,7 @@ namespace SignalBox.Core.Workflows
                 }
                 else
                 {
+                    correlator.ModelRegistration = recommender.ModelRegistration;
                     client = await modelClientFactory
                         .GetClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1>(recommender);
                 }
@@ -85,10 +90,9 @@ namespace SignalBox.Core.Workflows
                 }
 
                 // invoke the model
-                var output = await client.Invoke(recommender, version, input);
+                var output = await client.Invoke(recommender, recommendingContext, input);
 
-                // now save the result
-                var correlator = await correlatorStore.Create(new RecommendationCorrelator());
+
                 var recommendation = new ParameterSetRecommendation(recommender, user, correlator, version);
                 recommendation.SetInput(input);
                 recommendation.SetOutput(output);

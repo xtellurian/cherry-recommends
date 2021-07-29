@@ -36,7 +36,7 @@ namespace SignalBox.Core.Workflows
 
         private HostingTypes ParseHostingType(string hostingType)
         {
-            return HostingTypes.AzureMLContainerInstance; // there's only 1
+            return Enum.Parse<HostingTypes>(hostingType);
         }
 
         public async Task<(string, HttpResponseMessage)> InvokeGeneric(long id, string input)

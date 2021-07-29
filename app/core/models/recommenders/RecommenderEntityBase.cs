@@ -16,7 +16,7 @@ namespace SignalBox.Core.Recommenders
 
         public bool ShouldThrowOnBadInput() => this.ErrorHandling?.ThrowOnBadInput == true;
         public RecommenderErrorHandling? ErrorHandling { get; set; }
-
+        public long? ModelRegistrationId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ModelRegistration? ModelRegistration { get; set; }
         [JsonIgnore]

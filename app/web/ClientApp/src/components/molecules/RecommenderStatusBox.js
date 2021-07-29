@@ -5,7 +5,7 @@ import "./css/recommender-status-box.css";
 
 const label = "Recommender Status";
 export const RecommenderStatusBox = ({ recommender }) => {
-  if (!recommender.modelRegistration) {
+  if (!recommender.modelRegistrationId) {
     return (
       <NoteBox cardBodyClassName="training" label={label}>
         Exploring for good recommendations.

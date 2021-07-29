@@ -19,12 +19,12 @@
 
   const getUrl = (path) => `${storedBaseUrl}/${path}`;
 
-  const defaultHeaders$b = { "Content-Type": "application/json" };
+  const defaultHeaders$a = { "Content-Type": "application/json" };
 
   const headers = (token) =>
     !token
-      ? defaultHeaders$b
-      : { ...defaultHeaders$b, Authorization: `Bearer ${token}` };
+      ? defaultHeaders$a
+      : { ...defaultHeaders$a, Authorization: `Bearer ${token}` };
 
   const fetchApiKeys = async ({ success, error, token, page }) => {
     const url = getUrl("api/apiKeys");
@@ -146,7 +146,7 @@
     fetchLatestActionsAsync: fetchLatestActionsAsync
   });
 
-  const defaultHeaders$a = { "Content-Type": "application/json" };
+  const defaultHeaders$9 = { "Content-Type": "application/json" };
 
   const fetchDeploymentConfiguration = async ({
     success,
@@ -157,8 +157,8 @@
 
     const result = await fetch(url, {
       headers: !token
-        ? defaultHeaders$a
-        : { ...defaultHeaders$a, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$9
+        : { ...defaultHeaders$9, Authorization: `Bearer ${token}` },
     });
     if (result.ok) {
       success(await result.json());
@@ -238,7 +238,7 @@
     logUserEvents: logUserEvents
   });
 
-  const defaultHeaders$9 = { "Content-Type": "application/json" };
+  const defaultHeaders$8 = { "Content-Type": "application/json" };
 
   const fetchExperiments = async ({ success, error, token, page }) => {
     const url = getUrl("api/experiments");
@@ -257,8 +257,8 @@
     const url = getUrl("api/experiments");
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$9
-        : { ...defaultHeaders$9, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$8
+        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify(payload),
     });
@@ -273,8 +273,8 @@
     const url = getUrl(`api/experiments/${id}/results`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$9
-        : { ...defaultHeaders$9, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$8
+        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
     });
     if (response.ok) {
       const data = await response.json();
@@ -295,8 +295,8 @@
     const url = getUrl(`api/experiments/${experimentId}/recommendation`);
     const response = await fetch(url, {
       headers: !token
-        ? defaultHeaders$9
-        : { ...defaultHeaders$9, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$8
+        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
       method: "post",
       body: JSON.stringify({ commonUserId: userId, features }),
     });
@@ -487,8 +487,6 @@
     createWebhookReceiver: createWebhookReceiver
   });
 
-  const defaultHeaders$8 = { "Content-Type": "application/json" };
-
   const fetchModelRegistrations = async ({
     success,
     error,
@@ -497,9 +495,7 @@
   }) => {
     const url = getUrl("api/ModelRegistrations");
     const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: !token
-        ? defaultHeaders$8
-        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
       const results = await response.json();
@@ -512,9 +508,7 @@
   const fetchModelRegistration = async ({ success, error, token, id }) => {
     const url = getUrl(`api/ModelRegistrations/${id}`);
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$8
-        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
       const results = await response.json();
@@ -532,9 +526,7 @@
   }) => {
     const url = getUrl(`api/ModelRegistrations/${id}`);
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$8
-        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
+      headers: headers(token),
       method: "delete",
     });
     if (response.ok) {
@@ -545,26 +537,22 @@
     }
   };
 
-  const createModelRegistration = async ({
-    success,
-    error,
-    token,
-    payload,
-  }) => {
+  const createModelRegistrationAsync = async ({ token, payload }) => {
     const url = getUrl("api/ModelRegistrations");
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$8
-        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
+      headers: headers(token),
       method: "post",
       body: JSON.stringify(payload),
     });
     if (response.ok) {
-      const data = await response.json();
-      success(data);
+      return await response.json();
     } else {
-      error(await response.json());
+      throw await response.json();
     }
+  };
+
+  const createModelRegistration = ({ success, error, token, payload }) => {
+    createModelRegistrationAsync({ token, payload }).then(success).catch(error);
   };
 
   const invokeModel = async ({
@@ -576,9 +564,7 @@
   }) => {
     const url = getUrl(`api/ModelRegistrations/${modelId}/invoke`);
     const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$8
-        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
+      headers: headers(token),
       method: "post",
       body: JSON.stringify(features),
     });
@@ -595,6 +581,7 @@
     fetchModelRegistrations: fetchModelRegistrations,
     fetchModelRegistration: fetchModelRegistration,
     deleteModelRegistration: deleteModelRegistration,
+    createModelRegistrationAsync: createModelRegistrationAsync,
     createModelRegistration: createModelRegistration,
     invokeModel: invokeModel
   });

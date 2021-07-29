@@ -49,8 +49,12 @@ namespace SignalBox.Core.Workflows
             string version,
             ProductRecommenderModelInputV1 input)
         {
+            var invokationEntry = await base.StartTrackInvokation(recommender, input?.CommonUserId, saveOnComplete: false);
+            var correlator = await correlatorStore.Create(new RecommendationCorrelator());
+            await storageContext.SaveChanges(); // save the correlator and invokatin entry
+
+            var recommendingContext = new RecommendingContext(version, correlator);
             await productRecommenderStore.Load(recommender, _ => _.ModelRegistration);
-            var invokationEntry = await base.StartTrackInvokation(recommender, input?.CommonUserId);
             TrackedUser user = null;
             try
             {
@@ -89,11 +93,12 @@ namespace SignalBox.Core.Workflows
                 }
                 else
                 {
+                    correlator.ModelRegistration = recommender.ModelRegistration;
                     client = await modelClientFactory
                        .GetClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(recommender);
                 }
 
-                var output = await client.Invoke(recommender, version, input);
+                var output = await client.Invoke(recommender, recommendingContext, input);
 
                 // load the product
                 if (output.ProductId.HasValue)
@@ -109,7 +114,7 @@ namespace SignalBox.Core.Workflows
                     throw new ModelInvokationException("The model did not return a product.");
                 }
 
-                return await HandleRecommendation(recommender, version, input, invokationEntry, user, output);
+                return await HandleRecommendation(recommender, recommendingContext, input, invokationEntry, user, output);
             }
             catch (System.Exception ex)
             {
@@ -147,7 +152,7 @@ namespace SignalBox.Core.Workflows
                         ProductCommonId = recommender.DefaultProduct.CommonId,
                         Product = recommender.DefaultProduct
                     };
-                    return await HandleRecommendation(recommender, version, input, invokationEntry, user, output);
+                    return await HandleRecommendation(recommender, recommendingContext, input, invokationEntry, user, output);
                 }
                 else
                 {
@@ -161,16 +166,21 @@ namespace SignalBox.Core.Workflows
                         ProductCommonId = recommender.DefaultProduct.CommonId,
                         Product = recommender.DefaultProduct
                     };
-                    return await HandleRecommendation(recommender, version, input, invokationEntry, user, output);
+                    return await HandleRecommendation(recommender, recommendingContext, input, invokationEntry, user, output);
                 }
             }
         }
 
-        private async Task<ProductRecommenderModelOutputV1> HandleRecommendation(ProductRecommender recommender, string version, ProductRecommenderModelInputV1 input, InvokationLogEntry invokationEntry, TrackedUser user, ProductRecommenderModelOutputV1 output)
+        private async Task<ProductRecommenderModelOutputV1> HandleRecommendation(ProductRecommender recommender,
+                                                                                 RecommendingContext recommendingContext,
+                                                                                 ProductRecommenderModelInputV1 input,
+                                                                                 InvokationLogEntry invokationEntry,
+                                                                                 TrackedUser user,
+                                                                                 ProductRecommenderModelOutputV1 output)
         {
             // now save the result
-            var correlator = await correlatorStore.Create(new RecommendationCorrelator());
-            var recommendation = new ProductRecommendation(recommender, user, correlator, version, output.Product);
+
+            var recommendation = new ProductRecommendation(recommender, user, recommendingContext.Correlator, recommendingContext.Version, output.Product);
             recommendation.SetInput(input);
             recommendation.SetOutput(output);
 
@@ -178,7 +188,7 @@ namespace SignalBox.Core.Workflows
             await base.EndTrackInvokation(invokationEntry,
                                           true,
                                           user,
-                                          correlator,
+                                          recommendingContext.Correlator,
                                           $"Invoked successfully for {user.Name ?? user.CommonId}",
                                           null,
                                           false);
@@ -186,7 +196,7 @@ namespace SignalBox.Core.Workflows
             await storageContext.SaveChanges();
 
             // set this after the context has been saved.
-            output.CorrelatorId = correlator.Id;
+            output.CorrelatorId = recommendingContext.Correlator.Id;
             return output;
         }
     }

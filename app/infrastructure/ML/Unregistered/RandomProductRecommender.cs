@@ -15,7 +15,7 @@ namespace SignalBox.Infrastructure
         {
             this.productStore = productStore;
         }
-        public async Task<ProductRecommenderModelOutputV1> Invoke(IRecommender recommender, string version, ProductRecommenderModelInputV1 input)
+        public async Task<ProductRecommenderModelOutputV1> Invoke(IRecommender recommender, RecommendingContext recommendingContext, ProductRecommenderModelInputV1 input)
         {
             var random = new Random();
             var productRecommender = (ProductRecommender)recommender;
