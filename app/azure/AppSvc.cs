@@ -94,8 +94,12 @@ namespace SignalBox.Azure
                         new NameValuePairArgs{
                             Name = "FUNCTIONS_WORKER_RUNTIME",
                             Value = "python",
-                        }
                         },
+                        new NameValuePairArgs{
+                            Name = "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            Value = insights.InstrumentationKey,
+                        }
+                    },
                     Http20Enabled = true,
                 },
             });
