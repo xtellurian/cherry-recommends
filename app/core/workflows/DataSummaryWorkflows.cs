@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core.Workflows
@@ -9,6 +10,7 @@ namespace SignalBox.Core.Workflows
     public class DataSummaryWorkflows : IWorkflow
     {
         private readonly ITrackedUserEventStore eventStore;
+        private readonly ILogger<DataSummaryWorkflows> logger;
         private readonly ITrackedUserActionStore actionStore;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IProductRecommendationStore productRecommendationStore;
@@ -16,6 +18,7 @@ namespace SignalBox.Core.Workflows
         private readonly ITelemetry telemetry;
 
         public DataSummaryWorkflows(ITrackedUserEventStore eventStore,
+                                    ILogger<DataSummaryWorkflows> logger,
                                     ITrackedUserActionStore actionStore,
                                     IDateTimeProvider dateTimeProvider,
                                     IProductRecommendationStore productRecommendationStore,
@@ -23,6 +26,7 @@ namespace SignalBox.Core.Workflows
                                     ITelemetry telemetry)
         {
             this.eventStore = eventStore;
+            this.logger = logger;
             this.actionStore = actionStore;
             this.dateTimeProvider = dateTimeProvider;
             this.productRecommendationStore = productRecommendationStore;
@@ -87,18 +91,47 @@ namespace SignalBox.Core.Workflows
 
         public async Task<Dashboard> GenerateDashboardData(string scope = null)
         {
-            var latestEvents = await eventStore.Latest(dateTimeProvider.Now.AddMonths(-1));
-            var actions = await actionStore.Query(1);
-
-            // get some recommendations
+            IEnumerable<TrackedUserAction> actions = new List<TrackedUserAction>();
+            IEnumerable<TrackedUserEvent> latestEvents = new List<TrackedUserEvent>();
             var recommendations = new List<RecommendationEntity>();
-            var parameterSetRecommendations = await parameterSetRecommendationStore.Query(1);
-            recommendations.AddRange(parameterSetRecommendations.Items);
-            var productRecommendations = await productRecommendationStore.Query(1);
-            recommendations.AddRange(productRecommendations.Items);
-            recommendations.Sort((x, y) => DateTimeOffset.Compare(y.LastUpdated, x.LastUpdated));
+            var timeCutoff = dateTimeProvider.Now.AddMonths(-1);
+            try
+            {
+                latestEvents = await eventStore.Latest(timeCutoff);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Timeout querying latest events", ex);
+                throw;
+            }
+            // try
+            // {
+            //     // var actionsResponse = await actionStore.Query(1, _ => _.Timestamp > timeCutoff);
+            //     // actions = actionsResponse.Items;
+            // }
+            // catch (Exception ex)
+            // {
+            //     logger.LogError("Timeout querying latest actions", ex);
+            //     throw;
+            // }
 
-            return new Dashboard(latestEvents, actions.Items, recommendations);
+            try
+            {
+                var parameterSetRecommendations = await parameterSetRecommendationStore.Query(1);
+                recommendations.AddRange(parameterSetRecommendations.Items);
+                var productRecommendations = await productRecommendationStore.Query(1);
+                recommendations.AddRange(productRecommendations.Items);
+                recommendations.Sort((x, y) => DateTimeOffset.Compare(y.LastUpdated, x.LastUpdated));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Timeout querying recommendations", ex);
+                throw;
+            }
+
+
+
+            return new Dashboard(latestEvents, actions, recommendations);
         }
     }
 }
