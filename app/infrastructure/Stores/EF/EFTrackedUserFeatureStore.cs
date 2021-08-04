@@ -30,12 +30,14 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<IEnumerable<Feature>> GetFeaturesFor(TrackedUser trackedUser)
         {
-            trackedUser = await context.TrackedUsers
-                .Include(_ => _.TrackedUserFeatures)
-                .ThenInclude(_ => _.Feature)
-                .FirstAsync(_ => _.Id == trackedUser.Id);
+            var features = await context.TrackedUserFeatures
+                .Where(_ => _.TrackedUserId == trackedUser.Id)
+                .Include(_ => _.Feature)
+                .Select(_ => _.Feature)
+                .Distinct()
+                .ToListAsync();
 
-            return trackedUser.TrackedUserFeatures.Select(_ => _.Feature).Distinct().ToList();
+            return features;
         }
 
         public async Task<TrackedUserFeature> ReadFeature(TrackedUser trackedUser, Feature feature, int? version = null)
