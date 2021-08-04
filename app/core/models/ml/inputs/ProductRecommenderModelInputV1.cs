@@ -10,6 +10,8 @@ namespace SignalBox.Core
         public string CommonUserId { get; set; }
         public string Version { get; set; }
         public string Touchpoint { get; set; }
-        public Dictionary<string, object> Arguments { get; set; }
+        public IDictionary<string, object> Arguments { get; set; }
+        public IDictionary<string, object> Features { get; set; }
+
     }
 }

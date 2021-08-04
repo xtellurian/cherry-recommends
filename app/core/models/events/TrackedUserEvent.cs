@@ -5,7 +5,7 @@ namespace SignalBox.Core
 {
     public class TrackedUserEvent : Entity
     {
-        public TrackedUserEvent()
+        protected TrackedUserEvent()
         {
         }
 

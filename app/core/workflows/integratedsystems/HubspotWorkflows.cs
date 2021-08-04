@@ -13,6 +13,7 @@ namespace SignalBox.Core.Workflows
     {
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ITrackedUserStore trackedUserStore;
+        private readonly ITrackedUserEventStore eventStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
         private readonly IStorageContext storageContext;
         private readonly IHubspotService hubspotService;
@@ -22,6 +23,7 @@ namespace SignalBox.Core.Workflows
 
         public HubspotWorkflows(IIntegratedSystemStore integratedSystemStore,
                                 ITrackedUserStore trackedUserStore,
+                                ITrackedUserEventStore eventStore,
                                 ITrackedUserSystemMapStore systemMapStore,
                                 IStorageContext storageContext,
                                 IHubspotService hubspotService,
@@ -31,6 +33,7 @@ namespace SignalBox.Core.Workflows
         {
             this.integratedSystemStore = integratedSystemStore;
             this.trackedUserStore = trackedUserStore;
+            this.eventStore = eventStore;
             this.systemMapStore = systemMapStore;
             this.storageContext = storageContext;
             this.hubspotService = hubspotService;
@@ -137,6 +140,116 @@ namespace SignalBox.Core.Workflows
                 throw new WorkflowException("Hubspot integration not configured correctly. Contact admin.");
             }
             return Task.FromResult(hubspotCreds.Value);
+        }
+
+        public async Task<TrackedUser> HandleWebhookPayload(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
+        {
+            switch (webhookPayload.SubscriptionType)
+            {
+                case "contact.creation":
+                    return await HandleContactCreated(integratedSystem, webhookPayload);
+                case "contact.propertyChange":
+                    return await HandleContactPropertyChanged(integratedSystem, webhookPayload);
+                default:
+                    logger.LogWarning("Unhandled Hubspot Webhook Payload");
+                    return null;
+            }
+        }
+
+        private async Task<TrackedUser> HandleContactCreated(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
+        {
+            var hubspotInfo = integratedSystem.GetCache<HubspotCache>();
+            var behaviour = hubspotInfo.WebhookBehaviour ?? new HubspotWebhookBehaviour();
+            var objectId = webhookPayload.ObjectId?.ToString();
+            if (string.IsNullOrEmpty(behaviour.CommonUserIdPropertyName))
+            {
+                var commonUserId = webhookPayload.ObjectId?.ToString();
+                // then use object ID
+                if (await trackedUserStore.ExistsFromCommonId(commonUserId))
+                {
+                    // for now, just throw with an error here, but log it.
+                    logger.LogError($"Tracked User {commonUserId} already exists");
+                    throw new BadRequestException($"Tracked User {commonUserId} already exists");
+                }
+                else
+                {
+                    return await CreateNewTrackedUser(integratedSystem, objectId, commonUserId);
+                }
+            }
+            else if (webhookPayload.PropertyName == behaviour.CommonUserIdPropertyName)
+            {
+                return await CreateNewTrackedUser(integratedSystem, objectId, webhookPayload.PropertyValue);
+            }
+            else
+            {
+                throw new BadRequestException("Can't create user without a common Id");
+            }
+        }
+
+        private async Task<TrackedUser> CreateNewTrackedUser(IntegratedSystem integratedSystem, string objectId, string commonUserId)
+        {
+            var trackedUser = await trackedUserStore.Create(new TrackedUser(commonUserId));
+            trackedUser.IntegratedSystemMaps.Add(new TrackedUserSystemMap(objectId, integratedSystem, trackedUser));
+            await storageContext.SaveChanges();
+            return trackedUser;
+        }
+
+        private async Task<TrackedUser> HandleContactPropertyChanged(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
+        {
+            var hubspotInfo = integratedSystem.GetCache<HubspotCache>();
+            var behaviour = hubspotInfo.WebhookBehaviour ?? new HubspotWebhookBehaviour();
+            var objectId = webhookPayload.ObjectId?.ToString();
+
+            TrackedUser trackedUser;
+            var exists = await systemMapStore.ExistsInIntegratedSystem(integratedSystem.Id, objectId) == true;
+            if ((behaviour.CreateUserIfNotExist == true) && !exists)
+            {
+                // create the tracked user.
+                if (string.IsNullOrEmpty(behaviour.CommonUserIdPropertyName))
+                {
+                    trackedUser = await CreateNewTrackedUser(integratedSystem, objectId, objectId);
+                }
+                else if (webhookPayload.PropertyName == behaviour.CommonUserIdPropertyName)
+                {
+                    return await CreateNewTrackedUser(integratedSystem, objectId, webhookPayload.PropertyValue);
+                }
+                else
+                {
+                    throw new BadRequestException("Can't automatically create a Tracked User without a common Id");
+                }
+            }
+            else if ((behaviour.CreateUserIfNotExist == false) && !exists)
+            {
+                throw new ConfigurationException("Cannot create a user without a Common User Id");
+            }
+            else
+            {
+                trackedUser = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, objectId);
+            }
+
+            if (string.IsNullOrEmpty(trackedUser.Name) && webhookPayload.PropertyName?.ToLower()?.Contains("firstname") == true)
+            {
+                trackedUser.Name = webhookPayload.PropertyValue;
+            }
+
+            trackedUser.Properties[$"{behaviour.PropertyPrefix}{webhookPayload.PropertyName}"] = webhookPayload.PropertyValue;
+
+            // now create an event
+            await eventStore.AddTrackedUserEvents(new List<TrackedUserEvent>
+            {
+                new TrackedUserEvent(trackedUser.CommonId,
+                    webhookPayload.EventId?.ToString(),
+                    dateTimeProvider.Now,
+                    integratedSystem,
+                    "Hubspot",
+                    webhookPayload.SubscriptionType, new Dictionary<string, object>
+                    {
+                        { $"{behaviour.PropertyPrefix}{webhookPayload.PropertyName}", webhookPayload.PropertyValue }
+                    },
+                    recommendationCorrelatorId: null)
+                });
+            await storageContext.SaveChanges();
+            return trackedUser;
         }
 
         public async Task SaveTokenFromCode(long integratedSystemId, string code, string redirectUri)

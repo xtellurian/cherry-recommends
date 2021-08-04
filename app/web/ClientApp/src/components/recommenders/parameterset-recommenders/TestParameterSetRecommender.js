@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
-import { invokeParameterSetRecommender } from "../../../api/parameterSetRecommendersApi";
+import { invokeParameterSetRecommenderAsync } from "../../../api/parameterSetRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import {
   AsyncButton,
@@ -13,6 +13,7 @@ import {
   Title,
 } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
+import { AsyncSelectTrackedUser } from "../../molecules/AsyncSelectTrackedUser";
 
 const Top = ({ id }) => {
   return (
@@ -90,6 +91,7 @@ export const TestParameterSetRecommender = () => {
   const parameterSetRecommender = useParameterSetRecommender({ id });
   const token = useAccessToken();
   const [argValues, setArgValues] = React.useState({});
+  const [selectedTrackedUser, setSelectedTrackedUser] = React.useState();
 
   React.useEffect(() => {
     if (parameterSetRecommender.arguments) {
@@ -111,17 +113,18 @@ export const TestParameterSetRecommender = () => {
   const handleInvoke = () => {
     setLoading(true);
     setError(null);
-    invokeParameterSetRecommender({
-      success: setResponse,
-      error: setError,
-      onFinally: () => setLoading(false),
+    invokeParameterSetRecommenderAsync({
       token,
       id: parameterSetRecommender.id,
       // version,
       input: {
+        commonUserId: selectedTrackedUser.commonId,
         arguments: argValues,
       },
-    });
+    })
+      .then(setResponse)
+      .catch(setError)
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -134,6 +137,10 @@ export const TestParameterSetRecommender = () => {
         </ExpandableCard>
       </div>
       {error && <ErrorCard error={error} />}
+      <AsyncSelectTrackedUser
+        placeholder="Search for a user to make a recommendation for."
+        onChange={(v) => setSelectedTrackedUser(v.value)}
+      />
       <div className="row mt-3">
         <div className="col">
           <Subtitle>Arguments</Subtitle>
@@ -151,8 +158,9 @@ export const TestParameterSetRecommender = () => {
             ))}
 
           <AsyncButton
+            disabled={!selectedTrackedUser}
             onClick={handleInvoke}
-            className="btn btn-primary m-2 w-25"
+            className="btn btn-primary m-2 w-50"
             loading={loading}
           >
             Invoke

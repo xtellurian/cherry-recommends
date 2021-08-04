@@ -30,9 +30,10 @@ namespace SignalBox.Core.Workflows
                                     IParameterSetRecommenderStore parameterSetRecommenderStore,
                                     IParameterSetRecommendationStore parameterSetRecommendationStore,
                                     IModelRegistrationStore modelRegistrationStore,
+                                    ITrackedUserFeatureStore featureStore,
                                     ITrackedUserStore trackedUserStore,
                                     IRecommenderModelClientFactory modelClientFactory)
-                                     : base(storageContext, parameterSetRecommenderStore, dateTimeProvider)
+                                     : base(storageContext, parameterSetRecommenderStore, featureStore, dateTimeProvider)
         {
             this.logger = logger;
             this.storageContext = storageContext;
@@ -51,7 +52,7 @@ namespace SignalBox.Core.Workflows
         {
             // use the correlator to begin with because need to pass an event ID into some models
             var correlator = await correlatorStore.Create(new RecommendationCorrelator());
-            var invokationEntry = await base.StartTrackInvokation(recommender, input?.CommonUserId, saveOnComplete: false);
+            var invokationEntry = await base.StartTrackInvokation(recommender, input, saveOnComplete: false);
             await storageContext.SaveChanges(); // save the correlator and invokation entry
             var recommendingContext = new RecommendingContext(version, correlator);
             TrackedUser user = null;
@@ -59,6 +60,9 @@ namespace SignalBox.Core.Workflows
             {
                 var model = recommender.ModelRegistration;
                 user = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
+
+                // load the features from the user
+                input.Features = await base.GetFeatures(user, invokationEntry);
 
                 IRecommenderModelClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1> client;
                 if (model == null)

@@ -2,23 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useHubspotAccount } from "../../../../api-hooks/hubspotApi";
 
-export const HubspotDetail = ({ integratedSystem }) => {
+export const HubspotOverview = ({ integratedSystem }) => {
   const hubspotAccount = useHubspotAccount({ id: integratedSystem.id });
 
   return (
     <div className="row text-center">
       <div className="col">
         {hubspotAccount.portalId !== 0 && (
-          <div>Portal Id: {hubspotAccount.portalId}</div>
+          <div>Portal Id: {hubspotAccount.portalId || "Not Connnected"}</div>
         )}
-      </div>
-      <div className="col">
-        <Link to={`/settings/integrations/hubspot-detail/${integratedSystem.id}`}>
-          <button className="btn btn-primary">
-            Details
-          </button>
-        </Link>
-        {/* <HubspotContactProperties integratedSystem={integratedSystem} /> */}
       </div>
       <div className="col">
         <Link

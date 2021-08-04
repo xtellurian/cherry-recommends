@@ -1,11 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useIntegratedSystems } from "../../../api-hooks/integratedSystemsApi";
 import { Title } from "../../molecules/PageHeadings";
 import { CreateButton } from "../../molecules/CreateButton";
 import { Spinner } from "../../molecules/Spinner";
 import { ErrorCard } from "../../molecules/ErrorCard";
 import { EmptyList } from "../../molecules/EmptyList";
-import { Link } from "react-router-dom";
+import { IntegrationIcon } from "./icons/IntegrationIcons";
 
 const IntegrationRow = ({ integration }) => {
   return (
@@ -14,7 +15,12 @@ const IntegrationRow = ({ integration }) => {
         <div className="col">
           <h5>{integration.name}</h5>
         </div>
-        <div className="col-2 text-center">{integration.systemType}</div>
+        <div className="col-2 text-center text-capitalize">
+          {integration.systemType}
+        </div>
+        <div className="col-1 text-left">
+          <IntegrationIcon integration={integration} />
+        </div>
         <div className="col-2 text-right">
           <Link to={`/settings/integrations/detail/${integration.id}`}>
             <button className="btn btn-outline-primary">Detail</button>
@@ -28,9 +34,7 @@ export const ListIntegrations = () => {
   const result = useIntegratedSystems();
 
   if (result.error) {
-    return (
-      <ErrorCard error={result.error} />
-    );
+    return <ErrorCard error={result.error} />;
   }
   return (
     <React.Fragment>

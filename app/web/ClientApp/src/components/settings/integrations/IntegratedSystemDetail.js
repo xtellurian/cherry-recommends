@@ -7,7 +7,7 @@ import { WebookPanel } from "./WebhookPanel";
 import { useIntegratedSystem } from "../../../api-hooks/integratedSystemsApi";
 import { Spinner } from "../../molecules/Spinner";
 import { ErrorCard } from "../../molecules/ErrorCard";
-import { HubspotDetail } from "./hubspot/HubspotDetail";
+import { HubspotOverview } from "./hubspot/HubspotOverview";
 
 export const IntegratedSystemDetail = () => {
   let { id } = useParams();
@@ -50,7 +50,7 @@ export const IntegratedSystemDetail = () => {
 
       {integratedSystem.error && <ErrorCard error={integratedSystem.error} />}
       {integratedSystem.systemType === "hubspot" && (
-        <HubspotDetail integratedSystem={integratedSystem} />
+        <HubspotOverview integratedSystem={integratedSystem} />
       )}
     </React.Fragment>
   );

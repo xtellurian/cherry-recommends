@@ -1,6 +1,5 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SignalBox.Core.Workflows
 {
@@ -9,22 +8,26 @@ namespace SignalBox.Core.Workflows
         private readonly IFeatureStore featureStore;
         private readonly ITrackedUserFeatureStore trackedUserFeatureStore;
         private readonly ITrackedUserStore trackedUserStore;
+        private readonly ILogger<FeatureWorkflows> logger;
         private readonly IStorageContext storageContext;
 
         public FeatureWorkflows(IFeatureStore featureStore,
                                    ITrackedUserFeatureStore trackedUserFeatureStore,
                                    ITrackedUserStore trackedUserStore,
+                                   ILogger<FeatureWorkflows> logger,
                                    IStorageContext storageContext)
         {
             this.featureStore = featureStore;
             this.trackedUserFeatureStore = trackedUserFeatureStore;
             this.trackedUserStore = trackedUserStore;
+            this.logger = logger;
             this.storageContext = storageContext;
         }
 
         public async Task<TrackedUserFeature> CreateFeatureOnUser(TrackedUser trackedUser,
                                                                    string featureCommonId,
-                                                                   object value)
+                                                                   object value,
+                                                                   bool? forceIncrementVersion)
         {
             Feature feature;
             if (await featureStore.ExistsFromCommonId(featureCommonId))
@@ -36,10 +39,30 @@ namespace SignalBox.Core.Workflows
                 throw new BadRequestException($"Feature {featureCommonId} does not exist");
             }
 
-            var nextVersion = 1 + await trackedUserFeatureStore.CurrentMaximumFeatureVersion(trackedUser, feature);
-            var featureValue = await trackedUserFeatureStore.Create(GenerateFeatureValues(trackedUser, feature, value, nextVersion));
-            await storageContext.SaveChanges();
-            return featureValue;
+            var currentVersion = await trackedUserFeatureStore.CurrentMaximumFeatureVersion(trackedUser, feature);
+            var newFeatureValue = GenerateFeatureValues(trackedUser, feature, value, currentVersion + 1);
+            if (forceIncrementVersion == true || currentVersion == 0) // first time or incrementing
+            {
+                newFeatureValue = await trackedUserFeatureStore.Create(newFeatureValue);
+                await storageContext.SaveChanges();
+                return newFeatureValue;
+            }
+            else // check whether the value has changed before updating.
+            {
+                var currentFeatureValue = await trackedUserFeatureStore.ReadFeature(trackedUser, feature, currentVersion);
+                if (!newFeatureValue.ValuesEqual(currentFeatureValue))
+                {
+                    // values aren't equal, create a new feature.
+                    newFeatureValue = await trackedUserFeatureStore.Create(newFeatureValue);
+                    await storageContext.SaveChanges();
+                    return newFeatureValue;
+                }
+                else // values are equal, do don't create a new feature.
+                {
+                    logger.LogInformation("Skipping update to Feature. Values are equal");
+                    return currentFeatureValue;
+                }
+            }
         }
 
         public async Task<Feature> CreateFeature(string commonId, string name)

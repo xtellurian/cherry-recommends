@@ -56,6 +56,7 @@ export const TextInput = ({
   value,
   placeholder,
   onChange,
+  onBlur,
   onHideErrors,
   validator,
 }) => {
@@ -90,9 +91,11 @@ export const TextInput = ({
   }
   return (
     <React.Fragment>
-      <div className="input-group-prepend">
-        <span className="input-group-text">{label}</span>
-      </div>
+      {label && (
+        <div className="input-group-prepend">
+          <span className="input-group-text">{label}</span>
+        </div>
+      )}
       <input
         ref={setReferenceElement}
         type="text"
@@ -100,6 +103,7 @@ export const TextInput = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
       />
 
       {errorMessages && errorMessages.length > 0 && !hide && (

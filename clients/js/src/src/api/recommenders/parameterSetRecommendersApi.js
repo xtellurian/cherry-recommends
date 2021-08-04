@@ -132,7 +132,25 @@ export const fetchLinkedRegisteredModel = async ({
     .catch(error);
 };
 
-export const invokeParameterSetRecommender = async ({
+export const invokeParameterSetRecommenderAsync = async ({
+  token,
+  id,
+  version,
+  input,
+}) => {
+  const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}/invoke`);
+  const result = await fetch(`${url}?version=${version || "default"}`, {
+    headers: headers(token),
+    method: "post",
+    body: JSON.stringify(input),
+  });
+  if (result.ok) {
+    return await result.json();
+  } else {
+    throw await result.json();
+  }
+};
+export const invokeParameterSetRecommender = ({
   success,
   error,
   onFinally,
@@ -141,25 +159,10 @@ export const invokeParameterSetRecommender = async ({
   version,
   input,
 }) => {
-  try {
-    const url = getUrl(
-      `api/recommenders/ParameterSetRecommenders/${id}/invoke`
-    );
-    const result = await fetch(`${url}?version=${version || "default"}`, {
-      headers: headers(token),
-      method: "post",
-      body: JSON.stringify(input),
-    });
-    if (result.ok) {
-      success(await result.json());
-    } else {
-      error(await result.json());
-    }
-  } finally {
-    if (onFinally) {
-      onFinally();
-    }
-  }
+  invokeParameterSetRecommenderAsync({ token, id, version, input })
+    .then(success)
+    .catch(error)
+    .finally(onFinally);
 };
 
 export const fetchInvokationLogsAsync = async ({ id, token, page }) => {
@@ -193,7 +196,11 @@ export const createTargetVariableAsync = async ({
   });
 };
 
-export const updateErrorHandlingAsync = async ({ id, token, errorHandling }) => {
+export const updateErrorHandlingAsync = async ({
+  id,
+  token,
+  errorHandling,
+}) => {
   return await eh.updateErrorHandlingAsync({
     recommenderApiName: "ParameterSetRecommenders",
     id,

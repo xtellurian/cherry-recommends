@@ -26,11 +26,12 @@ namespace SignalBox.Core.Workflows
                                     ITrackedUserStore trackedUserStore,
                                     ITrackedUserTouchpointStore trackedUserTouchpointStore,
                                     ITouchpointStore touchpointStore,
+                                    ITrackedUserFeatureStore featureStore,
                                     IProductStore productStore,
                                     IRecommendationCorrelatorStore correlatorStore,
                                     IProductRecommenderStore productRecommenderStore,
                                     IProductRecommendationStore productRecommendationStore)
-                                     : base(storageContext, productRecommenderStore, dateTimeProvider)
+                                     : base(storageContext, productRecommenderStore, featureStore, dateTimeProvider)
         {
             this.logger = logger;
             this.storageContext = storageContext;
@@ -49,7 +50,7 @@ namespace SignalBox.Core.Workflows
             string version,
             ProductRecommenderModelInputV1 input)
         {
-            var invokationEntry = await base.StartTrackInvokation(recommender, input?.CommonUserId, saveOnComplete: false);
+            var invokationEntry = await base.StartTrackInvokation(recommender, input, saveOnComplete: false);
             var correlator = await correlatorStore.Create(new RecommendationCorrelator());
             await storageContext.SaveChanges(); // save the correlator and invokatin entry
 
@@ -67,16 +68,16 @@ namespace SignalBox.Core.Workflows
                 // enrich values from the touchpoint
                 var touchpoint = await touchpointStore.ReadFromCommonId(input.Touchpoint);
                 user = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
-                invokationEntry.LogMessage("Create or Update Tracked User");
+
                 if (await trackedUserTouchpointStore.TouchpointExists(user, touchpoint))
                 {
+                    invokationEntry.LogMessage($"Using arguments from Touchpoint {touchpoint.CommonId}");
                     var tpValues = await trackedUserTouchpointStore.ReadTouchpoint(user, touchpoint);
                     input.Arguments = tpValues.Values;
                 }
-                else
-                {
-                    input.Arguments = null;
-                }
+
+                // load the features of the tracked user
+                input.Features = await base.GetFeatures(user, invokationEntry);
 
                 IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1> client;
                 if (recommender.ModelRegistration == null)

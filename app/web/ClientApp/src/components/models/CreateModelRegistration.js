@@ -1,5 +1,5 @@
 import React from "react";
-import { ErrorCard, Title, BackButton } from "../molecules";
+import { Title, BackButton } from "../molecules";
 import { NoteBox } from "../molecules/NoteBox";
 import { DropdownComponent, DropdownItem } from "../molecules/Dropdown";
 import { AzureMLModelRegistration } from "./AzureMLModelRegistration";
@@ -15,7 +15,6 @@ const hostingTypes = [
 ];
 
 export const CreateModelRegistration = () => {
-  const [error, setError] = React.useState();
   const [hostingType, setHostingType] = React.useState(hostingTypes[0]);
   const [modelType, setModelType] = React.useState(modelTypes[0]);
 
@@ -26,7 +25,6 @@ export const CreateModelRegistration = () => {
       </BackButton>
       <Title>Register Model</Title>
       <hr />
-      {error && <ErrorCard error={error} />}
       <NoteBox className="m-auto w-50" label="Warning">
         This area is for administrators only.
       </NoteBox>

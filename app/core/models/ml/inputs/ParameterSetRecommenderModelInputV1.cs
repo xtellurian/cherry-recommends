@@ -11,7 +11,8 @@ namespace SignalBox.Core
         [StringLength(256, MinimumLength = 3)]
         public string? CommonUserId { get; set; } = System.Guid.NewGuid().ToString(); // create a new GUID here if empty
         [Required]
-        public Dictionary<string, object> Arguments { get; set; } = null!;
+        public IDictionary<string, object>? Arguments { get; set; } = null!;
+        public IDictionary<string, object>? Features { get; set; }
         public List<ParameterBounds>? ParameterBounds { get; set; }
     }
 }

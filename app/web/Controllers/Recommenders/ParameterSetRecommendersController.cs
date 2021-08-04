@@ -9,6 +9,7 @@ using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommenders;
 using SignalBox.Core.Workflows;
 using SignalBox.Web.Dto;
+using SignalBox.Web.Dto.RecommenderInputs;
 
 namespace SignalBox.Web.Controllers
 {
@@ -45,7 +46,7 @@ namespace SignalBox.Web.Controllers
             return await workflows.CreateParameterSetRecommender(c, dto.Parameters, dto.Bounds, arguments,
                  new RecommenderErrorHandling { ThrowOnBadInput = dto.ThrowOnBadInput });
         }
-        
+
         [HttpPost("{id}/ModelRegistration")]
         public async Task<ModelRegistration> LinkModel(string id, LinkModel dto)
         {
@@ -58,16 +59,24 @@ namespace SignalBox.Web.Controllers
         {
             var parameterSetRecommender = await base.GetResource(id);
             return parameterSetRecommender.ModelRegistration ??
-                throw new EntityNotFoundException(typeof(ModelRegistration), id, null);
+                throw new EntityNotFoundException(typeof(ModelRegistration), id);
 
         }
 
         /// <summary>Invoke a model with some payload. Id is the recommender Id.</summary>
         [HttpPost("{id}/invoke")]
-        public async Task<ParameterSetRecommenderModelOutputV1> InvokeModel(string id, string version, [FromBody] ParameterSetRecommenderModelInputV1 input, bool? useInternalId = null)
+        public async Task<ParameterSetRecommenderModelOutputV1> InvokeModel(string id,
+                                                                            string version,
+                                                                            [FromBody] ParameterSetRecommenderInput input,
+                                                                            bool? useInternalId = null)
         {
             var recommender = await base.GetResource(id, useInternalId);
-            return await invokationWorkflows.InvokeParameterSetRecommender(recommender, version, input);
+            var convertedInput = new ParameterSetRecommenderModelInputV1
+            {
+                Arguments = input.Arguments,
+                CommonUserId = input.CommonUserId ?? System.Guid.NewGuid().ToString()
+            };
+            return await invokationWorkflows.InvokeParameterSetRecommender(recommender, version, convertedInput);
         }
 
         /// <summary>Get the latest recommendations made by a recommender.</summary>

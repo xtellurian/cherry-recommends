@@ -24,6 +24,19 @@ namespace SignalBox.Core
             NumericValue = value;
         }
 
+        public bool ValuesEqual(TrackedUserFeature other)
+        {
+            if (this.Value == null || other?.Value == null)
+            {
+                // nulls cannot be equal
+                return false;
+            }
+            else
+            {
+                return string.Equals(this.Value.ToString(), other.Value.ToString());
+            }
+        }
+
 #nullable enable
         public int Version { get; set; }
         public long TrackedUserId { get; set; }

@@ -35,7 +35,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .ThenInclude(_ => _.Feature)
                 .FirstAsync(_ => _.Id == trackedUser.Id);
 
-            return trackedUser.TrackedUserFeatures.Select(_ => _.Feature).ToList();
+            return trackedUser.TrackedUserFeatures.Select(_ => _.Feature).Distinct().ToList();
         }
 
         public async Task<TrackedUserFeature> ReadFeature(TrackedUser trackedUser, Feature feature, int? version = null)
@@ -47,7 +47,6 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .FirstAsync(_ => _.Id == trackedUser.Id);
 
             return trackedUser.TrackedUserFeatures.First(_ => _.FeatureId == feature.Id && _.Version == version.Value);
-
         }
 
         public async Task<bool> FeatureExists(TrackedUser trackedUser, Feature feature, int? version = null)

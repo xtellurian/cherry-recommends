@@ -8,7 +8,7 @@ export const CopyableField = ({ label, value, isSecret }) => {
       </div>
       <input
         type={isSecret ? "password" : "text"}
-        value={value}
+        value={value || ""} // dont allow uncontrolled
         className="form-control"
         aria-label={label}
         disabled

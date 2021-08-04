@@ -21,8 +21,8 @@ export const fetchLinkedRegisteredModel =
 export const createLinkRegisteredModel =
   parameterSetRecommenders.createLinkRegisteredModel;
 
-export const invokeParameterSetRecommender =
-  parameterSetRecommenders.invokeParameterSetRecommender;
+export const invokeParameterSetRecommenderAsync =
+  parameterSetRecommenders.invokeParameterSetRecommenderAsync;
 
 export const fetchTargetVariablesAsync =
   parameterSetRecommenders.fetchTargetVariablesAsync;

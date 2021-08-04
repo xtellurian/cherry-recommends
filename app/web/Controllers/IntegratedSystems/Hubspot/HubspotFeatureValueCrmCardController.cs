@@ -8,30 +8,32 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
+using SignalBox.Core.Adapters.Hubspot;
 using SignalBox.Core.Integrations;
+using SignalBox.Core.Integrations.Hubspot;
 using SignalBox.Core.Workflows;
-using SignalBox.Web.Dto;
 
 namespace SignalBox.Web.Controllers
 {
     [AllowAnonymous]
     [ApiController]
     [ApiVersion("0.1")]
-    [Route("api/hubspotcrmcards")]
-    public class HubspotCrmCardsController : SignalBoxControllerBase
+    [Route("api/hubspotcrmcards/user-features")]
+    public class HubspotFeatureValueCrmCardsController : HubspotConnectorControllerBase
     {
-        private readonly ILogger<HubspotCrmCardsController> logger;
+        private readonly ILogger<HubspotFeatureValueCrmCardsController> logger;
         private readonly IHasher hasher;
         private readonly ITelemetry telemetry;
         private readonly HubspotWorkflows hubspotWorkflows;
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
         private readonly ITrackedUserTouchpointStore trackedUserTouchpointStore;
-        private readonly ITouchpointStore touchpointStore;
+        private readonly IFeatureStore featureStore;
+        private readonly ITrackedUserFeatureStore trackedUserFeatureStore;
         private readonly HubspotAppCredentials credentials;
         private readonly DeploymentInformation deploymentOptions;
 
-        public HubspotCrmCardsController(ILogger<HubspotCrmCardsController> logger,
+        public HubspotFeatureValueCrmCardsController(ILogger<HubspotFeatureValueCrmCardsController> logger,
                                          IOptions<DeploymentInformation> deploymentOptions,
                                          IHasher hasher,
                                          ITelemetry telemetry,
@@ -40,7 +42,9 @@ namespace SignalBox.Web.Controllers
                                          IIntegratedSystemStore integratedSystemStore,
                                          ITrackedUserSystemMapStore systemMapStore,
                                          ITrackedUserTouchpointStore trackedUserTouchpointStore,
-                                         ITouchpointStore touchpointStore)
+                                         IFeatureStore featureStore,
+                                         ITrackedUserFeatureStore trackedUserFeatureStore)
+                                          : base(logger, deploymentOptions, hasher, hubspotOptions)
         {
             this.logger = logger;
             this.hasher = hasher;
@@ -49,7 +53,8 @@ namespace SignalBox.Web.Controllers
             this.integratedSystemStore = integratedSystemStore;
             this.systemMapStore = systemMapStore;
             this.trackedUserTouchpointStore = trackedUserTouchpointStore;
-            this.touchpointStore = touchpointStore;
+            this.featureStore = featureStore;
+            this.trackedUserFeatureStore = trackedUserFeatureStore;
             this.credentials = hubspotOptions.Value;
             this.deploymentOptions = deploymentOptions.Value;
         }
@@ -57,7 +62,7 @@ namespace SignalBox.Web.Controllers
 
         [HttpGet]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<HubspotCrmCardResponse> CrmCard(long id,
+        public async Task<HubspotCrmCardResponse> USerFeatureCrmCard(long id,
                                                           string portalId,
                                                           string userId,
                                                           string userEmail,
@@ -65,7 +70,7 @@ namespace SignalBox.Web.Controllers
                                                           string associatedObjectType,
                                                           string objectType)
         {
-            ValidateHubspotSignature();
+            await ValidateHubspotSignature();
             telemetry.TrackEvent("Hubspot.CrmCard", new Dictionary<string, string>
             {
                 {"portalId", portalId},
@@ -97,12 +102,14 @@ namespace SignalBox.Web.Controllers
         {
             try
             {
+                var integratedSystem = await integratedSystemStore.ReadFromCommonId(portalId);
                 var trackedUsers = await hubspotWorkflows.GetAssociatedTrackedUsersFromTicket(portalId, ticketId);
                 if (trackedUsers.Any())
                 {
                     var tu = trackedUsers.First();
                     logger.LogInformation($"Found a TrackedUser {tu.CommonId} for ticket {ticketId}");
-                    return await HubspotTouchpointResponse(tu);
+                    return await HubspotUserFeaturesResponse(tu,
+                        integratedSystem.GetCache<HubspotCache>()?.FeatureCrmCardBehaviour?.ExcludedFeatures);
                 }
                 else
                 {
@@ -121,16 +128,16 @@ namespace SignalBox.Web.Controllers
             try
             {
                 var integratedSystem = await integratedSystemStore.ReadFromCommonId(portalId);
-                // var allSystemMaps = await systemMapStore.Query(1, (x) => true);
-                var systemMaps = await systemMapStore.Query(1,  // first page
-                    _ => _.TrackedUser,
-                    _ => _.UserId == associatedObjectId && _.IntegratedSystemId == integratedSystem.Id);
-                if (systemMaps.Pagination.TotalItemCount == 0)
+                if (await systemMapStore.ExistsInIntegratedSystem(integratedSystem.Id, associatedObjectId))
+                {
+                    var trackedUser = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, associatedObjectId);
+                    return await HubspotUserFeaturesResponse(trackedUser,
+                        integratedSystem.GetCache<HubspotCache>()?.FeatureCrmCardBehaviour?.ExcludedFeatures);
+                }
+                else
                 {
                     return DefaultCardResponse($"User ({associatedObjectId}) not linked");
                 }
-                var trackedUser = systemMaps.Items.First().TrackedUser;
-                return await HubspotTouchpointResponse(trackedUser);
             }
             catch (SignalBox.Core.StorageException ex)
             {
@@ -144,26 +151,27 @@ namespace SignalBox.Web.Controllers
             }
         }
 
-        private async Task<HubspotCrmCardResponse> HubspotTouchpointResponse(TrackedUser trackedUser)
+        private async Task<HubspotCrmCardResponse> HubspotUserFeaturesResponse(TrackedUser trackedUser, IEnumerable<string> excludedFeatures = null)
         {
-            var touchpoint = await touchpointStore.ReadFromCommonId("Hubspot");
-            if (await trackedUserTouchpointStore.TouchpointExists(trackedUser, touchpoint))
+            excludedFeatures ??= new List<string>();
+            var features = await trackedUserFeatureStore.GetFeaturesFor(trackedUser);
+            features = features.Where(_ => !excludedFeatures.Contains(_.CommonId));
+            var featureValues = new List<TrackedUserFeature>();
+
+            if (features.Any())
             {
-                var touchpointValues = await trackedUserTouchpointStore.ReadTouchpoint(trackedUser, touchpoint);
-                // they always need an objectId and title
-                touchpointValues.Values["title"] = "Four2 Analysis";
-                touchpointValues.Values["objectId"] = touchpointValues.Id;
-                return new HubspotCrmCardResponse
+                var response = new HubspotCrmCardResponse();
+                foreach (var feature in features)
                 {
-                    Results = new List<Dictionary<string, object>>
-                        {
-                            touchpointValues.Values
-                        }
-                };
+                    var val = await trackedUserFeatureStore.ReadFeature(trackedUser, feature);
+                    response.AddFeatureValueCard(val);
+                }
+
+                return response;
             }
             else
             {
-                return DefaultCardResponse($"{trackedUser.Name ?? trackedUser.CommonId} analysis pending.");
+                return DefaultCardResponse($"{trackedUser.Name ?? trackedUser.CommonId} has not been classified.");
             }
         }
 
@@ -179,45 +187,5 @@ namespace SignalBox.Web.Controllers
                 }
             }
         };
-
-        private void ValidateHubspotSignature()
-        {
-            if (Request.Headers.TryGetValue("X-HubSpot-Signature-Version", out var sigVer))
-            {
-                logger.LogInformation($"X-HubSpot-Signature-Version: {sigVer}");
-            }
-            else
-            {
-                logger.LogWarning("X-HubSpot-Signature-Version header found ");
-            }
-            if (Request.Headers.TryGetValue("X-HubSpot-Signature", out var sig))
-            {
-                //https://legacydocs.hubspot.com/docs/faq/v2-request-validation
-                // var s = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyyPOSThttps://www.example.com/webhook_uri{\"example_field\":\"サンプルデータ\"}";
-                var sigValue = sig.ToString();
-                var uri = $"{ Request.Scheme }://{ Request.Host }{ Request.Path }{ Request.QueryString }";
-                var s = $"{credentials.ClientSecret}{Request.Method}{uri}";
-
-                var hashedBytes = hasher.HashToBytes(HashingAlgorithms.SHA256, s);
-                var hashed = Convert.ToHexString(hashedBytes).ToLower();
-                var isValid = string.Equals(hashed, sigValue);
-
-                if (!isValid)
-                {
-                    throw new BadRequestException("Hubspot Request was not signed correctly.");
-                }
-                else
-                {
-                    logger.LogInformation("X-HubSpot-Signature header matches computed value.");
-                }
-            }
-            else
-            {
-                if (this.deploymentOptions?.Environment?.ToLower() == "production")
-                {
-                    throw new BadRequestException("X-HubSpot-Signature did not match computed signature");
-                }
-            }
-        }
     }
 }

@@ -20,6 +20,17 @@ namespace SignalBox.Core
             this._entityId = id.ToString();
         }
 
+        public EntityNotFoundException(Type t, string commonId, string message) : base($"Entity of type {t.Name} with Id {commonId} not found", message)
+        {
+            this._entityType = t;
+            this._entityId = commonId;
+        }
+        public EntityNotFoundException(Type t, string commonId) : base($"Entity of type {t.Name} with Id {commonId} not found")
+        {
+            this._entityType = t;
+            this._entityId = commonId;
+        }
+
         private Type _entityType;
         private string _entityId;
         public override int Status => 404;

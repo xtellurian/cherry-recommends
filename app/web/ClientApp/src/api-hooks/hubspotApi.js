@@ -3,6 +3,8 @@ import { useAccessToken } from "./token";
 import {
   fetchHubspotAccount,
   fetchHubspotAppInformation,
+  fetchHubspotWebhookBehaviourAsync,
+  fetchHubspotCrmCardBehaviourAsync,
   fetchHubspotClientAllContactProperties,
   fetchHubspotClientContactEventsAsync,
   fetchHubspotContacts,
@@ -21,6 +23,42 @@ export const useHubspotAppInformation = () => {
       });
     }
   }, [token]);
+  return result;
+};
+
+export const useHubspotWebhookBehaviour = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      setState({ loading: true });
+      fetchHubspotWebhookBehaviourAsync({
+        id,
+        token,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+  return result;
+};
+
+export const useHubspotCrmCardBehaviour = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      setState({ loading: true });
+      fetchHubspotCrmCardBehaviourAsync({
+        id,
+        token,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
   return result;
 };
 

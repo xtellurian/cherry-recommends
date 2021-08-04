@@ -5,7 +5,7 @@ namespace SignalBox.Core
 {
     public class TrackedUser : CommonEntity
     {
-        public TrackedUser()
+        protected TrackedUser()
         { }
 
         public TrackedUser(string commonUserId) : base(commonUserId, null)

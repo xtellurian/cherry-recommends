@@ -40,6 +40,19 @@ export const createFeatureAsync = async ({ token, feature }) => {
   }
 };
 
+export const deleteFeatureAsync = async ({ token, id }) => {
+  const url = getUrl(`api/features/${id}`);
+  const response = await fetch(url, {
+    headers: headers(token),
+    method: "delete",
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
 export const fetchTrackedUserFeaturesAsync = async ({ token, id }) => {
   const url = getUrl(`api/TrackedUsers/${id}/features`);
   const response = await fetch(url, {

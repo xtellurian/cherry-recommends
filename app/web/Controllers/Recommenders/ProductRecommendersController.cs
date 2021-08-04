@@ -8,6 +8,7 @@ using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommenders;
 using SignalBox.Core.Workflows;
 using SignalBox.Web.Dto;
+using SignalBox.Web.Dto.RecommenderInputs;
 
 namespace SignalBox.Web.Controllers
 {
@@ -82,7 +83,7 @@ namespace SignalBox.Web.Controllers
         {
             var parameterSetRecommender = await base.GetResource(id);
             return parameterSetRecommender.ModelRegistration ??
-                throw new EntityNotFoundException(typeof(ModelRegistration), id, null);
+                throw new EntityNotFoundException(typeof(ModelRegistration), id);
 
         }
 
@@ -91,11 +92,16 @@ namespace SignalBox.Web.Controllers
         public async Task<ProductRecommenderModelOutputV1> InvokeModel(
             string id,
             string version,
-            [FromBody] ProductRecommenderModelInputV1 input,
+            [FromBody] ProductRecommenderInput input,
             bool? useInternalId = null)
         {
             var recommender = await base.GetResource(id, useInternalId);
-            return await invokationWorkflows.InvokeProductRecommender(recommender, version, input);
+            var convertedInput = new ProductRecommenderModelInputV1
+            {
+                Arguments = input.Arguments,
+                CommonUserId = input.CommonUserId,
+            };
+            return await invokationWorkflows.InvokeProductRecommender(recommender, version, convertedInput);
 
         }
 

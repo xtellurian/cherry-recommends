@@ -67,20 +67,24 @@ namespace SignalBox.Infrastructure.ML.Azure
 
             var rankableActions = ToRankableActions(products);
 
-            // IList<object> currentContext = new List<object>() {
-            //     new { time = timeOfDayFeature },
-            //     new { taste = tasteFeature }
-            // };
             var currentContext = new List<object>();
+            // add features to the context
+            if (input.Features != null && input.Features.Any())
+            {
+                foreach (var f in input.Features)
+                {
+                    currentContext.Add(f);
+                }
+            }
+
+            // add incoming arguments to the context (arguments overwrite features)
             if (input.Arguments != null && input.Arguments.Any())
             {
                 foreach (var a in input.Arguments)
                 {
-                    // TODO: change to features
                     currentContext.Add(a);
                 }
             }
-
 
             var rank = await client.RankAsync(new RankRequest(rankableActions,
                                                               currentContext,

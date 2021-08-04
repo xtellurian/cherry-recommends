@@ -7,11 +7,14 @@ import { ExpandableCard } from "../../../molecules/ExpandableCard";
 import { JsonView } from "../../../molecules/JsonView";
 import { BackButton } from "../../../molecules/BackButton";
 
-const Top = () => {
+const Top = ({ integratedSystem }) => {
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/settings/integrations">
-        Integrations
+      <BackButton
+        className="float-right"
+        to={`/settings/integrations/detail/${integratedSystem.id}`}
+      >
+        Overview
       </BackButton>
       <Title> Hubspot Contact Properties</Title>
       <Subtitle>Available Contact Properties</Subtitle>
@@ -28,10 +31,12 @@ const PropertyRow = ({ property }) => {
 };
 
 export const HubspotContactProperties = ({ integratedSystem }) => {
-  const properties = useHubspotClientAllContactProperties({ id: integratedSystem.id });
+  const properties = useHubspotClientAllContactProperties({
+    id: integratedSystem.id,
+  });
   return (
     <React.Fragment>
-      <Top />
+      <Top integratedSystem={integratedSystem} />
       <hr />
       {integratedSystem.loading && <Spinner>Loading Integrated System</Spinner>}
       {properties.loading && <Spinner>Loading Hubspot Properties</Spinner>}

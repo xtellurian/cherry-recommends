@@ -354,6 +354,19 @@
     }
   };
 
+  const deleteFeatureAsync = async ({ token, id }) => {
+    const url = getUrl(`api/features/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "delete",
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const fetchTrackedUserFeaturesAsync = async ({ token, id }) => {
     const url = getUrl(`api/TrackedUsers/${id}/features`);
     const response = await fetch(url, {
@@ -390,6 +403,7 @@
     fetchFeaturesAsync: fetchFeaturesAsync,
     fetchFeatureAsync: fetchFeatureAsync,
     createFeatureAsync: createFeatureAsync,
+    deleteFeatureAsync: deleteFeatureAsync,
     fetchTrackedUserFeaturesAsync: fetchTrackedUserFeaturesAsync,
     fetchTrackedUserFeatureValuesAsync: fetchTrackedUserFeatureValuesAsync
   });
@@ -988,7 +1002,25 @@
       .catch(error);
   };
 
-  const invokeParameterSetRecommender = async ({
+  const invokeParameterSetRecommenderAsync = async ({
+    token,
+    id,
+    version,
+    input,
+  }) => {
+    const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}/invoke`);
+    const result = await fetch(`${url}?version=${version || "default"}`, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(input),
+    });
+    if (result.ok) {
+      return await result.json();
+    } else {
+      throw await result.json();
+    }
+  };
+  const invokeParameterSetRecommender = ({
     success,
     error,
     onFinally,
@@ -997,25 +1029,10 @@
     version,
     input,
   }) => {
-    try {
-      const url = getUrl(
-        `api/recommenders/ParameterSetRecommenders/${id}/invoke`
-      );
-      const result = await fetch(`${url}?version=${version || "default"}`, {
-        headers: headers(token),
-        method: "post",
-        body: JSON.stringify(input),
-      });
-      if (result.ok) {
-        success(await result.json());
-      } else {
-        error(await result.json());
-      }
-    } finally {
-      if (onFinally) {
-        onFinally();
-      }
-    }
+    invokeParameterSetRecommenderAsync({ token, id, version, input })
+      .then(success)
+      .catch(error)
+      .finally(onFinally);
   };
 
   const fetchInvokationLogsAsync$1 = async ({ id, token, page }) => {
@@ -1049,7 +1066,11 @@
     });
   };
 
-  const updateErrorHandlingAsync$1 = async ({ id, token, errorHandling }) => {
+  const updateErrorHandlingAsync$1 = async ({
+    id,
+    token,
+    errorHandling,
+  }) => {
     return await updateErrorHandlingAsync$2({
       recommenderApiName: "ParameterSetRecommenders",
       id,
@@ -1067,6 +1088,7 @@
     fetchParameterSetRecommendationsAsync: fetchParameterSetRecommendationsAsync,
     createLinkRegisteredModel: createLinkRegisteredModel$1,
     fetchLinkedRegisteredModel: fetchLinkedRegisteredModel$1,
+    invokeParameterSetRecommenderAsync: invokeParameterSetRecommenderAsync,
     invokeParameterSetRecommender: invokeParameterSetRecommender,
     fetchInvokationLogsAsync: fetchInvokationLogsAsync$1,
     fetchTargetVariablesAsync: fetchTargetVariablesAsync$1,

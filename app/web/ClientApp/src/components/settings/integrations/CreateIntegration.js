@@ -7,6 +7,8 @@ import { Title } from "../../molecules/PageHeadings";
 import { DropdownComponent, DropdownItem } from "../../molecules/Dropdown";
 import { ErrorCard } from "../../molecules/ErrorCard";
 import { AsyncButton } from "../../molecules/AsyncButton";
+import { NoteBox } from "../../molecules/NoteBox";
+import { TextInput, InputGroup } from "../../molecules/TextInput";
 
 const systemTypes = ["Hubspot", "Segment"];
 
@@ -15,7 +17,7 @@ export const CreateIntegration = () => {
   const token = useAccessToken();
   const [integratedSystem, setIntegratedSystem] = React.useState({
     name: "",
-    systemType: systemTypes[0],
+    systemType: "",
   });
   const [error, setError] = React.useState();
 
@@ -40,45 +42,56 @@ export const CreateIntegration = () => {
       <Title>Create new Integration</Title>
       <hr />
       {error && <ErrorCard error={error} />}
-      <div className="input-group">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="System Name"
-          value={integratedSystem.name}
-          onChange={(e) =>
-            setIntegratedSystem({
-              ...integratedSystem,
-              name: e.target.value,
-            })
-          }
-        />
+      <NoteBox className="m-3" label="What is an integration?">
+        Integrations allow you to automatically pull data or push
+        recommendations into various external systems. Select either Segment or
+        Hubspot below, and give your integration a name, for example:
+        'Production Segment Connection'
+      </NoteBox>
 
-        <DropdownComponent title={integratedSystem.systemType}>
-          {systemTypes.map((t) => (
-            <DropdownItem key={t}>
-              <div
-                onClick={() =>
-                  setIntegratedSystem({
-                    ...integratedSystem,
-                    systemType: t,
-                  })
-                }
-              >
-                {t}
-              </div>
-            </DropdownItem>
-          ))}
-        </DropdownComponent>
+      <DropdownComponent title={integratedSystem.systemType || "Choose a System Type"} className="w-100">
+        {systemTypes.map((t) => (
+          <DropdownItem key={t} className="text-center w-100">
+            <div
+              onClick={() =>
+                setIntegratedSystem({
+                  ...integratedSystem,
+                  systemType: t,
+                })
+              }
+            >
+              {t}
+            </div>
+          </DropdownItem>
+        ))}
+      </DropdownComponent>
 
-        <AsyncButton
-          loading={creating}
-          className="btn btn-primary w-25"
-          onClick={handleCreate}
-        >
-          Create
-        </AsyncButton>
-      </div>
+      {integratedSystem.systemType && (
+        <React.Fragment>
+          <InputGroup className="mt-2 mb-2">
+            <TextInput
+              placeholder="System Name"
+              label="What name should we give the external system?"
+              value={integratedSystem.name}
+              onChange={(e) =>
+                setIntegratedSystem({
+                  ...integratedSystem,
+                  name: e.target.value,
+                })
+              }
+            />
+          </InputGroup>
+
+          <AsyncButton
+            loading={creating}
+            disabled={!integratedSystem.name || integratedSystem.name.length < 3}
+            className="btn btn-primary btn-block mt-3"
+            onClick={handleCreate}
+          >
+            Create
+          </AsyncButton>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };

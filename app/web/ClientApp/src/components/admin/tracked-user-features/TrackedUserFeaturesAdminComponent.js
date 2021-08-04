@@ -4,6 +4,7 @@ import AuthorizeRoute from "../../auth0/ProtectedRoute";
 import { FeaturesSummary } from "./FeaturesSummary";
 import { CreateFeature } from "./CreateFeature";
 import { FeatureDetail } from "./FeatureDetail";
+import { SetFeatureValue } from "./SetFeatureValue";
 
 export const TrackedUserFeaturesAdminComponent = () => {
   const { path } = useRouteMatch();
@@ -11,8 +12,21 @@ export const TrackedUserFeaturesAdminComponent = () => {
     <React.Fragment>
       <Switch>
         <AuthorizeRoute exact path={`${path}`} component={FeaturesSummary} />
-        <AuthorizeRoute exact path={`${path}/create`} component={CreateFeature} />
-        <AuthorizeRoute exact path={`${path}/detail/:id`} component={FeatureDetail} />
+        <AuthorizeRoute
+          exact
+          path={`${path}/create`}
+          component={CreateFeature}
+        />
+        <AuthorizeRoute
+          exact
+          path={`${path}/detail/:id`}
+          component={FeatureDetail}
+        />
+        <AuthorizeRoute
+          exact
+          path={`${path}/set-value/:id`}
+          component={SetFeatureValue}
+        />
       </Switch>
     </React.Fragment>
   );

@@ -2,13 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace SignalBox.Web.Dto
+namespace SignalBox.Core.Adapters.Hubspot
 {
 
     public partial class HubspotCrmCardResponse
     {
+        public void AddFeatureValueCard(TrackedUserFeature featureValue)
+        {
+            this.Results ??= new List<Dictionary<string, object>>();
+            Results.Add(new Dictionary<string, object>
+            {
+                { "value", featureValue.Value},
+                { "objectId", featureValue.Id},
+                { "title", featureValue.Feature.Name }
+            });
+        }
+
         [JsonPropertyName("results")]
-        public IEnumerable<Dictionary<string, object>> Results { get; set; }
+        public List<Dictionary<string, object>> Results { get; set; }
 
     }
 

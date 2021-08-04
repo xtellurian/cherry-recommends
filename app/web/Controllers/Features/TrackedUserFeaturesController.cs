@@ -46,10 +46,11 @@ namespace SignalBox.Web.Controllers
         public async Task<TrackedUserFeature> Create(string id,
                                          string featureCommonId,
                                          [FromBody] CreateTrackedUserFeature dto,
-                                         [FromQuery] bool? useInternalId = null)
+                                         [FromQuery] bool? useInternalId = null,
+                                         bool? forceIncrementVersion = null)
         {
             var trackedUser = await LoadTrackedUser(trackedUserStore, id, useInternalId);
-            return await workflows.CreateFeatureOnUser(trackedUser, featureCommonId, dto.Value);
+            return await workflows.CreateFeatureOnUser(trackedUser, featureCommonId, dto.Value, forceIncrementVersion);
         }
 
         /// <summary>Returns the value set in the feature.</summary>

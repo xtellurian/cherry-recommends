@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommenders;
@@ -9,14 +10,17 @@ namespace SignalBox.Core.Workflows
     {
         private readonly IStorageContext storageContext;
         private readonly IRecommenderStore<T> store;
+        private readonly ITrackedUserFeatureStore trackedUserFeatureStore;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public RecommenderInvokationWorkflowBase(IStorageContext storageContext,
                                                  IRecommenderStore<T> store,
+                                                 ITrackedUserFeatureStore trackedUserFeatureStore,
                                                  IDateTimeProvider dateTimeProvider)
         {
             this.storageContext = storageContext;
             this.store = store;
+            this.trackedUserFeatureStore = trackedUserFeatureStore;
             this.dateTimeProvider = dateTimeProvider;
         }
 
@@ -26,11 +30,12 @@ namespace SignalBox.Core.Workflows
             return await store.QueryInvokationLogs(recommender.Id, page);
         }
 
-        public async Task<InvokationLogEntry> StartTrackInvokation(T recommender, string userId, bool? saveOnComplete = true)
+        protected async Task<InvokationLogEntry> StartTrackInvokation(T recommender, IModelInput input, bool? saveOnComplete = true)
         {
             var entry = new InvokationLogEntry(recommender, dateTimeProvider.Now);
             var errorsWillBe = recommender.ShouldThrowOnBadInput() ? "thrown" : "silently handled.";
-            entry.LogMessage($"Recomending for tracked user: {userId}. Errors will be {errorsWillBe} ");
+            entry.LogMessage($"Recomending for tracked user: {input.CommonUserId}. Errors will be {errorsWillBe} ");
+            entry.LogMessage($"There are {input.Arguments?.Count ?? 0} input arguments.");
             recommender.RecommenderInvokationLogs ??= new List<InvokationLogEntry>();
             recommender.RecommenderInvokationLogs.Add(entry);
             if (saveOnComplete == true)
@@ -40,7 +45,7 @@ namespace SignalBox.Core.Workflows
             return entry;
         }
 
-        public async Task<InvokationLogEntry> EndTrackInvokation(InvokationLogEntry entry,
+        protected async Task<InvokationLogEntry> EndTrackInvokation(InvokationLogEntry entry,
                                                                  bool success,
                                                                  TrackedUser trackedUser,
                                                                  RecommendationCorrelator? correlator,
@@ -60,6 +65,17 @@ namespace SignalBox.Core.Workflows
                 await storageContext.SaveChanges();
             }
             return entry;
+        }
+
+        protected async Task<IDictionary<string, object>> GetFeatures(TrackedUser trackedUser, InvokationLogEntry entry)
+        {
+            var features = await trackedUserFeatureStore.ReadAllLatestFeatures(trackedUser);
+            var result = features
+                .Where(_ => _.Value != null)
+                .ToDictionary(_ => _.Feature.CommonId, _ => _.Value ?? "");
+
+            entry.LogMessage($"Discovered {result.Count} features");
+            return result;
         }
     }
 }

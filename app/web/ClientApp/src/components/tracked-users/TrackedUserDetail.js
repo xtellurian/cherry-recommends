@@ -58,14 +58,14 @@ export const TrackedUserDetail = () => {
     <React.Fragment>
       <ActionsButton
         className="ml-1 float-right"
-        to={`/tracked-users/touchpoints/${id}`}
-        label="Touchpoints"
+        to={`/tracked-users/features/${id}`}
+        label="Features"
       >
         <ActionItemsGroup label="Actions">
           <ActionLink
-            to={`/tracked-users/features/${trackedUser.id}`}
+            to={`/tracked-users/touchpoints/${trackedUser.id}`}
           >
-            Features
+            Touchpoints
           </ActionLink>
           <ActionLink
             to={`/tracked-users/link-to-integrated-system/${trackedUser.id}`}
