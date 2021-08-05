@@ -215,12 +215,12 @@ namespace SignalBox.Core.Workflows
                 }
                 else
                 {
-                    throw new BadRequestException("Can't automatically create a Tracked User without a common Id");
+                    throw new BadRequestException($"Can't automatically create a Tracked User without a common Id for HS Object ID {objectId}");
                 }
             }
             else if ((behaviour.CreateUserIfNotExist == false) && !exists)
             {
-                throw new ConfigurationException("Cannot create a user without a Common User Id");
+                throw new ConfigurationException($"Cannot create a user without a Common User Id for HS Object ID {objectId}");
             }
             else
             {
