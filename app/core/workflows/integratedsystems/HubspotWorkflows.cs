@@ -18,6 +18,7 @@ namespace SignalBox.Core.Workflows
         private readonly IStorageContext storageContext;
         private readonly IHubspotService hubspotService;
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly ITelemetry telemetry;
         private readonly ILogger<HubspotWorkflows> logger;
         private readonly IOptions<HubspotAppCredentials> hubspotCreds;
 
@@ -28,6 +29,7 @@ namespace SignalBox.Core.Workflows
                                 IStorageContext storageContext,
                                 IHubspotService hubspotService,
                                 IDateTimeProvider dateTimeProvider,
+                                ITelemetry telemetry,
                                 ILogger<HubspotWorkflows> logger,
                                 IOptions<HubspotAppCredentials> hubspotCreds)
         {
@@ -38,6 +40,7 @@ namespace SignalBox.Core.Workflows
             this.storageContext = storageContext;
             this.hubspotService = hubspotService;
             this.dateTimeProvider = dateTimeProvider;
+            this.telemetry = telemetry;
             this.logger = logger;
             this.hubspotCreds = hubspotCreds;
         }
@@ -182,6 +185,14 @@ namespace SignalBox.Core.Workflows
             }
             else
             {
+                var telemetryDic = new Dictionary<string, string>
+            {
+                { "objectId", webhookPayload.ObjectId?.ToString()},
+                { "portalId", webhookPayload.PortalId?.ToString()},
+                { "propertyName", webhookPayload.PropertyName?.ToString()},
+                { "propertyValue", webhookPayload.PropertyValue?.ToString()},
+            };
+                telemetry.TrackEvent("Hubspot.Webhook.HandleContactCreated.Failed", telemetryDic);
                 throw new BadRequestException("Can't create user without a common Id");
             }
         }
