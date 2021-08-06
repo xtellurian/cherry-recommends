@@ -5,7 +5,6 @@ import { setTrackedUserFeatureAsync } from "../../../api/trackedUsersApi";
 import { AsyncSelectTrackedUser } from "../../molecules/AsyncSelectTrackedUser";
 import { TrackedUserListItem } from "../../molecules/TrackedUser";
 import { useFeature } from "../../../api-hooks/featuresApi";
-import { set } from "../../../api/featuresApi";
 import {
   Title,
   Subtitle,

@@ -1,14 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SignalBox.Core;
 using SignalBox.Core.Adapters.Hubspot;
 using SignalBox.Core.Integrations;
@@ -125,15 +121,23 @@ namespace SignalBox.Infrastructure.Services
             return res.Results.Select(_ => new HubspotContactProperty(_.Name, _.Label, _.Type, _.Description, _.HubspotDefined));
         }
 
-        public async Task<IEnumerable<HubspotContact>> GetContacts(IntegratedSystem system)
+        public async Task<IEnumerable<HubspotContact>> GetContacts(IntegratedSystem system, IEnumerable<string> properties = null)
         {
             AuthorizeHttpClient(system);
             var contactsClient = new ContactsClient(httpClient);
 
-            var res = await contactsClient.CrmV3ObjectsContactsGetAsync(10, null, null, null, false);
+            var res = await contactsClient.CrmV3ObjectsContactsGetAsync(10, after: null, properties: properties, associations: null, archived: false);
             // TODO: paging
 
             return res.Results.Select(_ => new HubspotContact(_.Id, _.Properties));
+        }
+
+        public async Task<HubspotContact> GetContact(IntegratedSystem system, string contactId, IEnumerable<string> properties = null)
+        {
+            AuthorizeHttpClient(system);
+            var contactsClient = new ContactsClient(httpClient);
+            var res = await contactsClient.CrmV3ObjectsContactsGetAsync(contactId, properties, associations: null, archived: null, idProperty: null);
+            return new HubspotContact(res.Id, res.Properties);
         }
 
         public async Task<IEnumerable<HubspotAssociation>> GetAssociatedContactsFromTicket(IntegratedSystem system, string ticketId)

@@ -12,12 +12,13 @@ namespace SignalBox.Core
         Task<TokenResponse> UseRefreshToken(string clientId, string clientSecret, string refreshToken);
         Task<HubspotAccountDetails> GetAccountDetails(TokenResponse tokenResponse);
         Task<IEnumerable<HubspotContactProperty>> GetContactProperties(IntegratedSystem hubspotSystemReference);
-        Task<IEnumerable<HubspotContact>> GetContacts(IntegratedSystem system);
+        Task<IEnumerable<HubspotContact>> GetContacts(IntegratedSystem system, IEnumerable<string> properties = null);
         Task<IEnumerable<HubspotAssociation>> GetAssociatedContactsFromTicket(IntegratedSystem system, string ticketId);
         Task<IEnumerable<HubspotEvent>> GetContactEvents(IntegratedSystem system,
                                                          DateTimeOffset? occurredAfter,
                                                          DateTimeOffset? occurredBefore,
                                                          long? objectId,
                                                          int? limit);
+        Task<HubspotContact> GetContact(IntegratedSystem system, string contactId, IEnumerable<string> properties = null);
     }
 }

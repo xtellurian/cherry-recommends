@@ -58,22 +58,20 @@ export const HubspotWebhookBehaviour = ({ integratedSystem }) => {
       : [];
 
   const handleUploadPropertyName = (name) => {
-    {
-      if (name !== behaviour.commonUserIdPropertyName) {
-        setError(null);
-        setLoading(true);
-        setHubspotWebhookBehaviourAsync({
-          token,
-          id: integratedSystem.id,
-          behaviour: {
-            ...behaviour,
-            commonUserIdPropertyName: name,
-          },
-        })
-          .then(setUpdateTrigger)
-          .catch(setError)
-          .finally(() => setLoading(false));
-      }
+    if (name !== behaviour.commonUserIdPropertyName) {
+      setError(null);
+      setLoading(true);
+      setHubspotWebhookBehaviourAsync({
+        token,
+        id: integratedSystem.id,
+        behaviour: {
+          ...behaviour,
+          commonUserIdPropertyName: name,
+        },
+      })
+        .then(setUpdateTrigger)
+        .catch(setError)
+        .finally(() => setLoading(false));
     }
   };
 

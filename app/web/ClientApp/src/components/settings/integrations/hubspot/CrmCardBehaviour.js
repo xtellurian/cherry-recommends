@@ -10,6 +10,8 @@ import {
   AsyncButton,
   ErrorCard,
 } from "../../../molecules";
+import { ToggleSwitch } from "../../../molecules/ToggleSwitch";
+import { SettingRow } from "../../../molecules/SettingRow";
 import { useAccessToken } from "../../../../api-hooks/token";
 
 const Top = ({ integratedSystem }) => {
@@ -41,6 +43,7 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
   const [featureOptions, setFeatureOptions] = React.useState([]);
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
+  const [include, setInclude] = React.useState(true);
 
   const features = useFeatures();
 
@@ -58,12 +61,21 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
         features.items.map((f) => ({ label: f.name, value: f }))
       );
     }
-  }, [behaviour]);
+  }, [behaviour, features]);
 
-  const [excludedFeatures, setExcludedFeatures] = React.useState([]);
+  const [selectedFeatures, setSelectedFeatures] = React.useState([]);
 
   React.useEffect(() => {
-    setExcludedFeatures(behaviour.excludedFeatures || []);
+    if (behaviour.includedFeatures && behaviour.includedFeatures.length) {
+      setSelectedFeatures(behaviour.includedFeatures || []);
+    } else if (
+      behaviour.excludedFeatures &&
+      behaviour.excludedFeatures.length
+    ) {
+      setSelectedFeatures(behaviour.excludedFeatures || []);
+    } else {
+      setSelectedFeatures([]);
+    }
   }, [behaviour]);
 
   const [excludedFeatureOptions, setExcludedFeatureOptions] = React.useState(
@@ -71,7 +83,15 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
   );
 
   React.useEffect(() => {
-    if (behaviour && behaviour.excludedFeatures) {
+    if (behaviour && behaviour.includedFeatures) {
+      setInclude(true);
+      setExcludedFeatureOptions(
+        featureOptions.filter((_) =>
+          behaviour.includedFeatures.includes(_.value.commonId)
+        )
+      );
+    } else if (behaviour && behaviour.excludedFeatures) {
+      setInclude(false);
       setExcludedFeatureOptions(
         featureOptions.filter((_) =>
           behaviour.excludedFeatures.includes(_.value.commonId)
@@ -82,10 +102,16 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
 
   const handleSave = () => {
     setLoading(true);
+    const payload = {};
+    if (include) {
+      payload.includedFeatures = selectedFeatures;
+    } else {
+      payload.excludedFeatures = selectedFeatures;
+    }
     setHubspotCrmCardBehaviourAsync({
       id: integratedSystem.id,
       token,
-      behaviour: { excludedFeatures },
+      behaviour: payload,
     })
       .then(setUpdateTrigger)
       .catch(setError)
@@ -95,34 +121,51 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
     <React.Fragment>
       <Top integratedSystem={integratedSystem} />
       {error && <ErrorCard error={error} />}
-     
-      <h5>Exclude Features from Hubspot CRM Card.</h5>
-      <p>
-          By default, all Features for a user will be shown in a Hubspot CRM Card.
-          Which Features would you like to exclude from the Card?
-      </p>
+
+      <SettingRow
+        label="Include or Exclude Features"
+        description="Would you like to include or exclude the features selected below?"
+      >
+        <ToggleSwitch
+          id="include-exclude-toggle"
+          onChange={setInclude}
+          checked={include}
+          name="Include Features"
+        />
+        <div className="mt-3">
+          The Features selected below will be{" "}
+          <strong>{include ? "included " : "excluded "}</strong>
+          from your Hubspot CRM Card.
+        </div>
+      </SettingRow>
+
       <div>
+        <h6>{include ? "Included" : "Excluded"} Features</h6>
         <Selector
           isMulti
           isSearchable
           placeholder="Select features to exclude from CRM Cards"
-          noOptionsMessage={({inputValue}) => `No Feature matches ${inputValue}`}
+          noOptionsMessage={({ inputValue }) =>
+            `No Feature matches ${inputValue}`
+          }
           defaultValue={excludedFeatureOptions}
           value={excludedFeatureOptions}
           onChange={(so) => {
             setExcludedFeatureOptions(so);
-            setExcludedFeatures([...so.map((_) => _.value.commonId)]);
+            setSelectedFeatures([...so.map((_) => _.value.commonId)]);
           }}
           options={featureOptions}
         />
       </div>
-      <AsyncButton
-        loading={loading}
-        className="btn btn-primary btn-block"
-        onClick={handleSave}
-      >
-        Save
-      </AsyncButton>
+      <div className="mt-3">
+        <AsyncButton
+          loading={loading}
+          className="btn btn-primary btn-block"
+          onClick={handleSave}
+        >
+          Save
+        </AsyncButton>
+      </div>
     </React.Fragment>
   );
 };

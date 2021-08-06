@@ -226,12 +226,20 @@ namespace SignalBox.Core.Workflows
                 }
                 else
                 {
-                    throw new BadRequestException($"Can't automatically create a Tracked User without a common Id for HS Object ID {objectId}");
+                    var contact = await hubspotService.GetContact(integratedSystem, objectId, new List<string> { behaviour.CommonUserIdPropertyName });
+                    if (contact.Properties.ContainsKey(behaviour.CommonUserIdPropertyName) && !string.IsNullOrEmpty(contact.Properties[behaviour.CommonUserIdPropertyName]))
+                    {
+                        return await CreateNewTrackedUser(integratedSystem, objectId, contact.Properties[behaviour.CommonUserIdPropertyName]);
+                    }
+                    else
+                    {
+                        throw new BadRequestException($"Hubspot Contact {objectId} had no value for property {behaviour.CommonUserIdPropertyName}");
+                    }
                 }
             }
             else if ((behaviour.CreateUserIfNotExist == false) && !exists)
             {
-                throw new ConfigurationException($"Cannot create a user without a Common User Id for HS Object ID {objectId}");
+                throw new WorkflowCancelledException($"HS Object ID {objectId} does not exist already, and CreateUserIfNotExist is false");
             }
             else
             {

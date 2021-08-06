@@ -71,14 +71,20 @@ namespace SignalBox.Web.Controllers
 
         private async Task HandleWebhookPayload(HubspotWebhookPayload payload)
         {
-
             var portalId = payload.PortalId.ToString();
             if (!await integratedSystemStore.ExistsFromCommonId(portalId))
             {
                 throw new ConfigurationException($"Hubspot Integrated s ystem with portalId={portalId} does not exist");
             }
             var integratedSystem = await integratedSystemStore.ReadFromCommonId(portalId);
-            await hubspotWorkflows.HandleWebhookPayload(integratedSystem, payload);
+            try
+            {
+                await hubspotWorkflows.HandleWebhookPayload(integratedSystem, payload);
+            }
+            catch (WorkflowCancelledException cancelledException)
+            {
+                logger.LogInformation($"Webhook workflow was cancelled. {cancelledException.Message}");
+            }
         }
     }
 }

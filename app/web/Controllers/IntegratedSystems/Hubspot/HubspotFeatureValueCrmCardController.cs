@@ -109,7 +109,7 @@ namespace SignalBox.Web.Controllers
                     var tu = trackedUsers.First();
                     logger.LogInformation($"Found a TrackedUser {tu.CommonId} for ticket {ticketId}");
                     return await HubspotUserFeaturesResponse(tu,
-                        integratedSystem.GetCache<HubspotCache>()?.FeatureCrmCardBehaviour?.ExcludedFeatures);
+                        integratedSystem.GetCache<HubspotCache>()?.FeatureCrmCardBehaviour);
                 }
                 else
                 {
@@ -132,7 +132,7 @@ namespace SignalBox.Web.Controllers
                 {
                     var trackedUser = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, associatedObjectId);
                     return await HubspotUserFeaturesResponse(trackedUser,
-                        integratedSystem.GetCache<HubspotCache>()?.FeatureCrmCardBehaviour?.ExcludedFeatures);
+                        integratedSystem.GetCache<HubspotCache>()?.FeatureCrmCardBehaviour);
                 }
                 else
                 {
@@ -151,11 +151,24 @@ namespace SignalBox.Web.Controllers
             }
         }
 
-        private async Task<HubspotCrmCardResponse> HubspotUserFeaturesResponse(TrackedUser trackedUser, IEnumerable<string> excludedFeatures = null)
+        private async Task<HubspotCrmCardResponse> HubspotUserFeaturesResponse(TrackedUser trackedUser, FeatureCrmCardBehaviour behaviour)
         {
-            excludedFeatures ??= new List<string>();
+            // deal with potential incoming nulls
+            behaviour ??= new FeatureCrmCardBehaviour();
+            behaviour.ExcludedFeatures ??= new HashSet<string>();
+            behaviour.IncludedFeatures ??= new HashSet<string>();
+
             var features = await trackedUserFeatureStore.GetFeaturesFor(trackedUser);
-            features = features.Where(_ => !excludedFeatures.Contains(_.CommonId));
+            // filter included by default
+            if (behaviour.IncludedFeatures.Any())
+            {
+                features = features.Where(_ => behaviour.IncludedFeatures.Contains(_.CommonId));
+            }
+            else if (behaviour.ExcludedFeatures.Any())
+            {
+                features = features.Where(_ => !behaviour.ExcludedFeatures.Contains(_.CommonId));
+            }
+
             var featureValues = new List<TrackedUserFeature>();
 
             if (features.Any())
