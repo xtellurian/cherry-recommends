@@ -44,7 +44,7 @@ namespace SignalBox.Core.Workflows
             this.newTrackedUserQueue = newTrackedUserQueue;
         }
 
-        public async Task<EventLoggingResponse> TrackUserEvents(IEnumerable<TrackedUserEventInput> input, bool addToQueue = false, bool ensureCreated = false)
+        public async Task<EventLoggingResponse> TrackUserEvents(IEnumerable<TrackedUserEventInput> input, bool addToQueue = false)
         {
             if (await eventQueueStore.IsWriteEnabled() && addToQueue)
             {
@@ -68,14 +68,15 @@ namespace SignalBox.Core.Workflows
                 logger.LogWarning("Not enqueuing. Prcessing events directly.");
                 var events = new List<TrackedUserEvent>();
                 var lastUpdated = dateTimeProvider.Now;
-                if (ensureCreated)
+                var trackedUsers = await userStore.CreateIfNotExists(input.Select(_ => _.CommonUserId).Distinct());
+                if (trackedUsers.Any())
                 {
-                    var newUsers = await userStore.CreateIfNotExists(input.Select(_ => _.CommonUserId).Distinct());
-                    foreach (var u in newUsers)
+                    foreach (var u in trackedUsers)
                     {
                         u.LastUpdated = lastUpdated;
                     }
                 }
+
 
                 foreach (var d in input)
                 {
@@ -84,7 +85,9 @@ namespace SignalBox.Core.Workflows
                     {
                         sourceSystem = await integratedSystemStore.Read(d.SourceSystemId.Value);
                     }
-                    events.Add(new TrackedUserEvent(d.CommonUserId,
+                    var trackedUser = trackedUsers.First(_ => _.CommonId == d.CommonUserId);
+                    trackedUser.LastUpdated = dateTimeProvider.Now; // user has been updated.
+                    events.Add(new TrackedUserEvent(trackedUser,
                                                     d.EventId,
                                                     d.Timestamp ?? dateTimeProvider.Now,
                                                     sourceSystem,
@@ -96,7 +99,7 @@ namespace SignalBox.Core.Workflows
 
 
                 var results = await trackedUserEventStore.AddTrackedUserEvents(events);
-                var actions = await trackedUserActionWorkflows.StoreActionsFromEvents(events);
+                var actions = await trackedUserActionWorkflows.ProcessActionsFromEvents(events);
                 await storageContext.SaveChanges();
                 return new EventLoggingResponse { EventsProcessed = input.Count(), ActionsProcessed = actions.Count() };
             }

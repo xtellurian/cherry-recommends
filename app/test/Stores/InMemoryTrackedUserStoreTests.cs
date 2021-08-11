@@ -41,7 +41,7 @@ namespace SignalBox.Test.Stores
             // Act
             // Add some events, empty this time.
             var updatedTime = dt.Now;
-            var trackedEvent = new TrackedUserEvent(userId, Guid.NewGuid().ToString(), updatedTime, null, null, "common_event_type", new DynamicPropertyDictionary
+            var trackedEvent = new TrackedUserEvent(user, Guid.NewGuid().ToString(), updatedTime, null, null, "common_event_type", new DynamicPropertyDictionary
             {
                  {"a key", "a logical value"}
             });
@@ -72,11 +72,11 @@ namespace SignalBox.Test.Stores
             // Add some properties, empty this time.
             var updatedTime = dt.Now;
 
-            var event1 = new TrackedUserEvent(userId, Guid.NewGuid().ToString(), updatedTime, null, null, "common_event_type", new DynamicPropertyDictionary
+            var event1 = new TrackedUserEvent(user, Guid.NewGuid().ToString(), updatedTime, null, null, "common_event_type", new DynamicPropertyDictionary
             {
                  {"a key", "a logical value"}
             });
-            var event2 = new TrackedUserEvent(userId, Guid.NewGuid().ToString(), updatedTime, null, null, "common_event_type", new DynamicPropertyDictionary
+            var event2 = new TrackedUserEvent(user, Guid.NewGuid().ToString(), updatedTime, null, null, "common_event_type", new DynamicPropertyDictionary
             {
                  {"a key", "a logical value"}
             });
@@ -109,12 +109,12 @@ namespace SignalBox.Test.Stores
 
             var updatedTime = dt.Now;
 
-            var maryProperties = new TrackedUserEvent(idMary, Guid.NewGuid().ToString(), updatedTime, null, null, "Set_Name", new DynamicPropertyDictionary
+            var maryProperties = new TrackedUserEvent(maryTracked, Guid.NewGuid().ToString(), updatedTime, null, null, "Set_Name", new DynamicPropertyDictionary
             {
                 {"name", "Mary"}
             });
 
-            var garyProperties = new TrackedUserEvent(idMary, Guid.NewGuid().ToString(), updatedTime, null, null, "Set_Name", new DynamicPropertyDictionary
+            var garyProperties = new TrackedUserEvent(maryTracked, Guid.NewGuid().ToString(), updatedTime, null, null, "Set_Name", new DynamicPropertyDictionary
             {
                 {"name", "Gary"}
             });

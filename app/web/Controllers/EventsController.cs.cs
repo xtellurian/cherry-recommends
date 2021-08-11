@@ -45,7 +45,7 @@ namespace SignalBox.Web.Controllers
                                                                  d.SourceSystemId,
                                                                  d.Kind,
                                                                  d.EventType,
-                                                                 d.Properties)), enqueue, !enqueue); // add to queue if available
+                                                                 d.Properties)), addToQueue: enqueue); // add to queue if available
         }
 
         /// <summary>Get events. Filter by commonUserId, otherwise latest events.</summary>
@@ -60,6 +60,14 @@ namespace SignalBox.Web.Controllers
             {
                 return new EventsResponse(await eventStore.ReadEventsForUser(commonUserId));
             }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<TrackedUserEvent> GetEvent(string id)
+        {
+            var e = await eventStore.Read(id);
+            await eventStore.LoadMany(e, _ => _.Actions);
+            return e;
         }
     }
 }

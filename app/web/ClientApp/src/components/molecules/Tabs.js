@@ -22,7 +22,7 @@ export const Tabs = ({ tabs, defaultTabId }) => {
   const currentTab = useTabs(defaultTabId || tabs[0].id);
   const { pathname } = useLocation();
   return (
-    <ul className="nav nav-pills nav-fill">
+    <ul className="nav nav-tabs nav-fill mb-2">
       {tabs.map((t) => (
         <TabListItem
           key={t.id}

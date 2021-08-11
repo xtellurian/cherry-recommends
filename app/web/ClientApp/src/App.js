@@ -17,6 +17,7 @@ import { TouchpointsComponent } from "./components/touchpoints/TouchpointsCompon
 import { ParametersComponent } from "./components/parameters/ParametersComponent";
 import { RecommendersComponent } from "./components/recommenders/RecommendersComponent";
 import { ProductsComponent } from "./components/products/ProductsComponent";
+import { EventsComponent } from "./components/events/EventsComponent";
 import { AdminComponent } from "./components/admin/AdminComponent";
 
 // import some demo stuff
@@ -40,12 +41,16 @@ export default class App extends Component {
         <AuthorizeRoute path="/segments" component={SegmentsComponent} />
         <AuthorizeRoute path="/offers" component={OffersComponent} />
         <AuthorizeRoute path="/parameters" component={ParametersComponent} />
-        <AuthorizeRoute path="/recommenders" component={RecommendersComponent} />
+        <AuthorizeRoute
+          path="/recommenders"
+          component={RecommendersComponent}
+        />
         <AuthorizeRoute path="/products" component={ProductsComponent} />
         <AuthorizeRoute
           path="/models"
           component={ModelRegistrationsComponent}
         />
+        <AuthorizeRoute path="/events" component={EventsComponent} />
         <AuthorizeRoute path="/settings" component={SettingsComponent} />
 
         <AuthorizeRoute path="/demo" component={DemoComponent} />

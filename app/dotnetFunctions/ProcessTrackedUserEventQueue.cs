@@ -41,7 +41,7 @@ namespace SignalBox.Functions
 
             try
             {
-                await eventWorkflow.TrackUserEvents(events, false, false);
+                await eventWorkflow.TrackUserEvents(events, addToQueue: false);
             }
             catch (System.Exception ex)
             {

@@ -1,17 +1,19 @@
 import { trackedUsers } from "signalbox.js";
 
-export const fetchTrackedUsers = trackedUsers.fetchTrackedUsers;
+export const fetchTrackedUsersAsync = trackedUsers.fetchTrackedUsersAsync;
 
 export const fetchTrackedUser = trackedUsers.fetchTrackedUser;
 
-export const fetchUniqueTrackedUserActions =
-  trackedUsers.fetchUniqueTrackedUserActions;
+export const fetchUniqueTrackedUserActionGroupsAsync =
+  trackedUsers.fetchUniqueTrackedUserActionGroupsAsync;
 
-export const fetchTrackedUserAction = trackedUsers.fetchTrackedUserAction;
+export const fetchTrackedUserActionAsync = trackedUsers.fetchTrackedUserActionAsync;
 
 export const uploadUserData = trackedUsers.uploadUserData;
 
 export const createOrUpdateTrackedUser = trackedUsers.createOrUpdateTrackedUser;
+export const updateMergePropertiesAsync =
+  trackedUsers.updateMergePropertiesAsync;
 
 const defaultHeaders = { "Content-Type": "application/json" };
 const headers = (token) =>

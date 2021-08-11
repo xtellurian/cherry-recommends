@@ -30,6 +30,8 @@ namespace SignalBox.Core
         public DynamicPropertyDictionary Properties { get; set; } = new DynamicPropertyDictionary(); // not empty
 
         [JsonIgnore]
+        public ICollection<TrackedUserAction> Actions { get; set; }
+        [JsonIgnore]
         public ICollection<Segment> Segments { get; set; }
 
         [JsonIgnore]

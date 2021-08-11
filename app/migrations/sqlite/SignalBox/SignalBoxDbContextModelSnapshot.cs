@@ -914,6 +914,43 @@ namespace sqlite.SignalBox
                     b.ToTable("RecommenderTargetVariableValue");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.RewardSelector", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ActionName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("SelectorType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionName", "SelectorType")
+                        .IsUnique();
+
+                    b.ToTable("RewardSelectors");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Rule", b =>
                 {
                     b.Property<long>("Id")
@@ -1064,6 +1101,9 @@ namespace sqlite.SignalBox
                     b.Property<string>("ActionValue")
                         .HasColumnType("TEXT");
 
+                    b.Property<double?>("AssociatedRevenue")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("Category")
                         .HasColumnType("TEXT");
 
@@ -1093,6 +1133,12 @@ namespace sqlite.SignalBox
                     b.Property<long>("Timestamp")
                         .HasColumnType("INTEGER");
 
+                    b.Property<long?>("TrackedUserEventId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("TrackedUserId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ValueType")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -1104,6 +1150,10 @@ namespace sqlite.SignalBox
                     b.HasIndex("CommonUserId");
 
                     b.HasIndex("Timestamp");
+
+                    b.HasIndex("TrackedUserEventId");
+
+                    b.HasIndex("TrackedUserId");
 
                     b.ToTable("TrackedUserActions");
                 });
@@ -1152,6 +1202,9 @@ namespace sqlite.SignalBox
                     b.Property<long>("Timestamp")
                         .HasColumnType("INTEGER");
 
+                    b.Property<long?>("TrackedUserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EventId")
@@ -1160,6 +1213,8 @@ namespace sqlite.SignalBox
                     b.HasIndex("SourceId");
 
                     b.HasIndex("Timestamp");
+
+                    b.HasIndex("TrackedUserId");
 
                     b.ToTable("TrackedUserEvents");
                 });
@@ -1586,13 +1641,34 @@ namespace sqlite.SignalBox
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("SignalBox.Core.TrackedUserAction", b =>
+                {
+                    b.HasOne("SignalBox.Core.TrackedUserEvent", "TrackedUserEvent")
+                        .WithMany("Actions")
+                        .HasForeignKey("TrackedUserEventId");
+
+                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                        .WithMany("Actions")
+                        .HasForeignKey("TrackedUserId");
+
+                    b.Navigation("TrackedUser");
+
+                    b.Navigation("TrackedUserEvent");
+                });
+
             modelBuilder.Entity("SignalBox.Core.TrackedUserEvent", b =>
                 {
                     b.HasOne("SignalBox.Core.IntegratedSystem", "Source")
                         .WithMany()
                         .HasForeignKey("SourceId");
 
+                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                        .WithMany()
+                        .HasForeignKey("TrackedUserId");
+
                     b.Navigation("Source");
+
+                    b.Navigation("TrackedUser");
                 });
 
             modelBuilder.Entity("SignalBox.Core.TrackedUserFeature", b =>
@@ -1701,11 +1777,18 @@ namespace sqlite.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
                 {
+                    b.Navigation("Actions");
+
                     b.Navigation("IntegratedSystemMaps");
 
                     b.Navigation("TrackedUserFeatures");
 
                     b.Navigation("TrackedUserTouchpoints");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.TrackedUserEvent", b =>
+                {
+                    b.Navigation("Actions");
                 });
 #pragma warning restore 612, 618
         }

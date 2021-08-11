@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace SignalBox.Core
 {
@@ -8,63 +9,71 @@ namespace SignalBox.Core
     {
         protected TrackedUserAction()
         { }
-        private TrackedUserAction(string commonUserId,
-                                 string eventId,
+        private TrackedUserAction(TrackedUser trackedUser,
+                                 TrackedUserEvent trackedUserEvent,
                                  DateTimeOffset timestamp,
                                  long? recommendationCorrelatorId,
                                  long? integratedSystemId,
                                  string category,
                                  string actionName)
         {
-            CommonUserId = commonUserId;
-            EventId = eventId;
+            if (trackedUser == null)
+            {
+                throw new System.NullReferenceException("Tracked User cannot be null for an event.");
+            }
+            CommonUserId = trackedUser.CommonId;
+            TrackedUser = trackedUser;
+            EventId = trackedUserEvent?.EventId ?? "auto-" + Guid.NewGuid().ToString();
+            TrackedUserEvent = trackedUserEvent;
             Timestamp = timestamp;
             RecommendationCorrelatorId = recommendationCorrelatorId;
             IntegratedSystemId = integratedSystemId;
             Category = category;
             ActionName = actionName;
         }
-        public TrackedUserAction(string commonUserId,
-                                 string eventId,
+        public TrackedUserAction(TrackedUser trackedUser,
+                                 TrackedUserEvent trackedUserEvent,
                                  DateTimeOffset timestamp,
                                  long? recommendationCorrelatorId,
                                  long? integratedSystemId,
                                  string category,
                                  string property,
                                  string value)
-        : this(commonUserId, eventId, timestamp, recommendationCorrelatorId, integratedSystemId, category, property)
+        : this(trackedUser, trackedUserEvent, timestamp, recommendationCorrelatorId, integratedSystemId, category, property)
         {
             ActionValue = value;
             ValueType = TrackedUserActionValueType.String;
         }
 
-        public TrackedUserAction(string commonUserId,
-                                 string eventId,
+        public TrackedUserAction(TrackedUser trackedUser,
+                                 TrackedUserEvent trackedUserEvent,
                                  DateTimeOffset timestamp,
                                  long? recommendationCorrelatorId,
                                  long? integratedSystemId,
                                  string category,
                                  string property,
                                  double value)
-        : this(commonUserId, eventId, timestamp, recommendationCorrelatorId, integratedSystemId, category, property)
+        : this(trackedUser, trackedUserEvent, timestamp, recommendationCorrelatorId, integratedSystemId, category, property)
         {
             ActionValue = value.ToString();
             ValueType = TrackedUserActionValueType.Float;
         }
-        public TrackedUserAction(string commonUserId,
-                                 string eventId,
+        public TrackedUserAction(TrackedUser trackedUser,
+                                 TrackedUserEvent trackedUserEvent,
                                  DateTimeOffset timestamp,
                                  long? recommendationCorrelatorId,
                                  long? integratedSystemId,
                                  string category,
                                  string actionName,
                                  int value)
-        : this(commonUserId, eventId, timestamp, recommendationCorrelatorId, integratedSystemId, category, actionName)
+        : this(trackedUser, trackedUserEvent, timestamp, recommendationCorrelatorId, integratedSystemId, category, actionName)
         {
             ActionValue = value.ToString();
             ValueType = TrackedUserActionValueType.Int;
         }
 
+        public long? TrackedUserId { get; set; }
+        public TrackedUser TrackedUser { get; set; }
         public string CommonUserId { get; set; }
         public string EventId { get; set; }
         public DateTimeOffset Timestamp { get; set; }
@@ -76,6 +85,10 @@ namespace SignalBox.Core
         public string ActionName { get; set; }
         public string ActionValue { get; set; }
         public TrackedUserActionValueType ValueType { get; set; }
+        public double? AssociatedRevenue { get; set; }
 
+        [JsonIgnore] // ignore to prevent circular serialization problem
+        public TrackedUserEvent TrackedUserEvent { get; set; }
+        public long? TrackedUserEventId { get; set; }
     }
 }

@@ -1,6 +1,34 @@
 import { getUrl } from "../baseUrl";
 import { headers } from "./headers";
 
+export const fetchEventAsync = async ({ id, token }) => {
+  const url = getUrl(`api/events/${id}`);
+
+  const response = await fetch(url, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
+export const createEventsAsync = async ({ token, events }) => {
+  const url = getUrl(`api/events`);
+
+  const response = await fetch(url, {
+    headers: headers(token),
+    method: "post",
+    body: JSON.stringify(events),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
 export const fetchUserEvents = async ({
   success,
   error,

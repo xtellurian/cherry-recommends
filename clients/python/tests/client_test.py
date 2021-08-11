@@ -59,7 +59,8 @@ for i in range(1, 10):
     test_client.create_product_recommender_target_variable_value(
         product_recommender['id'], start, end, "LTV", i * 7 * random.randint(1, 3))
 
-target_variable_values = test_client.get_product_recommender_target_variable_values(product_recommender_id)
+target_variable_values = test_client.get_product_recommender_target_variable_values(
+    product_recommender_id)
 assert len(target_variable_values) > 0
 
 # delete the recommender
@@ -121,13 +122,18 @@ tracked = test_client.track_recommendation_outcome(
 print(tracked)
 
 event_types = ["CREATED", "CANCELED"]
-event_kinds = ["BILLING", "TICKET"]
+event_kinds = ["BILLING", "TICKET", "PAYMENT"]
 events = []
 for i in range(100):
     uid = str(uuid.uuid1())
     print(f'Event User Id: ', uid)
+    properties = {}
+    e_type = np.random.choice(event_types)
+    e_kind = np.random.choice(event_kinds)
+    if(e_kind == "PAYMENT"):
+        properties['amountBilled'] = random.random() * 100
     events.append(test_client.construct_event(
-        uid, str(uuid.uuid1()), np.random.choice(event_types), np.random.choice(event_kinds), {}))
+        uid, str(uuid.uuid1()), e_type, e_kind, properties=properties))
     # commonUserId, event_id, event_type, kind, properties, timestamp, source_system_id
 
 print(f'logging {len(events)} events')

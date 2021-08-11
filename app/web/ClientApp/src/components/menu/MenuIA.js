@@ -110,4 +110,8 @@ export const settingsItems = [
     name: "Integrations",
     to: "/settings/integrations",
   },
+  {
+    name: "Reward Settings",
+    to: "/settings/rewards",
+  },
 ];

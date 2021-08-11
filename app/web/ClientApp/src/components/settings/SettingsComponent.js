@@ -3,6 +3,7 @@ import { Switch, Link, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { ApiKeyComponent } from "./apiKeys/ApiKeyComponent";
 import { IntegrationsComponent } from "./integrations/IntegrationsComponent";
+import { RewardsComponent } from "./rewards/RewardsComponent";
 import { DeploymentInfo } from "./deployment/DeploymentInfo";
 
 const SettingsHome = () => {
@@ -38,10 +39,8 @@ export const SettingsComponent = () => {
           path={`${path}/integrations`}
           component={IntegrationsComponent}
         />
-        <AuthorizeRoute
-          path={`${path}/info`}
-          component={DeploymentInfo}
-        />
+        <AuthorizeRoute path={`${path}/info`} component={DeploymentInfo} />
+        <AuthorizeRoute path={`${path}/rewards`} component={RewardsComponent} />
       </Switch>
     </React.Fragment>
   );

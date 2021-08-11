@@ -7,6 +7,8 @@ namespace SignalBox.Core
 {
     public interface ITrackedUserEventStore
     {
+        Task<TrackedUserEvent> Read(string eventId);
+        Task LoadMany<TProperty>(TrackedUserEvent entity, Expression<Func<TrackedUserEvent, IEnumerable<TProperty>>> propertyExpression) where TProperty : class;
         Task<IEnumerable<TrackedUserEvent>> Latest(DateTimeOffset after);
         Task<int> Count(Expression<Func<TrackedUserEvent, bool>> predicate = null);
         Task<TProperty> Max<TProperty>(Expression<Func<TrackedUserEvent, TProperty>> selector);

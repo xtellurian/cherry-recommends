@@ -76,6 +76,7 @@ namespace SignalBox.Infrastructure
         public DbSet<TrackedUser> TrackedUsers { get; set; }
         public DbSet<TrackedUserEvent> TrackedUserEvents { get; set; }
         public DbSet<TrackedUserAction> TrackedUserActions { get; set; }
+        public DbSet<RewardSelector> RewardSelectors { get; set; }
         public DbSet<Touchpoint> Touchpoints { get; set; }
         public DbSet<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
         public DbSet<Parameter> Parameters { get; set; }

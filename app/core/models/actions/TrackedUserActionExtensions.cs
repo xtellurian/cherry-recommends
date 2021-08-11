@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SignalBox.Core
 {
@@ -7,12 +8,12 @@ namespace SignalBox.Core
     {
         public static ICollection<TrackedUserAction> ToActions(this TrackedUserEvent e)
         {
-            var category = $"{e.Kind}|{e.EventType}";
+            var category = $"Event|{e.Kind}";
             var actions = new List<TrackedUserAction>();
             if (e.Properties == null || e.Properties.Count == 0)
             {
-                actions.Add(new TrackedUserAction(e.CommonUserId,
-                                                      e.EventId,
+                actions.Add(new TrackedUserAction(e.TrackedUser,
+                                                      e,
                                                       e.Timestamp,
                                                       e.RecommendationCorrelatorId,
                                                       e.Source?.Id,
@@ -22,8 +23,8 @@ namespace SignalBox.Core
             }
             foreach (var kvp in e.Properties)
             {
-                actions.Add(ToAction(e.CommonUserId,
-                                    e.EventId,
+                actions.Add(ToAction(e.TrackedUser,
+                                    e,
                                     e.Timestamp,
                                     e.RecommendationCorrelatorId,
                                     e.Source?.Id,
@@ -42,22 +43,47 @@ namespace SignalBox.Core
             return actions;
         }
 
-        public static ICollection<TrackedUserAction> ToActions(this DynamicPropertyDictionary properties,
-                                                               string commonUserId,
-                                                               DateTimeOffset timestamp,
-                                                               long? integratedSystemId)
+        public static IList<TrackedUserAction> ActionsFromChanges(this TrackedUser user,
+                                                           IDictionary<string, object> nextProperties,
+                                                           DateTimeOffset now,
+                                                           long? recommendationCorrelatorId,
+                                                           long? integratedSystemId)
         {
-            var eventId = System.Guid.NewGuid().ToString();
-            var actions = new List<TrackedUserAction>();
-            foreach (var kvp in properties)
+            var result = new List<TrackedUserAction>();
+            user.Properties ??= new DynamicPropertyDictionary();
+            if ((user.Properties.Count == 0) && (nextProperties == null || nextProperties.Count == 0))
             {
-                actions.Add(ToAction(commonUserId, eventId, timestamp, null, integratedSystemId, "TrackedUser|Properties", kvp));
+                // current and next are both empty or null
+                return result;
             }
-            return actions;
+            else
+            {
+                foreach (var k in user.Properties.Keys.Where(_ => nextProperties.ContainsKey(_)))
+                {
+                    // existing properties, keys in both
+                    // then the value may be updated or the same
+                    if (!string.Equals(user.Properties[k]?.ToString(), nextProperties[k]?.ToString()))
+                    {
+                        // they are NOT the same
+                        result.Add(new TrackedUserAction(user, null, timestamp: now, recommendationCorrelatorId, integratedSystemId, "System|PropertyUpdated", k, nextProperties[k].ToString()));
+                    }
+                }
+                foreach (var k in user.Properties.Keys.Where(_ => !nextProperties.ContainsKey(_)))
+                {
+                    // deleted properties
+                    result.Add(new TrackedUserAction(user, null, timestamp: now, recommendationCorrelatorId, integratedSystemId, "System|PropertyDeleted", k, null));
+                }
+                foreach (var k in nextProperties.Keys.Where(_ => !user.Properties.ContainsKey(_)))
+                {
+                    // new properties
+                    result.Add(new TrackedUserAction(user, null, timestamp: now, recommendationCorrelatorId, integratedSystemId, "System|PropertyCreated", k, nextProperties[k].ToString()));
+                }
+            }
+            return result;
         }
 
-        private static TrackedUserAction ToAction(string commonUserId,
-                                     string eventId,
+        private static TrackedUserAction ToAction(TrackedUser trackedUser,
+                                     TrackedUserEvent trackedUserEvent,
                                      DateTimeOffset timestamp,
                                      long? recommendationCorrelatorId,
                                      long? integratedSystemId,
@@ -66,35 +92,35 @@ namespace SignalBox.Core
         {
             if (kvp.Value == null)
             {
-                return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, (string)null);
+                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, (string)null);
             }
             else if (kvp.Value is double f)
             {
-                return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, f);
+                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, f);
             }
             else if (kvp.Value is int n)
             {
-                return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, n);
+                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, n);
             }
             else if (kvp.Value is string s)
             {
-                return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, s);
+                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, s);
             }
             else if (kvp.Value is System.Text.Json.JsonElement jsonElement)
             {
                 if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.String)
                 {
-                    return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, jsonElement.GetString());
+                    return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, jsonElement.GetString());
                 }
                 if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Number)
                 {
                     if (jsonElement.TryGetInt32(out var i))
                     {
-                        return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, i);
+                        return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, i);
                     }
                     else if (jsonElement.TryGetDouble(out var d))
                     {
-                        return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, d);
+                        return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, d);
                     }
                     else
                     {
@@ -103,7 +129,7 @@ namespace SignalBox.Core
                 }
                 else
                 {
-                    return new TrackedUserAction(commonUserId, eventId, timestamp, null, integratedSystemId, category, kvp.Key, $"{kvp.Value}");
+                    return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, $"{kvp.Value}");
                 }
             }
             else

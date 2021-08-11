@@ -9,7 +9,7 @@ namespace SignalBox.Core
         {
         }
 
-        public TrackedUserEvent(string commonUserId,
+        public TrackedUserEvent(TrackedUser trackedUser,
                                 string eventId,
                                 DateTimeOffset timestamp,
                                 IntegratedSystem source,
@@ -18,7 +18,12 @@ namespace SignalBox.Core
                                 IDictionary<string, object> properties,
                                 long? recommendationCorrelatorId = null)
         {
-            CommonUserId = commonUserId;
+            if (trackedUser == null)
+            {
+                throw new NullReferenceException("Cannot create an event with a null tracked user");
+            }
+            TrackedUser = trackedUser;
+            CommonUserId = trackedUser.CommonId;
             EventId = eventId;
             Timestamp = timestamp;
             Source = source;
@@ -38,5 +43,8 @@ namespace SignalBox.Core
         public string Kind { get; set; }
         public string EventType { get; set; }
         public DynamicPropertyDictionary Properties { get; set; }
+        public long? TrackedUserId { get; set; }
+        public TrackedUser TrackedUser { get; set; }
+        public ICollection<TrackedUserAction> Actions { get; set; }
     }
 }

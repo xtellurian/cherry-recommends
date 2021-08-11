@@ -48,12 +48,22 @@ namespace SignalBox.Infrastructure
             throw new NotImplementedException();
         }
 
+        public Task LoadMany<TProperty>(TrackedUserEvent entity, Expression<Func<TrackedUserEvent, IEnumerable<TProperty>>> propertyExpression) where TProperty : class
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<TProperty> Max<TProperty>(Expression<Func<TrackedUserEvent, TProperty>> selector)
         {
             throw new NotImplementedException();
         }
 
         public Task<TProperty> Min<TProperty>(Expression<Func<TrackedUserEvent, TProperty>> selector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TrackedUserEvent> Read(string eventId)
         {
             throw new NotImplementedException();
         }

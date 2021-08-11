@@ -9,7 +9,7 @@ namespace SignalBox.Core
         {
         }
 
-        public DynamicPropertyDictionary(IDictionary<string, object> dictionary) : base(dictionary ?? new Dictionary<string,object>())
+        public DynamicPropertyDictionary(IDictionary<string, object> dictionary) : base(dictionary ?? new Dictionary<string, object>())
         {
         }
     }

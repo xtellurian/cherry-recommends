@@ -49,11 +49,20 @@ namespace SignalBox.Web.Controllers
             }
         }
 
-        /// <summary>Returns a list of events for a given user.</summary>
-        [HttpGet("events")]
-        public async Task<IEnumerable<TrackedUserEvent>> GetEvents(string commonUserId)
+        // /// <summary>Returns a list of events for a given user.</summary>
+        // [HttpGet("events")]
+        // public async Task<IEnumerable<TrackedUserEvent>> GetEvents(string commonUserId)
+        // {
+        //     return await eventStore.ReadEventsForUser(commonUserId);
+        // }
+
+        // /// <summary>Returns a list of events for a given user.</summary>
+        [HttpPost("{id}/properties")]
+        public async Task<IDictionary<string, object>> UpdateProperties(string id, [FromBody] Dictionary<string, object> properties)
         {
-            return await eventStore.ReadEventsForUser(commonUserId);
+            var trackedUser = await base.GetResource(id);
+            trackedUser = await workflows.MergeUpdateProperties(trackedUser, properties, null, saveOnComplete: true);
+            return trackedUser.Properties;
         }
 
         /// <summary>Creates a new tracked user.</summary>

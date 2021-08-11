@@ -30,45 +30,20 @@ namespace SignalBox.Web.Controllers
         }
 
         /// <summary>Gets the latest actions from a tracked user.</summary>
-        [HttpGet("{id}/actions")]
-        public async Task<UniqueActionsDto> GetLatestActions(string id, bool? useInternalId = null)
+        [HttpGet("{id}/action-groups")]
+        public async Task<Paginated<ActionCategoryAndName>> GetActionGroups([FromQuery] PaginateRequest p, string id, bool? useInternalId = null)
         {
-            TrackedUser user;
-            if ((useInternalId == null || useInternalId == true) && int.TryParse(id, out var internalId))
-            {
-                user = await trackedUserStore.Read(internalId);
-            }
-            else if (useInternalId == true)
-            {
-                throw new BadRequestException("Internal Ids must be integers");
-            }
-            else
-            {
-                user = await trackedUserStore.ReadFromCommonId(id);
-            }
-
-            return new UniqueActionsDto(await actionWorkflows.ReadUniqueActionNames(user.CommonId));
+            var trackedUser = await trackedUserStore.GetEntity(id);
+            return await actionWorkflows.ReadTrackedUserCategoriesAndActionNames(p.Page, trackedUser.CommonId);
         }
 
-        /// <summary>Gets the latest action from a tracked user for this action name.</summary>
-        [HttpGet("{id}/actions/{actionName}")]
-        public async Task<TrackedUserAction> GetAction(string id, string actionName, bool? useInternalId = null)
+        /// <summary>Gets the latest action from a tracked user for this category.</summary>
+        [HttpGet("{id}/actions/{category}")]
+        public async Task<TrackedUserAction> GetAction(string id, string category, string actionName = null, bool? useInternalId = null)
         {
-            TrackedUser user;
-            if ((useInternalId == null || useInternalId == true) && int.TryParse(id, out var internalId))
-            {
-                user = await trackedUserStore.Read(internalId);
-            }
-            else if (useInternalId == true)
-            {
-                throw new BadRequestException("Internal Ids must be integers");
-            }
-            else
-            {
-                user = await trackedUserStore.ReadFromCommonId(id);
-            }
+            var user = await trackedUserStore.GetEntity(id, useInternalId);
 
-            return await actionWorkflows.ReadLatestAction(user.CommonId, actionName);
+            return await actionWorkflows.ReadLatestAction(user.CommonId, category, actionName);
         }
     }
 }

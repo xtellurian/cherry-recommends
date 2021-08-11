@@ -8,6 +8,8 @@ import { CreateUser } from "./CreateUser";
 import { TrackedUserTouchpoints } from "./TrackedUserTouchpoints";
 import { CreateTouchpointData } from "./CreateTouchpointData";
 import { LinkToIntegratedSystem } from "./LinkToIntegratedSystem";
+import { EditProperties } from "./EditProperties";
+import { CreateEvent } from "./CreateEvent";
 import { Features } from "./Features";
 
 export const TrackedUsersComponent = (props) => {
@@ -55,6 +57,16 @@ export const TrackedUsersComponent = (props) => {
             exact
             path={`${path}/features/:id`}
             component={Features}
+          />
+          <AuthorizeRoute
+            exact
+            path={`${path}/edit-properties/:id`}
+            component={EditProperties}
+          />
+          <AuthorizeRoute
+            exact
+            path={`${path}/create-event/:id`}
+            component={CreateEvent}
           />
         </Switch>
       </div>

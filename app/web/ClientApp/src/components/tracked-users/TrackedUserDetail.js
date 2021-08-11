@@ -1,59 +1,37 @@
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
-import {
-  useTrackedUser,
-  useTrackedUserUniqueActions,
-  useTrackedUserAction,
-} from "../../api-hooks/trackedUserApi";
-import { useUserEvents } from "../../api-hooks/eventApi";
+import { Link, useParams } from "react-router-dom";
+import { useTrackedUser } from "../../api-hooks/trackedUserApi";
 import { BackButton } from "../molecules/BackButton";
-import {
-  Subtitle,
-  Title,
-  ErrorCard,
-  Spinner,
-  ExpandableCard,
-  EmptyList,
-} from "../molecules";
+import { Subtitle, Title, ErrorCard, Spinner, EmptyList } from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
+import { CopyableField } from "../molecules/CopyableField";
+import { Tabs, TabActivator } from "../molecules/Tabs";
 import {
   ActionsButton,
   ActionItemsGroup,
   ActionLink,
 } from "../molecules/ActionsButton";
 import { JsonView } from "../molecules/JsonView";
-import { EventTimelineChart } from "../molecules/EventTimelineChart";
 
-const ActionSubRow = ({ id, actionName }) => {
-  const action = useTrackedUserAction({ id, actionName });
-  const data = {
-    category: action.category,
-    eventId: action.eventId,
-    actionName: action.actionName,
-    actionValue: action.actionValue,
-  };
-  return (
-    <div>
-      {action.loading && <Spinner />}
-      {action.timestamp && <DateTimeField label="Timestamp" date={action.timestamp} />}
-      {data.actionName && <JsonView data={data} />}
-    </div>
-  );
-};
-const ActionRow = ({ id, actionName }) => {
-  return (
-    <ExpandableCard label={actionName}>
-      <ActionSubRow id={id} actionName={actionName} />
-    </ExpandableCard>
-  );
-};
+import { HistorySection } from "./HistorySection";
+
+const tabs = [
+  {
+    id: "properties",
+    label: "Properties",
+  },
+  {
+    id: "history",
+    label: "History",
+  },
+];
+const defaultTabId = tabs[0].id;
+
 export const TrackedUserDetail = () => {
-  const { params } = useRouteMatch();
-  const id = params["id"];
+  const { id } = useParams();
   const trackedUser = useTrackedUser({ id });
-  const actions = useTrackedUserUniqueActions({ id });
-  const events = useUserEvents({ commonUserId: trackedUser?.commonUserId });
 
+  const numProperties = Object.keys(trackedUser?.properties || {}).length;
   return (
     <React.Fragment>
       <ActionsButton
@@ -62,14 +40,16 @@ export const TrackedUserDetail = () => {
         label="Features"
       >
         <ActionItemsGroup label="Actions">
-          <ActionLink
-            to={`/tracked-users/touchpoints/${trackedUser.id}`}
-          >
+          <ActionLink to={`/tracked-users/edit-properties/${id}`}>
+            Edit Properties
+          </ActionLink>
+          <ActionLink to={`/tracked-users/create-event/${id}`}>
+            Log Event
+          </ActionLink>
+          <ActionLink to={`/tracked-users/touchpoints/${id}`}>
             Touchpoints
           </ActionLink>
-          <ActionLink
-            to={`/tracked-users/link-to-integrated-system/${trackedUser.id}`}
-          >
+          <ActionLink to={`/tracked-users/link-to-integrated-system/${id}`}>
             Link to Integrated System
           </ActionLink>
         </ActionItemsGroup>
@@ -81,28 +61,33 @@ export const TrackedUserDetail = () => {
       <Title>Tracked User</Title>
       <Subtitle>{trackedUser.name || trackedUser.commonUserId}</Subtitle>
       <hr />
+
       {trackedUser.loading && <Spinner />}
       {trackedUser.error && <ErrorCard error={trackedUser.error} />}
-      <ExpandableCard label="Details">
-        <JsonView data={trackedUser} />
-      </ExpandableCard>
-      <div className="mt-2">
-        <Subtitle>Latest Activity</Subtitle>
-        {actions.loading && <Spinner />}
-        {actions.error && <ErrorCard error={actions.error} />}
-        {actions.actionNames && actions.actionNames.length === 0 && (
-          <EmptyList>No Action Data</EmptyList>
-        )}
-        {actions.actionNames &&
-          actions.actionNames.map((a) => (
-            <ActionRow key={a} id={id} actionName={a} />
-          ))}
-      </div>
-      <hr />
-      <div className="mb-5">
-        <h4>Events</h4>
-        <EventTimelineChart eventResponse={events} />
-      </div>
+      {trackedUser.lastUpdated && (
+        <DateTimeField label="Last Updated" date={trackedUser.lastUpdated} />
+      )}
+      {trackedUser.commonId && (
+        <CopyableField label="Common Id" value={trackedUser.commonId} />
+      )}
+
+      <Tabs tabs={tabs} defaultTabId={tabs[0].id} />
+
+      <TabActivator tabId={tabs[0].id} defaultTabId={defaultTabId}>
+        <Subtitle>Properties ({numProperties})</Subtitle>
+
+        <Link to={`/tracked-users/edit-properties/${trackedUser.id}`}>
+          <button className="btn btn-outline-primary float-right">
+            Edit Properties
+          </button>
+        </Link>
+        {numProperties > 0 && <JsonView data={trackedUser.properties} />}
+        {numProperties === 0 && <EmptyList>User has no properties.</EmptyList>}
+      </TabActivator>
+
+      <TabActivator tabId={"history"} defaultTabId={defaultTabId}>
+        <HistorySection trackedUser={trackedUser} />
+      </TabActivator>
     </React.Fragment>
   );
 };

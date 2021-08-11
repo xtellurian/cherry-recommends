@@ -41,6 +41,7 @@ namespace SignalBox.Infrastructure
         {
             services.AddScoped<ITrackedUserEventStore, EFTrackedUserEventStore>();
             services.AddScoped<ITrackedUserActionStore, EFTrackedUserActionStore>();
+            services.AddScoped<IRewardSelectorStore, EFRewardSelectorStore>();
             services.AddScoped<ITrackedUserStore, EFTrackedUserStore>();
             services.AddScoped<IExperimentStore, EFExperimentStore>();
             services.AddScoped<ISegmentStore, EFSegmentStore>();

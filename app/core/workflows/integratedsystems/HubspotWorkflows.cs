@@ -256,7 +256,7 @@ namespace SignalBox.Core.Workflows
             // now create an event
             await eventStore.AddTrackedUserEvents(new List<TrackedUserEvent>
             {
-                new TrackedUserEvent(trackedUser.CommonId,
+                new TrackedUserEvent(trackedUser,
                     webhookPayload.EventId?.ToString(),
                     dateTimeProvider.Now,
                     integratedSystem,

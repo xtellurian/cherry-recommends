@@ -1,14 +1,13 @@
-using SignalBox.Core;
 using static SignalBox.Core.Workflows.TrackedUserEventsWorkflows;
 
 namespace SignalBox.Core.Adapters.Segment
 {
     public static class Converter
     {
-        public static TrackedUserEvent ToTrackedUserEvent(this SegmentModel model, IntegratedSystem sys)
+        public static TrackedUserEvent ToTrackedUserEvent(this SegmentModel model, TrackedUser trackedUser, IntegratedSystem sys)
         {
             return new TrackedUserEvent(
-                model.UserId, model.MessageId, model.Timestamp, sys, $"Segment|{model.Type}", model.Event, model.Properties);
+                trackedUser, model.MessageId, model.Timestamp, sys, $"Segment|{model.Type}", model.Event, model.Properties);
         }
 
         public static TrackedUserEventInput ToTrackedUserEventInput(this SegmentModel model, IntegratedSystem sys)

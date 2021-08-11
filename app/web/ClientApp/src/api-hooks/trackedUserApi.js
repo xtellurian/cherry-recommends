@@ -2,10 +2,10 @@ import React from "react";
 import { usePagination } from "../utility/utility";
 import { useAccessToken } from "./token";
 import {
-  fetchTrackedUsers,
+  fetchTrackedUsersAsync,
   fetchTrackedUser,
-  fetchUniqueTrackedUserActions,
-  fetchTrackedUserAction,
+  fetchUniqueTrackedUserActionGroupsAsync,
+  fetchTrackedUserActionAsync,
 } from "../api/trackedUsersApi";
 
 export const useTrackedUsers = ({ searchTerm }) => {
@@ -15,13 +15,13 @@ export const useTrackedUsers = ({ searchTerm }) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchTrackedUsers({
-        success: setState,
-        error: console.log,
+      fetchTrackedUsersAsync({
         token,
         page,
         searchTerm,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, page, searchTerm]);
 
@@ -46,39 +46,40 @@ export const useTrackedUser = ({ id }) => {
   return result;
 };
 
-export const useTrackedUserUniqueActions = ({ id }) => {
+export const useTrackedUserUniqueActionGroups = ({ id }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
     if (token && id) {
-      fetchUniqueTrackedUserActions({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchUniqueTrackedUserActionGroupsAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
 
   return result;
 };
 
-export const useTrackedUserAction = ({ id, actionName }) => {
+export const useTrackedUserAction = ({ id, category, actionName }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
     if (token && id) {
-      fetchTrackedUserAction({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchTrackedUserActionAsync({
         token,
         id,
+        category,
         actionName,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
-  }, [token, id, actionName]);
+  }, [token, id, category, actionName]);
 
   return result;
 };

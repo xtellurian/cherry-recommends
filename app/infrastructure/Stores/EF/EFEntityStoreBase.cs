@@ -10,7 +10,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFEntityStoreBase<T> : EFStoreBase<T>, IEntityStore<T> where T : Entity
     {
-        protected const int PageSize = 100;
+        protected virtual int PageSize => 100;
         public EFEntityStoreBase(SignalBoxDbContext context, Func<SignalBoxDbContext, DbSet<T>> selector)
         : base(context, selector)
         {

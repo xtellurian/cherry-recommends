@@ -1,7 +1,7 @@
 import React from "react";
 import { AsyncSelector } from "./AsyncSelect";
 import { useTrackedUsers } from "../../api-hooks/trackedUserApi";
-import { fetchTrackedUsers } from "../../api/trackedUsersApi";
+import { fetchTrackedUsersAsync } from "../../api/trackedUsersApi";
 import { useAccessToken } from "../../api-hooks/token";
 
 export const AsyncSelectTrackedUser = ({ onChange, placeholder }) => {
@@ -15,15 +15,16 @@ export const AsyncSelectTrackedUser = ({ onChange, placeholder }) => {
     : [];
 
   const loadUsers = (inputValue, callback) => {
-    fetchTrackedUsers({
-      success: (r) =>
-        callback(
-          r.items.map((x) => ({ value: x, label: x.name || x.commonId }))
-        ),
-      error: (e) => console.log(e),
+    fetchTrackedUsersAsync({
       token,
       searchTerm: inputValue,
-    });
+    })
+      .then((r) =>
+        callback(
+          r.items.map((x) => ({ value: x, label: x.name || x.commonId }))
+        )
+      )
+      .catch((e) => console.log(e));
   };
 
   return (

@@ -49,6 +49,25 @@ namespace SignalBox.Core.Workflows
             await storageContext.SaveChanges();
             return newUsers;
         }
+        public async Task<TrackedUser> MergeUpdateProperties(TrackedUser trackedUser, IDictionary<string, object> properties, long? integratedSystemId = null, bool? saveOnComplete = true)
+        {
+            await userStore.LoadMany(trackedUser, _ => _.Actions);
+            trackedUser.Actions ??= new List<TrackedUserAction>();
+            var newProperties = new DynamicPropertyDictionary(properties);
+            foreach (var a in trackedUser.ActionsFromChanges(newProperties, dateTimeProvider.Now, null, integratedSystemId))
+            {
+                trackedUser.Actions.Add(await trackedUserActionStore.Create(a));
+            }
+
+            trackedUser.Properties = newProperties;
+            trackedUser.LastUpdated = dateTimeProvider.Now;
+
+            if (saveOnComplete == true)
+            {
+                await storageContext.SaveChanges();
+            }
+            return trackedUser;
+        }
 
         public async Task<TrackedUser> CreateOrUpdateTrackedUser(string commonUserId,
                                                          string? name = null,
@@ -58,6 +77,8 @@ namespace SignalBox.Core.Workflows
                                                          bool saveOnComplete = true)
         {
             TrackedUser trackedUser;
+            var actions = new List<TrackedUserAction>();
+
             if (await userStore.ExistsFromCommonId(commonUserId))
             {
                 trackedUser = await userStore.ReadFromCommonId(commonUserId, _ => _.IntegratedSystemMaps);
@@ -68,7 +89,7 @@ namespace SignalBox.Core.Workflows
                 }
                 if (properties != null && properties.Keys.Count > 0)
                 {
-                    trackedUser.Properties = new DynamicPropertyDictionary(properties);
+                    trackedUser = await MergeUpdateProperties(trackedUser, properties, integratedSystemId, saveOnComplete: false);
                 }
             }
             else
@@ -88,12 +109,6 @@ namespace SignalBox.Core.Workflows
                 logger.LogWarning($"Not setting integratedSystemId for tracked user {trackedUser.Id}");
             }
 
-            var dynamicProperties = new DynamicPropertyDictionary(properties);
-            var actions = new List<TrackedUserAction>();
-            foreach (var a in dynamicProperties.ToActions(commonUserId, dateTimeProvider.Now, integratedSystemId))
-            {
-                actions.Add(await trackedUserActionStore.Create(a));
-            }
 
             if (saveOnComplete == true)
             {

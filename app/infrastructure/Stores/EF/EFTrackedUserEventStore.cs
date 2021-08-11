@@ -15,6 +15,28 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
         }
 
+        public async Task<TrackedUserEvent> Read(string eventId)
+        {
+            if (await Set.AnyAsync(_ => _.EventId == eventId))
+            {
+                return await Set.FirstAsync(_ => _.EventId == eventId);
+            }
+            else if (long.TryParse(eventId, out var id))
+            {
+                try
+                {
+                    return await Set.SingleAsync(_ => _.Id == id);
+                }
+                catch (Exception ex)
+                {
+                    throw new StorageException($"Event Id {eventId} not found", ex);
+                }
+            }
+            else
+            {
+                throw new StorageException($"Event Id {eventId} not found");
+            }
+        }
         public async Task<IEnumerable<TrackedUserEvent>> AddTrackedUserEvents(IEnumerable<TrackedUserEvent> events)
         {
             // need to chunk this query, because too many ids in a single Contains() breaks the db connection.

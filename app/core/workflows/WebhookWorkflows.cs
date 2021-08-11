@@ -53,7 +53,7 @@ namespace SignalBox.Core.Workflows
             // first check if the receiver has a shared secret, and if yes, validate the thing
             AssertSegmentSignatureValid(receiver, webhookBody, signature);
             var trackedUserEventInput = JsonSerializer.Deserialize<SegmentModel>(webhookBody).ToTrackedUserEventInput(receiver.IntegratedSystem);
-            var res = await eventsWorkflows.TrackUserEvents(new List<TrackedUserEventInput> { trackedUserEventInput }, false, true);
+            var res = await eventsWorkflows.TrackUserEvents(new List<TrackedUserEventInput> { trackedUserEventInput }, addToQueue: false);
             return res;
         }
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useDashboard } from "../../api-hooks/dataSummaryApi";
 import {
   Subtitle,
@@ -24,6 +25,9 @@ const EventRow = ({ event }) => {
   const ts = new Date(event.timestamp);
   return (
     <ExpandableCard label={`${event.kind}  @  ${ts.toLocaleDateString()}`}>
+      <Link to={`/events/detail/${event.eventId}`}>
+        <button className="btn btn-primary float-right">Detail</button>
+      </Link>
       <DateTimeField label="Timestamp" date={event.timestamp} />
       <JsonView data={event} />
     </ExpandableCard>
