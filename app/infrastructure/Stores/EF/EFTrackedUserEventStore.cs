@@ -59,9 +59,26 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await Set.Where(predicate ?? ((x) => true)).Select(_ => _.CommonUserId).Distinct().CountAsync();
         }
 
-        public async Task<IEnumerable<TrackedUserEvent>> ReadEventsForUser(string commonUserId)
+        public async Task<Paginated<TrackedUserEvent>> ReadEventsForUser(int page, TrackedUser trackedUser)
         {
-            return await Set.Where(_ => _.CommonUserId == commonUserId).ToListAsync();
+            Expression<Func<TrackedUserEvent, bool>> predicate = _ => _.CommonUserId == trackedUser.CommonId;
+            var itemCount = await Set.CountAsync(predicate);
+            List<TrackedUserEvent> results;
+
+            if (itemCount > 0) // check and let's see whether the query is worth running against the database
+            {
+                results = await Set
+                    .Where(predicate)
+                    .OrderByDescending(_ => _.Timestamp)
+                    .Skip((page - 1) * PageSize).Take(PageSize)
+                    .ToListAsync();
+            }
+            else
+            {
+                results = new List<TrackedUserEvent>();
+            }
+            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
+            return new Paginated<TrackedUserEvent>(results, pageCount, itemCount, page);
         }
 
         public async Task<IEnumerable<TrackedUserEvent>> ReadEventsOfType(string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)

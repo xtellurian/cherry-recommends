@@ -29,25 +29,27 @@ export const createEventsAsync = async ({ token, events }) => {
   }
 };
 
+export const fetchTrackedUsersEventsAsync = async ({ token, id }) => {
+  const url = getUrl(`api/TrackedUsers/${id}/events`);
+
+  const response = await fetch(url, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
 export const fetchUserEvents = async ({
   success,
   error,
   token,
   commonUserId,
 }) => {
-  let url = getUrl("api/events");
-  if (commonUserId) {
-    url = `${url}?commonUserId=${commonUserId}`;
-  }
-
-  const response = await fetch(url, {
-    headers: headers(token),
-  });
-  if (response.ok) {
-    success(await response.json());
-  } else {
-    error(await response.json());
-  }
+  fetchTrackedUsersEventsAsync({ id: commonUserId, token })
+    .then(success)
+    .catch(error);
 };
 
 export const logUserEvents = async ({ success, error, token, events }) => {

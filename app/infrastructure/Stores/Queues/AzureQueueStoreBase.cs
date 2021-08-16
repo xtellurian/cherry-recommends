@@ -71,7 +71,7 @@ namespace SignalBox.Infrastructure.Queues
             }
             catch (System.Exception ex)
             {
-                throw new QueueStorageException($"Failed to Enqueue onto queue ${this.queueName}", ex);
+                throw new QueueStorageException($"Failed to Enqueue onto queue {this.queueName}", ex);
             }
         }
 
@@ -87,7 +87,7 @@ namespace SignalBox.Infrastructure.Queues
             }
             catch (System.Exception ex)
             {
-                throw new QueueStorageException($"Failed to StartDequeue off queue ${this.queueName}", ex);
+                throw new QueueStorageException($"Failed to StartDequeue off queue {this.queueName}", ex);
             }
         }
 
@@ -102,7 +102,7 @@ namespace SignalBox.Infrastructure.Queues
             }
             catch (System.Exception ex)
             {
-                throw new QueueStorageException($"Failed to CompleteDequeue off queue ${this.queueName}", ex);
+                throw new QueueStorageException($"Failed to CompleteDequeue off queue {this.queueName}", ex);
             }
         }
 

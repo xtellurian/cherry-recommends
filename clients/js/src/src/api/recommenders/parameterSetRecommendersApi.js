@@ -11,38 +11,53 @@ import * as eh from "./common/errorHandling";
 import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
 
+export const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
+  const url = getUrl("api/recommenders/ParameterSetRecommenders");
+  const response = await fetch(`${url}?${pageQuery(page)}`, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
 export const fetchParameterSetRecommenders = async ({
   success,
   error,
   token,
   page,
 }) => {
-  const url = getUrl("api/recommenders/ParameterSetRecommenders");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
+  fetchParameterSetRecommendersAsync({ token, page })
+    .then(success)
+    .catch(error);
+};
+
+export const fetchParameterSetRecommenderAsync = async ({
+  token,
+  id,
+  searchTerm,
+}) => {
+  let url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}`);
+  if (searchTerm) {
+    url = url + `?${searchEntities(searchTerm)}`;
+  }
+  const response = await fetch(url, {
     headers: headers(token),
   });
   if (response.ok) {
-    success(await response.json());
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
   }
 };
-
 export const fetchParameterSetRecommender = async ({
   success,
   error,
   token,
   id,
 }) => {
-  const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}`);
-  const response = await fetch(url, {
-    headers: headers(token),
-  });
-  if (response.ok) {
-    success(await response.json());
-  } else {
-    error(await response.json());
-  }
+  fetchParameterSetRecommenderAsync({ id, token }).then(success).catch(error);
 };
 
 export const createParameterSetRecommender = async ({

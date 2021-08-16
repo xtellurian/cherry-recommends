@@ -131,14 +131,9 @@ namespace SignalBox.Web.Controllers
         public async Task<FeatureCrmCardBehaviour> SetCrmCardBehaviour(string id, FeatureCrmCardBehaviour dto)
         {
             var system = await store.GetEntity(id);
-            if (dto.ExcludedFeatures != null && dto.ExcludedFeatures.Any(_ => _ == null))
-            {
-                dto.ExcludedFeatures = dto.ExcludedFeatures.Where(_ => _ != null).ToHashSet(); // remove nulls
-            }
-            var cache = system.GetCache<HubspotCache>();
-            cache.FeatureCrmCardBehaviour = dto;
-            system.SetCache(cache);
-            await store.Context.SaveChanges();
+
+            var cache = await hubspotWorkflows.UpdateCrmCardBehaviour(system, dto);
+            
             return cache.FeatureCrmCardBehaviour;
         }
     }

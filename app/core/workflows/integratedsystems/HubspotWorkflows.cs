@@ -12,9 +12,11 @@ namespace SignalBox.Core.Workflows
     public class HubspotWorkflows : IWorkflow
     {
         private readonly IIntegratedSystemStore integratedSystemStore;
+        private readonly TrackedUserEventsWorkflows eventsWorkflows;
         private readonly ITrackedUserStore trackedUserStore;
         private readonly ITrackedUserEventStore eventStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
+        private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IStorageContext storageContext;
         private readonly IHubspotService hubspotService;
         private readonly IDateTimeProvider dateTimeProvider;
@@ -23,9 +25,11 @@ namespace SignalBox.Core.Workflows
         private readonly IOptions<HubspotAppCredentials> hubspotCreds;
 
         public HubspotWorkflows(IIntegratedSystemStore integratedSystemStore,
+                                TrackedUserEventsWorkflows eventsWorkflows,
                                 ITrackedUserStore trackedUserStore,
                                 ITrackedUserEventStore eventStore,
                                 ITrackedUserSystemMapStore systemMapStore,
+                                IParameterSetRecommenderStore parameterSetRecommenderStore,
                                 IStorageContext storageContext,
                                 IHubspotService hubspotService,
                                 IDateTimeProvider dateTimeProvider,
@@ -34,9 +38,11 @@ namespace SignalBox.Core.Workflows
                                 IOptions<HubspotAppCredentials> hubspotCreds)
         {
             this.integratedSystemStore = integratedSystemStore;
+            this.eventsWorkflows = eventsWorkflows;
             this.trackedUserStore = trackedUserStore;
             this.eventStore = eventStore;
             this.systemMapStore = systemMapStore;
+            this.parameterSetRecommenderStore = parameterSetRecommenderStore;
             this.storageContext = storageContext;
             this.hubspotService = hubspotService;
             this.dateTimeProvider = dateTimeProvider;
@@ -74,6 +80,42 @@ namespace SignalBox.Core.Workflows
             }
 
             return system.GetCache<HubspotCache>();
+        }
+
+        public async Task<HubspotCache> UpdateCrmCardBehaviour(IntegratedSystem system, FeatureCrmCardBehaviour behaviour)
+        {
+            if (behaviour.ExcludedFeatures != null && behaviour.ExcludedFeatures.Any(_ => _ == null))
+            {
+                behaviour.ExcludedFeatures = behaviour.ExcludedFeatures.Where(_ => _ != null).ToHashSet(); // remove nulls
+            }
+
+            var cache = system.GetCache<HubspotCache>();
+
+            if (behaviour.ParameterSetRecommenderId.HasValue &&
+                behaviour.ParameterSetRecommenderId != cache.FeatureCrmCardBehaviour.ParameterSetRecommenderId)
+            {
+                // recommender needs updating
+                if (!await parameterSetRecommenderStore.Exists(behaviour.ParameterSetRecommenderId.Value))
+                {
+                    // doesn't exist - throw
+                    throw new BadRequestException($"Parameter Set Recommender Id={behaviour.ParameterSetRecommenderId} doesnt exist");
+                }
+                else
+                {
+                    // check this recommender will work.
+                    var recommender = await parameterSetRecommenderStore.Read(behaviour.ParameterSetRecommenderId.Value);
+                    if (recommender.Arguments.Any(_ => _.IsRequired))
+                    {
+                        throw new BadRequestException($"Hubspot Recommenders do not support required arguments");
+                    }
+                }
+            }
+
+            cache.FeatureCrmCardBehaviour = behaviour;
+            system.SetCache(cache);
+            await storageContext.SaveChanges();
+
+            return cache;
         }
 
         public async Task<IEnumerable<HubspotContactProperty>> LoadContactProperties(long integratedSystemId)
@@ -145,6 +187,44 @@ namespace SignalBox.Core.Workflows
             return Task.FromResult(hubspotCreds.Value);
         }
 
+        public async Task<EventLoggingResponse> HandleHubspotRecommendationOutcome(IntegratedSystem integratedSystem,
+                                                                          long correlationId,
+                                                                          string outcome,
+                                                                          string userId,
+                                                                          string userEmail,
+                                                                          string associatedObjectId,
+                                                                          string associatedObjectType)
+        {
+            var hubspotInfo = integratedSystem.GetCache<HubspotCache>();
+            var behaviour = hubspotInfo.WebhookBehaviour ?? new HubspotWebhookBehaviour();
+            var eventId = System.Guid.NewGuid().ToString();
+            var externalId = associatedObjectId; // mot true
+
+            if (!string.IsNullOrEmpty(behaviour.CommonUserIdPropertyName))
+            {
+                var contact = await hubspotService.GetContact(integratedSystem, associatedObjectId, new List<string> { behaviour.CommonUserIdPropertyName });
+                if (contact.Properties.ContainsKey(behaviour.CommonUserIdPropertyName) && !string.IsNullOrEmpty(contact.Properties[behaviour.CommonUserIdPropertyName]))
+                {
+                    externalId = contact.Properties[behaviour.CommonUserIdPropertyName];
+                }
+                else
+                {
+                    throw new BadRequestException($"Couldn't find user, Hubspot Property is: {behaviour.CommonUserIdPropertyName}");
+                }
+            }
+            var trackedUser = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, associatedObjectId);
+            // use the object ID
+            return await eventsWorkflows.TrackUserEvents(new List<TrackedUserEventsWorkflows.TrackedUserEventInput>
+                {
+                    new TrackedUserEventsWorkflows.TrackedUserEventInput(trackedUser.CommonId,
+                    eventId, dateTimeProvider.Now, correlationId, integratedSystem.Id, "Hubspot", "RecommendatonOutcome",
+                    new Dictionary<string, object>
+                    {
+                        {"Outcome", outcome}
+                    })
+                }, addToQueue: false);
+
+        }
         public async Task<TrackedUser> HandleWebhookPayload(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
         {
             switch (webhookPayload.SubscriptionType)
@@ -185,15 +265,23 @@ namespace SignalBox.Core.Workflows
             }
             else
             {
-                var telemetryDic = new Dictionary<string, string>
-            {
-                { "objectId", webhookPayload.ObjectId?.ToString()},
-                { "portalId", webhookPayload.PortalId?.ToString()},
-                { "propertyName", webhookPayload.PropertyName?.ToString()},
-                { "propertyValue", webhookPayload.PropertyValue?.ToString()},
-            };
-                telemetry.TrackEvent("Hubspot.Webhook.HandleContactCreated.Failed", telemetryDic);
-                throw new BadRequestException("Can't create user without a common Id");
+                var contact = await hubspotService.GetContact(integratedSystem, objectId, new List<string> { behaviour.CommonUserIdPropertyName });
+                if (contact.Properties.ContainsKey(behaviour.CommonUserIdPropertyName) && !string.IsNullOrEmpty(contact.Properties[behaviour.CommonUserIdPropertyName]))
+                {
+                    return await CreateNewTrackedUser(integratedSystem, objectId, contact.Properties[behaviour.CommonUserIdPropertyName]);
+                }
+                else
+                {
+                    var telemetryDic = new Dictionary<string, string>
+                {
+                    { "objectId", webhookPayload.ObjectId?.ToString()},
+                    { "portalId", webhookPayload.PortalId?.ToString()},
+                    { "propertyName", webhookPayload.PropertyName?.ToString()},
+                    { "propertyValue", webhookPayload.PropertyValue?.ToString()},
+                };
+                    telemetry.TrackEvent("Hubspot.Webhook.HandleContactCreated.Failed", telemetryDic);
+                    throw new BadRequestException("Can't create user without a common Id");
+                }
             }
         }
 

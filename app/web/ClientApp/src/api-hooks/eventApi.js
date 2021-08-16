@@ -1,6 +1,9 @@
 import React from "react";
 import { useAccessToken } from "./token";
-import { fetchUserEvents, fetchEventAsync } from "../api/eventsApi";
+import {
+  fetchTrackedUsersEventsAsync,
+  fetchEventAsync,
+} from "../api/eventsApi";
 
 export const useEvent = ({ id }) => {
   const token = useAccessToken();
@@ -24,32 +27,14 @@ export const useUserEvents = ({ commonUserId }) => {
   });
   React.useEffect(() => {
     if (token && commonUserId) {
-      fetchUserEvents({
-        success: setState,
-        error: (error) => setState({ error }),
+      fetchTrackedUsersEventsAsync({
         token,
-        commonUserId,
-      });
+        id: commonUserId,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, commonUserId]);
-
-  return result;
-};
-
-export const useLatestEvents = () => {
-  const token = useAccessToken();
-  const [result, setState] = React.useState({
-    loading: true,
-  });
-  React.useEffect(() => {
-    if (token) {
-      fetchUserEvents({
-        success: setState,
-        error: (error) => setState({ error }),
-        token,
-      });
-    }
-  }, [token]);
 
   return result;
 };

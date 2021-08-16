@@ -1,7 +1,7 @@
 import React from "react";
 import {
-  fetchParameterSetRecommenders,
-  fetchParameterSetRecommender,
+  fetchParameterSetRecommendersAsync,
+  fetchParameterSetRecommenderAsync,
   fetchParameterSetRecommendationsAsync,
   fetchLinkedRegisteredModel,
   fetchInvokationLogsAsync,
@@ -17,12 +17,12 @@ export const useParameterSetRecommenders = () => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchParameterSetRecommenders({
-        success: setState,
-        error: (error) => setState({ error }),
+      fetchParameterSetRecommendersAsync({
         token,
         page,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, page]);
 
@@ -34,13 +34,13 @@ export const useParameterSetRecommender = ({ id, trigger }) => {
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
-      fetchParameterSetRecommender({
-        success: setState,
-        error: (error) => setState({ error }),
+    if (id && token) {
+      fetchParameterSetRecommenderAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id, trigger]);
 

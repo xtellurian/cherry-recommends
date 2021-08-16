@@ -78,6 +78,11 @@ namespace SignalBox.Infrastructure
             throw new NotImplementedException();
         }
 
+        public Task<Paginated<TrackedUserEvent>> ReadEventsForUser(int page, TrackedUser user)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<TrackedUserEvent>> ReadEventsOfKind(string kind, DateTimeOffset? since = null, DateTimeOffset? until = null)
         {
             throw new NotImplementedException();

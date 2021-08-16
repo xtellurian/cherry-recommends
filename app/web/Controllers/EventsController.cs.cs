@@ -48,20 +48,6 @@ namespace SignalBox.Web.Controllers
                                                                  d.Properties)), addToQueue: enqueue); // add to queue if available
         }
 
-        /// <summary>Get events. Filter by commonUserId, otherwise latest events.</summary>
-        [HttpGet]
-        public async Task<EventsResponse> GetEvents(string commonUserId)
-        {
-            if (commonUserId == null)
-            {
-                return new EventsResponse(await eventStore.Latest(dateTimeProvider.Now.AddMonths(-1)));
-            }
-            else
-            {
-                return new EventsResponse(await eventStore.ReadEventsForUser(commonUserId));
-            }
-        }
-
         [HttpGet("{id}")]
         public async Task<TrackedUserEvent> GetEvent(string id)
         {

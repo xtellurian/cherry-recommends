@@ -46,7 +46,6 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
             var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
             return new Paginated<T>(results, pageCount, itemCount, page);
-
         }
 
         public virtual async Task<T> ReadFromCommonId<TProperty>(string commonId, Expression<Func<T, TProperty>> include)

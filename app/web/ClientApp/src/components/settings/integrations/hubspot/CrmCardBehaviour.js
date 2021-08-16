@@ -13,6 +13,8 @@ import {
 import { ToggleSwitch } from "../../../molecules/ToggleSwitch";
 import { SettingRow } from "../../../molecules/SettingRow";
 import { useAccessToken } from "../../../../api-hooks/token";
+import { useParameterSetRecommender } from "../../../../api-hooks/parameterSetRecommendersApi";
+import { AsyncSelectParameterSetRecommender } from "../../../molecules/AsyncSelectParameterSetRecommender";
 
 const Top = ({ integratedSystem }) => {
   return (
@@ -40,6 +42,11 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
     trigger: updateTrigger,
   });
 
+  const parameterSetRecommender = useParameterSetRecommender({
+    id: behaviour.parameterSetRecommenderId,
+  });
+
+  const [newRecommender, setRecommender] = React.useState();
   const [featureOptions, setFeatureOptions] = React.useState([]);
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
@@ -108,6 +115,12 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
     } else {
       payload.excludedFeatures = selectedFeatures;
     }
+    if (
+      newRecommender &&
+      newRecommender.id !== behaviour.parameterSetRecommenderId
+    ) {
+      payload.parameterSetRecommenderId = newRecommender.id;
+    }
     setHubspotCrmCardBehaviourAsync({
       id: integratedSystem.id,
       token,
@@ -121,6 +134,16 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
     <React.Fragment>
       <Top integratedSystem={integratedSystem} />
       {error && <ErrorCard error={error} />}
+      <SettingRow
+        label="Recommender"
+        description="Would you like to show recommendations in HubSpot? Currently, only ParameterSet Recommendations are supported."
+      >
+        <AsyncSelectParameterSetRecommender
+          allowNone={true}
+          placeholder={parameterSetRecommender.name || "Choose a recommender"}
+          onChange={(v) => setRecommender(v.value)}
+        />
+      </SettingRow>
 
       <SettingRow
         label="Include or Exclude Features"
@@ -139,7 +162,7 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
         </div>
       </SettingRow>
 
-      <div>
+      <div className="mb-2">
         <h6>{include ? "Included" : "Excluded"} Features</h6>
         <Selector
           isMulti

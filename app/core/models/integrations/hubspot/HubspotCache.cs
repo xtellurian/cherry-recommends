@@ -14,7 +14,6 @@ namespace SignalBox.Core.Integrations.Hubspot
         }
 
         public HubspotAccountDetails? AccountDetails { get; set; }
-
         public HubspotWebhookBehaviour? WebhookBehaviour { get; set; }
         public FeatureCrmCardBehaviour? FeatureCrmCardBehaviour { get; set; }
     }

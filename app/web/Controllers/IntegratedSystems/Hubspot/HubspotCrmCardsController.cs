@@ -65,7 +65,7 @@ namespace SignalBox.Web.Controllers
                                                           string associatedObjectType,
                                                           string objectType)
         {
-            await ValidateHubspotSignature();
+            await ValidateHubspotSignature(false);
             telemetry.TrackEvent("Hubspot.CrmCard", new Dictionary<string, string>
             {
                 {"portalId", portalId},

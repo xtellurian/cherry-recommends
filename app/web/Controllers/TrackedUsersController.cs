@@ -49,12 +49,13 @@ namespace SignalBox.Web.Controllers
             }
         }
 
-        // /// <summary>Returns a list of events for a given user.</summary>
-        // [HttpGet("events")]
-        // public async Task<IEnumerable<TrackedUserEvent>> GetEvents(string commonUserId)
-        // {
-        //     return await eventStore.ReadEventsForUser(commonUserId);
-        // }
+        /// <summary>Returns a list of events for a given user.</summary>
+        [HttpGet("{id}/events")]
+        public async Task<Paginated<TrackedUserEvent>> GetEvents([FromQuery] PaginateRequest p, string id)
+        {
+            var trackedUser = await store.GetEntity(id);
+            return await eventStore.ReadEventsForUser(p.Page, trackedUser);
+        }
 
         // /// <summary>Returns a list of events for a given user.</summary>
         [HttpPost("{id}/properties")]

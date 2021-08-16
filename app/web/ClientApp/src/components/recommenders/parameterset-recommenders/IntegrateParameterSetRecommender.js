@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
 import {
   BackButton,
@@ -14,6 +14,7 @@ import { Tabs, TabActivator } from "../../molecules/Tabs";
 const tabs = [
   { id: "api", label: "REST API" },
   { id: "js", label: "Javascript" },
+  { id: "hubspot", label: "Hubspot CRM Card" },
 ];
 
 const jsIntegrate = ({ id, argumentsExample }) => `
@@ -91,6 +92,32 @@ export const IntegrateParameterSetRecommender = () => {
                 language="js"
                 text={jsIntegrate({ id, argumentsExample })}
               ></CodeView>
+            )}
+          </TabActivator>
+          <TabActivator tabId="hubspot" defaultTabId={defaultTabId}>
+            {id && (
+              <div>
+                <h5>To connect this recommender to your Hubspot CRM card:</h5>
+                <ol class="list-group list-group-numbered">
+                  <li class="list-group-item">
+                    <Link to="/settings/integrations">
+                      <button className="btn btn-primary mr-3">
+                        View Integrations
+                      </button>
+                    </Link>
+                    Click the button below to view your existing integrations.
+                  </li>
+
+                  <li class="list-group-item">
+                    View the details of your chosen Hubspot integration, and
+                    click "More Options"
+                  </li>
+                  <li class="list-group-item">
+                    Go to the CRM Card tab, and choose this recommender (
+                    {recommender.name})
+                  </li>
+                </ol>
+              </div>
             )}
           </TabActivator>
         </React.Fragment>

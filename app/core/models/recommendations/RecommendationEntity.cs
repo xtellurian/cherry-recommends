@@ -13,8 +13,10 @@ namespace SignalBox.Core.Recommendations
             this.RecommenderType = recommenderType;
             this.Version = version;
         }
+#nullable enable
 
         public RecommenderTypes? RecommenderType { get; set; } // nullable for backwards compat
+        public TrackedUser? TrackedUser { get; set; }
 
         public long? RecommendationCorrelatorId { get; set; }
         [JsonIgnore]
@@ -34,7 +36,7 @@ namespace SignalBox.Core.Recommendations
             this.ModelOutput = Serialize(output);
             this.ModelOutputType = typeof(T).FullName;
         }
-        public T GetOutput<T>() where T : IModelInput
+        public T GetOutput<T>() where T : IModelOutput
         {
             return Deserialize<T>(this.ModelOutput);
         }

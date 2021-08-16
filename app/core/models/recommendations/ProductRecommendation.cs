@@ -18,7 +18,6 @@ namespace SignalBox.Core.Recommendations
         }
 
 #nullable enable
-        public TrackedUser TrackedUser { get; set; }
         public long? RecommenderId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ProductRecommender? Recommender { get; set; }

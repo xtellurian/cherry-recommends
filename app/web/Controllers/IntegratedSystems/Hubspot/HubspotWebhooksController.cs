@@ -58,7 +58,7 @@ namespace SignalBox.Web.Controllers
         public async Task ProcessWebhook()
         {
             var content = await Request.GetRawBodyStringAsync();
-            await ValidateHubspotSignature(content);
+            await ValidateHubspotSignature(true, content);
 
             var payloads = JsonSerializer.Deserialize<List<HubspotWebhookPayload>>(content);
             telemetry.TrackEvent("Hubspot.Webhook");
@@ -67,6 +67,26 @@ namespace SignalBox.Web.Controllers
             {
                 await HandleWebhookPayload(p);
             }
+        }
+
+        // {?userId=25089465&userEmail=rian@four2.ai&associatedObjectId=51&associatedObjectType=CONTACT&portalId=20210647}
+        [HttpGet("recommendations/{correlationId}/outcomes/{outcome}")] // use correlation ID for now but potentially change it?
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<HubspotActionHookResponse> ProcessActionHook(long correlationId,
+                                                                        string outcome,
+                                                                       string userId,
+                                                                       string userEmail,
+                                                                       string associatedObjectId,
+                                                                       string associatedObjectType,
+                                                                       string portalId)
+        {
+            // everything is in the request URI (no body)
+            var requestBody = await Request.GetRawBodyStringAsync();
+            await ValidateHubspotSignature(false);
+            var integratedSystem = await integratedSystemStore.ReadFromCommonId(portalId);
+            var response = await hubspotWorkflows.HandleHubspotRecommendationOutcome(integratedSystem, correlationId, outcome, userId, userEmail, associatedObjectId, associatedObjectType);
+
+            return new HubspotActionHookResponse($"{outcome} logged. {response.EventsProcessed} events processed");
         }
 
         private async Task HandleWebhookPayload(HubspotWebhookPayload payload)

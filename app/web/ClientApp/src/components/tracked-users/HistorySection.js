@@ -55,7 +55,7 @@ const ActionGroupRow = ({ id, actionGroup }) => {
 
 const EventRow = ({ event }) => {
   return (
-    <ExpandableCard label={event.kind}>
+    <ExpandableCard label={`${event.kind} @ ${event.timestamp}`}>
       <div>
         {event.timestamp && (
           <DateTimeField label="Timestamp" date={event.timestamp} />
@@ -104,13 +104,12 @@ const ViewAsEvents = ({ trackedUser }) => {
         <Subtitle>Events</Subtitle>
       </div>
       {events.loading && <Spinner>Loading events</Spinner>}
-      {events.events &&
-        events.events.length > 0 &&
-        events.events.map((e) => <EventRow key={e.eventId} event={e} />)}
-      <div className="mt-2 text-center">
-        <strong>Event Timeline</strong>
-        <EventTimelineChart eventResponse={events} />
-      </div>
+      {events.items && events.items.length === 0 && (
+        <EmptyList>No events</EmptyList>
+      )}
+      {events.items &&
+        events.items.length > 0 &&
+        events.items.map((e) => <EventRow key={e.eventId} event={e} />)}
     </div>
   );
 };

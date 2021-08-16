@@ -45,7 +45,7 @@ namespace SignalBox.Core.Workflows
             this.modelClientFactory = modelClientFactory;
         }
 
-        public async Task<ParameterSetRecommenderModelOutputV1> InvokeParameterSetRecommender(
+        public async Task<ParameterSetRecommendation> InvokeParameterSetRecommender(
             ParameterSetRecommender recommender,
             string version,
             ParameterSetRecommenderModelInputV1 input)
@@ -113,7 +113,7 @@ namespace SignalBox.Core.Workflows
                                               $"Invoked successfully for {user.Name ?? user.CommonId}",
                                               null,
                                               true);
-                return output;
+                return recommendation;
             }
             catch (ModelInvokationException modelEx)
             {
@@ -153,10 +153,8 @@ namespace SignalBox.Core.Workflows
                     recommendedParams[p.CommonId] = p.DefaultValue?.Value;
                 }
 
-                return new ParameterSetRecommenderModelOutputV1
-                {
-                    RecommendedParameters = recommendedParams
-                };
+                var recommendation = new ParameterSetRecommendation(recommender, user, correlator, version);
+                return recommendation;
             }
             catch (System.Exception ex)
             {

@@ -76,7 +76,8 @@ namespace SignalBox.Web.Controllers
                 Arguments = input.Arguments,
                 CommonUserId = input.CommonUserId ?? System.Guid.NewGuid().ToString()
             };
-            return await invokationWorkflows.InvokeParameterSetRecommender(recommender, version, convertedInput);
+            var recommendation = await invokationWorkflows.InvokeParameterSetRecommender(recommender, version, convertedInput);
+            return recommendation.GetOutput<ParameterSetRecommenderModelOutputV1>();
         }
 
         /// <summary>Get the latest recommendations made by a recommender.</summary>

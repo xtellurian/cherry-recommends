@@ -200,25 +200,27 @@
     }
   };
 
+  const fetchTrackedUsersEventsAsync = async ({ token, id }) => {
+    const url = getUrl(`api/TrackedUsers/${id}/events`);
+
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
   const fetchUserEvents = async ({
     success,
     error,
     token,
     commonUserId,
   }) => {
-    let url = getUrl("api/events");
-    if (commonUserId) {
-      url = `${url}?commonUserId=${commonUserId}`;
-    }
-
-    const response = await fetch(url, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
+    fetchTrackedUsersEventsAsync({ id: commonUserId, token })
+      .then(success)
+      .catch(error);
   };
 
   const logUserEvents = async ({ success, error, token, events }) => {
@@ -264,6 +266,7 @@
     __proto__: null,
     fetchEventAsync: fetchEventAsync,
     createEventsAsync: createEventsAsync,
+    fetchTrackedUsersEventsAsync: fetchTrackedUsersEventsAsync,
     fetchUserEvents: fetchUserEvents,
     logUserEvents: logUserEvents
   });
@@ -911,38 +914,53 @@
     }
   };
 
+  const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
+    const url = getUrl("api/recommenders/ParameterSetRecommenders");
+    const response = await fetch(`${url}?${pageQuery(page)}`, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
   const fetchParameterSetRecommenders = async ({
     success,
     error,
     token,
     page,
   }) => {
-    const url = getUrl("api/recommenders/ParameterSetRecommenders");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
+    fetchParameterSetRecommendersAsync({ token, page })
+      .then(success)
+      .catch(error);
+  };
+
+  const fetchParameterSetRecommenderAsync = async ({
+    token,
+    id,
+    searchTerm,
+  }) => {
+    let url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}`);
+    if (searchTerm) {
+      url = url + `?${searchEntities(searchTerm)}`;
+    }
+    const response = await fetch(url, {
       headers: headers(token),
     });
     if (response.ok) {
-      success(await response.json());
+      return await response.json();
     } else {
-      error(await response.json());
+      throw await response.json();
     }
   };
-
   const fetchParameterSetRecommender = async ({
     success,
     error,
     token,
     id,
   }) => {
-    const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
+    fetchParameterSetRecommenderAsync({ id, token }).then(success).catch(error);
   };
 
   const createParameterSetRecommender = async ({
@@ -1111,7 +1129,9 @@
 
   var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
+    fetchParameterSetRecommendersAsync: fetchParameterSetRecommendersAsync,
     fetchParameterSetRecommenders: fetchParameterSetRecommenders,
+    fetchParameterSetRecommenderAsync: fetchParameterSetRecommenderAsync,
     fetchParameterSetRecommender: fetchParameterSetRecommender,
     createParameterSetRecommender: createParameterSetRecommender,
     deleteParameterSetRecommender: deleteParameterSetRecommender,
@@ -1789,7 +1809,7 @@
 
   const MAX_ARRAY = 5000;
 
-  const searchEntities = (term) => {
+  const searchEntities$1 = (term) => {
     if (term) {
       return `&q.term=${term}`;
     } else {
@@ -1799,7 +1819,7 @@
   const fetchTrackedUsersAsync = async ({ token, page, searchTerm }) => {
     const url = getUrl("api/trackedUsers");
     const response = await fetch(
-      `${url}?${pageQuery(page)}${searchEntities(searchTerm)}`,
+      `${url}?${pageQuery(page)}${searchEntities$1(searchTerm)}`,
       {
         headers: headers(token),
       }

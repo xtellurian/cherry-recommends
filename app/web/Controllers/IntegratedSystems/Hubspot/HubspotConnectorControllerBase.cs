@@ -31,7 +31,7 @@ namespace SignalBox.Web.Controllers
             this.deploymentOptions = deploymentOptions.Value;
         }
 
-        protected async Task ValidateHubspotSignature(string requestBody = null)
+        protected async Task ValidateHubspotSignature(bool useRequestBody, string requestBody = null)
         {
             if (Request.Headers.TryGetValue("X-HubSpot-Signature-Version", out var sigVer))
             {
@@ -50,18 +50,14 @@ namespace SignalBox.Web.Controllers
                 // need to include the body?
                 string valueToHash;
 
-                if (Request.Method.ToLower() == "get")
-                {
-                    valueToHash = $"{credentials.ClientSecret}{Request.Method}{uri}";
-                }
-                else if (Request.Method.ToLower() == "post")
+                if (useRequestBody)
                 {
                     requestBody ??= await Request.GetRawBodyStringAsync();
                     valueToHash = $"{credentials.ClientSecret}{requestBody}";
                 }
                 else
                 {
-                    throw new BadRequestException("Hubspot methods must be GET or POST");
+                    valueToHash = $"{credentials.ClientSecret}{Request.Method}{uri}";
                 }
 
 
