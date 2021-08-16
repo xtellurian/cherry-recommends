@@ -85,8 +85,9 @@ namespace SignalBox.Web.Controllers
             await ValidateHubspotSignature(false);
             var integratedSystem = await integratedSystemStore.ReadFromCommonId(portalId);
             var response = await hubspotWorkflows.HandleHubspotRecommendationOutcome(integratedSystem, correlationId, outcome, userId, userEmail, associatedObjectId, associatedObjectType);
-
-            return new HubspotActionHookResponse($"{outcome} logged. {response.EventsProcessed} events processed");
+            logger.LogInformation($"{outcome} logged. Events processed: {response.EventsProcessed}");
+            telemetry.TrackEvent("Hubspot.CrmCardFeedback", new Dictionary<string, string> { { "Outcome", outcome } });
+            return new HubspotActionHookResponse($"Thanks for the feedback!");
         }
 
         private async Task HandleWebhookPayload(HubspotWebhookPayload payload)
