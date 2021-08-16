@@ -13,7 +13,7 @@ namespace SignalBox.Infrastructure
                                                     string migrationAssembly = "sqlserver")
         {
             services.AddDbContext<SignalBoxDbContext>(options =>
-                options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssembly)));
+                options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssembly).CommandTimeout(180)));
             return services;
         }
         public static IServiceCollection UseSqlLite(this IServiceCollection services,
