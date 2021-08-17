@@ -19,7 +19,7 @@ export const ConfirmationPopup = ({ isOpen, setIsOpen, label, children }) => {
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={customStyles}
-      contentLabel="Example Modal"
+      contentLabel="Modal Confirmation"
     >
       <div className="text-center">
         <div className="pb-3">

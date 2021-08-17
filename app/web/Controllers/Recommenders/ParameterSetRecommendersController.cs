@@ -37,6 +37,12 @@ namespace SignalBox.Web.Controllers
         public async Task<ParameterSetRecommender> Create(CreateParameterSetRecommender dto)
         {
             var c = new CreateCommonEntityModel(dto.CommonId, dto.Name);
+            if (dto.CloneFromId.HasValue)
+            {
+                // then clone from existing.
+                var from = await store.Read(dto.CloneFromId.Value);
+                return await workflows.CloneParameterSetRecommender(c, from);
+            }
             var arguments = dto.Arguments.Select(a => new RecommenderArgument
             {
                 ArgumentType = a.ArgumentType,

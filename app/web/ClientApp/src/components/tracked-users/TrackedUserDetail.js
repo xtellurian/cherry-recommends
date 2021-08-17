@@ -14,6 +14,7 @@ import {
 import { JsonView } from "../molecules/JsonView";
 
 import { HistorySection } from "./HistorySection";
+import { LatestRecommendationsSection } from "./LatestRecommendationsSection";
 
 const tabs = [
   {
@@ -23,6 +24,10 @@ const tabs = [
   {
     id: "history",
     label: "History",
+  },
+  {
+    id: "latest-recommendations",
+    label: "Recommendations",
   },
 ];
 const defaultTabId = tabs[0].id;
@@ -87,6 +92,9 @@ export const TrackedUserDetail = () => {
 
       <TabActivator tabId={"history"} defaultTabId={defaultTabId}>
         <HistorySection trackedUser={trackedUser} />
+      </TabActivator>
+      <TabActivator tabId={"latest-recommendations"} defaultTabId={defaultTabId}>
+        <LatestRecommendationsSection trackedUser={trackedUser} />
       </TabActivator>
     </React.Fragment>
   );

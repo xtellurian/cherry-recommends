@@ -31,17 +31,25 @@ namespace SignalBox.Core.Workflows
             this.productStore = productStore;
         }
 
+        public async Task<ProductRecommender> CloneProductRecommender(CreateCommonEntityModel common, ProductRecommender from)
+        {
+            await store.Load(from, _ => _.DefaultProduct);
+            await store.LoadMany(from, _ => _.Products);
+            return await CreateProductRecommender(common,
+                                                  from.DefaultProduct?.CommonId,
+                                                  from.Products?.Select(_ => _.CommonId),
+                                                  from.ErrorHandling ?? new RecommenderErrorHandling());
+        }
         public async Task<ProductRecommender> CreateProductRecommender(CreateCommonEntityModel common,
-                                                                       string touchpointId,
-                                                                       string defaultProductId,
-                                                                       IEnumerable<string> productCommonIds,
+                                                                       string? defaultProductId,
+                                                                       IEnumerable<string>? productCommonIds,
                                                                        RecommenderErrorHandling errorHandling)
         {
             Touchpoint? touchpoint = null;
-            if (touchpointId != null)
-            {
-                touchpoint = await touchpointStore.ReadFromCommonId(touchpointId);
-            }
+            // if (touchpointId != null)
+            // {
+            //     touchpoint = await touchpointStore.ReadFromCommonId(touchpointId);
+            // }
 
             Product? defaultProduct = null;
             if (!string.IsNullOrEmpty(defaultProductId))

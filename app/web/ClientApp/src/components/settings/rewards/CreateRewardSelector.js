@@ -1,6 +1,6 @@
 import React from "react";
 import { AsyncButton, Title, ErrorCard, BackButton } from "../../molecules";
-import { AsyncSelectActionName } from "../../molecules/AsyncSelectActionName";
+import { AsyncSelectActionName } from "../../molecules/selectors/AsyncSelectActionName";
 import { Selector } from "../../molecules/Select";
 import { SettingRow } from "../../molecules/SettingRow";
 import { createRewardSelectorAsync } from "../../../api/rewardSelectorsApi";

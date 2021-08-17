@@ -42,6 +42,17 @@ namespace SignalBox.Web.Controllers
             return await GetEntity<T>(id, useInternalId, null);
         }
 
+        /// <summary>Returns the resource with this Id.</summary>
+        [HttpPost("{id}/name")]
+        public virtual async Task<T> Rename(string id, string name, bool? useInternalId = null)
+        {
+            var entity = await GetEntity<T>(id, useInternalId, null);
+            entity.Name = name;
+            await store.Update(entity);
+            await store.Context.SaveChanges();
+            return entity;
+        }
+
         protected async Task<T> GetEntity(string id, bool? useInternalId)
         {
             // wrapper around the generic, without an include selector
@@ -50,33 +61,7 @@ namespace SignalBox.Web.Controllers
 
         protected async Task<T> GetEntity<TProperty>(string id, bool? useInternalId, Expression<Func<T, TProperty>> include = null)
         {
-            if ((useInternalId == null || useInternalId == true) && int.TryParse(id, out var internalId))
-            {
-                if (include != null)
-                {
-                    return await store.Read(internalId, include);
-                }
-                else
-                {
-                    return await store.Read(internalId);
-                }
-            }
-            else if (useInternalId == true)
-            {
-                throw new BadRequestException("Internal Ids must be integers");
-            }
-            else
-            {
-                if (include != null)
-                {
-                    return await store.ReadFromCommonId(id, include);
-                }
-                else
-                {
-
-                    return await store.ReadFromCommonId(id);
-                }
-            }
+            return await store.GetEntity(id, useInternalId);
         }
 
         /// <summary>Deletes the resource with this Id.</summary>

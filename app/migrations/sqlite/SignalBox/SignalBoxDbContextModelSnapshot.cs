@@ -527,12 +527,17 @@ namespace sqlite.SignalBox
                     b.Property<string>("RecommenderType")
                         .HasColumnType("TEXT");
 
+                    b.Property<long?>("TrackedUserId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Version")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RecommendationCorrelatorId");
+
+                    b.HasIndex("TrackedUserId");
 
                     b.ToTable("Recommendations");
                 });
@@ -1119,6 +1124,9 @@ namespace sqlite.SignalBox
                     b.Property<string>("EventId")
                         .HasColumnType("TEXT");
 
+                    b.Property<double?>("FeedbackScore")
+                        .HasColumnType("REAL");
+
                     b.Property<long?>("IntegratedSystemId")
                         .HasColumnType("INTEGER");
 
@@ -1509,7 +1517,13 @@ namespace sqlite.SignalBox
                         .WithMany()
                         .HasForeignKey("RecommendationCorrelatorId");
 
+                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                        .WithMany()
+                        .HasForeignKey("TrackedUserId");
+
                     b.Navigation("RecommendationCorrelator");
+
+                    b.Navigation("TrackedUser");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ParameterSetRecommendation", b =>

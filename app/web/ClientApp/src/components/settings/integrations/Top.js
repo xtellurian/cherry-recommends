@@ -1,8 +1,7 @@
 import React from "react";
-import { BackButton } from "../../molecules/BackButton";
-import { Title, Subtitle } from "../../molecules/PageHeadings";
-import { DetailButton } from "./DetailButton";
+import { BackButton, Title, Subtitle } from "../../molecules";
 
+import { DetailButton } from "./DetailButton";
 export const Top = ({ integratedSystem }) => {
   if (!integratedSystem || integratedSystem.loading) {
     return (
@@ -21,7 +20,7 @@ export const Top = ({ integratedSystem }) => {
         Integrations
       </BackButton>
       <DetailButton
-        className="float-right"
+        className="float-right mr-1"
         integratedSystem={integratedSystem}
       />
       <Title>Integrated System</Title>

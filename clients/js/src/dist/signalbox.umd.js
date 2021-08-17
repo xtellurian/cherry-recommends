@@ -963,9 +963,7 @@
     fetchParameterSetRecommenderAsync({ id, token }).then(success).catch(error);
   };
 
-  const createParameterSetRecommender = async ({
-    success,
-    error,
+  const createParameterSetRecommenderAsync = async ({
     token,
     payload,
   }) => {
@@ -976,10 +974,20 @@
       body: JSON.stringify(payload),
     });
     if (response.ok) {
-      success(await response.json());
+      return await response.json();
     } else {
-      error(await response.json());
+      throw await response.json();
     }
+  };
+  const createParameterSetRecommender = async ({
+    success,
+    error,
+    token,
+    payload,
+  }) => {
+    createParameterSetRecommenderAsync({ token, payload })
+      .then(success)
+      .catch(error);
   };
 
   const deleteParameterSetRecommender = async ({
@@ -1133,6 +1141,7 @@
     fetchParameterSetRecommenders: fetchParameterSetRecommenders,
     fetchParameterSetRecommenderAsync: fetchParameterSetRecommenderAsync,
     fetchParameterSetRecommender: fetchParameterSetRecommender,
+    createParameterSetRecommenderAsync: createParameterSetRecommenderAsync,
     createParameterSetRecommender: createParameterSetRecommender,
     deleteParameterSetRecommender: deleteParameterSetRecommender,
     fetchParameterSetRecommendationsAsync: fetchParameterSetRecommendationsAsync,
@@ -1218,6 +1227,19 @@
     }
   };
 
+  const createProductRecommenderAsync = async ({ token, payload }) => {
+    const url = getUrl("api/recommenders/ProductRecommenders");
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
   const createProductRecommender = async ({
     success,
     error,
@@ -1225,23 +1247,10 @@
     payload,
     onFinally,
   }) => {
-    try {
-      const url = getUrl("api/recommenders/ProductRecommenders");
-      const response = await fetch(url, {
-        headers: headers(token),
-        method: "post",
-        body: JSON.stringify(payload),
-      });
-      if (response.ok) {
-        success(await response.json());
-      } else {
-        error(await response.json());
-      }
-    } finally {
-      if (onFinally) {
-        onFinally();
-      }
-    }
+    createProductRecommenderAsync({ token, payload })
+      .then(success)
+      .catch(error)
+      .finally(onFinally);
   };
 
   const createLinkRegisteredModel = async ({
@@ -1384,12 +1393,13 @@
     });
   };
 
-  var productRecommenders = /*#__PURE__*/Object.freeze({
+  var productRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchProductRecommenders: fetchProductRecommenders,
     fetchProductRecommender: fetchProductRecommender,
     fetchProductRecommendations: fetchProductRecommendations,
     deleteProductRecommender: deleteProductRecommender,
+    createProductRecommenderAsync: createProductRecommenderAsync,
     createProductRecommender: createProductRecommender,
     createLinkRegisteredModel: createLinkRegisteredModel,
     setDefaultProductAsync: setDefaultProductAsync,
@@ -2101,7 +2111,7 @@
   exports.paging = paging;
   exports.parameterSetRecommenders = parameterSetRecommendersApi;
   exports.parameters = parametersApi;
-  exports.productRecommenders = productRecommenders;
+  exports.productRecommenders = productRecommendersApi;
   exports.products = productsApi;
   exports.reactConfig = reactConfigApi;
   exports.reports = reportsApi;

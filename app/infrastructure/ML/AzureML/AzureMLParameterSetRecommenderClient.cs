@@ -2,6 +2,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SignalBox.Core;
 using SignalBox.Core.Recommenders;
 
@@ -38,6 +39,12 @@ namespace SignalBox.Infrastructure.ML.Azure
             {
                 throw new ModelInvokationException(recommender.ModelRegistration, ex, body);
             }
+        }
+
+        public Task Reward(IRecommender recommender, RewardingContext context, TrackedUserAction action)
+        {
+            context.Logger.LogWarning($"{this.GetType()} cannot be rewarded");
+            return Task.CompletedTask;
         }
     }
 }

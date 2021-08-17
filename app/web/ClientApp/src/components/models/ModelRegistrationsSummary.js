@@ -17,7 +17,7 @@ import {
   ActionItem,
   ActionItemsGroup,
 } from "../molecules/ActionsButton";
-import { ConfirmationPopup } from "../molecules/ConfirmationPopup";
+import { ConfirmationPopup } from "../molecules/popups/ConfirmationPopup";
 import { useAccessToken } from "../../api-hooks/token";
 
 const ModelRow = ({ model, onDeleted }) => {

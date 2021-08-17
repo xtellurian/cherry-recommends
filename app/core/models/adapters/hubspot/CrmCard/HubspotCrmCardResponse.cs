@@ -50,16 +50,32 @@ namespace SignalBox.Core.Adapters.Hubspot
             };
 
             var properties = cardEntry["properties"] as List<Dictionary<string, string>>;
-            var parameterRecommendations = recommendation.GetOutput<ParameterSetRecommenderModelOutputV1>().RecommendedParameters;
-            foreach (var kvp in parameterRecommendations)
+
+            if (recommendation.RecommenderType == Recommenders.RecommenderTypes.ParameterSet)
             {
-                properties.Add(new Dictionary<string, string>
+                var parameterRecommendations = recommendation.GetOutput<ParameterSetRecommenderModelOutputV1>().RecommendedParameters;
+                foreach (var kvp in parameterRecommendations)
+                {
+                    properties.Add(new Dictionary<string, string>
                 {
                     { "label", $"{kvp.Key}" },
                     { "dataType", "STRING" },
                     { "value", kvp.Value.ToString() }
                 });
+                }
             }
+            else if (recommendation.RecommenderType == Recommenders.RecommenderTypes.Product)
+            {
+                var productRecommendation = (ProductRecommendation)recommendation;
+
+                properties.Add(new Dictionary<string, string>
+                {
+                    { "label", $"{productRecommendation.Recommender.Name}" },
+                    { "dataType", "STRING" },
+                    { "value", productRecommendation.Product.Name }
+                });
+            }
+
             // add actions to track good/bad recommendaion
             var actions = new List<object>(); // use object to enforce polymorphic serialization
             actions.Add(new ActionHookCrmCardAction

@@ -1,7 +1,10 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useProductRecommender } from "../../../api-hooks/productRecommendersApi";
-import { deleteProductRecommender } from "../../../api/productRecommendersApi";
+import {
+  deleteProductRecommender,
+  createProductRecommenderAsync,
+} from "../../../api/productRecommendersApi";
 import { ProductRow } from "../../products/ProductRow";
 import { useAccessToken } from "../../../api-hooks/token";
 import {
@@ -14,19 +17,32 @@ import {
 } from "../../molecules";
 import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
 import { ActionsButtonUtil } from "../utils/actionsButtonUtil";
-import { ConfirmationPopup } from "../../molecules/ConfirmationPopup";
+import { ConfirmationPopup } from "../../molecules/popups/ConfirmationPopup";
 import { CopyableField } from "../../molecules/CopyableField";
 import { EntityField } from "../../molecules/EntityField";
+import { CloneRecommender } from "../utils/CloneRecommender";
 
 export const ProductRecommenderDetail = () => {
   const { id } = useParams();
   const token = useAccessToken();
   const history = useHistory();
   const recommender = useProductRecommender({ id });
+  const [cloneOpen, setCloneOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState();
   const onDeleted = () => {
     history.push("/recommenders/product-recommenders");
+  };
+
+  const cloneAsync = (name, commonId) => {
+    return createProductRecommenderAsync({
+      token,
+      payload: {
+        name,
+        commonId,
+        cloneFromId: recommender.id,
+      },
+    });
   };
 
   return (
@@ -91,7 +107,30 @@ export const ProductRecommenderDetail = () => {
       <div className="row">
         <div className="col-md order-last">
           {!recommender.loading && !recommender.error && (
-            <RecommenderStatusBox recommender={recommender} />
+            <React.Fragment>
+              <RecommenderStatusBox recommender={recommender} />
+              <button
+                className="btn btn-outline-primary btn-block"
+                onClick={() => setCloneOpen(true)}
+              >
+                Clone this Recommender
+              </button>
+              <ConfirmationPopup
+                isOpen={cloneOpen}
+                setIsOpen={setCloneOpen}
+                label="Clone this recommender?"
+              >
+                <CloneRecommender
+                  recommender={recommender}
+                  cloneAsync={cloneAsync}
+                  onCloned={(r) =>
+                    history.push(
+                      `/recommenders/product-recommenders/detail/${r.id}`
+                    )
+                  }
+                />
+              </ConfirmationPopup>
+            </React.Fragment>
           )}
         </div>
         <div className="col-8">

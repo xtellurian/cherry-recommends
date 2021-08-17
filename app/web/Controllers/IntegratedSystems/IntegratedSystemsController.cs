@@ -12,7 +12,7 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    public class IntegratedSystemsController : EntityControllerBase<IntegratedSystem>
+    public class IntegratedSystemsController : CommonEntityControllerBase<IntegratedSystem>
     {
         private readonly IntegratedSystemWorkflows workflows;
         private readonly IWebhookReceiverStore webhookReceiverStore;
@@ -32,7 +32,7 @@ namespace SignalBox.Web.Controllers
             return await workflows.CreateIntegratedSystem(dto.Name, dto.SystemType);
         }
 
-        /// <summary>Creates a new webhook receiver on an existing integrated system.</summary>
+        /// <summary>Creates a new Segment webhook receiver on an existing integrated system.</summary>
         [HttpPost("{id}/webhookreceivers")]
         public async Task<WebhookReceiver> CreateWebhookReceiver(long id, bool? useSharedSecret = null)
         {
@@ -44,6 +44,11 @@ namespace SignalBox.Web.Controllers
         public async Task<IEnumerable<WebhookReceiver>> QueryWebhookReceivers(long id)
         {
             return await webhookReceiverStore.GetReceiversForIntegratedSystem(id);
+        }
+
+        protected override Task<(bool, string)> CanDelete(IntegratedSystem entity)
+        {
+            return Task.FromResult((true, ""));
         }
     }
 }

@@ -45,7 +45,7 @@ namespace SignalBox.Core.Workflows
             this.productRecommendationStore = productRecommendationStore;
         }
 
-        public async Task<ProductRecommenderModelOutputV1> InvokeProductRecommender(
+        public async Task<ProductRecommendation> InvokeProductRecommender(
             ProductRecommender recommender,
             string version,
             ProductRecommenderModelInputV1 input)
@@ -172,16 +172,17 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        private async Task<ProductRecommenderModelOutputV1> HandleRecommendation(ProductRecommender recommender,
-                                                                                 RecommendingContext recommendingContext,
-                                                                                 ProductRecommenderModelInputV1 input,
-                                                                                 InvokationLogEntry invokationEntry,
-                                                                                 TrackedUser user,
-                                                                                 ProductRecommenderModelOutputV1 output)
+        private async Task<ProductRecommendation> HandleRecommendation(ProductRecommender recommender,
+                                                                        RecommendingContext recommendingContext,
+                                                                        ProductRecommenderModelInputV1 input,
+                                                                        InvokationLogEntry invokationEntry,
+                                                                        TrackedUser user,
+                                                                        ProductRecommenderModelOutputV1 output)
         {
             // now save the result
 
             var recommendation = new ProductRecommendation(recommender, user, recommendingContext.Correlator, recommendingContext.Version, output.Product);
+            output.CorrelatorId = recommendingContext.Correlator.Id;
             recommendation.SetInput(input);
             recommendation.SetOutput(output);
 
@@ -198,7 +199,7 @@ namespace SignalBox.Core.Workflows
 
             // set this after the context has been saved.
             output.CorrelatorId = recommendingContext.Correlator.Id;
-            return output;
+            return recommendation;
         }
     }
 }

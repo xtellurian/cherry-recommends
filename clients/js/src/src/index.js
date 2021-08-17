@@ -24,7 +24,7 @@ import * as offers from "./api/offersApi";
 import * as paging from "./api/paging";
 import * as parameters from "./api/parametersApi";
 import * as parameterSetRecommenders from "./api/recommenders/parameterSetRecommendersApi";
-import * as productRecommenders from "./api/recommenders/productRecommenders";
+import * as productRecommenders from "./api/recommenders/productRecommendersApi";
 import * as products from "./api/productsApi";
 import * as reactConfig from "./api/reactConfigApi";
 import * as reports from "./api/reportsApi";

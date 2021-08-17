@@ -1,16 +1,16 @@
 import React from "react";
 import { AsyncSelector } from "./AsyncSelect";
-import { useParameterSetRecommenders } from "../../api-hooks/parameterSetRecommendersApi";
-import { fetchParameterSetRecommendersAsync } from "../../api/parameterSetRecommendersApi";
-import { useAccessToken } from "../../api-hooks/token";
+import { useProductRecommenders } from "../../../api-hooks/productRecommendersApi";
+import { fetchProductRecommendersAsync } from "../../../api/productRecommendersApi";
+import { useAccessToken } from "../../../api-hooks/token";
 
-export const AsyncSelectParameterSetRecommender = ({
+export const AsyncSelectProductRecommender = ({
   onChange,
   placeholder,
   allowNone,
 }) => {
   const token = useAccessToken();
-  const recommenders = useParameterSetRecommenders();
+  const recommenders = useProductRecommenders();
   const recommendersSelectable = recommenders.items
     ? recommenders.items.map((u) => ({
         label: u.name || u.commonId,
@@ -25,7 +25,7 @@ export const AsyncSelectParameterSetRecommender = ({
   }
 
   const loadSelectable = (inputValue, callback) => {
-    fetchParameterSetRecommendersAsync({
+    fetchProductRecommendersAsync({
       token,
       searchTerm: inputValue,
     })

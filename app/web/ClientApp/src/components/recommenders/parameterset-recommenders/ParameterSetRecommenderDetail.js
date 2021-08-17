@@ -1,7 +1,10 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
-import { deleteParameterSetRecommender } from "../../../api/parameterSetRecommendersApi";
+import {
+  deleteParameterSetRecommender,
+  createParameterSetRecommenderAsync,
+} from "../../../api/parameterSetRecommendersApi";
 import { ActionsButtonUtil } from "../utils/actionsButtonUtil";
 import {
   Title,
@@ -10,10 +13,11 @@ import {
   Spinner,
   BackButton,
 } from "../../molecules";
-import { ConfirmationPopup } from "../../molecules/ConfirmationPopup";
+import { ConfirmationPopup } from "../../molecules/popups/ConfirmationPopup";
 import { JsonView } from "../../molecules/JsonView";
 import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
 import { useAccessToken } from "../../../api-hooks/token";
+import { CloneRecommender } from "../utils/CloneRecommender";
 
 export const ParameterSetRecommenderDetail = () => {
   const { id } = useParams();
@@ -21,10 +25,23 @@ export const ParameterSetRecommenderDetail = () => {
   const history = useHistory();
   const recommender = useParameterSetRecommender({ id });
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [cloneOpen, setCloneOpen] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState();
   const onDeleted = () => {
     history.push("/recommenders/parameter-set-recommenders");
   };
+
+  const cloneAsync = (name, commonId) => {
+    return createParameterSetRecommenderAsync({
+      token,
+      payload: {
+        name,
+        commonId,
+        cloneFromId: recommender.id,
+      },
+    });
+  };
+
   return (
     <React.Fragment>
       <ActionsButtonUtil
@@ -86,7 +103,30 @@ export const ParameterSetRecommenderDetail = () => {
       <div className="row">
         <div className="col-md order-last">
           {!recommender.loading && !recommender.error && (
-            <RecommenderStatusBox recommender={recommender} />
+            <React.Fragment>
+              <RecommenderStatusBox recommender={recommender} />
+              <button
+                className="btn btn-outline-primary btn-block"
+                onClick={() => setCloneOpen(true)}
+              >
+                Clone this Recommender
+              </button>
+              <ConfirmationPopup
+                isOpen={cloneOpen}
+                setIsOpen={setCloneOpen}
+                label="Clone this recommender?"
+              >
+                <CloneRecommender
+                  recommender={recommender}
+                  cloneAsync={cloneAsync}
+                  onCloned={(r) =>
+                    history.push(
+                      `/recommenders/parameter-set-recommenders/detail/${r.id}`
+                    )
+                  }
+                />
+              </ConfirmationPopup>
+            </React.Fragment>
           )}
         </div>
         <div className="col-8">

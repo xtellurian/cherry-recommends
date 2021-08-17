@@ -13,7 +13,7 @@ import {
   Title,
 } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
-import { AsyncSelectTrackedUser } from "../../molecules/AsyncSelectTrackedUser";
+import { AsyncSelectTrackedUser } from "../../molecules/selectors/AsyncSelectTrackedUser";
 
 const Top = ({ id }) => {
   return (

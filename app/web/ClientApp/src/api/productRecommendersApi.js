@@ -1,7 +1,7 @@
 import { productRecommenders } from "signalbox.js";
 
-export const fetchProductRecommenders =
-  productRecommenders.fetchProductRecommenders;
+export const fetchProductRecommendersAsync =
+  productRecommenders.fetchProductRecommendersAsync;
 
 export const fetchProductRecommender =
   productRecommenders.fetchProductRecommender;
@@ -12,8 +12,8 @@ export const fetchProductRecommendations =
 export const deleteProductRecommender =
   productRecommenders.deleteProductRecommender;
 
-export const createProductRecommender =
-  productRecommenders.createProductRecommender;
+export const createProductRecommenderAsync =
+  productRecommenders.createProductRecommenderAsync;
 
 export const fetchLinkedRegisteredModel =
   productRecommenders.fetchLinkedRegisteredModel;

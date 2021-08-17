@@ -60,9 +60,7 @@ export const fetchParameterSetRecommender = async ({
   fetchParameterSetRecommenderAsync({ id, token }).then(success).catch(error);
 };
 
-export const createParameterSetRecommender = async ({
-  success,
-  error,
+export const createParameterSetRecommenderAsync = async ({
   token,
   payload,
 }) => {
@@ -73,10 +71,20 @@ export const createParameterSetRecommender = async ({
     body: JSON.stringify(payload),
   });
   if (response.ok) {
-    success(await response.json());
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
   }
+};
+export const createParameterSetRecommender = async ({
+  success,
+  error,
+  token,
+  payload,
+}) => {
+  createParameterSetRecommenderAsync({ token, payload })
+    .then(success)
+    .catch(error);
 };
 
 export const deleteParameterSetRecommender = async ({

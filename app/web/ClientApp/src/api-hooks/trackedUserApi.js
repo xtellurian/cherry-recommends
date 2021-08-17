@@ -6,6 +6,7 @@ import {
   fetchTrackedUser,
   fetchUniqueTrackedUserActionGroupsAsync,
   fetchTrackedUserActionAsync,
+  fetchLatestRecommendationsAsync,
 } from "../api/trackedUsersApi";
 
 export const useTrackedUsers = ({ searchTerm }) => {
@@ -40,6 +41,24 @@ export const useTrackedUser = ({ id }) => {
         token,
         id,
       });
+    }
+  }, [token, id]);
+
+  return result;
+};
+
+export const useLatestRecommendations = ({ id }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchLatestRecommendationsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
 

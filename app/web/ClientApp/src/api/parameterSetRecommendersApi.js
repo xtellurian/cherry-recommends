@@ -6,8 +6,8 @@ export const fetchParameterSetRecommendersAsync =
 export const fetchParameterSetRecommenderAsync =
   parameterSetRecommenders.fetchParameterSetRecommenderAsync;
 
-export const createParameterSetRecommender =
-  parameterSetRecommenders.createParameterSetRecommender;
+export const createParameterSetRecommenderAsync =
+  parameterSetRecommenders.createParameterSetRecommenderAsync;
 
 export const deleteParameterSetRecommender =
   parameterSetRecommenders.deleteParameterSetRecommender;

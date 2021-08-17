@@ -1,6 +1,6 @@
 import React from "react";
 import { ConfirmationPopup } from "./ConfirmationPopup";
-import { ErrorCard } from "./ErrorCard";
+import { ErrorCard } from "../ErrorCard";
 
 export const ConfirmDeletePopup = ({
   entity,

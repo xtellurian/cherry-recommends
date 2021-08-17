@@ -1,17 +1,22 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Check } from "react-bootstrap-icons";
-import { Subtitle } from "../../molecules/PageHeadings";
+import { renameAsync } from "../../../api/integratedSystemsApi";
 import { Top } from "./Top";
 import { WebookPanel } from "./WebhookPanel";
 import { useIntegratedSystem } from "../../../api-hooks/integratedSystemsApi";
-import { Spinner } from "../../molecules/Spinner";
-import { ErrorCard } from "../../molecules/ErrorCard";
+import { useAccessToken } from "../../../api-hooks/token";
+import { Spinner, ErrorCard, Subtitle } from "../../molecules";
+import { RenameEntityPopup } from "../../molecules/popups/RenameEntityPopup";
 import { HubspotOverview } from "./hubspot/HubspotOverview";
 
 export const IntegratedSystemDetail = () => {
+  const token = useAccessToken();
   let { id } = useParams();
-  const integratedSystem = useIntegratedSystem({ id });
+  const [trigger, setReloadTrigger] = React.useState({});
+  const integratedSystem = useIntegratedSystem({ id, trigger });
+
+  const [renameOpen, setRenameOpen] = React.useState(false);
 
   return (
     <React.Fragment>
@@ -26,10 +31,31 @@ export const IntegratedSystemDetail = () => {
           Connected
         </div>
       )}
+      {integratedSystem.name && (
+        <RenameEntityPopup
+          onRename={(name) =>
+            renameAsync({ token, id: integratedSystem.id, name })
+              .then(setReloadTrigger)
+              .catch(() => alert("Rename error"))
+          }
+          isOpen={renameOpen}
+          setIsOpen={setRenameOpen}
+          entity={integratedSystem}
+          label="Rename Integrated System"
+        />
+      )}
       {!integratedSystem.loading && !integratedSystem.error && (
         <div className="col-4">
           <Subtitle>Information</Subtitle>
-          <div>Name: {integratedSystem.name}</div>
+          <div>
+            Name: {integratedSystem.name}{" "}
+            <button
+              className="btn btn-link btn-sm"
+              onClick={() => setRenameOpen(true)}
+            >
+              (rename)
+            </button>
+          </div>
           <div>Type: {integratedSystem.systemType}</div>
           <div>Status: {integratedSystem.integrationStatus}</div>
         </div>

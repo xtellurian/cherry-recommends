@@ -3,7 +3,7 @@ import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
 import {
   fetchIntegratedSystems,
-  fetchIntegratedSystem,
+  fetchIntegratedSystemAsync,
   fetchWebhookReceivers,
 } from "../api/integratedSystemsApi";
 
@@ -32,7 +32,7 @@ export const useIntegratedSystems = () => {
   return result;
 };
 
-export const useIntegratedSystem = ({ id }) => {
+export const useIntegratedSystem = ({ id, trigger }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({
     loading: true,
@@ -40,18 +40,15 @@ export const useIntegratedSystem = ({ id }) => {
 
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
-      fetchIntegratedSystem({
-        success: setState,
-        error: (e) =>
-          setState({
-            error: e,
-          }),
+    if (token && id) {
+      fetchIntegratedSystemAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
-  }, [token, id]);
+  }, [token, id, trigger]);
 
   return result;
 };

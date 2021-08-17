@@ -2,7 +2,7 @@ import React from "react";
 
 import { useParams } from "react-router-dom";
 import { setTrackedUserFeatureAsync } from "../../../api/trackedUsersApi";
-import { AsyncSelectTrackedUser } from "../../molecules/AsyncSelectTrackedUser";
+import { AsyncSelectTrackedUser } from "../../molecules/selectors/AsyncSelectTrackedUser";
 import { TrackedUserListItem } from "../../molecules/TrackedUser";
 import { useFeature } from "../../../api-hooks/featuresApi";
 import {

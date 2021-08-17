@@ -9,7 +9,9 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.ML.Azure
 {
-    public class AzurePersonalizerRecommenderClient : IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>
+    public class AzurePersonalizerRecommenderClient :
+        IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>,
+        IRecommenderModelRewardClient
     {
         public AzurePersonalizerRecommenderClient(HttpClient httpClient,
                                                   IProductRecommenderStore recommenderStore,
@@ -86,10 +88,11 @@ namespace SignalBox.Infrastructure.ML.Azure
                 }
             }
 
+            var personalizerEventId = recommendingContext.Correlator.Id.ToString();
             var rank = await client.RankAsync(new RankRequest(rankableActions,
                                                               currentContext,
                                                               excludedActions: null,
-                                                              eventId: recommendingContext.Correlator.Id.ToString()));
+                                                              eventId: personalizerEventId));
 
             var maxProb = rank.Ranking.Max(_ => _.Probability);
             telemetry.TrackEvent("Models.AzurePersonalizer.Rank", new Dictionary<string, string>
@@ -111,6 +114,25 @@ namespace SignalBox.Infrastructure.ML.Azure
                 Features =
                 new List<object>() { new { name = p.Name, listPrice = p.ListPrice, directCost = p.DirectCost, description = p.Description } }
             }).ToList();
+        }
+
+        public async Task Reward(IRecommender recommender, RewardingContext context, TrackedUserAction action)
+        {
+            var personalizerEventId = action.RecommendationCorrelatorId?.ToString();
+            if (action.HasReward() && personalizerEventId != null)
+            {
+                var client = InitializePersonalizerClient(httpClient, recommender.ModelRegistration);
+                if (action.FeedbackScore.HasValue)
+                {
+                    var rewardValue = action.FeedbackScore.Value / (context.NormaliseToMaximum ?? 1);
+                    await client.RewardAsync(personalizerEventId, new RewardRequest(rewardValue));
+                }
+                if (action.AssociatedRevenue.HasValue)
+                {
+                    var rewardValue = action.AssociatedRevenue.Value / (context.NormaliseToMaximum ?? 1);
+                    await client.RewardAsync(personalizerEventId, new RewardRequest(rewardValue));
+                }
+            }
         }
     }
 }

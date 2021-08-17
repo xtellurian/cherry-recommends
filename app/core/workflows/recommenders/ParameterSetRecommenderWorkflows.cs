@@ -28,6 +28,11 @@ namespace SignalBox.Core.Workflows
             this.parameterStore = parameterStore;
         }
 
+        public async Task<ParameterSetRecommender> CloneParameterSetRecommender(CreateCommonEntityModel common, ParameterSetRecommender from)
+        {
+            await store.LoadMany(from, _ => _.Parameters);
+            return await this.CreateParameterSetRecommender(common, from.Parameters.Select(_ => _.CommonId), from.ParameterBounds, from.Arguments, from.ErrorHandling ?? new RecommenderErrorHandling());
+        }
         public async Task<ParameterSetRecommender> CreateParameterSetRecommender(CreateCommonEntityModel common,
                                                                                  IEnumerable<string> parameterCommonIds,
                                                                                  IEnumerable<ParameterBounds> bounds,

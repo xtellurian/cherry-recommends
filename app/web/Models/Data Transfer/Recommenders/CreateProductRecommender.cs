@@ -6,7 +6,6 @@ namespace SignalBox.Web.Dto
     public class CreateProductRecommender : CreateRecommenderDtoBase
     {
         public IEnumerable<string>? ProductIds { get; set; }
-        public string Touchpoint { get; set; } = null!;
         public string? DefaultProductId { get; set; } = null!;
     }
 }

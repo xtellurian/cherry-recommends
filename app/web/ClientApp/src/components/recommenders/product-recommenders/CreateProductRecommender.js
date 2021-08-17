@@ -7,7 +7,7 @@ import {
   createTouchpointMetadata,
   fetchTouchpoint,
 } from "../../../api/touchpointsApi";
-import { createProductRecommender } from "../../../api/productRecommendersApi";
+import { createProductRecommenderAsync } from "../../../api/productRecommendersApi";
 import {
   Title,
   BackButton,
@@ -45,14 +45,17 @@ export const CreateProductRecommender = () => {
   const createRecommenderAfterTouchpoint = (tp) => {
     setLoading(true);
     recommender.touchpoint = tp.commonId;
-    createProductRecommender({
-      success: (pr) =>
-        history.push(`/recommenders/product-recommenders/detail/${pr.id}`),
+    createProductRecommenderAsync({
       error: setError,
       token,
       payload: recommender,
       onFinally: () => setLoading(false),
-    });
+    })
+      .then((pr) =>
+        history.push(`/recommenders/product-recommenders/detail/${pr.id}`)
+      )
+      .catch(setError)
+      .finally(() => setLoading(false));
   };
 
   const handleCreate = () => {

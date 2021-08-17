@@ -5,6 +5,8 @@ namespace SignalBox.Core
 {
     public class TrackedUserEvent : Entity
     {
+        public const string FOUR2_INTERNAL_PREFIX = "_f2_internal_use_";
+        public static string FEEDBACK = $"{FOUR2_INTERNAL_PREFIX}_feedback";
         protected TrackedUserEvent()
         {
         }
@@ -31,6 +33,17 @@ namespace SignalBox.Core
             EventType = eventType;
             Properties = new DynamicPropertyDictionary(properties);
             RecommendationCorrelatorId = recommendationCorrelatorId;
+        }
+
+        public void AddGoodFeedback()
+        {
+            this.Properties ??= new DynamicPropertyDictionary();
+            this.Properties[FEEDBACK] = 1;
+        }
+        public void AddBadFeedback()
+        {
+            this.Properties ??= new DynamicPropertyDictionary();
+            this.Properties[FEEDBACK] = -1;
         }
 
         public string CommonUserId { get; set; }

@@ -79,6 +79,18 @@ export const fetchUniqueTrackedUserActionGroupsAsync = async ({
   }
 };
 
+export const fetchLatestRecommendationsAsync = async ({ token, id }) => {
+  const url = getUrl(`api/trackedUsers/${id}/latest-recommendations`);
+  const response = await fetch(url, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
 export const fetchTrackedUserActionAsync = async ({
   token,
   id,

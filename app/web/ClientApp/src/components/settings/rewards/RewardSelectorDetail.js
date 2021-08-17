@@ -4,7 +4,7 @@ import { useRewardSelector } from "../../../api-hooks/rewardSelectorsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { deleteRewardSelectorAsync } from "../../../api/rewardSelectorsApi";
 import { Title, Subtitle, BackButton } from "../../molecules";
-import { ConfirmDeletePopup } from "../../molecules/ConfirmDeletePopup";
+import { ConfirmDeletePopup } from "../../molecules/popups/ConfirmDeletePopup";
 
 export const RewardSelectorDetail = () => {
   const { id } = useParams();

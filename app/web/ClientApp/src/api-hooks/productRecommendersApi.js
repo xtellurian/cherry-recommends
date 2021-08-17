@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  fetchProductRecommenders,
+  fetchProductRecommendersAsync,
   fetchProductRecommender,
   fetchLinkedRegisteredModel,
   fetchInvokationLogsAsync,
@@ -18,12 +18,12 @@ export const useProductRecommenders = () => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchProductRecommenders({
-        success: setState,
-        error: (error) => setState({ error }),
+      fetchProductRecommendersAsync({
         token,
         page,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, page]);
 
@@ -53,7 +53,7 @@ export const useProductRecommender = ({ id }) => {
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchProductRecommender({
         success: setState,
         error: (error) => setState({ error }),

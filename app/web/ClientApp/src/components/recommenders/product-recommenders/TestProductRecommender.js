@@ -5,7 +5,7 @@ import { invokeProductRecommender } from "../../../api/productRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { Title, Subtitle, AsyncButton, BackButton } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
-import { AsyncSelectTrackedUser } from "../../molecules/AsyncSelectTrackedUser";
+import { AsyncSelectTrackedUser } from "../../molecules/selectors/AsyncSelectTrackedUser";
 
 export const TestProductRecommender = () => {
   const { id } = useParams();

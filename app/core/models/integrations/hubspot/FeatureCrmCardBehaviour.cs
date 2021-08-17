@@ -7,11 +7,12 @@ namespace SignalBox.Core.Adapters.Hubspot
     {
         public HashSet<string>? ExcludedFeatures { get; set; }
         public HashSet<string>? IncludedFeatures { get; set; }
+        public long? ProductRecommenderId { get; set; }
         public long? ParameterSetRecommenderId { get; set; }
 
         public bool HasRecommender()
         {
-            return ParameterSetRecommenderId != null;
+            return ParameterSetRecommenderId != null || ProductRecommenderId != null;
         }
     }
 }

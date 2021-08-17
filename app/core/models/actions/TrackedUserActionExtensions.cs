@@ -90,37 +90,49 @@ namespace SignalBox.Core
                                      string category,
                                      KeyValuePair<string, object> kvp)
         {
+            // handle internal
+            if (kvp.Key.StartsWith(TrackedUserEvent.FOUR2_INTERNAL_PREFIX))
+            {
+                // is internal
+                if (kvp.Key == TrackedUserEvent.FEEDBACK && kvp.Value is int n)
+                {
+                    var a = new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, n);
+                    a.FeedbackScore = n;
+                    return a;
+                }
+            }
+
             if (kvp.Value == null)
             {
-                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, (string)null);
+                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, (string)null);
             }
             else if (kvp.Value is double f)
             {
-                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, f);
+                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, f);
             }
             else if (kvp.Value is int n)
             {
-                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, n);
+                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, n);
             }
             else if (kvp.Value is string s)
             {
-                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, s);
+                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, s);
             }
             else if (kvp.Value is System.Text.Json.JsonElement jsonElement)
             {
                 if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.String)
                 {
-                    return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, jsonElement.GetString());
+                    return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, jsonElement.GetString());
                 }
                 if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Number)
                 {
                     if (jsonElement.TryGetInt32(out var i))
                     {
-                        return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, i);
+                        return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, i);
                     }
                     else if (jsonElement.TryGetDouble(out var d))
                     {
-                        return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, d);
+                        return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, d);
                     }
                     else
                     {
@@ -129,7 +141,7 @@ namespace SignalBox.Core
                 }
                 else
                 {
-                    return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, null, integratedSystemId, category, kvp.Key, $"{kvp.Value}");
+                    return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, $"{kvp.Value}");
                 }
             }
             else

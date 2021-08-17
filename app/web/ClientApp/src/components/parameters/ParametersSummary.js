@@ -6,7 +6,7 @@ import { useParameters } from "../../api-hooks/parametersApi";
 import { deleteParameterAsync } from "../../api/parametersApi";
 import { ExpandableCard } from "../molecules/ExpandableCard";
 import { CopyableField } from "../molecules/CopyableField";
-import { ConfirmDeletePopup } from "../molecules/ConfirmDeletePopup";
+import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { useAccessToken } from "../../api-hooks/token";
 
 const ParameterRow = ({ parameter, onDeleted }) => {

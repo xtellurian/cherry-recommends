@@ -1,8 +1,8 @@
 import React from "react";
 import { AsyncSelector } from "./AsyncSelect";
-import { useTrackedUsers } from "../../api-hooks/trackedUserApi";
-import { fetchTrackedUsersAsync } from "../../api/trackedUsersApi";
-import { useAccessToken } from "../../api-hooks/token";
+import { useTrackedUsers } from "../../../api-hooks/trackedUserApi";
+import { fetchTrackedUsersAsync } from "../../../api/trackedUsersApi";
+import { useAccessToken } from "../../../api-hooks/token";
 
 export const AsyncSelectTrackedUser = ({ onChange, placeholder }) => {
   const token = useAccessToken();

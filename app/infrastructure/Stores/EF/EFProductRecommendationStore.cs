@@ -15,6 +15,23 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
         }
 
+        public async Task<ProductRecommendation> GetRecommendationFromCorrelator(long correlatorId)
+        {
+            return await Set
+                .Include(_ => _.Recommender)
+                .ThenInclude(_=>_.ModelRegistration)
+                .SingleAsync(_ => _.RecommendationCorrelatorId == correlatorId);
+        }
+
+        public async Task<bool> CorrelationExists(long? correlatorId)
+        {
+            if (correlatorId == null)
+            {
+                return false;
+            }
+            return await Set.AnyAsync(_ => _.RecommendationCorrelatorId == correlatorId);
+        }
+
         public async Task<Paginated<ProductRecommendation>> QueryForRecommender(int page, long recommenderId)
         {
             var itemCount = await Set.CountAsync(_ => _.RecommenderId == recommenderId);

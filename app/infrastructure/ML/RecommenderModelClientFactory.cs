@@ -54,6 +54,18 @@ namespace SignalBox.Infrastructure.ML
             }
         }
 
+        public Task<IRecommenderModelRewardClient> GetRewardClient(IRecommender recommender)
+        {
+            if (recommender.ModelRegistration != null && recommender.ModelRegistration.HostingType == HostingTypes.AzurePersonalizer)
+            {
+                return Task.FromResult((IRecommenderModelRewardClient)new AzurePersonalizerRecommenderClient(httpClient, productRecommenderStore, productStore, telemetry));
+            }
+            else
+            {
+                return Task.FromResult((IRecommenderModelRewardClient)new DefaultRewardClient());
+            }
+        }
+
         public Task<IRecommenderModelClient<TInput, TOutput>> GetUnregisteredClient<TInput, TOutput>(IRecommender recommender)
             where TInput : IModelInput
             where TOutput : IModelOutput

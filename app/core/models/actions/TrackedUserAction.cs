@@ -85,10 +85,13 @@ namespace SignalBox.Core
         public string ActionName { get; set; }
         public string ActionValue { get; set; }
         public TrackedUserActionValueType ValueType { get; set; }
-        public double? AssociatedRevenue { get; set; }
 
         [JsonIgnore] // ignore to prevent circular serialization problem
         public TrackedUserEvent TrackedUserEvent { get; set; }
         public long? TrackedUserEventId { get; set; }
+        // rewards
+        public bool HasReward() => this.AssociatedRevenue != null || this.FeedbackScore != null;
+        public double? FeedbackScore { get; set; }
+        public double? AssociatedRevenue { get; set; }
     }
 }

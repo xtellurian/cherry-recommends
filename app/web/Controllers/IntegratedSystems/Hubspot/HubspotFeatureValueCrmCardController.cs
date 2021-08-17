@@ -32,7 +32,9 @@ namespace SignalBox.Web.Controllers
         private readonly ITrackedUserSystemMapStore systemMapStore;
         private readonly ITrackedUserTouchpointStore trackedUserTouchpointStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
+        private readonly IProductRecommenderStore productRecommenderStore;
         private readonly ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation;
+        private readonly ProductRecommenderInvokationWorkflows productRecommenderInvokation;
         private readonly IFeatureStore featureStore;
         private readonly ITrackedUserFeatureStore trackedUserFeatureStore;
         private readonly HubspotAppCredentials credentials;
@@ -48,7 +50,9 @@ namespace SignalBox.Web.Controllers
                                          ITrackedUserSystemMapStore systemMapStore,
                                          ITrackedUserTouchpointStore trackedUserTouchpointStore,
                                          IParameterSetRecommenderStore parameterSetRecommenderStore,
+                                         IProductRecommenderStore productRecommenderStore,
                                          ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation,
+                                         ProductRecommenderInvokationWorkflows productRecommenderInvokation,
                                          IFeatureStore featureStore,
                                          ITrackedUserFeatureStore trackedUserFeatureStore)
                                           : base(logger, deploymentOptions, hasher, hubspotOptions)
@@ -61,7 +65,9 @@ namespace SignalBox.Web.Controllers
             this.systemMapStore = systemMapStore;
             this.trackedUserTouchpointStore = trackedUserTouchpointStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
+            this.productRecommenderStore = productRecommenderStore;
             this.parameterSetRecommenderInvokation = parameterSetRecommenderInvokation;
+            this.productRecommenderInvokation = productRecommenderInvokation;
             this.featureStore = featureStore;
             this.trackedUserFeatureStore = trackedUserFeatureStore;
             this.credentials = hubspotOptions.Value;
@@ -193,17 +199,18 @@ namespace SignalBox.Web.Controllers
 
                 if (behaviour.HasRecommender())
                 {
-                    var recommendation = await GetRecommendation(trackedUser, behaviour.ParameterSetRecommenderId.Value);
+                    var recommendation = await GetRecommendation(trackedUser, behaviour);
                     response.AddRecommendation(baseUrl, recommendation);
                 }
 
-                response.PrimaryAction = new IframeAction
-                {
-                    Height = 600,
-                    Width = 1200,
-                    Label = "View in Four2",
-                    Uri = $"{baseUrl.TrimEnd('/')}/tracked-users/detail/{trackedUser.Id}",
-                };
+                // not working
+                // response.PrimaryAction = new IframeAction
+                // {
+                //     Height = 600,
+                //     Width = 1200,
+                //     Label = "View in Four2",
+                //     Uri = $"{baseUrl.TrimEnd('/')}/tracked-users/detail/{trackedUser.Id}",
+                // };
 
                 return response;
             }
@@ -213,14 +220,30 @@ namespace SignalBox.Web.Controllers
             }
         }
 
-        private async Task<RecommendationEntity> GetRecommendation(TrackedUser trackedUser, long parameterSetRecommenderId)
+        private async Task<RecommendationEntity> GetRecommendation(TrackedUser trackedUser, FeatureCrmCardBehaviour behaviour)
         {
-            var recommender = await parameterSetRecommenderStore.Read(parameterSetRecommenderId);
-            var input = new ParameterSetRecommenderModelInputV1
+            if (behaviour.ParameterSetRecommenderId != null)
             {
-                CommonUserId = trackedUser.CommonUserId
-            };
-            return await parameterSetRecommenderInvokation.InvokeParameterSetRecommender(recommender, "hubspot", input);
+                var recommender = await parameterSetRecommenderStore.Read(behaviour.ParameterSetRecommenderId.Value);
+                var input = new ParameterSetRecommenderModelInputV1
+                {
+                    CommonUserId = trackedUser.CommonUserId
+                };
+                return await parameterSetRecommenderInvokation.InvokeParameterSetRecommender(recommender, "hubspot", input);
+            }
+            else if (behaviour.ProductRecommenderId != null)
+            {
+                var recommender = await productRecommenderStore.Read(behaviour.ProductRecommenderId.Value);
+                var input = new ProductRecommenderModelInputV1
+                {
+                    CommonUserId = trackedUser.CommonUserId
+                };
+                return await productRecommenderInvokation.InvokeProductRecommender(recommender, "hubspot", input);
+            }
+            else
+            {
+                return new DefaultRecommendation();
+            }
         }
 
         private HubspotCrmCardResponse DefaultCardResponse(string title) => new HubspotCrmCardResponse

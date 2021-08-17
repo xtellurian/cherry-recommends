@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core.Workflows
 {
@@ -11,16 +12,25 @@ namespace SignalBox.Core.Workflows
         private readonly ITrackedUserActionStore actionStore;
         private readonly IRewardSelectorStore rewardSelectorStore;
         private readonly ILogger<TrackedUserActionWorkflows> logger;
+        private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
+        private readonly IProductRecommendationStore productRecommendationStore;
+        private readonly IRecommenderModelClientFactory modelClientFactory;
         private readonly IStorageContext storageContext;
 
         public TrackedUserActionWorkflows(ITrackedUserActionStore actionStore,
                                           IRewardSelectorStore rewardSelectorStore,
                                           ILogger<TrackedUserActionWorkflows> logger,
+                                          IParameterSetRecommendationStore parameterSetRecommendationStore,
+                                          IProductRecommendationStore productRecommendationStore,
+                                          IRecommenderModelClientFactory modelClientFactory,
                                           IStorageContext storageContext)
         {
             this.actionStore = actionStore;
             this.rewardSelectorStore = rewardSelectorStore;
             this.logger = logger;
+            this.parameterSetRecommendationStore = parameterSetRecommendationStore;
+            this.productRecommendationStore = productRecommendationStore;
+            this.modelClientFactory = modelClientFactory;
             this.storageContext = storageContext;
         }
 
@@ -59,6 +69,27 @@ namespace SignalBox.Core.Workflows
                             break;
 
                     }
+                }
+            }
+
+            // now update any recommenders if they need to be updated.
+            foreach (var a in actions.Where(_ => _.HasReward()))
+            {
+                if (await parameterSetRecommendationStore.CorrelationExists(a.RecommendationCorrelatorId))
+                {
+                    // reward the model that generated the recommendation
+                    var recommendation = await parameterSetRecommendationStore.GetRecommendationFromCorrelator(a.RecommendationCorrelatorId.Value);
+                    var client = await modelClientFactory.GetRewardClient(recommendation.Recommender);
+                    await client.Reward(recommendation.Recommender, new RewardingContext(logger), a);
+
+                }
+                else if (await productRecommendationStore.CorrelationExists(a.RecommendationCorrelatorId))
+                {
+                    // reward the model that generated the recommendation
+                    var recommendation = await productRecommendationStore.GetRecommendationFromCorrelator(a.RecommendationCorrelatorId.Value);
+                    var client = await modelClientFactory.GetRewardClient(recommendation.Recommender);
+                    await client.Reward(recommendation.Recommender, new RewardingContext(logger), a);
+
                 }
             }
 

@@ -7,7 +7,11 @@ export const fetchTrackedUser = trackedUsers.fetchTrackedUser;
 export const fetchUniqueTrackedUserActionGroupsAsync =
   trackedUsers.fetchUniqueTrackedUserActionGroupsAsync;
 
-export const fetchTrackedUserActionAsync = trackedUsers.fetchTrackedUserActionAsync;
+export const fetchLatestRecommendationsAsync =
+  trackedUsers.fetchLatestRecommendationsAsync;
+
+export const fetchTrackedUserActionAsync =
+  trackedUsers.fetchTrackedUserActionAsync;
 
 export const uploadUserData = trackedUsers.uploadUserData;
 

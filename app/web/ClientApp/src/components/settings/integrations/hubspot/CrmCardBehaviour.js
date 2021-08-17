@@ -14,7 +14,9 @@ import { ToggleSwitch } from "../../../molecules/ToggleSwitch";
 import { SettingRow } from "../../../molecules/SettingRow";
 import { useAccessToken } from "../../../../api-hooks/token";
 import { useParameterSetRecommender } from "../../../../api-hooks/parameterSetRecommendersApi";
-import { AsyncSelectParameterSetRecommender } from "../../../molecules/AsyncSelectParameterSetRecommender";
+import { AsyncSelectParameterSetRecommender } from "../../../molecules/selectors/AsyncSelectParameterSetRecommender";
+import { AsyncSelectProductRecommender } from "../../../molecules/selectors/AsyncSelectProductRecommender";
+import { useProductRecommender } from "../../../../api-hooks/productRecommendersApi";
 
 const Top = ({ integratedSystem }) => {
   return (
@@ -34,6 +36,12 @@ const Top = ({ integratedSystem }) => {
   );
 };
 
+const recommenderTypeOptions = [
+  { label: "Product Recommender", value: "PRODUCT" },
+  { label: "Parameter Set Recommender", value: "PARAMETER-SET" },
+  { label: "None", value: "None" },
+];
+
 export const CrmCardBehaviour = ({ integratedSystem }) => {
   const token = useAccessToken();
   const [updateTrigger, setUpdateTrigger] = React.useState({});
@@ -45,6 +53,23 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
   const parameterSetRecommender = useParameterSetRecommender({
     id: behaviour.parameterSetRecommenderId,
   });
+  const productRecommender = useProductRecommender({
+    id: behaviour.productRecommenderId,
+  });
+
+  const [recommenderType, setRecommenderType] = React.useState();
+  // update the recommender type based in which one is not null
+  React.useEffect(() => {
+    if (behaviour.parameterSetRecommenderId) {
+      setRecommenderType(
+        recommenderTypeOptions.find((x) => x.value === "PARAMETER-SET")
+      );
+    } else if (behaviour.productRecommenderId) {
+      setRecommenderType(
+        recommenderTypeOptions.find((x) => x.value === "PRODUCT")
+      );
+    }
+  }, [behaviour]);
 
   const [newRecommender, setRecommender] = React.useState();
   const [featureOptions, setFeatureOptions] = React.useState([]);
@@ -117,9 +142,17 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
     }
     if (
       newRecommender &&
+      recommenderType.value === "PARAMETER-SET" &&
       newRecommender.id !== behaviour.parameterSetRecommenderId
     ) {
       payload.parameterSetRecommenderId = newRecommender.id;
+    }
+    if (
+      newRecommender &&
+      recommenderType.value === "PRODUCT" &&
+      newRecommender.id !== behaviour.productRecommenderId
+    ) {
+      payload.productRecommenderId = newRecommender.id;
     }
     setHubspotCrmCardBehaviourAsync({
       id: integratedSystem.id,
@@ -138,11 +171,33 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
         label="Recommender"
         description="Would you like to show recommendations in HubSpot? Currently, only ParameterSet Recommendations are supported."
       >
-        <AsyncSelectParameterSetRecommender
-          allowNone={true}
-          placeholder={parameterSetRecommender.name || "Choose a recommender"}
-          onChange={(v) => setRecommender(v.value)}
+        <Selector
+          placeholder="Recommender Type"
+          value={recommenderType}
+          defaultValue={recommenderType}
+          onChange={setRecommenderType}
+          options={recommenderTypeOptions}
         />
+        {!recommenderType ||
+          (recommenderType.value === "PARAMETER-SET" && (
+            <AsyncSelectParameterSetRecommender
+              allowNone={true}
+              placeholder={
+                parameterSetRecommender.name ||
+                "Choose a parameter-set recommender"
+              }
+              onChange={(v) => setRecommender(v.value)}
+            />
+          ))}
+        {recommenderType && recommenderType.value === "PRODUCT" && (
+          <AsyncSelectProductRecommender
+            allowNone={true}
+            placeholder={
+              productRecommender.name || "Choose a product recommender"
+            }
+            onChange={(v) => setRecommender(v.value)}
+          />
+        )}
       </SettingRow>
 
       <SettingRow

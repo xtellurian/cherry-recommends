@@ -4,7 +4,7 @@ import { useProduct } from "../../api-hooks/productsApi";
 import { deleteProduct } from "../../api/productsApi";
 import { Title, Subtitle, Spinner, ErrorCard, BackButton } from "../molecules";
 import { CopyableField } from "../molecules/CopyableField";
-import { ConfirmationPopup } from "../molecules/ConfirmationPopup";
+import { ConfirmationPopup } from "../molecules/popups/ConfirmationPopup";
 import { useAccessToken } from "../../api-hooks/token";
 
 const ConfirmDeletePopup = ({ product, open, setOpen, onDeleted }) => {

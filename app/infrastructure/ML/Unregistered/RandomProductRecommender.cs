@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SignalBox.Core;
 using SignalBox.Core.Recommenders;
 
@@ -37,6 +38,12 @@ namespace SignalBox.Infrastructure
                 ProductCommonId = product.CommonId,
                 Product = product
             };
+        }
+
+        public Task Reward(IRecommender recommender, RewardingContext context, TrackedUserAction action)
+        {
+            context.Logger.LogWarning($"{this.GetType()} cannot be rewarded");
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,10 +1,10 @@
 import React from "react";
 import {
-  ActionsButton,
-  ActionItem,
-  ActionItemsGroup,
-  ActionLink,
-} from "../../molecules/ActionsButton";
+  MoreOptionsDropdown,
+  OptionItem,
+  OptionItemsGroup,
+  OptionLink,
+} from "../../molecules/MoreOptionsDropdown";
 
 export const ActionsButtonUtil = ({
   basePath,
@@ -13,32 +13,59 @@ export const ActionsButtonUtil = ({
   children,
 }) => {
   return (
-    <ActionsButton
-      to={`${basePath}/recommendations/${id}`}
-      label="Latest Recommendations"
-    >
-      <ActionItemsGroup label="Actions">
-        <ActionLink to={`${basePath}/test/${id}`}>
+    <MoreOptionsDropdown>
+      <OptionItemsGroup label="Actions">
+        <OptionLink to={`${basePath}/recommendations/${id}`}>
+          Latest Recommendations
+        </OptionLink>
+        <OptionLink to={`${basePath}/test/${id}`}>
           Recommender Testing
-        </ActionLink>
-        <ActionLink to={`${basePath}/settings/${id}`}>
-          Settings
-        </ActionLink>
-        <ActionLink to={`${basePath}/target-variable/${id}`}>
+        </OptionLink>
+        <OptionLink to={`${basePath}/settings/${id}`}>Settings</OptionLink>
+        <OptionLink to={`${basePath}/target-variable/${id}`}>
           Target Variable
-        </ActionLink>
-        <ActionLink to={`${basePath}/integrate/${id}`}>
+        </OptionLink>
+        <OptionLink to={`${basePath}/integrate/${id}`}>
           Technical Integration
-        </ActionLink>
-        <ActionLink to={`${basePath}/invokation-logs/${id}`}>
+        </OptionLink>
+        <OptionLink to={`${basePath}/invokation-logs/${id}`}>
           Invokation Logs
-        </ActionLink>
-        <ActionLink to={`${basePath}/link-to-model/${id}`}>
+        </OptionLink>
+        <OptionLink to={`${basePath}/link-to-model/${id}`}>
           Link to Model
-        </ActionLink>
-        <ActionItem onClick={() => setDeleteOpen(true)}>Delete</ActionItem>
-      </ActionItemsGroup>
+        </OptionLink>{" "}
+        <OptionItem onClick={() => setDeleteOpen(true)}>Delete</OptionItem>
+      </OptionItemsGroup>
       {children}
-    </ActionsButton>
+    </MoreOptionsDropdown>
   );
+  // return (
+  //   <ActionsButton
+  //     to={`${basePath}/recommendations/${id}`}
+  //     label="Latest Recommendations"
+  //   >
+  //     <ActionItemsGroup label="Actions">
+  //       <ActionLink to={`${basePath}/test/${id}`}>
+  //         Recommender Testing
+  //       </ActionLink>
+  //       <ActionLink to={`${basePath}/settings/${id}`}>
+  //         Settings
+  //       </ActionLink>
+  //       <ActionLink to={`${basePath}/target-variable/${id}`}>
+  //         Target Variable
+  //       </ActionLink>
+  //       <ActionLink to={`${basePath}/integrate/${id}`}>
+  //         Technical Integration
+  //       </ActionLink>
+  //       <ActionLink to={`${basePath}/invokation-logs/${id}`}>
+  //         Invokation Logs
+  //       </ActionLink>
+  //       <ActionLink to={`${basePath}/link-to-model/${id}`}>
+  //         Link to Model
+  //       </ActionLink>
+  //       <ActionItem onClick={() => setDeleteOpen(true)}>Delete</ActionItem>
+  //     </ActionItemsGroup>
+  //     {children}
+  //   </ActionsButton>
+  // );
 };

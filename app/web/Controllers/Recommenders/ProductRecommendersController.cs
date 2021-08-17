@@ -45,9 +45,15 @@ namespace SignalBox.Web.Controllers
         [HttpPost]
         public async Task<ProductRecommender> Create(CreateProductRecommender dto, bool? useInternalId = null)
         {
-            return await workflows.CreateProductRecommender(
-                new CreateCommonEntityModel(dto.CommonId, dto.Name),
-                dto.Touchpoint, dto.DefaultProductId, dto.ProductIds,
+            var c = new CreateCommonEntityModel(dto.CommonId, dto.Name);
+            if (dto.CloneFromId.HasValue)
+            {
+                // then clone from existing.
+                var from = await store.Read(dto.CloneFromId.Value);
+                return await workflows.CloneProductRecommender(c, from);
+            }
+            return await workflows.CreateProductRecommender(c,
+                dto.DefaultProductId, dto.ProductIds,
                 new RecommenderErrorHandling { ThrowOnBadInput = dto.ThrowOnBadInput });
         }
 
@@ -101,8 +107,8 @@ namespace SignalBox.Web.Controllers
                 Arguments = input.Arguments,
                 CommonUserId = input.CommonUserId,
             };
-            return await invokationWorkflows.InvokeProductRecommender(recommender, version, convertedInput);
-
+            var recommendation = await invokationWorkflows.InvokeProductRecommender(recommender, version, convertedInput);
+            return recommendation.GetOutput<ProductRecommenderModelOutputV1>();
         }
 
         /// <summary>Get the latest recommendations made by a recommender.</summary>

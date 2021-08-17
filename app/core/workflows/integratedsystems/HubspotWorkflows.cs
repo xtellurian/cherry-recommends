@@ -17,6 +17,7 @@ namespace SignalBox.Core.Workflows
         private readonly ITrackedUserEventStore eventStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
+        private readonly IProductRecommenderStore productRecommenderStore;
         private readonly IStorageContext storageContext;
         private readonly IHubspotService hubspotService;
         private readonly IDateTimeProvider dateTimeProvider;
@@ -30,6 +31,7 @@ namespace SignalBox.Core.Workflows
                                 ITrackedUserEventStore eventStore,
                                 ITrackedUserSystemMapStore systemMapStore,
                                 IParameterSetRecommenderStore parameterSetRecommenderStore,
+                                IProductRecommenderStore productRecommenderStore,
                                 IStorageContext storageContext,
                                 IHubspotService hubspotService,
                                 IDateTimeProvider dateTimeProvider,
@@ -43,6 +45,7 @@ namespace SignalBox.Core.Workflows
             this.eventStore = eventStore;
             this.systemMapStore = systemMapStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
+            this.productRecommenderStore = productRecommenderStore;
             this.storageContext = storageContext;
             this.hubspotService = hubspotService;
             this.dateTimeProvider = dateTimeProvider;
@@ -89,24 +92,40 @@ namespace SignalBox.Core.Workflows
                 behaviour.ExcludedFeatures = behaviour.ExcludedFeatures.Where(_ => _ != null).ToHashSet(); // remove nulls
             }
 
-            var cache = system.GetCache<HubspotCache>();
-
-            if (behaviour.ParameterSetRecommenderId.HasValue &&
-                behaviour.ParameterSetRecommenderId != cache.FeatureCrmCardBehaviour.ParameterSetRecommenderId)
+            if (behaviour.ParameterSetRecommenderId != null && behaviour.ProductRecommenderId != null)
             {
-                // recommender needs updating
-                if (!await parameterSetRecommenderStore.Exists(behaviour.ParameterSetRecommenderId.Value))
+                throw new BadRequestException("Must choose only ONE of a product recommender or parameter-set recommender");
+            }
+
+            var cache = system.GetCache<HubspotCache>();
+            if (behaviour.HasRecommender())
+            {
+                if (behaviour.ParameterSetRecommenderId.HasValue &&
+                    behaviour.ParameterSetRecommenderId != cache.FeatureCrmCardBehaviour.ParameterSetRecommenderId)
                 {
-                    // doesn't exist - throw
-                    throw new BadRequestException($"Parameter Set Recommender Id={behaviour.ParameterSetRecommenderId} doesnt exist");
-                }
-                else
-                {
-                    // check this recommender will work.
-                    var recommender = await parameterSetRecommenderStore.Read(behaviour.ParameterSetRecommenderId.Value);
-                    if (recommender.Arguments.Any(_ => _.IsRequired))
+                    // recommender needs updating
+                    if (!await parameterSetRecommenderStore.Exists(behaviour.ParameterSetRecommenderId.Value))
                     {
-                        throw new BadRequestException($"Hubspot Recommenders do not support required arguments");
+                        // doesn't exist - throw
+                        throw new BadRequestException($"Parameter Set Recommender Id={behaviour.ParameterSetRecommenderId} doesnt exist");
+                    }
+                    else
+                    {
+                        // check this recommender will work.
+                        var recommender = await parameterSetRecommenderStore.Read(behaviour.ParameterSetRecommenderId.Value);
+                        if (recommender.Arguments.Any(_ => _.IsRequired))
+                        {
+                            throw new BadRequestException($"Hubspot Recommenders do not support required arguments");
+                        }
+                    }
+                }
+
+                else if (behaviour.ProductRecommenderId.HasValue && behaviour.ProductRecommenderId != cache.FeatureCrmCardBehaviour.ProductRecommenderId)
+                {
+                    if (!await productRecommenderStore.Exists(behaviour.ProductRecommenderId.Value))
+                    {
+                        // doesn't exist - throw
+                        throw new BadRequestException($"Product Recommender Id={behaviour.ProductRecommenderId} doesnt exist");
                     }
                 }
             }
@@ -214,13 +233,23 @@ namespace SignalBox.Core.Workflows
             }
             var trackedUser = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, associatedObjectId);
             // use the object ID
+            double? outcomeFeedbackValue = null;
+            if (outcome == "GOOD")
+            {
+                outcomeFeedbackValue = 0.8;
+            }
+            else if (outcome == "BAD")
+            {
+                outcomeFeedbackValue = -0.4;
+            }
+
             return await eventsWorkflows.TrackUserEvents(new List<TrackedUserEventsWorkflows.TrackedUserEventInput>
                 {
                     new TrackedUserEventsWorkflows.TrackedUserEventInput(trackedUser.CommonId,
                     eventId, dateTimeProvider.Now, correlationId, integratedSystem.Id, "Hubspot", "RecommendatonOutcome",
                     new Dictionary<string, object>
                     {
-                        {"Outcome", outcome}
+                        {TrackedUserEvent.FEEDBACK, outcomeFeedbackValue},
                     })
                 }, addToQueue: false);
 

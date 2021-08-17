@@ -1,7 +1,7 @@
 import React from "react";
 import { useAccessToken } from "../../../api-hooks/token";
 import { useParameters } from "../../../api-hooks/parametersApi";
-import { createParameterSetRecommender } from "../../../api/parameterSetRecommendersApi";
+import { createParameterSetRecommenderAsync } from "../../../api/parameterSetRecommendersApi";
 import {
   BackButton,
   Title,
@@ -156,13 +156,14 @@ export const CreateParameterSetRecommender = () => {
     });
   };
   const onSave = () => {
-    createParameterSetRecommender({
-      success: (r) =>
-        history.push(`/recommenders/parameter-set-recommenders/detail/${r.id}`),
-      error: setError,
+    createParameterSetRecommenderAsync({
       token,
       payload: recommender,
-    });
+    })
+      .then((r) =>
+        history.push(`/recommenders/parameter-set-recommenders/detail/${r.id}`)
+      )
+      .catch(setError);
   };
   return (
     <React.Fragment>

@@ -11,21 +11,24 @@ import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
 import * as eh from "./common/errorHandling";
 
+export const fetchProductRecommendersAsync = async ({ token, page }) => {
+  const url = getUrl("api/recommenders/ProductRecommenders");
+  const response = await fetch(`${url}?${pageQuery(page)}`, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
 export const fetchProductRecommenders = async ({
   success,
   error,
   token,
   page,
 }) => {
-  const url = getUrl("api/recommenders/ProductRecommenders");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: headers(token),
-  });
-  if (response.ok) {
-    success(await response.json());
-  } else {
-    error(await response.json());
-  }
+  fetchProductRecommendersAsync({ page, token }).then(success).catch(error);
 };
 
 export const fetchProductRecommender = async ({
@@ -83,6 +86,19 @@ export const deleteProductRecommender = async ({
   }
 };
 
+export const createProductRecommenderAsync = async ({ token, payload }) => {
+  const url = getUrl("api/recommenders/ProductRecommenders");
+  const response = await fetch(url, {
+    headers: headers(token),
+    method: "post",
+    body: JSON.stringify(payload),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
 export const createProductRecommender = async ({
   success,
   error,
@@ -90,23 +106,10 @@ export const createProductRecommender = async ({
   payload,
   onFinally,
 }) => {
-  try {
-    const url = getUrl("api/recommenders/ProductRecommenders");
-    const response = await fetch(url, {
-      headers: headers(token),
-      method: "post",
-      body: JSON.stringify(payload),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
-  } finally {
-    if (onFinally) {
-      onFinally();
-    }
-  }
+  createProductRecommenderAsync({ token, payload })
+    .then(success)
+    .catch(error)
+    .finally(onFinally);
 };
 
 export const createLinkRegisteredModel = async ({

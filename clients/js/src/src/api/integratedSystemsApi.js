@@ -20,16 +20,31 @@ export const fetchIntegratedSystems = async ({
   }
 };
 
-export const fetchIntegratedSystem = async ({ success, error, token, id }) => {
+export const fetchIntegratedSystemAsync = async ({ token, id }) => {
   const url = getUrl(`api/integratedSystems/${id}`);
   const response = await fetch(url, {
     headers: headers(token),
   });
   if (response.ok) {
-    const results = await response.json();
-    success(results);
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
+  }
+};
+export const fetchIntegratedSystem = async ({ success, error, token, id }) => {
+  fetchIntegratedSystemAsync({ id, token }).then(success).catch(error);
+};
+
+export const renameAsync = async ({ token, id, name }) => {
+  const url = getUrl(`api/integratedSystems/${id}/name?name=${name}`);
+  const response = await fetch(url, {
+    headers: headers(token),
+    method: "post",
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
   }
 };
 
