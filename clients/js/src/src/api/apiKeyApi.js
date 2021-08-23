@@ -32,17 +32,21 @@ export const createApiKey = async ({ success, error, token, name }) => {
   }
 };
 
-export const exchangeApiKey = async ({ success, error, token, apiKey }) => {
+export const exchangeApiKeyAsync = async ({ apiKey }) => {
   const url = getUrl("api/apiKeys/exchange");
   const response = await fetch(url, {
-    headers: headers(token),
+    headers: headers(),
     method: "post",
     body: JSON.stringify({ apiKey }),
   });
   if (response.ok) {
-    const data = await response.json();
-    success(data);
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
   }
+};
+
+export const exchangeApiKey = ({ success, error, apiKey }) => {
+  const url = getUrl("api/apiKeys/exchange");
+  exchangeApiKeyAsync({ apiKey }).then(success).catch(error);
 };

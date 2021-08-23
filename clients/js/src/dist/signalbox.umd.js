@@ -56,25 +56,29 @@
     }
   };
 
-  const exchangeApiKey = async ({ success, error, token, apiKey }) => {
+  const exchangeApiKeyAsync = async ({ apiKey }) => {
     const url = getUrl("api/apiKeys/exchange");
     const response = await fetch(url, {
-      headers: headers(token),
+      headers: headers(),
       method: "post",
       body: JSON.stringify({ apiKey }),
     });
     if (response.ok) {
-      const data = await response.json();
-      success(data);
+      return await response.json();
     } else {
-      error(await response.json());
+      throw await response.json();
     }
+  };
+
+  const exchangeApiKey = ({ success, error, apiKey }) => {
+    exchangeApiKeyAsync({ apiKey }).then(success).catch(error);
   };
 
   var apiKeyApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchApiKeys: fetchApiKeys,
     createApiKey: createApiKey,
+    exchangeApiKeyAsync: exchangeApiKeyAsync,
     exchangeApiKey: exchangeApiKey
   });
 
@@ -459,16 +463,31 @@
     }
   };
 
-  const fetchIntegratedSystem = async ({ success, error, token, id }) => {
+  const fetchIntegratedSystemAsync = async ({ token, id }) => {
     const url = getUrl(`api/integratedSystems/${id}`);
     const response = await fetch(url, {
       headers: headers(token),
     });
     if (response.ok) {
-      const results = await response.json();
-      success(results);
+      return await response.json();
     } else {
-      error(await response.json());
+      throw await response.json();
+    }
+  };
+  const fetchIntegratedSystem = async ({ success, error, token, id }) => {
+    fetchIntegratedSystemAsync({ id, token }).then(success).catch(error);
+  };
+
+  const renameAsync = async ({ token, id, name }) => {
+    const url = getUrl(`api/integratedSystems/${id}/name?name=${name}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
     }
   };
 
@@ -527,7 +546,9 @@
   var integratedSystemsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchIntegratedSystems: fetchIntegratedSystems,
+    fetchIntegratedSystemAsync: fetchIntegratedSystemAsync,
     fetchIntegratedSystem: fetchIntegratedSystem,
+    renameAsync: renameAsync,
     createIntegratedSystemAsync: createIntegratedSystemAsync,
     fetchWebhookReceivers: fetchWebhookReceivers,
     createIntegratedSystem: createIntegratedSystem,
@@ -1155,21 +1176,24 @@
     updateErrorHandlingAsync: updateErrorHandlingAsync$1
   });
 
+  const fetchProductRecommendersAsync = async ({ token, page }) => {
+    const url = getUrl("api/recommenders/ProductRecommenders");
+    const response = await fetch(`${url}?${pageQuery(page)}`, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
   const fetchProductRecommenders = async ({
     success,
     error,
     token,
     page,
   }) => {
-    const url = getUrl("api/recommenders/ProductRecommenders");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
+    fetchProductRecommendersAsync({ page, token }).then(success).catch(error);
   };
 
   const fetchProductRecommender = async ({
@@ -1395,6 +1419,7 @@
 
   var productRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
+    fetchProductRecommendersAsync: fetchProductRecommendersAsync,
     fetchProductRecommenders: fetchProductRecommenders,
     fetchProductRecommender: fetchProductRecommender,
     fetchProductRecommendations: fetchProductRecommendations,
@@ -1894,6 +1919,18 @@
     }
   };
 
+  const fetchLatestRecommendationsAsync = async ({ token, id }) => {
+    const url = getUrl(`api/trackedUsers/${id}/latest-recommendations`);
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const fetchTrackedUserActionAsync = async ({
     token,
     id,
@@ -1973,6 +2010,7 @@
     updateMergePropertiesAsync: updateMergePropertiesAsync,
     fetchTrackedUser: fetchTrackedUser,
     fetchUniqueTrackedUserActionGroupsAsync: fetchUniqueTrackedUserActionGroupsAsync,
+    fetchLatestRecommendationsAsync: fetchLatestRecommendationsAsync,
     fetchTrackedUserActionAsync: fetchTrackedUserActionAsync,
     fetchTrackedUserAction: fetchTrackedUserAction,
     uploadUserData: uploadUserData,
