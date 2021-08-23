@@ -65,7 +65,8 @@ namespace SignalBox.Core
                     if (!string.Equals(user.Properties[k]?.ToString(), nextProperties[k]?.ToString()))
                     {
                         // they are NOT the same
-                        result.Add(new TrackedUserAction(user, null, timestamp: now, recommendationCorrelatorId, integratedSystemId, "System|PropertyUpdated", k, nextProperties[k].ToString()));
+
+                        result.Add(new TrackedUserAction(user, null, timestamp: now, recommendationCorrelatorId, integratedSystemId, "System|PropertyUpdated", k, nextProperties[k]?.ToString()));
                     }
                 }
                 foreach (var k in user.Properties.Keys.Where(_ => !nextProperties.ContainsKey(_)))
@@ -76,7 +77,8 @@ namespace SignalBox.Core
                 foreach (var k in nextProperties.Keys.Where(_ => !user.Properties.ContainsKey(_)))
                 {
                     // new properties
-                    result.Add(new TrackedUserAction(user, null, timestamp: now, recommendationCorrelatorId, integratedSystemId, "System|PropertyCreated", k, nextProperties[k].ToString()));
+
+                    result.Add(new TrackedUserAction(user, null, timestamp: now, recommendationCorrelatorId, integratedSystemId, "System|PropertyCreated", k, nextProperties[k]?.ToString()));
                 }
             }
             return result;
