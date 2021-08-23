@@ -26,6 +26,18 @@ export const fetchFeatureAsync = async ({ token, id }) => {
   }
 };
 
+export const fetchFeatureTrackedUsersAsync = async ({ token, page, id }) => {
+  const url = getUrl(`api/Features/${id}/TrackedUsers?${pageQuery(page)}`);
+  const response = await fetch(url, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
 export const createFeatureAsync = async ({ token, feature }) => {
   const url = getUrl(`api/features/`);
   const response = await fetch(url, {

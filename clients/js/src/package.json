@@ -1,6 +1,6 @@
 {
   "name": "signalbox.js",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "description": "API Client for Four2 SignalBox ",
   "main": "dist/signalbox.umd.js",
   "module": "src/index.js",
