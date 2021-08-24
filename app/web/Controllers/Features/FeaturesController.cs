@@ -32,7 +32,7 @@ namespace SignalBox.Web.Controllers
             return await workflows.CreateFeature(dto.CommonId, dto.Name);
         }
 
-        /// <summary>Creates a new feature that can used with a tracked user.</summary>
+        /// <summary>Get's the tracked users associated with a feature.</summary>
         [HttpGet("{id}/TrackedUsers")]
         public async Task<Paginated<TrackedUser>> GetAssociatedTrackedUsers(string id, [FromQuery] PaginateRequest p)
         {
