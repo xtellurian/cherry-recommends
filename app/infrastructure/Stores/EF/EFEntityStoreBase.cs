@@ -31,7 +31,19 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<TResult> Min<TResult>(Expression<Func<T, TResult>> selector)
         {
-            return await Set.MinAsync(selector);
+            return await Set.DefaultIfEmpty(null).MinAsync(selector);
+        }
+
+        public async Task<TResult> Min<TResult>(Expression<Func<T, bool>> predicate, Expression<Func<T, TResult>> selector)
+        {
+            if (await Set.Where(predicate).Select(selector).AnyAsync(_ => _ != null))
+            {
+                return await Set.Where(predicate).MinAsync(selector);
+            }
+            else
+            {
+                throw new InvalidStorageAccessException($"The entities of type {typeof(T)} have to minimum value for this query");
+            }
         }
 
         public async Task<TResult> Max<TResult>(Expression<Func<T, TResult>> selector)

@@ -1,10 +1,15 @@
 import { pageQuery } from "./paging";
 import { getUrl } from "../baseUrl";
 import { headers } from "./headers";
+import { searchEntities } from "../utilities/search";
 
-export const fetchFeaturesAsync = async ({ token, page }) => {
-  const url = getUrl("api/features");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
+export const fetchFeaturesAsync = async ({ token, page, searchTerm }) => {
+  let url = getUrl("api/features");
+  url = `${url}?${pageQuery(page)}`;
+  if (searchTerm) {
+    url = `${url}&${searchEntities(searchTerm)}`;
+  }
+  const response = await fetch(url, {
     headers: headers(token),
   });
   if (response.ok) {

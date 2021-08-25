@@ -37,6 +37,11 @@ namespace SignalBox.Core
             }
         }
 
+        public bool IsNumeric()
+        {
+            return this.NumericValue != null;
+        }
+
 #nullable enable
         public int Version { get; set; }
         public long TrackedUserId { get; set; }

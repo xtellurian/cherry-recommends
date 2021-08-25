@@ -72,6 +72,10 @@ export const getAuthenticatedIA = (scopes) => {
           to: "/admin/features",
         },
         {
+          name: "Feature Generators",
+          to: "/admin/feature-generators",
+        },
+        {
           name: "Models",
           to: "/models",
         },

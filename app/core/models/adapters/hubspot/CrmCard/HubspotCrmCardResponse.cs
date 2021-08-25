@@ -21,16 +21,28 @@ namespace SignalBox.Core.Adapters.Hubspot
                 { "title", customerInformationTitle},
                 { userFeaturesEntryKey, featureValue.TrackedUser.CommonUserId},
                 { "objectId", featureValue.Id},
-                { "properties", new List<Dictionary<string,string>>() }
+                { "properties", new List<Dictionary<string,object>>() }
             };
 
-            var properties = cardEntry["properties"] as List<Dictionary<string, string>>;
-            properties.Add(new Dictionary<string, string>
+            var properties = cardEntry["properties"] as List<Dictionary<string, object>>;
+            if (featureValue.IsNumeric())
             {
-                { "label", featureValue.Feature.Name },
-                { "dataType", "STRING" },
-                { "value", featureValue.StringValue }
-            });
+                properties.Add(new Dictionary<string, object>
+                {
+                    { "label", featureValue.Feature.Name },
+                    { "dataType", "NUMERIC" },
+                    { "value", featureValue.NumericValue }
+                });
+            }
+            else
+            {
+                properties.Add(new Dictionary<string, object>
+                {
+                    { "label", featureValue.Feature.Name },
+                    { "dataType", "STRING" },
+                    { "value", featureValue.StringValue }
+                });
+            }
 
             if (!this.Results.Any(_ => _.GetValueOrDefault("title") as string == customerInformationTitle))
             {

@@ -1,5 +1,5 @@
 import React from "react";
-import { EmptyList, Paginator, Title } from "../../molecules";
+import { EmptyList, Paginator, Title, ErrorCard } from "../../molecules";
 import { ClickableRow } from "../../molecules/ClickableRow";
 
 import { useFeatures } from "../../../api-hooks/featuresApi";
@@ -26,6 +26,7 @@ export const FeaturesSummary = () => {
       {features.items && features.items.length === 0 && (
         <EmptyList>There are no features.</EmptyList>
       )}
+      {features.error && <ErrorCard error={features.error} />}
       {features.items &&
         features.items.map((f) => <FeatureRow key={f.id} feature={f} />)}
 

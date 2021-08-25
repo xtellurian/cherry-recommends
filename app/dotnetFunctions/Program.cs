@@ -8,6 +8,7 @@ using SignalBox.Infrastructure.Services;
 using System.IO;
 using System;
 using SignalBox.Infrastructure.Files;
+using SignalBox.Functions.Services;
 
 namespace SignalBox.Functions
 {
@@ -46,6 +47,11 @@ namespace SignalBox.Functions
                         services.UseSqlLite(cs);
                     }
 
+                    services.RegisterCoreServices();
+                    services.RegisterDefaultInfrastructureServices();
+
+                    services.AddScoped<ITelemetry, AzureFunctionsAppInsightsTelemetry>();
+
                     services.Configure<QueueMessagesFileHosting>(_ =>
                     {
                         _.ConnectionString = azureWebJobsConnectionString;
@@ -57,11 +63,8 @@ namespace SignalBox.Functions
                     services.AddAzureStorageQueueStores();
                     services.AddEFStores();
                     // add the workflows needed for backend processing
-                    services.AddScoped<TrackedUserActionWorkflows>();
-                    services.AddScoped<TrackedUserEventsWorkflows>();
-                    services.AddScoped<TrackedUserWorkflows>();
+                    services.RegisterWorkflows();
                     // add some required services
-                    services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();
                 })
                 .Build();
 

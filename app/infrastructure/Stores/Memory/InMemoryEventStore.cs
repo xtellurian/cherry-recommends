@@ -63,6 +63,11 @@ namespace SignalBox.Infrastructure
             throw new NotImplementedException();
         }
 
+        public Task<TProperty> Min<TProperty>(Expression<Func<TrackedUserEvent, bool>> predicate, Expression<Func<TrackedUserEvent, TProperty>> selector)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<TrackedUserEvent> Read(string eventId)
         {
             throw new NotImplementedException();

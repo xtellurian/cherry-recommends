@@ -13,6 +13,7 @@ namespace SignalBox.Core
         Task<int> Count(Expression<Func<TrackedUserEvent, bool>> predicate = null);
         Task<TProperty> Max<TProperty>(Expression<Func<TrackedUserEvent, TProperty>> selector);
         Task<TProperty> Min<TProperty>(Expression<Func<TrackedUserEvent, TProperty>> selector);
+        Task<TProperty> Min<TProperty>(Expression<Func<TrackedUserEvent, bool>> predicate, Expression<Func<TrackedUserEvent, TProperty>> selector);
         Task<int> CountTrackedUsers(Expression<Func<TrackedUserEvent, bool>> predicate = null);
         Task<IEnumerable<TrackedUserEvent>> AddTrackedUserEvents(IEnumerable<TrackedUserEvent> events);
         Task<Paginated<TrackedUserEvent>> ReadEventsForUser(int page, TrackedUser user);

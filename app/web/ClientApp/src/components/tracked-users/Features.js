@@ -24,7 +24,7 @@ const FeatureValues = ({ userId, feature }) => {
     <div>
       <CopyableField label="Feature Common Id" value={feature.commonId} />
       <CopyableField label="Current Version" value={values.version} />
-      <CopyableField label="Current Value" value={values.value} />
+      <CopyableField label="Current Value" value={`${values.value}`} />
     </div>
   );
 };

@@ -62,6 +62,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IProductRecommendationStore, EFProductRecommendationStore>();
 
             services.AddScoped<IFeatureStore, EFFeatureStore>();
+            services.AddScoped<IFeatureGeneratorStore, EFFeatureGeneratorStore>();
             services.AddScoped<ITrackedUserFeatureStore, EFTrackedUserFeatureStore>();
 
             services.AddScoped<ITouchpointStore, EFTouchpointStore>();

@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -190,7 +188,8 @@ namespace SignalBox.Web.Controllers
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             if (features.Any())
             {
-                var response = new CrmCardResponseWithPrimaryAction<IframeAction>();
+                // var response = new CrmCardResponseWithPrimaryAction<IframeAction>();
+                var response = new HubspotCrmCardResponse();
                 foreach (var feature in features)
                 {
                     var val = await trackedUserFeatureStore.ReadFeature(trackedUser, feature);

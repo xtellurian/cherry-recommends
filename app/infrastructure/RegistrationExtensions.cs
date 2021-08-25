@@ -8,11 +8,13 @@ namespace SignalBox.Infrastructure
 {
     public static class RegistrationExtensions
     {
-        public static IServiceCollection RegisterDefaultServices(this IServiceCollection services)
+        public static IServiceCollection RegisterDefaultInfrastructureServices(this IServiceCollection services)
         {
             services.AddScoped<IApiTokenFactory, Auth0ApiTokenFactory>();
             services.AddScoped<IModelClientFactory, ModelClientFactory>();
             services.AddScoped<IRecommenderModelClientFactory, RecommenderModelClientFactory>();
+            services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();
+            services.AddHttpClient();
             return services;
         }
     }

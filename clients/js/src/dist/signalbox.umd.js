@@ -353,9 +353,67 @@
     fetchRecommendation: fetchRecommendation
   });
 
-  const fetchFeaturesAsync = async ({ token, page }) => {
-    const url = getUrl("api/features");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
+  const fetchFeatureGeneratorsAsync = async ({ page, token }) => {
+    const url = getUrl(`api/FeatureGenerators?${pageQuery(page)}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const createFeatureGeneratorAsync = async ({ token, payload }) => {
+    const url = getUrl(`api/FeatureGenerators`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const deleteFeatureGeneratorAsync = async ({ token, id }) => {
+    const url = getUrl(`api/FeatureGenerators/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "delete",
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  var featureGeneratorsApi = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    fetchFeatureGeneratorsAsync: fetchFeatureGeneratorsAsync,
+    createFeatureGeneratorAsync: createFeatureGeneratorAsync,
+    deleteFeatureGeneratorAsync: deleteFeatureGeneratorAsync
+  });
+
+  const searchEntities$2 = (term) => {
+      if (term) {
+        return `q.term=${term}`;
+      } else {
+        return "";
+      }
+    };
+
+  const fetchFeaturesAsync = async ({ token, page, searchTerm }) => {
+    let url = getUrl("api/features");
+    url = `${url}?${pageQuery(page)}`;
+    if (searchTerm) {
+      url = `${url}&${searchEntities$2(searchTerm)}`;
+    }
+    const response = await fetch(url, {
       headers: headers(token),
     });
     if (response.ok) {
@@ -2154,6 +2212,7 @@
   exports.deployment = deploymentApi;
   exports.events = eventsApi;
   exports.experiments = experimentsApi;
+  exports.featureGenerators = featureGeneratorsApi;
   exports.features = featuresApi;
   exports.integratedSystems = integratedSystemsApi;
   exports.modelRegistrations = modelRegistrationsApi;

@@ -11,6 +11,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<IntegratedSystemWorkflows>();
             services.AddScoped<ModelRegistrationWorkflows>();
             services.AddScoped<OfferWorkflows>();
+            services.AddScoped<FeatureGeneratorWorkflows>();
             services.AddScoped<FeatureWorkflows>();
             services.AddScoped<PresentationsWorkflows>();
             services.AddScoped<ProductWorkflows>();

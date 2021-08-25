@@ -90,8 +90,7 @@ namespace SignalBox.Web
             services.AddEFStores();
             // add our logical workflows from the Core project
             services.RegisterWorkflows();
-            services.AddHttpClient();
-            services.RegisterDefaultServices();
+            services.RegisterDefaultInfrastructureServices();
             services.Configure<Auth0M2MClient>(Configuration.GetSection("Auth0").GetSection("M2M"));
             services.Configure<HubspotAppCredentials>(Configuration.GetSection("HubSpot").GetSection("AppCredentials"));
             services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();
