@@ -447,6 +447,24 @@
     }
   };
 
+  const fetchFeatureTrackedUserFeaturesAsync = async ({
+    token,
+    page,
+    id,
+  }) => {
+    const url = getUrl(
+      `api/Features/${id}/TrackedUserFeatures?${pageQuery(page)}`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const createFeatureAsync = async ({ token, feature }) => {
     const url = getUrl(`api/features/`);
     const response = await fetch(url, {
@@ -510,6 +528,7 @@
     fetchFeaturesAsync: fetchFeaturesAsync,
     fetchFeatureAsync: fetchFeatureAsync,
     fetchFeatureTrackedUsersAsync: fetchFeatureTrackedUsersAsync,
+    fetchFeatureTrackedUserFeaturesAsync: fetchFeatureTrackedUserFeaturesAsync,
     createFeatureAsync: createFeatureAsync,
     deleteFeatureAsync: deleteFeatureAsync,
     fetchTrackedUserFeaturesAsync: fetchTrackedUserFeaturesAsync,
