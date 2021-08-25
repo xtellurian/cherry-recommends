@@ -172,6 +172,7 @@ namespace SignalBox.Web
             }
             else
             {
+                app.UseHttpsRedirection();
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
@@ -180,7 +181,6 @@ namespace SignalBox.Web
             app.UseProblemDetails(); // must come after app.UseDeveloperExceptionPage()
             app.UseMiddleware<ExceptionTelemetryMiddleware>(); // must come after UseProblemDetails()
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
