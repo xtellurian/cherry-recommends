@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,21 @@ namespace SignalBox.Web.Controllers
         {
             var feature = await base.GetResource(id);
             return await workflows.GetTrackedUsers(feature, p.Page);
+        }
+
+        /// <summary>Get's the latest tracked user features (values) for a feature.</summary>
+        [HttpGet("{id}/TrackedUserFeatures")]
+        public async Task<Paginated<TrackedUserFeature>> GetLatestTrackedUserFeatures(string id, [FromQuery] PaginateRequest p)
+        {
+            var feature = await base.GetResource(id);
+            var users = await workflows.GetTrackedUsers(feature, p.Page);
+            var featureValues = new List<TrackedUserFeature>();
+            foreach (var trackedUser in users.Items)
+            {
+                featureValues.Add(await workflows.ReadFeatureValues(trackedUser, feature.CommonId));
+            }
+
+            return new Paginated<TrackedUserFeature>(featureValues, users.Pagination.PageCount, users.Pagination.TotalItemCount, users.Pagination.PageNumber);
         }
 
         protected override Task<(bool, string)> CanDelete(Feature entity)
