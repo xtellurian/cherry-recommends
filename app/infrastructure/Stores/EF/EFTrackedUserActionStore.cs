@@ -10,6 +10,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFTrackedUserActionStore : EFEntityStoreBase<TrackedUserAction>, ITrackedUserActionStore
     {
+        protected override Expression<Func<TrackedUserAction, DateTimeOffset>> defaultOrderBy => _ => _.Timestamp;
         protected override int PageSize => 10;
         public EFTrackedUserActionStore(SignalBoxDbContext context) : base(context, c => c.TrackedUserActions)
         { }

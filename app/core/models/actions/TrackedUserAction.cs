@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json.Serialization;
+using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core
 {
@@ -78,6 +79,7 @@ namespace SignalBox.Core
         public string EventId { get; set; }
         public DateTimeOffset Timestamp { get; set; }
         public long? RecommendationCorrelatorId { get; set; }
+        public RecommendationCorrelator RecommendationCorrelator { get; set; }
         public long? IntegratedSystemId { get; set; }
 
         // category can be bar separated Kind|EventType

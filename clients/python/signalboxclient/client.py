@@ -146,8 +146,8 @@ class SignalBoxClient:
     # Recommenders
 
     # Product Recommenders
-    def create_product_recommender(self, common_id: str, name: str, touchpoint: str, product_ids: List[str] = None):
-        return create_product_recommender(self.access_token, self.base_url, common_id, name, touchpoint, product_ids)
+    def create_product_recommender(self, common_id: str, name: str, product_ids: List[str] = None):
+        return create_product_recommender(self.access_token, self.base_url, common_id, name, product_ids)
 
     def get_product_recommender(self, recommender_id):
         return get_product_recommender(self.access_token, self.base_url, id=recommender_id)

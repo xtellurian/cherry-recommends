@@ -716,9 +716,19 @@ namespace sqlite.SignalBox
                     b.Property<long?>("ModelRegistrationId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<long?>("ParameterSetRecommenderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("ProductRecommenderId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ModelRegistrationId");
+
+                    b.HasIndex("ParameterSetRecommenderId");
+
+                    b.HasIndex("ProductRecommenderId");
 
                     b.ToTable("RecommendationCorrelators");
                 });
@@ -1190,6 +1200,8 @@ namespace sqlite.SignalBox
 
                     b.HasIndex("CommonUserId");
 
+                    b.HasIndex("RecommendationCorrelatorId");
+
                     b.HasIndex("Timestamp");
 
                     b.HasIndex("TrackedUserEventId");
@@ -1250,6 +1262,8 @@ namespace sqlite.SignalBox
 
                     b.HasIndex("EventId")
                         .IsUnique();
+
+                    b.HasIndex("RecommendationCorrelatorId");
 
                     b.HasIndex("SourceId");
 
@@ -1627,7 +1641,21 @@ namespace sqlite.SignalBox
                         .HasForeignKey("ModelRegistrationId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("SignalBox.Core.Recommenders.ParameterSetRecommender", "ParameterSetRecommender")
+                        .WithMany("RecommendationCorrelators")
+                        .HasForeignKey("ParameterSetRecommenderId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("SignalBox.Core.Recommenders.ProductRecommender", "ProductRecommender")
+                        .WithMany("RecommendationCorrelators")
+                        .HasForeignKey("ProductRecommenderId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("ModelRegistration");
+
+                    b.Navigation("ParameterSetRecommender");
+
+                    b.Navigation("ProductRecommender");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.InvokationLogEntry", b =>
@@ -1701,6 +1729,10 @@ namespace sqlite.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.TrackedUserAction", b =>
                 {
+                    b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
+                        .WithMany("TrackedUserActions")
+                        .HasForeignKey("RecommendationCorrelatorId");
+
                     b.HasOne("SignalBox.Core.TrackedUserEvent", "TrackedUserEvent")
                         .WithMany("Actions")
                         .HasForeignKey("TrackedUserEventId");
@@ -1709,6 +1741,8 @@ namespace sqlite.SignalBox
                         .WithMany("Actions")
                         .HasForeignKey("TrackedUserId");
 
+                    b.Navigation("RecommendationCorrelator");
+
                     b.Navigation("TrackedUser");
 
                     b.Navigation("TrackedUserEvent");
@@ -1716,6 +1750,10 @@ namespace sqlite.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.TrackedUserEvent", b =>
                 {
+                    b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
+                        .WithMany()
+                        .HasForeignKey("RecommendationCorrelatorId");
+
                     b.HasOne("SignalBox.Core.IntegratedSystem", "Source")
                         .WithMany()
                         .HasForeignKey("SourceId");
@@ -1723,6 +1761,8 @@ namespace sqlite.SignalBox
                     b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
                         .WithMany()
                         .HasForeignKey("TrackedUserId");
+
+                    b.Navigation("RecommendationCorrelator");
 
                     b.Navigation("Source");
 
@@ -1810,8 +1850,15 @@ namespace sqlite.SignalBox
                     b.Navigation("Outcomes");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Recommendations.RecommendationCorrelator", b =>
+                {
+                    b.Navigation("TrackedUserActions");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommender", b =>
                 {
+                    b.Navigation("RecommendationCorrelators");
+
                     b.Navigation("Recommendations");
 
                     b.Navigation("RecommenderInvokationLogs");
@@ -1821,6 +1868,8 @@ namespace sqlite.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ProductRecommender", b =>
                 {
+                    b.Navigation("RecommendationCorrelators");
+
                     b.Navigation("Recommendations");
 
                     b.Navigation("RecommenderInvokationLogs");

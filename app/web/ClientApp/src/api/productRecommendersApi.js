@@ -41,3 +41,6 @@ export const setDefaultProductAsync =
 
 export const getDefaultProductAsync =
   productRecommenders.getDefaultProductAsync;
+
+export const fetchRecommenderTrackedUserActionsAsync =
+  productRecommenders.fetchRecommenderTrackedUserActionsAsync;

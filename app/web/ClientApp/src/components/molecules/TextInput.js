@@ -54,6 +54,7 @@ export const createServerErrorValidator =
 export const TextInput = ({
   label,
   value,
+  type,
   placeholder,
   onChange,
   onBlur,
@@ -98,7 +99,7 @@ export const TextInput = ({
       )}
       <input
         ref={setReferenceElement}
-        type="text"
+        type={type || "text"}
         className={`form-control ${formControlValidationClass}`}
         placeholder={placeholder}
         value={value}

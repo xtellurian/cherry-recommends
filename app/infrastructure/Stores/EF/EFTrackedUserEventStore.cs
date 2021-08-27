@@ -10,6 +10,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFTrackedUserEventStore : EFEntityStoreBase<TrackedUserEvent>, ITrackedUserEventStore
     {
+        protected override Expression<Func<TrackedUserEvent, DateTimeOffset>> defaultOrderBy => _ => _.Timestamp;
         public EFTrackedUserEventStore(SignalBoxDbContext context)
         : base(context, (c) => c.TrackedUserEvents)
         {

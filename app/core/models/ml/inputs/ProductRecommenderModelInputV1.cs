@@ -9,7 +9,6 @@ namespace SignalBox.Core
         [StringLength(256, MinimumLength = 3)]
         public string CommonUserId { get; set; }
         public string Version { get; set; }
-        public string Touchpoint { get; set; }
         public IDictionary<string, object> Arguments { get; set; }
         public IDictionary<string, object> Features { get; set; }
 

@@ -64,13 +64,13 @@ export const IntegrateProductRecommender = () => {
       {recommender.error && <ErrorCard error={recommender.error} />}
       {!recommender.loading && (
         <React.Fragment>
-          <TabActivator tabId="api" defaultTab={defaultTabId}>
+          <TabActivator tabId="api" defaultTabId={defaultTabId}>
             <CodeView
               language="bash"
               text={restIntegrate({ id, basePath: origin })}
             ></CodeView>
           </TabActivator>
-          <TabActivator tabId="js" defaultTab={defaultTabId}>
+          <TabActivator tabId="js" defaultTabId={defaultTabId}>
             {id && (
               <CodeView language="js" text={jsIntegrate({ id })}></CodeView>
             )}

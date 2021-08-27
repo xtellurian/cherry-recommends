@@ -16,10 +16,10 @@ export const CreateRewardSelector = () => {
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState();
   const [selectorType, setSelectorType] = React.useState(rewardTypeOptions[0]);
-  const [selector, setSelector] = React.useState({
+  const selector = {
     selectorType: rewardTypeOptions[0].value,
     actionName,
-  });
+  };
 
   const handleCreate = () => {
     setLoading(true);

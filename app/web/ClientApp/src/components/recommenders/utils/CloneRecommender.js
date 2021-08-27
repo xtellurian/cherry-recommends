@@ -1,10 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
-// import {
-//   createProductRecommenderAsync,
-// } from "../../../api/productRecommendersApi";
-
-import { useAccessToken } from "../../../api-hooks/token";
 import { ErrorCard } from "../../molecules";
 import { AsyncButton } from "../../molecules/AsyncButton";
 import {
@@ -16,8 +10,6 @@ import {
 } from "../../molecules/TextInput";
 
 export const CloneRecommender = ({ recommender, cloneAsync, onCloned }) => {
-  const token = useAccessToken();
-  const history = useHistory();
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [name, setName] = React.useState(`${recommender.name} (clone)`);

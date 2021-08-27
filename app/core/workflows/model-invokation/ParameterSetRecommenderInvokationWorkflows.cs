@@ -51,7 +51,8 @@ namespace SignalBox.Core.Workflows
             ParameterSetRecommenderModelInputV1 input)
         {
             // use the correlator to begin with because need to pass an event ID into some models
-            var correlator = await correlatorStore.Create(new RecommendationCorrelator());
+            await parameterSetRecommenderStore.Load(recommender, _ => _.ModelRegistration);
+            var correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
             var invokationEntry = await base.StartTrackInvokation(recommender, input, saveOnComplete: false);
             await storageContext.SaveChanges(); // save the correlator and invokation entry
             var recommendingContext = new RecommendingContext(version, correlator);

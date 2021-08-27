@@ -7,6 +7,7 @@ import {
   fetchUniqueTrackedUserActionGroupsAsync,
   fetchTrackedUserActionAsync,
   fetchLatestRecommendationsAsync,
+  fetchTrackedUsersActionsAsync,
 } from "../api/trackedUsersApi";
 
 export const useTrackedUsers = ({ searchTerm }) => {
@@ -99,6 +100,30 @@ export const useTrackedUserAction = ({ id, category, actionName }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, category, actionName]);
+
+  return result;
+};
+
+// pass through page here, because it's unlikely to be paginated via the query string
+export const useTrackedUserRevenueActions = ({ id, page }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  if (!page) {
+    page = 1;
+  }
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchTrackedUsersActionsAsync({
+        token,
+        id,
+        page,
+        revenueOnly: true,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, page]);
 
   return result;
 };

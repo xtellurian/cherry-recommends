@@ -43,5 +43,14 @@ namespace SignalBox.Web.Controllers
 
             return await actionWorkflows.ReadLatestAction(user.CommonId, category, actionName);
         }
+
+        /// <summary>Gets actions for a tracked user.</summary>
+        [HttpGet("{id}/actions")]
+        public async Task<Paginated<TrackedUserAction>> GetUserActions([FromQuery] PaginateRequest p, string id, bool? revenueOnly = null, bool? useInternalId = null)
+        {
+            var user = await trackedUserStore.GetEntity(id, useInternalId);
+
+            return await actionWorkflows.ReadTrackedUserActions(p.Page, user, revenueOnly ?? false);
+        }
     }
 }

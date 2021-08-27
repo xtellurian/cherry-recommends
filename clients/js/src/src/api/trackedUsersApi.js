@@ -162,3 +162,21 @@ export const createOrUpdateTrackedUser = async ({
     error(await response.json());
   }
 };
+
+export const fetchTrackedUsersActionsAsync = async ({
+  token,
+  page,
+  id,
+  revenueOnly,
+}) => {
+  let url = getUrl(`api/TrackedUsers/${id}/Actions`);
+  url = `${url}?${pageQuery(page)}&revenueOnly=${!!revenueOnly}`;
+  const response = await fetch(url, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};

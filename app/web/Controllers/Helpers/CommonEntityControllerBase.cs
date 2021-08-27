@@ -39,14 +39,14 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}")]
         public virtual async Task<T> GetResource(string id, bool? useInternalId = null)
         {
-            return await GetEntity<T>(id, useInternalId, null);
+            return await GetEntity<T>(id, useInternalId);
         }
 
         /// <summary>Returns the resource with this Id.</summary>
         [HttpPost("{id}/name")]
         public virtual async Task<T> Rename(string id, string name, bool? useInternalId = null)
         {
-            var entity = await GetEntity<T>(id, useInternalId, null);
+            var entity = await GetEntity<T>(id, useInternalId);
             entity.Name = name;
             await store.Update(entity);
             await store.Context.SaveChanges();
@@ -56,10 +56,10 @@ namespace SignalBox.Web.Controllers
         protected async Task<T> GetEntity(string id, bool? useInternalId)
         {
             // wrapper around the generic, without an include selector
-            return await this.GetEntity<object>(id, useInternalId, null);
+            return await this.GetEntity<object>(id, useInternalId);
         }
 
-        protected async Task<T> GetEntity<TProperty>(string id, bool? useInternalId, Expression<Func<T, TProperty>> include = null)
+        protected async Task<T> GetEntity<TProperty>(string id, bool? useInternalId)
         {
             return await store.GetEntity(id, useInternalId);
         }

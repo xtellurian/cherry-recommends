@@ -1,5 +1,5 @@
 import React from "react";
-import { BackButton, EmptyList, Subtitle, Title } from "../../molecules";
+import { EmptyList } from "../../molecules";
 import {
   ResponsiveContainer,
   LineChart,
@@ -54,7 +54,7 @@ export const TargetVariableValuesUtility = ({
 
   return (
     <React.Fragment>
-      <BackButton
+      {/* <BackButton
         className="float-right"
         to={`${rootPath}/detail/${recommender.id}`}
       >
@@ -62,7 +62,7 @@ export const TargetVariableValuesUtility = ({
       </BackButton>
       <Title>Target Variable</Title>
       <Subtitle>{recommender.name || "..."}</Subtitle>
-      <hr />
+      <hr /> */}
 
       {targetVariableValues.length === 0 && (
         <EmptyList>

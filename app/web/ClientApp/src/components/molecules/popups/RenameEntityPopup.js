@@ -23,7 +23,7 @@ export const RenameEntityPopup = ({
   const [newName, setNewName] = React.useState(entity.name);
 
   if (onRename === undefined) {
-    throw  "onRename is not a function";
+    throw new Error("onRename is not a function");
   }
   const handleRename = () => {
     onRename(newName);

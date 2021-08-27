@@ -11,6 +11,7 @@ import { LinkToModel } from "./LinkToModel";
 import { TargetVariableValues } from "./TargetVariableValues";
 import { InvokationLogs } from "./InvokationLogs";
 import { Settings } from "./Settings";
+import { MonitorProductRecommender } from "./MonitorProductRecommender";
 
 export const ProductRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -55,6 +56,10 @@ export const ProductRecommendersComponent = () => {
         <AuthorizeRoute
           path={`${path}/invokation-logs/:id`}
           component={InvokationLogs}
+        />
+        <AuthorizeRoute
+          path={`${path}/monitor/:id`}
+          component={MonitorProductRecommender}
         />
         <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
       </Switch>

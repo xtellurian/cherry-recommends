@@ -11,7 +11,6 @@ import {
 import { DateTimeField } from "../molecules/DateTimeField";
 import { ToggleSwitch } from "../molecules/ToggleSwitch";
 import { JsonView } from "../molecules/JsonView";
-import { EventTimelineChart } from "../molecules/EventTimelineChart";
 import {
   useTrackedUserUniqueActionGroups,
   useTrackedUserAction,

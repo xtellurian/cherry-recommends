@@ -13,6 +13,12 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder.HasOne(_ => _.DefaultProduct).WithMany().OnDelete(DeleteBehavior.SetNull);
             builder.HasOne(_ => _.Touchpoint).WithMany();
             builder.HasMany(_ => _.Recommendations).WithOne(_ => _.Recommender).OnDelete(DeleteBehavior.SetNull);
+
+            // configure the relationship between correlator and recommender
+            builder
+               .HasMany(_ => _.RecommendationCorrelators)
+               .WithOne(_ => _.ProductRecommender)
+               .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

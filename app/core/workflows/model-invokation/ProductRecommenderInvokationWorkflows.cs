@@ -50,12 +50,12 @@ namespace SignalBox.Core.Workflows
             string version,
             ProductRecommenderModelInputV1 input)
         {
+            await productRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             var invokationEntry = await base.StartTrackInvokation(recommender, input, saveOnComplete: false);
-            var correlator = await correlatorStore.Create(new RecommendationCorrelator());
+            var correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
             await storageContext.SaveChanges(); // save the correlator and invokatin entry
 
             var recommendingContext = new RecommendingContext(version, correlator);
-            await productRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             TrackedUser user = null;
             try
             {
@@ -64,17 +64,8 @@ namespace SignalBox.Core.Workflows
                     throw new BadRequestException("ParameterSetRecommenderId is a required parameter.");
                 }
 
-                input.Touchpoint ??= recommender.CommonId;
                 // enrich values from the touchpoint
-                var touchpoint = await touchpointStore.ReadFromCommonId(input.Touchpoint);
                 user = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
-
-                if (await trackedUserTouchpointStore.TouchpointExists(user, touchpoint))
-                {
-                    invokationEntry.LogMessage($"Using arguments from Touchpoint {touchpoint.CommonId}");
-                    var tpValues = await trackedUserTouchpointStore.ReadTouchpoint(user, touchpoint);
-                    input.Arguments = tpValues.Values;
-                }
 
                 // load the features of the tracked user
                 input.Features = await base.GetFeatures(user, invokationEntry);

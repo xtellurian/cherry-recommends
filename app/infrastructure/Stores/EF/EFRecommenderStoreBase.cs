@@ -37,5 +37,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
             return new Paginated<InvokationLogEntry>(results, pageCount, itemCount, page);
         }
+
+        public abstract Task<Paginated<TrackedUserAction>> QueryAssociatedActions(T recommender, int page, bool revenueOnly);
     }
 }

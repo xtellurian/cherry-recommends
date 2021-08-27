@@ -6,6 +6,7 @@ import {
   fetchInvokationLogsAsync,
   fetchProductRecommendations,
   fetchTargetVariablesAsync,
+  fetchRecommenderTrackedUserActionsAsync,
   getDefaultProductAsync,
 } from "../api/productRecommendersApi";
 import { useAccessToken } from "./token";
@@ -139,6 +140,30 @@ export const useTargetVariables = ({ id, name }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, name]);
+
+  return state;
+};
+
+export const useRecommenderTrackedUserActions = ({
+  id,
+  page,
+  revenueOnly,
+}) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchRecommenderTrackedUserActionsAsync({
+        token,
+        id,
+        page,
+        revenueOnly,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, page]);
 
   return state;
 };

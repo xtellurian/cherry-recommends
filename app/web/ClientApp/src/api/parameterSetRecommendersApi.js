@@ -35,3 +35,6 @@ export const fetchInvokationLogsAsync =
 
 export const updateErrorHandlingAsync =
   parameterSetRecommenders.updateErrorHandlingAsync;
+
+export const fetchRecommenderTrackedUserActionsAsync =
+  parameterSetRecommenders.fetchRecommenderTrackedUserActionsAsync;

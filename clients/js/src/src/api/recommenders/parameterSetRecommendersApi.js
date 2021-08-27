@@ -7,6 +7,7 @@ import {
   createLinkedRegisteredModelAsync,
 } from "./common/linkRegisteredModels";
 
+import * as actions from "./common/trackedUserActions";
 import * as eh from "./common/errorHandling";
 import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
@@ -22,6 +23,7 @@ export const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
     throw await response.json();
   }
 };
+
 export const fetchParameterSetRecommenders = async ({
   success,
   error,
@@ -51,6 +53,7 @@ export const fetchParameterSetRecommenderAsync = async ({
     throw await response.json();
   }
 };
+
 export const fetchParameterSetRecommender = async ({
   success,
   error,
@@ -229,5 +232,20 @@ export const updateErrorHandlingAsync = async ({
     id,
     token,
     errorHandling,
+  });
+};
+
+export const fetchRecommenderTrackedUserActionsAsync = async ({
+  id,
+  token,
+  page,
+  revenueOnly
+}) => {
+  return await actions.fetchRecommenderTrackedUserActionsAsync({
+    recommenderApiName: "ParameterSetRecommenders",
+    id,
+    token,
+    page,
+    revenueOnly,
   });
 };

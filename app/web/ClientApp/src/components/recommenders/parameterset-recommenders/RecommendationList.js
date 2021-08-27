@@ -55,7 +55,7 @@ export const RecommendationList = () => {
   const recommendations = useParameterSetRecommendations({ id });
   return (
     <React.Fragment>
-      <BackButton
+      {/* <BackButton
         className="float-right mr-1"
         to={`/recommenders/parameter-set-recommenders/detail/${id}`}
       >
@@ -63,7 +63,7 @@ export const RecommendationList = () => {
       </BackButton>
       <Title>Latest Recommendations</Title>
       <Subtitle>{recommender.name || "..."}</Subtitle>
-      <hr />
+      <hr /> */}
 
       {recommendations.loading && <Spinner />}
       {recommendations.error && <ErrorCard error={recommendations.error} />}

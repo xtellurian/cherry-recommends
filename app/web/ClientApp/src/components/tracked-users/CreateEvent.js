@@ -8,6 +8,7 @@ import {
   BackButton,
   AsyncButton,
   ErrorCard,
+  ExpandableCard,
 } from "../molecules";
 import { InputGroup, TextInput } from "../molecules/TextInput";
 import { PropertiesEditor } from "../molecules/PropertiesEditor";
@@ -25,6 +26,7 @@ export const CreateEvent = () => {
     kind: "",
     eventType: "",
     properties: {},
+    recommendationCorrelatorId: null,
   });
 
   const [properties, setProperties] = React.useState({});
@@ -40,6 +42,7 @@ export const CreateEvent = () => {
           Math.floor(Math.random() * 0x10000000000).toString(16),
         kind: "",
         eventType: "",
+        recommendationCorrelatorId: null,
         properties: {},
       });
     }
@@ -87,6 +90,24 @@ export const CreateEvent = () => {
           }
         />
       </InputGroup>
+      <div className="mb-2">
+        <ExpandableCard label="Advanced">
+          <InputGroup className="mb-2">
+            <TextInput
+              label="Recommendation Correlator Id"
+              type="number"
+              value={payload.recommendationCorrelatorId || -1}
+              placeholder="Link this event to a recommendation via the Correlator ID."
+              onChange={(v) =>
+                setPayload({
+                  ...payload,
+                  recommendationCorrelatorId: v.target.value,
+                })
+              }
+            />
+          </InputGroup>
+        </ExpandableCard>
+      </div>
 
       <PropertiesEditor
         label="Event Properties"

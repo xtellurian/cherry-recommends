@@ -17,10 +17,12 @@ namespace SignalBox.Web.Controllers
     public abstract class RecommenderControllerBase<T> : CommonEntityControllerBase<T> where T : RecommenderEntityBase
     {
         private readonly RecommenderInvokationWorkflowBase<T> workflows;
+        private readonly IRecommenderStore<T> recommenderStore;
 
-        protected RecommenderControllerBase(ICommonEntityStore<T> store, RecommenderInvokationWorkflowBase<T> workflows) : base(store)
+        protected RecommenderControllerBase(IRecommenderStore<T> store, RecommenderInvokationWorkflowBase<T> workflows) : base(store)
         {
             this.workflows = workflows;
+            this.recommenderStore = store;
         }
 
         [HttpGet("{id}/InvokationLogs")]
@@ -31,9 +33,10 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpGet("{id}/TargetVariableValues")]
-        public async Task<IEnumerable<RecommenderTargetVariableValue>> TargetVariableValues(string id, string name = null)
+        public async Task<IEnumerable<RecommenderTargetVariableValue>> TargetVariableValues(string id, string name = null, bool? useInternalId = null)
         {
-            var recommender = await base.GetEntity(id, null, _ => _.TargetVariableValues);
+            var recommender = await base.GetEntity(id, useInternalId);
+            await store.LoadMany(recommender, _ => _.TargetVariableValues);
             if (string.IsNullOrEmpty(name) || name == "null")
             {
                 return recommender.TargetVariableValues.ToList().OrderBy(_ => _.Version);
@@ -44,6 +47,14 @@ namespace SignalBox.Web.Controllers
             }
         }
 
+        [HttpGet("{id}/TrackedUserActions")]
+        public async Task<Paginated<TrackedUserAction>> GetAssociatedTrackedUserActions([FromQuery] PaginateRequest p,
+                                                                                        string id,
+                                                                                        bool? revenueOnly)
+        {
+            var recommender = await base.GetEntity(id, null);
+            return await recommenderStore.QueryAssociatedActions(recommender, p.Page, revenueOnly ?? false);
+        }
 
         [HttpPost("{id}/ErrorHandling")]
         public async Task<RecommenderErrorHandling> SetErrorHandling(string id, RecommenderErrorHandling dto)
@@ -59,7 +70,8 @@ namespace SignalBox.Web.Controllers
         [Authorize(Core.Security.Policies.AdminOnlyPolicyName)]
         public async Task<RecommenderTargetVariableValue> SetLatestTargetVariableValue(string id, CreateTargetVariableValue dto)
         {
-            var recommender = await base.GetEntity(id, null, _ => _.TargetVariableValues);
+            var recommender = await base.GetEntity(id, null);
+            await store.LoadMany(recommender, _ => _.TargetVariableValues);
             var currentMaxVersion = recommender.TargetVariableValues
                 .Where(_ => _.Name == dto.Name)
                 .Max(_ => (int?)_.Version) ?? 0;

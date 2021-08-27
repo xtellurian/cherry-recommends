@@ -15,6 +15,8 @@ export const fetchTrackedUserActionAsync =
 
 export const uploadUserData = trackedUsers.uploadUserData;
 
+export const fetchTrackedUsersActionsAsync = trackedUsers.fetchTrackedUsersActionsAsync;
+
 export const createOrUpdateTrackedUser = trackedUsers.createOrUpdateTrackedUser;
 export const updateMergePropertiesAsync =
   trackedUsers.updateMergePropertiesAsync;

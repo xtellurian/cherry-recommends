@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core
 {
@@ -38,12 +39,12 @@ namespace SignalBox.Core
         public void AddGoodFeedback()
         {
             this.Properties ??= new DynamicPropertyDictionary();
-            this.Properties[FEEDBACK] = 1;
+            this.Properties[FEEDBACK] = 0.8;
         }
         public void AddBadFeedback()
         {
             this.Properties ??= new DynamicPropertyDictionary();
-            this.Properties[FEEDBACK] = -1;
+            this.Properties[FEEDBACK] = -0.4;
         }
 
         public string CommonUserId { get; set; }
@@ -51,6 +52,7 @@ namespace SignalBox.Core
         public DateTimeOffset Timestamp { get; set; }
 # nullable enable
         public long? RecommendationCorrelatorId { get; set; }
+        public RecommendationCorrelator? RecommendationCorrelator { get; set; }
         public IntegratedSystem? Source { get; set; }
 #nullable disable
         public string Kind { get; set; }

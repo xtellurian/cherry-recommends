@@ -7,6 +7,7 @@ import {
   createLinkedRegisteredModelAsync,
 } from "./common/linkRegisteredModels";
 
+import * as actions from "./common/trackedUserActions";
 import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
 import * as eh from "./common/errorHandling";
@@ -249,5 +250,20 @@ export const updateErrorHandlingAsync = async ({
     id,
     token,
     errorHandling,
+  });
+};
+
+export const fetchRecommenderTrackedUserActionsAsync = async ({
+  id,
+  token,
+  page,
+  revenueOnly,
+}) => {
+  return await actions.fetchRecommenderTrackedUserActionsAsync({
+    recommenderApiName: "ProductRecommenders",
+    id,
+    token,
+    page,
+    revenueOnly,
   });
 };

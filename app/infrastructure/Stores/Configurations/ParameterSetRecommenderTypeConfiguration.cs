@@ -12,6 +12,12 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder.Property(_ => _.ParameterBounds).HasJsonConversion();
             builder.Property(_ => _.Arguments).HasJsonConversion();
             builder.HasMany(_ => _.Recommendations).WithOne(_ => _.Recommender).OnDelete(DeleteBehavior.SetNull);
+
+            // configure the relationship between correlator and recommender
+            builder
+               .HasMany(_ => _.RecommendationCorrelators)
+               .WithOne(_ => _.ParameterSetRecommender)
+               .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

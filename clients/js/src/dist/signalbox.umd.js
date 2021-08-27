@@ -941,6 +941,28 @@
     }
   };
 
+  const fetchRecommenderTrackedUserActionsAsync$2 = async ({
+    recommenderApiName,
+    revenueOnly,
+    token,
+    id,
+    page,
+  }) => {
+    let url = getUrl(
+      `api/recommenders/${recommenderApiName}/${id}/TrackedUserActions`
+    );
+
+    url = `${url}?${pageQuery(page)}&revenueOnly=${!!revenueOnly}`;
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const updateErrorHandlingAsync$2 = async ({
     recommenderApiName,
     token,
@@ -1036,6 +1058,7 @@
       throw await response.json();
     }
   };
+
   const fetchParameterSetRecommenders = async ({
     success,
     error,
@@ -1065,6 +1088,7 @@
       throw await response.json();
     }
   };
+
   const fetchParameterSetRecommender = async ({
     success,
     error,
@@ -1246,6 +1270,21 @@
     });
   };
 
+  const fetchRecommenderTrackedUserActionsAsync$1 = async ({
+    id,
+    token,
+    page,
+    revenueOnly
+  }) => {
+    return await fetchRecommenderTrackedUserActionsAsync$2({
+      recommenderApiName: "ParameterSetRecommenders",
+      id,
+      token,
+      page,
+      revenueOnly,
+    });
+  };
+
   var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchParameterSetRecommendersAsync: fetchParameterSetRecommendersAsync,
@@ -1263,7 +1302,8 @@
     fetchInvokationLogsAsync: fetchInvokationLogsAsync$1,
     fetchTargetVariablesAsync: fetchTargetVariablesAsync$1,
     createTargetVariableAsync: createTargetVariableAsync$1,
-    updateErrorHandlingAsync: updateErrorHandlingAsync$1
+    updateErrorHandlingAsync: updateErrorHandlingAsync$1,
+    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$1
   });
 
   const fetchProductRecommendersAsync = async ({ token, page }) => {
@@ -1507,6 +1547,21 @@
     });
   };
 
+  const fetchRecommenderTrackedUserActionsAsync = async ({
+    id,
+    token,
+    page,
+    revenueOnly,
+  }) => {
+    return await actions.fetchRecommenderTrackedUserActionsAsync({
+      recommenderApiName: "ProductRecommenders",
+      id,
+      token,
+      page,
+      revenueOnly,
+    });
+  };
+
   var productRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchProductRecommendersAsync: fetchProductRecommendersAsync,
@@ -1525,7 +1580,8 @@
     fetchInvokationLogsAsync: fetchInvokationLogsAsync,
     fetchTargetVariablesAsync: fetchTargetVariablesAsync,
     createTargetVariableAsync: createTargetVariableAsync,
-    updateErrorHandlingAsync: updateErrorHandlingAsync
+    updateErrorHandlingAsync: updateErrorHandlingAsync,
+    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync
   });
 
   const defaultHeaders$4 = { "Content-Type": "application/json" };
@@ -2093,6 +2149,24 @@
     }
   };
 
+  const fetchTrackedUsersActionsAsync = async ({
+    token,
+    page,
+    id,
+    revenueOnly,
+  }) => {
+    let url = getUrl(`api/TrackedUsers/${id}/Actions`);
+    url = `${url}?${pageQuery(page)}&revenueOnly=${!!revenueOnly}`;
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   var trackedUsersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchTrackedUsersAsync: fetchTrackedUsersAsync,
@@ -2104,7 +2178,8 @@
     fetchTrackedUserActionAsync: fetchTrackedUserActionAsync,
     fetchTrackedUserAction: fetchTrackedUserAction,
     uploadUserData: uploadUserData,
-    createOrUpdateTrackedUser: createOrUpdateTrackedUser
+    createOrUpdateTrackedUser: createOrUpdateTrackedUser,
+    fetchTrackedUsersActionsAsync: fetchTrackedUsersActionsAsync
   });
 
   const fetchRewardSelectorsAsync = async ({ token, page }) => {

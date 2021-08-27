@@ -10,6 +10,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFEntityStoreBase<T> : EFStoreBase<T>, IEntityStore<T> where T : Entity
     {
+        protected virtual Expression<Func<T, DateTimeOffset>> defaultOrderBy => _ => _.LastUpdated;
         protected virtual int PageSize => 100;
         public EFEntityStoreBase(SignalBoxDbContext context, Func<SignalBoxDbContext, DbSet<T>> selector)
         : base(context, selector)
@@ -72,7 +73,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             {
                 results = await Set
                     .Where(predicate)
-                    .OrderByDescending(_ => _.LastUpdated)
+                    .OrderByDescending(defaultOrderBy)
                     .Skip((page - 1) * PageSize).Take(PageSize)
                     .ToListAsync();
             }
@@ -97,7 +98,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 results = await Set
                     .Where(predicate)
                     .Include(include)
-                    .OrderByDescending(_ => _.LastUpdated)
+                    .OrderByDescending(defaultOrderBy)
                     .Skip((page - 1) * PageSize).Take(PageSize)
                     .ToListAsync();
             }

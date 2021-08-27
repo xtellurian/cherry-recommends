@@ -36,7 +36,8 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}")]
         public override async Task<ProductRecommender> GetResource(string id, bool? useInternalId = null)
         {
-            var recommender = await base.GetEntity(id, useInternalId, _ => _.DefaultProduct); // include the default product
+            var recommender = await base.GetEntity(id, useInternalId); // include the default product
+            await store.Load(recommender, _ => _.DefaultProduct);
             await store.LoadMany(recommender, _ => _.Products);
             return recommender;
         }

@@ -4,11 +4,10 @@ from .exceptions import SignalBoxException
 from .target_variables import create_recommender_target_variable_value, get_recommender_target_variable_values
 
 
-def create_product_recommender(access_token: str, base_url: str, common_id: str, name: str, touchpoint: str, product_ids: List[str] = None):
+def create_product_recommender(access_token: str, base_url: str, common_id: str, name: str, product_ids: List[str] = None):
     json_params = {
         "commonId": common_id,
         "name": name,
-        "touchpoint": touchpoint,
         "productIds": product_ids
     }
     r = post(f'{base_url}/api/recommenders/ProductRecommenders/',

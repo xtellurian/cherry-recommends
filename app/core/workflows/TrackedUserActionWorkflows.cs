@@ -141,5 +141,17 @@ namespace SignalBox.Core.Workflows
         {
             return await actionStore.ReadLatestAction(commonUserId, category, actionName);
         }
+
+        public async Task<Paginated<TrackedUserAction>> ReadTrackedUserActions(int page, TrackedUser trackedUser, bool revenueOnly)
+        {
+            if (revenueOnly)
+            {
+                return await actionStore.Query(page, _ => _.TrackedUserId == trackedUser.Id && _.AssociatedRevenue != null);
+            }
+            else
+            {
+                return await actionStore.Query(page, _ => _.TrackedUserId == trackedUser.Id);
+            }
+        }
     }
 }
