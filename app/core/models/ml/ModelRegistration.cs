@@ -38,7 +38,9 @@ namespace SignalBox.Core
             Swagger = swagger;
         }
 
+        [JsonIgnore]
         public ICollection<RecommenderEntityBase> Recommenders { get; set; }
+        [JsonIgnore]
         public ICollection<RecommendationCorrelator> Correlators { get; set; }
         public ModelTypes ModelType { get; set; }
         public HostingTypes HostingType { get; set; }
