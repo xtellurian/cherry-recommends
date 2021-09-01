@@ -60,15 +60,21 @@ export const TextInput = ({
   onBlur,
   onHideErrors,
   validator,
+  resetTrigger,
 }) => {
   const [hide, setHide] = React.useState(false);
   const [errorMessages, setErrorMessages] = React.useState([]);
   const [hasError, setHasError] = React.useState([]);
 
   React.useEffect(() => {
+    if (hide === true) {
+      setHide(false);
+    }
+  }, [resetTrigger]);
+
+  React.useEffect(() => {
     if (validator) {
       setErrorMessages(validator(value));
-      setHide(false);
     }
   }, [validator, value]);
 

@@ -15,11 +15,11 @@ export const deleteParameterSetRecommender =
 export const fetchParameterSetRecommendationsAsync =
   parameterSetRecommenders.fetchParameterSetRecommendationsAsync;
 
-export const fetchLinkedRegisteredModel =
-  parameterSetRecommenders.fetchLinkedRegisteredModel;
+export const fetchLinkedRegisteredModelAsync =
+  parameterSetRecommenders.fetchLinkedRegisteredModelAsync;
 
-export const createLinkRegisteredModel =
-  parameterSetRecommenders.createLinkRegisteredModel;
+export const createLinkRegisteredModelAsync =
+  parameterSetRecommenders.createLinkRegisteredModelAsync;
 
 export const invokeParameterSetRecommenderAsync =
   parameterSetRecommenders.invokeParameterSetRecommenderAsync;

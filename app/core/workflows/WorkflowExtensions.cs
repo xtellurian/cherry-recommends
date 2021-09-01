@@ -7,13 +7,12 @@ namespace SignalBox.Core.Workflows
         public static IServiceCollection RegisterWorkflows(this IServiceCollection services)
         {
             services.AddScoped<ApiKeyWorkflows>();
-            services.AddScoped<ExperimentWorkflows>();
             services.AddScoped<IntegratedSystemWorkflows>();
             services.AddScoped<ModelRegistrationWorkflows>();
-            services.AddScoped<OfferWorkflows>();
             services.AddScoped<FeatureGeneratorWorkflows>();
             services.AddScoped<FeatureWorkflows>();
             services.AddScoped<ProductWorkflows>();
+            services.AddScoped<RecommendableItemWorkflows>();
             services.AddScoped<RuleWorkflows>();
             services.AddScoped<SegmentWorkflows>();
             services.AddScoped<TrackedUserWorkflows>();
@@ -28,10 +27,12 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ParameterWorkflows>();
             services.AddScoped<ParameterSetRecommenderWorkflows>();
             services.AddScoped<ProductRecommenderWorkflows>();
+            services.AddScoped<ItemsRecommenderWorkflows>();
 
             // model invokation
             services.AddScoped<GenericModelWorkflows>();
             services.AddScoped<ClassifierModelWorkflows>();
+            services.AddScoped<ItemsRecommenderInvokationWorkflows>();
             services.AddScoped<ProductRecommenderInvokationWorkflows>();
             services.AddScoped<ParameterSetRecommenderInvokationWorkflows>();
             return services;

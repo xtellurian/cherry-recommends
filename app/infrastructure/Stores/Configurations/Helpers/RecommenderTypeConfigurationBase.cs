@@ -4,10 +4,10 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal abstract class RecommenderTypeConfigurationBase<T>
-       : EntityTypeConfigurationBase<T>, IEntityTypeConfiguration<T> where T : RecommenderEntityBase
+    internal class RecommenderTypeConfigurationBase
+       : EntityTypeConfigurationBase<RecommenderEntityBase>, IEntityTypeConfiguration<RecommenderEntityBase>
     {
-        public override void Configure(EntityTypeBuilder<T> builder)
+        public override void Configure(EntityTypeBuilder<RecommenderEntityBase> builder)
         {
             base.Configure(builder);
             builder
@@ -18,6 +18,10 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasMany(_ => _.RecommenderInvokationLogs)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+            builder
+                .HasMany(_ => _.RecommendationCorrelators)
+                .WithOne(_ => _.Recommender);
+
             builder.Property(_ => _.ErrorHandling).HasJsonConversion();
         }
     }

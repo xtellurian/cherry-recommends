@@ -4,7 +4,7 @@ import {
   useProductRecommender,
   useLinkedRegisteredModel,
 } from "../../../api-hooks/productRecommendersApi";
-import { createLinkRegisteredModel } from "../../../api/productRecommendersApi";
+import { createLinkRegisteredModelAsync } from "../../../api/productRecommendersApi";
 import { LinkToModelUtility } from "../utils/LinkToModel";
 export const LinkToModel = () => {
   const { id } = useParams();
@@ -13,7 +13,7 @@ export const LinkToModel = () => {
   return (
     <LinkToModelUtility
       recommender={recommender}
-      createLinkRegisteredModel={createLinkRegisteredModel}
+      createLinkRegisteredModelAsync={createLinkRegisteredModelAsync}
       rootPath="/recommenders/product-recommenders"
       linkedModel={linkedModel}
     />

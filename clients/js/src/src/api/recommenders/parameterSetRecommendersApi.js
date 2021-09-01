@@ -2,10 +2,7 @@ import { pageQuery } from "../paging";
 import { getUrl } from "../../baseUrl";
 import { headers } from "../headers";
 
-import {
-  fetchLinkedRegisteredModelAsync,
-  createLinkedRegisteredModelAsync,
-} from "./common/linkRegisteredModels";
+import * as link from "./common/linkRegisteredModels";
 
 import * as actions from "./common/trackedUserActions";
 import * as eh from "./common/errorHandling";
@@ -126,36 +123,25 @@ export const fetchParameterSetRecommendationsAsync = async ({
   }
 };
 
-export const createLinkRegisteredModel = async ({
-  success,
-  error,
+export const createLinkRegisteredModelAsync = async ({
   token,
   id,
   modelId,
 }) => {
-  createLinkedRegisteredModelAsync({
+  return await link.createLinkedRegisteredModelAsync({
     recommenderApiName: "ParameterSetRecommenders",
     id,
     modelId,
     token,
-  })
-    .then(success)
-    .catch(error);
+  });
 };
 
-export const fetchLinkedRegisteredModel = async ({
-  success,
-  error,
-  token,
-  id,
-}) => {
-  fetchLinkedRegisteredModelAsync({
+export const fetchLinkedRegisteredModelAsync = async ({ token, id }) => {
+  return await link.fetchLinkedRegisteredModelAsync({
     recommenderApiName: "ParameterSetRecommenders",
     id,
     token,
-  })
-    .then(success)
-    .catch(error);
+  });
 };
 
 export const invokeParameterSetRecommenderAsync = async ({
@@ -239,7 +225,7 @@ export const fetchRecommenderTrackedUserActionsAsync = async ({
   id,
   token,
   page,
-  revenueOnly
+  revenueOnly,
 }) => {
   return await actions.fetchRecommenderTrackedUserActionsAsync({
     recommenderApiName: "ParameterSetRecommenders",

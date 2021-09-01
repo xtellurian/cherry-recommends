@@ -902,7 +902,7 @@
     createParameter: createParameter
   });
 
-  const fetchLinkedRegisteredModelAsync = async ({
+  const fetchLinkedRegisteredModelAsync$2 = async ({
     recommenderApiName,
     token,
     id,
@@ -941,7 +941,7 @@
     }
   };
 
-  const fetchRecommenderTrackedUserActionsAsync$2 = async ({
+  const fetchRecommenderTrackedUserActionsAsync$3 = async ({
     recommenderApiName,
     revenueOnly,
     token,
@@ -963,7 +963,7 @@
     }
   };
 
-  const updateErrorHandlingAsync$2 = async ({
+  const updateErrorHandlingAsync$3 = async ({
     recommenderApiName,
     token,
     id,
@@ -1161,36 +1161,25 @@
     }
   };
 
-  const createLinkRegisteredModel$1 = async ({
-    success,
-    error,
+  const createLinkRegisteredModelAsync$2 = async ({
     token,
     id,
     modelId,
   }) => {
-    createLinkedRegisteredModelAsync({
+    return await createLinkedRegisteredModelAsync({
       recommenderApiName: "ParameterSetRecommenders",
       id,
       modelId,
       token,
-    })
-      .then(success)
-      .catch(error);
+    });
   };
 
-  const fetchLinkedRegisteredModel$1 = async ({
-    success,
-    error,
-    token,
-    id,
-  }) => {
-    fetchLinkedRegisteredModelAsync({
+  const fetchLinkedRegisteredModelAsync$1 = async ({ token, id }) => {
+    return await fetchLinkedRegisteredModelAsync$2({
       recommenderApiName: "ParameterSetRecommenders",
       id,
       token,
-    })
-      .then(success)
-      .catch(error);
+    });
   };
 
   const invokeParameterSetRecommenderAsync = async ({
@@ -1226,7 +1215,7 @@
       .finally(onFinally);
   };
 
-  const fetchInvokationLogsAsync$1 = async ({ id, token, page }) => {
+  const fetchInvokationLogsAsync$2 = async ({ id, token, page }) => {
     return await fetchRecommenderInvokationLogsAsync({
       recommenderApiName: "ParameterSetRecommenders",
       id,
@@ -1235,7 +1224,7 @@
     });
   };
 
-  const fetchTargetVariablesAsync$1 = async ({ id, token, name }) => {
+  const fetchTargetVariablesAsync$2 = async ({ id, token, name }) => {
     return await fetchRecommenderTargetVariableValuesAsync({
       recommenderApiName: "ParameterSetRecommenders",
       id,
@@ -1244,7 +1233,7 @@
     });
   };
 
-  const createTargetVariableAsync$1 = async ({
+  const createTargetVariableAsync$2 = async ({
     id,
     token,
     targetVariableValue,
@@ -1257,12 +1246,12 @@
     });
   };
 
-  const updateErrorHandlingAsync$1 = async ({
+  const updateErrorHandlingAsync$2 = async ({
     id,
     token,
     errorHandling,
   }) => {
-    return await updateErrorHandlingAsync$2({
+    return await updateErrorHandlingAsync$3({
       recommenderApiName: "ParameterSetRecommenders",
       id,
       token,
@@ -1270,13 +1259,13 @@
     });
   };
 
-  const fetchRecommenderTrackedUserActionsAsync$1 = async ({
+  const fetchRecommenderTrackedUserActionsAsync$2 = async ({
     id,
     token,
     page,
-    revenueOnly
+    revenueOnly,
   }) => {
-    return await fetchRecommenderTrackedUserActionsAsync$2({
+    return await fetchRecommenderTrackedUserActionsAsync$3({
       recommenderApiName: "ParameterSetRecommenders",
       id,
       token,
@@ -1295,15 +1284,15 @@
     createParameterSetRecommender: createParameterSetRecommender,
     deleteParameterSetRecommender: deleteParameterSetRecommender,
     fetchParameterSetRecommendationsAsync: fetchParameterSetRecommendationsAsync,
-    createLinkRegisteredModel: createLinkRegisteredModel$1,
-    fetchLinkedRegisteredModel: fetchLinkedRegisteredModel$1,
+    createLinkRegisteredModelAsync: createLinkRegisteredModelAsync$2,
+    fetchLinkedRegisteredModelAsync: fetchLinkedRegisteredModelAsync$1,
     invokeParameterSetRecommenderAsync: invokeParameterSetRecommenderAsync,
     invokeParameterSetRecommender: invokeParameterSetRecommender,
-    fetchInvokationLogsAsync: fetchInvokationLogsAsync$1,
-    fetchTargetVariablesAsync: fetchTargetVariablesAsync$1,
-    createTargetVariableAsync: createTargetVariableAsync$1,
-    updateErrorHandlingAsync: updateErrorHandlingAsync$1,
-    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$1
+    fetchInvokationLogsAsync: fetchInvokationLogsAsync$2,
+    fetchTargetVariablesAsync: fetchTargetVariablesAsync$2,
+    createTargetVariableAsync: createTargetVariableAsync$2,
+    updateErrorHandlingAsync: updateErrorHandlingAsync$2,
+    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$2
   });
 
   const fetchProductRecommendersAsync = async ({ token, page }) => {
@@ -1407,21 +1396,17 @@
       .finally(onFinally);
   };
 
-  const createLinkRegisteredModel = async ({
-    success,
-    error,
+  const createLinkRegisteredModelAsync$1 = async ({
     token,
     id,
     modelId,
   }) => {
-    createLinkedRegisteredModelAsync({
+    return await createLinkedRegisteredModelAsync({
       recommenderApiName: "ProductRecommenders",
       id,
       modelId,
       token,
-    })
-      .then(success)
-      .then(error);
+    });
   };
 
   const setDefaultProductAsync = async ({ token, id, productId }) => {
@@ -1454,19 +1439,12 @@
     }
   };
 
-  const fetchLinkedRegisteredModel = async ({
-    success,
-    error,
-    token,
-    id,
-  }) => {
-    fetchLinkedRegisteredModelAsync({
+  const fetchLinkedRegisteredModelAsync = async ({ token, id }) => {
+    return await fetchLinkedRegisteredModelAsync$2({
       recommenderApiName: "ProductRecommenders",
       id,
       token,
-    })
-      .then(success)
-      .catch(error);
+    });
   };
 
   const invokeProductRecommenderAsync = async ({
@@ -1503,7 +1481,7 @@
       .finally(onFinally || (() => console.log()));
   };
 
-  const fetchInvokationLogsAsync = async ({ id, token, page }) => {
+  const fetchInvokationLogsAsync$1 = async ({ id, token, page }) => {
     return await fetchRecommenderInvokationLogsAsync({
       recommenderApiName: "ProductRecommenders",
       id,
@@ -1512,7 +1490,7 @@
     });
   };
 
-  const fetchTargetVariablesAsync = async ({ id, token, name }) => {
+  const fetchTargetVariablesAsync$1 = async ({ id, token, name }) => {
     return await fetchRecommenderTargetVariableValuesAsync({
       recommenderApiName: "ProductRecommenders",
       id,
@@ -1521,7 +1499,7 @@
     });
   };
 
-  const createTargetVariableAsync = async ({
+  const createTargetVariableAsync$1 = async ({
     id,
     token,
     targetVariableValue,
@@ -1534,12 +1512,12 @@
     });
   };
 
-  const updateErrorHandlingAsync = async ({
+  const updateErrorHandlingAsync$1 = async ({
     id,
     token,
     errorHandling,
   }) => {
-    return await updateErrorHandlingAsync$2({
+    return await updateErrorHandlingAsync$3({
       recommenderApiName: "ProductRecommenders",
       id,
       token,
@@ -1547,13 +1525,13 @@
     });
   };
 
-  const fetchRecommenderTrackedUserActionsAsync = async ({
+  const fetchRecommenderTrackedUserActionsAsync$1 = async ({
     id,
     token,
     page,
     revenueOnly,
   }) => {
-    return await actions.fetchRecommenderTrackedUserActionsAsync({
+    return await fetchRecommenderTrackedUserActionsAsync$3({
       recommenderApiName: "ProductRecommenders",
       id,
       token,
@@ -1571,12 +1549,216 @@
     deleteProductRecommender: deleteProductRecommender,
     createProductRecommenderAsync: createProductRecommenderAsync,
     createProductRecommender: createProductRecommender,
-    createLinkRegisteredModel: createLinkRegisteredModel,
+    createLinkRegisteredModelAsync: createLinkRegisteredModelAsync$1,
     setDefaultProductAsync: setDefaultProductAsync,
     getDefaultProductAsync: getDefaultProductAsync,
-    fetchLinkedRegisteredModel: fetchLinkedRegisteredModel,
+    fetchLinkedRegisteredModelAsync: fetchLinkedRegisteredModelAsync,
     invokeProductRecommenderAsync: invokeProductRecommenderAsync,
     invokeProductRecommender: invokeProductRecommender,
+    fetchInvokationLogsAsync: fetchInvokationLogsAsync$1,
+    fetchTargetVariablesAsync: fetchTargetVariablesAsync$1,
+    createTargetVariableAsync: createTargetVariableAsync$1,
+    updateErrorHandlingAsync: updateErrorHandlingAsync$1,
+    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$1
+  });
+
+  const fetchItemsRecommendersAsync = async ({ token, page }) => {
+    const url = getUrl("api/recommenders/ItemsRecommenders");
+    const response = await fetch(`${url}?${pageQuery(page)}`, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const fetchItemsRecommenderAsync = async ({ token, id }) => {
+    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const fetchItemsRecommendationsAsync = async ({ token, page, id }) => {
+    const url = getUrl(
+      `api/recommenders/ItemsRecommenders/${id}/Recommendations`
+    );
+    const response = await fetch(`${url}?${pageQuery(page)}`, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const deleteItemsRecommenderAsync = async ({ token, id }) => {
+    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "delete",
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const createItemsRecommenderAsync = async ({ token, payload }) => {
+    const url = getUrl("api/recommenders/ItemsRecommenders");
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const setDefaultItemAsync = async ({ token, id, itemId }) => {
+    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/DefaultItem`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify({ itemId }),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const getDefaultItemAsync = async ({ token, id }) => {
+    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/DefaultItem`);
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const createLinkRegisteredModelAsync = async ({
+    token,
+    id,
+    modelId,
+  }) => {
+    return await createLinkedRegisteredModelAsync({
+      recommenderApiName: "ItemsRecommenders",
+      id,
+      modelId,
+      token,
+    });
+  };
+
+  const fetchLinkedRegisteredModel = async ({ token, id }) => {
+    return await fetchLinkedRegisteredModelAsync$2({
+      recommenderApiName: "ItemsRecommenders",
+      id,
+      token,
+    });
+  };
+
+  const invokeItemsRecommenderAsync = async ({ token, id, input }) => {
+    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/Invoke`);
+    const result = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(input),
+    });
+    if (result.ok) {
+      return await result.json();
+    } else {
+      throw await result.json();
+    }
+  };
+
+  const fetchInvokationLogsAsync = async ({ id, token, page }) => {
+    return await fetchRecommenderInvokationLogsAsync({
+      recommenderApiName: "ItemsRecommenders",
+      id,
+      token,
+      page,
+    });
+  };
+
+  const fetchTargetVariablesAsync = async ({ id, token, name }) => {
+    return await fetchRecommenderTargetVariableValuesAsync({
+      recommenderApiName: "ItemsRecommenders",
+      id,
+      token,
+      name,
+    });
+  };
+
+  const createTargetVariableAsync = async ({
+    id,
+    token,
+    targetVariableValue,
+  }) => {
+    return await createRecommenderTargetVariableValueAsync({
+      recommenderApiName: "ItemsRecommenders",
+      id,
+      token,
+      targetVariableValue,
+    });
+  };
+
+  const updateErrorHandlingAsync = async ({
+    id,
+    token,
+    errorHandling,
+  }) => {
+    return await updateErrorHandlingAsync$3({
+      recommenderApiName: "ItemsRecommenders",
+      id,
+      token,
+      errorHandling,
+    });
+  };
+
+  const fetchRecommenderTrackedUserActionsAsync = async ({
+    id,
+    token,
+    page,
+    revenueOnly,
+  }) => {
+    return await fetchRecommenderTrackedUserActionsAsync$3({
+      recommenderApiName: "ItemsRecommenders",
+      id,
+      token,
+      page,
+      revenueOnly,
+    });
+  };
+
+  var itemsRecommendersApi = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    fetchItemsRecommendersAsync: fetchItemsRecommendersAsync,
+    fetchItemsRecommenderAsync: fetchItemsRecommenderAsync,
+    fetchItemsRecommendationsAsync: fetchItemsRecommendationsAsync,
+    deleteItemsRecommenderAsync: deleteItemsRecommenderAsync,
+    createItemsRecommenderAsync: createItemsRecommenderAsync,
+    setDefaultItemAsync: setDefaultItemAsync,
+    getDefaultItemAsync: getDefaultItemAsync,
+    createLinkRegisteredModelAsync: createLinkRegisteredModelAsync,
+    fetchLinkedRegisteredModel: fetchLinkedRegisteredModel,
+    invokeItemsRecommenderAsync: invokeItemsRecommenderAsync,
     fetchInvokationLogsAsync: fetchInvokationLogsAsync,
     fetchTargetVariablesAsync: fetchTargetVariablesAsync,
     createTargetVariableAsync: createTargetVariableAsync,
@@ -1671,6 +1853,65 @@
   var reactConfigApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchAuth0Configuration: fetchAuth0Configuration
+  });
+
+  const fetchItemsAsync = async ({ token, page }) => {
+    const url = getUrl("api/RecommendableItems");
+    const response = await fetch(`${url}?${pageQuery(page)}`, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const fetchItemAsync = async ({ token, id }) => {
+    const url = getUrl(`api/RecommendableItems/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const createItemAsync = async ({ token, item }) => {
+    const url = getUrl(`api/RecommendableItems/`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(item),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const deleteItemAsync = async ({ token, id }) => {
+    const url = getUrl(`api/RecommendableItems/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "delete",
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  var recommendableItemsApi = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    fetchItemsAsync: fetchItemsAsync,
+    fetchItemAsync: fetchItemAsync,
+    createItemAsync: createItemAsync,
+    deleteItemAsync: deleteItemAsync
   });
 
   const defaultHeaders$2 = { "Content-Type": "application/json" };
@@ -2309,6 +2550,7 @@
   exports.featureGenerators = featureGeneratorsApi;
   exports.features = featuresApi;
   exports.integratedSystems = integratedSystemsApi;
+  exports.itemsRecommenders = itemsRecommendersApi;
   exports.modelRegistrations = modelRegistrationsApi;
   exports.models = index;
   exports.offers = offersApi;
@@ -2318,6 +2560,7 @@
   exports.productRecommenders = productRecommendersApi;
   exports.products = productsApi;
   exports.reactConfig = reactConfigApi;
+  exports.recommendableItems = recommendableItemsApi;
   exports.reports = reportsApi;
   exports.rewardSelectors = rewardSelectorsApi;
   exports.segments = segmentsApi;

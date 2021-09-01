@@ -4,7 +4,7 @@ import {
   useParameterSetRecommender,
   useLinkedRegisteredModel,
 } from "../../../api-hooks/parameterSetRecommendersApi";
-import { createLinkRegisteredModel } from "../../../api/parameterSetRecommendersApi";
+import { createLinkRegisteredModelAsync } from "../../../api/parameterSetRecommendersApi";
 import { LinkToModelUtility } from "../utils/LinkToModel";
 export const LinkToModel = () => {
   const { id } = useParams();
@@ -13,7 +13,7 @@ export const LinkToModel = () => {
   return (
     <LinkToModelUtility
       recommender={recommender}
-      createLinkRegisteredModel={createLinkRegisteredModel}
+      createLinkRegisteredModelAsync={createLinkRegisteredModelAsync}
       rootPath="/recommenders/parameter-set-recommenders"
       linkedModel={linkedModel}
     />

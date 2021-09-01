@@ -30,7 +30,7 @@ namespace SignalBox.Infrastructure
 
                 products.AddRange(productRecommender.Products);
             }
-            var index = random.Next(products.Count - 1);
+            var index = random.Next(products.Count);
             var product = products[index];
             return new ProductRecommenderModelOutputV1
             {

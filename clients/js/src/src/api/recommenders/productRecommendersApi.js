@@ -2,10 +2,7 @@ import { pageQuery } from "../paging";
 import { getUrl } from "../../baseUrl";
 import { headers } from "../headers";
 
-import {
-  fetchLinkedRegisteredModelAsync,
-  createLinkedRegisteredModelAsync,
-} from "./common/linkRegisteredModels";
+import * as link from "./common/linkRegisteredModels";
 
 import * as actions from "./common/trackedUserActions";
 import * as tv from "./common/targetvariables";
@@ -113,21 +110,17 @@ export const createProductRecommender = async ({
     .finally(onFinally);
 };
 
-export const createLinkRegisteredModel = async ({
-  success,
-  error,
+export const createLinkRegisteredModelAsync = async ({
   token,
   id,
   modelId,
 }) => {
-  createLinkedRegisteredModelAsync({
+  return await link.createLinkedRegisteredModelAsync({
     recommenderApiName: "ProductRecommenders",
     id,
     modelId,
     token,
-  })
-    .then(success)
-    .then(error);
+  });
 };
 
 export const setDefaultProductAsync = async ({ token, id, productId }) => {
@@ -160,19 +153,12 @@ export const getDefaultProductAsync = async ({ token, id }) => {
   }
 };
 
-export const fetchLinkedRegisteredModel = async ({
-  success,
-  error,
-  token,
-  id,
-}) => {
-  fetchLinkedRegisteredModelAsync({
+export const fetchLinkedRegisteredModelAsync = async ({ token, id }) => {
+  return await link.fetchLinkedRegisteredModelAsync({
     recommenderApiName: "ProductRecommenders",
     id,
     token,
-  })
-    .then(success)
-    .catch(error);
+  });
 };
 
 export const invokeProductRecommenderAsync = async ({

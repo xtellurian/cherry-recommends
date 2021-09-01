@@ -37,6 +37,10 @@ const AuthenticatedIA = [
     name: "Catalogue",
     items: [
       {
+        name: "Recommendable Items",
+        to: "/recommendable-items",
+      },
+      {
         name: "Products",
         to: "/products",
       },
@@ -49,6 +53,10 @@ const AuthenticatedIA = [
   {
     name: "Recommenders",
     items: [
+      {
+        name: "Items",
+        to: "/recommenders/items-recommenders",
+      },
       {
         name: "Products",
         to: "/recommenders/product-recommenders",

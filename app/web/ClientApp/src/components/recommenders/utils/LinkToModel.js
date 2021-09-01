@@ -23,7 +23,7 @@ const LinkedModelInfo = ({ linkedModel }) => {
 export const LinkToModelUtility = ({
   recommender,
   linkedModel,
-  createLinkRegisteredModel,
+  createLinkRegisteredModelAsync,
   rootPath,
 }) => {
   const history = useHistory();
@@ -45,13 +45,13 @@ export const LinkToModelUtility = ({
   const [selectedModel, setSelectedModel] = React.useState();
 
   const handleLink = () => {
-    createLinkRegisteredModel({
-      success: () => history.push(`${rootPath}/detail/${recommender.id}`),
-      error: setError,
+    createLinkRegisteredModelAsync({
       token,
       id: recommender.id,
       modelId: selectedModel.id,
-    });
+    })
+      .then(() => history.push(`${rootPath}/detail/${recommender.id}`))
+      .catch(setError);
   };
   return (
     <React.Fragment>

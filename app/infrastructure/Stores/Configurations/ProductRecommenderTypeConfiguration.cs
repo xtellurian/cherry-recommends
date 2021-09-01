@@ -4,21 +4,25 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal class ProductRecommenderTypeConfiguration : RecommenderTypeConfigurationBase<ProductRecommender>, IEntityTypeConfiguration<ProductRecommender>
+    internal class ProductRecommenderTypeConfiguration : EntityTypeConfigurationBase<ProductRecommender>, IEntityTypeConfiguration<ProductRecommender>
     {
         public override void Configure(EntityTypeBuilder<ProductRecommender> builder)
         {
-            base.Configure(builder);
-            builder.HasMany(_ => _.Products).WithMany(_ => _.ProductRecommenders);
-            builder.HasOne(_ => _.DefaultProduct).WithMany().OnDelete(DeleteBehavior.SetNull);
-            builder.HasOne(_ => _.Touchpoint).WithMany();
-            builder.HasMany(_ => _.Recommendations).WithOne(_ => _.Recommender).OnDelete(DeleteBehavior.SetNull);
-
-            // configure the relationship between correlator and recommender
             builder
-               .HasMany(_ => _.RecommendationCorrelators)
-               .WithOne(_ => _.ProductRecommender)
-               .OnDelete(DeleteBehavior.SetNull);
+                .HasMany(_ => _.Products)
+                .WithMany(_ => _.ProductRecommenders);
+
+            builder
+                .HasOne(_ => _.DefaultProduct)
+                .WithMany()
+                .HasForeignKey(_ => _.DefaultProductId);
+
+            builder.HasOne(_ => _.Touchpoint).WithMany();
+
+            builder
+                .HasMany(_ => _.ProductRecommendations)
+                .WithOne(_ => _.Recommender)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

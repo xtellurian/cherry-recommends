@@ -13,5 +13,8 @@ namespace SignalBox.Core
         Task<IRecommenderModelClient<TInput, TOutput>> GetUnregisteredClient<TInput, TOutput>(IRecommender recommender)
             where TInput : IModelInput
             where TOutput : IModelOutput;
+
+        Task<IRecommenderModelClient<IModelInput, TOutput>> GetUnregisteredItemsRecommenderClient<TOutput>(IRecommender recommender)
+            where TOutput : IModelOutput;
     }
 }

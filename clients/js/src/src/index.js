@@ -26,8 +26,10 @@ import * as paging from "./api/paging";
 import * as parameters from "./api/parametersApi";
 import * as parameterSetRecommenders from "./api/recommenders/parameterSetRecommendersApi";
 import * as productRecommenders from "./api/recommenders/productRecommendersApi";
+import * as itemsRecommenders from "./api/recommenders/itemsRecommendersApi";
 import * as products from "./api/productsApi";
 import * as reactConfig from "./api/reactConfigApi";
+import * as recommendableItems from "./api/recommendableItemsApi";
 import * as reports from "./api/reportsApi";
 import * as segments from "./api/segmentsApi";
 import * as touchpoints from "./api/touchpointsApi";
@@ -47,6 +49,7 @@ export {
   featureGenerators,
   features,
   integratedSystems,
+  itemsRecommenders,
   modelRegistrations,
   models,
   offers,
@@ -56,6 +59,7 @@ export {
   productRecommenders,
   products,
   reactConfig,
+  recommendableItems,
   reports,
   rewardSelectors,
   segments,

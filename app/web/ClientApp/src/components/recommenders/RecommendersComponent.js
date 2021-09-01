@@ -3,6 +3,7 @@ import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { ParameterSetRecommendersComponent } from "./parameterset-recommenders/ParameterSetRecommendersComponent";
 import { ProductRecommendersComponent } from "./product-recommenders/ProductRecommendersComponent";
+import { ItemsRecommendersComponent } from "./items-recommenders/ItemsRecommendersComponent";
 
 export const RecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -16,6 +17,10 @@ export const RecommendersComponent = () => {
         <AuthorizeRoute
           path={`${path}/product-recommenders`}
           component={ProductRecommendersComponent}
+        />
+        <AuthorizeRoute
+          path={`${path}/items-recommenders`}
+          component={ItemsRecommendersComponent}
         />
       </Switch>
     </React.Fragment>

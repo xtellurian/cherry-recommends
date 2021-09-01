@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using SignalBox.Core.Recommendations;
+using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core
 {
@@ -7,6 +10,7 @@ namespace SignalBox.Core
         SingleClassClassifier,
         ParameterSetRecommenderV1,
         ProductRecommenderV1,
+        ItemsRecommenderV1,
     }
 
     public enum HostingTypes
@@ -34,6 +38,8 @@ namespace SignalBox.Core
             Swagger = swagger;
         }
 
+        public ICollection<RecommenderEntityBase> Recommenders { get; set; }
+        public ICollection<RecommendationCorrelator> Correlators { get; set; }
         public ModelTypes ModelType { get; set; }
         public HostingTypes HostingType { get; set; }
         public string ScoringUrl { get; set; }

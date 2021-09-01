@@ -19,8 +19,8 @@ namespace SignalBox.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderTypeConfiguration).Assembly,
-                _ => _.Namespace.StartsWith(typeof(OrderTypeConfiguration).Namespace));
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TrackedUserTypeConfiguration).Assembly,
+                _ => _.Namespace.StartsWith(typeof(TrackedUserTypeConfiguration).Namespace));
             FixSqlLite(modelBuilder);
         }
 
@@ -67,10 +67,8 @@ namespace SignalBox.Infrastructure
         }
 
         // core stuff
-        public DbSet<Experiment> Experiments { get; set; }
-        public DbSet<Offer> Offers { get; set; }
-        public DbSet<PresentationOutcome> PresentationOutcomes { get; set; }
         public DbSet<Rule> Rules { get; set; }
+        public DbSet<RecommendableItem> RecommendableItems { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Segment> Segments { get; set; }
         public DbSet<TrackedUser> TrackedUsers { get; set; }
@@ -87,13 +85,15 @@ namespace SignalBox.Infrastructure
         public DbSet<TrackedUserFeature> TrackedUserFeatures { get; set; }
 
         // recommenders
+        public DbSet<RecommenderEntityBase> Recommenders { get; set; }
         public DbSet<ProductRecommender> ProductRecommenders { get; set; }
         public DbSet<ParameterSetRecommender> ParameterSetRecommenders { get; set; }
+        public DbSet<ItemsRecommender> ItemsRecommenders { get; set; }
 
         // recommendations
         public DbSet<RecommendationCorrelator> RecommendationCorrelators { get; set; }
-        public DbSet<OfferRecommendation> Recommendations { get; set; }
         public DbSet<ParameterSetRecommendation> ParameterSetRecommendations { get; set; }
+        public DbSet<ItemsRecommendation> ItemsRecommendations { get; set; }
         public DbSet<ProductRecommendation> ProductRecommendations { get; set; }
 
         // system stuff

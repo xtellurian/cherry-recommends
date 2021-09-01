@@ -39,14 +39,37 @@ namespace SignalBox.Core.Workflows
             return Enum.Parse<HostingTypes>(hostingType);
         }
 
-        public async Task<(string, HttpResponseMessage)> InvokeGeneric(long id, string input)
+        public async Task<(string, bool)> InvokeGeneric(long id, string input)
         {
             var model = await modelRegistrationStore.Read(id);
             var inputContent = new StringContent(input, Encoding.UTF8, "application/json");
             httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", model.Key);
             var response = await httpClient.PostAsync(model.ScoringUrl, inputContent);
             var responseContent = await response.Content.ReadAsStringAsync();
-            return (responseContent, response);
+            if (IsJson(responseContent))
+            {
+                return (responseContent, response.IsSuccessStatusCode);
+            }
+            else
+            {
+                return (responseContent, false);
+            }
+        }
+
+        private bool IsJson(string s)
+        {
+            if (s == null)
+                return false;
+
+            try
+            {
+                JsonDocument.Parse(s);
+                return true;
+            }
+            catch (JsonException)
+            {
+                return false;
+            }
         }
     }
 }

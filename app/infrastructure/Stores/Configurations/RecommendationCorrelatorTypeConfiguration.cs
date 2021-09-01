@@ -13,6 +13,13 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasOne(_ => _.ModelRegistration)
                 .WithMany()
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(_ => _.Recommender)
+                .WithMany(_ => _.RecommendationCorrelators)
+                .HasForeignKey(_ => _.RecommenderId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }

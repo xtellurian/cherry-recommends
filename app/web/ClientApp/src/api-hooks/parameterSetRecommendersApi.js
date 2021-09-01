@@ -3,7 +3,7 @@ import {
   fetchParameterSetRecommendersAsync,
   fetchParameterSetRecommenderAsync,
   fetchParameterSetRecommendationsAsync,
-  fetchLinkedRegisteredModel,
+  fetchLinkedRegisteredModelAsync,
   fetchInvokationLogsAsync,
   fetchRecommenderTrackedUserActionsAsync,
   fetchTargetVariablesAsync,
@@ -92,12 +92,12 @@ export const useLinkedRegisteredModel = ({ id }) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchLinkedRegisteredModel({
-        success: setState,
-        error: (error) => setState({ error }),
+      fetchLinkedRegisteredModelAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
 

@@ -15,11 +15,11 @@ export const deleteProductRecommender =
 export const createProductRecommenderAsync =
   productRecommenders.createProductRecommenderAsync;
 
-export const fetchLinkedRegisteredModel =
-  productRecommenders.fetchLinkedRegisteredModel;
+export const fetchLinkedRegisteredModelAsync =
+  productRecommenders.fetchLinkedRegisteredModelAsync;
 
-export const createLinkRegisteredModel =
-  productRecommenders.createLinkRegisteredModel;
+export const createLinkRegisteredModelAsync =
+  productRecommenders.createLinkRegisteredModelAsync;
 
 export const invokeProductRecommender =
   productRecommenders.invokeProductRecommender;

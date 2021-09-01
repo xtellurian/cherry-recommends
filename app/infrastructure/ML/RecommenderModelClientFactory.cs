@@ -12,16 +12,19 @@ namespace SignalBox.Infrastructure.ML
         private readonly ITelemetry telemetry;
         private readonly IProductRecommenderStore productRecommenderStore;
         private readonly IProductStore productStore;
+        private readonly IRecommendableItemStore itemStore;
 
         public RecommenderModelClientFactory(HttpClient httpClient,
                                              ITelemetry telemetry,
                                              IProductRecommenderStore productRecommenderStore,
-                                             IProductStore productStore)
+                                             IProductStore productStore,
+                                             IRecommendableItemStore itemStore)
         {
             this.httpClient = httpClient;
             this.telemetry = telemetry;
             this.productRecommenderStore = productRecommenderStore;
             this.productStore = productStore;
+            this.itemStore = itemStore;
         }
 
         public Task<IRecommenderModelClient<TInput, TOutput>> GetClient<TInput, TOutput>(IRecommender recommender)
@@ -37,6 +40,11 @@ namespace SignalBox.Infrastructure.ML
             {
                 return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)
                     new AzureMLParameterSetRecommenderClient(httpClient));
+            }
+            else if (model.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ItemsRecommenderV1)
+            {
+                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)
+                    new AzureMLItemsRecommenderClient(httpClient));
             }
             else if (model.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ProductRecommenderV1)
             {
@@ -82,6 +90,11 @@ namespace SignalBox.Infrastructure.ML
             {
                 throw new NotImplementedException("This type of client is not creatable");
             }
+        }
+
+        public Task<IRecommenderModelClient<IModelInput, TOutput>> GetUnregisteredItemsRecommenderClient<TOutput>(IRecommender recommender) where TOutput : IModelOutput
+        {
+            return Task.FromResult((IRecommenderModelClient<IModelInput, TOutput>)new RandomItemsRecommender(itemStore));
         }
     }
 }

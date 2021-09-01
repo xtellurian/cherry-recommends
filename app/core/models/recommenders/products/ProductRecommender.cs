@@ -28,7 +28,7 @@ namespace SignalBox.Core.Recommenders
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ICollection<Product> Products { get; set; }
         [JsonIgnore]
-        public ICollection<ProductRecommendation> Recommendations { get; set; } = null!;
+        public ICollection<ProductRecommendation> ProductRecommendations { get; set; } = null!;
 
         //TODO: replace touchpoint w/ Features
         // this is a way to get summary data to the model.

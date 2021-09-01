@@ -2,7 +2,7 @@ import React from "react";
 import {
   fetchProductRecommendersAsync,
   fetchProductRecommender,
-  fetchLinkedRegisteredModel,
+  fetchLinkedRegisteredModelAsync,
   fetchInvokationLogsAsync,
   fetchProductRecommendations,
   fetchTargetVariablesAsync,
@@ -113,12 +113,12 @@ export const useLinkedRegisteredModel = ({ id }) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchLinkedRegisteredModel({
-        success: setState,
-        error: (error) => setState({ error }),
+      fetchLinkedRegisteredModelAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
 
@@ -144,11 +144,7 @@ export const useTargetVariables = ({ id, name }) => {
   return state;
 };
 
-export const useRecommenderTrackedUserActions = ({
-  id,
-  page,
-  revenueOnly,
-}) => {
+export const useRecommenderTrackedUserActions = ({ id, page, revenueOnly }) => {
   const token = useAccessToken();
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {

@@ -57,7 +57,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
 
             var itemCount = await context.RecommendationCorrelators
-                .Where(_ => _.ParameterSetRecommenderId == recommender.Id)
+                .Where(_ => _.RecommenderId == recommender.Id)
                 .SelectMany(_ => _.TrackedUserActions)
                 .Where(actionFilter)
                 .CountAsync();
@@ -67,7 +67,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
                 results = await context.RecommendationCorrelators
-                    .Where(_ => _.ParameterSetRecommenderId == recommender.Id)
+                    .Where(_ => _.RecommenderId == recommender.Id)
                     .SelectMany(_ => _.TrackedUserActions)
                     .Where(actionFilter)
                     .OrderByDescending(_ => _.Timestamp)

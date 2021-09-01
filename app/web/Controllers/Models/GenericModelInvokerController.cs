@@ -27,8 +27,8 @@ namespace SignalBox.Web.Controllers
         public async Task<string> InvokeModel(long id)
         {
             var raw = await Request.GetRawBodyStringAsync();
-            var (content, response) = await workflows.InvokeGeneric(id, raw);
-            if (response.IsSuccessStatusCode)
+            var (content, success) = await workflows.InvokeGeneric(id, raw);
+            if (success)
             {
                 return content;
             }

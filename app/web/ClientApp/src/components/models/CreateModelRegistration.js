@@ -5,13 +5,14 @@ import { DropdownComponent, DropdownItem } from "../molecules/Dropdown";
 import { AzureMLModelRegistration } from "./AzureMLModelRegistration";
 import { AzurePersonalizerModelRegistration } from "./AzurePersonalizerModelRegistration";
 const modelTypes = [
+  { label: "Items Recommender", value: "ItemsRecommenderV1" },
   { label: "Parameter Set Recommender", value: "ParameterSetRecommenderV1" },
   { label: "Product Recommender", value: "ProductRecommenderV1" },
   { label: "Classifier", value: "SingleClassClassifier" },
 ];
 const hostingTypes = [
-  { label: "Azure Personalizer", value: "AzurePersonalizer" },
   { label: "Azure ML Container", value: "AzureMLContainerInstance" },
+  { label: "Azure Personalizer", value: "AzurePersonalizer" },
 ];
 
 export const CreateModelRegistration = () => {

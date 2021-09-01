@@ -16,6 +16,7 @@ import { ReportsComponent } from "./components/reports/ReportsComponent";
 import { TouchpointsComponent } from "./components/touchpoints/TouchpointsComponent";
 import { ParametersComponent } from "./components/parameters/ParametersComponent";
 import { RecommendersComponent } from "./components/recommenders/RecommendersComponent";
+import { RecommendableItemsComponent } from "./components/items/RecommendableItemsComponent";
 import { ProductsComponent } from "./components/products/ProductsComponent";
 import { EventsComponent } from "./components/events/EventsComponent";
 import { AdminComponent } from "./components/admin/AdminComponent";
@@ -46,6 +47,10 @@ export default class App extends Component {
           component={RecommendersComponent}
         />
         <AuthorizeRoute path="/products" component={ProductsComponent} />
+        <AuthorizeRoute
+          path="/recommendable-items"
+          component={RecommendableItemsComponent}
+        />
         <AuthorizeRoute
           path="/models"
           component={ModelRegistrationsComponent}
