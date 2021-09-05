@@ -19,7 +19,7 @@ const tabs = [
 const jsIntegrate = ({ id }) => `
 import { itemsRecommenders } from "signalbox.js";
 
-itemsRecommenders.invokeProductRecommender({
+itemsRecommenders.invokeItemsRecommenderAsync({
     token: "Your JSON Web Token / access token",
     id: ${id}, // the id of this recommender
     input: {
@@ -29,8 +29,8 @@ itemsRecommenders.invokeProductRecommender({
         }
     }
 })
-.then((recommendation) => console.log('success callback'))
-.catch( (error) => alert('error callback') );
+.then( recommendation => console.log('success callback'))
+.catch( error => alert('error callback') );
 `;
 
 const restIntegrate = ({ id, basePath }) => `

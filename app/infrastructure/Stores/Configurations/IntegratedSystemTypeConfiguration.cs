@@ -6,6 +6,8 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     internal class IntegratedSystemTypeConfiguration : EntityTypeConfigurationBase<IntegratedSystem>, IEntityTypeConfiguration<IntegratedSystem>
     {
+        // I don't inherit from CommonEntityTypeConfiguration because sometimes the CommonID of an integrated system is null
+        // If you change this inheritence, be sure to go through the onboarding process for a new integrated system.
         public override void Configure(EntityTypeBuilder<IntegratedSystem> builder)
         {
             base.Configure(builder);
@@ -19,6 +21,9 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder.Property(_ => _.IntegrationStatus)
                 .HasDefaultValueSql("('NotConfigured')")
                 .HasConversion<string>();
+            builder
+                .Property(_ => _.Properties)
+                .HasJsonConversion();
         }
     }
 }

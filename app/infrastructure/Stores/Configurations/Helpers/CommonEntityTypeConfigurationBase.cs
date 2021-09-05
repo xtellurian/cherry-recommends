@@ -11,6 +11,8 @@ namespace SignalBox.Infrastructure.EntityFramework
             base.Configure(builder);
             builder.HasIndex(_ => _.CommonId)
                .IsUnique();
+            builder.Property(_ => _.Properties)
+                .HasJsonConversion();
         }
     }
 }

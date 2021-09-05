@@ -11,7 +11,8 @@ namespace SignalBox.Core
         { }
 
 #nullable enable
-        public RecommendableItem(string commonId, string name, double listPrice, double? directCost = null) : base(commonId, name)
+        public RecommendableItem(string commonId, string name, double? listPrice, double? directCost, DynamicPropertyDictionary? properties)
+        : base(commonId, name, properties)
         {
             ListPrice = listPrice;
             DirectCost = directCost;
@@ -24,7 +25,7 @@ namespace SignalBox.Core
         [JsonIgnore]
         public ICollection<ItemsRecommendation> Recommendations { get; set; } = null!;
 
-        public double ListPrice { get; set; }
+        public double? ListPrice { get; set; }
         public double? DirectCost { get; set; }
         public string? Description { get; set; }
     }

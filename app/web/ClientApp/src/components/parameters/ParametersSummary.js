@@ -5,7 +5,7 @@ import { Subtitle, Title, ErrorCard, Spinner, EmptyList } from "../molecules";
 import { useParameters } from "../../api-hooks/parametersApi";
 import { deleteParameterAsync } from "../../api/parametersApi";
 import { ExpandableCard } from "../molecules/ExpandableCard";
-import { CopyableField } from "../molecules/CopyableField";
+import { CopyableField } from "../molecules/fields/CopyableField";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { useAccessToken } from "../../api-hooks/token";
 

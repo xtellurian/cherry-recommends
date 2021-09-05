@@ -4,7 +4,7 @@ import { useModelRegistrations } from "../../../api-hooks/modelRegistrationsApi"
 import { BackButton } from "../../molecules/BackButton";
 import { Title, Spinner, ErrorCard, Selector } from "../../molecules";
 import { NoteBox } from "../../molecules/NoteBox";
-import { CopyableField } from "../../molecules/CopyableField";
+import { CopyableField } from "../../molecules/fields/CopyableField";
 import { useAccessToken } from "../../../api-hooks/token";
 
 const LinkedModelInfo = ({ linkedModel }) => {

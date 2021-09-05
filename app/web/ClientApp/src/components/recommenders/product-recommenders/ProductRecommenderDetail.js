@@ -18,7 +18,7 @@ import {
 import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
 import { ActionsButtonUtil } from "../utils/actionsButtonUtil";
 import { ConfirmationPopup } from "../../molecules/popups/ConfirmationPopup";
-import { CopyableField } from "../../molecules/CopyableField";
+import { CopyableField } from "../../molecules/fields/CopyableField";
 import { EntityField } from "../../molecules/EntityField";
 import { CloneRecommender } from "../utils/CloneRecommender";
 

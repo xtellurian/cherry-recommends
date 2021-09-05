@@ -10,7 +10,7 @@ import {
   ErrorCard,
   BackButton,
 } from "../../molecules";
-import { CopyableField } from "../../molecules/CopyableField";
+import { CopyableField } from "../../molecules/fields/CopyableField";
 import { useAccessToken } from "../../../api-hooks/token";
 export const FeatureDetail = () => {
   const { id } = useParams();

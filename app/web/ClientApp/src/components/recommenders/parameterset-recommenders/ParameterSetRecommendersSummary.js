@@ -8,7 +8,7 @@ import { EmptyList } from "../../molecules/EmptyList";
 import { Paginator } from "../../molecules/Paginator";
 import { useParameterSetRecommenders } from "../../../api-hooks/parameterSetRecommendersApi";
 import { ExpandableCard } from "../../molecules/ExpandableCard";
-import { CopyableField } from "../../molecules/CopyableField";
+import { CopyableField } from "../../molecules/fields/CopyableField";
 
 const ParameterSetRecommenderRow = ({ recommender }) => {
   return (

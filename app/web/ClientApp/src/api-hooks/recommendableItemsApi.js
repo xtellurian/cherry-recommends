@@ -23,7 +23,7 @@ export const useItems = (p) => {
   return result;
 };
 
-export const useItem = ({ id }) => {
+export const useItem = ({ id, trigger }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
@@ -36,7 +36,7 @@ export const useItem = ({ id }) => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, id]);
+  }, [token, id, trigger]);
 
   return result;
 };

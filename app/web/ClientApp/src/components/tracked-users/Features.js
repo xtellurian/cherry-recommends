@@ -13,7 +13,7 @@ import {
   EmptyList,
   BackButton,
 } from "../molecules";
-import { CopyableField } from "../molecules/CopyableField";
+import { CopyableField } from "../molecules/fields/CopyableField";
 
 const FeatureValues = ({ userId, feature }) => {
   const values = useTrackedUserFeatureValues({

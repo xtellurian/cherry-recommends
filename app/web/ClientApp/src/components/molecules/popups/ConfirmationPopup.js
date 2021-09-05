@@ -1,16 +1,6 @@
 import React from "react";
 import Modal from "react-modal";
-
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
+import { small } from "./styles";
 
 export const ConfirmationPopup = ({ isOpen, setIsOpen, label, children }) => {
   const onRequestClose = () => setIsOpen(false);
@@ -18,7 +8,7 @@ export const ConfirmationPopup = ({ isOpen, setIsOpen, label, children }) => {
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      style={customStyles}
+      style={small}
       contentLabel="Modal Confirmation"
     >
       <div className="text-center">

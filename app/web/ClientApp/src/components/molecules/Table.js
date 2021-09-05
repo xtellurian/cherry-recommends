@@ -1,7 +1,7 @@
 import React from "react";
 
 export const Table = ({ children }) => {
-  return <table class="table">{children}</table>;
+  return <table className="table">{children}</table>;
 };
 
 export const TableHead = ({ headings }) => {

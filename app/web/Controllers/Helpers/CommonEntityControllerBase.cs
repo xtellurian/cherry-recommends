@@ -42,7 +42,7 @@ namespace SignalBox.Web.Controllers
             return await GetEntity<T>(id, useInternalId);
         }
 
-        /// <summary>Returns the resource with this Id.</summary>
+        /// <summary>Update the name of this the resource.</summary>
         [HttpPost("{id}/name")]
         public virtual async Task<T> Rename(string id, string name, bool? useInternalId = null)
         {
@@ -51,6 +51,26 @@ namespace SignalBox.Web.Controllers
             await store.Update(entity);
             await store.Context.SaveChanges();
             return entity;
+        }
+
+        /// <summary>Get the properties associated with this resource.</summary>
+        [HttpGet("{id}/Properties")]
+        public virtual async Task<DynamicPropertyDictionary> GetProperties(string id, bool? useInternalId = null)
+        {
+            var entity = await GetEntity<T>(id, useInternalId);
+            return entity.Properties;
+        }
+
+        /// <summary>Set the properties associated with this resource.</summary>
+        [HttpPost("{id}/Properties")]
+        public virtual async Task<DynamicPropertyDictionary> SetProperties(string id, [FromBody] DynamicPropertyDictionary properties, bool? useInternalId = null)
+        {
+            var entity = await GetEntity<T>(id, useInternalId);
+            properties.Validate();
+            entity.Properties = properties;
+            await store.Update(entity);
+            await store.Context.SaveChanges();
+            return entity.Properties;
         }
 
         protected async Task<T> GetEntity(string id, bool? useInternalId)

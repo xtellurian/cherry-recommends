@@ -55,7 +55,14 @@ export const TestRecommender = () => {
       >
         Invoke
       </AsyncButton>
-      <div>{modelResponse && <JsonView data={modelResponse} />}</div>
+      <div>
+        {modelResponse && (
+          <JsonView
+            data={modelResponse}
+            shouldExpandNode={(n) => n.includes("scoredItems")}
+          />
+        )}
+      </div>
     </React.Fragment>
   );
 };

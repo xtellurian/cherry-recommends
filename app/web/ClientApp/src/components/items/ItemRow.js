@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ExpandableCard } from "../molecules";
-import { CopyableField } from "../molecules/CopyableField";
+import { CopyableField } from "../molecules/fields/CopyableField";
 
 export const ItemRow = ({ item }) => {
   return (

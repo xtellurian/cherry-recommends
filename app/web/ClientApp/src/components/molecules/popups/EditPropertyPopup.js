@@ -3,21 +3,21 @@ import Modal from "react-modal";
 import { InputGroup, TextInput } from "../TextInput";
 import { small } from "./styles";
 
-export const RenameEntityPopup = ({
+export const EditPropertyPopup = ({
   isOpen,
   setIsOpen,
   label,
-  entity,
-  onRename,
+  value,
+  onSetValue,
 }) => {
   const onRequestClose = () => setIsOpen(false);
-  const [newName, setNewName] = React.useState(entity.name);
+  const [newValue, setNewValue] = React.useState(value);
 
-  if (onRename === undefined) {
-    throw new Error("onRename is not a function");
+  if (onSetValue === undefined) {
+    throw new Error("onSetValue is not a function");
   }
-  const handleRename = () => {
-    onRename(newName);
+  const handleSetValue = () => {
+    onSetValue(newValue);
     setIsOpen(false);
   };
   return (
@@ -25,18 +25,15 @@ export const RenameEntityPopup = ({
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={small}
-      contentLabel="Rename"
+      contentLabel="Edit Property"
     >
       <div className="text-center">
-        <div className="pb-3">
-          <h5>{label}</h5>
-        </div>
         <div className="m-2">
           <InputGroup>
             <TextInput
-              label="Name"
-              value={newName}
-              onChange={(v) => setNewName(v.target.value)}
+              label={label}
+              value={newValue}
+              onChange={(v) => setNewValue(v.target.value)}
             />
           </InputGroup>
           <div
@@ -50,7 +47,7 @@ export const RenameEntityPopup = ({
             >
               Cancel
             </button>
-            <button className="btn btn-success" onClick={handleRename}>
+            <button className="btn btn-success" onClick={handleSetValue}>
               Confirm
             </button>
           </div>

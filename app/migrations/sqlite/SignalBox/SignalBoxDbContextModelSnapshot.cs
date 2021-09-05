@@ -118,6 +118,9 @@ namespace sqlite.SignalBox
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Properties")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CommonId")
@@ -244,6 +247,9 @@ namespace sqlite.SignalBox
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Properties")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("SystemType")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -339,6 +345,9 @@ namespace sqlite.SignalBox
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Properties")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CommonId")
@@ -382,10 +391,13 @@ namespace sqlite.SignalBox
                         .HasColumnType("INTEGER")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<double>("ListPrice")
+                    b.Property<double?>("ListPrice")
                         .HasColumnType("REAL");
 
                     b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Properties")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -722,7 +734,13 @@ namespace sqlite.SignalBox
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Properties")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CommonId")
+                        .IsUnique();
 
                     b.HasIndex("ModelRegistrationId");
 
@@ -905,6 +923,9 @@ namespace sqlite.SignalBox
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Properties")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

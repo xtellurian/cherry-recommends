@@ -6,7 +6,7 @@ import { EmptyList } from "../../molecules/EmptyList";
 import { Spinner } from "../../molecules/Spinner";
 import { ErrorCard } from "../../molecules/ErrorCard";
 import { ExpandableCard } from "../../molecules/ExpandableCard";
-import { CopyableField } from "../../molecules/CopyableField";
+import { CopyableField } from "../../molecules/fields/CopyableField";
 
 const basePath = `${window.location.protocol}//${window.location.host}`;
 const WebhookReceiverRow = ({ wr }) => {

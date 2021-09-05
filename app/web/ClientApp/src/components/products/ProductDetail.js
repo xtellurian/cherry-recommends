@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { useProduct } from "../../api-hooks/productsApi";
 import { deleteProduct } from "../../api/productsApi";
 import { Title, Subtitle, Spinner, ErrorCard, BackButton } from "../molecules";
-import { CopyableField } from "../molecules/CopyableField";
+import { CopyableField } from "../molecules/fields/CopyableField";
 import { ConfirmationPopup } from "../molecules/popups/ConfirmationPopup";
 import { useAccessToken } from "../../api-hooks/token";
 

@@ -13,8 +13,6 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder.Property(_ => _.CommonId) // fixes legacy column name
                 .HasColumnName("CommonUserId");
 
-            builder.Property(_ => _.Properties)
-                .HasJsonConversion();
         }
     }
 }

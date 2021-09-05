@@ -26,7 +26,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost]
         public async Task<Product> Create(CreateProductDto dto)
         {
-            return await workflows.CreateProduct(dto.CommonId, dto.Name, dto.ListPrice, dto.Description, dto.DirectCost);
+            return await workflows.CreateProduct(dto.CommonId, dto.Name, dto.ListPrice, dto.DirectCost, dto.Description, dto.Properties);
         }
 
         protected override async Task<(bool, string)> CanDelete(Product entity)

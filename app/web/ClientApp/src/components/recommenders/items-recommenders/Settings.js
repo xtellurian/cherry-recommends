@@ -1,15 +1,15 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useProducts } from "../../../api-hooks/productsApi";
+import { useItem, useItems } from "../../../api-hooks/recommendableItemsApi";
 import {
-  useProductRecommender,
-  useDefaultProduct,
-} from "../../../api-hooks/productRecommendersApi";
+  useItemsRecommender,
+  useDefaultItem,
+} from "../../../api-hooks/itemsRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import {
   updateErrorHandlingAsync,
-  setDefaultProductAsync,
-} from "../../../api/productRecommendersApi";
+  setDefaultItemAsync,
+} from "../../../api/itemsRecommendersApi";
 import { Selector } from "../../molecules/Select";
 import { SettingsUtil } from "../utils/settingsUtil";
 import { Spinner } from "../../molecules";
@@ -17,24 +17,24 @@ import { Spinner } from "../../molecules";
 export const Settings = () => {
   const { id } = useParams();
   const [updatedErrorHandling, setUpdatedErrorHandling] = React.useState({});
-  const recommender = useProductRecommender({
+  const recommender = useItemsRecommender({
     id,
     trigger: updatedErrorHandling,
   });
   const token = useAccessToken();
-  const products = useProducts();
-  const productOptions = products.items
-    ? products.items.map((p) => ({ label: p.name, value: p.commonId }))
+  const items = useItems();
+  const itemOptions = items.items
+    ? items.items.map((p) => ({ label: p.name, value: p.commonId }))
     : [];
 
   const handleUpdateError = (e) => {
     alert(e.title);
   };
 
-  const [updatedDefaultProduct, setUpdatedDefaultProduct] = React.useState({});
-  const defaultProduct = useDefaultProduct({
+  const [updatedDefaultItem, setUpdatedDefaultItem] = React.useState({});
+  const defaultItem = useDefaultItem({
     id,
-    trigger: updatedDefaultProduct,
+    trigger: updatedDefaultItem,
   });
   const handleUpdate = (errorHandling) => {
     updateErrorHandlingAsync({
@@ -46,9 +46,9 @@ export const Settings = () => {
       .catch(handleUpdateError);
   };
 
-  const handleSetDefaultProduct = (productId) => {
-    setDefaultProductAsync({ token, id, productId })
-      .then(setUpdatedDefaultProduct)
+  const handleSetDefaultItem = (itemId) => {
+    setDefaultItemAsync({ token, id, itemId })
+      .then(setUpdatedDefaultItem)
       .catch(handleUpdateError);
   };
   return (
@@ -58,28 +58,28 @@ export const Settings = () => {
         <React.Fragment>
           <SettingsUtil
             recommender={recommender}
-            basePath="/recommenders/product-recommenders"
+            basePath="/recommenders/items-recommenders"
             updateErrorHandling={handleUpdate}
           />
           <div className="row">
             <div className="col">
-              <h5>Default Product</h5>
-              Choosing a default product helps the recommender know what to do
-              in error situations or when there's no information about a tracked
-              user.
+              <h5>Baseline Item</h5>
+              Choosing a baseline (default) item helps the recommender know what
+              to do in error situations, what to do when there's no information
+              about a tracked user, and how to compare various items.
             </div>
             <div className="col-3">
-              {defaultProduct.loading ? (
+              {defaultItem.loading ? (
                 <Spinner />
               ) : (
                 <Selector
                   isSearchable
                   placeholder={
-                    defaultProduct.name || "Choose a default product."
+                    defaultItem.name || "Choose a default item."
                   }
-                  noOptionsMessage={(inputValue) => "No Products Available"}
-                  onChange={(so) => handleSetDefaultProduct(so.value)}
-                  options={productOptions}
+                  noOptionsMessage={(inputValue) => "No Items Available"}
+                  onChange={(so) => handleSetDefaultItem(so.value)}
+                  options={itemOptions}
                 />
               )}
             </div>

@@ -1855,6 +1855,32 @@
     fetchAuth0Configuration: fetchAuth0Configuration
   });
 
+  const getPropertiesAsync$1 = async ({ api, token, id }) => {
+    const url = getUrl(`api/${api}/${id}/Properties`);
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const setPropertiesAsync$1 = async ({ api, token, id, properties }) => {
+    const url = getUrl(`api/${api}/${id}/Properties`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(properties),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const fetchItemsAsync = async ({ token, page }) => {
     const url = getUrl("api/RecommendableItems");
     const response = await fetch(`${url}?${pageQuery(page)}`, {
@@ -1893,6 +1919,20 @@
     }
   };
 
+  const updateItemAsync = async ({ token, id, item }) => {
+    const url = getUrl(`api/RecommendableItems/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(item),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const deleteItemAsync = async ({ token, id }) => {
     const url = getUrl(`api/RecommendableItems/${id}`);
     const response = await fetch(url, {
@@ -1906,12 +1946,32 @@
     }
   };
 
+  const getPropertiesAsync = async ({ token, id }) => {
+    return await getPropertiesAsync$1({
+      token,
+      id,
+      api: "RecommendableItems",
+    });
+  };
+
+  const setPropertiesAsync = async ({ token, id, properties }) => {
+    return await setPropertiesAsync$1({
+      token,
+      id,
+      properties,
+      api: "RecommendableItems",
+    });
+  };
+
   var recommendableItemsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchItemsAsync: fetchItemsAsync,
     fetchItemAsync: fetchItemAsync,
     createItemAsync: createItemAsync,
-    deleteItemAsync: deleteItemAsync
+    updateItemAsync: updateItemAsync,
+    deleteItemAsync: deleteItemAsync,
+    getPropertiesAsync: getPropertiesAsync,
+    setPropertiesAsync: setPropertiesAsync
   });
 
   const defaultHeaders$2 = { "Content-Type": "application/json" };

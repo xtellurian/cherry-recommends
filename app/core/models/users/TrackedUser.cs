@@ -27,7 +27,6 @@ namespace SignalBox.Core
         { }
 
         public string CommonUserId => CommonId;
-        public DynamicPropertyDictionary Properties { get; set; } = new DynamicPropertyDictionary(); // not empty
 
         [JsonIgnore]
         public ICollection<TrackedUserAction> Actions { get; set; }

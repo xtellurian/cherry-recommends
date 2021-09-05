@@ -26,7 +26,15 @@ namespace SignalBox.Web.Controllers
         [HttpPost]
         public async Task<RecommendableItem> Create(CreateRecommendableItemDto dto)
         {
-            return await workflows.CreateRecommendableItem(dto.CommonId, dto.Name, dto.ListPrice, dto.Description, dto.DirectCost);
+            return await workflows.CreateRecommendableItem(dto.CommonId, dto.Name, dto.ListPrice, dto.DirectCost, dto.Description, dto.Properties );
+        }
+
+        /// <summary>Updates a recommendable item.</summary>
+        [HttpPost("{id}")]
+        public async Task<RecommendableItem> Update(string id, UpdateRecommendableItem dto)
+        {
+            var entity = await store.GetEntity(id);
+            return await workflows.UpdateRecommendableItem(entity, dto.Name, dto.ListPrice, dto.DirectCost, dto.Description, dto.Properties);
         }
 
         protected override async Task<(bool, string)> CanDelete(RecommendableItem entity)

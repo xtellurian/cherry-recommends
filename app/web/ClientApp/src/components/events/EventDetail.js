@@ -4,7 +4,7 @@ import { useEvent } from "../../api-hooks/eventApi";
 import { useTrackedUser } from "../../api-hooks/trackedUserApi";
 import { useParams } from "react-router-dom";
 import { DateTimeField } from "../molecules/DateTimeField";
-import { CopyableField } from "../molecules/CopyableField";
+import { CopyableField } from "../molecules/fields/CopyableField";
 import { EntityField } from "../molecules/EntityField";
 
 const ActionRow = ({ action }) => {

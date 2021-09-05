@@ -4,7 +4,7 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal class ParameterSetRecommenderTypeConfiguration : EntityTypeConfigurationBase<ParameterSetRecommender>, IEntityTypeConfiguration<ParameterSetRecommender>
+    internal class ParameterSetRecommenderTypeConfiguration : CommonEntityTypeConfigurationBase<ParameterSetRecommender>, IEntityTypeConfiguration<ParameterSetRecommender>
     {
         public override void Configure(EntityTypeBuilder<ParameterSetRecommender> builder)
         {

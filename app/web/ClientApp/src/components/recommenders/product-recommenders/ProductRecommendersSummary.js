@@ -8,6 +8,7 @@ import {
   EmptyList,
   ExpandableCard,
 } from "../../molecules";
+import { NoteBox } from "../../molecules/NoteBox";
 import { CreateButton } from "../../molecules/CreateButton";
 import { useProductRecommenders } from "../../../api-hooks/productRecommendersApi";
 import { JsonView } from "../../molecules/JsonView";
@@ -35,6 +36,20 @@ export const ProductRecommendersSummary = () => {
       <Title>Product Recommenders</Title>
 
       <hr />
+
+      <div className="m-3">
+        <NoteBox label="Deprecation Warning">
+          <div className="m-2">
+            Product Recommenders are obsolete. Please use an Item Recommender.
+          </div>
+          <Link to="/recommenders/items-recommenders">
+            <button className="btn btn-primary">
+              Go to Items Recommenders
+            </button>
+          </Link>
+        </NoteBox>
+      </div>
+
       {productRecommenders.loading && <Spinner>Loading Recommenders</Spinner>}
       {productRecommenders.error && (
         <ErrorCard error={productRecommenders.error} />

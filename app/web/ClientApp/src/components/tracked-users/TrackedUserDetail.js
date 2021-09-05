@@ -4,7 +4,7 @@ import { useTrackedUser } from "../../api-hooks/trackedUserApi";
 import { BackButton } from "../molecules/BackButton";
 import { Subtitle, Title, ErrorCard, Spinner, EmptyList } from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
-import { CopyableField } from "../molecules/CopyableField";
+import { CopyableField } from "../molecules/fields/CopyableField";
 import { Tabs, TabActivator } from "../molecules/Tabs";
 import {
   ActionsButton,

@@ -7,12 +7,12 @@ const AuthenticatedIA = [
     name: "Users",
     items: [
       {
-        name: "Add User",
-        to: "/tracked-users/create",
+        name: "Tracked Users",
+        to: "/tracked-users",
       },
       {
-        name: "All Users",
-        to: "/tracked-users",
+        name: "Track a new user",
+        to: "/tracked-users/create",
       },
       {
         name: "Events Overview",
@@ -41,12 +41,12 @@ const AuthenticatedIA = [
         to: "/recommendable-items",
       },
       {
-        name: "Products",
-        to: "/products",
-      },
-      {
         name: "Parameters",
         to: "/parameters",
+      },
+      {
+        name: "Products",
+        to: "/products",
       },
     ],
   },
@@ -58,12 +58,12 @@ const AuthenticatedIA = [
         to: "/recommenders/items-recommenders",
       },
       {
-        name: "Products",
-        to: "/recommenders/product-recommenders",
-      },
-      {
         name: "Parameter Sets",
         to: "/recommenders/parameter-set-recommenders",
+      },
+      {
+        name: "Products",
+        to: "/recommenders/product-recommenders",
       },
     ],
   },
