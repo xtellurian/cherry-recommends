@@ -18,12 +18,12 @@ namespace SignalBox.Web.Controllers
     {
         private readonly ILogger<TrackedUserFeaturesController> _logger;
         private readonly FeatureWorkflows workflows;
-        private readonly ITrackedUserFeatureStore trackedUserFeatureStore;
+        private readonly IHistoricTrackedUserFeatureStore trackedUserFeatureStore;
         private readonly ITrackedUserStore trackedUserStore;
 
         public TrackedUserFeaturesController(ILogger<TrackedUserFeaturesController> logger,
                                              FeatureWorkflows workflows,
-                                             ITrackedUserFeatureStore trackedUserFeatureStore,
+                                             IHistoricTrackedUserFeatureStore trackedUserFeatureStore,
                                              ITrackedUserStore trackedUserStore)
         {
             _logger = logger;
@@ -43,7 +43,7 @@ namespace SignalBox.Web.Controllers
         /// <summary>Creates a new set of feature values on a user. You probably shouldn't set this manually.</summary>
         [HttpPost("{id}/features/{featureCommonId}")]
         [Authorize(Policies.AdminOnlyPolicyName)]
-        public async Task<TrackedUserFeature> Create(string id,
+        public async Task<HistoricTrackedUserFeature> Create(string id,
                                          string featureCommonId,
                                          [FromBody] CreateTrackedUserFeature dto,
                                          [FromQuery] bool? useInternalId = null,
@@ -55,7 +55,7 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Returns the value set in the feature.</summary>
         [HttpGet("{id}/features/{featureCommonId}")]
-        public async Task<TrackedUserFeature> FeatureValue(string id,
+        public async Task<HistoricTrackedUserFeature> FeatureValue(string id,
                                          string featureCommonId,
                                          [FromQuery] bool? useInternalId = null,
                                          [FromQuery] int? version = null)

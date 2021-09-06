@@ -11,6 +11,6 @@ namespace SignalBox.Core
         { }
 
         [JsonIgnore]
-        public ICollection<TrackedUserFeature> TrackedUserFeatures { get; set; }
+        public ICollection<HistoricTrackedUserFeature> HistoricTrackedUserFeatures { get; set; }
     }
 }

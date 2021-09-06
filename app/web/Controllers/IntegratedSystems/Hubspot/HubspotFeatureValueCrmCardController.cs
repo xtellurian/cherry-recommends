@@ -34,7 +34,7 @@ namespace SignalBox.Web.Controllers
         private readonly ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation;
         private readonly ProductRecommenderInvokationWorkflows productRecommenderInvokation;
         private readonly IFeatureStore featureStore;
-        private readonly ITrackedUserFeatureStore trackedUserFeatureStore;
+        private readonly IHistoricTrackedUserFeatureStore trackedUserFeatureStore;
         private readonly HubspotAppCredentials credentials;
         private readonly DeploymentInformation deploymentOptions;
 
@@ -52,7 +52,7 @@ namespace SignalBox.Web.Controllers
                                          ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation,
                                          ProductRecommenderInvokationWorkflows productRecommenderInvokation,
                                          IFeatureStore featureStore,
-                                         ITrackedUserFeatureStore trackedUserFeatureStore)
+                                         IHistoricTrackedUserFeatureStore trackedUserFeatureStore)
                                           : base(logger, deploymentOptions, hasher, hubspotOptions)
         {
             this.logger = logger;
@@ -182,7 +182,7 @@ namespace SignalBox.Web.Controllers
                 features = features.Where(_ => !behaviour.ExcludedFeatures.Contains(_.CommonId));
             }
 
-            var featureValues = new List<TrackedUserFeature>();
+            var featureValues = new List<HistoricTrackedUserFeature>();
 
             var host = Request.Host;
             var baseUrl = $"{Request.Scheme}://{Request.Host}";

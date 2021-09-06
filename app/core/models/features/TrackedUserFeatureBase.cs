@@ -2,29 +2,29 @@ using System.Text.Json.Serialization;
 
 namespace SignalBox.Core
 {
-    public class TrackedUserFeature : Entity
+    public class TrackedUserFeatureBase : Entity
     {
-        protected TrackedUserFeature()
+        protected TrackedUserFeatureBase()
         { }
-        private TrackedUserFeature(TrackedUser trackedUser, Feature feature, int version)
+#nullable enable
+        protected TrackedUserFeatureBase(TrackedUser trackedUser, Feature feature)
         {
             TrackedUser = trackedUser;
             Feature = feature;
-            Version = version;
         }
-        public TrackedUserFeature(TrackedUser trackedUser, Feature feature, string value, int version)
-        : this(trackedUser, feature, version)
+        public TrackedUserFeatureBase(TrackedUser trackedUser, Feature feature, string value)
+        : this(trackedUser, feature)
         {
             StringValue = value;
         }
 
-        public TrackedUserFeature(TrackedUser trackedUser, Feature feature, double value, int version)
-        : this(trackedUser, feature, version)
+        public TrackedUserFeatureBase(TrackedUser trackedUser, Feature feature, double value)
+        : this(trackedUser, feature)
         {
             NumericValue = value;
         }
 
-        public bool ValuesEqual(TrackedUserFeature other)
+        public bool ValuesEqual(TrackedUserFeatureBase other)
         {
             if (this.Value == null || other?.Value == null)
             {
@@ -42,8 +42,7 @@ namespace SignalBox.Core
             return this.NumericValue != null;
         }
 
-#nullable enable
-        public int Version { get; set; }
+
         public long TrackedUserId { get; set; }
         public TrackedUser TrackedUser { get; set; }
         public long FeatureId { get; set; }

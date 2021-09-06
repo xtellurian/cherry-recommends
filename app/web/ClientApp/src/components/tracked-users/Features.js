@@ -12,6 +12,7 @@ import {
   ExpandableCard,
   EmptyList,
   BackButton,
+  ErrorCard,
 } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 
@@ -20,13 +21,18 @@ const FeatureValues = ({ userId, feature }) => {
     id: userId,
     feature: feature.commonId,
   });
-  return (
-    <div>
-      <CopyableField label="Feature Common Id" value={feature.commonId} />
-      <CopyableField label="Current Version" value={values.version} />
-      <CopyableField label="Current Value" value={`${values.value}`} />
-    </div>
-  );
+  if (values.loading) {
+    return <Spinner>Loading Feature Value</Spinner>;
+  } else if (values.error) {
+    return <ErrorCard error={values.error} />;
+  } else
+    return (
+      <div>
+        <CopyableField label="Feature Common Id" value={feature.commonId} />
+        <CopyableField label="Current Version" value={values.version} />
+        <CopyableField label="Current Value" value={`${values.value}`} />
+      </div>
+    );
 };
 const FeatureValuesRow = ({ userId, feature }) => {
   return (

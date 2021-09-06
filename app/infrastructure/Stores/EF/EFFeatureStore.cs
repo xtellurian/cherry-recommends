@@ -17,7 +17,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             var itemCount = await Set
                     .Where(_ => _.Id == featureId)
-                    .SelectMany(_ => _.TrackedUserFeatures.Select(_ => _.TrackedUser))
+                    .SelectMany(_ => _.HistoricTrackedUserFeatures.Select(_ => _.TrackedUser))
                     .Distinct()
                     .CountAsync();
 
@@ -27,7 +27,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             {
                 results = await Set
                     .Where(_ => _.Id == featureId)
-                    .SelectMany(_ => _.TrackedUserFeatures.Select(_ => _.TrackedUser))
+                    .SelectMany(_ => _.HistoricTrackedUserFeatures.Select(_ => _.TrackedUser))
                     .OrderByDescending(_ => _.LastUpdated)
                     .Distinct()
                     .OrderByDescending(_ => _.LastUpdated)

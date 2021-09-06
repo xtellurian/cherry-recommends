@@ -15,11 +15,11 @@ namespace SignalBox.Core.Workflows
                                          IFeatureStore featureStore,
                                          ITrackedUserEventStore trackedUserEventStore,
                                          IFeatureGeneratorStore featureGeneratorStore,
-                                         ITrackedUserFeatureStore trackedUserFeatureStore,
+                                         IHistoricTrackedUserFeatureStore historicTrackedUserFeatureStore,
                                          IDateTimeProvider dateTimeProvider,
                                          IStorageContext storageContext,
                                          ILogger<FeatureGeneratorWorkflows> logger)
-                                        : base(featureStore, trackedUserFeatureStore, storageContext, logger)
+                                        : base(featureStore, historicTrackedUserFeatureStore, storageContext, logger)
         {
             this.trackedUserStore = trackedUserStore;
             this.trackedUserEventStore = trackedUserEventStore;

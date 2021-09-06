@@ -24,12 +24,12 @@ namespace SignalBox.Core.Workflows
                                     IRecommenderModelClientFactory modelClientFactory,
                                     ITrackedUserStore trackedUserStore,
                                     ITrackedUserTouchpointStore trackedUserTouchpointStore,
-                                    ITrackedUserFeatureStore featureStore,
+                                    IHistoricTrackedUserFeatureStore historicFeatureStore,
                                     IRecommendableItemStore itemStore,
                                     IRecommendationCorrelatorStore correlatorStore,
                                     IItemsRecommenderStore itemsRecommenderStore,
                                     IItemsRecommendationStore itemsRecommendationStore)
-                                     : base(storageContext, itemsRecommenderStore, featureStore, dateTimeProvider)
+                                     : base(storageContext, itemsRecommenderStore, historicFeatureStore, dateTimeProvider)
         {
             this.logger = logger;
             this.storageContext = storageContext;

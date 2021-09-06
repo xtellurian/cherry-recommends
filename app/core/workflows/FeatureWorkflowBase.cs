@@ -5,12 +5,12 @@ namespace SignalBox.Core.Workflows
     public abstract class FeatureWorkflowBase
     {
         protected readonly IFeatureStore featureStore;
-        protected readonly ITrackedUserFeatureStore trackedUserFeatureStore;
+        protected readonly IHistoricTrackedUserFeatureStore trackedUserFeatureStore;
         protected readonly IStorageContext storageContext;
         protected readonly ILogger<FeatureWorkflowBase> logger;
 
         protected FeatureWorkflowBase(IFeatureStore featureStore,
-                                   ITrackedUserFeatureStore trackedUserFeatureStore,
+                                   IHistoricTrackedUserFeatureStore trackedUserFeatureStore,
                                    IStorageContext storageContext,
                                    ILogger<FeatureWorkflowBase> logger)
         {
@@ -19,7 +19,7 @@ namespace SignalBox.Core.Workflows
             this.storageContext = storageContext;
             this.logger = logger;
         }
-        public async Task<TrackedUserFeature> CreateFeatureOnUser(TrackedUser trackedUser,
+        public async Task<HistoricTrackedUserFeature> CreateFeatureOnUser(TrackedUser trackedUser,
                                                                    string featureCommonId,
                                                                    object value,
                                                                    bool? forceIncrementVersion)
@@ -61,7 +61,7 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        private TrackedUserFeature GenerateFeatureValues(TrackedUser user, Feature feature, object value, int version)
+        private HistoricTrackedUserFeature GenerateFeatureValues(TrackedUser user, Feature feature, object value, int version)
         {
             if (value == null)
             {
@@ -69,31 +69,31 @@ namespace SignalBox.Core.Workflows
             }
             else if (value is double f)
             {
-                return new TrackedUserFeature(user, feature, f, version);
+                return new HistoricTrackedUserFeature(user, feature, f, version);
             }
             else if (value is int n)
             {
-                return new TrackedUserFeature(user, feature, n, version);
+                return new HistoricTrackedUserFeature(user, feature, n, version);
             }
             else if (value is string s)
             {
-                return new TrackedUserFeature(user, feature, s, version);
+                return new HistoricTrackedUserFeature(user, feature, s, version);
             }
             else if (value is System.Text.Json.JsonElement jsonElement)
             {
                 if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.String)
                 {
-                    return new TrackedUserFeature(user, feature, jsonElement.GetString(), version);
+                    return new HistoricTrackedUserFeature(user, feature, jsonElement.GetString(), version);
                 }
                 if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Number)
                 {
                     if (jsonElement.TryGetInt32(out var i))
                     {
-                        return new TrackedUserFeature(user, feature, i, version);
+                        return new HistoricTrackedUserFeature(user, feature, i, version);
                     }
                     else if (jsonElement.TryGetDouble(out var d))
                     {
-                        return new TrackedUserFeature(user, feature, d, version);
+                        return new HistoricTrackedUserFeature(user, feature, d, version);
                     }
                     else
                     {

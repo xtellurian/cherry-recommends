@@ -10,12 +10,12 @@ namespace SignalBox.Core.Workflows
     {
         private readonly IStorageContext storageContext;
         private readonly IRecommenderStore<T> store;
-        private readonly ITrackedUserFeatureStore trackedUserFeatureStore;
+        private readonly IHistoricTrackedUserFeatureStore trackedUserFeatureStore;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public RecommenderInvokationWorkflowBase(IStorageContext storageContext,
                                                  IRecommenderStore<T> store,
-                                                 ITrackedUserFeatureStore trackedUserFeatureStore,
+                                                 IHistoricTrackedUserFeatureStore trackedUserFeatureStore,
                                                  IDateTimeProvider dateTimeProvider)
         {
             this.storageContext = storageContext;

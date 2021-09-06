@@ -11,7 +11,7 @@ namespace SignalBox.Core.Workflows
 
 
         public FeatureWorkflows(IFeatureStore featureStore,
-                                   ITrackedUserFeatureStore trackedUserFeatureStore,
+                                   IHistoricTrackedUserFeatureStore trackedUserFeatureStore,
                                    ITrackedUserStore trackedUserStore,
                                    ILogger<FeatureWorkflows> logger,
                                    IStorageContext storageContext) : base(featureStore, trackedUserFeatureStore, storageContext, logger)
@@ -31,7 +31,7 @@ namespace SignalBox.Core.Workflows
             return await featureStore.QueryTrackedUsers(page, feature.Id);
         }
 
-        public async Task<TrackedUserFeature> ReadFeatureValues(TrackedUser trackedUser, string featureCommonId, int? version = null)
+        public async Task<HistoricTrackedUserFeature> ReadFeatureValues(TrackedUser trackedUser, string featureCommonId, int? version = null)
         {
             var feature = await featureStore.ReadFromCommonId(featureCommonId);
             return await trackedUserFeatureStore.ReadFeature(trackedUser, feature, version);

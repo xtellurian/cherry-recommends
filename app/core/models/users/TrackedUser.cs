@@ -36,7 +36,7 @@ namespace SignalBox.Core
         [JsonIgnore]
         public ICollection<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
         [JsonIgnore]
-        public ICollection<TrackedUserFeature> TrackedUserFeatures { get; set; }
+        public ICollection<HistoricTrackedUserFeature> HistoricTrackedUserFeatures { get; set; }
         // this can be serialised and sent out
         public ICollection<TrackedUserSystemMap> IntegratedSystemMaps { get; set; } = new List<TrackedUserSystemMap>(); // for initialising
     }

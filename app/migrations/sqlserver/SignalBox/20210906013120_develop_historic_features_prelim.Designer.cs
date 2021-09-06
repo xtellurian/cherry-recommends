@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
 namespace sqlserver.SignalBox
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210906013120_develop_historic_features_prelim")]
+    partial class develop_historic_features_prelim
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,50 +209,6 @@ namespace sqlserver.SignalBox
                     b.ToTable("ApiKeys");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.HistoricTrackedUserFeature", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long>("FeatureId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<double?>("NumericValue")
-                        .HasColumnType("float");
-
-                    b.Property<string>("StringValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("TrackedUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TrackedUserId");
-
-                    b.HasIndex("FeatureId", "TrackedUserId", "Version")
-                        .IsUnique();
-
-                    b.ToTable("HistoricTrackedUserFeatures");
-                });
-
             modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
                 {
                     b.Property<long>("Id")
@@ -309,23 +267,6 @@ namespace sqlserver.SignalBox
                     b.HasKey("Id");
 
                     b.ToTable("IntegratedSystems");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.LatestFeatureVersion", b =>
-                {
-                    b.Property<long>("FeatureId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("HistoricTrackedUserFeatureId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("MaxVersion")
-                        .HasColumnType("int");
-
-                    b.Property<long>("TrackedUserId")
-                        .HasColumnType("bigint");
-
-                    b.ToView("View_MaxHistoricTrackedUserFeatureVersion");
                 });
 
             modelBuilder.Entity("SignalBox.Core.ModelRegistration", b =>
@@ -1180,6 +1121,50 @@ namespace sqlserver.SignalBox
                     b.ToTable("TrackedUserEvents");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.TrackedUserFeature", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("FeatureId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<double?>("NumericValue")
+                        .HasColumnType("float");
+
+                    b.Property<string>("StringValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("TrackedUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TrackedUserId");
+
+                    b.HasIndex("FeatureId", "TrackedUserId", "Version")
+                        .IsUnique();
+
+                    b.ToTable("HistoricTrackedUserFeatures");
+                });
+
             modelBuilder.Entity("SignalBox.Core.TrackedUserSystemMap", b =>
                 {
                     b.Property<long>("Id")
@@ -1444,25 +1429,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("Feature");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.HistoricTrackedUserFeature", b =>
-                {
-                    b.HasOne("SignalBox.Core.Feature", "Feature")
-                        .WithMany("HistoricTrackedUserFeatures")
-                        .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
-                        .WithMany("HistoricTrackedUserFeatures")
-                        .HasForeignKey("TrackedUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Feature");
-
-                    b.Navigation("TrackedUser");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Recommendations.ItemsRecommendation", b =>
                 {
                     b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
@@ -1636,6 +1602,25 @@ namespace sqlserver.SignalBox
                     b.Navigation("TrackedUser");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.TrackedUserFeature", b =>
+                {
+                    b.HasOne("SignalBox.Core.Feature", "Feature")
+                        .WithMany("TrackedUserFeatures")
+                        .HasForeignKey("FeatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                        .WithMany("TrackedUserFeatures")
+                        .HasForeignKey("TrackedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Feature");
+
+                    b.Navigation("TrackedUser");
+                });
+
             modelBuilder.Entity("SignalBox.Core.TrackedUserSystemMap", b =>
                 {
                     b.HasOne("SignalBox.Core.IntegratedSystem", "IntegratedSystem")
@@ -1710,7 +1695,7 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Feature", b =>
                 {
-                    b.Navigation("HistoricTrackedUserFeatures");
+                    b.Navigation("TrackedUserFeatures");
                 });
 
             modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
@@ -1748,9 +1733,9 @@ namespace sqlserver.SignalBox
                 {
                     b.Navigation("Actions");
 
-                    b.Navigation("HistoricTrackedUserFeatures");
-
                     b.Navigation("IntegratedSystemMaps");
+
+                    b.Navigation("TrackedUserFeatures");
 
                     b.Navigation("TrackedUserTouchpoints");
                 });

@@ -82,7 +82,8 @@ namespace SignalBox.Infrastructure
         // features
         public DbSet<Feature> Features { get; set; }
         public DbSet<FeatureGenerator> FeatureGenerators { get; set; }
-        public DbSet<TrackedUserFeature> TrackedUserFeatures { get; set; }
+        public DbSet<HistoricTrackedUserFeature> HistoricTrackedUserFeatures { get; set; }
+        public DbSet<LatestFeatureVersion> LatestFeatureVersions { get; set; } // SQL view
 
         // recommenders
         public DbSet<RecommenderEntityBase> Recommenders { get; set; }

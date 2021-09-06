@@ -30,10 +30,10 @@ namespace SignalBox.Core.Workflows
                                     IParameterSetRecommenderStore parameterSetRecommenderStore,
                                     IParameterSetRecommendationStore parameterSetRecommendationStore,
                                     IModelRegistrationStore modelRegistrationStore,
-                                    ITrackedUserFeatureStore featureStore,
+                                    IHistoricTrackedUserFeatureStore historicFeatureStore,
                                     ITrackedUserStore trackedUserStore,
                                     IRecommenderModelClientFactory modelClientFactory)
-                                     : base(storageContext, parameterSetRecommenderStore, featureStore, dateTimeProvider)
+                                     : base(storageContext, parameterSetRecommenderStore, historicFeatureStore, dateTimeProvider)
         {
             this.logger = logger;
             this.storageContext = storageContext;

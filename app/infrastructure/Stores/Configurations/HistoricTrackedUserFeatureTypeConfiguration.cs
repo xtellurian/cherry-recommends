@@ -4,14 +4,16 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal class TrackedUserFeatureTypeConfiguration : EntityTypeConfigurationBase<TrackedUserFeature>, IEntityTypeConfiguration<TrackedUserFeature>
+    internal class HistoricTrackedUserFeatureTypeConfiguration : EntityTypeConfigurationBase<HistoricTrackedUserFeature>, IEntityTypeConfiguration<HistoricTrackedUserFeature>
     {
-        public override void Configure(EntityTypeBuilder<TrackedUserFeature> builder)
+        public override void Configure(EntityTypeBuilder<HistoricTrackedUserFeature> builder)
         {
             base.Configure(builder);
             // ensure the uniqueness of a feature value
             builder.HasIndex(f => new { f.FeatureId, f.TrackedUserId, f.Version })
                 .IsUnique();
+
+            builder.ToTable("HistoricTrackedUserFeatures");
         }
     }
 }
