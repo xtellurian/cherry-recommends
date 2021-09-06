@@ -15,6 +15,7 @@ import {
   InputGroup,
   commonIdValidator,
 } from "../../molecules/TextInput";
+import { IntegerRangeSelector } from "../../molecules/selectors/IntegerRangeSelector";
 
 export const CreateRecommender = () => {
   const token = useAccessToken();
@@ -31,6 +32,7 @@ export const CreateRecommender = () => {
     name: "",
     itemIds: null,
     defaultItemId: "",
+    numberOfItemsToRecommend: null,
   });
 
   const [loading, setLoading] = React.useState(false);
@@ -114,6 +116,15 @@ export const CreateRecommender = () => {
             });
           }}
           options={itemsOptions}
+        />
+        <IntegerRangeSelector
+          min={1}
+          max={9}
+          defaultValue={1}
+          placeholder="Select number of items recommended"
+          onSelected={(numberOfItemsToRecommend) =>
+            setRecommender({ ...recommender, numberOfItemsToRecommend })
+          }
         />
       </div>
 

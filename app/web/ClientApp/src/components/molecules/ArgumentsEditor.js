@@ -1,5 +1,5 @@
 import React from "react";
-import { Selector } from "./Select";
+import { Selector } from "./selectors/Select";
 
 const argumentTypeOptions = [
   { label: "Numerical", value: "numerical" },

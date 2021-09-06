@@ -6,7 +6,7 @@ import { ErrorCard } from "./ErrorCard";
 import { Paginator } from "./Paginator";
 import { Spinner } from "./Spinner";
 import { Title, Subtitle } from "./PageHeadings";
-import { Selector } from "./Select";
+import { Selector } from "./selectors/Select";
 
 export {
   AsyncButton,

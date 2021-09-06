@@ -35,11 +35,13 @@ namespace SignalBox.Core.Workflows
             return await CreateItemsRecommender(common,
                                                   from.DefaultItem?.CommonId,
                                                   from.Items?.Select(_ => _.CommonId),
+                                                  from.NumberOfItemsToRecommend,
                                                   from.ErrorHandling ?? new RecommenderErrorHandling());
         }
         public async Task<ItemsRecommender> CreateItemsRecommender(CreateCommonEntityModel common,
                                                                        string? defaultItemId,
                                                                        IEnumerable<string>? itemsCommonIds,
+                                                                       int? numberOfItemsToRecommend,
                                                                        RecommenderErrorHandling errorHandling)
         {
             RecommendableItem? defaultItem = null;
@@ -57,14 +59,16 @@ namespace SignalBox.Core.Workflows
                 }
 
                 var recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, items, errorHandling));
+                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, items, errorHandling) 
+                    { NumberOfItemsToRecommend = numberOfItemsToRecommend });
                 await storageContext.SaveChanges();
                 return recommender;
             }
             else
             {
                 var recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, null, errorHandling));
+                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, null, errorHandling) 
+                    { NumberOfItemsToRecommend = numberOfItemsToRecommend });
                 await storageContext.SaveChanges();
                 return recommender;
             }

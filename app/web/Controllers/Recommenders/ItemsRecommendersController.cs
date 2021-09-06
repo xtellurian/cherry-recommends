@@ -54,7 +54,7 @@ namespace SignalBox.Web.Controllers
                 return await workflows.CloneItemsRecommender(c, from);
             }
             return await workflows.CreateItemsRecommender(c,
-                dto.DefaultItemId, dto.ItemIds,
+                dto.DefaultItemId, dto.ItemIds,dto.NumberOfItemsToRecommend,
                 new RecommenderErrorHandling { ThrowOnBadInput = dto.ThrowOnBadInput });
         }
 

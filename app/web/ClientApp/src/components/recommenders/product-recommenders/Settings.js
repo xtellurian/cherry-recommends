@@ -10,7 +10,7 @@ import {
   updateErrorHandlingAsync,
   setDefaultProductAsync,
 } from "../../../api/productRecommendersApi";
-import { Selector } from "../../molecules/Select";
+import { Selector } from "../../molecules/selectors/Select";
 import { SettingsUtil } from "../utils/settingsUtil";
 import { Spinner } from "../../molecules";
 

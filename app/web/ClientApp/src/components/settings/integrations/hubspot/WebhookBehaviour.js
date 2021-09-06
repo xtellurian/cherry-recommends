@@ -6,7 +6,7 @@ import {
   Subtitle,
   BackButton,
 } from "../../../molecules";
-import { Selector } from "../../../molecules/Select";
+import { Selector } from "../../../molecules/selectors/Select";
 import { ToggleSwitch } from "../../../molecules/ToggleSwitch";
 import {
   useHubspotWebhookBehaviour,

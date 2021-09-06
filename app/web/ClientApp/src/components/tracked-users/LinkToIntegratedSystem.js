@@ -5,7 +5,7 @@ import { createOrUpdateTrackedUser } from "../../api/trackedUsersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { JsonView } from "../molecules/JsonView";
 import { Title, BackButton, Spinner } from "../molecules";
-import { Selector } from "../molecules/Select";
+import { Selector } from "../molecules/selectors/Select";
 import { useAccessToken } from "../../api-hooks/token";
 
 const Top = ({id}) => {

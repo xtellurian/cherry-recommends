@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useAccessToken } from "../../api-hooks/token";
 import { useOffers } from "../../api-hooks/offersApi";
 import { createExperiment } from "../../api/experimentsApi";
-import { Selector } from "../molecules/Select";
+import { Selector } from "../molecules/selectors/Select";
 import { Title } from "../molecules/PageHeadings";
 import { ExpandableCard } from "../molecules/ExpandableCard";
 import { ErrorCard } from "../molecules/ErrorCard";
