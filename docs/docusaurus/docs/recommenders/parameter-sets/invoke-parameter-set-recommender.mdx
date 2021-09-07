@@ -21,19 +21,20 @@ Once a Parameter-Set Recommender has been created, you can invoke it (i.e. get a
 ```js
 const signalbox = require("signalbox.js");
 
-signalbox.parameterSetRecommenders.invokeParameterSetRecommender({
-  success: (s) => console.log(s), // a success callback
-  error: (e) => console.log(e), // an error callback
-  id: 1, // the Id of the recommender
-  token: "Your Access Token",
-  input: {
-    commonUserId: "The identifier used to track the user",
-    arguments: {
-      // the arguments are defined upon creation of the recommender.
-      // You can include values here, or the defaults may be used if these are omitted.
+signalbox.parameterSetRecommenders
+  .invokeParameterSetRecommenderAsync({
+    id: 1, // the Id of the recommender
+    token: "Your Access Token",
+    input: {
+      commonUserId: "The identifier used to track the user",
+      arguments: {
+        // the arguments are defined upon creation of the recommender.
+        // You can include values here, or the defaults may be used if these are omitted.
+      },
     },
-  },
-});
+  })
+  .then((s) => console.log(s)) // a success callback
+  .catch((e) => console.log(e)); // an error callback;
 ```
 
 Response
@@ -57,4 +58,3 @@ Response
 To explicitly link outcomes of recommendations to events, you can use the `correlatorId` value in the Recommendation response.
 
 [Read more about tracking outcomes](../correlator-id).
-
