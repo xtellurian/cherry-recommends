@@ -7,6 +7,7 @@ import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 import { ErrorCard } from "../../molecules/ErrorCard";
 import { Spinner } from "../../molecules/Spinner";
 import { Top } from "./Top";
+import { WebhookReceiverRow } from "./WebhookPanel";
 
 export const CreateWebhookReceiver = () => {
   let { id } = useParams();
@@ -52,14 +53,8 @@ export const CreateWebhookReceiver = () => {
       <div className="mt-3">
         {result.loading && <Spinner>Creating Webhook</Spinner>}
         {result && result.error && <ErrorCard error={result.error} />}
-        {result.endpointId && (
-          <div className="card">
-            <div className="card-body">
-              <div>Endpoint Id: {result.endpointId}</div>
-              <div>Shared Secret: {result.sharedSecret}</div>
-            </div>
-          </div>
-        )}
+
+        {result && result.endpointId && <WebhookReceiverRow wr={result} />}
       </div>
     </React.Fragment>
   );

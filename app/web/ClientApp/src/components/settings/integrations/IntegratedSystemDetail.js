@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Check } from "react-bootstrap-icons";
 import { renameAsync } from "../../../api/integratedSystemsApi";
 import { Top } from "./Top";
-import { WebookPanel } from "./WebhookPanel";
+import { WebhookPanel } from "./WebhookPanel";
 import { useIntegratedSystem } from "../../../api-hooks/integratedSystemsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { Spinner, ErrorCard, Subtitle } from "../../molecules";
@@ -68,7 +68,7 @@ export const IntegratedSystemDetail = () => {
             integratedSystem.id &&
             integratedSystem.systemType === "segment" && (
               <div className="col">
-                <WebookPanel integratedSystemId={integratedSystem.id} />
+                <WebhookPanel integratedSystemId={integratedSystem.id} />
               </div>
             )}
         </div>

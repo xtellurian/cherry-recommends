@@ -9,7 +9,7 @@ import { ExpandableCard } from "../../molecules/ExpandableCard";
 import { CopyableField } from "../../molecules/fields/CopyableField";
 
 const basePath = `${window.location.protocol}//${window.location.host}`;
-const WebhookReceiverRow = ({ wr }) => {
+export const WebhookReceiverRow = ({ wr }) => {
   return (
     <ExpandableCard label={wr.endpointId}>
       <CopyableField label="Endpoint ID" value={wr.endpointId} />
@@ -38,7 +38,7 @@ const Top = ({ integratedSystemId }) => {
     </React.Fragment>
   );
 };
-export const WebookPanel = ({ integratedSystemId, className }) => {
+export const WebhookPanel = ({ integratedSystemId, className }) => {
   const webhookReceivers = useWebhookReceivers({ id: integratedSystemId });
 
   return (
