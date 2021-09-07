@@ -4,17 +4,17 @@ const headers = (token) =>
     ? defaultHeaders
     : { ...defaultHeaders, Authorization: `Bearer ${token}` };
 
-export const fetchHubspotAppInformation = async ({ success, error, token }) => {
+export const fetchHubspotAppInformationAsync = async ({ token }) => {
   const url = "api/hubspotappinfo";
-
+  console.log("about to fetch")
   const response = await fetch(url, {
     headers: headers(token),
   });
+  console.log("fetched")
   if (response.ok) {
-    const results = await response.json();
-    success(results);
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
   }
 };
 
@@ -24,6 +24,7 @@ export const fetchHubspotWebhookBehaviourAsync = async ({ token, id }) => {
     headers: headers(token),
   });
   if (response.ok) {
+    console.log("OK")
     return await response.json();
   } else {
     throw await response.json();

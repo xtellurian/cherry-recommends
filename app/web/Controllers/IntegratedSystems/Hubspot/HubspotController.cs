@@ -32,7 +32,7 @@ namespace SignalBox.Web.Controllers
             this.store = store;
         }
 
-        [HttpGet("api/hubspotappinfo")]
+        [HttpGet("/api/hubspotappinfo")]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<HubspotAppInformation> AppInformation()
         {

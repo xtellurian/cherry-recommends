@@ -93,10 +93,11 @@ export const HubspotConnector = () => {
       <div className="text-center m-5">
         <a href={installLink}>
           <button
+            disabled={loading}
             onClick={() => setStage(stages[1])}
             className="btn btn-primary"
           >
-            Install Hubspot App
+            {loading ? "Loading App Info" : "Install Hubspot App"}
           </button>
         </a>
       </div>

@@ -2,7 +2,7 @@ import React from "react";
 import { useAccessToken } from "./token";
 import {
   fetchHubspotAccount,
-  fetchHubspotAppInformation,
+  fetchHubspotAppInformationAsync,
   fetchHubspotWebhookBehaviourAsync,
   fetchHubspotCrmCardBehaviourAsync,
   fetchHubspotClientAllContactProperties,
@@ -13,16 +13,21 @@ import {
 export const useHubspotAppInformation = () => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
+
   React.useEffect(() => {
     if (token) {
       setState({ loading: true });
-      fetchHubspotAppInformation({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchHubspotAppInformationAsync({
         token,
-      });
+      })
+        .then((s) => {
+          console.log("promise returned");
+          setState(s);
+        })
+        .catch((error) => setState({ error }));
     }
   }, [token]);
+  console.log(result);
   return result;
 };
 
