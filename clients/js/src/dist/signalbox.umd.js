@@ -176,6 +176,26 @@
     fetchDeploymentConfiguration: fetchDeploymentConfiguration
   });
 
+  const internalId = (useInternalId) => {
+    if (useInternalId === null || useInternalId === undefined) {
+      return "";
+    } else if (useInternalId === true) {
+      return "useInternalId=true";
+    } else if (useInternalId === false) {
+      return "useInternalId=false";
+    } else {
+      return "";
+    }
+  };
+
+  const searchEntities$2 = (term) => {
+      if (term) {
+        return `q.term=${term}`;
+      } else {
+        return "";
+      }
+    };
+
   const fetchEventAsync = async ({ id, token }) => {
     const url = getUrl(`api/events/${id}`);
 
@@ -204,9 +224,13 @@
     }
   };
 
-  const fetchTrackedUsersEventsAsync = async ({ token, id }) => {
-    const url = getUrl(`api/TrackedUsers/${id}/events`);
-
+  const fetchTrackedUsersEventsAsync = async ({
+    token,
+    id,
+    useInternalId,
+  }) => {
+    let url = getUrl(`api/TrackedUsers/${id}/events`);
+    url = `${url}?${internalId(useInternalId)}`;
     const response = await fetch(url, {
       headers: headers(token),
     });
@@ -398,14 +422,6 @@
     createFeatureGeneratorAsync: createFeatureGeneratorAsync,
     deleteFeatureGeneratorAsync: deleteFeatureGeneratorAsync
   });
-
-  const searchEntities$2 = (term) => {
-      if (term) {
-        return `q.term=${term}`;
-      } else {
-        return "";
-      }
-    };
 
   const fetchFeaturesAsync = async ({ token, page, searchTerm }) => {
     let url = getUrl("api/features");

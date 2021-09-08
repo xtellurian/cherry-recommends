@@ -1,5 +1,6 @@
 import { getUrl } from "../baseUrl";
 import { headers } from "./headers";
+import { internalId } from "../utilities/index";
 
 export const fetchEventAsync = async ({ id, token }) => {
   const url = getUrl(`api/events/${id}`);
@@ -29,9 +30,13 @@ export const createEventsAsync = async ({ token, events }) => {
   }
 };
 
-export const fetchTrackedUsersEventsAsync = async ({ token, id }) => {
-  const url = getUrl(`api/TrackedUsers/${id}/events`);
-
+export const fetchTrackedUsersEventsAsync = async ({
+  token,
+  id,
+  useInternalId,
+}) => {
+  let url = getUrl(`api/TrackedUsers/${id}/events`);
+  url = `${url}?${internalId(useInternalId)}`;
   const response = await fetch(url, {
     headers: headers(token),
   });
