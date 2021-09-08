@@ -2,6 +2,7 @@ namespace SignalBox.Core
 {
     public abstract class CommonEntity : NamedEntity
     {
+        protected virtual int CommonIdMinLength => 3;
         protected CommonEntity()
         { }
 #nullable enable
@@ -17,15 +18,15 @@ namespace SignalBox.Core
             this.Properties = properties ?? new DynamicPropertyDictionary();
         }
 
-        private static void Validate(string commonId)
+        private void Validate(string commonId)
         {
             if (string.IsNullOrEmpty(commonId))
             {
                 throw new System.ArgumentException($"Common Id must not be null");
             }
-            else if (commonId.Length < 3)
+            else if (commonId.Length < CommonIdMinLength)
             {
-                throw new System.ArgumentException($"Common Id must not be at least 3 characters");
+                throw new System.ArgumentException($"Common Id must not be at least {CommonIdMinLength} characters");
             }
         }
 

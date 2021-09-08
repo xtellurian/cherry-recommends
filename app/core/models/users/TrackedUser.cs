@@ -5,6 +5,7 @@ namespace SignalBox.Core
 {
     public class TrackedUser : CommonEntity
     {
+        protected override int CommonIdMinLength => 1;
         protected TrackedUser()
         { }
 
