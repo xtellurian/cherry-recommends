@@ -2,6 +2,7 @@ import { pageQuery } from "./paging";
 import { chunkArray } from "../utilities/chunk";
 import { getUrl } from "../baseUrl";
 import { headers } from "./headers";
+import { internalId } from "../utilities/index";
 const MAX_ARRAY = 5000;
 
 const searchEntities = (term) => {
@@ -51,17 +52,29 @@ export const updateMergePropertiesAsync = async ({ token, id, properties }) => {
   }
 };
 
-export const fetchTrackedUser = async ({ success, error, token, id }) => {
-  const url = getUrl(`api/trackedUsers/${id}`);
+export const fetchTrackedUserAsync = async ({ token, id, useInternalId }) => {
+  let url = getUrl(`api/trackedUsers/${id}`);
+  url = `${url}?${internalId(useInternalId)}`;
   const response = await fetch(url, {
     headers: headers(token),
   });
   if (response.ok) {
-    const trackedUser = await response.json();
-    success(trackedUser);
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
   }
+};
+
+export const fetchTrackedUser = async ({
+  success,
+  error,
+  token,
+  id,
+  useInternalId,
+}) => {
+  fetchTrackedUserAsync({ token, id, useInternalId })
+    .then(success)
+    .catch(error);
 };
 
 export const fetchUniqueTrackedUserActionGroupsAsync = async ({

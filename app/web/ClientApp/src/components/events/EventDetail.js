@@ -22,7 +22,7 @@ const ActionRow = ({ action }) => {
 export const EventDetail = () => {
   const { id } = useParams();
   const eventInfo = useEvent({ id });
-  const trackedUser = useTrackedUser({ id: eventInfo.commonUserId });
+  const trackedUser = useTrackedUser({ id: eventInfo.trackedUserId });
   return (
     <React.Fragment>
       <BackButton className="float-right" to="/">

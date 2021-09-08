@@ -3,6 +3,7 @@ import { trackedUsers } from "signalbox.js";
 export const fetchTrackedUsersAsync = trackedUsers.fetchTrackedUsersAsync;
 
 export const fetchTrackedUser = trackedUsers.fetchTrackedUser;
+export const fetchTrackedUserAsync = trackedUsers.fetchTrackedUserAsync;
 
 export const fetchUniqueTrackedUserActionGroupsAsync =
   trackedUsers.fetchUniqueTrackedUserActionGroupsAsync;

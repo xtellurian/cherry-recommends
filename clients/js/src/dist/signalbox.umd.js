@@ -2354,17 +2354,29 @@
     }
   };
 
-  const fetchTrackedUser = async ({ success, error, token, id }) => {
-    const url = getUrl(`api/trackedUsers/${id}`);
+  const fetchTrackedUserAsync = async ({ token, id, useInternalId }) => {
+    let url = getUrl(`api/trackedUsers/${id}`);
+    url = `${url}?${internalId(useInternalId)}`;
     const response = await fetch(url, {
       headers: headers(token),
     });
     if (response.ok) {
-      const trackedUser = await response.json();
-      success(trackedUser);
+      return await response.json();
     } else {
-      error(await response.json());
+      throw await response.json();
     }
+  };
+
+  const fetchTrackedUser = async ({
+    success,
+    error,
+    token,
+    id,
+    useInternalId,
+  }) => {
+    fetchTrackedUserAsync({ token, id, useInternalId })
+      .then(success)
+      .catch(error);
   };
 
   const fetchUniqueTrackedUserActionGroupsAsync = async ({
@@ -2489,6 +2501,7 @@
     fetchTrackedUsersAsync: fetchTrackedUsersAsync,
     fetchTrackedUsers: fetchTrackedUsers,
     updateMergePropertiesAsync: updateMergePropertiesAsync,
+    fetchTrackedUserAsync: fetchTrackedUserAsync,
     fetchTrackedUser: fetchTrackedUser,
     fetchUniqueTrackedUserActionGroupsAsync: fetchUniqueTrackedUserActionGroupsAsync,
     fetchLatestRecommendationsAsync: fetchLatestRecommendationsAsync,
