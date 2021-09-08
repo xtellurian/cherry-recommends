@@ -51,9 +51,9 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Returns a list of events for a given user.</summary>
         [HttpGet("{id}/events")]
-        public async Task<Paginated<TrackedUserEvent>> GetEvents([FromQuery] PaginateRequest p, string id)
+        public async Task<Paginated<TrackedUserEvent>> GetEvents([FromQuery] PaginateRequest p, string id, bool? useInternalId = null)
         {
-            var trackedUser = await store.GetEntity(id);
+            var trackedUser = await store.GetEntity(id, useInternalId);
             return await eventStore.ReadEventsForUser(p.Page, trackedUser);
         }
 

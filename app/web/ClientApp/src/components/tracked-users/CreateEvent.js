@@ -14,6 +14,18 @@ import { InputGroup, TextInput } from "../molecules/TextInput";
 import { PropertiesEditor } from "../molecules/PropertiesEditor";
 import { useAccessToken } from "../../api-hooks/token";
 
+const parseIntElseNull = (number) => {
+  try {
+    var n = parseInt(number);
+    if (isNaN(n)) {
+      return null;
+    } else {
+      return null;
+    }
+  } catch {
+    return null;
+  }
+};
 export const CreateEvent = () => {
   const { id } = useParams();
   const history = useHistory();
@@ -101,7 +113,7 @@ export const CreateEvent = () => {
               onChange={(v) =>
                 setPayload({
                   ...payload,
-                  recommendationCorrelatorId: v.target.value,
+                  recommendationCorrelatorId: parseIntElseNull(v.target.value),
                 })
               }
             />

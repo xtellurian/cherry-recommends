@@ -90,7 +90,7 @@ const ViewAsActions = ({ trackedUser }) => {
 };
 
 const ViewAsEvents = ({ trackedUser }) => {
-  const events = useUserEvents({ commonUserId: trackedUser?.commonUserId });
+  const events = useUserEvents({ id: trackedUser?.id });
 
   return (
     <div className="m-2">
@@ -102,6 +102,7 @@ const ViewAsEvents = ({ trackedUser }) => {
         </Link>
         <Subtitle>Events</Subtitle>
       </div>
+      {events.error && <ErrorCard error={events.error} />}
       {events.loading && <Spinner>Loading events</Spinner>}
       {events.items && events.items.length === 0 && (
         <EmptyList>No events</EmptyList>
@@ -126,10 +127,13 @@ export const HistorySection = ({ trackedUser }) => {
           checked={viewAsActions}
         />
       </div>
-      <div className="mb-5">
-        {!viewAsActions && <ViewAsEvents trackedUser={trackedUser} />}
-        {viewAsActions && <ViewAsActions trackedUser={trackedUser} />}
-      </div>
+      {trackedUser.loading && <Spinner />}
+      {trackedUser.id && (
+        <div className="mb-5">
+          {!viewAsActions && <ViewAsEvents trackedUser={trackedUser} />}
+          {viewAsActions && <ViewAsActions trackedUser={trackedUser} />}
+        </div>
+      )}
     </React.Fragment>
   );
 };

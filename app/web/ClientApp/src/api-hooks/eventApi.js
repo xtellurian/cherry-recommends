@@ -20,21 +20,22 @@ export const useEvent = ({ id }) => {
 
   return result;
 };
-export const useUserEvents = ({ commonUserId }) => {
+export const useUserEvents = ({ id }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({
     loading: true,
   });
   React.useEffect(() => {
-    if (token && commonUserId) {
+    if (token && id) {
       fetchTrackedUsersEventsAsync({
         token,
-        id: commonUserId,
+        id,
+        useInternalId: true,
       })
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, commonUserId]);
+  }, [token, id]);
 
   return result;
 };
