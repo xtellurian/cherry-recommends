@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core
@@ -53,12 +54,14 @@ namespace SignalBox.Core
 # nullable enable
         public long? RecommendationCorrelatorId { get; set; }
         public RecommendationCorrelator? RecommendationCorrelator { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IntegratedSystem? Source { get; set; }
 #nullable disable
         public string Kind { get; set; }
         public string EventType { get; set; }
         public DynamicPropertyDictionary Properties { get; set; }
         public long? TrackedUserId { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public TrackedUser TrackedUser { get; set; }
         public ICollection<TrackedUserAction> Actions { get; set; }
     }
