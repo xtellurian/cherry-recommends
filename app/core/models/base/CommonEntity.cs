@@ -22,11 +22,11 @@ namespace SignalBox.Core
         {
             if (string.IsNullOrEmpty(commonId))
             {
-                throw new System.ArgumentException($"Common Id must not be null");
+                throw new CommonIdException("Common Id must not be null");
             }
             else if (commonId.Length < CommonIdMinLength)
             {
-                throw new System.ArgumentException($"Common Id must not be at least {CommonIdMinLength} characters");
+                throw new CommonIdException($"Common Id must not be at least {CommonIdMinLength} characters");
             }
         }
 

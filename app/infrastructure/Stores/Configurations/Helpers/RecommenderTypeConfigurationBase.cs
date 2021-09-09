@@ -22,6 +22,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasMany(_ => _.RecommendationCorrelators)
                 .WithOne(_ => _.Recommender);
 
+            builder.Property(_ => _.Arguments).IsRequired(false).HasJsonConversion();
             builder.Property(_ => _.ErrorHandling).HasJsonConversion();
         }
     }

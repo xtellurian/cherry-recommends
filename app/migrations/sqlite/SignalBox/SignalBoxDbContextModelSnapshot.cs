@@ -768,6 +768,9 @@ namespace sqlite.SignalBox
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Arguments")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CommonId")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -1320,9 +1323,6 @@ namespace sqlite.SignalBox
                 {
                     b.HasBaseType("SignalBox.Core.Recommenders.RecommenderEntityBase");
 
-                    b.Property<string>("Arguments")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Key")
                         .HasColumnType("TEXT");
 
@@ -1342,12 +1342,7 @@ namespace sqlite.SignalBox
                     b.Property<long?>("DefaultProductId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("TouchpointId")
-                        .HasColumnType("INTEGER");
-
                     b.HasIndex("DefaultProductId");
-
-                    b.HasIndex("TouchpointId");
 
                     b.HasDiscriminator().HasValue("ProductRecommender");
                 });
@@ -1693,13 +1688,7 @@ namespace sqlite.SignalBox
                         .WithMany()
                         .HasForeignKey("DefaultProductId");
 
-                    b.HasOne("SignalBox.Core.Touchpoint", "Touchpoint")
-                        .WithMany()
-                        .HasForeignKey("TouchpointId");
-
                     b.Navigation("DefaultProduct");
-
-                    b.Navigation("Touchpoint");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Feature", b =>

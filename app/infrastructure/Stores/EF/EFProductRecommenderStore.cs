@@ -23,7 +23,6 @@ namespace SignalBox.Infrastructure.EntityFramework
                 return await Set
                     .Include(_ => _.Products)
                     .Include(_ => _.ModelRegistration)
-                    .Include(_ => _.Touchpoint)
                     .FirstAsync(_ => _.Id == id);
             }
             catch (Exception ex)
@@ -39,7 +38,6 @@ namespace SignalBox.Infrastructure.EntityFramework
                 return await Set
                     .Include(_ => _.Products)
                     .Include(_ => _.ModelRegistration)
-                    .Include(_ => _.Touchpoint)
                     .FirstAsync(_ => _.CommonId == commonId);
             }
             catch (Exception ex)

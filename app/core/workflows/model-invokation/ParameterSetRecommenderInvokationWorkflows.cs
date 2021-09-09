@@ -192,8 +192,8 @@ namespace SignalBox.Core.Workflows
                 }
                 else
                 {
-                    invokationEntry.LogMessage($"Using default value ({arg.DefaultValue?.Value}) for argument {arg.CommonId}");
-                    input.Arguments[arg.CommonId] = arg.DefaultValue?.Value;
+                    invokationEntry.LogMessage($"Using default value ({arg.DefaultValue}) for argument {arg.CommonId}");
+                    input.Arguments[arg.CommonId] = arg.DefaultValue;
                 }
             }
             else
@@ -220,8 +220,8 @@ namespace SignalBox.Core.Workflows
                         else
                         {
                             // try and set the value to the default
-                            invokationEntry.LogMessage($"Using default value ({arg.DefaultValue?.Value}) for argument {arg.CommonId}");
-                            input.Arguments[arg.CommonId] = arg.DefaultValue?.Value;
+                            invokationEntry.LogMessage($"Using default value ({arg.DefaultValue}) for argument {arg.CommonId}");
+                            input.Arguments[arg.CommonId] = arg.DefaultValue;
                         }
                     }
                 }

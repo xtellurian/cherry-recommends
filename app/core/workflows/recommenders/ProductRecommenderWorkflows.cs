@@ -45,12 +45,6 @@ namespace SignalBox.Core.Workflows
                                                                        IEnumerable<string>? productCommonIds,
                                                                        RecommenderErrorHandling errorHandling)
         {
-            Touchpoint? touchpoint = null;
-            // if (touchpointId != null)
-            // {
-            //     touchpoint = await touchpointStore.ReadFromCommonId(touchpointId);
-            // }
-
             Product? defaultProduct = null;
             if (!string.IsNullOrEmpty(defaultProductId))
             {
@@ -66,14 +60,14 @@ namespace SignalBox.Core.Workflows
                 }
 
                 var recommender = await store.Create(
-                    new ProductRecommender(common.CommonId, common.Name, touchpoint, defaultProduct, products, errorHandling));
+                    new ProductRecommender(common.CommonId, common.Name, defaultProduct, products, null, errorHandling));
                 await storageContext.SaveChanges();
                 return recommender;
             }
             else
             {
                 var recommender = await store.Create(
-                    new ProductRecommender(common.CommonId, common.Name, touchpoint, defaultProduct, null, errorHandling));
+                    new ProductRecommender(common.CommonId, common.Name, defaultProduct, null, null, errorHandling));
                 await storageContext.SaveChanges();
                 return recommender;
             }

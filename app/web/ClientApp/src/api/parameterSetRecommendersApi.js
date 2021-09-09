@@ -38,3 +38,5 @@ export const updateErrorHandlingAsync =
 
 export const fetchRecommenderTrackedUserActionsAsync =
   parameterSetRecommenders.fetchRecommenderTrackedUserActionsAsync;
+
+export const setArgumentsAsync = parameterSetRecommenders.setArgumentsAsync;

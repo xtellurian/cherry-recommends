@@ -50,9 +50,10 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}/TrackedUserActions")]
         public async Task<Paginated<TrackedUserAction>> GetAssociatedTrackedUserActions([FromQuery] PaginateRequest p,
                                                                                         string id,
-                                                                                        bool? revenueOnly)
+                                                                                        bool? revenueOnly,
+                                                                                        bool? useInternalId = null)
         {
-            var recommender = await base.GetEntity(id, null);
+            var recommender = await base.GetEntity(id, useInternalId);
             return await recommenderStore.QueryAssociatedActions(recommender, p.Page, revenueOnly ?? false);
         }
 
@@ -66,11 +67,28 @@ namespace SignalBox.Web.Controllers
             return recommender.ErrorHandling;
         }
 
+        [HttpGet("{id}/Arguments")]
+        public async Task<IEnumerable<RecommenderArgument>> GetArguments(string id, bool? useInternalId = null)
+        {
+            var recommender = await base.GetEntity(id, useInternalId);
+            return recommender.Arguments;
+        }
+
+        [HttpPost("{id}/Arguments")]
+        public async Task<IEnumerable<RecommenderArgument>> SetArguments(string id, IEnumerable<CreateOrUpdateRecommenderArgument> dto, bool? useInternalId = null)
+        {
+            var recommender = await base.GetResource(id, useInternalId);
+            recommender.Arguments = dto.ToCoreRepresentation();
+            await store.Update(recommender);
+            await store.Context.SaveChanges();
+            return recommender.Arguments;
+        }
+
         [HttpPost("{id}/TargetVariableValues")]
         [Authorize(Core.Security.Policies.AdminOnlyPolicyName)]
-        public async Task<RecommenderTargetVariableValue> SetLatestTargetVariableValue(string id, CreateTargetVariableValue dto)
+        public async Task<RecommenderTargetVariableValue> SetLatestTargetVariableValue(string id, CreateTargetVariableValue dto,  bool? useInternalId = null)
         {
-            var recommender = await base.GetEntity(id, null);
+            var recommender = await base.GetEntity(id, useInternalId);
             await store.LoadMany(recommender, _ => _.TargetVariableValues);
             var currentMaxVersion = recommender.TargetVariableValues
                 .Where(_ => _.Name == dto.Name)

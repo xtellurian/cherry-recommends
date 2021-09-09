@@ -16,14 +16,21 @@ import {
 import { ConfirmationPopup } from "../../molecules/popups/ConfirmationPopup";
 import { JsonView } from "../../molecules/JsonView";
 import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
+import { Tabs, TabActivator } from "../../molecules/Tabs";
 import { useAccessToken } from "../../../api-hooks/token";
 import { CloneRecommender } from "../utils/CloneRecommender";
+import { ArgumentsSection } from "./Arguments";
 
+const tabs = [
+  { id: "detail", label: "Detail" },
+  { id: "arguments", label: "Arguments" },
+];
 export const ParameterSetRecommenderDetail = () => {
   const { id } = useParams();
   const token = useAccessToken();
   const history = useHistory();
-  const recommender = useParameterSetRecommender({ id });
+  const [trigger, setTrigger] = React.useState();
+  const recommender = useParameterSetRecommender({ id, trigger });
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [cloneOpen, setCloneOpen] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState();
@@ -96,43 +103,51 @@ export const ParameterSetRecommenderDetail = () => {
       </BackButton>
       <Title>Parameter Set Recommender</Title>
       <Subtitle>{recommender.name || "..."}</Subtitle>
-      <hr />
-      {recommender.loading && <Spinner>Loading Recommender</Spinner>}
-      {recommender.error && <ErrorCard error={recommender.error} />}
+      {/* <hr /> */}
 
-      <div className="row">
-        <div className="col-md order-last">
-          {!recommender.loading && !recommender.error && (
-            <React.Fragment>
-              <RecommenderStatusBox recommender={recommender} />
-              <button
-                className="btn btn-outline-primary btn-block"
-                onClick={() => setCloneOpen(true)}
-              >
-                Clone this Recommender
-              </button>
-              <ConfirmationPopup
-                isOpen={cloneOpen}
-                setIsOpen={setCloneOpen}
-                label="Clone this recommender?"
-              >
-                <CloneRecommender
-                  recommender={recommender}
-                  cloneAsync={cloneAsync}
-                  onCloned={(r) =>
-                    history.push(
-                      `/recommenders/parameter-set-recommenders/detail/${r.id}`
-                    )
-                  }
-                />
-              </ConfirmationPopup>
-            </React.Fragment>
-          )}
+      <Tabs defaultTabId={tabs[0].id} tabs={tabs} />
+
+      <TabActivator defaultTabId="detail" tabId="detail">
+        {recommender.loading && <Spinner>Loading Recommender</Spinner>}
+        {recommender.error && <ErrorCard error={recommender.error} />}
+
+        <div className="row">
+          <div className="col-md order-last">
+            {!recommender.loading && !recommender.error && (
+              <React.Fragment>
+                <RecommenderStatusBox recommender={recommender} />
+                <button
+                  className="btn btn-outline-primary btn-block"
+                  onClick={() => setCloneOpen(true)}
+                >
+                  Clone this Recommender
+                </button>
+                <ConfirmationPopup
+                  isOpen={cloneOpen}
+                  setIsOpen={setCloneOpen}
+                  label="Clone this recommender?"
+                >
+                  <CloneRecommender
+                    recommender={recommender}
+                    cloneAsync={cloneAsync}
+                    onCloned={(r) =>
+                      history.push(
+                        `/recommenders/parameter-set-recommenders/detail/${r.id}`
+                      )
+                    }
+                  />
+                </ConfirmationPopup>
+              </React.Fragment>
+            )}
+          </div>
+          <div className="col-8">
+            {!recommender.loading && <JsonView data={recommender} />}
+          </div>
         </div>
-        <div className="col-8">
-          {!recommender.loading && <JsonView data={recommender} />}
-        </div>
-      </div>
+      </TabActivator>
+      <TabActivator defaultTabId={"detail"} tabId="arguments">
+        <ArgumentsSection recommender={recommender} setTrigger={setTrigger} />
+      </TabActivator>
     </React.Fragment>
   );
 };

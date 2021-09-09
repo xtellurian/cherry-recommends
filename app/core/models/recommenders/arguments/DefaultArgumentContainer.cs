@@ -1,11 +1,11 @@
 
 namespace SignalBox.Core.Recommenders
 {
-    public class DefaultArgumentValue
+    public class DefaultArgumentContainer
     {
-        public DefaultArgumentValue()
+        public DefaultArgumentContainer()
         { }
-        public DefaultArgumentValue(ArgumentTypes argumentType, object value)
+        public DefaultArgumentContainer(ArgumentTypes argumentType, object value)
         {
             ArgumentType = argumentType;
             Value = value;

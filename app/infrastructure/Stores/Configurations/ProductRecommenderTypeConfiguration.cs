@@ -8,6 +8,8 @@ namespace SignalBox.Infrastructure.EntityFramework
     {
         public override void Configure(EntityTypeBuilder<ProductRecommender> builder)
         {
+            builder.Property(_ => _.Arguments).HasJsonConversion();
+
             builder
                 .HasMany(_ => _.Products)
                 .WithMany(_ => _.ProductRecommenders);
@@ -16,8 +18,6 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasOne(_ => _.DefaultProduct)
                 .WithMany()
                 .HasForeignKey(_ => _.DefaultProductId);
-
-            builder.HasOne(_ => _.Touchpoint).WithMany();
 
             builder
                 .HasMany(_ => _.ProductRecommendations)

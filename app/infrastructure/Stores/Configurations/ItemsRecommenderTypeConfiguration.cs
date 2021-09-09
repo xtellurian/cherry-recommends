@@ -9,6 +9,8 @@ namespace SignalBox.Infrastructure.EntityFramework
     {
         public override void Configure(EntityTypeBuilder<ItemsRecommender> builder)
         {
+            builder.Property(_ => _.Arguments).HasJsonConversion();
+
             builder
                 .HasMany(_ => _.Items)
                 .WithMany(_ => _.Recommenders);

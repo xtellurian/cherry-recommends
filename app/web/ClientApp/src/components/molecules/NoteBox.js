@@ -12,7 +12,7 @@ export const NoteBox = ({
       <div className="card text-center">
         <div className={`card-body ${cardBodyClassName || ""}`}>
           <h5 className={`card-title ${cardTitleClassName || ""}`}>{label}</h5>
-          <p className="card-text">{children}</p>
+          <div className="card-text">{children}</div>
         </div>
       </div>
     </div>

@@ -43,14 +43,12 @@ namespace SignalBox.Web.Controllers
                 var from = await store.Read(dto.CloneFromId.Value);
                 return await workflows.CloneParameterSetRecommender(c, from);
             }
-            var arguments = dto.Arguments.Select(a => new RecommenderArgument
-            {
-                ArgumentType = a.ArgumentType,
-                CommonId = a.CommonId,
-                DefaultValue = new DefaultArgumentValue(a.ArgumentType, a.DefaultValue)
-            });
-            return await workflows.CreateParameterSetRecommender(c, dto.Parameters, dto.Bounds, arguments,
-                 new RecommenderErrorHandling { ThrowOnBadInput = dto.ThrowOnBadInput });
+
+            return await workflows.CreateParameterSetRecommender(c, 
+                dto.Parameters, 
+                dto.Bounds,
+                dto.Arguments.ToCoreRepresentation(),
+                new RecommenderErrorHandling { ThrowOnBadInput = dto.ThrowOnBadInput });
         }
 
         [HttpPost("{id}/ModelRegistration")]

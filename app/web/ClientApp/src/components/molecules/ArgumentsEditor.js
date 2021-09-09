@@ -7,13 +7,21 @@ const argumentTypeOptions = [
 ];
 
 const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
-  const { commonId, argumentType, defaultValue, isRequired } = argument;
+  const { commonId, argumentType, isRequired, defaultArgumentValue } = argument;
+  let defaultValue = argument.defaultValue;
+  if (defaultArgumentValue && typeof defaultValue === "object") {
+    defaultValue = defaultArgumentValue;
+  }
   return (
     <div className="row mt-1">
       <div className="col-2">
         <Selector
           placeholder="Type"
-          defaultValue={argumentType || argumentTypeOptions[0].value}
+          defaultValue={
+            argumentType
+              ? { label: argumentType, value: argumentType }
+              : argumentTypeOptions[0].value
+          }
           onChange={(v) =>
             onChange(entry, entry, { ...argument, argumentType: v.value })
           }
@@ -117,9 +125,17 @@ export const ArgumentsEditor = ({
   };
 
   // updates the parent on changes
+  const ensureDefaultValNotObject = (a) => {
+    if (a.defaultValue && typeof a.defaultValue === "object") {
+      a.defaultValue = a.defaultValue.value;
+    }
+    return a;
+  };
   React.useEffect(() => {
     if (args) {
-      onArgumentsChanged(args);
+      const vals = Object.values(args);
+      const vals_edited = vals.map(ensureDefaultValNotObject);
+      onArgumentsChanged(vals_edited);
     }
   }, [args, onArgumentsChanged]);
 

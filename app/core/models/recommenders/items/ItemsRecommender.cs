@@ -15,8 +15,9 @@ namespace SignalBox.Core.Recommenders
                                 string? name,
                                 RecommendableItem? defaultItem,
                                 ICollection<RecommendableItem>? items,
+                                IEnumerable<RecommenderArgument>? arguments,
                                 RecommenderErrorHandling? errorHandling,
-                                int numberOfItemsToRecommend = 1) : base(commonId, name, errorHandling)
+                                int numberOfItemsToRecommend = 1) : base(commonId, name, arguments, errorHandling)
         {
             Items = items ?? new List<RecommendableItem>();
             DefaultItem = defaultItem;

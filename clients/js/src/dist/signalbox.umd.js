@@ -1063,6 +1063,25 @@
     }
   };
 
+  const setArgumentsAsync$1 = async ({
+    recommenderApiName,
+    token,
+    id,
+    args,
+  }) => {
+    const url = getUrl(`api/recommenders/${recommenderApiName}/${id}/Arguments`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(args),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
     const url = getUrl("api/recommenders/ParameterSetRecommenders");
     const response = await fetch(`${url}?${pageQuery(page)}`, {
@@ -1290,6 +1309,15 @@
     });
   };
 
+  const setArgumentsAsync = async ({ id, token, args }) => {
+    return await setArgumentsAsync$1({
+      recommenderApiName: "ParameterSetRecommenders",
+      id,
+      token,
+      args,
+    });
+  };
+
   var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchParameterSetRecommendersAsync: fetchParameterSetRecommendersAsync,
@@ -1308,7 +1336,8 @@
     fetchTargetVariablesAsync: fetchTargetVariablesAsync$2,
     createTargetVariableAsync: createTargetVariableAsync$2,
     updateErrorHandlingAsync: updateErrorHandlingAsync$2,
-    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$2
+    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$2,
+    setArgumentsAsync: setArgumentsAsync
   });
 
   const fetchProductRecommendersAsync = async ({ token, page }) => {

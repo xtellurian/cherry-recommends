@@ -8,6 +8,7 @@ import * as actions from "./common/trackedUserActions";
 import * as eh from "./common/errorHandling";
 import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
+import * as ar from "./common/args";
 
 export const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
   const url = getUrl("api/recommenders/ParameterSetRecommenders");
@@ -233,5 +234,14 @@ export const fetchRecommenderTrackedUserActionsAsync = async ({
     token,
     page,
     revenueOnly,
+  });
+};
+
+export const setArgumentsAsync = async ({ id, token, args }) => {
+  return await ar.setArgumentsAsync({
+    recommenderApiName: "ParameterSetRecommenders",
+    id,
+    token,
+    args,
   });
 };

@@ -12,13 +12,12 @@ namespace SignalBox.Core.Recommenders
 #nullable enable
         public ProductRecommender(string commonId,
                                   string? name,
-                                  Touchpoint? touchpoint,
                                   Product? defaultProduct,
                                   ICollection<Product>? products,
-                                  RecommenderErrorHandling? errorHandling) : base(commonId, name, errorHandling)
+                                  IEnumerable<RecommenderArgument>? arguments,
+                                  RecommenderErrorHandling? errorHandling) : base(commonId, name, arguments, errorHandling)
         {
             Products = products ?? new List<Product>();
-            Touchpoint = touchpoint;
             DefaultProduct = defaultProduct;
         }
 
@@ -29,11 +28,5 @@ namespace SignalBox.Core.Recommenders
         public ICollection<Product> Products { get; set; }
         [JsonIgnore]
         public ICollection<ProductRecommendation> ProductRecommendations { get; set; } = null!;
-
-        //TODO: replace touchpoint w/ Features
-        // this is a way to get summary data to the model.
-        // we might replace this with a set of Features. (tbd)
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public Touchpoint? Touchpoint { get; set; }
     }
 }
