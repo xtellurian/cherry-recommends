@@ -9,21 +9,15 @@ using SignalBox.Core.Integrations.Hubspot;
 
 namespace SignalBox.Core.Workflows
 {
-    public class HubspotWorkflows : IWorkflow
+    public class HubspotWorkflows : HubspotWorkflowBase, IWorkflow
     {
-        private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly TrackedUserEventsWorkflows eventsWorkflows;
-        private readonly ITrackedUserStore trackedUserStore;
         private readonly ITrackedUserEventStore eventStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IProductRecommenderStore productRecommenderStore;
         private readonly IStorageContext storageContext;
-        private readonly IHubspotService hubspotService;
-        private readonly IDateTimeProvider dateTimeProvider;
         private readonly ITelemetry telemetry;
-        private readonly ILogger<HubspotWorkflows> logger;
-        private readonly IOptions<HubspotAppCredentials> hubspotCreds;
 
         public HubspotWorkflows(IIntegratedSystemStore integratedSystemStore,
                                 TrackedUserEventsWorkflows eventsWorkflows,
@@ -38,40 +32,15 @@ namespace SignalBox.Core.Workflows
                                 ITelemetry telemetry,
                                 ILogger<HubspotWorkflows> logger,
                                 IOptions<HubspotAppCredentials> hubspotCreds)
+                                : base(logger, hubspotService, hubspotCreds, integratedSystemStore, trackedUserStore, dateTimeProvider)
         {
-            this.integratedSystemStore = integratedSystemStore;
             this.eventsWorkflows = eventsWorkflows;
-            this.trackedUserStore = trackedUserStore;
             this.eventStore = eventStore;
             this.systemMapStore = systemMapStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
             this.productRecommenderStore = productRecommenderStore;
             this.storageContext = storageContext;
-            this.hubspotService = hubspotService;
-            this.dateTimeProvider = dateTimeProvider;
             this.telemetry = telemetry;
-            this.logger = logger;
-            this.hubspotCreds = hubspotCreds;
-        }
-
-        private async Task CheckAndRefreshCredentials(IntegratedSystem system)
-        {
-            if (!system.TokenResponseUpdated.HasValue || dateTimeProvider.Now > system.TokenResponseUpdated.Value.AddSeconds(system.TokenResponse.ExpiresIn))
-            {
-                await this.RefreshCredentials(system);
-            }
-        }
-
-        private async Task<TrackedUserSystemMap> GetSystemMap(IntegratedSystem system, TrackedUser trackedUser)
-        {
-            await trackedUserStore.LoadMany(trackedUser, _ => _.IntegratedSystemMaps);
-            var map = trackedUser.IntegratedSystemMaps.FirstOrDefault(_ => _.IntegratedSystemId == system.Id);
-            if (map == null)
-            {
-                throw new ConfigurationException($"Tracked User {trackedUser.CommonId} is not lined to system {system.CommonId}");
-            }
-
-            return map;
         }
 
         public async Task<HubspotCache> GetCache(long integratedSystemId)
@@ -144,7 +113,7 @@ namespace SignalBox.Core.Workflows
             return await hubspotService.GetContactProperties(system);
         }
 
-        public async Task<IEnumerable<HubspotContact>> LoadContacts(long integratedSystemId)
+        public async Task<Paginated<HubspotContact>> LoadContacts(long integratedSystemId)
         {
             var system = await integratedSystemStore.Read(integratedSystemId);
             await CheckAndRefreshCredentials(system);
@@ -215,7 +184,7 @@ namespace SignalBox.Core.Workflows
                                                                           string associatedObjectType)
         {
             var hubspotInfo = integratedSystem.GetCache<HubspotCache>();
-            var behaviour = hubspotInfo.WebhookBehaviour ?? new HubspotWebhookBehaviour();
+            var behaviour = hubspotInfo.WebhookBehaviour ?? new HubspotTrackedUserLinkBehaviour();
             var eventId = System.Guid.NewGuid().ToString();
             var externalId = associatedObjectId; // mot true
 
@@ -271,7 +240,7 @@ namespace SignalBox.Core.Workflows
         private async Task<TrackedUser> HandleContactCreated(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
         {
             var hubspotInfo = integratedSystem.GetCache<HubspotCache>();
-            var behaviour = hubspotInfo.WebhookBehaviour ?? new HubspotWebhookBehaviour();
+            var behaviour = hubspotInfo.WebhookBehaviour ?? new HubspotTrackedUserLinkBehaviour();
             var objectId = webhookPayload.ObjectId?.ToString();
             if (string.IsNullOrEmpty(behaviour.CommonUserIdPropertyName))
             {
@@ -325,7 +294,7 @@ namespace SignalBox.Core.Workflows
         private async Task<TrackedUser> HandleContactPropertyChanged(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
         {
             var hubspotInfo = integratedSystem.GetCache<HubspotCache>();
-            var behaviour = hubspotInfo.WebhookBehaviour ?? new HubspotWebhookBehaviour();
+            var behaviour = hubspotInfo.WebhookBehaviour ?? new HubspotTrackedUserLinkBehaviour();
             var objectId = webhookPayload.ObjectId?.ToString();
 
             TrackedUser trackedUser;
@@ -400,26 +369,6 @@ namespace SignalBox.Core.Workflows
                 integratedSystem.SetCache(new HubspotCache(details));
 
                 integratedSystem.CommonId = details.PortalId.ToString();
-                integratedSystem.TokenResponse = tokenResponse;
-                integratedSystem.TokenResponseUpdated = dateTimeProvider.Now;
-                integratedSystem.IntegrationStatus = IntegrationStatuses.OK;
-
-                await integratedSystemStore.Update(integratedSystem);
-                await storageContext.SaveChanges();
-            }
-            catch (System.Exception ex)
-            {
-                throw new WorkflowException("An error occurred when accessing Hubspot", ex);
-            }
-        }
-
-        private async Task RefreshCredentials(IntegratedSystem integratedSystem)
-        {
-            logger.LogInformation($"Refreshing credentials for integrated system: {integratedSystem.Id}");
-            try
-            {
-                var tokenResponse = await hubspotService.UseRefreshToken(hubspotCreds.Value.ClientId, hubspotCreds.Value.ClientSecret, integratedSystem.TokenResponse.RefreshToken);
-
                 integratedSystem.TokenResponse = tokenResponse;
                 integratedSystem.TokenResponseUpdated = dateTimeProvider.Now;
                 integratedSystem.IntegrationStatus = IntegrationStatuses.OK;

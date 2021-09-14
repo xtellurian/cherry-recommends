@@ -121,15 +121,16 @@ namespace SignalBox.Infrastructure.Services
             return res.Results.Select(_ => new HubspotContactProperty(_.Name, _.Label, _.Type, _.Description, _.HubspotDefined));
         }
 
-        public async Task<IEnumerable<HubspotContact>> GetContacts(IntegratedSystem system, IEnumerable<string> properties = null)
+        public async Task<Paginated<HubspotContact>> GetContacts(IntegratedSystem system, string after = null, IEnumerable<string> properties = null)
         {
             AuthorizeHttpClient(system);
             var contactsClient = new ContactsClient(httpClient);
 
-            var res = await contactsClient.CrmV3ObjectsContactsGetAsync(10, after: null, properties: properties, associations: null, archived: false);
-            // TODO: paging
+            var res = await contactsClient.CrmV3ObjectsContactsGetAsync(10, after, properties: properties, associations: null, archived: false);
+            // res.Paging.Next.After
 
-            return res.Results.Select(_ => new HubspotContact(_.Id, _.Properties));
+            var items = res.Results.Select(_ => new HubspotContact(_.Id, _.Properties));
+            return new Paginated<HubspotContact>(items, res.Paging?.Next?.After);
         }
 
         public async Task<HubspotContact> GetContact(IntegratedSystem system, string contactId, IEnumerable<string> properties = null)

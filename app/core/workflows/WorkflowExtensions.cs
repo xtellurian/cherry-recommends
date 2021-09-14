@@ -24,6 +24,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<WebhookWorkflows>();
             services.AddScoped<IntegratedSystemWorkflows>();
             services.AddScoped<HubspotWorkflows>();
+            services.AddScoped<HubspotEtlWorkflows>();
             services.AddScoped<ParameterWorkflows>();
             services.AddScoped<ParameterSetRecommenderWorkflows>();
             services.AddScoped<ProductRecommenderWorkflows>();

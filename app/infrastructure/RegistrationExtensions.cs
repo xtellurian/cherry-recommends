@@ -14,6 +14,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IModelClientFactory, ModelClientFactory>();
             services.AddScoped<IRecommenderModelClientFactory, RecommenderModelClientFactory>();
             services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();
+            services.AddScoped<IHubspotService, HubspotService>();
             services.AddHttpClient();
             return services;
         }

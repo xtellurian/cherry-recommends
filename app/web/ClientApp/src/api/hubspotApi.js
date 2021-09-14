@@ -6,11 +6,9 @@ const headers = (token) =>
 
 export const fetchHubspotAppInformationAsync = async ({ token }) => {
   const url = "api/hubspotappinfo";
-  console.log("about to fetch")
   const response = await fetch(url, {
     headers: headers(token),
   });
-  console.log("fetched")
   if (response.ok) {
     return await response.json();
   } else {
@@ -24,7 +22,6 @@ export const fetchHubspotWebhookBehaviourAsync = async ({ token, id }) => {
     headers: headers(token),
   });
   if (response.ok) {
-    console.log("OK")
     return await response.json();
   } else {
     throw await response.json();
@@ -155,5 +152,38 @@ export const saveHubspotCode = async ({
     success(await response.json());
   } else {
     error(await response.json());
+  }
+};
+
+export const setHubspotConnectedContactPropertiesAsync = async ({
+  token,
+  id,
+  behaviour,
+}) => {
+  const url = `api/integratedsystems/${id}/hubspot/ConnectedContactProperties`;
+  const response = await fetch(url, {
+    headers: headers(token),
+    method: "post",
+    body: JSON.stringify(behaviour),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
+export const fetchHubspotConnectedContactPropertiesAsync = async ({
+  token,
+  id,
+}) => {
+  const url = `api/integratedsystems/${id}/hubspot/ConnectedContactProperties`;
+  const response = await fetch(url, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
   }
 };

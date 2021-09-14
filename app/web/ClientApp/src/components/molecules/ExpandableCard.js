@@ -6,6 +6,7 @@ export const ExpandableCard = ({
   children,
   label,
   headerClassName,
+  icon,
 }) => {
   const [expanded, setExpanded] = React.useState(!!startExpanded);
 
@@ -14,11 +15,12 @@ export const ExpandableCard = ({
   return (
     <div className="card">
       <div
-        className={`card-header ${headerClassName || ''}`}
+        className={`card-header ${headerClassName || ""}`}
         style={{ cursor: "pointer" }}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="float-right">{expanded ? "▲" : "▼"}</div>
+        {icon && <div className="mr-3 float-right">{icon}</div>}
         <div className="text-truncate">{label}</div>
       </div>
       {expanded && (

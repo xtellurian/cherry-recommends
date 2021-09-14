@@ -26,7 +26,7 @@ const Top = ({ integratedSystem }) => {
       >
         Overview
       </BackButton>
-      <Title> Hubspot Webook Behaviour</Title>
+      <Title> Hubspot Linking Behaviour</Title>
       <Subtitle>
         {integratedSystem.name || integratedSystem.commonId || "..."}
       </Subtitle>
@@ -35,7 +35,7 @@ const Top = ({ integratedSystem }) => {
   );
 };
 
-export const HubspotWebhookBehaviour = ({ integratedSystem }) => {
+export const HubspotLinkBehaviour = ({ integratedSystem }) => {
   const [loading, setLoading] = React.useState(false);
   const token = useAccessToken();
   const [updateTrigger, setUpdateTrigger] = React.useState({});
@@ -151,7 +151,7 @@ export const HubspotWebhookBehaviour = ({ integratedSystem }) => {
         </SettingRow>
         <SettingRow
           label="Common User ID Property Name"
-          description="Which Hubspot Property should we use as the Four2 User ID? Click the button to use Object ID"
+          description="Which Hubspot Property should we use as the Four2 Common User ID? Click the button to use Object ID"
         >
           <button
             className="btn btn-outline-info btn-block"

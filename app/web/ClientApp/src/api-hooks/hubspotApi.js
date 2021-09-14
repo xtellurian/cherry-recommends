@@ -7,6 +7,7 @@ import {
   fetchHubspotCrmCardBehaviourAsync,
   fetchHubspotClientAllContactProperties,
   fetchHubspotClientContactEventsAsync,
+  fetchHubspotConnectedContactPropertiesAsync,
   fetchHubspotContacts,
 } from "../api/hubspotApi";
 
@@ -39,6 +40,24 @@ export const useHubspotWebhookBehaviour = ({ id, trigger }) => {
     if (token) {
       setState({ loading: true });
       fetchHubspotWebhookBehaviourAsync({
+        id,
+        token,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+  return result;
+};
+
+export const useHubspotConnectedContactProperties = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      setState({ loading: true });
+      fetchHubspotConnectedContactPropertiesAsync({
         id,
         token,
       })

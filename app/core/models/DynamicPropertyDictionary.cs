@@ -1,15 +1,55 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SignalBox.Core
 {
+#nullable enable
     public class DynamicPropertyDictionary : Dictionary<string, object>
     {
+        public void Merge(IDictionary<string, object> other)
+        {
+            foreach (var key in other.Keys)
+            {
+                this[key] = other[key];
+            }
+        }
+
+        public void Merge(IDictionary<string, string> other)
+        {
+            foreach (var key in other.Keys)
+            {
+                this[key] = other[key];
+            }
+        }
+
+        public void PrefixAllKeys(string? prefix)
+        {
+            if (string.IsNullOrEmpty(prefix))
+            {
+                return;
+            }
+            var oldKeys = this.Keys.ToList();
+            foreach (var k in oldKeys)
+            {
+                if (!k.StartsWith(prefix))
+                {
+                    var value = this[k];
+                    this.Remove(k);
+                    this.Add($"{prefix}{k}", value);
+                }
+            }
+        }
 
         public DynamicPropertyDictionary()
         {
         }
 
-        public DynamicPropertyDictionary(IDictionary<string, object> dictionary) : base(dictionary ?? new Dictionary<string, object>())
+        public DynamicPropertyDictionary(IDictionary<string, object>? dictionary) : base(dictionary ?? new Dictionary<string, object>())
+        {
+        }
+
+        public DynamicPropertyDictionary(IDictionary<string, string> dictionary)
+        : base(dictionary?.ToDictionary(pair => pair.Key, pair => (object)pair.Value) ?? new Dictionary<string, object>())
         {
         }
 

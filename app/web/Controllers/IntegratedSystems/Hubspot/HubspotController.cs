@@ -57,7 +57,7 @@ namespace SignalBox.Web.Controllers
 
         [HttpGet("contacts")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IEnumerable<HubspotContact>> Contacts(long id)
+        public async Task<Paginated<HubspotContact>> Contacts(long id)
         {
             return await hubspotWorkflows.LoadContacts(id);
         }
@@ -79,15 +79,16 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpGet("WebhookBehaviour")]
+        [HttpGet("LinkBehaviour")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<HubspotWebhookBehaviour> GetWebhookBehaviour(string id)
+        public async Task<HubspotTrackedUserLinkBehaviour> GetWebhookBehaviour(string id)
         {
             var system = await store.GetEntity(id);
             var cache = system.GetCache<HubspotCache>();
             if (cache?.WebhookBehaviour == null)
             {
                 cache ??= new HubspotCache();
-                cache.WebhookBehaviour ??= new HubspotWebhookBehaviour();
+                cache.WebhookBehaviour ??= new HubspotTrackedUserLinkBehaviour();
                 system.SetCache(cache);
                 await store.Context.SaveChanges();
                 logger.LogInformation("Updated cache since it was null");
@@ -97,8 +98,9 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpPost("WebhookBehaviour")]
+        [HttpPost("LinkBehaviour")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<HubspotWebhookBehaviour> SetWebhookBehaviour(string id, HubspotWebhookBehaviour dto)
+        public async Task<HubspotTrackedUserLinkBehaviour> SetWebhookBehaviour(string id, HubspotTrackedUserLinkBehaviour dto)
         {
             var system = await store.GetEntity(id);
             var cache = system.GetCache<HubspotCache>();
@@ -131,10 +133,49 @@ namespace SignalBox.Web.Controllers
         public async Task<FeatureCrmCardBehaviour> SetCrmCardBehaviour(string id, FeatureCrmCardBehaviour dto)
         {
             var system = await store.GetEntity(id);
-
             var cache = await hubspotWorkflows.UpdateCrmCardBehaviour(system, dto);
-            
             return cache.FeatureCrmCardBehaviour;
+        }
+
+        [HttpGet("ConnectedContactProperties")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<HubspotPropertyCollection> GetConnectedContactProperties(string id)
+        {
+            var system = await store.GetEntity(id);
+            var cache = system.GetCache<HubspotCache>();
+            if (cache?.ConnectedContactProperties == null)
+            {
+                cache ??= new HubspotCache();
+                cache.ConnectedContactProperties ??= new HubspotPropertyCollection();
+                system.SetCache(cache);
+                await store.Context.SaveChanges();
+                logger.LogInformation("Updated cache since it was null");
+            }
+
+            return cache.ConnectedContactProperties;
+        }
+
+        [HttpPost("ConnectedContactProperties")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<HubspotPropertyCollection> SetConnectedContactProperties(string id, HubspotPropertyCollection dto)
+        {
+            var system = await store.GetEntity(id);
+            // validate properties
+            var availableproperties = await hubspotWorkflows.LoadContactProperties(system.Id);
+            var availablepropertyNames = availableproperties.Select(_ => _.Name);
+            foreach (var n in dto.PropertyNames)
+            {
+                if (!availablepropertyNames.Any(_ => _ == n))
+                {
+                    throw new BadRequestException($"{n} is not a valid hubspot contact property name");
+                }
+            }
+
+            var cache = system.GetCache<HubspotCache>();
+            cache.ConnectedContactProperties = dto;
+            system.SetCache(cache);
+            await store.Context.SaveChanges();
+            return cache.ConnectedContactProperties;
         }
     }
 }

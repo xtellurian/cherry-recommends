@@ -56,9 +56,6 @@ export const TrackedUserDetail = () => {
           <ActionLink to={`/tracked-users/create-event/${id}`}>
             Log Event
           </ActionLink>
-          <ActionLink to={`/tracked-users/touchpoints/${id}`}>
-            Touchpoints
-          </ActionLink>
           <ActionLink to={`/tracked-users/link-to-integrated-system/${id}`}>
             Link to Integrated System
           </ActionLink>
@@ -101,7 +98,10 @@ export const TrackedUserDetail = () => {
       <TabActivator tabId={"revenue"} defaultTabId={defaultTabId}>
         <RevenueSection trackedUser={trackedUser} />
       </TabActivator>
-      <TabActivator tabId={"latest-recommendations"} defaultTabId={defaultTabId}>
+      <TabActivator
+        tabId={"latest-recommendations"}
+        defaultTabId={defaultTabId}
+      >
         <LatestRecommendationsSection trackedUser={trackedUser} />
       </TabActivator>
     </React.Fragment>

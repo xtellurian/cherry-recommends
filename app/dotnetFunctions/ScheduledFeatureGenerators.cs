@@ -4,7 +4,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Workflows;
 
-namespace dotnetFunctions
+namespace SignalBox.Functions
 {
     public class ScheduledFeatureGenerators
     {
@@ -17,7 +17,7 @@ namespace dotnetFunctions
 
         [Function("ScheduledFeatureGenerators")]
         // should run once per day at 1300 UTC (approx midnight Australia time)
-        public async Task Run([TimerTrigger("0 0 13 * * * ")] MyInfo myTimer, FunctionContext context)
+        public async Task Run([TimerTrigger("0 0 13 * * * ")] TimerStatus myTimer, FunctionContext context)
         {
             var logger = context.GetLogger(nameof(ScheduledFeatureGenerators));
 
@@ -34,21 +34,5 @@ namespace dotnetFunctions
 
             }
         }
-    }
-
-    public class MyInfo
-    {
-        public MyScheduleStatus ScheduleStatus { get; set; }
-
-        public bool IsPastDue { get; set; }
-    }
-
-    public class MyScheduleStatus
-    {
-        public DateTime Last { get; set; }
-
-        public DateTime Next { get; set; }
-
-        public DateTime LastUpdated { get; set; }
     }
 }

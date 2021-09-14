@@ -34,7 +34,7 @@ const AuthenticatedIA = [
   //     ],
   //   },
   {
-    name: "Catalogue",
+    name: "Library",
     items: [
       {
         name: "Recommendable Items",

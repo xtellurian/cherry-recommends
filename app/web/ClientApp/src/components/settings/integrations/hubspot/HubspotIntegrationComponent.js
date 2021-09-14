@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { HubspotContactProperties } from "./HubspotContactProperties";
 // import { HubspotContactEvents } from "./HubspotContactEvents";
-import { HubspotWebhookBehaviour } from "./WebhookBehaviour";
+import { HubspotLinkBehaviour } from "./LinkBehaviour";
 import { TabActivator, Tabs } from "../../../molecules/Tabs";
 import { useIntegratedSystem } from "../../../../api-hooks/integratedSystemsApi";
 import { useHubspotAccount } from "../../../../api-hooks/hubspotApi";
@@ -11,8 +11,8 @@ import { CrmCardBehaviour } from "./CrmCardBehaviour";
 
 const tabs = [
   {
-    id: "webhook-behaviour",
-    label: "Webhook Behaviour",
+    id: "link-behaviour",
+    label: "Link Behaviour",
   },
   {
     id: "crm-card",
@@ -57,7 +57,7 @@ export const HubspotIntegrationComponent = () => {
       <Tabs tabs={tabs} defaultTabId={tabs[0].id} />
       <hr />
       <TabActivator tabId={tabs[0].id} defaultTabId={tabs[0].id}>
-        <HubspotWebhookBehaviour integratedSystem={integratedSystem} />
+        <HubspotLinkBehaviour integratedSystem={integratedSystem} />
       </TabActivator>
       <TabActivator tabId={tabs[1].id} defaultTabId={tabs[0].id}>
         <CrmCardBehaviour integratedSystem={integratedSystem} />

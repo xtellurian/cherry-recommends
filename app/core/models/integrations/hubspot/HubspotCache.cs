@@ -5,6 +5,8 @@ namespace SignalBox.Core.Integrations.Hubspot
 {
     public class HubspotCache : IIntegratedSystemCache
     {
+        private HubspotPropertyCollection? connectedContactProperties;
+
         public HubspotCache()
         { }
 
@@ -14,7 +16,15 @@ namespace SignalBox.Core.Integrations.Hubspot
         }
 
         public HubspotAccountDetails? AccountDetails { get; set; }
-        public HubspotWebhookBehaviour? WebhookBehaviour { get; set; }
+        public HubspotTrackedUserLinkBehaviour? WebhookBehaviour { get; set; }
+        public HubspotPropertyCollection? ConnectedContactProperties
+        {
+            get => connectedContactProperties; set
+            {
+                connectedContactProperties?.Validate();
+                connectedContactProperties = value;
+            }
+        }
         public FeatureCrmCardBehaviour? FeatureCrmCardBehaviour { get; set; }
     }
 }

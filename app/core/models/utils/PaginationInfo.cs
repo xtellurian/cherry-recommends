@@ -1,12 +1,20 @@
+using System.Text.Json.Serialization;
+
 namespace SignalBox.Core
 {
     public class PaginationInfo
     {
+#nullable enable
         public PaginationInfo(int pageCount, int totalItemCount, int pageNumber)
         {
             PageCount = pageCount;
             TotalItemCount = totalItemCount;
             PageNumber = pageNumber;
+        }
+
+        public PaginationInfo(NextPageInfo next)
+        {
+            Next = next;
         }
 
         /// <summary>
@@ -47,5 +55,8 @@ namespace SignalBox.Core
         /// is the last subset within the superset.
         /// </summary>
         public bool IsLastPage => TotalItemCount > 0 && PageNumber == PageCount;
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public NextPageInfo? Next { get; set; }
     }
 }

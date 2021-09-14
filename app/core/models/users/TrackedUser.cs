@@ -26,6 +26,9 @@ namespace SignalBox.Core
         public TrackedUser(string commonUserId, string name, IDictionary<string, object> properties)
         : this(commonUserId, name, new DynamicPropertyDictionary(properties))
         { }
+        public TrackedUser(string commonUserId, string name, IDictionary<string, string> properties)
+        : this(commonUserId, name, new DynamicPropertyDictionary(properties))
+        { }
 
         public string CommonUserId => CommonId;
 
