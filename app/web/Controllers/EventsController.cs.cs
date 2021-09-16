@@ -43,7 +43,7 @@ namespace SignalBox.Web.Controllers
                                                                  d.Timestamp,
                                                                  d.RecommendationCorrelatorId,
                                                                  d.SourceSystemId,
-                                                                 d.Kind,
+                                                                 d.Kind.ToEventKind(),
                                                                  d.EventType,
                                                                  d.Properties)), addToQueue: enqueue); // add to queue if available
         }

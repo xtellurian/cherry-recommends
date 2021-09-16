@@ -37,14 +37,14 @@ namespace SignalBox.Core.Workflows
                                                   from.Items?.Select(_ => _.CommonId),
                                                   from.NumberOfItemsToRecommend,
                                                   from.Arguments,
-                                                  from.ErrorHandling ?? new RecommenderErrorHandling());
+                                                  from.ErrorHandling ?? new RecommenderSettings());
         }
         public async Task<ItemsRecommender> CreateItemsRecommender(CreateCommonEntityModel common,
                                                                        string? defaultItemId,
                                                                        IEnumerable<string>? itemsCommonIds,
                                                                        int? numberOfItemsToRecommend,
                                                                        IEnumerable<RecommenderArgument>? arguments,
-                                                                       RecommenderErrorHandling errorHandling)
+                                                                       RecommenderSettings settings)
         {
             RecommendableItem? defaultItem = null;
             if (!string.IsNullOrEmpty(defaultItemId))
@@ -61,7 +61,7 @@ namespace SignalBox.Core.Workflows
                 }
 
                 var recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, items, arguments, errorHandling) 
+                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, items, arguments, settings) 
                     { NumberOfItemsToRecommend = numberOfItemsToRecommend });
                 await storageContext.SaveChanges();
                 return recommender;
@@ -69,7 +69,7 @@ namespace SignalBox.Core.Workflows
             else
             {
                 var recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, null, arguments, errorHandling) 
+                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, null, arguments, settings) 
                     { NumberOfItemsToRecommend = numberOfItemsToRecommend });
                 await storageContext.SaveChanges();
                 return recommender;

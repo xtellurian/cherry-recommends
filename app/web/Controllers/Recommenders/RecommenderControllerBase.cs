@@ -62,9 +62,28 @@ namespace SignalBox.Web.Controllers
         {
             var recommender = await base.GetResource(id);
             recommender.ErrorHandling = dto;
+            recommender.Settings ??= new RecommenderSettings();
+            recommender.Settings.ThrowOnBadInput = dto.ThrowOnBadInput;
             await store.Update(recommender);
             await store.Context.SaveChanges();
             return recommender.ErrorHandling;
+        }
+
+        [HttpPost("{id}/Settings")]
+        public async Task<RecommenderSettings> SetSettings(string id, RecommenderSettings dto)
+        {
+            var recommender = await base.GetResource(id);
+            recommender.Settings = dto;
+            await store.Update(recommender);
+            await store.Context.SaveChanges();
+            return recommender.Settings;
+        }
+
+        [HttpGet("{id}/Settings")]
+        public async Task<RecommenderSettings> GetSettings(string id)
+        {
+            var recommender = await base.GetResource(id);
+            return recommender.Settings;
         }
 
         [HttpGet("{id}/Arguments")]
@@ -86,7 +105,7 @@ namespace SignalBox.Web.Controllers
 
         [HttpPost("{id}/TargetVariableValues")]
         [Authorize(Core.Security.Policies.AdminOnlyPolicyName)]
-        public async Task<RecommenderTargetVariableValue> SetLatestTargetVariableValue(string id, CreateTargetVariableValue dto,  bool? useInternalId = null)
+        public async Task<RecommenderTargetVariableValue> SetLatestTargetVariableValue(string id, CreateTargetVariableValue dto, bool? useInternalId = null)
         {
             var recommender = await base.GetEntity(id, useInternalId);
             await store.LoadMany(recommender, _ => _.TargetVariableValues);

@@ -35,7 +35,7 @@ export const EventDetail = () => {
       <EntityField
         label="Tracked User"
         entity={trackedUser}
-        to={`/tracked-users/detail/${eventInfo.commonUserId}`}
+        to={`/tracked-users/detail/${eventInfo.trackedUserId}`}
       />
       <CopyableField label="Event ID" value={eventInfo.eventId} />
       <CopyableField label="Kind" value={eventInfo.kind} />
@@ -47,7 +47,7 @@ export const EventDetail = () => {
       )}
 
       {eventInfo.actions &&
-        eventInfo.actions.map((a) => <ActionRow key={a.id} action={a} />)}d
+        eventInfo.actions.map((a) => <ActionRow key={a.id} action={a} />)}
     </React.Fragment>
   );
 };

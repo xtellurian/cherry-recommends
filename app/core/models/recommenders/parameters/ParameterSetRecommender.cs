@@ -15,7 +15,7 @@ namespace SignalBox.Core.Recommenders
                                        IEnumerable<Parameter> parameters,
                                        IEnumerable<ParameterBounds> bounds,
                                        IEnumerable<RecommenderArgument> arguments,
-                                       RecommenderErrorHandling errorHandling) : base(commonId, name, arguments, errorHandling)
+                                       RecommenderSettings settings) : base(commonId, name, arguments, settings)
         {
             // validate # paramters. No more than 3 to limit query load on the database
             if (parameters.Count() > 3)

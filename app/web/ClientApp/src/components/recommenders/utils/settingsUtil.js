@@ -8,33 +8,36 @@ import {
 } from "../../molecules";
 import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 
-export const SettingsUtil = ({
-  recommender,
-  basePath,
-  updateErrorHandling,
-}) => {
-  const [errorHandling, setErrorHandling] = React.useState();
+export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
+  // const [errorHandling, setErrorHandling] = React.useState();
+  const [settings, setSettings] = React.useState();
+
+  if (updateSettings === undefined) {
+    throw new Error("updateSettings is a required prop");
+  }
 
   React.useEffect(() => {
     if (!recommender.loading && !recommender.error) {
-      setErrorHandling(
-        recommender?.errorHandling || {
+      setSettings(
+        recommender?.settings || {
           throwOnBadInput: false,
+          requireConsumptionEvent: false,
         }
       );
     }
   }, [recommender]);
 
   React.useEffect(() => {
-    if (errorHandling && errorHandling !== recommender.errorHandling) {
+    if (settings && settings !== recommender.settings) {
       if (
-        recommender.errorHandling?.throwOnBadInput !==
-        errorHandling?.throwOnBadInput
+        recommender.settings?.throwOnBadInput !== settings?.throwOnBadInput ||
+        recommender.settings?.requireConsumptionEvent !==
+          settings?.requireConsumptionEvent
       ) {
-        updateErrorHandling(errorHandling);
+        updateSettings(settings);
       }
     }
-  }, [errorHandling]);
+  }, [settings]);
 
   return (
     <React.Fragment>
@@ -51,25 +54,49 @@ export const SettingsUtil = ({
       {recommender.loading && <Spinner />}
       {recommender.error && <ErrorCard error={recommender.error} />}
 
-      {errorHandling && (
-        <div className="row">
-          <div className="col">
-            <h5>Throw on Bad Inputs</h5>
-            Setting this to true will cause inputs on the wrong type to throw an
-            error, rather than attempt to be silently handled. This is useful
-            when testing.
+      {settings && (
+        <React.Fragment>
+          <div className="row">
+            <div className="col">
+              <h5>Throw on Bad Inputs</h5>
+              Setting this to true will cause inputs on the wrong type to throw
+              an error, rather than attempt to be silently handled. This is
+              useful when testing.
+            </div>
+            <div className="col-3">
+              <ToggleSwitch
+                name="Throw on Bad Input"
+                id="throw-on-bad-input"
+                checked={settings.throwOnBadInput}
+                onChange={(v) =>
+                  setSettings({ ...settings, throwOnBadInput: v })
+                }
+              />
+            </div>
           </div>
-          <div className="col-3">
-            <ToggleSwitch
-              name="Throw on Bad Input"
-              id="throw-on-bad-input"
-              checked={errorHandling.throwOnBadInput}
-              onChange={(v) =>
-                setErrorHandling({ ...errorHandling, throwOnBadInput: v })
-              }
-            />
+
+          <div className="row">
+            <div className="col">
+              <h5>Require Consumption Event</h5>
+              By default, all recommendations are assumed to be consumed, i.e.
+              affect the tracked user's behaviour in some way. In some
+              situations, you may wish to invoke a recommender and only later
+              decide whether to consume the recommendation. In that case, you
+              should set this to true, and send an event when and if the tracked
+              user is affected by the recommendation.
+            </div>
+            <div className="col-3">
+              <ToggleSwitch
+                name="Require Consumption Event"
+                id="require-consumption-event"
+                checked={settings.requireConsumptionEvent}
+                onChange={(v) =>
+                  setSettings({ ...settings, requireConsumptionEvent: v })
+                }
+              />
+            </div>
           </div>
-        </div>
+        </React.Fragment>
       )}
     </React.Fragment>
   );

@@ -114,7 +114,7 @@ namespace SignalBox.Core.Workflows
                                          DateTimeOffset? timestamp,
                                          long? recommendationCorrelatorId,
                                          long? sourceSystemId,
-                                         string kind,
+                                         EventKinds kind,
                                          string eventType,
                                          Dictionary<string, object> properties)
             {
@@ -133,7 +133,7 @@ namespace SignalBox.Core.Workflows
             public DateTimeOffset? Timestamp { get; set; }
             public long? RecommendationCorrelatorId { get; set; }
             public long? SourceSystemId { get; set; }
-            public string Kind { get; set; }
+            public EventKinds Kind { get; set; }
             public string EventType { get; set; }
             public DynamicPropertyDictionary Properties { get; set; }
         }

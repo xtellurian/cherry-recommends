@@ -20,10 +20,12 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .OnDelete(DeleteBehavior.Cascade);
             builder
                 .HasMany(_ => _.RecommendationCorrelators)
-                .WithOne(_ => _.Recommender);
+                .WithOne(_ => _.Recommender)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.Property(_ => _.Arguments).IsRequired(false).HasJsonConversion();
             builder.Property(_ => _.ErrorHandling).HasJsonConversion();
+            builder.Property(_ => _.Settings).HasJsonConversion();
         }
     }
 }

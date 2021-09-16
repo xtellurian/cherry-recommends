@@ -803,6 +803,9 @@ namespace sqlserver.SignalBox
                     b.Property<string>("Properties")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Settings")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CommonId")
@@ -1138,6 +1141,9 @@ namespace sqlserver.SignalBox
 
                     b.Property<string>("EventId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EventKind")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EventType")
                         .IsRequired()

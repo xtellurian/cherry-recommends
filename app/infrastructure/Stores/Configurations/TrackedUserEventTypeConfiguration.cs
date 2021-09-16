@@ -10,9 +10,10 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             base.Configure(builder);
 
+            builder.Property(_ => _.EventType).IsRequired();
+            builder.Property(_ => _.EventKind).HasConversion<string>();
             builder.HasIndex(_ => _.EventId).IsUnique();
             builder.HasIndex(_ => _.Timestamp);
-            builder.Property(_ => _.EventType).IsRequired();
             builder.Property(_ => _.Properties).HasJsonConversion();
         }
     }

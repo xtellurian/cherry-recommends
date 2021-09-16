@@ -8,6 +8,7 @@ import * as actions from "./common/trackedUserActions";
 import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
 import * as eh from "./common/errorHandling";
+import * as st from "./common/settings";
 
 export const fetchItemsRecommendersAsync = async ({ token, page }) => {
   const url = getUrl("api/recommenders/ItemsRecommenders");
@@ -176,6 +177,15 @@ export const updateErrorHandlingAsync = async ({
     id,
     token,
     errorHandling,
+  });
+};
+
+export const setSettingsAsync = async ({ id, token, settings }) => {
+  return await st.setSettingsAsync({
+    recommenderApiName: "ItemsRecommenders",
+    id,
+    token,
+    settings,
   });
 };
 

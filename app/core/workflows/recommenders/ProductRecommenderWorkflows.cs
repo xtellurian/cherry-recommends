@@ -38,12 +38,13 @@ namespace SignalBox.Core.Workflows
             return await CreateProductRecommender(common,
                                                   from.DefaultProduct?.CommonId,
                                                   from.Products?.Select(_ => _.CommonId),
-                                                  from.ErrorHandling ?? new RecommenderErrorHandling());
+                                                  from.Settings ?? new RecommenderSettings());
         }
+
         public async Task<ProductRecommender> CreateProductRecommender(CreateCommonEntityModel common,
                                                                        string? defaultProductId,
                                                                        IEnumerable<string>? productCommonIds,
-                                                                       RecommenderErrorHandling errorHandling)
+                                                                       RecommenderSettings settings)
         {
             Product? defaultProduct = null;
             if (!string.IsNullOrEmpty(defaultProductId))
@@ -60,14 +61,14 @@ namespace SignalBox.Core.Workflows
                 }
 
                 var recommender = await store.Create(
-                    new ProductRecommender(common.CommonId, common.Name, defaultProduct, products, null, errorHandling));
+                    new ProductRecommender(common.CommonId, common.Name, defaultProduct, products, null, settings));
                 await storageContext.SaveChanges();
                 return recommender;
             }
             else
             {
                 var recommender = await store.Create(
-                    new ProductRecommender(common.CommonId, common.Name, defaultProduct, null, null, errorHandling));
+                    new ProductRecommender(common.CommonId, common.Name, defaultProduct, null, null, settings));
                 await storageContext.SaveChanges();
                 return recommender;
             }

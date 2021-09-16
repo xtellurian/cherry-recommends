@@ -54,8 +54,12 @@ namespace SignalBox.Web.Controllers
                 return await workflows.CloneItemsRecommender(c, from);
             }
             return await workflows.CreateItemsRecommender(c,
-                dto.DefaultItemId, dto.ItemIds,dto.NumberOfItemsToRecommend, dto.Arguments.ToCoreRepresentation(),
-                new RecommenderErrorHandling { ThrowOnBadInput = dto.ThrowOnBadInput });
+                dto.DefaultItemId, dto.ItemIds, dto.NumberOfItemsToRecommend, dto.Arguments.ToCoreRepresentation(),
+                new RecommenderSettings
+                {
+                    ThrowOnBadInput = dto.ThrowOnBadInput,
+                    RequireConsumptionEvent = dto.RequireConsumptionEvent
+                });
         }
 
         /// <summary>Sets the default item id.</summary>
@@ -96,7 +100,7 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Invoke a model with some input. Id is the recommender Id.</summary>
         [HttpPost("{id}/invoke")]
-        public async Task<ItemsRecommenderModelOutputV1> InvokeModel(
+        public async Task<ItemsRecommendationDto> InvokeModel(
             string id,
             [FromBody] ModelInputDto input,
             bool? useInternalId = null)
@@ -105,7 +109,7 @@ namespace SignalBox.Web.Controllers
             var convertedInput = new ModelInputDto(input.CommonUserId, input.Arguments);
 
             var recommendation = await invokationWorkflows.InvokeItemsRecommender(recommender, convertedInput);
-            return recommendation.GetOutput<ItemsRecommenderModelOutputV1>();
+            return new ItemsRecommendationDto(recommendation);
         }
 
         /// <summary>Get the latest recommendations made by a recommender.</summary>

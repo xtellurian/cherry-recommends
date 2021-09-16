@@ -1,7 +1,12 @@
 namespace SignalBox.Core.Recommenders
 {
-    public class RecommenderErrorHandling
+    public class RecommenderErrorHandling : RecommenderSettings
     {
-        public bool? ThrowOnBadInput { get; set; }
+        public RecommenderErrorHandling() { }
+        public RecommenderErrorHandling(RecommenderSettings other)
+        {
+            this.ThrowOnBadInput = other.ThrowOnBadInput;
+            this.RequireConsumptionEvent = other.RequireConsumptionEvent;
+        }
     }
 }

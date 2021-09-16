@@ -6,6 +6,7 @@ namespace SignalBox.Web.Dto
     {
         public long? CloneFromId { get; set; }
         public bool? ThrowOnBadInput { get; set; }
+        public bool? RequireConsumptionEvent { get; set; }
         public IEnumerable<CreateOrUpdateRecommenderArgument>? Arguments { get; set; }
     }
 }

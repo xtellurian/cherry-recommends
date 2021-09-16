@@ -6,11 +6,14 @@ import { useAccessToken } from "../../../api-hooks/token";
 import { Title, Subtitle, AsyncButton, BackButton } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
 import { AsyncSelectTrackedUser } from "../../molecules/selectors/AsyncSelectTrackedUser";
+import { ConsumeRecommendationPopup } from "../utils/consumeRecommendationPopup";
 
 export const TestRecommender = () => {
   const { id } = useParams();
   const token = useAccessToken();
   const recommender = useItemsRecommender({ id });
+
+  const [consumePopupOpen, setConsumePopupOpen] = React.useState(false);
 
   const [selectedTrackedUser, setSelectedTrackedUser] = React.useState();
   const [loading, setInvoking] = React.useState(false);
@@ -55,14 +58,30 @@ export const TestRecommender = () => {
       >
         Invoke
       </AsyncButton>
-      <div>
-        {modelResponse && (
-          <JsonView
-            data={modelResponse}
-            shouldExpandNode={(n) => n.includes("scoredItems")}
-          />
-        )}
-      </div>
+      {modelResponse && (
+        <div className="row">
+          <div className="col">
+            <JsonView
+              data={modelResponse}
+              shouldExpandNode={(n) => n.includes("scoredItems")}
+            />
+          </div>
+          <div className="col-4">
+            <button
+              className="btn btn-primary"
+              onClick={() => setConsumePopupOpen(true)}
+            >
+              Consume Recommendation
+            </button>
+            <ConsumeRecommendationPopup
+              recommendation={modelResponse}
+              isOpen={consumePopupOpen}
+              setIsOpen={setConsumePopupOpen}
+              onConsumed={() => setModelResponse(null)}
+            />
+          </div>
+        </div>
+      )}
     </React.Fragment>
   );
 };

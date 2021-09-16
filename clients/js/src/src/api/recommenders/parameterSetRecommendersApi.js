@@ -9,6 +9,7 @@ import * as eh from "./common/errorHandling";
 import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
 import * as ar from "./common/args";
+import * as st from "./common/settings";
 
 export const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
   const url = getUrl("api/recommenders/ParameterSetRecommenders");
@@ -219,6 +220,15 @@ export const updateErrorHandlingAsync = async ({
     id,
     token,
     errorHandling,
+  });
+};
+
+export const setSettingsAsync = async ({ id, token, settings }) => {
+  return await st.setSettingsAsync({
+    recommenderApiName: "ParameterSetRecommenders",
+    id,
+    token,
+    settings,
   });
 };
 

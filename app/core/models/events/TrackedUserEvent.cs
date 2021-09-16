@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using SignalBox.Core.Recommendations;
 
@@ -9,15 +10,16 @@ namespace SignalBox.Core
     {
         public const string FOUR2_INTERNAL_PREFIX = "_f2_internal_use_";
         public static string FEEDBACK = $"{FOUR2_INTERNAL_PREFIX}_feedback";
+        private string kind;
+
         protected TrackedUserEvent()
-        {
-        }
+        { }
 
         public TrackedUserEvent(TrackedUser trackedUser,
                                 string eventId,
                                 DateTimeOffset timestamp,
                                 IntegratedSystem source,
-                                string kind,
+                                EventKinds kind,
                                 string eventType,
                                 IDictionary<string, object> properties,
                                 long? recommendationCorrelatorId = null)
@@ -31,7 +33,8 @@ namespace SignalBox.Core
             EventId = eventId;
             Timestamp = timestamp;
             Source = source;
-            Kind = kind;
+            EventKind = kind;
+            Kind = kind.ToString();
             EventType = eventType;
             Properties = new DynamicPropertyDictionary(properties);
             RecommendationCorrelatorId = recommendationCorrelatorId;
@@ -57,7 +60,17 @@ namespace SignalBox.Core
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IntegratedSystem? Source { get; set; }
 #nullable disable
-        public string Kind { get; set; }
+
+        public EventKinds? EventKind { get; set; }
+
+        public string Kind
+        {
+            get => kind; set
+            {
+                this.EventKind ??= value?.ToEventKind(); // try to backwards compat
+                kind = value;
+            }
+        }
         public string EventType { get; set; }
         public DynamicPropertyDictionary Properties { get; set; }
         public long? TrackedUserId { get; set; }

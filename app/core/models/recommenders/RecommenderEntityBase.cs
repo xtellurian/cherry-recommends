@@ -13,20 +13,21 @@ namespace SignalBox.Core.Recommenders
         public RecommenderEntityBase(string commonId,
                                      string? name,
                                      IEnumerable<RecommenderArgument>? arguments,
-                                     RecommenderErrorHandling? errorHandling) : base(commonId, name)
+                                     RecommenderSettings? settings) : base(commonId, name)
         {
-            this.ErrorHandling = errorHandling ?? new RecommenderErrorHandling();
+            this.ErrorHandling = settings as RecommenderErrorHandling ?? new RecommenderErrorHandling(settings);
+            this.Settings = settings;
             this.Arguments = arguments?.ToList() ?? new List<RecommenderArgument>();
         }
 
 
         public bool ShouldThrowOnBadInput() => this.ErrorHandling?.ThrowOnBadInput == true;
         public RecommenderErrorHandling? ErrorHandling { get; set; }
+        public RecommenderSettings? Settings { get; set; }
         public List<RecommenderArgument>? Arguments { get; set; }
         public long? ModelRegistrationId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ModelRegistration? ModelRegistration { get; set; }
-
 
         [JsonIgnore]
         public ICollection<RecommenderTargetVariableValue> TargetVariableValues { get; set; } = null!;

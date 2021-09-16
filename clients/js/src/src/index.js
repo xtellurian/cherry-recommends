@@ -14,7 +14,7 @@ if (typeof globalThis === "object") {
 import * as apiKeys from "./api/apiKeyApi";
 import * as dataSummary from "./api/dataSummaryApi";
 import * as deployment from "./api/deploymentApi";
-import * as events from "./api/eventsApi";
+import * as events from "./api/eventsApi/index";
 import * as experiments from "./api/experimentsApi";
 import * as featureGenerators from "./api/featureGeneratorsApi";
 import * as features from "./api/featuresApi";

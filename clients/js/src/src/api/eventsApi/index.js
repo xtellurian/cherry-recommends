@@ -1,6 +1,7 @@
-import { getUrl } from "../baseUrl";
-import { headers } from "./headers";
-import { internalId } from "../utilities/index";
+import { getUrl } from "../../baseUrl";
+import { headers } from "../headers";
+import { internalId } from "../../utilities/index";
+import * as kinds from "./eventKinds";
 
 export const fetchEventAsync = async ({ id, token }) => {
   const url = getUrl(`api/events/${id}`);
@@ -94,4 +95,20 @@ export const logUserEvents = async ({ success, error, token, events }) => {
   } else {
     error(await response.json());
   }
+};
+
+// useful extension methods to create certain event kinds
+export const createRecommendationConsumedEventAsync = async ({
+  token,
+  commonUserId,
+  correlatorId,
+}) => {
+  const payload = {
+    commonUserId,
+    eventId: `recommendation-${correlatorId}-${new Date().getTime()}`,
+    recommendationCorrelatorId: correlatorId,
+    kind: kinds.ConsumeRecommendation,
+    eventType: "generated",
+  };
+  return await createEventsAsync({ token, events: [payload] });
 };

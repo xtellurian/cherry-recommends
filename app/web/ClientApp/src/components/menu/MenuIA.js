@@ -61,10 +61,10 @@ const AuthenticatedIA = [
         name: "Parameter Sets",
         to: "/recommenders/parameter-set-recommenders",
       },
-      {
-        name: "Products",
-        to: "/recommenders/product-recommenders",
-      },
+      // {
+      //   name: "Products",
+      //   to: "/recommenders/product-recommenders",
+      // },
     ],
   },
 ];
@@ -87,18 +87,18 @@ export const getAuthenticatedIA = (scopes) => {
           name: "Models",
           to: "/models",
         },
-        {
-          name: "Touchpoints",
-          to: "/touchpoints",
-        },
-        {
-          name: "Offers",
-          to: "/offers",
-        },
-        {
-          name: "Experiments",
-          to: "/experiments",
-        },
+        // {
+        //   name: "Touchpoints",
+        //   to: "/touchpoints",
+        // },
+        // {
+        //   name: "Offers",
+        //   to: "/offers",
+        // },
+        // {
+        //   name: "Experiments",
+        //   to: "/experiments",
+        // },
       ],
     });
   }

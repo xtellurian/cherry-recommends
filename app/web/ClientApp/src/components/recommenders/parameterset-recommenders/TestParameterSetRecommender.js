@@ -14,6 +14,7 @@ import {
 } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
 import { AsyncSelectTrackedUser } from "../../molecules/selectors/AsyncSelectTrackedUser";
+import { ConsumeRecommendationPopup } from "../utils/consumeRecommendationPopup";
 
 const Top = ({ id }) => {
   return (
@@ -92,6 +93,8 @@ export const TestParameterSetRecommender = () => {
   const token = useAccessToken();
   const [argValues, setArgValues] = React.useState({});
   const [selectedTrackedUser, setSelectedTrackedUser] = React.useState();
+
+  const [consumePopupOpen, setConsumePopupOpen] = React.useState(false);
 
   React.useEffect(() => {
     if (parameterSetRecommender.arguments) {
@@ -177,6 +180,22 @@ export const TestParameterSetRecommender = () => {
           {loading && <Spinner />}
           {!response && !loading && (
             <div className="text-muted text-center">No Response.</div>
+          )}
+          {response && (
+            <React.Fragment>
+              <button
+                className="btn btn-primary"
+                onClick={() => setConsumePopupOpen(true)}
+              >
+                Consume Recommendation
+              </button>
+              <ConsumeRecommendationPopup
+                recommendation={response}
+                isOpen={consumePopupOpen}
+                setIsOpen={setConsumePopupOpen}
+                onConsumed={() => setResponse(null)}
+              />
+            </React.Fragment>
           )}
         </div>
       </div>

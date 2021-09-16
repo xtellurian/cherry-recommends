@@ -61,8 +61,9 @@ const EventRow = ({ event }) => {
         )}
         <JsonView
           data={{
-            kind: event.kind,
+            kind: event.eventKind ?? event.kind,
             eventType: event.eventType,
+            recommendationCorrelatorId: event.recommendationCorrelatorId,
             properties: event.properties,
           }}
         />

@@ -196,6 +196,8 @@
       }
     };
 
+  const ConsumeRecommendation = "ConsumeRecommendation";
+
   const fetchEventAsync = async ({ id, token }) => {
     const url = getUrl(`api/events/${id}`);
 
@@ -290,13 +292,30 @@
     }
   };
 
-  var eventsApi = /*#__PURE__*/Object.freeze({
+  // useful extension methods to create certain event kinds
+  const createRecommendationConsumedEventAsync = async ({
+    token,
+    commonUserId,
+    correlatorId,
+  }) => {
+    const payload = {
+      commonUserId,
+      eventId: `recommendation-${correlatorId}-${new Date().getTime()}`,
+      recommendationCorrelatorId: correlatorId,
+      kind: ConsumeRecommendation,
+      eventType: "generated",
+    };
+    return await createEventsAsync({ token, events: [payload] });
+  };
+
+  var index$1 = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchEventAsync: fetchEventAsync,
     createEventsAsync: createEventsAsync,
     fetchTrackedUsersEventsAsync: fetchTrackedUsersEventsAsync,
     fetchUserEvents: fetchUserEvents,
-    logUserEvents: logUserEvents
+    logUserEvents: logUserEvents,
+    createRecommendationConsumedEventAsync: createRecommendationConsumedEventAsync
   });
 
   const defaultHeaders$7 = { "Content-Type": "application/json" };
@@ -1082,6 +1101,25 @@
     }
   };
 
+  const setSettingsAsync$2 = async ({
+    recommenderApiName,
+    token,
+    id,
+    settings,
+  }) => {
+    const url = getUrl(`api/recommenders/${recommenderApiName}/${id}/Settings`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(settings),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
     const url = getUrl("api/recommenders/ParameterSetRecommenders");
     const response = await fetch(`${url}?${pageQuery(page)}`, {
@@ -1294,6 +1332,15 @@
     });
   };
 
+  const setSettingsAsync$1 = async ({ id, token, settings }) => {
+    return await setSettingsAsync$2({
+      recommenderApiName: "ParameterSetRecommenders",
+      id,
+      token,
+      settings,
+    });
+  };
+
   const fetchRecommenderTrackedUserActionsAsync$2 = async ({
     id,
     token,
@@ -1336,6 +1383,7 @@
     fetchTargetVariablesAsync: fetchTargetVariablesAsync$2,
     createTargetVariableAsync: createTargetVariableAsync$2,
     updateErrorHandlingAsync: updateErrorHandlingAsync$2,
+    setSettingsAsync: setSettingsAsync$1,
     fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$2,
     setArgumentsAsync: setArgumentsAsync
   });
@@ -1777,6 +1825,15 @@
     });
   };
 
+  const setSettingsAsync = async ({ id, token, settings }) => {
+    return await setSettingsAsync$2({
+      recommenderApiName: "ItemsRecommenders",
+      id,
+      token,
+      settings,
+    });
+  };
+
   const fetchRecommenderTrackedUserActionsAsync = async ({
     id,
     token,
@@ -1808,6 +1865,7 @@
     fetchTargetVariablesAsync: fetchTargetVariablesAsync,
     createTargetVariableAsync: createTargetVariableAsync,
     updateErrorHandlingAsync: updateErrorHandlingAsync,
+    setSettingsAsync: setSettingsAsync,
     fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync
   });
 
@@ -2663,7 +2721,7 @@
   exports.apiKeys = apiKeyApi;
   exports.dataSummary = dataSummaryApi;
   exports.deployment = deploymentApi;
-  exports.events = eventsApi;
+  exports.events = index$1;
   exports.experiments = experimentsApi;
   exports.featureGenerators = featureGeneratorsApi;
   exports.features = featuresApi;

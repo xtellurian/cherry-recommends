@@ -1,5 +1,6 @@
 import React from "react";
 import { usePopper } from "react-popper";
+import Tippy from "@tippyjs/react";
 
 export const joinValidators = (validators) => {
   return (value) => {
@@ -37,6 +38,14 @@ export const createLengthValidator = (minLength) => (value) => {
   }
 };
 
+export const createRequiredByServerValidator = (serverError) => (value) => {
+  if (serverError && (!value || value.length === 0)) {
+    return ["Required"];
+  } else {
+    return [];
+  }
+};
+
 export const createServerErrorValidator =
   (serverErrorKey, serverError) => (value) => {
     let hasError =
@@ -51,6 +60,14 @@ export const createServerErrorValidator =
     }
   };
 
+const Tooltip = ({ required }) => {
+  return (
+    <div className="bg-light p-1 border border-rounded">
+      {required ? "Required" : "Optional"}
+    </div>
+  );
+};
+
 export const TextInput = ({
   label,
   value,
@@ -61,6 +78,7 @@ export const TextInput = ({
   onHideErrors,
   validator,
   resetTrigger,
+  required,
 }) => {
   const [hide, setHide] = React.useState(false);
   const [errorMessages, setErrorMessages] = React.useState([]);
@@ -103,45 +121,35 @@ export const TextInput = ({
           <span className="input-group-text">{label}</span>
         </div>
       )}
-      <input
-        ref={setReferenceElement}
-        type={type || "text"}
-        className={`form-control ${formControlValidationClass}`}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-      />
-
-      {errorMessages && errorMessages.length > 0 && !hide && (
-        <div
-          ref={setPopperElement}
-          style={{ zIndex: 999, ...styles.popper }}
-          {...attributes.popper}
-        >
-          <div className="bg-light text-center p-2 text-danger border border-danger rounded">
-            <ul className="list-group">
-              {errorMessages.map((m) => (
-                <li className="list-group-item" key={m}>
-                  {m}
-                </li>
-              ))}
-            </ul>
-            <button
-              className="btn btn-outline-danger btn-sm btn-block"
-              onClick={() => {
-                setHide(true);
-                if (onHideErrors) {
-                  onHideErrors();
-                }
-              }}
-            >
-              Hide
-            </button>
-            <div ref={setArrowElement} style={styles.arrow} />
-          </div>
-        </div>
-      )}
+      <Tippy
+        placement="bottom-start"
+        content={
+          errorMessages &&
+          errorMessages.length > 0 &&
+          !hide && (
+            <div className="bg-light text-center text-danger border border-danger rounded">
+              <ul className="list-group">
+                {errorMessages.map((m) => (
+                  <li className="list-group-item" key={m}>
+                    {m}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      >
+        <input
+          ref={setReferenceElement}
+          type={type || "text"}
+          className={`form-control ${formControlValidationClass}`}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          required={required}
+        />
+      </Tippy>
     </React.Fragment>
   );
 };

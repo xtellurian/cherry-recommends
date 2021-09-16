@@ -44,11 +44,15 @@ namespace SignalBox.Web.Controllers
                 return await workflows.CloneParameterSetRecommender(c, from);
             }
 
-            return await workflows.CreateParameterSetRecommender(c, 
-                dto.Parameters, 
+            return await workflows.CreateParameterSetRecommender(c,
+                dto.Parameters,
                 dto.Bounds,
                 dto.Arguments.ToCoreRepresentation(),
-                new RecommenderErrorHandling { ThrowOnBadInput = dto.ThrowOnBadInput });
+                new RecommenderSettings
+                {
+                    ThrowOnBadInput = dto.ThrowOnBadInput,
+                    RequireConsumptionEvent = dto.RequireConsumptionEvent
+                });
         }
 
         [HttpPost("{id}/ModelRegistration")]
@@ -69,7 +73,7 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Invoke a model with some payload. Id is the recommender Id.</summary>
         [HttpPost("{id}/invoke")]
-        public async Task<ParameterSetRecommenderModelOutputV1> InvokeModel(string id,
+        public async Task<ParameterSetRecommendationDto> InvokeModel(string id,
                                                                             string version,
                                                                             [FromBody] ParameterSetRecommenderInput input,
                                                                             bool? useInternalId = null)
@@ -81,7 +85,7 @@ namespace SignalBox.Web.Controllers
                 CommonUserId = input.CommonUserId ?? System.Guid.NewGuid().ToString()
             };
             var recommendation = await invokationWorkflows.InvokeParameterSetRecommender(recommender, version, convertedInput);
-            return recommendation.GetOutput<ParameterSetRecommenderModelOutputV1>();
+            return new ParameterSetRecommendationDto(recommendation, recommendation.GetOutput<ParameterSetRecommenderModelOutputV1>().RecommendedParameters);
         }
 
         /// <summary>Get the latest recommendations made by a recommender.</summary>

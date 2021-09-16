@@ -1,6 +1,6 @@
 import React from "react";
 import { useLatestRecommendations } from "../../api-hooks/trackedUserApi";
-import { Spinner, ExpandableCard } from "../molecules";
+import { Spinner, ExpandableCard, EmptyList } from "../molecules";
 import { JsonView } from "../molecules/JsonView";
 
 const RecommendationRow = ({ recommendation }) => {
@@ -37,6 +37,12 @@ export const LatestRecommendationsSection = ({ trackedUser }) => {
         latestRecommendations.items.map((r, i) => (
           <RecommendationRow key={i} recommendation={r} />
         ))}
+      {latestRecommendations.items &&
+        latestRecommendations.items.length === 0 && (
+          <EmptyList>
+            This Tracked User is yet to receive a recommendation
+          </EmptyList>
+        )}
     </React.Fragment>
   );
 };

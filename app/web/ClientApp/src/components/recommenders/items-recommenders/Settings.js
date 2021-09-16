@@ -1,13 +1,13 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useItem, useItems } from "../../../api-hooks/recommendableItemsApi";
+import { useItems } from "../../../api-hooks/recommendableItemsApi";
 import {
   useItemsRecommender,
   useDefaultItem,
 } from "../../../api-hooks/itemsRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import {
-  updateErrorHandlingAsync,
+  setSettingsAsync,
   setDefaultItemAsync,
 } from "../../../api/itemsRecommendersApi";
 import { Selector } from "../../molecules/selectors/Select";
@@ -16,10 +16,10 @@ import { Spinner } from "../../molecules";
 
 export const Settings = () => {
   const { id } = useParams();
-  const [updatedErrorHandling, setUpdatedErrorHandling] = React.useState({});
+  const [updatedSettings, setUpdatedSettings] = React.useState({});
   const recommender = useItemsRecommender({
     id,
-    trigger: updatedErrorHandling,
+    trigger: updatedSettings,
   });
   const token = useAccessToken();
   const items = useItems();
@@ -36,13 +36,13 @@ export const Settings = () => {
     id,
     trigger: updatedDefaultItem,
   });
-  const handleUpdate = (errorHandling) => {
-    updateErrorHandlingAsync({
+  const handleUpdate = (settings) => {
+    setSettingsAsync({
       id,
       token,
-      errorHandling,
+      settings,
     })
-      .then(setUpdatedErrorHandling)
+      .then(setUpdatedSettings)
       .catch(handleUpdateError);
   };
 
@@ -59,7 +59,7 @@ export const Settings = () => {
           <SettingsUtil
             recommender={recommender}
             basePath="/recommenders/items-recommenders"
-            updateErrorHandling={handleUpdate}
+            updateSettings={handleUpdate}
           />
           <div className="row">
             <div className="col">

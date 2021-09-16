@@ -215,7 +215,7 @@ namespace SignalBox.Core.Workflows
             return await eventsWorkflows.TrackUserEvents(new List<TrackedUserEventsWorkflows.TrackedUserEventInput>
                 {
                     new TrackedUserEventsWorkflows.TrackedUserEventInput(trackedUser.CommonId,
-                    eventId, dateTimeProvider.Now, correlationId, integratedSystem.Id, "Hubspot", "RecommendatonOutcome",
+                    eventId, dateTimeProvider.Now, correlationId, integratedSystem.Id, EventKinds.ConsumeRecommendation, "Direct Feedback",
                     new Dictionary<string, object>
                     {
                         {TrackedUserEvent.FEEDBACK, outcomeFeedbackValue},
@@ -339,14 +339,14 @@ namespace SignalBox.Core.Workflows
 
             trackedUser.Properties[$"{behaviour.PropertyPrefix}{webhookPayload.PropertyName}"] = webhookPayload.PropertyValue;
 
-            // now create an event
+            // now create an event that tracks properties changing
             await eventStore.AddTrackedUserEvents(new List<TrackedUserEvent>
             {
                 new TrackedUserEvent(trackedUser,
                     webhookPayload.EventId?.ToString(),
                     dateTimeProvider.Now,
                     integratedSystem,
-                    "Hubspot",
+                    EventKinds.PropertyUpdate,
                     webhookPayload.SubscriptionType, new Dictionary<string, object>
                     {
                         { $"{behaviour.PropertyPrefix}{webhookPayload.PropertyName}", webhookPayload.PropertyValue }

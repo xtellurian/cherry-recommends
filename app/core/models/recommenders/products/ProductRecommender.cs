@@ -15,7 +15,7 @@ namespace SignalBox.Core.Recommenders
                                   Product? defaultProduct,
                                   ICollection<Product>? products,
                                   IEnumerable<RecommenderArgument>? arguments,
-                                  RecommenderErrorHandling? errorHandling) : base(commonId, name, arguments, errorHandling)
+                                  RecommenderSettings? settings) : base(commonId, name, arguments, settings)
         {
             Products = products ?? new List<Product>();
             DefaultProduct = defaultProduct;

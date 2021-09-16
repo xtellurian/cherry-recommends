@@ -10,9 +10,14 @@ import {
   ErrorCard,
   ExpandableCard,
 } from "../molecules";
-import { InputGroup, TextInput } from "../molecules/TextInput";
+import {
+  InputGroup,
+  TextInput,
+  createRequiredByServerValidator,
+} from "../molecules/TextInput";
 import { PropertiesEditor } from "../molecules/PropertiesEditor";
 import { useAccessToken } from "../../api-hooks/token";
+import { EventKindSelect } from "../molecules/selectors/EventKindSelect";
 
 const parseIntElseNull = (number) => {
   try {
@@ -65,7 +70,7 @@ export const CreateEvent = () => {
     setLoading(true);
     setError(null);
     createEventsAsync({ token, events: [payload] })
-      .then((_) => history.push(`/tracked-users/detail/${id}`))
+      .then((_) => history.push(`/tracked-users/detail/${id}?tab=history`))
       .catch(setError)
       .finally(() => setLoading(false));
   };
@@ -86,20 +91,22 @@ export const CreateEvent = () => {
           onChange={(v) => setPayload({ ...payload, eventId: v.target.value })}
         />
       </InputGroup>
+
+      <EventKindSelect
+        defaultValue="custom"
+        placeholder="Select a kind of event"
+        onSelected={(v) => setPayload({ ...payload, kind: v })}
+      />
       <InputGroup className="mb-2">
-        <TextInput
-          label="Event Kind"
-          value={payload.kind}
-          placeholder="A high level category."
-          onChange={(v) => setPayload({ ...payload, kind: v.target.value })}
-        />
         <TextInput
           label="Event Type"
           placeholder="The specific type of event."
           value={payload.eventType}
+          validator={createRequiredByServerValidator(error)}
           onChange={(v) =>
             setPayload({ ...payload, eventType: v.target.value })
           }
+          required={true}
         />
       </InputGroup>
       <div className="mb-2">

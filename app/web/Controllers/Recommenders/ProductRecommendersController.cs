@@ -55,7 +55,11 @@ namespace SignalBox.Web.Controllers
             }
             return await workflows.CreateProductRecommender(c,
                 dto.DefaultProductId, dto.ProductIds,
-                new RecommenderErrorHandling { ThrowOnBadInput = dto.ThrowOnBadInput });
+                new RecommenderSettings
+                {
+                    ThrowOnBadInput = dto.ThrowOnBadInput,
+                    RequireConsumptionEvent = dto.RequireConsumptionEvent
+                });
         }
 
         /// <summary>Sets the default product id.</summary>

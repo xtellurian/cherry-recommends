@@ -10,7 +10,7 @@ Let's discover **Four2|SignalBox in less than 5 minutes**.
 
 Four2 is currently in private preview. 
 
-[Join the waitlist.](https://www.four2.ai/sign-up)
+[Join the waitlist.](https://get.four2.ai/)
 
 ## What's SignalBox
 

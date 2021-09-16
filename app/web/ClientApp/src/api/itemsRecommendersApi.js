@@ -42,3 +42,5 @@ export const getDefaultItemAsync = itemsRecommenders.getDefaultItemAsync;
 
 export const fetchRecommenderTrackedUserActionsAsync =
   itemsRecommenders.fetchRecommenderTrackedUserActionsAsync;
+
+export const setSettingsAsync = itemsRecommenders.setSettingsAsync;

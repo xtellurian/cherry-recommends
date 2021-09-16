@@ -31,13 +31,13 @@ namespace SignalBox.Core.Workflows
         public async Task<ParameterSetRecommender> CloneParameterSetRecommender(CreateCommonEntityModel common, ParameterSetRecommender from)
         {
             await store.LoadMany(from, _ => _.Parameters);
-            return await this.CreateParameterSetRecommender(common, from.Parameters.Select(_ => _.CommonId), from.ParameterBounds, from.Arguments, from.ErrorHandling ?? new RecommenderErrorHandling());
+            return await this.CreateParameterSetRecommender(common, from.Parameters.Select(_ => _.CommonId), from.ParameterBounds, from.Arguments, from.Settings ?? new RecommenderSettings());
         }
         public async Task<ParameterSetRecommender> CreateParameterSetRecommender(CreateCommonEntityModel common,
                                                                                  IEnumerable<string> parameterCommonIds,
                                                                                  IEnumerable<ParameterBounds> bounds,
                                                                                  IEnumerable<RecommenderArgument>? arguments,
-                                                                                 RecommenderErrorHandling errorHandling)
+                                                                                 RecommenderSettings settings)
         {
             var parameters = new List<Parameter>();
             foreach (var p in parameterCommonIds)
@@ -57,7 +57,7 @@ namespace SignalBox.Core.Workflows
                 throw new BadRequestException("Bounds require an reference identifier");
             }
 
-            var recommender = await store.Create(new ParameterSetRecommender(common.CommonId, common.Name, parameters, bounds, arguments, errorHandling));
+            var recommender = await store.Create(new ParameterSetRecommender(common.CommonId, common.Name, parameters, bounds, arguments, settings));
             await storageContext.SaveChanges();
             return recommender;
         }
