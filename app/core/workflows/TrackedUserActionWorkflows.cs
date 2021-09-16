@@ -110,12 +110,12 @@ namespace SignalBox.Core.Workflows
             }
             else if (selector.Category != null)
             {
-                shouldProcess = string.Equals(action.ActionName, selector.ActionName)
-                    && string.Equals(action.Category, selector.Category);
+                shouldProcess = string.Equals(action.ActionName, selector.ActionName, StringComparison.InvariantCultureIgnoreCase)
+                    && string.Equals(action.Category, selector.Category, StringComparison.InvariantCultureIgnoreCase);
             }
             else
             {
-                shouldProcess = string.Equals(action.ActionName, selector.ActionName); // ignore category, because it's null
+                shouldProcess = string.Equals(action.ActionName, selector.ActionName, StringComparison.InvariantCultureIgnoreCase); // ignore category, because it's null
             }
 
             if (shouldProcess)
