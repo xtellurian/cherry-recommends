@@ -3,6 +3,7 @@ namespace SignalBox.Core.Recommenders
     public class RecommenderArgument
     {
         private DefaultArgumentContainer defaultValue;
+        private object defaultArgumentValue;
 
         public string CommonId { get; set; } // use commonId for external API consistency
         public ArgumentTypes ArgumentType { get; set; }
@@ -15,7 +16,11 @@ namespace SignalBox.Core.Recommenders
                 defaultValue = value;
             }
         }
-        public object DefaultArgumentValue { get; set; }
+        public object DefaultArgumentValue
+        {
+            get => defaultArgumentValue ?? this.DefaultValue?.Value; // try both
+            set => defaultArgumentValue = value;
+        }
         public bool IsRequired { get; set; } = false; // default not required.
     }
 
