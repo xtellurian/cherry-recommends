@@ -1,11 +1,18 @@
 import React from "react";
-import { BackButton, EmptyList, Subtitle, Title } from "../molecules";
+import {
+  BackButton,
+  EmptyList,
+  ExpandableCard,
+  Subtitle,
+  Title,
+} from "../molecules";
 import { useEvent } from "../../api-hooks/eventApi";
 import { useTrackedUser } from "../../api-hooks/trackedUserApi";
 import { useParams } from "react-router-dom";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { EntityField } from "../molecules/EntityField";
+import { JsonView } from "../molecules/JsonView";
 
 const ActionRow = ({ action }) => {
   return (
@@ -40,6 +47,14 @@ export const EventDetail = () => {
       <CopyableField label="Event ID" value={eventInfo.eventId} />
       <CopyableField label="Kind" value={eventInfo.kind} />
       <CopyableField label="Event Type" value={eventInfo.eventType} />
+      <CopyableField
+        label="Recommendation Correlator"
+        value={eventInfo.recommendationCorrelatorId}
+      />
+      <hr />
+      <ExpandableCard label="Properties">
+        <JsonView data={eventInfo.properties} />
+      </ExpandableCard>
       <hr />
       <h6>Actions</h6>
       {eventInfo.actions && eventInfo.actions.length === 0 && (

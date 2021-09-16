@@ -30,6 +30,9 @@ const ActionSubRow = ({ id, category, actionName }) => {
   if (action.associatedRevenue) {
     data.associatedRevenue = action.associatedRevenue;
   }
+  if (action.recommendationCorrelatorId) {
+    data.recommendationCorrelatorId = action.recommendationCorrelatorId;
+  }
   return (
     <div>
       {action.loading && <Spinner />}
