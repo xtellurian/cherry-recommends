@@ -15,17 +15,17 @@ namespace SignalBox.Web.Controllers
     public class TrackedUserRecommendationsController : SignalBoxControllerBase
     {
         private readonly ILogger<TrackedUserRecommendationsController> logger;
-        private readonly IProductRecommendationStore productRecommendationStore;
+        private readonly IItemsRecommendationStore itemsRecommendationStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
         private readonly ITrackedUserStore trackedUserStore;
 
         public TrackedUserRecommendationsController(ILogger<TrackedUserRecommendationsController> logger,
-        IProductRecommendationStore productRecommendationStore,
+        IItemsRecommendationStore itemsRecommendationStore,
         IParameterSetRecommendationStore parameterSetRecommendationStore,
                                       ITrackedUserStore trackedUserStore)
         {
             this.logger = logger;
-            this.productRecommendationStore = productRecommendationStore;
+            this.itemsRecommendationStore = itemsRecommendationStore;
             this.parameterSetRecommendationStore = parameterSetRecommendationStore;
             this.trackedUserStore = trackedUserStore;
         }
@@ -36,10 +36,10 @@ namespace SignalBox.Web.Controllers
         {
             var trackedUser = await trackedUserStore.GetEntity(id);
             var parameterSetRecommendations = await parameterSetRecommendationStore.Query(1, _ => _.TrackedUserId == trackedUser.Id);
-            var productRecommendations = await productRecommendationStore.Query(1, _ => _.TrackedUserId == trackedUser.Id);
+            var itemsRecommendations = await itemsRecommendationStore.Query(1, _ => _.TrackedUserId == trackedUser.Id);
             var recommendations = new List<object>();
             recommendations.AddRange(parameterSetRecommendations.Items);
-            recommendations.AddRange(productRecommendations.Items);
+            recommendations.AddRange(itemsRecommendations.Items);
             var result = new Paginated<object>(recommendations, 1, recommendations.Count, 1);
             return result;
         }

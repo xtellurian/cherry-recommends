@@ -13,7 +13,7 @@ namespace SignalBox.Core.Workflows
         private readonly ILogger<DataSummaryWorkflows> logger;
         private readonly ITrackedUserActionStore actionStore;
         private readonly IDateTimeProvider dateTimeProvider;
-        private readonly IProductRecommendationStore productRecommendationStore;
+        private readonly IItemsRecommendationStore itemsRecommendationStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
         private readonly ITelemetry telemetry;
 
@@ -21,7 +21,7 @@ namespace SignalBox.Core.Workflows
                                     ILogger<DataSummaryWorkflows> logger,
                                     ITrackedUserActionStore actionStore,
                                     IDateTimeProvider dateTimeProvider,
-                                    IProductRecommendationStore productRecommendationStore,
+                                    IItemsRecommendationStore itemsRecommendationStore,
                                     IParameterSetRecommendationStore parameterSetRecommendationStore,
                                     ITelemetry telemetry)
         {
@@ -29,7 +29,7 @@ namespace SignalBox.Core.Workflows
             this.logger = logger;
             this.actionStore = actionStore;
             this.dateTimeProvider = dateTimeProvider;
-            this.productRecommendationStore = productRecommendationStore;
+            this.itemsRecommendationStore = itemsRecommendationStore;
             this.parameterSetRecommendationStore = parameterSetRecommendationStore;
             this.telemetry = telemetry;
         }
@@ -119,8 +119,8 @@ namespace SignalBox.Core.Workflows
             {
                 var parameterSetRecommendations = await parameterSetRecommendationStore.Query(1);
                 recommendations.AddRange(parameterSetRecommendations.Items);
-                var productRecommendations = await productRecommendationStore.Query(1);
-                recommendations.AddRange(productRecommendations.Items);
+                var itemsRecommendations = await itemsRecommendationStore.Query(1);
+                recommendations.AddRange(itemsRecommendations.Items);
                 recommendations.Sort((x, y) => DateTimeOffset.Compare(y.LastUpdated, x.LastUpdated));
             }
             catch (Exception ex)
