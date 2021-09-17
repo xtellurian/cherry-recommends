@@ -18,8 +18,8 @@ import {
 const RecommendationRow = ({ recommendation }) => {
   const dataSubset = {
     recommendationCorrelatorId: recommendation.recommendationCorrelatorId,
-    trackedUser: recommendation.trackedUser,
     scoredItems: recommendation.scoredItems,
+    trackedUser: recommendation.trackedUser,
   };
   let label = `Correlator: ${recommendation.recommendationCorrelatorId}`;
   if (recommendation.trackedUser && recommendation.product) {
@@ -42,7 +42,7 @@ const RecommendationRow = ({ recommendation }) => {
         </Link>
       )}
       <DateTimeField label="Created" date={recommendation.created} />
-      <JsonView data={recommendation}></JsonView>
+      <JsonView data={dataSubset}></JsonView>
     </ExpandableCard>
   );
 };
