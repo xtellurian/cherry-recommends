@@ -37,6 +37,7 @@ export const ItemsRecommendersSummary = () => {
 
       <hr />
       {itemsRecommenders.error && <ErrorCard error={itemsRecommenders.error} />}
+      {itemsRecommenders.loading && <Spinner />}
       {itemsRecommenders.items && itemsRecommenders.items.length === 0 && (
         <EmptyList>
           <div className="text-muted m-3">There are no item recommenders.</div>
