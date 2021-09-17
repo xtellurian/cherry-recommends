@@ -4,6 +4,7 @@ namespace SignalBox.Core.Recommenders
     {
         Product,
         ParameterSet,
+        Items,
         Offer
     }
 }

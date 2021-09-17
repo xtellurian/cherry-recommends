@@ -2,13 +2,6 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { Link45deg } from "react-bootstrap-icons";
 import {
-  useProductRecommender,
-  useProductRecommendations,
-} from "../../../api-hooks/productRecommendersApi";
-import {
-  BackButton,
-  Title,
-  Subtitle,
   Spinner,
   ErrorCard,
   EmptyList,
@@ -17,12 +10,16 @@ import {
 } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
 import { DateTimeField } from "../../molecules/DateTimeField";
+import {
+  useItemsRecommendations,
+  useItemsRecommender,
+} from "../../../api-hooks/itemsRecommendersApi";
 
 const RecommendationRow = ({ recommendation }) => {
   const dataSubset = {
     recommendationCorrelatorId: recommendation.recommendationCorrelatorId,
     trackedUser: recommendation.trackedUser,
-    product: recommendation.product,
+    scoredItems: recommendation.scoredItems,
   };
   let label = `Correlator: ${recommendation.recommendationCorrelatorId}`;
   if (recommendation.trackedUser && recommendation.product) {
@@ -45,26 +42,16 @@ const RecommendationRow = ({ recommendation }) => {
         </Link>
       )}
       <DateTimeField label="Created" date={recommendation.created} />
-      <JsonView data={dataSubset}></JsonView>
+      <JsonView data={recommendation}></JsonView>
     </ExpandableCard>
   );
 };
 export const RecommendationList = () => {
   const { id } = useParams();
-  const recommender = useProductRecommender({ id });
-  const recommendations = useProductRecommendations({ id });
+  const recommender = useItemsRecommender({ id });
+  const recommendations = useItemsRecommendations({ id });
   return (
     <React.Fragment>
-      {/* <BackButton
-        className="float-right mr-1"
-        to={`/recommenders/product-recommenders/detail/${id}`}
-      >
-        Recommender
-      </BackButton>
-      <Title>Latest Recommendations</Title>
-      <Subtitle>{recommender.name || "..."}</Subtitle>
-      <hr /> */}
-
       {recommendations.loading && <Spinner />}
       {recommendations.error && <ErrorCard error={recommendations.error} />}
       {recommendations.items && recommendations.items.length === 0 && (
