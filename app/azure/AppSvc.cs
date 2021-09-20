@@ -129,6 +129,23 @@ namespace SignalBox.Azure
                         new NameValuePairArgs{
                             Name = "APPINSIGHTS_INSTRUMENTATIONKEY",
                             Value = insights.InstrumentationKey,
+                        },
+                        // hubspot 
+                        new NameValuePairArgs{
+                            Name = "HubSpot__AppCredentials__AppId",
+                            Value = hubspotConfig.Get("appId") ?? "",
+                        },
+                        new NameValuePairArgs{
+                            Name = "HubSpot__AppCredentials__ClientId",
+                            Value = hubspotConfig.Get("clientId") ?? "",
+                        },
+                        new NameValuePairArgs{
+                            Name = "HubSpot__AppCredentials__ClientSecret",
+                            Value = hubspotConfig.Get("clientSecret") ?? "",
+                        },
+                        new NameValuePairArgs{
+                            Name = "HubSpot__AppCredentials__Scope",
+                            Value = hubspotConfig.Get("scope") ?? "contacts oauth tickets",
                         }
                     },
                     ConnectionStrings = {
@@ -186,6 +203,7 @@ namespace SignalBox.Azure
                     {"Queues__ContainerName", "queue-messages"},
                     {"Queues__EnableWriteQueue", true.ToString()},
                     {"Queues__EnableReadQueue", false.ToString()},
+                    // hubspot connection
                     {"HubSpot__AppCredentials__AppId", hubspotConfig.Get("appId") ?? ""},
                     {"HubSpot__AppCredentials__ClientId", hubspotConfig.Get("clientId") ?? ""},
                     {"HubSpot__AppCredentials__ClientSecret", hubspotConfig.Get("clientSecret") ?? ""},

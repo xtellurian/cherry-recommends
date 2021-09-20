@@ -64,6 +64,14 @@ namespace SignalBox.Infrastructure.Services
 
         public async Task<TokenResponse> ExchangeCode(string clientId, string clientSecret, string redirectUri, string code)
         {
+            if (clientId == null)
+            {
+                throw new ConfigurationException("Hubspot clientId cannot be null");
+            }
+            if (clientSecret == null)
+            {
+                throw new ConfigurationException("Hubspot clientSecret cannot be null");
+            }
             var oauthClient = new OAuthClient(httpClient);
             var r = await oauthClient.ExchangeCode(clientId, clientSecret, redirectUri, code);
             return new TokenResponse(r.AccessToken, r.RefreshToken, null, r.ExpiresIn);

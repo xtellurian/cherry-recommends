@@ -9,6 +9,7 @@ using System.IO;
 using System;
 using SignalBox.Infrastructure.Files;
 using SignalBox.Functions.Services;
+using SignalBox.Core.Integrations;
 
 namespace SignalBox.Functions
 {
@@ -28,11 +29,7 @@ namespace SignalBox.Functions
                 {
                     var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
                     var provider = configuration.GetValue("Provider", "sqlserver");
-                    var azureWebJobsConnectionString = configuration.GetValue<string>("AzureWebJobsStorage");
-                    if (string.IsNullOrEmpty(azureWebJobsConnectionString))
-                    {
-                        throw new Exception("AzureWebJobsStorage connection string missing");
-                    }
+
                     System.Console.WriteLine($"Database Provider: {provider}");
                     if (provider == "sqlserver")
                     {
@@ -51,14 +48,9 @@ namespace SignalBox.Functions
                     services.RegisterDefaultInfrastructureServices();
 
                     services.AddScoped<ITelemetry, AzureFunctionsAppInsightsTelemetry>();
-
-                    services.Configure<QueueMessagesFileHosting>(_ =>
-                    {
-                        _.ConnectionString = azureWebJobsConnectionString;
-                        _.ContainerName = "queue-messages";
-
-                    });
                     services.AddScoped<IQueueMessagesFileStore, AzureBlobQueueMessagesFileStore>();
+
+                    ConfigureAppSettings(services, configuration);
 
                     services.AddAzureStorageQueueStores();
                     services.AddEFStores();
@@ -69,6 +61,24 @@ namespace SignalBox.Functions
                 .Build();
 
             host.Run();
+        }
+
+        private static void ConfigureAppSettings(IServiceCollection services, IConfiguration configuration)
+        {
+            var azureWebJobsConnectionString = configuration.GetValue<string>("AzureWebJobsStorage");
+            if (string.IsNullOrEmpty(azureWebJobsConnectionString))
+            {
+                throw new Exception("AzureWebJobsStorage connection string missing");
+            }
+
+            services.Configure<QueueMessagesFileHosting>(_ =>
+            {
+                _.ConnectionString = azureWebJobsConnectionString;
+                _.ContainerName = "queue-messages";
+
+            });
+
+            services.Configure<HubspotAppCredentials>(configuration.GetSection("HubSpot").GetSection("AppCredentials"));
         }
     }
 }
