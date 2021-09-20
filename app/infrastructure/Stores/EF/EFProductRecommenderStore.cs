@@ -11,8 +11,8 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFProductRecommenderStore : EFRecommenderStoreBase<ProductRecommender>, IProductRecommenderStore
     {
-        public EFProductRecommenderStore(SignalBoxDbContext context)
-        : base(context, (c) => c.ProductRecommenders)
+        public EFProductRecommenderStore(SignalBoxDbContext context, IEnvironmentService environmentService)
+        : base(context, environmentService, (c) => c.ProductRecommenders)
         {
         }
 

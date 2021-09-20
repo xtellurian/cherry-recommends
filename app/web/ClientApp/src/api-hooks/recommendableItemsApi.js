@@ -2,11 +2,13 @@ import React from "react";
 import { fetchItemsAsync, fetchItemAsync } from "../api/recommendableItemsApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
+import { useEnvironment } from "./environmentsApi";
 
 export const useItems = (p) => {
   const { trigger } = p || {}; // ensure this works in the case of p === undefinfed
   const token = useAccessToken();
   const page = usePagination();
+  const [environment, setEnvironment] = useEnvironment();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
@@ -18,7 +20,7 @@ export const useItems = (p) => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, page, trigger]);
+  }, [token, page, trigger, environment]);
 
   return result;
 };

@@ -4,7 +4,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal abstract class CommonEntityTypeConfigurationBase<T> : EntityTypeConfigurationBase<T>, IEntityTypeConfiguration<T> where T : CommonEntity
+    internal abstract class CommonEntityTypeConfigurationBase<T> : EnvironmentScopedEntityTypeConfigurationBase<T>, IEntityTypeConfiguration<T> where T : CommonEntity
     {
         public override void Configure(EntityTypeBuilder<T> builder)
         {

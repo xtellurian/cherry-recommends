@@ -10,10 +10,12 @@ import {
 } from "../api/parameterSetRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
+import { useEnvironment } from "./environmentsApi";
 
 export const useParameterSetRecommenders = () => {
   const token = useAccessToken();
   const page = usePagination();
+  const [environment, setEnvironment] = useEnvironment();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
@@ -25,7 +27,7 @@ export const useParameterSetRecommenders = () => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, page]);
+  }, [token, page, environment]);
 
   return result;
 };

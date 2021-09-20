@@ -20,8 +20,11 @@ namespace SignalBox.Infrastructure
                                                     string connectionString,
                                                     string migrationAssembly = "sqlite")
         {
-            services.AddDbContext<SignalBoxDbContext>(options =>
-                options.UseSqlite(connectionString, b => b.MigrationsAssembly(migrationAssembly)));
+            services.AddDbContext<SignalBoxDbContext>((provider, options) =>
+               {
+                   options.UseSqlite(connectionString, b => b.MigrationsAssembly(migrationAssembly));
+                   options.AddInterceptors(provider.GetRequiredService<IEnvironmentService>());
+               });
             return services;
         }
         public static IServiceCollection UseMemory(this IServiceCollection services)
@@ -50,6 +53,9 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IRecommendableItemStore, EFRecommendableItemStore>();
             services.AddScoped<IProductStore, EFProductStore>();
             services.AddScoped<IParameterStore, EFParameterStore>();
+
+            // environment
+            services.AddScoped<IEnvironmentStore, EFEnvironmentStore>();
 
             // recommenders
             services.AddScoped<IProductRecommenderStore, EFProductRecommenderStore>();

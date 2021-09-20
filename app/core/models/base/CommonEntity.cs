@@ -1,6 +1,6 @@
 namespace SignalBox.Core
 {
-    public abstract class CommonEntity : NamedEntity
+    public abstract class CommonEntity : EnvironmentScopedEntity
     {
         protected virtual int CommonIdMinLength => 3;
         protected CommonEntity()

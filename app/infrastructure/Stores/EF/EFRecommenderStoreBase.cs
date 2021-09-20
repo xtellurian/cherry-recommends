@@ -1,6 +1,3 @@
-
-
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +10,22 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public abstract class EFRecommenderStoreBase<T> : EFCommonEntityStoreBase<T>, IRecommenderStore<T> where T : RecommenderEntityBase
     {
-        protected EFRecommenderStoreBase(SignalBoxDbContext context, Func<SignalBoxDbContext, DbSet<T>> selector) : base(context, selector)
+        protected override bool IsEnvironmentScoped => true;
+        protected EFRecommenderStoreBase(SignalBoxDbContext context, IEnvironmentService environmentService, Func<SignalBoxDbContext, DbSet<T>> selector) 
+        : base(context, environmentService, selector)
         { }
 
         public async Task<Paginated<InvokationLogEntry>> QueryInvokationLogs(long id, int page)
         {
-            var itemCount = await Set.Where(_ => _.Id == id).SelectMany(_ => _.RecommenderInvokationLogs).CountAsync();
+            var itemCount = await QuerySet
+                .Where(_ => _.Id == id)
+                .SelectMany(_ => _.RecommenderInvokationLogs)
+                .CountAsync();
             List<InvokationLogEntry> results;
 
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
-                results = await Set
+                results = await QuerySet
                     .Where(_ => _.Id == id)
                     .SelectMany(_ => _.RecommenderInvokationLogs)
                     .OrderByDescending(_ => _.LastUpdated)

@@ -94,6 +94,35 @@ namespace sqlserver.SignalBox
                     b.ToTable("SegmentTrackedUser");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Environment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Environments");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Feature", b =>
                 {
                     b.Property<long>("Id")
@@ -112,6 +141,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -127,6 +159,8 @@ namespace sqlserver.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("Features");
                 });
@@ -278,6 +312,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("IntegrationStatus")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -307,6 +344,8 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("IntegratedSystems");
                 });
@@ -396,6 +435,9 @@ namespace sqlserver.SignalBox
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -415,6 +457,8 @@ namespace sqlserver.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("Parameters");
                 });
@@ -449,6 +493,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("Product");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -467,6 +514,8 @@ namespace sqlserver.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("RecommendableItems");
 
@@ -786,6 +835,9 @@ namespace sqlserver.SignalBox
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("ErrorHandling")
                         .HasColumnType("nvarchar(max)");
 
@@ -810,6 +862,8 @@ namespace sqlserver.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.HasIndex("ModelRegistrationId");
 
@@ -921,6 +975,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("EventKey")
                         .HasColumnType("nvarchar(max)");
 
@@ -940,6 +997,8 @@ namespace sqlserver.SignalBox
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EnvironmentId");
+
                     b.ToTable("Rules");
                 });
 
@@ -957,6 +1016,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -966,6 +1028,8 @@ namespace sqlserver.SignalBox
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("Segments");
                 });
@@ -988,6 +1052,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -1003,6 +1070,8 @@ namespace sqlserver.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("Touchpoints");
                 });
@@ -1026,6 +1095,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -1041,6 +1113,8 @@ namespace sqlserver.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("TrackedUsers");
                 });
@@ -1434,6 +1508,16 @@ namespace sqlserver.SignalBox
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Feature", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
+                });
+
             modelBuilder.Entity("SignalBox.Core.FeatureGenerator", b =>
                 {
                     b.HasOne("SignalBox.Core.Feature", "Feature")
@@ -1462,6 +1546,35 @@ namespace sqlserver.SignalBox
                     b.Navigation("Feature");
 
                     b.Navigation("TrackedUser");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId");
+
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Parameter", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.RecommendableItem", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ItemsRecommendation", b =>
@@ -1579,10 +1692,17 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.RecommenderEntityBase", b =>
                 {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("SignalBox.Core.ModelRegistration", "ModelRegistration")
                         .WithMany("Recommenders")
                         .HasForeignKey("ModelRegistrationId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
 
                     b.Navigation("ModelRegistration");
                 });
@@ -1593,6 +1713,44 @@ namespace sqlserver.SignalBox
                         .WithMany("TargetVariableValues")
                         .HasForeignKey("RecommenderEntityBaseId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Rule", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId");
+
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Segment", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId");
+
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
                 });
 
             modelBuilder.Entity("SignalBox.Core.TrackedUserAction", b =>

@@ -11,8 +11,8 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFParameterSetRecommenderStore : EFRecommenderStoreBase<ParameterSetRecommender>, IParameterSetRecommenderStore
     {
-        public EFParameterSetRecommenderStore(SignalBoxDbContext context)
-        : base(context, (c) => c.ParameterSetRecommenders)
+        public EFParameterSetRecommenderStore(SignalBoxDbContext context, IEnvironmentService environmentService)
+        : base(context, environmentService, (c) => c.ParameterSetRecommenders)
         {
         }
 

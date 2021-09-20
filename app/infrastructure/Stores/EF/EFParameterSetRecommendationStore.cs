@@ -17,7 +17,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<ParameterSetRecommendation> GetRecommendationFromCorrelator(long correlatorId)
         {
-            return await Set
+            return await QuerySet
                 .Include(_ => _.Recommender)
                 .ThenInclude(_ => _.ModelRegistration)
                 .SingleAsync(_ => _.RecommendationCorrelatorId == correlatorId);
@@ -29,16 +29,16 @@ namespace SignalBox.Infrastructure.EntityFramework
             {
                 return false;
             }
-            return await Set.AnyAsync(_ => _.RecommendationCorrelatorId == correlatorId);
+            return await QuerySet.AnyAsync(_ => _.RecommendationCorrelatorId == correlatorId);
         }
 
         public async Task<Paginated<ParameterSetRecommendation>> QueryForRecommender(int page, long recommenderId)
         {
-            var itemCount = await Set.CountAsync(_ => _.RecommenderId == recommenderId);
+            var itemCount = await QuerySet.CountAsync(_ => _.RecommenderId == recommenderId);
             List<ParameterSetRecommendation> results;
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
-                results = await Set
+                results = await QuerySet
                     .Where(_ => _.RecommenderId == recommenderId)
                     .Include(_ => _.TrackedUser)
                     .OrderByDescending(_ => _.Created)

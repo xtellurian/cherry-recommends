@@ -12,7 +12,7 @@ namespace SignalBox.Infrastructure.Files
         private string rootPath = "~";
         public LocalFileStore(string rootPath = null)
         {
-            this.rootPath = rootPath ?? Environment.CurrentDirectory;
+            this.rootPath = rootPath ?? System.Environment.CurrentDirectory;
         }
 
         public Task<IEnumerable<FileInformation>> ListFiles(string path = null)

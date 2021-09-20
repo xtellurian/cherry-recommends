@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace SignalBox.Core
 {
-    public class Segment : NamedEntity
+    public class Segment : EnvironmentScopedEntity
     {
         public Segment()
         { }

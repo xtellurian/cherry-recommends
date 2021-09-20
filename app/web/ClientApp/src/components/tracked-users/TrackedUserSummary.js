@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useTrackedUsers } from "../../api-hooks/trackedUserApi";
-import { Title, Spinner, Paginator } from "../molecules";
+import { Title, Spinner, Paginator, ErrorCard } from "../molecules";
 import { SearchBox } from "../molecules/SearchBox";
 import { TrackedUserListItem } from "../molecules/TrackedUser";
 import { EmptyList } from "../molecules/EmptyList";
@@ -28,6 +28,7 @@ export const TrackedUserSummary = () => {
       <Title>Tracked Users</Title>
       <hr />
       {trackedUsers.loading && <Spinner />}
+      {trackedUsers.error && <ErrorCard error={trackedUsers.error} />}
       <SearchBox onSearch={setSearchTerm} />
       {trackedUsers.items && trackedUsers.items.length === 0 && (
         <EmptyList>

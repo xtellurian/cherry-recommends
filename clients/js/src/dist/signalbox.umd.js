@@ -19,12 +19,24 @@
 
   const getUrl = (path) => `${storedBaseUrl}/${path}`;
 
-  const defaultHeaders$9 = { "Content-Type": "application/json" };
+  let defaltEnvironmentId = null;
 
-  const headers = (token) =>
-    !token
-      ? defaultHeaders$9
-      : { ...defaultHeaders$9, Authorization: `Bearer ${token}` };
+  const setDefaultEnvironmentId$1 = (e) => {
+    defaltEnvironmentId = e;
+  };
+
+  const defaultHeaders$8 = { "Content-Type": "application/json" };
+
+  const headers = (token) => {
+    let headers = { ...defaultHeaders$8 };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    if (defaltEnvironmentId) {
+      headers["x-environment"] = defaltEnvironmentId;
+    }
+    return headers;
+  };
 
   const fetchApiKeys = async ({ success, error, token, page }) => {
     const url = getUrl("api/apiKeys");
@@ -150,7 +162,7 @@
     fetchLatestActionsAsync: fetchLatestActionsAsync
   });
 
-  const defaultHeaders$8 = { "Content-Type": "application/json" };
+  const defaultHeaders$7 = { "Content-Type": "application/json" };
 
   const fetchDeploymentConfiguration = async ({
     success,
@@ -161,8 +173,8 @@
 
     const result = await fetch(url, {
       headers: !token
-        ? defaultHeaders$8
-        : { ...defaultHeaders$8, Authorization: `Bearer ${token}` },
+        ? defaultHeaders$7
+        : { ...defaultHeaders$7, Authorization: `Bearer ${token}` },
     });
     if (result.ok) {
       success(await result.json());
@@ -318,82 +330,53 @@
     createRecommendationConsumedEventAsync: createRecommendationConsumedEventAsync
   });
 
-  const defaultHeaders$7 = { "Content-Type": "application/json" };
-
-  const fetchExperiments = async ({ success, error, token, page }) => {
-    const url = getUrl("api/experiments");
+  const fetchEnvironmentsAsync = async ({ token, page }) => {
+    const url = getUrl("api/Environments");
     const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: !token ? {} : { Authorization: `Bearer ${token}` },
+      headers: headers(token),
     });
     if (response.ok) {
-      const results = await response.json();
-      success(results);
+      return await response.json();
     } else {
-      error(response.json());
+      throw response.json();
     }
   };
 
-  const createExperiment = async ({ success, error, token, payload }) => {
-    const url = getUrl("api/experiments");
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$7
-        : { ...defaultHeaders$7, Authorization: `Bearer ${token}` },
+  const createEnvironmentAsync = async ({ token, environment }) => {
+    const url = getUrl("api/Environments");
+    const response = await fetch(`${url}?`, {
+      headers: headers(token),
       method: "post",
-      body: JSON.stringify(payload),
+      body: JSON.stringify(environment),
     });
     if (response.ok) {
-      success(await response.json());
+      return await response.json();
     } else {
-      error(await response.json());
+      throw response.json();
     }
   };
 
-  const fetchExperimentResults = async ({ success, error, token, id }) => {
-    const url = getUrl(`api/experiments/${id}/results`);
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$7
-        : { ...defaultHeaders$7, Authorization: `Bearer ${token}` },
+  const deleteEnvironmentAsync = async ({ token, id }) => {
+    const url = getUrl(`api/Environments/${id}`);
+    const response = await fetch(`${url}?`, {
+      headers: headers(token),
+      method: "delete",
     });
     if (response.ok) {
-      const data = await response.json();
-      success(data);
+      return await response.json();
     } else {
-      error(response.json());
+      throw response.json();
     }
   };
 
-  const fetchRecommendation = async ({
-    success,
-    error,
-    token,
-    experimentId,
-    features,
-    userId,
-  }) => {
-    const url = getUrl(`api/experiments/${experimentId}/recommendation`);
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$7
-        : { ...defaultHeaders$7, Authorization: `Bearer ${token}` },
-      method: "post",
-      body: JSON.stringify({ commonUserId: userId, features }),
-    });
-    if (response.ok) {
-      const data = await response.json();
-      success(data);
-    } else {
-      error(await response.json());
-    }
-  };
+  const setDefaultEnvironmentId = setDefaultEnvironmentId$1;
 
-  var experimentsApi = /*#__PURE__*/Object.freeze({
+  var environmentsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchExperiments: fetchExperiments,
-    createExperiment: createExperiment,
-    fetchExperimentResults: fetchExperimentResults,
-    fetchRecommendation: fetchRecommendation
+    fetchEnvironmentsAsync: fetchEnvironmentsAsync,
+    createEnvironmentAsync: createEnvironmentAsync,
+    deleteEnvironmentAsync: deleteEnvironmentAsync,
+    setDefaultEnvironmentId: setDefaultEnvironmentId
   });
 
   const fetchFeatureGeneratorsAsync = async ({ page, token }) => {
@@ -2721,8 +2704,8 @@
   exports.apiKeys = apiKeyApi;
   exports.dataSummary = dataSummaryApi;
   exports.deployment = deploymentApi;
+  exports.environments = environmentsApi;
   exports.events = index$1;
-  exports.experiments = experimentsApi;
   exports.featureGenerators = featureGeneratorsApi;
   exports.features = featuresApi;
   exports.integratedSystems = integratedSystemsApi;
@@ -2741,6 +2724,7 @@
   exports.rewardSelectors = rewardSelectorsApi;
   exports.segments = segmentsApi;
   exports.setBaseUrl = setBaseUrl;
+  exports.setDefaultEnvironmentId = setDefaultEnvironmentId$1;
   exports.touchpoints = touchpointsApi;
   exports.trackedUsers = trackedUsersApi;
 

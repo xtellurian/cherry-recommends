@@ -1,6 +1,6 @@
 namespace SignalBox.Core
 {
-    public class Rule : NamedEntity
+    public class Rule : EnvironmentScopedEntity
     {
         public Rule()
         {

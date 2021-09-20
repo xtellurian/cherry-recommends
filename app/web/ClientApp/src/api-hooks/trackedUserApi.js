@@ -9,10 +9,12 @@ import {
   fetchLatestRecommendationsAsync,
   fetchTrackedUsersActionsAsync,
 } from "../api/trackedUsersApi";
+import { useEnvironment } from "./environmentsApi";
 
 export const useTrackedUsers = ({ searchTerm }) => {
   const token = useAccessToken();
   const page = usePagination();
+  const [environment, setEnvironment] = useEnvironment();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
@@ -25,7 +27,7 @@ export const useTrackedUsers = ({ searchTerm }) => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, page, searchTerm]);
+  }, [token, page, searchTerm, environment]);
 
   return result;
 };

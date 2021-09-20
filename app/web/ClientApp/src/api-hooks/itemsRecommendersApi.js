@@ -11,10 +11,12 @@ import {
 } from "../api/itemsRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
+import { useEnvironment } from "./environmentsApi";
 
 export const useItemsRecommenders = () => {
   const token = useAccessToken();
   const page = usePagination();
+  const [environment, setEnvironment] = useEnvironment();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
@@ -26,8 +28,7 @@ export const useItemsRecommenders = () => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, page]);
-
+  }, [token, page, environment]);
   return result;
 };
 

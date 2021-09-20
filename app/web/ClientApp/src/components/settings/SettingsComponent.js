@@ -5,6 +5,7 @@ import { ApiKeyComponent } from "./apiKeys/ApiKeyComponent";
 import { IntegrationsComponent } from "./integrations/IntegrationsComponent";
 import { RewardsComponent } from "./rewards/RewardsComponent";
 import { DeploymentInfo } from "./deployment/DeploymentInfo";
+import { EnvironmentsComponent } from "./environments/EnvironmentsComponent"
 
 const SettingsHome = () => {
   const { path } = useRouteMatch();
@@ -18,6 +19,11 @@ const SettingsHome = () => {
       <div>
         <Link to={`${path}/integrations`}>
           <button className="btn btn-outline-primary">Integrations</button>
+        </Link>
+      </div>
+      <div>
+        <Link to={`${path}/environments`}>
+          <button className="btn btn-outline-primary">Environments</button>
         </Link>
       </div>
     </React.Fragment>
@@ -41,6 +47,7 @@ export const SettingsComponent = () => {
         />
         <AuthorizeRoute path={`${path}/info`} component={DeploymentInfo} />
         <AuthorizeRoute path={`${path}/rewards`} component={RewardsComponent} />
+        <AuthorizeRoute path={`${path}/environments`} component={EnvironmentsComponent} />
       </Switch>
     </React.Fragment>
   );

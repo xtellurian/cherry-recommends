@@ -4,8 +4,9 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFParameterStore : EFCommonEntityStoreBase<Parameter>, IParameterStore
     {
-        public EFParameterStore(SignalBoxDbContext context)
-        : base(context, (c) => c.Parameters)
+        protected override bool IsEnvironmentScoped => true;
+        public EFParameterStore(SignalBoxDbContext context, IEnvironmentService environmentService)
+        : base(context, environmentService, (c) => c.Parameters)
         {
         }
     }

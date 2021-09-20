@@ -6,8 +6,8 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFProductStore : EFCommonEntityStoreBase<Product>, IProductStore
     {
-        public EFProductStore(SignalBoxDbContext context)
-        : base(context, (c) => c.Products)
+        public EFProductStore(SignalBoxDbContext context, IEnvironmentService environmentService)
+        : base(context, environmentService, (c) => c.Products)
         {
         }
     }

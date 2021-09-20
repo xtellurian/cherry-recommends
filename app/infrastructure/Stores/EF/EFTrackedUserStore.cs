@@ -7,7 +7,9 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFTrackedUserStore : EFCommonEntityStoreBase<TrackedUser>, ITrackedUserStore
     {
-        public EFTrackedUserStore(SignalBoxDbContext context) : base(context, (c) => c.TrackedUsers)
+        protected override bool IsEnvironmentScoped => true;
+        public EFTrackedUserStore(SignalBoxDbContext context, IEnvironmentService environmentService)
+        : base(context, environmentService, (c) => c.TrackedUsers)
         { }
 
         public async Task<IEnumerable<TrackedUser>> CreateIfNotExists(IEnumerable<string> commonIds)
@@ -27,7 +29,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<TrackedUser> CreateIfNotExists(string commonId, string name = null)
         {
-            if (!await this.Set.AnyAsync(_ => _.CommonId == commonId))
+            if (!await this.QuerySet.AnyAsync(_ => _.CommonId == commonId))
             {
                 return await this.Create(new TrackedUser(commonId, name));
             }
@@ -39,13 +41,13 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<long> GetInternalId(string commonId)
         {
-            var entity = await Set.SingleAsync(_ => _.CommonId == commonId);
+            var entity = await QuerySet.SingleAsync(_ => _.CommonId == commonId);
             return entity.Id;
         }
 
         public async Task<TrackedUser> ReadFromCommonUserId(string commonId)
         {
-            return await Set.SingleAsync(_ => _.CommonId == commonId);
+            return await QuerySet.SingleAsync(_ => _.CommonId == commonId);
         }
     }
 }

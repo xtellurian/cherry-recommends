@@ -1,9 +1,5 @@
 const AuthenticatedIA = [
   {
-    name: "Setup",
-    to: "/",
-  },
-  {
     name: "Users",
     items: [
       {
@@ -20,19 +16,6 @@ const AuthenticatedIA = [
       },
     ],
   },
-  //   {
-  //     name: "Segmentation",
-  //     items: [
-  //       {
-  //         name: "Segments",
-  //         to: "/segments",
-  //       },
-  //       {
-  //         name: "Models",
-  //         to: "/models",
-  //       },
-  //     ],
-  //   },
   {
     name: "Library",
     items: [
@@ -43,10 +26,6 @@ const AuthenticatedIA = [
       {
         name: "Parameters",
         to: "/parameters",
-      },
-      {
-        name: "Products",
-        to: "/products",
       },
     ],
   },
@@ -61,16 +40,16 @@ const AuthenticatedIA = [
         name: "Parameter Sets",
         to: "/recommenders/parameter-set-recommenders",
       },
-      // {
-      //   name: "Products",
-      //   to: "/recommenders/product-recommenders",
-      // },
     ],
   },
 ];
 
 export const getAuthenticatedIA = (scopes) => {
   let ia = AuthenticatedIA;
+  if (ia.filter((_) => _.name === "Admin").length > 0) {
+    // already in there
+    return ia;
+  }
   if (scopes.includes("write:features")) {
     ia.splice(1, 0, {
       name: "Admin",
@@ -87,18 +66,6 @@ export const getAuthenticatedIA = (scopes) => {
           name: "Models",
           to: "/models",
         },
-        // {
-        //   name: "Touchpoints",
-        //   to: "/touchpoints",
-        // },
-        // {
-        //   name: "Offers",
-        //   to: "/offers",
-        // },
-        // {
-        //   name: "Experiments",
-        //   to: "/experiments",
-        // },
       ],
     });
   }

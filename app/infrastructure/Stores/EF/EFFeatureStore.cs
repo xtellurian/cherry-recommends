@@ -9,7 +9,8 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFFeatureStore : EFCommonEntityStoreBase<Feature>, IFeatureStore
     {
-        public EFFeatureStore(SignalBoxDbContext context) : base(context, c => c.Features)
+        public EFFeatureStore(SignalBoxDbContext context, IEnvironmentService environmentService) 
+        : base(context, environmentService, c => c.Features)
         {
         }
 

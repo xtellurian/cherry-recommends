@@ -11,8 +11,8 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFItemsRecommenderStore : EFRecommenderStoreBase<ItemsRecommender>, IItemsRecommenderStore
     {
-        public EFItemsRecommenderStore(SignalBoxDbContext context)
-        : base(context, (c) => c.ItemsRecommenders)
+        public EFItemsRecommenderStore(SignalBoxDbContext context, IEnvironmentService environmentService)
+        : base(context, environmentService, (c) => c.ItemsRecommenders)
         { }
 
         public override async Task<ItemsRecommender> Read(long id)

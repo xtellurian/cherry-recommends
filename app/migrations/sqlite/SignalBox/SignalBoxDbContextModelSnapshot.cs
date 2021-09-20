@@ -92,6 +92,35 @@ namespace sqlite.SignalBox
                     b.ToTable("SegmentTrackedUser");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Environment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Environments");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Feature", b =>
                 {
                     b.Property<long>("Id")
@@ -110,6 +139,9 @@ namespace sqlite.SignalBox
                         .HasColumnType("INTEGER")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
@@ -125,6 +157,8 @@ namespace sqlite.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("Features");
                 });
@@ -276,6 +310,9 @@ namespace sqlite.SignalBox
                         .HasColumnType("INTEGER")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("IntegrationStatus")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -305,6 +342,8 @@ namespace sqlite.SignalBox
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("IntegratedSystems");
                 });
@@ -394,6 +433,9 @@ namespace sqlite.SignalBox
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
@@ -413,6 +455,8 @@ namespace sqlite.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("Parameters");
                 });
@@ -447,6 +491,9 @@ namespace sqlite.SignalBox
                         .HasColumnType("TEXT")
                         .HasDefaultValue("Product");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
@@ -465,6 +512,8 @@ namespace sqlite.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("RecommendableItems");
 
@@ -784,6 +833,9 @@ namespace sqlite.SignalBox
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ErrorHandling")
                         .HasColumnType("TEXT");
 
@@ -808,6 +860,8 @@ namespace sqlite.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.HasIndex("ModelRegistrationId");
 
@@ -917,6 +971,9 @@ namespace sqlite.SignalBox
                         .HasColumnType("INTEGER")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("EventKey")
                         .HasColumnType("TEXT");
 
@@ -936,6 +993,8 @@ namespace sqlite.SignalBox
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EnvironmentId");
+
                     b.ToTable("Rules");
                 });
 
@@ -953,6 +1012,9 @@ namespace sqlite.SignalBox
                         .HasColumnType("INTEGER")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
@@ -962,6 +1024,8 @@ namespace sqlite.SignalBox
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("Segments");
                 });
@@ -984,6 +1048,9 @@ namespace sqlite.SignalBox
                         .HasColumnType("INTEGER")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
@@ -999,6 +1066,8 @@ namespace sqlite.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("Touchpoints");
                 });
@@ -1022,6 +1091,9 @@ namespace sqlite.SignalBox
                         .HasColumnType("INTEGER")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
@@ -1037,6 +1109,8 @@ namespace sqlite.SignalBox
 
                     b.HasIndex("CommonId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.ToTable("TrackedUsers");
                 });
@@ -1428,6 +1502,16 @@ namespace sqlite.SignalBox
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Feature", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
+                });
+
             modelBuilder.Entity("SignalBox.Core.FeatureGenerator", b =>
                 {
                     b.HasOne("SignalBox.Core.Feature", "Feature")
@@ -1456,6 +1540,35 @@ namespace sqlite.SignalBox
                     b.Navigation("Feature");
 
                     b.Navigation("TrackedUser");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId");
+
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Parameter", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.RecommendableItem", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ItemsRecommendation", b =>
@@ -1573,10 +1686,17 @@ namespace sqlite.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.RecommenderEntityBase", b =>
                 {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("SignalBox.Core.ModelRegistration", "ModelRegistration")
                         .WithMany("Recommenders")
                         .HasForeignKey("ModelRegistrationId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
 
                     b.Navigation("ModelRegistration");
                 });
@@ -1587,6 +1707,44 @@ namespace sqlite.SignalBox
                         .WithMany("TargetVariableValues")
                         .HasForeignKey("RecommenderEntityBaseId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Rule", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId");
+
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Segment", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId");
+
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Environment");
                 });
 
             modelBuilder.Entity("SignalBox.Core.TrackedUserAction", b =>

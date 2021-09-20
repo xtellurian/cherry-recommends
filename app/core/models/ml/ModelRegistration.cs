@@ -19,7 +19,7 @@ namespace SignalBox.Core
         AzurePersonalizer
     }
 
-    public class ModelRegistration : NamedEntity
+    public class ModelRegistration : Entity
     {
         public ModelRegistration()
         { }
@@ -29,15 +29,17 @@ namespace SignalBox.Core
                                  HostingTypes hostingType,
                                  string scoringUrl,
                                  string key,
-                                 SwaggerDefinition swagger) : base(name)
+                                 SwaggerDefinition swagger)
         {
             ModelType = modelType;
             HostingType = hostingType;
             ScoringUrl = scoringUrl;
             Key = key;
             Swagger = swagger;
+            Name = name;
         }
 
+        public string Name { get; set; }
         [JsonIgnore]
         public ICollection<RecommenderEntityBase> Recommenders { get; set; }
         [JsonIgnore]

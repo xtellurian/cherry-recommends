@@ -57,6 +57,9 @@ namespace SignalBox.Web
                 services.UseMemory();
             }
 
+            services.AddHttpContextAccessor();
+            services.AddScoped<IEnvironmentService, EFCoreHttpHeaderEnvironmentService>();
+
             // configure storage queues
             services.Configure<AzureQueueConfig>(Configuration.GetSection("Queues"));
             services.Configure<QueueMessagesFileHosting>(Configuration.GetSection("Queues"));

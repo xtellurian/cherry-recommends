@@ -24,6 +24,11 @@ namespace SignalBox.Infrastructure
             FixSqlLite(modelBuilder);
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+
         private void FixSqlLite(ModelBuilder modelBuilder)
         {
             if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
@@ -67,6 +72,7 @@ namespace SignalBox.Infrastructure
         }
 
         // core stuff
+        public DbSet<Core.Environment> Environments { get; set; }
         public DbSet<Rule> Rules { get; set; }
         public DbSet<RecommendableItem> RecommendableItems { get; set; }
         public DbSet<Product> Products { get; set; }

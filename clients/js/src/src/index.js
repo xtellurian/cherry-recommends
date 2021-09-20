@@ -15,7 +15,7 @@ import * as apiKeys from "./api/apiKeyApi";
 import * as dataSummary from "./api/dataSummaryApi";
 import * as deployment from "./api/deploymentApi";
 import * as events from "./api/eventsApi/index";
-import * as experiments from "./api/experimentsApi";
+import * as environments from "./api/environmentsApi";
 import * as featureGenerators from "./api/featureGeneratorsApi";
 import * as features from "./api/featuresApi";
 import * as integratedSystems from "./api/integratedSystemsApi";
@@ -38,6 +38,7 @@ import * as rewardSelectors from "./api/rewardSelectorsApi";
 import * as actions from "./api/actionsApi";
 
 import { setBaseUrl } from "./baseUrl";
+import { setDefaultEnvironmentId } from "./api/headers";
 
 export {
   actions,
@@ -45,7 +46,7 @@ export {
   dataSummary,
   deployment,
   events,
-  experiments,
+  environments,
   featureGenerators,
   features,
   integratedSystems,
@@ -66,4 +67,5 @@ export {
   touchpoints,
   trackedUsers,
   setBaseUrl,
+  setDefaultEnvironmentId,
 };

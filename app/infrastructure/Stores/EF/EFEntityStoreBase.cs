@@ -19,9 +19,9 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<int> Count(Expression<Func<T, bool>> predicate = null)
         {
-            if (await Set.AnyAsync(predicate ?? ((x) => true)))
+            if (await QuerySet.AnyAsync(predicate ?? ((x) => true)))
             {
-                return await Set
+                return await QuerySet
                     .CountAsync(predicate ?? ((x) => true));
             }
             else
@@ -32,14 +32,14 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<TResult> Min<TResult>(Expression<Func<T, TResult>> selector)
         {
-            return await Set.DefaultIfEmpty(null).MinAsync(selector);
+            return await QuerySet.DefaultIfEmpty(null).MinAsync(selector);
         }
 
         public async Task<TResult> Min<TResult>(Expression<Func<T, bool>> predicate, Expression<Func<T, TResult>> selector)
         {
-            if (await Set.Where(predicate).Select(selector).AnyAsync(_ => _ != null))
+            if (await QuerySet.Where(predicate).Select(selector).AnyAsync(_ => _ != null))
             {
-                return await Set.Where(predicate).MinAsync(selector);
+                return await QuerySet.Where(predicate).MinAsync(selector);
             }
             else
             {
@@ -49,7 +49,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<TResult> Max<TResult>(Expression<Func<T, TResult>> selector)
         {
-            return await Set.MaxAsync(selector);
+            return await QuerySet.MaxAsync(selector);
         }
 
         public virtual async Task<T> Create(T entity)
@@ -60,18 +60,18 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<bool> Exists(long id)
         {
-            return await Set.AnyAsync(_ => _.Id == id);
+            return await QuerySet.AnyAsync(_ => _.Id == id);
         }
 
         public async Task<Paginated<T>> Query(int page, Expression<Func<T, bool>> predicate = null)
         {
             predicate ??= _ => true; // default to all entities
-            var itemCount = await Set.CountAsync(predicate);
+            var itemCount = await QuerySet.CountAsync(predicate);
             List<T> results;
 
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
-                results = await Set
+                results = await QuerySet
                     .Where(predicate)
                     .OrderByDescending(defaultOrderBy)
                     .Skip((page - 1) * PageSize).Take(PageSize)
@@ -90,12 +90,12 @@ namespace SignalBox.Infrastructure.EntityFramework
                                                          Expression<Func<T, bool>> predicate = null)
         {
             predicate ??= _ => true; // default to all entities
-            var itemCount = await Set.CountAsync(predicate);
+            var itemCount = await QuerySet.CountAsync(predicate);
             List<T> results;
 
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
-                results = await Set
+                results = await QuerySet
                     .Where(predicate)
                     .Include(include)
                     .OrderByDescending(defaultOrderBy)
@@ -114,7 +114,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             try
             {
-                return await Set.SingleAsync(_ => _.Id == id);
+                return await QuerySet.SingleAsync(_ => _.Id == id);
             }
             catch (Exception ex)
             {
@@ -125,7 +125,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             try
             {
-                return await Set.Include(include).SingleAsync(_ => _.Id == id);
+                return await QuerySet.Include(include).SingleAsync(_ => _.Id == id);
             }
             catch (Exception ex)
             {
@@ -137,7 +137,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             try
             {
-                var entity = await Set.SingleAsync(_ => _.Id == id);
+                var entity = await QuerySet.SingleAsync(_ => _.Id == id);
                 var result = Set.Remove(entity);
                 return result.State.HasFlag(EntityState.Deleted);
             }
@@ -149,7 +149,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<T> Update(T entity)
         {
-            entity = await Set.SingleAsync(_ => _.Id == entity.Id);
+            entity = await QuerySet.SingleAsync(_ => _.Id == entity.Id);
             return entity;
         }
 

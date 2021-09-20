@@ -3,7 +3,6 @@ import { Route } from "react-router";
 import { Layout } from "./components/Layout";
 import { Home } from "./components/Home";
 import { TrackedUsersComponent } from "./components/tracked-users/TrackedUsersComponent";
-import { ExperimentsComponent } from "./components/experiments/ExperimentsComponent";
 import AuthorizeRoute from "./components/auth0/ProtectedRoute";
 import { SegmentsComponent } from "./components/segments/SegmentsComponent";
 import { OffersComponent } from "./components/offers/OffersComponent";
@@ -21,9 +20,6 @@ import { ProductsComponent } from "./components/products/ProductsComponent";
 import { EventsComponent } from "./components/events/EventsComponent";
 import { AdminComponent } from "./components/admin/AdminComponent";
 
-// import some demo stuff
-import { DemoComponent } from "./components/demo-app/DemoComponent";
-
 import "./custom.css";
 export default class App extends Component {
   static displayName = App.name;
@@ -38,7 +34,6 @@ export default class App extends Component {
           path="/tracked-users"
           component={TrackedUsersComponent}
         />
-        <AuthorizeRoute path="/experiments" component={ExperimentsComponent} />
         <AuthorizeRoute path="/segments" component={SegmentsComponent} />
         <AuthorizeRoute path="/offers" component={OffersComponent} />
         <AuthorizeRoute path="/parameters" component={ParametersComponent} />
@@ -58,7 +53,6 @@ export default class App extends Component {
         <AuthorizeRoute path="/events" component={EventsComponent} />
         <AuthorizeRoute path="/settings" component={SettingsComponent} />
 
-        <AuthorizeRoute path="/demo" component={DemoComponent} />
         <AuthorizeRoute path="/dataview" component={DataViewComponent} />
         <AuthorizeRoute path="/reports" component={ReportsComponent} />
         <AuthorizeRoute path="/touchpoints" component={TouchpointsComponent} />

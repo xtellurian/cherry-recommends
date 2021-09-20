@@ -6,6 +6,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import { fetchAuth0Configuration } from "./api/reactConfigApi";
 import { FunloaderContainer } from "./components/molecules/FunLoader";
 import { FunError } from "./components/molecules/FunError";
+import EnvironmentStore from "./contexts/EnvironmentStore";
 import Modal from "react-modal";
 import App from "./App";
 
@@ -32,7 +33,9 @@ fetchAuth0Configuration()
         }
       >
         <BrowserRouter basename={baseUrl}>
-          <App />
+          <EnvironmentStore>
+            <App />
+          </EnvironmentStore>
         </BrowserRouter>
       </Auth0Provider>,
       rootElement
