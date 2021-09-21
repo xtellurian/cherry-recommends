@@ -49,6 +49,7 @@ namespace SignalBox.Functions
 
                     services.AddScoped<ITelemetry, AzureFunctionsAppInsightsTelemetry>();
                     services.AddScoped<IQueueMessagesFileStore, AzureBlobQueueMessagesFileStore>();
+                    services.AddScoped<IEnvironmentService, AzFunctionEnvironmentService>();
 
                     ConfigureAppSettings(services, configuration);
 
