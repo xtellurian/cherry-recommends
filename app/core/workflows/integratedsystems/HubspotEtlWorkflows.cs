@@ -40,6 +40,7 @@ namespace SignalBox.Core.Workflows
             {
                 // do it once.
                 var trackedUsers = await GetAndUpdateTrackedUsers(integratedSystem, null, propertyNames);
+                report.NumberOfHubspotRequests += 1;
                 report.NumberOfTrackedUsersUpdated += trackedUsers.Items.Count();
                 await trackedUserStore.Context.SaveChanges();
                 var after = trackedUsers.Pagination.Next?.After;
@@ -47,6 +48,7 @@ namespace SignalBox.Core.Workflows
                 while (!string.IsNullOrEmpty(after) && trackedUsers.Items.Any())
                 {
                     trackedUsers = await GetAndUpdateTrackedUsers(integratedSystem, after, propertyNames);
+                    report.NumberOfHubspotRequests += 1;
                     await trackedUserStore.Context.SaveChanges();
                     after = trackedUsers.Pagination?.Next?.After;
                     report.NumberOfTrackedUsersUpdated += trackedUsers.Items.Count();
@@ -127,6 +129,7 @@ namespace SignalBox.Core.Workflows
         {
             this.HubspotSystemCommonId = commonId;
         }
+        public int NumberOfHubspotRequests { get; set; }
         public string HubspotSystemCommonId { get; set; }
         public int NumberOfTrackedUsersUpdated { get; set; }
     }
