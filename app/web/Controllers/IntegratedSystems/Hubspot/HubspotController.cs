@@ -176,5 +176,36 @@ namespace SignalBox.Web.Controllers
             await store.Context.SaveChanges();
             return cache.ConnectedContactProperties;
         }
+
+        // push behaviour
+        [HttpGet("PushBehaviour")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<PushBehaviour> GetPushBehaviour(string id)
+        {
+            var system = await store.GetEntity(id);
+            var cache = system.GetCache<HubspotCache>();
+            if (cache?.PushBehaviour == null)
+            {
+                cache ??= new HubspotCache();
+                cache.PushBehaviour ??= new PushBehaviour();
+                system.SetCache(cache);
+                await store.Context.SaveChanges();
+                logger.LogInformation("Updated cache since it was null");
+            }
+
+            return cache.PushBehaviour;
+        }
+
+        [HttpPost("PushBehaviour")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<PushBehaviour> SetPushBehaviour(string id, PushBehaviour dto)
+        {
+            var system = await store.GetEntity(id);
+            var cache = system.GetCache<HubspotCache>();
+            cache.PushBehaviour = dto;
+            system.SetCache(cache);
+            await store.Context.SaveChanges();
+            return cache.PushBehaviour;
+        }
     }
 }

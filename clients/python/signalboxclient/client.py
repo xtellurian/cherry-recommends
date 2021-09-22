@@ -11,6 +11,7 @@ from .parameters import create_parameter
 from .parameter_recommenders import create_parameterset_recommender, get_parameterset_recommender, delete_parameterset_recommender
 from .product_recommenders import create_product_recommender, get_product_recommender, delete_product_recommender, invoke_product_recommender, create_recommender_target_variable_value, get_recommender_target_variable_values
 from .features import get_feature, create_feature, get_feature_value, set_feature_value
+from .items_recommenders import create_items_recommender, get_items_recommender, invoke_items_recommender, delete_items_recommender
 
 
 class Configuration:
@@ -113,7 +114,7 @@ class SignalBoxClient:
         else:
             raise SignalBoxException(r.text)
 
-    def create_parameter(self, common_id: str, name: str, parameter_type: str = "Numerical", default_value = None, description: str = None):
+    def create_parameter(self, common_id: str, name: str, parameter_type: str = "Numerical", default_value=None, description: str = None):
         return create_parameter(self.access_token, self.base_url,
                                 common_id, name, parameter_type, default_value, description)
 
@@ -180,6 +181,19 @@ class SignalBoxClient:
 
     def get_parameterset_recommender_target_variable_values(self, recommender_id: int, name: str = None):
         return get_recommender_target_variable_values(self.access_token, self.base_url, "ParameterSetRecommenders", recommender_id, name)
+
+    # Items Recommender
+    def create_items_recommender(self, common_id: str, name: str, default_item_id: str, item_ids: List[str] = None, number_items_to_recommend: int = None):
+        return create_items_recommender(self.access_token, self.base_url, common_id, name, default_item_id, item_ids, number_items_to_recommend)
+
+    def get_items_recommender(self, recommender_id):
+        return get_items_recommender(self.access_token, self.base_url, recommender_id)
+
+    def invoke_items_recommender(self, recommender_id, common_user_id: str, arguments: dict = None):
+        return invoke_items_recommender(self.access_token, self.base_url, recommender_id, common_user_id, arguments)
+
+    def delete_items_recommender(self, recommender_id):
+        return delete_items_recommender(self.access_token, self.base_url, recommender_id)
 
     def recommend_offer(self, experimentId: str, commonUserId: str, features: dict = None):
         json_params = {

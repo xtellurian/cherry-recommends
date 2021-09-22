@@ -25,8 +25,8 @@ namespace SignalBox.Core
                 throw new EntityNotFoundException(typeof(TrackedUserSystemMap), externalSystemUserId, "User Map not found");
             }
         }
-        
-     
+
+
         /// <summary>
         /// True if a user exists in the integrated system.
         /// </summary>
@@ -35,6 +35,33 @@ namespace SignalBox.Core
             var systemMaps = await systemMapStore.Query(1,  // first page
                     _ => _.UserId == externalSystemUserId && _.IntegratedSystemId == integratedSystemId);
             return systemMaps.Items.Any();
+        }
+
+        /// <summary>
+        /// Finds the map for a given system and tracked user
+        /// </summary>
+        public static async Task<TrackedUserSystemMap> FindMap(this ITrackedUserSystemMapStore systemMapStore, TrackedUser trackedUser, IntegratedSystem system)
+        {
+            var systemMaps = await systemMapStore.Query(1,  // first page
+                    _ => _.TrackedUserId == trackedUser.Id && _.IntegratedSystemId == system.Id);
+            if (systemMaps.Items.Any())
+            {
+                return systemMaps.Items.First();
+            }
+            else
+            {
+                throw new BadRequestException($"Tracked User {trackedUser.Id} has no system map for system {system.Id}");
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the map exists
+        /// </summary>
+        public static async Task<bool> MapExists(this ITrackedUserSystemMapStore systemMapStore, TrackedUser trackedUser, IntegratedSystem system)
+        {
+            var mapCount = await systemMapStore.Count(_ => _.TrackedUserId == trackedUser.Id && _.IntegratedSystemId == system.Id);
+            return mapCount > 0;
+
         }
     }
 }

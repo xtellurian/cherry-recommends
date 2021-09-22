@@ -8,5 +8,8 @@ namespace SignalBox.Core
         public ConfigurationException(string message) : base(message)
         {
         }
+        public ConfigurationException(string message, System.Exception inner) : base(message, inner)
+        {
+        }
     }
 }

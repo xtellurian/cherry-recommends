@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace SignalBox.Core
 {
 #nullable enable
@@ -12,6 +14,7 @@ namespace SignalBox.Core
         }
         public string? Name { get; set; } // settable by the creator
         public long? EnvironmentId { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Environment? Environment { get; set; }
     }
 }

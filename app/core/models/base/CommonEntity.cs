@@ -9,7 +9,7 @@ namespace SignalBox.Core
         protected CommonEntity(string commonId, string? name) : base(name)
         {
             Validate(commonId);
-            CommonId = commonId;
+            CommonId = commonId.ToLower();
         }
 
         protected CommonEntity(string commonId, string? name, DynamicPropertyDictionary? properties) : this(commonId, name)

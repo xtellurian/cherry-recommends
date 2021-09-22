@@ -94,18 +94,7 @@ namespace SignalBox.Infrastructure.Services
         {
             AuthorizeHttpClient(system);
             var eventsClient = new EventsClient(httpClient);
-            // eventsClient.JsonSerializerSettings.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat;
             eventsClient.JsonSerializerSettings.DateFormatString = @"yyyy-MM-dd";
-            // eventsClient.JsonSerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
-            // var x = JsonConvert.SerializeObject(new { d = occurredAfter }, eventsClient.JsonSerializerSettings);
-            // var y = JsonConvert.SerializeObject(new { d = occurredBefore }, eventsClient.JsonSerializerSettings);
-            // IsoDateTimeConverter converter = new IsoDateTimeConverter
-            // {
-            //     DateTimeStyles = DateTimeStyles.AdjustToUniversal
-            //     // DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK"
-            //     // 2017-03-15T11:45:42Z
-            // };
-            // eventsClient.JsonSerializerSettings.Converters.Add(converter);
 
             var res = await eventsClient.EventsV3EventsAsync(occurredAfter?.ToString("yyyy-MM-dd"),
                                                              occurredBefore?.ToString("yyyy-MM-dd"),
@@ -124,9 +113,109 @@ namespace SignalBox.Infrastructure.Services
         {
             AuthorizeHttpClient(system);
             var contactPropertiesClient = new ContactPropertiesClient(httpClient);
-
             var res = await contactPropertiesClient.CrmV3PropertiesGetAsync(contactObjectType, false);
             return res.Results.Select(_ => new HubspotContactProperty(_.Name, _.Label, _.Type, _.Description, _.HubspotDefined));
+        }
+
+
+
+        public async Task<HubspotContactPropertyGroup> EnsureContactPropertyGroupCreated(IntegratedSystem system, HubspotContactPropertyGroup propertyGroup)
+        {
+            AuthorizeHttpClient(system);
+            var contactPropertiesClient = new ContactPropertiesClient(httpClient);
+
+            try
+            {
+                var group = await contactPropertiesClient.CrmV3PropertiesGroupsGetAsync("CONTACT", propertyGroup.Name);
+                return new HubspotContactPropertyGroup(group.Name, group.Label);
+            }
+            catch (xtellurian.HubSpot.ContactProperties.ApiException apiEx)
+            {
+                logger.LogWarning(apiEx.Response);
+                if (apiEx.StatusCode == 401)
+                {
+                    throw new ConfigurationException($"Hubspot connection returned 401", apiEx);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex.Message);
+            }
+
+            var res = await contactPropertiesClient.CrmV3PropertiesGroupsPostAsync("CONTACT", new PropertyGroupCreate
+            {
+                Label = propertyGroup.Label,
+                Name = propertyGroup.Name
+            });
+
+            return new HubspotContactPropertyGroup(res.Name, res.Label);
+        }
+
+        public async Task<HubspotContactProperty> EnsureContactPropertyCreated(IntegratedSystem system, HubspotContactProperty property)
+        {
+            AuthorizeHttpClient(system);
+            var contactPropertiesClient = new ContactPropertiesClient(httpClient);
+
+            // check and maybe create a property group.
+            if (property.GroupName == null)
+            {
+                throw new NullReferenceException("GroupName cannot be null");
+            }
+
+            try
+            {
+                var response = await contactPropertiesClient.CrmV3PropertiesGetAsync("CONTACT", property.Name, false);
+                return new HubspotContactProperty(response.Name, response.Label, response.Type, response.Description, response.HubspotDefined, response.GroupName);
+            }
+            catch (Exception)
+            {
+                logger.LogInformation($"Fetching property {property.Name} resulted in an error. Will try to create");
+            }
+
+            try
+            {
+                var res = await contactPropertiesClient.CrmV3PropertiesPostAsync("CONTACT",
+                    new PropertyCreate
+                    {
+                        // Required
+                        Name = property.Name.ToLower(),
+                        Label = property.Label,
+                        Type = PropertyCreateType.String, // string, number, date, datetime, enumeration
+                        FieldType = PropertyCreateFieldType.Text, // textarea, text, date, file, number, select, radio, checkbox, booleancheckbox
+                        GroupName = property.GroupName,
+                        // end required
+                    });
+
+                return new HubspotContactProperty(res.Name, res.Label, res.Type, res.Description, res.HubspotDefined, res.GroupName);
+            }
+            catch (xtellurian.HubSpot.ContactProperties.ApiException apiEx)
+            {
+                logger.LogError(apiEx.Response);
+                throw new IntegratedSystemException($"Error creating property {property.Name}", apiEx.Response, apiEx);
+            }
+        }
+
+        public async Task SetPropertyValue(IntegratedSystem system, HubspotContactPropertyValue value)
+        {
+            AuthorizeHttpClient(system);
+            var contactsClient = new ContactsClient(httpClient);
+
+            try
+            {
+                var res = await contactsClient.CrmV3ObjectsContactsPatchAsync(value.ObjectId, idProperty: null,
+                    new xtellurian.HubSpot.Contacts.SimplePublicObjectInput
+                    {
+                        Properties = new Dictionary<string, string>
+                        {
+                            {value.Property, value.Value}
+                        }
+                    });
+            }
+            catch (xtellurian.HubSpot.Contacts.ApiException apiEx)
+            {
+                logger.LogError(apiEx.Response);
+                throw new IntegratedSystemException($"Error setting property {value.Property} as {value.Value} on ObjectId {value.ObjectId}", apiEx.Response, apiEx);
+            }
         }
 
         public async Task<Paginated<HubspotContact>> GetContacts(IntegratedSystem system, string after = null, IEnumerable<string> properties = null)

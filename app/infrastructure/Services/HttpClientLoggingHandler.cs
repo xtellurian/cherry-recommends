@@ -21,6 +21,7 @@ namespace SignalBox.Infrastructure.Services
         {
             logger.LogDebug(request.RequestUri.ToString());
             HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
+            var c = await response.Content.ReadAsStringAsync();
             return response;
         }
     }

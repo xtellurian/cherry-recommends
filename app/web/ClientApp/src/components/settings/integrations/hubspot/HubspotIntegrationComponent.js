@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { HubspotContactProperties } from "./HubspotContactProperties";
+import { PushDataBehaviour } from "./PushDataBehaviour";
 // import { HubspotContactEvents } from "./HubspotContactEvents";
 import { HubspotLinkBehaviour } from "./LinkBehaviour";
 import { TabActivator, Tabs } from "../../../molecules/Tabs";
@@ -21,6 +22,10 @@ const tabs = [
   {
     id: "properties",
     label: "Contact Properties",
+  },
+  {
+    id: "push-data",
+    label: "Push Data",
   },
   // {
   //   id: "events",
@@ -55,7 +60,6 @@ export const HubspotIntegrationComponent = () => {
   return (
     <React.Fragment>
       <Tabs tabs={tabs} defaultTabId={tabs[0].id} />
-      <hr />
       <TabActivator tabId={tabs[0].id} defaultTabId={tabs[0].id}>
         <HubspotLinkBehaviour integratedSystem={integratedSystem} />
       </TabActivator>
@@ -64,6 +68,9 @@ export const HubspotIntegrationComponent = () => {
       </TabActivator>
       <TabActivator tabId={tabs[2].id} defaultTabId={tabs[0].id}>
         <HubspotContactProperties integratedSystem={integratedSystem} />
+      </TabActivator>
+      <TabActivator tabId="push-data" defaultTabId={tabs[0].id}>
+        <PushDataBehaviour integratedSystem={integratedSystem} />
       </TabActivator>
       {/* <TabActivator tabId={tabs[2].id} defaultTabId={tabs[0].id}>
         <HubspotContactEvents integratedSystem={integratedSystem} />

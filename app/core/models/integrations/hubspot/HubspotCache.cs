@@ -26,5 +26,6 @@ namespace SignalBox.Core.Integrations.Hubspot
             }
         }
         public FeatureCrmCardBehaviour? FeatureCrmCardBehaviour { get; set; }
+        public PushBehaviour? PushBehaviour { get; set; }
     }
 }

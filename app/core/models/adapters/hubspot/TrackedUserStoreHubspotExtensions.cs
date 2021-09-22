@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SignalBox.Core.Adapters.Hubspot
@@ -5,7 +6,7 @@ namespace SignalBox.Core.Adapters.Hubspot
     public static class TrackedUserStoreHubspotExtensions
     {
 #nullable enable
-        public static async Task<TrackedUser> CreateOrUpdateFromHubspotContact(this ITrackedUserStore trackedUserStore, HubspotContact contact, string? commonIdPropertyName = null, string? propertyPrefix = null)
+        public static async Task<TrackedUser> CreateOrUpdateFromHubspotContact(this ITrackedUserStore trackedUserStore, IntegratedSystem system, HubspotContact contact, string? commonIdPropertyName = null, string? propertyPrefix = null)
         {
             var commonId = string.Empty;
             if (string.IsNullOrEmpty(commonIdPropertyName))
@@ -25,20 +26,29 @@ namespace SignalBox.Core.Adapters.Hubspot
 
             string? name = null;
             contact.Properties.TryGetValue("firstname", out name);
+            TrackedUser tu;
             if (await trackedUserStore.ExistsFromCommonId(commonId))
             {
-                var tu = await trackedUserStore.ReadFromCommonId(commonId);
+                tu = await trackedUserStore.ReadFromCommonId(commonId);
                 tu.Properties ??= new DynamicPropertyDictionary();
                 tu.Name ??= name;
 
                 tu.Properties.Merge(newProperties);
                 await trackedUserStore.Update(tu);
-                return tu;
             }
             else
             {
-                return await trackedUserStore.Create(new TrackedUser(commonId, name, newProperties));
+                tu = await trackedUserStore.Create(new TrackedUser(commonId, name, newProperties));
             }
+
+            await trackedUserStore.LoadMany(tu, _ => _.IntegratedSystemMaps);
+
+            if (!tu.IntegratedSystemMaps.Any(_ => _.Id == system.Id))
+            {
+                tu.IntegratedSystemMaps.Add(new TrackedUserSystemMap(contact.ObjectId, system, tu));
+            }
+
+            return tu;
         }
     }
 }

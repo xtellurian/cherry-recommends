@@ -10,21 +10,21 @@ namespace SignalBox.Core.Workflows
     {
         protected readonly ILogger<HubspotWorkflowBase> logger;
         protected readonly IHubspotService hubspotService;
-        protected readonly IOptions<HubspotAppCredentials> hubspotCreds;
+        protected readonly HubspotAppCredentials hubspotCreds;
         protected readonly IIntegratedSystemStore integratedSystemStore;
         protected readonly ITrackedUserStore trackedUserStore;
         protected readonly IDateTimeProvider dateTimeProvider;
 
         public HubspotWorkflowBase(ILogger<HubspotWorkflowBase> logger,
                                    IHubspotService hubspotService,
-                                   IOptions<HubspotAppCredentials> hubspotCreds,
+                                   IOptions<HubspotAppCredentials> hubspotCredOptions,
                                    IIntegratedSystemStore integratedSystemStore,
                                    ITrackedUserStore trackedUserStore,
                                    IDateTimeProvider dateTimeProvider)
         {
             this.logger = logger;
             this.hubspotService = hubspotService;
-            this.hubspotCreds = hubspotCreds;
+            this.hubspotCreds = hubspotCredOptions.Value;
             this.integratedSystemStore = integratedSystemStore;
             this.trackedUserStore = trackedUserStore;
             this.dateTimeProvider = dateTimeProvider;
@@ -50,12 +50,12 @@ namespace SignalBox.Core.Workflows
             return map;
         }
 
-        protected async Task RefreshCredentials(IntegratedSystem integratedSystem)
+        private async Task RefreshCredentials(IntegratedSystem integratedSystem)
         {
             logger.LogInformation($"Refreshing credentials for integrated system: {integratedSystem.Id}");
             try
             {
-                var tokenResponse = await hubspotService.UseRefreshToken(hubspotCreds.Value.ClientId, hubspotCreds.Value.ClientSecret, integratedSystem.TokenResponse.RefreshToken);
+                var tokenResponse = await hubspotService.UseRefreshToken(hubspotCreds.ClientId, hubspotCreds.ClientSecret, integratedSystem.TokenResponse.RefreshToken);
 
                 integratedSystem.TokenResponse = tokenResponse;
                 integratedSystem.TokenResponseUpdated = dateTimeProvider.Now;
@@ -66,6 +66,7 @@ namespace SignalBox.Core.Workflows
             }
             catch (System.Exception ex)
             {
+                logger.LogError(ex.Message);
                 throw new WorkflowException("An error occurred when accessing Hubspot", ex);
             }
         }

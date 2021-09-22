@@ -7,6 +7,11 @@ namespace SignalBox.Core
     {
         public ModelInputDto()
         { }
+        public ModelInputDto(string commonUserId)
+        {
+            this.CommonUserId = commonUserId;
+            this.Arguments = new Dictionary<string, object>();
+        }
         public ModelInputDto(string commonUserId, IDictionary<string, object> arguments)
         {
             this.CommonUserId = commonUserId;

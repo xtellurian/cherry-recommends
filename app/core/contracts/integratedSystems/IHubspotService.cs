@@ -20,5 +20,8 @@ namespace SignalBox.Core
                                                          long? objectId,
                                                          int? limit);
         Task<HubspotContact> GetContact(IntegratedSystem system, string contactId, IEnumerable<string> properties = null);
+        Task<HubspotContactProperty> EnsureContactPropertyCreated(IntegratedSystem system, HubspotContactProperty property);
+        Task<HubspotContactPropertyGroup> EnsureContactPropertyGroupCreated(IntegratedSystem system, HubspotContactPropertyGroup propertyGroup);
+        Task SetPropertyValue(IntegratedSystem system, HubspotContactPropertyValue value);
     }
 }

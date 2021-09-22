@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
+using SignalBox.Core.Recommendations;
 using SignalBox.Web.Dto;
 
 namespace SignalBox.Web.Controllers
@@ -37,10 +39,11 @@ namespace SignalBox.Web.Controllers
             var trackedUser = await trackedUserStore.GetEntity(id);
             var parameterSetRecommendations = await parameterSetRecommendationStore.Query(1, _ => _.TrackedUserId == trackedUser.Id);
             var itemsRecommendations = await itemsRecommendationStore.Query(1, _ => _.TrackedUserId == trackedUser.Id);
-            var recommendations = new List<object>();
+            var recommendations = new List<RecommendationEntity>();
             recommendations.AddRange(parameterSetRecommendations.Items);
             recommendations.AddRange(itemsRecommendations.Items);
-            var result = new Paginated<object>(recommendations, 1, recommendations.Count, 1);
+            var toSerializeProperly = new List<object>(recommendations.OrderByDescending(_ => _.Created));
+            var result = new Paginated<object>(toSerializeProperly, 1, toSerializeProperly.Count, 1);
             return result;
         }
     }

@@ -95,12 +95,12 @@ namespace SignalBox.Core.Workflows
                 {
                     if (useObjectIdAsCommonId)
                     {
-                        var tu = await trackedUserStore.CreateOrUpdateFromHubspotContact(contact, propertyPrefix: propertyPrefix);
+                        var tu = await trackedUserStore.CreateOrUpdateFromHubspotContact(system, contact, propertyPrefix: propertyPrefix);
                         trackedUsers.Add(tu);
                     }
                     else if (contact.Properties.ContainsKey(commonIdPropertyName) && !string.IsNullOrEmpty(contact.Properties[commonIdPropertyName]))
                     {
-                        var tu = await trackedUserStore.CreateOrUpdateFromHubspotContact(contact, commonIdPropertyName, propertyPrefix: propertyPrefix);
+                        var tu = await trackedUserStore.CreateOrUpdateFromHubspotContact(system, contact, commonIdPropertyName, propertyPrefix: propertyPrefix);
                         trackedUsers.Add(tu);
                     }
                     else

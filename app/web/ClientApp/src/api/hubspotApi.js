@@ -76,13 +76,43 @@ export const setHubspotCrmCardBehaviourAsync = async ({
   }
 };
 
+export const fetchHubspotPushBehaviourAsync = async ({ token, id }) => {
+  const url = `api/IntegratedSystems/${id}/Hubspot/PushBehaviour`;
+  const response = await fetch(url, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
+export const setHubspotPushBehaviourAsync = async ({
+  token,
+  id,
+  behaviour,
+}) => {
+  const url = `api/IntegratedSystems/${id}/Hubspot/PushBehaviour`;
+  const response = await fetch(url, {
+    headers: headers(token),
+    method: "post",
+    body: JSON.stringify(behaviour),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
 export const fetchHubspotClientAllContactProperties = async ({
   success,
   error,
   token,
   id,
 }) => {
-  const url = `api/integratedsystems/${id}/hubspot/contactproperties`;
+  const url = `api/integratedsystems/${id}/Hubspot/ContactProperties`;
 
   const response = await fetch(url, {
     headers: headers(token),
@@ -95,7 +125,7 @@ export const fetchHubspotClientAllContactProperties = async ({
 };
 
 export const fetchHubspotClientContactEventsAsync = async ({ token, id }) => {
-  const url = `api/integratedsystems/${id}/hubspot/contact-events`;
+  const url = `api/integratedsystems/${id}/Hubspot/contact-events`;
 
   const response = await fetch(url, {
     headers: headers(token),

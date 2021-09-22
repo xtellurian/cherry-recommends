@@ -14,6 +14,8 @@ import {
   TextInput,
   InputGroup,
   commonIdValidator,
+  createServerErrorValidator,
+  joinValidators,
 } from "../../molecules/TextInput";
 import { IntegerRangeSelector } from "../../molecules/selectors/IntegerRangeSelector";
 
@@ -36,19 +38,6 @@ export const CreateRecommender = () => {
   });
 
   const [loading, setLoading] = React.useState(false);
-  const createRecommenderAfterTouchpoint = (tp) => {
-    setLoading(true);
-    recommender.touchpoint = tp.commonId;
-    createItemsRecommenderAsync({
-      token,
-      payload: recommender,
-    })
-      .then((pr) =>
-        history.push(`/recommenders/items-recommenders/detail/${pr.id}`)
-      )
-      .catch(setError)
-      .finally(() => setLoading(false));
-  };
 
   const handleCreate = () => {
     setLoading(true);
@@ -91,7 +80,10 @@ export const CreateRecommender = () => {
           label="Common Id"
           value={recommender.commonId}
           placeholder="A unique ID for this recommender resource."
-          validator={commonIdValidator}
+          validator={joinValidators([
+            commonIdValidator,
+            createServerErrorValidator("CommonId", error),
+          ])}
           onChange={(e) =>
             setRecommender({
               ...recommender,

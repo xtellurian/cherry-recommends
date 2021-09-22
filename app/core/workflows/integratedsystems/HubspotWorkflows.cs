@@ -168,11 +168,11 @@ namespace SignalBox.Core.Workflows
 
         public Task<HubspotAppCredentials> GetHubspotCredentials()
         {
-            if (hubspotCreds.Value.ClientId == null)
+            if (hubspotCreds.ClientId == null)
             {
-                throw new WorkflowException("Hubspot integration not configured correctly. Contact admin.");
+                throw new WorkflowException("Hubspot integration not configured correctly.");
             }
-            return Task.FromResult(hubspotCreds.Value);
+            return Task.FromResult(hubspotCreds);
         }
 
         public async Task<EventLoggingResponse> HandleHubspotRecommendationOutcome(IntegratedSystem integratedSystem,
@@ -363,7 +363,7 @@ namespace SignalBox.Core.Workflows
 
             try
             {
-                var tokenResponse = await hubspotService.ExchangeCode(hubspotCreds.Value.ClientId, hubspotCreds.Value.ClientSecret, redirectUri, code);
+                var tokenResponse = await hubspotService.ExchangeCode(hubspotCreds.ClientId, hubspotCreds.ClientSecret, redirectUri, code);
                 // get the details of the hubspot system
                 var details = await hubspotService.GetAccountDetails(tokenResponse);
                 integratedSystem.SetCache(new HubspotCache(details));

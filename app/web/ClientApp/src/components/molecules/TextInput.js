@@ -23,6 +23,8 @@ export const commonIdValidator = (value) => {
     return [];
   } else if (value && value.length < minCommonIdLength) {
     return [`Must be at least ${minCommonIdLength} characters`];
+  } else if (value !== value.toLowerCase()) {
+    return ["Lowercase only"];
   } else {
     return [];
   }
