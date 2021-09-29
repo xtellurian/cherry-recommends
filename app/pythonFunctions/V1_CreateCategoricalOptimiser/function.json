@@ -1,0 +1,36 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "authLevel": "function",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": [
+        "post"
+      ],
+      "route": "v1/{tenant}/categorical"
+    },
+    {
+      "name": "record",
+      "type": "table",
+      "tableName": "CategoricalOptimisers",
+      "partitionKey": "{tenant}",
+      "connection": "AzureWebJobsStorage",
+      "direction": "out"
+    },
+    {
+      "name": "outputBlob",
+      "type": "blob",
+      "dataType": "string",
+      "path": "{tenant}/categorical-optimisers/{id}.json",
+      "connection": "AzureWebJobsStorage",
+      "direction": "out"
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "$return"
+    }
+  ]
+}
