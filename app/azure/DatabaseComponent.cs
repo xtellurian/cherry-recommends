@@ -27,9 +27,8 @@ namespace SignalBox.Azure
                 ServerName = sqlServer.Name,
                 Sku = new Pulumi.AzureNative.Sql.Inputs.SkuArgs
                 {
-                    Name = "GP_Gen5",
-                    Tier = "GeneralPurpose",
-                    Capacity = 2
+                    Name = "S1",
+                    Tier = "Standard",
                 }
             });
             var fisherStRule = new Pulumi.AzureNative.Sql.FirewallRule("fisherst",

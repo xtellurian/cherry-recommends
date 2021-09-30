@@ -29,10 +29,15 @@ namespace SignalBox.Azure
                 ServerName = sqlServer.Name,
                 Sku = new Pulumi.AzureNative.Sql.Inputs.SkuArgs
                 {
-                    Name = "GP_Gen5",
-                    Tier = "GeneralPurpose",
-                    Capacity = 2
+                    Name = "S0",
+                    Tier = "Standard",
                 }
+                // Sku = new Pulumi.AzureNative.Sql.Inputs.SkuArgs
+                // {
+                //     Name = "GP_Gen5",
+                //     Tier = "GeneralPurpose",
+                //     Capacity = 2
+                // }
             });
 
             var elasticPool = new ElasticPool("pool", new ElasticPoolArgs
