@@ -11,4 +11,4 @@ fi
 
 CONTEXT="SignalBoxDbContext"
 
-dotnet ef database update $MIGRATION --context $CONTEXT --project ../migrations/sqlite -- --provider sqlite
+dotnet ef database update $MIGRATION --context $CONTEXT --project ../migrations/sqlite -- --Provider sqlite

@@ -2,6 +2,7 @@ config:
   appsvc:capacity: 2
   appsvc:sku-name: B2
   appsvc:sku-tier: Basic
+  appsvc:multitenant: "false"
   auth0:clientId: 2Jyaz6bNXrB9H4Qer34QNtmHFhU3L9p1
   auth0:clientSecret:
     secure: AAABAKoS8ns0U7sjsS84u9bL1xRRwFfNteeaN6DrYq0hMkRE2W6o+rnT609KiHl5im2GRYWBsgAODQqaVt52TDhSPbHDj0UD44HzbtpB+DoiG9qvrJLXOYxO1Q8JasBm

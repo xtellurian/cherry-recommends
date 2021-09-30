@@ -2,25 +2,38 @@ set -e
 cd ../web
 
 PROVIDER=$1
+CONTEXT=$2
 
 if [ -z "$PROVIDER" ]
 then
-      echo "Usage: $0 <provider>"
+      echo "Usage: $0 <provider> <context>"
       exit 1
 fi
 
-echo "Provider: $PROVIDER"
 
-MIGRATIONS_DIR="SignalBox"
-CONTEXT="SignalBoxDbContext"
+if [ -z "$CONTEXT" ]
+then
+      echo "Using default context: SignalBoxDbContext"
+      CONTEXT="SignalBoxDbContext"
+      MIGRATIONS_DIR="SignalBox"
+else
+      MIGRATIONS_DIR="SignalBox/Sub$CONTEXT"
+fi
+
+echo "DATABASE PROVIDER: $PROVIDER"
+echo "CONTEXT: $CONTEXT"
+echo "MIGRATIONS DIRECTORY: $MIGRATIONS_DIR"
+
 
 # use the name of the current branch for the migration
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 delim="_"
 to_replace="\/"
 MIGRATION="${CURRENT_BRANCH////_}"
-echo "Migration: $MIGRATION"
+echo "MIGRATION: $MIGRATION"
 
-dotnet ef migrations add $MIGRATION --context $CONTEXT --output-dir "$MIGRATIONS_DIR" --project "../migrations/$PROVIDER" -- --provider $PROVIDER
+echo "---"
+
+dotnet ef migrations add $MIGRATION --context $CONTEXT --output-dir "$MIGRATIONS_DIR" --project "../migrations/$PROVIDER" -- --Provider $PROVIDER
 
 echo "Done"

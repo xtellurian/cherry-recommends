@@ -5,6 +5,7 @@ cd ../azure
 STACK=$(pulumi stack --show-name)
 echo "Using Pulumi Stack $STACK"
 WEBAPPNAME=$(pulumi stack output WebappName)
+CANONICAL_ROOT_DOMAIN=$(pulumi stack output CanonicalRootDomain)
 RG=$(pulumi stack output AppResourceGroup)
 
 cd ../web
@@ -17,3 +18,5 @@ zip -r deploy.zip .
 az webapp deployment source config-zip -g $RG -n $WEBAPPNAME --src deploy.zip
 
 echo "Deployed app to $WEBAPPNAME.azurewebsites.net in stack $STACK"
+
+echo "Canonical Root Domain is $CANONICAL_ROOT_DOMAIN"

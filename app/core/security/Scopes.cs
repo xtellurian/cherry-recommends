@@ -4,6 +4,10 @@ namespace SignalBox.Core.Security
     {
         private static string TryAddScope(this string currentScope, string newScope)
         {
+            if (newScope == null)
+            {
+                return currentScope;
+            }
             if (!currentScope.Contains(newScope))
             {
                 return $"{currentScope} {newScope}";
@@ -14,9 +18,9 @@ namespace SignalBox.Core.Security
             }
         }
 
-        public static string AllScopes(string scope)
+        public static string AllScopes(string scope, Tenant tenant)
         {
-            return scope.TryAddScope(Features.Read).TryAddScope(Features.Write);
+            return scope.TryAddScope(Features.Read).TryAddScope(Features.Write).TryAddScope(tenant?.AccessScope());
         }
         public static ReadWriteScope Features => new ReadWriteScope("features");
     }

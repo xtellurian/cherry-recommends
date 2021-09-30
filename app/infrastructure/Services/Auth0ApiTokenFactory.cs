@@ -9,27 +9,49 @@ namespace SignalBox.Infrastructure.Services
 {
     public class Auth0ApiTokenFactory : IApiTokenFactory
     {
-        private readonly IOptions<Auth0M2MClient> options;
+        private readonly IOptions<Auth0M2MClient> m2mOptions;
+        private readonly IOptions<Auth0ManagementCredentials> managementOptions;
         private readonly HttpClient httpClient;
 
-        public Auth0ApiTokenFactory(IOptions<Auth0M2MClient> options, HttpClient httpClient)
+        public Auth0ApiTokenFactory(IOptions<Auth0M2MClient> m2mOptions,
+                                    IOptions<Auth0ManagementCredentials> managementOptions,
+                                    HttpClient httpClient)
         {
-            this.options = options;
+            this.m2mOptions = m2mOptions;
+            this.managementOptions = managementOptions;
             this.httpClient = httpClient;
         }
 
-        public async Task<string> GetToken(string scope = null)
+        public async Task<string> GetM2MToken(string scope = null)
         {
             var request = new Auth0TokenRequest()
             {
-                Audience = options.Value.Audience,
+                Audience = m2mOptions.Value.Audience,
                 GrantType = "client_credentials",
-                ClientId = options.Value.ClientId,
-                ClientSecret = options.Value.ClientSecret,
+                ClientId = m2mOptions.Value.ClientId,
+                ClientSecret = m2mOptions.Value.ClientSecret,
+                Scope = scope
+            };
+            return await GetToken(m2mOptions.Value.Endpoint, request);
+        }
+
+        public async Task<string> GetManagementToken(string scope = null)
+        {
+            var request = new Auth0TokenRequest()
+            {
+                Audience = $"https://{managementOptions.Value.Domain}/api/v2/",
+                GrantType = "client_credentials",
+                ClientId = managementOptions.Value.ClientId,
+                ClientSecret = managementOptions.Value.ClientSecret,
                 Scope = scope
             };
 
-            var response = await httpClient.PostAsJsonAsync(options.Value.Endpoint, request);
+            return await GetToken(managementOptions.Value.Endpoint, request);
+        }
+
+        private async Task<string> GetToken(string endpoint, Auth0TokenRequest request)
+        {
+            var response = await httpClient.PostAsJsonAsync(endpoint, request);
             var responseContent = await response.Content.ReadAsStringAsync();
 
             response.EnsureSuccessStatusCode();
@@ -37,5 +59,6 @@ namespace SignalBox.Infrastructure.Services
             var tokenResponse = JsonSerializer.Deserialize<Auth0TokenResponse>(responseContent);
             return tokenResponse.AccessToken;
         }
+
     }
 }

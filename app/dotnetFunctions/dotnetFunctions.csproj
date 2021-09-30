@@ -27,5 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\core\core.csproj" />
     <ProjectReference Include="..\infrastructure\infrastructure.csproj" />
+    <ProjectReference Include="..\migrations\sqlserver\sqlserver.csproj" />
+    <ProjectReference Include="..\migrations\sqlite\sqlite.csproj" />
   </ItemGroup>
 </Project>

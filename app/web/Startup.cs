@@ -25,6 +25,7 @@ using SignalBox.Core.Integrations;
 using Microsoft.ApplicationInsights.Extensibility;
 using SignalBox.Web.Services;
 using SignalBox.Core.Security;
+using SignalBox.Infrastructure.Models;
 
 namespace SignalBox.Web
 {
@@ -44,17 +45,59 @@ namespace SignalBox.Web
         {
             var provider = Configuration.GetValue("Provider", "sqlserver");
             System.Console.WriteLine($"Database Provider: {provider}");
-            if (provider == "sqlserver")
+
+            var useMulti = Configuration.GetSection("Hosting").GetValue<bool>("Multitenant");
+            System.Console.WriteLine($"Multitenant: {useMulti}");
+
+            services.AddHttpContextAccessor();
+
+            // enable the tenancy context connection
+
+            if (useMulti)
             {
-                services.UseSqlServer(Configuration.GetConnectionString("Application"));
+                services.RegisterMultiTenantInfrastructure();
+                if (provider == "sqlserver")
+                {
+                    services.UseSqlServer<MultiTenantDbContext>(Configuration.GetConnectionString("Tenants"));
+                    var azEnv = Configuration.GetSection("AzureEnvironment");
+                    services.UseMultitenantSqlServer(
+                        azEnv.GetValue<string>("SqlServerName"),
+                        azEnv.GetValue<string>("SqlServerPassword"),
+                        azEnv.GetValue<string>("SqlServerUserName"));
+                }
+                else if (provider == "sqlite")
+                {
+                    services.UseSqlite<MultiTenantDbContext>(Configuration.GetConnectionString("Tenants"), enableEnvironments: false);
+                    services.UseMultitenantSqlite("databases");
+                }
+                else
+                {
+                    throw new NotImplementedException($"Provider {provider} is unknown");
+                }
+                services.AddSingleton<ITenantResolutionStrategy, SubdomainTenantResolutionStrategy>();
             }
-            else if (provider == "sqlite")
+            else
             {
-                services.UseSqlLite(Configuration.GetConnectionString("Application"));
-            }
-            else if (provider == "memory" || Env.IsDevelopment())
-            {
-                services.UseMemory();
+                services.RegisterSingleTenantInfrastructure();
+                // add single tenant databases
+                if (provider == "sqlserver")
+                {
+                    var azEnv = Configuration.GetSection("AzureEnvironment");
+                    services.UseMultitenantSqlServer(
+                        azEnv.GetValue<string>("SqlServerName"),
+                        azEnv.GetValue<string>("SqlServerPassword"),
+                        azEnv.GetValue<string>("SqlServerUserName"));
+                }
+                else if (provider == "sqlite")
+                {
+                    services.UseMultitenantSqlite("databases");
+                }
+                else
+                {
+                    throw new ConfigurationException("Provider must be sqlite or sqlserver");
+                }
+
+                services.AddSingleton<ITenantResolutionStrategy, SingleTenantResolverStrategy>();
             }
 
             services.AddHttpContextAccessor();
@@ -97,7 +140,8 @@ namespace SignalBox.Web
 
             services.Configure<Auth0M2MClient>(Configuration.GetSection("Auth0").GetSection("M2M"));
             services.Configure<HubspotAppCredentials>(Configuration.GetSection("HubSpot").GetSection("AppCredentials"));
-
+            services.Configure<Hosting>(Configuration.GetSection("Hosting"));
+            services.AddScoped<ITenantAuthorizationStrategy, TokenClaimTenantAuthorizor>();
 
             services.AddApiVersioning(o =>
             {
@@ -184,6 +228,7 @@ namespace SignalBox.Web
             app.UseProblemDetails(); // must come after app.UseDeveloperExceptionPage()
             app.UseMiddleware<ExceptionTelemetryMiddleware>(); // must come after UseProblemDetails()
 
+
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -196,6 +241,7 @@ namespace SignalBox.Web
             });
 
             app.UseAuthorization();
+            app.UseMiddleware<TenantSelectorMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

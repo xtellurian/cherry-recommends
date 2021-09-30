@@ -11,6 +11,41 @@ The important applications models are:
 * Experiment: A long running process, whereby a set of offers are shown to many users.
 * Presenter: Responsible for choosing which offers to show to a tracked user within the context of an experiment.
 
+## Multitenants
+
+Multitenanting is achieved via subdomains, i.e. {tenant}.ourdomain.com or {tenant}.local.zone:5001
+
+To run locally, you need to setup the DNS routing properly.
+
+One solution (on Mac) is to run dnsmasq
+
+```
+brew install dnsmasq
+```
+
+Configure dnsmasq by adding this to the configuration file: `$(brew --prefix)/etc/dnsmasq.conf.`
+
+```
+address=/local.zone/127.0.0.1
+```
+
+and start dnsmasq like so:
+
+```
+sudo brew services start dnsmasq
+```
+
+THEN, create a DNS resolver by pttubg the following in file /etc/resolver/local.zone
+
+```
+nameserver 127.0.0.1
+```
+
+like so: `sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/local.zone'`
+Gist that helps:
+
+https://gist.github.com/ogrrd/5831371
+
 ## Development
 
 There is a SQLite database in the `/web` directory.

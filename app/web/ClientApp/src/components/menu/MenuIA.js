@@ -20,7 +20,7 @@ const AuthenticatedIA = [
     name: "Library",
     items: [
       {
-        name: "Recommendable Items",
+        name: "Items",
         to: "/recommendable-items",
       },
       {
@@ -37,7 +37,7 @@ const AuthenticatedIA = [
         to: "/recommenders/items-recommenders",
       },
       {
-        name: "Parameter Sets",
+        name: "Parameters",
         to: "/recommenders/parameter-set-recommenders",
       },
     ],

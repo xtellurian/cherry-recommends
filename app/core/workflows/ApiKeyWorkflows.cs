@@ -41,7 +41,7 @@ namespace SignalBox.Core.Workflows
                 key.LastExchanged = dateTimeProvider.Now;
                 key.TotalExchanges++;
                 await storageContext.SaveChanges();
-                return await tokenFactory.GetToken(key.Scope);
+                return await tokenFactory.GetM2MToken(key.Scope);
             }
             else
             {

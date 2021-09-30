@@ -1,13 +1,14 @@
 import "bootstrap/dist/css/bootstrap.css";
 import React from "react";
 import ReactDOM from "react-dom";
+import Modal from "react-modal";
 import { BrowserRouter } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { fetchAuth0Configuration } from "./api/reactConfigApi";
 import { FunloaderContainer } from "./components/molecules/FunLoader";
 import { FunError } from "./components/molecules/FunError";
 import EnvironmentStore from "./contexts/EnvironmentStore";
-import Modal from "react-modal";
+import { TenantExists } from "./components/tenants/TenantChecker";
 import App from "./App";
 
 //import registerServiceWorker from './registerServiceWorker';

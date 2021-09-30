@@ -85,6 +85,8 @@ namespace SignalBox.Core.Workflows
                 }
             }
 
+            logger.LogInformation($"Finished feauture generator workflow with {totalWrites} total writes");
+
             return totalWrites;
         }
     }

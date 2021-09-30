@@ -30,5 +30,17 @@ namespace SignalBox.Infrastructure.EntityFramework
 
             return propertyBuilder;
         }
+
+        public static PropertyBuilder<string> HasLowercaseConversion(this PropertyBuilder<string> propertyBuilder)
+        {
+            var converter = new ValueConverter<string, string>(
+                v => v,
+                v => v.ToLowerInvariant());
+
+            propertyBuilder.HasConversion(converter);
+            propertyBuilder.Metadata.SetValueConverter(converter);
+
+            return propertyBuilder;
+        }
     }
 }

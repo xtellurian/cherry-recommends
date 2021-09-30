@@ -1,6 +1,7 @@
 config:
   appsvc:sku-name: B1
   appsvc:sku-tier: Basic
+  appsvc:multitenant: "false"
   auth0:clientId: cT3UPVNDzNim39AMgCZHYZpqgaIymr0x
   auth0:clientSecret:
     secure: AAABAMhMd9LJkejVMlIkvhBwIUOR7oWObW/e5MSuyPI7wk+PtyqhZve6DjtQuDG8at9ii7AW0KtVjROSxiMJlamvjVTsOq+Kd++qmtYtqSA/gr2mj8SNihFbONA9p/ve

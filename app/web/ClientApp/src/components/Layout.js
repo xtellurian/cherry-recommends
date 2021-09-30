@@ -1,15 +1,16 @@
 import React from "react";
 import { Container } from "reactstrap";
 import { NavMenu } from "./menu/NavMenu";
-import { MenuSwitcher } from "./menu/MenuSwitcher";
+import { AnonymousSwitcher } from "./anonymous/AnonymousSwitcher";
+import { TenantChecker } from "./tenants/TenantChecker";
 
 export const Layout = ({ children }) => {
   return (
-    <div>
-      <MenuSwitcher>
+    <AnonymousSwitcher>
+      <TenantChecker>
         <NavMenu />
-      </MenuSwitcher>
-      <Container>{children}</Container>
-    </div>
+        <Container>{children}</Container>
+      </TenantChecker>
+    </AnonymousSwitcher>
   );
 };

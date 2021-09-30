@@ -9,6 +9,6 @@ MIGRATIONS_DIR="SignalBox"
 CONTEXT="SignalBoxDbContext"
 PROVIDER='sqlserver'
 
-dotnet ef migrations remove --context $CONTEXT --project "../migrations/$PROVIDER" -- --provider $PROVIDER  --ConnectionStrings:Application "$CS"
+dotnet ef migrations remove --context $CONTEXT --project "../migrations/$PROVIDER" -- --Provider $PROVIDER  --ConnectionStrings:Application "$CS"
 
 echo "Done"

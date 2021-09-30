@@ -4,6 +4,7 @@ config:
   - https://localhost:5001
   appsvc:sku-name: B2
   appsvc:sku-tier: Basic
+  appsvc:multitenant: "false"
   auth0:clientId: cT3UPVNDzNim39AMgCZHYZpqgaIymr0x
   auth0:clientSecret:
     secure: AAABAKbCIOUcfbxI+lV0GUQbanmlEsDq0/ZVQT5XMzjDsOaQzRJBlkRtzbbPNLtu3DeyldQ85fK9IC2phNotSp8CmAFlX02Qm2EaRxTQEFg/KagzJ0QQo149zM/RXkBM

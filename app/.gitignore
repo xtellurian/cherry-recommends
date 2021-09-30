@@ -5,3 +5,5 @@
 
 
 **/*.db
+
+web/databases/*.db

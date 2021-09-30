@@ -23,13 +23,11 @@ export const useHubspotAppInformation = () => {
         token,
       })
         .then((s) => {
-          console.log("promise returned");
           setState(s);
         })
         .catch((error) => setState({ error }));
     }
   }, [token]);
-  console.log(result);
   return result;
 };
 

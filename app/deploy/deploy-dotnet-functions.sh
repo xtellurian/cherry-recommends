@@ -9,6 +9,6 @@ RG=$(pulumi stack output AppResourceGroup)
 
 cd $home_dir
 cd ../dotnetFunctions
-echo "Publishing python functions to $FUNCTIONAPPNAME"
+echo "Publishing dotnet functions to $FUNCTIONAPPNAME"
 func azure functionapp publish $FUNCTIONAPPNAME
 echo "Deployed functions $FUNCTIONAPPNAME in stack $STACK"

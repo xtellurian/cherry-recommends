@@ -10,6 +10,7 @@ namespace SignalBox.Azure
         {
             var stackName = Deployment.Instance.StackName;
             var auth0Config = new Pulumi.Config("auth0");
+            var canonicalRootDomain = new Pulumi.Config("appsvc").Get("canonical-root-domain");
 
             var apiResource = new ResourceServer("apiResource", new ResourceServerArgs
             {
@@ -70,6 +71,14 @@ namespace SignalBox.Azure
                 }
             });
 
+            var hosts = new InputList<string>
+            {
+                Output.Format($"https://{webApp.DefaultHostName}")
+            };
+            if (!string.IsNullOrEmpty(canonicalRootDomain))
+            {
+                hosts.Add($"https://*.{canonicalRootDomain}");
+            }
             var clientApp = new Client("reactApp", new ClientArgs
             {
                 Name = "Signal Box",
@@ -77,23 +86,15 @@ namespace SignalBox.Azure
                 AppType = "spa",
                 IsFirstParty = true,
                 TokenEndpointAuthMethod = "none",
-                Callbacks = {
-                    Output.Format($"https://{webApp.DefaultHostName}")
-                },
-                WebOrigins = {
-                    Output.Format($"https://{webApp.DefaultHostName}")
-                },
-                AllowedOrigins = {
-                    Output.Format($"https://{webApp.DefaultHostName}")
-                },
+                Callbacks = hosts,
+                WebOrigins = hosts,
+                AllowedOrigins = hosts,
                 GrantTypes = {
                     "implicit",
                     "authorization_code",
                     "refresh_token"
                 },
-                AllowedLogoutUrls = {
-                    Output.Format($"https://{webApp.DefaultHostName}")
-                },
+                AllowedLogoutUrls = hosts,
                 ClientMetadata = new InputMap<object>
                 {
                     {"project", Pulumi.Deployment.Instance.ProjectName},
@@ -140,7 +141,7 @@ namespace SignalBox.Azure
 
             this.Authority = $"https://{Pulumi.Auth0.Config.Domain}";
             this.Audience = apiResource.Identifier!;
-            this.Audience = apiResource.Identifier!;
+            this.DefaultAudience = apiResource.Identifier!;
             this.ReactDomain = Pulumi.Auth0.Config.Domain!;
             this.ReactClientId = clientApp.ClientId;
             this.ReactManagementAudience = $"https://{Pulumi.Auth0.Config.Domain}/api/v2";
@@ -152,6 +153,7 @@ namespace SignalBox.Azure
         }
 
         public string Authority { get; }
+        public Output<string> DefaultAudience { get; }
         public Output<string> Audience { get; }
         public string ReactDomain { get; }
         public Output<string> ReactClientId { get; }

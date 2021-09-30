@@ -3,8 +3,8 @@
         {
             "previewLimit": 50,
             "driver": "SQLite",
-            "name": "signalboxlocal",
-            "database": "${workspaceFolder:app}/web/signalbox.db"
+            "name": "tenants",
+            "database": "${workspaceFolder:app}/web/tenants.db"
         }
     ],
     "sqltools.useNodeRuntime": true,
