@@ -43,7 +43,7 @@ namespace SignalBox.Core.Workflows
 
         public async Task<ItemsRecommendation> InvokeItemsRecommender(
             ItemsRecommender recommender,
-            IModelInput input)
+            IItemsModelInput input)
         {
             await itemsRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             var invokationEntry = await base.StartTrackInvokation(recommender, input, saveOnComplete: false);
@@ -64,6 +64,22 @@ namespace SignalBox.Core.Workflows
 
                 // load the features of the tracked user
                 input.Features = await base.GetFeatures(user, invokationEntry);
+
+                // load the items that a model can choose from
+                await itemsRecommenderStore.LoadMany(recommender, _ => _.Items);
+                if (recommender.Items.Any())
+                {
+                    input.Items = recommender.Items;
+                    logger.LogInformation($"Using {input.Items.Count()} items");
+                    invokationEntry.LogMessage($"Using {input.Items.Count()} items");
+                }
+                else
+                {
+                    var allItems = await itemStore.Query(1); // this is a fudge, it will only be the top items
+                    input.Items = allItems.Items;
+                    logger.LogInformation($"Using all items as input, {input.Items.Count()} items");
+                    invokationEntry.LogMessage($"Using all items as input, {input.Items.Count()} items");
+                }
 
                 IRecommenderModelClient<IModelInput, ItemsRecommenderModelOutputV1> client;
                 if (recommender.ModelRegistration == null)

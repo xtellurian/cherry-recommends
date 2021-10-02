@@ -1,4 +1,5 @@
 
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -106,7 +107,11 @@ namespace SignalBox.Web.Controllers
             bool? useInternalId = null)
         {
             var recommender = await base.GetResource(id, useInternalId);
-            var convertedInput = new ModelInputDto(input.CommonUserId, input.Arguments);
+            var convertedInput = new ItemsModelInputDto(input.CommonUserId, input.Arguments);
+            if (convertedInput.Items != null && convertedInput.Items.Any())
+            {
+                throw new BadRequestException($"Items must not be set externally");
+            }
 
             var recommendation = await invokationWorkflows.InvokeItemsRecommender(recommender, convertedInput);
             return new ItemsRecommendationDto(recommendation);
