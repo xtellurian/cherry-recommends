@@ -91,9 +91,16 @@ namespace SignalBox.Core.Workflows
         public async Task<ModelRegistration> LinkRegisteredModel(ProductRecommender recommender, long modelId)
         {
             var model = await modelRegistrationStore.Read(modelId);
-            recommender.ModelRegistration = model;
-            await storageContext.SaveChanges();
-            return model;
+            if (model.ModelType == ModelTypes.ProductRecommenderV1)
+            {
+                recommender.ModelRegistration = model;
+                await storageContext.SaveChanges();
+                return model;
+            }
+            else
+            {
+                throw new BadRequestException($"Model of type {model.ModelType} can't be linked to a Product Recommender");
+            }
         }
     }
 }

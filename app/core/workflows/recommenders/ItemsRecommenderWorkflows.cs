@@ -61,7 +61,7 @@ namespace SignalBox.Core.Workflows
                 }
 
                 var recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, items, arguments, settings) 
+                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, items, arguments, settings)
                     { NumberOfItemsToRecommend = numberOfItemsToRecommend });
                 await storageContext.SaveChanges();
                 return recommender;
@@ -69,7 +69,7 @@ namespace SignalBox.Core.Workflows
             else
             {
                 var recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, null, arguments, settings) 
+                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, null, arguments, settings)
                     { NumberOfItemsToRecommend = numberOfItemsToRecommend });
                 await storageContext.SaveChanges();
                 return recommender;
@@ -93,9 +93,16 @@ namespace SignalBox.Core.Workflows
         public async Task<ModelRegistration> LinkRegisteredModel(ItemsRecommender recommender, long modelId)
         {
             var model = await modelRegistrationStore.Read(modelId);
-            recommender.ModelRegistration = model;
-            await storageContext.SaveChanges();
-            return model;
+            if (model.ModelType == ModelTypes.ItemsRecommenderV1)
+            {
+                recommender.ModelRegistration = model;
+                await storageContext.SaveChanges();
+                return model;
+            }
+            else
+            {
+                throw new BadRequestException($"Model of type {model.ModelType} can't be linked to an Items Recommender");
+            }
         }
     }
 }
