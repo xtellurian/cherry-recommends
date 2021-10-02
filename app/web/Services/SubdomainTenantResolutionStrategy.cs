@@ -15,6 +15,8 @@ namespace SignalBox.Web.Services
             this.hosting = options.Value;
         }
 
+        public bool IsMultitenant => true;
+
         public Task<string> ResolveName(HttpRequestModel request)
         {
             if (hosting.Multitenant)

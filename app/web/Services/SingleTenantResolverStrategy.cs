@@ -12,6 +12,9 @@ namespace SignalBox.Web.Services
         {
             this.logger = logger;
         }
+
+        public bool IsMultitenant => false;
+
         public Task<string> ResolveName(HttpRequestModel reqest)
         {
             logger.LogWarning("Single tenant resolver will resolve null");

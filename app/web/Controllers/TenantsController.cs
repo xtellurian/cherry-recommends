@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
@@ -30,14 +31,16 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpGet("current")]
-        public Tenant GetCurrentTenant()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Tenant))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetCurrentTenant()
         {
             if (hostingOptions.CurrentValue.Multitenant)
             {
                 var current = tenantProvider.Current();
                 if (current != null)
                 {
-                    return current;
+                    return Ok(current);
                 }
                 else
                 {
@@ -46,7 +49,7 @@ namespace SignalBox.Web.Controllers
             }
             else
             {
-                return new Tenant(null, null);
+                return NotFound();
             }
         }
 

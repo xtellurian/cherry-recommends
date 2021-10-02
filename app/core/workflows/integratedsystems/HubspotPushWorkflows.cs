@@ -69,7 +69,7 @@ namespace SignalBox.Core.Workflows
         {
             if (await systemMapStore.MapExists(tu, system))
             {
-                var recommendationResponse = await itemsRecommenderWorkflows.InvokeItemsRecommender(recommender, new ModelInputDto(tu.CommonId));
+                var recommendationResponse = await itemsRecommenderWorkflows.InvokeItemsRecommender(recommender, new ItemsModelInputDto(tu.CommonId));
                 var topItemId = recommendationResponse.ScoredItems.OrderByDescending(_ => _.Score).FirstOrDefault().ItemCommonId;
                 var map = await systemMapStore.FindMap(tu, system);
                 await hubspotService.SetPropertyValue(system, new HubspotContactPropertyValue(map.UserId, recommender.CommonId, topItemId));

@@ -10,7 +10,7 @@ namespace SignalBox.Core
         protected Tenant() { }
         public Tenant(string name, string databaseName)
         {
-            this.Name = name.ToLower();
+            this.Name = name?.ToLower();
             this.DatabaseName = databaseName;
             Validate();
         }
