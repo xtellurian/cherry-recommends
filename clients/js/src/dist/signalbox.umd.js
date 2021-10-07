@@ -20,17 +20,25 @@
   const getUrl = (path) => `${storedBaseUrl}/${path}`;
 
   let defaltEnvironmentId = null;
-
   const setDefaultEnvironmentId$1 = (e) => {
     defaltEnvironmentId = e;
+  };
+  let defaultApiKey = null;
+  const setDefaultApiKey = (k) => {
+    defaultApiKey = k;
   };
 
   const defaultHeaders$8 = { "Content-Type": "application/json" };
 
-  const headers = (token) => {
+  const headers = (token, apiKey) => {
     let headers = { ...defaultHeaders$8 };
     if (token) {
       headers.Authorization = `Bearer ${token}`;
+    }
+    if (apiKey) {
+      headers["x-api-key"] = `${apiKey}`; // ensure its a string
+    } else if (defaultApiKey) {
+      headers["x-api-key"] = `${defaultApiKey}`; // ensure its a string
     }
     if (defaltEnvironmentId) {
       headers["x-environment"] = defaltEnvironmentId;
@@ -38,34 +46,39 @@
     return headers;
   };
 
-  const fetchApiKeys = async ({ success, error, token, page }) => {
+  const fetchApiKeysAsync = async ({ token, page }) => {
     const url = getUrl("api/apiKeys");
     let path = `${url}?${pageQuery(page)}`;
-
     const response = await fetch(path, {
       headers: headers(token),
     });
     if (response.ok) {
-      const results = await response.json();
-      success(results);
+      return await response.json();
     } else {
-      error(await response.json());
+      throw await response.json();
     }
   };
 
-  const createApiKey = async ({ success, error, token, name }) => {
-    const url = getUrl("api/apiKeys/create");
+  const fetchApiKeys = async ({ success, error, token, page }) => {
+    fetchApiKeysAsync({ token, page }).then(success).catch(error);
+  };
+
+  const createApiKeyAsync = async ({ token, payload }) => {
+    const url = getUrl("api/apiKeys");
     const response = await fetch(url, {
       headers: headers(token),
       method: "post",
-      body: JSON.stringify({ name }),
+      body: JSON.stringify(payload),
     });
     if (response.ok) {
-      const data = await response.json();
-      success(data);
+      return await response.json();
     } else {
-      error(await response.json());
+      throw await response.json();
     }
+  };
+
+  const createApiKey = async ({ success, error, token, payload }) => {
+    createApiKeyAsync({ token, payload }).then(success).catch(error);
   };
 
   const exchangeApiKeyAsync = async ({ apiKey }) => {
@@ -86,12 +99,28 @@
     exchangeApiKeyAsync({ apiKey }).then(success).catch(error);
   };
 
+  const deleteApiKeyAsync = async ({ token, id }) => {
+    const url = getUrl(`api/apiKeys/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "delete",
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   var apiKeyApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
+    fetchApiKeysAsync: fetchApiKeysAsync,
     fetchApiKeys: fetchApiKeys,
+    createApiKeyAsync: createApiKeyAsync,
     createApiKey: createApiKey,
     exchangeApiKeyAsync: exchangeApiKeyAsync,
-    exchangeApiKey: exchangeApiKey
+    exchangeApiKey: exchangeApiKey,
+    deleteApiKeyAsync: deleteApiKeyAsync
   });
 
   const fetchEventSummary = async ({ success, error, token }) => {
@@ -2724,6 +2753,7 @@
   exports.rewardSelectors = rewardSelectorsApi;
   exports.segments = segmentsApi;
   exports.setBaseUrl = setBaseUrl;
+  exports.setDefaultApiKey = setDefaultApiKey;
   exports.setDefaultEnvironmentId = setDefaultEnvironmentId$1;
   exports.touchpoints = touchpointsApi;
   exports.trackedUsers = trackedUsersApi;

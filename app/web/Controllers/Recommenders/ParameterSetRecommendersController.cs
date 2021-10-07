@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
@@ -73,11 +74,14 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Invoke a model with some payload. Id is the recommender Id.</summary>
         [HttpPost("{id}/invoke")]
+        [AllowApiKey]
+        [EnableCors(CorsPolicies.WebApiKeyPolicy)]
         public async Task<ParameterSetRecommendationDto> InvokeModel(string id,
                                                                             string version,
-                                                                            [FromBody] ParameterSetRecommenderInput input,
+                                                                            [FromBody] ModelInputDto input,
                                                                             bool? useInternalId = null)
         {
+            ValidateInvokationDto(input);
             var recommender = await base.GetResource(id, useInternalId);
             var convertedInput = new ParameterSetRecommenderModelInputV1
             {

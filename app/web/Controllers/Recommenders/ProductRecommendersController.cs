@@ -1,6 +1,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
@@ -100,6 +101,8 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Invoke a model with some input. Id is the recommender Id.</summary>
         [HttpPost("{id}/invoke")]
+        [AllowApiKey]
+        [EnableCors(CorsPolicies.WebApiKeyPolicy)]
         public async Task<ProductRecommenderModelOutputV1> InvokeModel(
             string id,
             string version,

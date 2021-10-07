@@ -3,6 +3,14 @@ import { useHistory } from "react-router-dom";
 import { useAccessToken } from "../../api-hooks/token";
 import { createItemAsync } from "../../api/recommendableItemsApi";
 import { ErrorCard, Title, BackButton } from "../molecules";
+import {
+  InputGroup,
+  TextInput,
+  createRequiredByServerValidator,
+  commonIdValidator,
+  createServerErrorValidator,
+  joinValidators,
+} from "../molecules/TextInput";
 
 export const CreateItem = () => {
   const token = useAccessToken();
@@ -33,17 +41,12 @@ export const CreateItem = () => {
       {error && <ErrorCard error={error} />}
       <div>
         <div className="mt-3">
-          <div className="input-group m-1">
-            <div className="input-group-prepend">
-              <span className="input-group-text" id="basic-addon3">
-                Display Name
-              </span>
-            </div>
-            <input
-              type="text"
-              className="form-control"
+          <InputGroup className="m-1">
+            <TextInput
+              label="Display Name"
               placeholder="Item Name"
               value={item.name}
+              validator={createRequiredByServerValidator(error)}
               onChange={(e) =>
                 setItem({
                   ...item,
@@ -51,18 +54,17 @@ export const CreateItem = () => {
                 })
               }
             />
-          </div>
-          <div className="input-group m-1">
-            <div className="input-group-prepend">
-              <span className="input-group-text" id="basic-addon3">
-                Item Identifier
-              </span>
-            </div>
-            <input
-              type="text"
-              className="form-control"
+          </InputGroup>
+
+          <InputGroup className="m-1">
+            <TextInput
+              label="Item Identifier"
               placeholder="Your SKU, Product Id, Plan Id, Discount Code etc."
               value={item.commonId}
+              validator={joinValidators([
+                commonIdValidator,
+                createServerErrorValidator("CommonId", error),
+              ])}
               onChange={(e) =>
                 setItem({
                   ...item,
@@ -70,17 +72,11 @@ export const CreateItem = () => {
                 })
               }
             />
-          </div>
+          </InputGroup>
 
-          <div className="input-group m-1">
-            <div className="input-group-prepend">
-              <span className="input-group-text" id="basic-addon3">
-                List Price
-              </span>
-            </div>
-            <input
-              type="number"
-              className="form-control"
+          <InputGroup className="m-1">
+            <TextInput
+              label="List Price"
               placeholder="Price paid when sold, per unit."
               value={item.listPrice}
               onChange={(e) =>
@@ -91,16 +87,10 @@ export const CreateItem = () => {
               }
             />
 
-            <div className="input-group-prepend">
-              <span className="input-group-text" id="basic-addon3">
-                Direct Cost
-              </span>
-            </div>
-            <input
-              type="number"
-              className="form-control"
+            <TextInput
+              label="Direct Cost"
               placeholder="Price you pay to acquire the item, per unit."
-              value={item.directCost || 0}
+              value={item.directCost}
               onChange={(e) =>
                 setItem({
                   ...item,
@@ -108,7 +98,7 @@ export const CreateItem = () => {
                 })
               }
             />
-          </div>
+          </InputGroup>
 
           <div className="input-group m-1">
             <textarea

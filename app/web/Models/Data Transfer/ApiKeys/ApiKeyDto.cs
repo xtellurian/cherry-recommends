@@ -1,20 +1,23 @@
 using System;
+using SignalBox.Core;
 
 namespace SignalBox.Web.Dto
 {
     public class ApiKeyDto
     {
-        public ApiKeyDto(long id, string name, DateTimeOffset? lastExchanged, int totalExchanges)
+        public ApiKeyDto(HashedApiKey hashedApiKey)
         {
-            Id = id;
-            Name = name;
-            LastExchanged = lastExchanged;
-            TotalExchanges = totalExchanges;
+            Id = hashedApiKey.Id;
+            Name = hashedApiKey.Name;
+            LastExchanged = hashedApiKey.LastExchanged;
+            TotalExchanges = hashedApiKey.TotalExchanges;
+            this.ApiKeyType = hashedApiKey.ApiKeyType;
         }
 
         public long Id { get; set; }
         public string Name { get; set; }
         public DateTimeOffset? LastExchanged { get; set; }
         public int TotalExchanges { get; set; }
+        public ApiKeyTypes? ApiKeyType { get; private set; }
     }
 }

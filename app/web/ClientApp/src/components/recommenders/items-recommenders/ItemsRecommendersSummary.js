@@ -11,7 +11,6 @@ import {
 import { CreateButton } from "../../molecules/CreateButton";
 import { useItemsRecommenders } from "../../../api-hooks/itemsRecommendersApi";
 import { JsonView } from "../../molecules/JsonView";
-import { ItemRow } from "../../items/ItemRow";
 
 const ItemsRecommenderRow = ({ recommender }) => {
   return (

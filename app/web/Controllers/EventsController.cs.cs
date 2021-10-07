@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
@@ -34,6 +35,8 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Stores event data about one or more tracked users.</summary>
         [HttpPost]
+        [AllowApiKey]
+        [EnableCors(CorsPolicies.WebApiKeyPolicy)]
         public async Task<EventLoggingResponse> LogEvents([FromBody] List<EventDto> dto)
         {
             var enqueue = dto.Count > 100;

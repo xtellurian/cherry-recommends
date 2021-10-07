@@ -1,5 +1,4 @@
 import React from "react";
-import { InputGroup, TextInput } from "../TextInput";
 import { EditPropertyPopup } from "../popups/EditPropertyPopup";
 
 export const CopyableField = ({
@@ -9,7 +8,6 @@ export const CopyableField = ({
   isEditable,
   onValueEdited,
 }) => {
-  const [state, setState] = React.useState({ value });
   const [editing, setEditing] = React.useState(false);
 
   const toggleEdit = () => {

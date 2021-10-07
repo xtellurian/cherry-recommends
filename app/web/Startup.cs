@@ -192,6 +192,18 @@ namespace SignalBox.Web
 
             });
 
+            services.AddCors(options =>
+            {
+                // don't add a default policy, it will apply to all endpoints.
+                options.AddPolicy(CorsPolicies.WebApiKeyPolicy, builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .WithHeaders("x-api-key");
+                });
+            });
+
             services
                 .AddProblemDetails(ConfigureProblemDetails)
                 .AddControllers()
@@ -228,11 +240,11 @@ namespace SignalBox.Web
             app.UseProblemDetails(); // must come after app.UseDeveloperExceptionPage()
             app.UseMiddleware<ExceptionTelemetryMiddleware>(); // must come after UseProblemDetails()
 
-
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseSwagger(c =>
@@ -240,8 +252,11 @@ namespace SignalBox.Web
                 c.RouteTemplate = "api/docs/{documentName}/spec.json";
             });
 
+            // the order is important.
+            app.UseMiddleware<TenantSelectorMiddleware>(); // select must occur before API Key Middleware, cos db access is required.
+            app.UseMiddleware<ApiKeyMiddleware>();
             app.UseAuthorization();
-            app.UseMiddleware<TenantSelectorMiddleware>();
+            app.UseMiddleware<TenantAuthorizerMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

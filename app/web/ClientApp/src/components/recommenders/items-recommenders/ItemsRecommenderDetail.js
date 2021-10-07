@@ -138,6 +138,13 @@ export const RecommenderDetail = () => {
             <CopyableField label="Common Id" value={recommender.commonId} />
           )}
 
+          {recommender.id && (
+            <CopyableField
+              label="Invokation URL"
+              value={`${window.location.protocol}//${window.location.host}/api/Recommenders/ItemsRecommenders/${recommender.id}/invoke`}
+            />
+          )}
+
           {recommender.defaultItem && (
             <EntityField
               label="Default Item"

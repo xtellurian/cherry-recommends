@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using SignalBox.Core;
 
 namespace SignalBox.Web.Dto
 {
@@ -6,6 +7,9 @@ namespace SignalBox.Web.Dto
     {
         [Required]
         public string Name { get; set; }
+        [Required]
+        [RegularExpression("Server|Web", ErrorMessage = "ApiKeyType must be one of Server, Web")]
+        public string ApiKeyType { get; set; }
         public string Scope { get; set; }
     }
 }

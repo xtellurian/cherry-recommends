@@ -21,13 +21,13 @@ const getEventKindOptions = () => {
 
 export const EventKindSelect = ({ defaultValue, placeholder, onSelected }) => {
   const options = getEventKindOptions();
-  let starting = null;
-  if (defaultValue !== undefined) {
-    starting = {
-      label: defaultValue,
-      value: defaultValue,
-    };
-  }
+  // let starting = null;
+  // if (defaultValue !== undefined) {
+  //   starting = {
+  //     label: defaultValue,
+  //     value: defaultValue,
+  //   };
+  // }
   const [selectedOption, setSelectedOption] = React.useState(null);
   React.useEffect(() => {
     if (selectedOption && selectedOption.value) {

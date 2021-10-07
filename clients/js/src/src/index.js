@@ -38,7 +38,7 @@ import * as rewardSelectors from "./api/rewardSelectorsApi";
 import * as actions from "./api/actionsApi";
 
 import { setBaseUrl } from "./baseUrl";
-import { setDefaultEnvironmentId } from "./api/headers";
+import { setDefaultEnvironmentId, setDefaultApiKey } from "./api/headers";
 
 export {
   actions,
@@ -68,4 +68,5 @@ export {
   trackedUsers,
   setBaseUrl,
   setDefaultEnvironmentId,
+  setDefaultApiKey,
 };

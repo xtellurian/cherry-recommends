@@ -1,5 +1,4 @@
 import React from "react";
-import { usePopper } from "react-popper";
 import Tippy from "@tippyjs/react";
 
 export const joinValidators = (validators) => {
@@ -62,14 +61,6 @@ export const createServerErrorValidator =
     }
   };
 
-const Tooltip = ({ required }) => {
-  return (
-    <div className="bg-light p-1 border border-rounded">
-      {required ? "Required" : "Optional"}
-    </div>
-  );
-};
-
 export const TextInput = ({
   label,
   value,
@@ -77,7 +68,6 @@ export const TextInput = ({
   placeholder,
   onChange,
   onBlur,
-  onHideErrors,
   validator,
   resetTrigger,
   required,
@@ -101,14 +91,6 @@ export const TextInput = ({
   React.useEffect(() => {
     setHasError(errorMessages && errorMessages.length > 0);
   }, [errorMessages]);
-
-  const [referenceElement, setReferenceElement] = React.useState(null);
-  const [popperElement, setPopperElement] = React.useState(null);
-  const [arrowElement, setArrowElement] = React.useState(null);
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    position: "top-left",
-    modifiers: [{ name: "arrow", options: { element: arrowElement } }],
-  });
 
   let formControlValidationClass = "";
   if (hasError) {
@@ -142,7 +124,6 @@ export const TextInput = ({
         }
       >
         <input
-          ref={setReferenceElement}
           type={type || "text"}
           className={`form-control ${formControlValidationClass}`}
           placeholder={placeholder}

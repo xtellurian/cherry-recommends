@@ -9,7 +9,7 @@ namespace SignalBox.Core
         protected CommonEntity(string commonId, string? name) : base(name)
         {
             Validate(commonId);
-            CommonId = commonId.ToLower();
+            CommonId = commonId;
         }
 
         protected CommonEntity(string commonId, string? name, DynamicPropertyDictionary? properties) : this(commonId, name)
@@ -27,6 +27,10 @@ namespace SignalBox.Core
             else if (commonId.Length < CommonIdMinLength)
             {
                 throw new CommonIdException($"Common Id must not be at least {CommonIdMinLength} characters");
+            }
+            else if (!commonId.ContainsOnlyAlphaNumeric('-', '_'))
+            {
+                throw new CommonIdException($"Common Id must only contain alpha-numeric, underscore, or hyphen");
             }
         }
 

@@ -119,7 +119,7 @@ namespace SignalBox.Core.Workflows
             catch (ModelInvokationException modelEx)
             {
                 logger.LogError("Error invoking recommender", modelEx);
-                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId}", modelEx.ModelResponseContent, saveOnComplete: true);
+                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId ?? input.CommonUserId}", modelEx.ModelResponseContent, saveOnComplete: true);
                 if (recommender.ShouldThrowOnBadInput())
                 {
                     throw;
@@ -133,7 +133,7 @@ namespace SignalBox.Core.Workflows
             catch (System.Exception ex)
             {
                 logger.LogError("Error invoking recommender", ex);
-                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId}", null, saveOnComplete: true);
+                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId ?? input.CommonUserId}", null, saveOnComplete: true);
                 if (recommender.ShouldThrowOnBadInput())
                 {
                     throw;
@@ -168,7 +168,7 @@ namespace SignalBox.Core.Workflows
                                               false,
                                               user,
                                               null,
-                                              message: $"Invoke failed for {user?.Name ?? user?.CommonId}",
+                                              message: $"Invoke failed for {user?.Name ?? user?.CommonId ?? input.CommonUserId}",
                                               modelResponse: null,
                                               saveOnComplete: true);
             }

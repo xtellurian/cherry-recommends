@@ -1,7 +1,4 @@
 config:
-  appsvc:corsorigins:
-    - http://localhost:5000
-    - https://localhost:5001
   appsvc:sku-name: B1
   appsvc:sku-tier: Basic
   appsvc:canonical-root-domain: querent.ai

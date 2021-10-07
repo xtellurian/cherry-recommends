@@ -12,14 +12,17 @@ import {
   ErrorCard,
   Spinner,
   BackButton,
+  ExpandableCard,
 } from "../../molecules";
 import { ConfirmationPopup } from "../../molecules/popups/ConfirmationPopup";
 import { JsonView } from "../../molecules/JsonView";
 import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
+import { CopyableField } from "../../molecules/fields/CopyableField";
 import { Tabs, TabActivator } from "../../molecules/Tabs";
 import { useAccessToken } from "../../../api-hooks/token";
 import { CloneRecommender } from "../utils/CloneRecommender";
 import { ArgumentsSection } from "./Arguments";
+import { ParameterRow } from "../../parameters/ParameterRow";
 
 const tabs = [
   { id: "detail", label: "Detail" },
@@ -141,8 +144,34 @@ export const ParameterSetRecommenderDetail = () => {
             )}
           </div>
           <div className="col-8">
-            {!recommender.loading && <JsonView data={recommender} />}
+            {recommender.commonId && (
+              <CopyableField label="Common Id" value={recommender.commonId} />
+            )}
+
+            {recommender.id && (
+              <CopyableField
+                label="Invokation URL"
+                value={`${window.location.protocol}//${window.location.host}/api/Recommenders/ParameterSetRecommenders/${recommender.id}/invoke`}
+              />
+            )}
+
+            {recommender.parameters && (
+              <React.Fragment>
+                <div>Parameters</div>
+                {recommender.parameters.map((p) => (
+                  <ParameterRow key={p.id} parameter={p} disableDelete={true} />
+                ))}
+              </React.Fragment>
+            )}
           </div>
+        </div>
+
+        <div className="mt-3">
+          {!recommender.loading && (
+            <ExpandableCard label="More Detail">
+              <JsonView data={recommender} />
+            </ExpandableCard>
+          )}
         </div>
       </TabActivator>
       <TabActivator defaultTabId={"detail"} tabId="arguments">

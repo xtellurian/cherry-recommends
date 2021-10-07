@@ -38,28 +38,9 @@ namespace SignalBox.Core
 
         private void ValidateName(string n)
         {
-            foreach (var c in n)
+            if (!n.ContainsOnlyLowercaseAlphaNumeric('-', '_'))
             {
-                if (char.IsLetter(c))
-                {
-                    continue;
-                }
-                else if (char.IsNumber(c))
-                {
-                    continue;
-                }
-                else if (char.IsUpper(c))
-                {
-                    throw new BadRequestException($"Character {c} is uppercase and an invalid in a tenant name or database name");
-                }
-                else if (c == '-' || c == '_')
-                {
-                    continue;
-                }
-                else
-                {
-                    throw new BadRequestException($"Character {c} is an invalid in a tenant name or database name");
-                }
+                throw new BadRequestException($"Value {n} has an invalid character. It should be lowercase alpha-numeric, underscore or dash.");
             }
 
             if (reservedNames.Any(_ => string.Equals(_, n)))

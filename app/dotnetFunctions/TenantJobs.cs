@@ -6,7 +6,9 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
+using SignalBox.Infrastructure;
 using SignalBox.Infrastructure.Models;
+using SignalBox.Infrastructure.Models.Databases;
 
 namespace SignalBox.Functions
 {
@@ -128,29 +130,76 @@ namespace SignalBox.Functions
         }
 
         [Function("MigrateTenant")]
-        public async Task<Tenant> TriggerMigrate([HttpTrigger(AuthorizationLevel.Function, "post",
-            Route = "Tenants/{tenantName:alpha}/migrations")] HttpRequestData req,
+        public async Task<IEnumerable<MigrationResult>> TriggerMigrate([HttpTrigger(AuthorizationLevel.Function, "post",
+            Route = "Tenants/{tenantName}/migrations")] HttpRequestData req,
             FunctionContext executionContext, string tenantName)
         {
             var logger = executionContext.GetLogger("MigrateTenant");
+
             if (hostingOptions.Value.Multitenant)
             {
-                if (await tenantStore.TenantExists(tenantName))
+                if (tenantName == "*")
+                {
+                    logger.LogInformation("Migrating all tenants");
+                    // then migrate all tenants
+                    var results = new List<MigrationResult>();
+                    foreach (var t in await tenantStore.List())
+                    {
+                        try
+                        {
+                            logger.LogInformation($"Migrating tenant {t.Name} with database {t.DatabaseName}");
+                            var result = await dbManager.MigrateDatabase(t, _ => _.FixSqliteConnectionString());
+                            results.Add(result);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            logger.LogCritical($"Error migrating tenant {t.Name} with database {t.DatabaseName}");
+                            logger.LogError(ex.Message);
+                        }
+                    }
+                    return results;
+                }
+                else if (await tenantStore.TenantExists(tenantName))
                 {
                     var tenant = await tenantStore.ReadFromName(tenantName);
-                    await dbManager.MigrateDatabase(tenant, _ => _.FixSqliteConnectionString());
-                    return tenant;
+                    var result = await dbManager.MigrateDatabase(tenant, _ => _.FixSqliteConnectionString());
+                    return new List<MigrationResult> { result };
                 }
                 else
                 {
                     throw new BadRequestException($"{tenantName} doesnt exist");
                 }
             }
-
             else
             {
                 throw new BadRequestException("Cannot create a tenant in a non-multitenant environment");
             }
+        }
+
+        [Function("ListMigrations")]
+        public async Task<IEnumerable<MigrationInfo>> ListMigrations([HttpTrigger(AuthorizationLevel.Function, "get",
+            Route = "Tenants/{tenantName}/migrations")] HttpRequestData req,
+            FunctionContext executionContext, string tenantName)
+        {
+            var logger = executionContext.GetLogger("MigrateTenant");
+
+            if (hostingOptions.Value.Multitenant)
+            {
+                if (await tenantStore.TenantExists(tenantName))
+                {
+                    var tenant = await tenantStore.ReadFromName(tenantName);
+                    return await dbManager.ListMigrations(tenant, _ => _.FixSqliteConnectionString());
+                }
+                else
+                {
+                    throw new BadRequestException($"Tenant {tenantName} doesn't exist");
+                }
+            }
+            else
+            {
+                throw new BadRequestException("Can't list migrations in a single tenant environment");
+            }
+
         }
 
         private async Task<Tenant> CreateTenant(NamedDatabase info, ILogger logger)

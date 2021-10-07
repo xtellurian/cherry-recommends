@@ -8,7 +8,7 @@ export const useParameters = (p) => {
   const { trigger } = p || {}; // ensure this works in the case of p === undefinfed
   const token = useAccessToken();
   const page = usePagination();
-  const [environment, setEnvironment] = useEnvironment();
+  const environment = useEnvironment()[0]; // fix warning that setEnvironment is never used
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });

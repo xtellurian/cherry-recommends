@@ -36,7 +36,6 @@ namespace SignalBox.Azure
             this.multitenant = appSvcConfig.RequireBoolean("multitenant");
 
             var hubspotConfig = new Pulumi.Config("hubspot");
-            var corsOrigins = appSvcConfig.GetObject<List<string>>("corsorigins") ?? new List<string>();
             System.Console.WriteLine($"Canonical Root Domain is {canonicalRootDomain ?? "null"}");
 
             var plan = new AppServicePlan("asp", new AppServicePlanArgs
@@ -64,8 +63,8 @@ namespace SignalBox.Azure
                     Cors = new CorsSettingsArgs
                     {
                         // Allowed Origins cannot be * if SupportCredentials = True
-                        AllowedOrigins = corsOrigins,
-                        SupportCredentials = true
+                        AllowedOrigins = "*",
+                        SupportCredentials = false
                     },
                     AppSettings = {
                         // warning! these are overwritten below
@@ -175,7 +174,7 @@ namespace SignalBox.Azure
         public WebApp WebApp { get; }
         public WebApp FunctionApp { get; }
         public WebApp DotnetFunctionApp { get; }
-        // public Output<string> FunctionAppDefaultKey { get; }
+        public bool Multitenant => multitenant;
 
         private static async Task<string> GetDefaultFunctionKey(string resourceGroupName, string name)
         {

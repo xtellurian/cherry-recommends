@@ -4,7 +4,6 @@ import LoginButton from "../auth0/LoginButton";
 
 export const AnonymousLanding = ({ isLoading }) => {
 
-  const location = useLocation()
   return (
     <React.Fragment>
       <div>

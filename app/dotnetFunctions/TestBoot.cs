@@ -5,6 +5,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
 using SignalBox.Core.Workflows;
+using SignalBox.Infrastructure;
 
 namespace dotnetFunctions
 {

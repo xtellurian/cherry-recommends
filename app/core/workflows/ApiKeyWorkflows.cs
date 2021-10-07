@@ -30,18 +30,55 @@ namespace SignalBox.Core.Workflows
             this.hasher = hasher;
         }
 
-        public async Task<string> ExchangeApiKeyForToken(string apiKey)
+        public async Task<bool> IsValidApiKey(string apiKey, ApiKeyTypes? apiKeyType = null)
         {
             // check the key
             var hashedKey = hasher.Hash(apiKey);
             if (await keyStore.HashExists(hashedKey))
             {
+                if (apiKeyType != null && apiKeyType.HasValue)
+                {
+                    // compare the key types
+                    var storedKey = await keyStore.ReadFromHash(hashedKey);
+                    return apiKeyType.Value.HasFlag(storedKey.ApiKeyType);
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<HashedApiKey> LoadRecord(string apiKey)
+        {
+            var hashedKey = hasher.Hash(apiKey);
+            if (await keyStore.HashExists(hashedKey))
+            {
+                return await keyStore.ReadFromHash(hashedKey);
+            }
+            else
+            {
+                throw new BadRequestException("Api Key not found");
+            }
+        }
+
+        public async Task<string> ExchangeApiKeyForToken(string apiKey)
+        {
+            // check the key
+            if (await IsValidApiKey(apiKey))
+            {
+                var hashedKey = hasher.Hash(apiKey);
                 // update the last exchanged time for the token.
                 var key = await keyStore.ReadFromHash(hashedKey);
                 key.LastExchanged = dateTimeProvider.Now;
                 key.TotalExchanges++;
                 await storageContext.SaveChanges();
                 return await tokenFactory.GetM2MToken(key.Scope);
+
             }
             else
             {
@@ -50,45 +87,57 @@ namespace SignalBox.Core.Workflows
 
         }
 
-        public async Task<string> GenerateAndStoreApiKey(string name, ClaimsPrincipal principal, string scope = null)
+        public async Task<bool> DeleteApiKey(long id)
+        {
+            var result = await keyStore.Remove(id);
+            await storageContext.SaveChanges();
+            return result;
+        }
+
+        public async Task<string> GenerateAndStoreApiKey(string name, string type, ClaimsPrincipal principal, string scope = null)
         {
             // scope: "openid profile email webAPI write:features"
-            var scopeClaim = principal.Claims.FirstOrDefault(_ => _.Type == "scope");
-            if (string.IsNullOrEmpty(scope))
+            if (System.Enum.TryParse<ApiKeyTypes>(type, out var t))
             {
-                scope = scopeClaim.Value;
+                var scopeClaim = principal.Claims.FirstOrDefault(_ => _.Type == "scope");
+                if (string.IsNullOrEmpty(scope))
+                {
+                    scope = scopeClaim.Value;
+                }
+                else
+                {
+                    foreach (var s in scope.Split(' '))
+                    {
+                        var userScope = scopeClaim.Value;
+                        if (!userScope.Contains(s))
+                        {
+                            throw new SecurityException($"Cannot assign scope {s} as user does not have scope.");
+                        }
+                    }
+                }
+
+                // remove the OIdC scopes
+                var oidcScopes = new List<string> { "openid", "profile", "email" };
+                foreach (var o in oidcScopes)
+                {
+                    if (scope.Contains(o))
+                    {
+                        scope = scope.Replace(o, "");
+                    }
+                }
+                scope = scope.Trim();
+
+                // generate a new key
+                var apiKey = System.Guid.NewGuid().ToBase64Encoded();
+                var hashedKey = hasher.Hash(apiKey);
+                var storedKey = await keyStore.Create(new HashedApiKey(name, t, hasher.DefaultAlgorithm, hashedKey, scope));
+                await storageContext.SaveChanges();
+                return apiKey;
             }
             else
             {
-                foreach (var s in scope.Split(' '))
-                {
-                    var userScope = scopeClaim.Value;
-                    if (!userScope.Contains(s))
-                    {
-                        throw new SecurityException($"Cannot assign scope {s} as user does not have scope.");
-                    }
-                }
+                throw new BadRequestException($"Unable to parse key type {type}");
             }
-
-            // remove the OIdC scopes
-            var oidcScopes = new List<string> { "openid", "profile", "email" };
-            foreach (var o in oidcScopes)
-            {
-                if (scope.Contains(o))
-                {
-                    scope = scope.Replace(o, "");
-                }
-            }
-            scope = scope.Trim();
-
-            // generate a new key
-            var apiKey = System.Guid.NewGuid().ToBase64Encoded();
-            var hashedKey = hasher.Hash(apiKey);
-            var storedKey = await keyStore.Create(new HashedApiKey(name, hasher.DefaultAlgorithm, hashedKey, scope));
-            await storageContext.SaveChanges();
-            return apiKey;
         }
-
-
     }
 }

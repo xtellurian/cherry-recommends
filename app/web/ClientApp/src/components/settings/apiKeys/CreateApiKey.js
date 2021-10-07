@@ -1,46 +1,64 @@
 import React from "react";
-import { createApiKey } from "../../../api/apiKeyApi";
+import { createApiKeyAsync } from "../../../api/apiKeyApi";
 import { useAccessToken } from "../../../api-hooks/token";
-import { Title } from "../../molecules/PageHeadings";
-import { Spinner } from "../../molecules/Spinner";
-import { ErrorCard } from "../../molecules/ErrorCard";
+import { Title, Spinner, ErrorCard } from "../../molecules";
+import { Selector } from "../../molecules/selectors/Select";
+import { InputGroup, TextInput } from "../../molecules/TextInput";
 
+const options = [
+  {
+    label: "Server",
+    value: "Server",
+  },
+  {
+    label: "Web",
+    value: "Web",
+  },
+];
 export const CreateApiKey = () => {
   const [name, setName] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [keyResponse, setKeyResponse] = React.useState();
   const token = useAccessToken();
+  const [selectedOption, setSelectedOption] = React.useState(options[0]);
 
   const handleCreate = () => {
+    setError(null);
     setLoading(true);
-    createApiKey({
-      success: (r) => {
-        setLoading(false);
-        setKeyResponse(r);
-      },
-      error: (e) => {
-        setLoading(false);
-        setError(e);
-      },
+    createApiKeyAsync({
       token,
-      name,
-    });
+      payload: {
+        name,
+        apiKeyType: selectedOption.value,
+      },
+    })
+      .then(setKeyResponse)
+      .catch(setError)
+      .finally(() => setLoading(false));
   };
+
   return (
     <React.Fragment>
       <Title>Create an API Key</Title>
       <hr />
       {error && <ErrorCard error={error} />}
       <div>
-        <label className="form-label">Give the API Key a name.</label>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="API Key Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <InputGroup>
+          <TextInput
+            label="Name"
+            placeholder="API Key Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Selector
+            className="w-25"
+            placeholder="Api Key Type"
+            defaultValue={selectedOption}
+            onChange={setSelectedOption}
+            options={options}
+          />
+        </InputGroup>
       </div>
       <div className="mt-2">
         <button onClick={handleCreate} className="btn btn-primary">

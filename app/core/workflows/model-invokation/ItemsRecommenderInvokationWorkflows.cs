@@ -126,6 +126,17 @@ namespace SignalBox.Core.Workflows
 
                 return await HandleRecommendation(recommender, recommendingContext, input, invokationEntry, user, output);
             }
+            catch (CommonIdException commonIdEx)
+            {
+                await base.EndTrackInvokation(
+                        invokationEntry,
+                        false,
+                        user,
+                        null,
+                        $"Invoke failed for {user?.Name ?? user?.CommonId ?? input.CommonUserId}",
+                        modelResponse: commonIdEx.Message);
+                throw; // rethrow the error to propagate to calling client
+            }
             catch (System.Exception ex)
             {
                 string modelResponseContent = null;
@@ -146,7 +157,7 @@ namespace SignalBox.Core.Workflows
                         false,
                         user,
                         null,
-                        $"Invoke failed for {user?.Name ?? user?.CommonId}",
+                        $"Invoke failed for {user?.Name ?? user?.CommonId ?? input.CommonUserId}",
                         modelResponseContent,
                         true);
                     throw; // rethrow the error to propagate to calling client

@@ -1,18 +1,19 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Identity;
 using Microsoft.Azure.Management.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
-using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
-using Microsoft.Azure.Management.Sql;
 using Microsoft.Azure.Management.Sql.Fluent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
 using SignalBox.Core;
+using SignalBox.Infrastructure.Models.Databases;
 
 namespace SignalBox.Infrastructure.Azure
 {
@@ -52,12 +53,14 @@ namespace SignalBox.Infrastructure.Azure
             }
         }
 
-        public async Task CreateDatabase(Tenant tenant, Func<string, string> manipulateConnectionString = null)
+        public async Task<MigrationResult> CreateDatabase(Tenant tenant, Func<string, string> manipulateConnectionString = null)
         {
+            var result = new MigrationResult(tenant);
             if (string.IsNullOrEmpty(tenant.DatabaseName))
             {
                 throw new System.NullReferenceException("Database name cannot be null or empty");
             }
+
             logger.LogInformation($"Creating SQL Database {tenant.DatabaseName} for tenant {tenant.Name}");
             var server = await azure.SqlServers.GetByIdAsync(this.azureEnv.SqlServerAzureId);
             if (server == null)
@@ -73,12 +76,30 @@ namespace SignalBox.Infrastructure.Azure
                             .WithTag("tenantId", tenant.Id.ToString())
                             .CreateAsync();
 
-            await MigrateDatabase(server, database, manipulateConnectionString);
+            await MigrateDatabase(server, database, result, manipulateConnectionString);
             logger.LogInformation("Completed Create Database operation");
+            return result;
         }
 
         // private method called during create and during migrate
-        private async Task MigrateDatabase(ISqlServer server, ISqlDatabase database, Func<string, string> manipulateConnectionString)
+        private async Task MigrateDatabase(ISqlServer server, ISqlDatabase database, MigrationResult result, Func<string, string> manipulateConnectionString)
+        {
+            var options = CreateDbContextOptions(server, database, manipulateConnectionString);
+            using (var context = new SignalBoxDbContext(options.Options))
+            {
+                var applied = await context.Database.GetAppliedMigrationsAsync();
+                result.AddMigrations(true, applied);
+
+                var pending = await context.Database.GetPendingMigrationsAsync();
+                result.AddMigrations(false, pending);
+
+                logger.LogInformation($"Migrating database. There are {pending.Count()} pending migrations and {applied.Count()} applied.");
+                await context.Database.MigrateAsync();
+            }
+            logger.LogInformation($"Migrated database {database.Name}");
+        }
+
+        private DbContextOptionsBuilder<SignalBoxDbContext> CreateDbContextOptions(ISqlServer server, ISqlDatabase database, Func<string, string> manipulateConnectionString)
         {
             var options = new DbContextOptionsBuilder<SignalBoxDbContext>();
             var connectionString = SqlServerConnectionStringFactory.GenerateAzureSqlConnectionString(
@@ -88,19 +109,18 @@ namespace SignalBox.Infrastructure.Azure
                 connectionString = manipulateConnectionString(connectionString);
             }
             options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssembly).CommandTimeout(180));
-            var context = new SignalBoxDbContext(options.Options);
-            logger.LogInformation("Migrating database...");
-            await context.Database.MigrateAsync();
-            logger.LogInformation($"Migrated database {database.Name}");
+            return options;
         }
 
-        public async Task MigrateDatabase(Tenant tenant, Func<string, string> manipulateConnectionString = null)
+        public async Task<MigrationResult> MigrateDatabase(Tenant tenant, Func<string, string> manipulateConnectionString = null)
         {
             if (string.IsNullOrEmpty(tenant.DatabaseName))
             {
                 throw new NullReferenceException("Database name cannot be null or empty");
             }
+            var result = new MigrationResult(tenant);
             logger.LogInformation($"Migrating SQL Database {tenant.DatabaseName} for tenant {tenant.Name}");
+
             var server = await azure.SqlServers.GetByIdAsync(this.azureEnv.SqlServerAzureId);
             if (server == null)
             {
@@ -113,7 +133,42 @@ namespace SignalBox.Infrastructure.Azure
             {
                 throw new NullReferenceException($"Database {tenant.DatabaseName} not found in server {server.Name}");
             }
-            await this.MigrateDatabase(server, database, manipulateConnectionString);
+            await this.MigrateDatabase(server, database, result, manipulateConnectionString);
+            return result;
+        }
+
+        public async Task<IEnumerable<MigrationInfo>> ListMigrations(Tenant tenant, Func<string, string> manipulateConnectionString = null)
+        {
+            if (string.IsNullOrEmpty(tenant.DatabaseName))
+            {
+                throw new NullReferenceException("Database name cannot be null or empty");
+            }
+
+            var server = await azure.SqlServers.GetByIdAsync(this.azureEnv.SqlServerAzureId);
+            if (server == null)
+            {
+                throw new System.NullReferenceException("Sql Server not found");
+            }
+            logger.LogInformation($"Using Azure Sql Server: {server.Name}");
+
+            var database = await server.Databases.GetAsync(tenant.DatabaseName);
+            if (database == null)
+            {
+                throw new NullReferenceException($"Database {tenant.DatabaseName} not found in server {server.Name}");
+            }
+
+            var migrations = new List<MigrationInfo>();
+            var options = CreateDbContextOptions(server, database, manipulateConnectionString);
+            using (var context = new SignalBoxDbContext(options.Options))
+            {
+                var applied = await context.Database.GetAppliedMigrationsAsync();
+                migrations.AddRange(applied.Select(_ => new MigrationInfo(_, true)));
+
+                var pending = await context.Database.GetPendingMigrationsAsync();
+                migrations.AddRange(pending.Select(_ => new MigrationInfo(_, false)));
+
+            }
+            return migrations;
         }
     }
 }

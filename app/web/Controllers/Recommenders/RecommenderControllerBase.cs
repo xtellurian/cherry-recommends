@@ -25,6 +25,14 @@ namespace SignalBox.Web.Controllers
             this.recommenderStore = store;
         }
 
+        protected virtual void ValidateInvokationDto(IModelInput dto)
+        {
+            if (dto.Features != null && dto.Features.Any())
+            {
+                throw new BadRequestException("Features cannot be set via the API");
+            }
+        }
+
         [HttpGet("{id}/InvokationLogs")]
         public async Task<Paginated<InvokationLogEntry>> GetInvokationLogs(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
         {

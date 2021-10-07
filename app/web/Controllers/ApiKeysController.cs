@@ -34,10 +34,19 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Creates an API key.</summary>
         [HttpPost("create")]
+        [HttpPost]
         public async Task<CreateApiKeyResponseDto> CreateApiKey(CreateApiKeyDto dto)
         {
-            var key = await workflows.GenerateAndStoreApiKey(dto.Name, User, dto.Scope);
+            var key = await workflows.GenerateAndStoreApiKey(dto.Name, dto.ApiKeyType, User, dto.Scope);
             return new CreateApiKeyResponseDto(dto.Name, key);
+        }
+
+        /// <summary>Creates an API key.</summary>
+        [HttpDelete("{id}")]
+        public async Task<DeleteResponse> DeleteApiKey(long id)
+        {
+            var result = await workflows.DeleteApiKey(id);
+            return new DeleteResponse(id, Request.Path.Value, result);
         }
 
         /// <summary>Lists the names of all API Keys.</summary>
@@ -46,7 +55,7 @@ namespace SignalBox.Web.Controllers
         {
             var result = await store.Query(p.Page);
             var x = new Paginated<ApiKeyDto>(
-                result.Items.Select(_ => new ApiKeyDto(_.Id, _.Name, _.LastExchanged, _.TotalExchanges)),
+                result.Items.Select(_ => new ApiKeyDto(_)),
                 result.Pagination.PageCount,
                 result.Pagination.TotalItemCount,
                 result.Pagination.PageNumber);

@@ -15,7 +15,7 @@ import { useEnvironment } from "./environmentsApi";
 export const useParameterSetRecommenders = () => {
   const token = useAccessToken();
   const page = usePagination();
-  const [environment, setEnvironment] = useEnvironment();
+  const environment = useEnvironment()[0]; // fix setEnvironmnet is not used warning
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });

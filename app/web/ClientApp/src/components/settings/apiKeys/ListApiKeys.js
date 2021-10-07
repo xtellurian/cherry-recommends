@@ -1,19 +1,47 @@
 import React from "react";
+import { deleteApiKeyAsync } from "../../../api/apiKeyApi";
 import { useApiKeys } from "../../../api-hooks/apiKeyApi";
 import { Title } from "../../molecules/PageHeadings";
 import { CreateButton } from "../../molecules/CreateButton";
 import { Spinner } from "../../molecules/Spinner";
+import { ErrorCard } from "../../molecules";
+import { ConfirmDeletePopup } from "../../molecules/popups/ConfirmDeletePopup";
+import { useAccessToken } from "../../../api-hooks/token";
 
-const ApiKeyRow = ({ id, name, lastExchanged, totalExchanges }) => {
+const ApiKeyRow = ({ apiKey, onDelete, onDeleteError }) => {
+  const token = useAccessToken();
+  const handleDelete = () => {
+    deleteApiKeyAsync({ id: apiKey.id, token })
+      .then(onDelete)
+      .catch(onDeleteError);
+  };
+  const [isDeleteOpen, setDeleteOpen] = React.useState(false);
+
   return (
-    <div className="card">
-      <div className="row card-body">
-        <div className="col-1">{id}</div>
-        <div className="col">{name}</div>
-        <div className="col">Exchanged {lastExchanged || "Never"}</div>
-        <div className="col-1">{totalExchanges}</div>
+    <React.Fragment>
+      <div className="card">
+        <div className="row justify-content-between card-body">
+          <div className="col-2 font-weight-bold">{apiKey.apiKeyType}</div>
+          <div className="col">{apiKey.name}</div>
+          <div className="col">Exchanged {apiKey.lastExchanged || "Never"}</div>
+          <div className="col-2">Exchanges: {apiKey.totalExchanges}</div>
+          <div className="col">
+            <button
+              className="btn btn-danger btn-block"
+              onClick={() => setDeleteOpen(true)}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+      <ConfirmDeletePopup
+        entity={apiKey}
+        open={isDeleteOpen}
+        setOpen={setDeleteOpen}
+        handleDelete={handleDelete}
+      />
+    </React.Fragment>
   );
 };
 const Top = () => {
@@ -28,7 +56,9 @@ const Top = () => {
   );
 };
 export const ListApiKeys = () => {
-  const { result } = useApiKeys();
+  const [trigger, setTrigger] = React.useState();
+  const [error, setError] = React.useState();
+  const { result } = useApiKeys({ trigger });
   if (result && result.loading) {
     return (
       <React.Fragment>
@@ -37,16 +67,22 @@ export const ListApiKeys = () => {
       </React.Fragment>
     );
   }
+  console.log(result);
   return (
     <React.Fragment>
-      <Top/>
-
+      <Top />
+      {error && <ErrorCard error={error} />}
       <div>
         <ul>
           {result &&
             result.items &&
             result.items.map((item, j) => (
-              <ApiKeyRow key={item.id} {...item}></ApiKeyRow>
+              <ApiKeyRow
+                key={item.id}
+                apiKey={item}
+                onDelete={setTrigger}
+                onDeleteError={setError}
+              ></ApiKeyRow>
             ))}
         </ul>
       </div>

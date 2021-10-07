@@ -15,7 +15,7 @@ namespace sqlite.SignalBox
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.9");
+                .HasAnnotation("ProductVersion", "5.0.10");
 
             modelBuilder.Entity("ItemsRecommendationRecommendableItem", b =>
                 {
@@ -207,6 +207,9 @@ namespace sqlite.SignalBox
 
                     b.Property<string>("AlgorithmName")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("ApiKeyType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<long>("Created")
                         .ValueGeneratedOnAdd()
@@ -1030,6 +1033,67 @@ namespace sqlite.SignalBox
                     b.ToTable("Segments");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Tenant", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("DatabaseName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DatabaseName")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Tenant", t => t.ExcludeFromMigrations());
+                });
+
+            modelBuilder.Entity("SignalBox.Core.TenantMembership", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("TenantMembership", t => t.ExcludeFromMigrations());
+                });
+
             modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>
                 {
                     b.Property<long>("Id")
@@ -1725,6 +1789,17 @@ namespace sqlite.SignalBox
                         .HasForeignKey("EnvironmentId");
 
                     b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.TenantMembership", b =>
+                {
+                    b.HasOne("SignalBox.Core.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>

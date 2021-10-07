@@ -26,15 +26,18 @@ namespace SignalBox.Functions
         public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
         {
             var tenantProvider = (ITenantProvider)context.InstanceServices.GetService(typeof(ITenantProvider));
-            var queryDic = context.BindingContext.BindingData["Query"] as string;
-            if (hosting.Multitenant)
+            if (context.BindingContext.BindingData.TryGetValue("Query", out var queryDicObject))
             {
-                if (!string.IsNullOrEmpty(queryDic))
+                var queryDic = queryDicObject as string;
+                if (hosting.Multitenant)
                 {
-                    var dic = JsonSerializer.Deserialize<Dictionary<string, string>>(queryDic);
-                    if (dic.ContainsKey("tenant"))
+                    if (!string.IsNullOrEmpty(queryDic))
                     {
-                        await tenantProvider.SetTenantName(dic["tenant"]);
+                        var dic = JsonSerializer.Deserialize<Dictionary<string, string>>(queryDic);
+                        if (dic.ContainsKey("tenant"))
+                        {
+                            await tenantProvider.SetTenantName(dic["tenant"]);
+                        }
                     }
                 }
             }

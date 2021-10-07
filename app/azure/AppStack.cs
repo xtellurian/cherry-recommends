@@ -60,7 +60,7 @@ namespace SignalBox.Azure
             this.FunctionAppName = appSvc.FunctionApp.Name;
             this.DotnetFunctionAppName = appSvc.DotnetFunctionApp.Name;
             this.TenantDatabaseConnectionString = multitenant.TenantDbConnectionString;
-            // this.FunctionAppDefaultKey = appSvc.FunctionAppDefaultKey;
+            this.Multitenant = Output.Create(appSvc.Multitenant);
         }
 
         [Output]
@@ -96,6 +96,8 @@ namespace SignalBox.Azure
         public Output<string> SqlServerPassword { get; private set; }
         [Output]
         public Output<string> DatabaseName { get; private set; }
+        [Output]
+        public Output<bool> Multitenant { get; private set; }
 
         private static async Task<string> GetStorageAccountPrimaryKey(string resourceGroupName, string accountName)
         {

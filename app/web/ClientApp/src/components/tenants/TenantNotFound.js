@@ -1,5 +1,5 @@
 import React from "react";
-import { useHosting, useTenantHint } from "../../api-hooks/tenantsApi";
+import { useHosting } from "../../api-hooks/tenantsApi";
 import { Spinner } from "../molecules";
 
 export const TenantNotFound = ({ error }) => {

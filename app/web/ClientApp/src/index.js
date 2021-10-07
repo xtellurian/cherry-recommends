@@ -8,7 +8,6 @@ import { fetchAuth0Configuration } from "./api/reactConfigApi";
 import { FunloaderContainer } from "./components/molecules/FunLoader";
 import { FunError } from "./components/molecules/FunError";
 import EnvironmentStore from "./contexts/EnvironmentStore";
-import { TenantExists } from "./components/tenants/TenantChecker";
 import App from "./App";
 
 //import registerServiceWorker from './registerServiceWorker';
