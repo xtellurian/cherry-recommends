@@ -1730,7 +1730,7 @@ namespace sqlserver.SignalBox
                     b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", "Recommender")
                         .WithMany("RecommendationCorrelators")
                         .HasForeignKey("RecommenderId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("ModelRegistration");
 

@@ -1,3 +1,4 @@
+const overlay = { zIndex: 2000 };
 export const small = {
   content: {
     top: "50%",
@@ -7,6 +8,7 @@ export const small = {
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
   },
+  overlay,
 };
 
 export const big = {
@@ -19,4 +21,5 @@ export const big = {
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
   },
+  overlay,
 };

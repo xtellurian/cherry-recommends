@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SignalBox.Web.Dto
 {
@@ -6,6 +7,7 @@ namespace SignalBox.Web.Dto
     public class CreateItemsRecommender : CreateRecommenderDtoBase
     {
         public IEnumerable<string>? ItemIds { get; set; }
+        [Required]
         public string? DefaultItemId { get; set; }
         public int? NumberOfItemsToRecommend { get; set; }
     }

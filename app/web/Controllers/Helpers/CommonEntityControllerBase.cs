@@ -98,7 +98,7 @@ namespace SignalBox.Web.Controllers
             }
             else
             {
-                throw new BadRequestException("Delete error", message);
+                throw new BadRequestException($"Delete error: {message}", message);
             }
         }
     }

@@ -59,11 +59,21 @@ namespace SignalBox.Web
                 if (provider == "sqlserver")
                 {
                     services.UseSqlServer<MultiTenantDbContext>(Configuration.GetConnectionString("Tenants"));
-                    var azEnv = Configuration.GetSection("AzureEnvironment");
-                    services.UseMultitenantSqlServer(
-                        azEnv.GetValue<string>("SqlServerName"),
-                        azEnv.GetValue<string>("SqlServerPassword"),
-                        azEnv.GetValue<string>("SqlServerUserName"));
+                    var azEnv = new SignalBoxAzureEnvironment();
+                    Configuration.GetSection("AzureEnvironment").Bind(azEnv);
+                    var localEnv = new SqlServerCredentials();
+                    Configuration.GetSection("LocalSql").Bind(localEnv);
+                    if (!string.IsNullOrEmpty(azEnv.SqlServerPassword))
+                    {
+                        services.UseMultitenantAzureSqlServer(
+                            azEnv.SqlServerName,
+                            azEnv.SqlServerPassword,
+                            azEnv.SqlServerUserName);
+                    }
+                    else
+                    {
+                        services.UseMultitenantLocalSqlServer(localEnv.SqlServerPassword, localEnv.SqlServerUserName);
+                    }
                 }
                 else if (provider == "sqlite")
                 {
@@ -80,13 +90,24 @@ namespace SignalBox.Web
             {
                 services.RegisterSingleTenantInfrastructure();
                 // add single tenant databases
+
                 if (provider == "sqlserver")
                 {
-                    var azEnv = Configuration.GetSection("AzureEnvironment");
-                    services.UseMultitenantSqlServer(
-                        azEnv.GetValue<string>("SqlServerName"),
-                        azEnv.GetValue<string>("SqlServerPassword"),
-                        azEnv.GetValue<string>("SqlServerUserName"));
+                    var azEnv = new SignalBoxAzureEnvironment();
+                    Configuration.GetSection("AzureEnvironment").Bind(azEnv);
+                    var localEnv = new SqlServerCredentials();
+                    Configuration.GetSection("LocalSql").Bind(localEnv);
+                    if (!string.IsNullOrEmpty(azEnv.SqlServerPassword))
+                    {
+                        services.UseMultitenantAzureSqlServer(
+                            azEnv.SqlServerName,
+                            azEnv.SqlServerPassword,
+                            azEnv.SqlServerUserName);
+                    }
+                    else
+                    {
+                        services.UseMultitenantLocalSqlServer(localEnv.SqlServerPassword, localEnv.SqlServerUserName);
+                    }
                 }
                 else if (provider == "sqlite")
                 {

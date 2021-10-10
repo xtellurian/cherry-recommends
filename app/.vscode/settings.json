@@ -5,6 +5,22 @@
             "driver": "SQLite",
             "name": "tenants",
             "database": "${workspaceFolder:app}/web/tenants.db"
+        },
+        {
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": true
+            },
+            "previewLimit": 50,
+            "server": "127.0.0.1",
+            "port": 1433,
+            "driver": "MSSQL",
+            "name": "local-container",
+            "group": "dev",
+            "database": "signalbox",
+            "username": "SA",
+            "password": "YourStrong@Passw0rd"
         }
     ],
     "sqltools.useNodeRuntime": true,

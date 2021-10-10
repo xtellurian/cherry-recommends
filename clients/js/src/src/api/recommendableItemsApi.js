@@ -1,12 +1,17 @@
 import { pageQuery } from "./paging";
 import { getUrl } from "../baseUrl";
 import { headers } from "./headers";
+import { searchEntities } from "../utilities/search"
 
 import * as pr from "./commonEntity/propertiesApiUtil";
 
-export const fetchItemsAsync = async ({ token, page }) => {
-  const url = getUrl("api/RecommendableItems");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
+export const fetchItemsAsync = async ({ token, page, searchTerm }) => {
+  let url = getUrl("api/RecommendableItems");
+  url = `${url}?${pageQuery(page)}`;
+  if (searchTerm) {
+    url = `${url}&${searchEntities(searchTerm)}`;
+  }
+  const response = await fetch(url, {
     headers: headers(token),
   });
   if (response.ok) {

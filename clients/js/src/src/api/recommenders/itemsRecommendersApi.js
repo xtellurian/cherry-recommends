@@ -75,6 +75,47 @@ export const createItemsRecommenderAsync = async ({ token, payload }) => {
   }
 };
 
+export const fetchItemsAsync = async ({ token, id }) => {
+  const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/Items`);
+  const response = await fetch(url, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
+export const addItemAsync = async ({ token, id, item }) => {
+  const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/Items`);
+  const response = await fetch(url, {
+    headers: headers(token),
+    method: "post",
+    body: JSON.stringify(item),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
+export const removeItemAsync = async ({ token, id, itemId }) => {
+  const url = getUrl(
+    `api/recommenders/ItemsRecommenders/${id}/Items/${itemId}`
+  );
+  const response = await fetch(url, {
+    headers: headers(token),
+    method: "delete",
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
 export const setDefaultItemAsync = async ({ token, id, itemId }) => {
   const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/DefaultItem`);
   const response = await fetch(url, {

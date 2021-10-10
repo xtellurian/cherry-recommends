@@ -18,7 +18,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .WithMany(_ => _.RecommendationCorrelators)
                 .HasForeignKey(_ => _.RecommenderId)
                 .IsRequired(false)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
 
         }
     }

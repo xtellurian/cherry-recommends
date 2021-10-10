@@ -12,6 +12,7 @@ import { TargetVariableValues } from "./TargetVariableValues";
 import { InvokationLogs } from "./InvokationLogs";
 import { Settings } from "./Settings";
 import { MonitorRecommender } from "./MonitorItemsRecommender";
+import { ManageItems } from "./ManageItems";
 
 export const ItemsRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -37,10 +38,7 @@ export const ItemsRecommendersComponent = () => {
           path={`${path}/link-to-model/:id`}
           component={LinkToModel}
         />
-        <AuthorizeRoute
-          path={`${path}/test/:id`}
-          component={TestRecommender}
-        />
+        <AuthorizeRoute path={`${path}/test/:id`} component={TestRecommender} />
         <AuthorizeRoute
           path={`${path}/recommendations/:id`}
           component={RecommendationList}
@@ -60,6 +58,10 @@ export const ItemsRecommendersComponent = () => {
         <AuthorizeRoute
           path={`${path}/monitor/:id`}
           component={MonitorRecommender}
+        />
+        <AuthorizeRoute
+          path={`${path}/manage-items/:id`}
+          component={ManageItems}
         />
         <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
       </Switch>

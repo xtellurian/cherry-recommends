@@ -81,8 +81,8 @@ export const ItemDetail = () => {
             open={isDeletePopupOpen}
             setOpen={setisDeletePopupOpen}
             handleDelete={() =>
-              deleteItemAsync({ id: item.id })
-                .then(history.push("/recommendable-items"))
+              deleteItemAsync({ id: item.id, token })
+                .then(() => history.push("/recommendable-items"))
                 .catch(setError)
             }
           />

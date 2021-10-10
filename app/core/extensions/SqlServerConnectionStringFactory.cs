@@ -12,6 +12,13 @@ namespace SignalBox.Core
 
             return cs;
         }
+        
+        public static string GenerateLocalSqlConnectionString(string databaseName, string sqlServerUserName, string sqlServerPassword)
+        {
+            var cs = $"Server=127.0.0.1,1433;Database={databaseName};User Id={sqlServerUserName};Password={sqlServerPassword}";
+
+            return cs;
+        }
 
     }
 }

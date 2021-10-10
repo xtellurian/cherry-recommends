@@ -6,6 +6,7 @@ import {
   fetchInvokationLogsAsync,
   fetchItemsRecommendationsAsync,
   fetchTargetVariablesAsync,
+  fetchItemsAsync,
   fetchRecommenderTrackedUserActionsAsync,
   getDefaultItemAsync,
 } from "../api/itemsRecommendersApi";
@@ -122,6 +123,24 @@ export const useLinkedRegisteredModel = ({ id }) => {
       });
     }
   }, [token, id]);
+
+  return result;
+};
+
+export const useItems = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchItemsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
 
   return result;
 };

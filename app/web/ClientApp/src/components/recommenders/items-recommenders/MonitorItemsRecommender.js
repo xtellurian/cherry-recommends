@@ -20,10 +20,10 @@ const tabs = [
     id: "revenue",
     label: "Revenue",
   },
-  {
-    id: "target-variable",
-    label: "Target Variable",
-  },
+  // {
+  //   id: "target-variable",
+  //   label: "Target Variable",
+  // },
   {
     id: "invokations",
     label: "Invokations",

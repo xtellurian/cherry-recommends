@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +24,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost]
         public async Task<RecommendableItem> Create(CreateRecommendableItemDto dto)
         {
-            return await workflows.CreateRecommendableItem(dto.CommonId, dto.Name, dto.ListPrice, dto.DirectCost, dto.Description, dto.Properties );
+            return await workflows.CreateRecommendableItem(dto.CommonId, dto.Name, dto.ListPrice, dto.DirectCost, dto.Description, dto.Properties);
         }
 
         /// <summary>Updates a recommendable item.</summary>
@@ -39,14 +37,14 @@ namespace SignalBox.Web.Controllers
 
         protected override async Task<(bool, string)> CanDelete(RecommendableItem entity)
         {
-            await store.LoadMany(entity, _ => _.Recommenders);
-            if (entity.Recommenders.Any())
+            var isDefaultItem = await workflows.IsDefaultItemForRecommender(entity);
+            if (isDefaultItem)
             {
-                return (false, "Item is used in a recommender. Delete the recommender first.");
+                return (false, "Cannot delete item as it is used as a Recommender's default item");
             }
             else
             {
-                return (true, null);
+                return (true, string.Empty);
             }
         }
     }

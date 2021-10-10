@@ -54,7 +54,7 @@ namespace SignalBox.Core
         /// Returns true if the superset is not empty and PageNumber is less than or equal to PageCount and this
         /// is the last subset within the superset.
         /// </summary>
-        public bool IsLastPage => TotalItemCount > 0 && PageNumber == PageCount;
+        public bool IsLastPage => (TotalItemCount > 0 && PageNumber == PageCount) || TotalItemCount == 0;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public NextPageInfo? Next { get; set; }

@@ -122,10 +122,44 @@ namespace SignalBox.Web.Controllers
         }
 
         /// <summary>Get the latest recommendations made by a recommender.</summary>
-        [HttpGet("{id}/recommendations")]
-        public async Task<Paginated<ItemsRecommendation>> GetRecommendations(long id, [FromQuery] PaginateRequest p)
+        [HttpGet("{id}/Recommendations")]
+        public async Task<Paginated<ItemsRecommendation>> GetRecommendations(string id, [FromQuery] PaginateRequest p)
         {
             return await workflows.QueryRecommendations(id, p.Page);
+        }
+
+        /// <summary>Get the items associated with a recommender.</summary>
+        [HttpGet("{id}/Items")]
+        public async Task<Paginated<RecommendableItem>> GetItems(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
+        {
+            return await workflows.QueryItems(id, p.Page, useInternalId);
+        }
+
+        /// <summary>Get the items associated with a recommender.</summary>
+        [HttpPost("{id}/Items")]
+        public async Task<RecommendableItem> AddItem(string id, [FromBody] AddItemDto dto, bool? useInternalId = null)
+        {
+            var recommender = await GetEntity(id, useInternalId);
+            if (dto.Id.HasValue)
+            {
+                return await workflows.AddItem(recommender, dto.Id.Value, useInternalId);
+            }
+            else if (string.IsNullOrEmpty(dto.CommonId))
+            {
+                throw new BadRequestException("Either Id or CommonId is required");
+            }
+            else
+            {
+                return await workflows.AddItem(recommender, dto.CommonId, useInternalId);
+            }
+        }
+
+        /// <summary>Remove an items association with a recommender.</summary>
+        [HttpDelete("{id}/Items/{itemId}")]
+        public async Task<RecommendableItem> RemoveItem(string id, string itemId, bool? useInternalId = null)
+        {
+            var recommender = await GetEntity(id, useInternalId);
+            return await workflows.RemoveItem(recommender, itemId, useInternalId);
         }
 
         protected override Task<(bool, string)> CanDelete(ItemsRecommender entity)

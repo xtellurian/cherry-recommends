@@ -85,9 +85,54 @@ namespace SignalBox.Core.Workflows
             return item;
         }
 
-        public async Task<Paginated<ItemsRecommendation>> QueryRecommendations(long recommenderId, int page)
+        public async Task<RecommendableItem> AddItem(ItemsRecommender recommender, RecommendableItem item, bool? useInternalId = null)
         {
-            return await recommendationStore.QueryForRecommender(page, recommenderId);
+            await store.LoadMany(recommender, _ => _.Items);
+
+            if (!recommender.Items.Any(_ => _.Id == item.Id)) // if the item not already in there.
+            {
+                recommender.Items.Add(item);
+                await store.Context.SaveChanges();
+            }
+
+            return item;
+        }
+        public async Task<RecommendableItem> AddItem(ItemsRecommender recommender, string itemId, bool? useInternalId = null)
+        {
+            var item = await itemStore.GetEntity(itemId, useInternalId);
+            return await AddItem(recommender, item, useInternalId);
+        }
+        public async Task<RecommendableItem> AddItem(ItemsRecommender recommender, long itemId, bool? useInternalId = null)
+        {
+            var item = await itemStore.Read(itemId);
+            return await AddItem(recommender, item, useInternalId);
+        }
+
+        public async Task<RecommendableItem> RemoveItem(ItemsRecommender recommender, string itemId, bool? useInternalId = null)
+        {
+            var item = await itemStore.GetEntity(itemId, useInternalId);
+            await store.LoadMany(recommender, _ => _.Items);
+
+            if (recommender.Items.Any(_ => _.Id == item.Id)) // if the item is in there.
+            {
+                item = recommender.Items.First(_ => _.Id == item.Id); // ensure the item is the right object
+                recommender.Items.Remove(item);
+                await store.Context.SaveChanges();
+            }
+
+            return item;
+        }
+
+        public async Task<Paginated<RecommendableItem>> QueryItems(string recommenderId, int page, bool? useInternalId)
+        {
+            var recommender = await store.GetEntity(recommenderId, useInternalId);
+            return await itemStore.QueryForRecommender(recommender.Id, page);
+        }
+
+        public async Task<Paginated<ItemsRecommendation>> QueryRecommendations(string recommenderId, int page, bool? useInternalId = null)
+        {
+            var recommender = await store.GetEntity(recommenderId, useInternalId);
+            return await recommendationStore.QueryForRecommender(page, recommender.Id);
         }
 
         public async Task<ModelRegistration> LinkRegisteredModel(ItemsRecommender recommender, long modelId)

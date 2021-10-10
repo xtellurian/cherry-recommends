@@ -19,7 +19,7 @@ namespace SignalBox.Infrastructure
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssembly).CommandTimeout(180)));
             return services;
         }
-        public static IServiceCollection UseMultitenantSqlServer(this IServiceCollection services,
+        public static IServiceCollection UseMultitenantAzureSqlServer(this IServiceCollection services,
                                                     string serverName,
                                                     string sqlServerPassword,
                                                     string sqlServerUserName,
@@ -33,6 +33,26 @@ namespace SignalBox.Infrastructure
                     Console.WriteLine($"Database Name: {tenantProvider.CurrentDatabaseName}");
                     var cs = SqlServerConnectionStringFactory.GenerateAzureSqlConnectionString(
                         serverName,
+                        tenantProvider.CurrentDatabaseName,
+                        sqlServerUserName: sqlServerUserName,
+                        sqlServerPassword: sqlServerPassword);
+                    options.UseSqlServer(cs, b => b.MigrationsAssembly(migrationAssembly).CommandTimeout(180));
+                }, ServiceLifetime.Scoped);
+            return services;
+        }
+
+        public static IServiceCollection UseMultitenantLocalSqlServer(this IServiceCollection services,
+                                                    string sqlServerPassword,
+                                                    string sqlServerUserName,
+                                                    string migrationAssembly = "sqlserver")
+        {
+            System.Console.WriteLine("Connecting to a local SQL");
+            // this is scoped
+            services.AddDbContextFactory<SignalBoxDbContext>((sp, options) =>
+                {
+                    var tenantProvider = sp.GetRequiredService<ITenantProvider>();
+                    Console.WriteLine($"Database Name: {tenantProvider.CurrentDatabaseName}");
+                    var cs = SqlServerConnectionStringFactory.GenerateLocalSqlConnectionString(
                         tenantProvider.CurrentDatabaseName,
                         sqlServerUserName: sqlServerUserName,
                         sqlServerPassword: sqlServerPassword);

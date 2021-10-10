@@ -1732,6 +1732,47 @@
     }
   };
 
+  const fetchItemsAsync$1 = async ({ token, id }) => {
+    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/Items`);
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const addItemAsync = async ({ token, id, item }) => {
+    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/Items`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      payload: JSON.stringify(item),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const removeItemAsync = async ({ token, id, itemId }) => {
+    const url = getUrl(
+      `api/recommenders/ItemsRecommenders/${id}/Items/${itemId}`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "delete",
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const setDefaultItemAsync = async ({ token, id, itemId }) => {
     const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/DefaultItem`);
     const response = await fetch(url, {
@@ -1868,6 +1909,9 @@
     fetchItemsRecommendationsAsync: fetchItemsRecommendationsAsync,
     deleteItemsRecommenderAsync: deleteItemsRecommenderAsync,
     createItemsRecommenderAsync: createItemsRecommenderAsync,
+    fetchItemsAsync: fetchItemsAsync$1,
+    addItemAsync: addItemAsync,
+    removeItemAsync: removeItemAsync,
     setDefaultItemAsync: setDefaultItemAsync,
     getDefaultItemAsync: getDefaultItemAsync,
     createLinkRegisteredModelAsync: createLinkRegisteredModelAsync,

@@ -44,3 +44,7 @@ export const fetchRecommenderTrackedUserActionsAsync =
   itemsRecommenders.fetchRecommenderTrackedUserActionsAsync;
 
 export const setSettingsAsync = itemsRecommenders.setSettingsAsync;
+
+export const fetchItemsAsync = itemsRecommenders.fetchItemsAsync;
+export const addItemAsync = itemsRecommenders.addItemAsync;
+export const removeItemAsync = itemsRecommenders.removeItemAsync;

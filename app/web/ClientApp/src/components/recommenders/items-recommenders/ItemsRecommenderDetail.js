@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useItemsRecommender } from "../../../api-hooks/itemsRecommendersApi";
 import {
   deleteItemsRecommenderAsync,
@@ -152,8 +152,15 @@ export const RecommenderDetail = () => {
               to={`/recommendable-items/detail/${recommender.defaultItemId}`}
             />
           )}
-          <div className="mt-2">
-            <Subtitle>Associated Items</Subtitle>
+          <div className="mt-5">
+            <div className="mb-4">
+              <Link to={`/recommenders/items-recommenders/manage-items/${id}`}>
+                <button className="float-right btn btn-outline-primary">
+                  Manage Items
+                </button>
+              </Link>
+              <Subtitle>Associated Items</Subtitle>
+            </div>
             {recommender.items &&
               recommender.items.map((p) => (
                 <ProductRow product={p} key={p.id} />
