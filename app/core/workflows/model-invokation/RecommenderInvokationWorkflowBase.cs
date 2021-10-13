@@ -45,36 +45,38 @@ namespace SignalBox.Core.Workflows
             return entry;
         }
 
-        protected async Task<InvokationLogEntry> EndTrackInvokation(InvokationLogEntry entry,
-                                                                 bool success,
-                                                                 TrackedUser trackedUser,
-                                                                 RecommendationCorrelator? correlator,
-                                                                 string? message = null,
-                                                                 string? modelResponse = null,
-                                                                 bool? saveOnComplete = true)
+        protected async Task<RecommendingContext> EndTrackInvokation(RecommendingContext context,
+                                                                    bool success,
+                                                                    string? message = null,
+                                                                    string? modelResponse = null,
+                                                                    bool? saveOnComplete = true)
         {
-            entry.InvokeEnded = dateTimeProvider.Now;
-            entry.Success = success;
-            entry.LogMessage(message);
-            entry.Correlator = correlator;
-            entry.TrackedUser = trackedUser;
-            entry.ModelResponse = modelResponse;
-            entry.Status = "Complete";
+            if(context == null)
+            {
+                throw new System.NullReferenceException("RecommendingContext must not be null");
+            }
+            context.InvokationLog.InvokeEnded = dateTimeProvider.Now;
+            context.InvokationLog.Success = success;
+            context.InvokationLog.LogMessage(message);
+            context.InvokationLog.Correlator = context.Correlator;
+            context.InvokationLog.TrackedUser = context.TrackedUser;
+            context.InvokationLog.ModelResponse = modelResponse;
+            context.InvokationLog.Status = "Complete";
             if (saveOnComplete == true)
             {
                 await storageContext.SaveChanges();
             }
-            return entry;
+            return context;
         }
 
-        protected async Task<IDictionary<string, object>> GetFeatures(TrackedUser trackedUser, InvokationLogEntry entry)
+        protected async Task<IDictionary<string, object>> GetFeatures(RecommendingContext context)
         {
-            var features = await trackedUserFeatureStore.ReadAllLatestFeatures(trackedUser);
+            var features = await trackedUserFeatureStore.ReadAllLatestFeatures(context.TrackedUser);
             var result = features
                 .Where(_ => _.Value != null)
                 .ToDictionary(_ => _.Feature.CommonId, _ => _.Value ?? "");
 
-            entry.LogMessage($"Discovered {result.Count} features");
+            context.InvokationLog.LogMessage($"Discovered {result.Count} features");
             return result;
         }
     }

@@ -12,11 +12,14 @@ import {
 } from "../../../api/itemsRecommendersApi";
 import { Selector } from "../../molecules/selectors/Select";
 import { SettingsUtil } from "../utils/settingsUtil";
-import { Spinner } from "../../molecules";
+import { ErrorCard, Spinner } from "../../molecules";
+import { LoadingPopup } from "../../molecules/popups/LoadingPopup";
 
 export const Settings = () => {
   const { id } = useParams();
   const [updatedSettings, setUpdatedSettings] = React.useState({});
+  const [error, setError] = React.useState();
+  const [saving, setSaving] = React.useState(false);
   const recommender = useItemsRecommender({
     id,
     trigger: updatedSettings,
@@ -29,6 +32,8 @@ export const Settings = () => {
 
   const handleUpdateError = (e) => {
     alert(e.title);
+    console.log(e);
+    setError(e);
   };
 
   const [updatedDefaultItem, setUpdatedDefaultItem] = React.useState({});
@@ -37,13 +42,15 @@ export const Settings = () => {
     trigger: updatedDefaultItem,
   });
   const handleUpdate = (settings) => {
+    setSaving(true);
     setSettingsAsync({
       id,
       token,
       settings,
     })
       .then(setUpdatedSettings)
-      .catch(handleUpdateError);
+      .catch(handleUpdateError)
+      .finally(() => setSaving(false));
   };
 
   const handleSetDefaultItem = (itemId) => {
@@ -53,6 +60,8 @@ export const Settings = () => {
   };
   return (
     <React.Fragment>
+      <LoadingPopup loading={saving} label="Saving Settings" />
+      {error && <ErrorCard error={error} />}
       {recommender.loading && <Spinner>Loading Recommender</Spinner>}
       {!recommender.loading && (
         <React.Fragment>
@@ -74,9 +83,7 @@ export const Settings = () => {
               ) : (
                 <Selector
                   isSearchable
-                  placeholder={
-                    defaultItem.name || "Choose a default item."
-                  }
+                  placeholder={defaultItem.name || "Choose a default item."}
                   noOptionsMessage={(inputValue) => "No Items Available"}
                   onChange={(so) => handleSetDefaultItem(so.value)}
                   options={itemOptions}

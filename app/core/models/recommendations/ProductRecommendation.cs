@@ -8,8 +8,8 @@ namespace SignalBox.Core.Recommendations
         protected ProductRecommendation()
         { }
 
-        public ProductRecommendation(ProductRecommender recommender, TrackedUser trackedUser, RecommendationCorrelator correlator, string version, Product product)
-         : base(correlator, RecommenderTypes.Product, version)
+        public ProductRecommendation(ProductRecommender recommender, TrackedUser trackedUser, RecommendationCorrelator correlator, Product product)
+         : base(correlator, RecommenderTypes.Product)
         {
             Recommender = recommender;
             RecommenderId = recommender.Id;

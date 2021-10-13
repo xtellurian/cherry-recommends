@@ -28,7 +28,7 @@ namespace SignalBox.Infrastructure.ML.Azure
             {
                 base.SetKeyAsBearerToken(httpClient, recommender.ModelRegistration);
                 var response = await httpClient.PostAsJsonAsync(recommender.ModelRegistration.ScoringUrl,
-                    new ModelInputWrapper<ProductRecommenderModelInputV1>(recommendingContext.Version, input, recommendingContext.Correlator?.Id), serializerOptions);
+                    new ModelInputWrapper<ProductRecommenderModelInputV1>(input, recommendingContext.Correlator?.Id), serializerOptions);
                 body = await response.Content.ReadAsStringAsync();
                 response.EnsureSuccessStatusCode();
                 return JsonSerializer.Deserialize<ProductRecommenderModelOutputV1>(body, serializerOptions);

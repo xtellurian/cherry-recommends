@@ -1,4 +1,5 @@
 import React from "react";
+import { toShortDate } from "../../../utility/utility";
 import {
   EmptyList,
   ErrorCard,
@@ -8,7 +9,9 @@ import {
 import { JsonView } from "../../molecules/JsonView";
 
 const InvokationRow = ({ invokation }) => {
-  const label = invokation.status || invokation.message || "Invoked";
+  const d = toShortDate(invokation.created);
+  const label =
+    (invokation.status || invokation.message || "Invoked") + ` ${d}`;
   return (
     <ExpandableCard
       label={label}
@@ -18,18 +21,9 @@ const InvokationRow = ({ invokation }) => {
     </ExpandableCard>
   );
 };
-export const InvokationLogsUtil = ({ recommender, invokations, rootPath }) => {
+export const InvokationLogsUtil = ({ invokations }) => {
   return (
     <React.Fragment>
-      {/* <BackButton
-        className="float-right"
-        to={`${rootPath}/detail/${recommender.id}`}
-      >
-        Back to Recommender
-      </BackButton>
-      <Title>Invokation Logs</Title>
-      <Subtitle>{recommender.name}</Subtitle>
-      <hr /> */}
       {invokations.error && <ErrorCard error={invokations.error} />}
       {invokations.items &&
         invokations.items.map((i) => (

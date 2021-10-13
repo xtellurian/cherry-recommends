@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,8 +10,11 @@ namespace SignalBox.Web.Dto
         [Required]
         public override string? Name { get; set; }
         public long? CloneFromId { get; set; }
+        [Obsolete]
         public bool? ThrowOnBadInput { get; set; }
+        [Obsolete]
         public bool? RequireConsumptionEvent { get; set; }
+        public RecommenderSettingsDto? Settings { get; set; }
         public IEnumerable<CreateOrUpdateRecommenderArgument>? Arguments { get; set; }
     }
 }

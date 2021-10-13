@@ -1,18 +1,16 @@
 import React from "react";
+import { toDate } from "../../utility/utility";
 
 export const DateTimeField = ({ label, date }) => {
-  let dateValue = new Date();
-  if (typeof date === "string") {
-    dateValue = new Date(Date.parse(date));
-  } else if (typeof date === "number") {
-    dateValue = new Date(date);
-  } else {
+  const dateValue = toDate(date);
+
+  if (!dateValue) {
     return <div>{date} is not a known date format</div>;
   }
 
   return (
     <div>
-      {label}:{" "}{dateValue.toLocaleString()}
+      {label}: {dateValue.toLocaleString()}
     </div>
   );
 };

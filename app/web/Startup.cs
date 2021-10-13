@@ -26,6 +26,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 using SignalBox.Web.Services;
 using SignalBox.Core.Security;
 using SignalBox.Infrastructure.Models;
+using SignalBox.Core.Serialization;
 
 namespace SignalBox.Web
 {
@@ -232,6 +233,7 @@ namespace SignalBox.Web
                 .AddJsonOptions(o =>
                     {
                         o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                        o.JsonSerializerOptions.Converters.Add(new TimeSpanJsonConverter());
                     });
 
             // In production, the React files will be served from this directory

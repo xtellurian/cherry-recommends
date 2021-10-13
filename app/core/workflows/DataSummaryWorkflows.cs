@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Recommendations;
@@ -122,6 +123,7 @@ namespace SignalBox.Core.Workflows
                 var itemsRecommendations = await itemsRecommendationStore.Query(1);
                 recommendations.AddRange(itemsRecommendations.Items);
                 recommendations.Sort((x, y) => DateTimeOffset.Compare(y.LastUpdated, x.LastUpdated));
+                recommendations = recommendations.Take(20).ToList();
             }
             catch (Exception ex)
             {

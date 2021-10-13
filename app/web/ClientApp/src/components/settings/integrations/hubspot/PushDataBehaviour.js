@@ -12,7 +12,7 @@ import { AsyncSelectItemsRecommender } from "../../../molecules/selectors/AsyncS
 import { useHubspotPushBehaviourAsync } from "../../../../api-hooks/hubspotApi";
 import { setHubspotPushBehaviourAsync } from "../../../../api/hubspotApi";
 import { useAccessToken } from "../../../../api-hooks/token";
-import { SettingRow } from "../../../molecules/SettingRow";
+import { SettingRow } from "../../../molecules/settings/SettingRow";
 
 const Top = ({ integratedSystem }) => {
   return (

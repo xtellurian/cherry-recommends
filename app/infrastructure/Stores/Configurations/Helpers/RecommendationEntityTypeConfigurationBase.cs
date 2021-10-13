@@ -11,6 +11,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             base.Configure(builder);
             builder.Property(_ => _.RecommenderType).HasConversion<string>();
+            builder.Ignore(_ => _.IsFromCache);
         }
     }
 }

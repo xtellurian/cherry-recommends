@@ -1,21 +1,24 @@
 using SignalBox.Core.Recommendations;
 
+#nullable enable
 namespace SignalBox.Core.Recommenders
 {
     public class RecommendingContext
     {
-        public RecommendingContext(RecommendationCorrelator correlator)
+        public RecommendingContext(InvokationLogEntry invokationLogEntry)
         {
-            Version = "v2";
-            Correlator = correlator;
-        }
-        public RecommendingContext(string version, RecommendationCorrelator correlator)
-        {
-            Version = version;
-            Correlator = correlator;
+            InvokationLog = invokationLogEntry;
         }
 
-        public string Version { get; set; }
-        public RecommendationCorrelator Correlator { get; set; }
+        public RecommendingContext(RecommendationCorrelator correlator, InvokationLogEntry invokationLogEntry)
+        {
+            Correlator = correlator;
+            InvokationLog = invokationLogEntry;
+        }
+
+
+        public TrackedUser? TrackedUser { get; set; }
+        public RecommendationCorrelator? Correlator { get; set; }
+        public InvokationLogEntry InvokationLog { get; }
     }
 }

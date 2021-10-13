@@ -2,7 +2,7 @@ import React from "react";
 import { AsyncButton, Title, ErrorCard, BackButton } from "../../molecules";
 import { AsyncSelectActionName } from "../../molecules/selectors/AsyncSelectActionName";
 import { Selector } from "../../molecules/selectors/Select";
-import { SettingRow } from "../../molecules/SettingRow";
+import { SettingRow } from "../../molecules/settings/SettingRow";
 import { createRewardSelectorAsync } from "../../../api/rewardSelectorsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { useHistory } from "react-router-dom";

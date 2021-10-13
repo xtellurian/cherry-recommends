@@ -36,7 +36,7 @@ namespace SignalBox.Infrastructure
 
             return new ItemsRecommenderModelOutputV1
             {
-                ScoredItems = itemsToRecommend.Select(_ => new ScoredRecommendableItem(_, random.Next())).ToList()
+                ScoredItems = itemsToRecommend.Select(_ => new ScoredRecommendableItem(_, Math.Round(random.NextDouble(), 4))).ToList()
             };
         }
 

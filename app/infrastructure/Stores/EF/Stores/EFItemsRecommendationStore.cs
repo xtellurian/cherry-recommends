@@ -54,5 +54,15 @@ namespace SignalBox.Infrastructure.EntityFramework
             return new Paginated<ItemsRecommendation>(results, pageCount, itemCount, page);
         }
 
+        public async Task<IEnumerable<ItemsRecommendation>> RecommendationsSince(long recommenderId,
+                                                                                 TrackedUser trackedUser,
+                                                                                 DateTimeOffset since)
+        {
+            return await QuerySet
+                 .Where(_ => _.RecommenderId == recommenderId &&
+                     _.TrackedUserId == trackedUser.Id &&
+                     _.Created > since)
+                 .ToListAsync();
+        }
     }
 }

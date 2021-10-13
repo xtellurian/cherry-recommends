@@ -56,12 +56,9 @@ namespace SignalBox.Web.Controllers
                 return await workflows.CloneItemsRecommender(c, from);
             }
             return await workflows.CreateItemsRecommender(c,
-                dto.DefaultItemId, dto.ItemIds, dto.NumberOfItemsToRecommend, dto.Arguments.ToCoreRepresentation(),
-                new RecommenderSettings
-                {
-                    ThrowOnBadInput = dto.ThrowOnBadInput,
-                    RequireConsumptionEvent = dto.RequireConsumptionEvent
-                });
+                dto.DefaultItemId, dto.ItemIds, dto.NumberOfItemsToRecommend,
+                dto.Arguments.ToCoreRepresentation(),
+                dto.Settings.ToCoreRepresentation());
         }
 
         /// <summary>Sets the default item id.</summary>

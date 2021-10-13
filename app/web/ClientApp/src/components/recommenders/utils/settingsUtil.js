@@ -6,11 +6,29 @@ import {
   Spinner,
   ErrorCard,
 } from "../../molecules";
+import { SettingRow } from "../../molecules/settings/SettingRow";
+import { TimespanSelector } from "../../molecules/selectors/TimespanSelector";
 import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 
+const initSettings = {
+  _isInitial: true,
+  throwOnBadInput: false,
+  requireConsumptionEvent: false,
+  recommendationCacheTime: null,
+};
+
+const anyAreDifferent = (newSettings, oldSettings) => {
+  return (
+    newSettings?.throwOnBadInput !== oldSettings?.throwOnBadInput ||
+    newSettings?.requireConsumptionEvent !==
+      oldSettings?.requireConsumptionEvent ||
+    newSettings?.recommendationCacheTime !==
+      oldSettings?.recommendationCacheTime
+  );
+};
 export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
   // const [errorHandling, setErrorHandling] = React.useState();
-  const [settings, setSettings] = React.useState();
+  const [settings, setSettings] = React.useState(initSettings);
 
   if (updateSettings === undefined) {
     throw new Error("updateSettings is a required prop");
@@ -18,22 +36,17 @@ export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
 
   React.useEffect(() => {
     if (!recommender.loading && !recommender.error) {
-      setSettings(
-        recommender?.settings || {
-          throwOnBadInput: false,
-          requireConsumptionEvent: false,
-        }
-      );
+      setSettings(recommender?.settings || initSettings);
     }
   }, [recommender]);
 
   React.useEffect(() => {
-    if (settings && settings !== recommender.settings) {
-      if (
-        recommender.settings?.throwOnBadInput !== settings?.throwOnBadInput ||
-        recommender.settings?.requireConsumptionEvent !==
-          settings?.requireConsumptionEvent
-      ) {
+    if (
+      settings &&
+      settings !== initSettings &&
+      settings !== recommender.settings
+    ) {
+      if (anyAreDifferent(recommender.settings, settings)) {
         updateSettings(settings);
       }
     }
@@ -54,7 +67,7 @@ export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
       {recommender.loading && <Spinner />}
       {recommender.error && <ErrorCard error={recommender.error} />}
 
-      {settings && (
+      {!settings._isInitial && (
         <React.Fragment>
           <div className="row">
             <div className="col">
@@ -96,6 +109,19 @@ export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
               />
             </div>
           </div>
+
+          <SettingRow
+            label="Recommendation Cache Time"
+            description="By default, a new recommendation will be generated every time this recommender is invoked. Setting this value causes Four2 to cache a recommendation for this time period."
+          >
+            <TimespanSelector
+              initialValue={settings.recommendationCacheTime}
+              allowNull={true}
+              onChange={(v) =>
+                setSettings({ ...settings, recommendationCacheTime: v })
+              }
+            />
+          </SettingRow>
         </React.Fragment>
       )}
     </React.Fragment>

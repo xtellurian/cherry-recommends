@@ -21,7 +21,7 @@ namespace SignalBox.Core.Recommenders
         }
 
 
-        public bool ShouldThrowOnBadInput() => this.ErrorHandling?.ThrowOnBadInput == true;
+        public bool ShouldThrowOnBadInput() => (this.Settings?.ThrowOnBadInput == true) || (this.ErrorHandling?.ThrowOnBadInput == true);
         public RecommenderErrorHandling? ErrorHandling { get; set; }
         public RecommenderSettings? Settings { get; set; }
         public List<RecommenderArgument>? Arguments { get; set; }

@@ -14,7 +14,7 @@ namespace SignalBox.Core.Recommendations
                                    TrackedUser trackedUser,
                                    RecommendationCorrelator correlator,
                                    IEnumerable<ScoredRecommendableItem> items)
-         : base(correlator, RecommenderTypes.Items, "Items")
+         : base(correlator, RecommenderTypes.Items)
         {
             Recommender = recommender;
             RecommenderId = recommender.Id;
@@ -35,7 +35,9 @@ namespace SignalBox.Core.Recommendations
         private double? GetScore(RecommendableItem item) => Scores.FirstOrDefault(_ => _.ItemId == item.Id || _.ItemCommonId == item.CommonId).Score;
 
         [JsonPropertyName("scoredItems")]
-        public IEnumerable<ScoredRecommendableItem> ScoredItems
-            => this.Items?.Select(_ => new ScoredRecommendableItem(_, GetScore(_)))!; // nullable due to backwards compat issue
+        public IOrderedEnumerable<ScoredRecommendableItem> ScoredItems
+            => this.Items?
+                .Select(_ => new ScoredRecommendableItem(_, GetScore(_)))?
+                .OrderByDescending(_ => _.Score)!; // nullable due to backwards compat issue
     }
 }

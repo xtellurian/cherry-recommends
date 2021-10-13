@@ -56,11 +56,7 @@ namespace SignalBox.Web.Controllers
             }
             return await workflows.CreateProductRecommender(c,
                 dto.DefaultProductId, dto.ProductIds,
-                new RecommenderSettings
-                {
-                    ThrowOnBadInput = dto.ThrowOnBadInput,
-                    RequireConsumptionEvent = dto.RequireConsumptionEvent
-                });
+                dto.Settings.ToCoreRepresentation());
         }
 
         /// <summary>Sets the default product id.</summary>
@@ -105,7 +101,6 @@ namespace SignalBox.Web.Controllers
         [EnableCors(CorsPolicies.WebApiKeyPolicy)]
         public async Task<ProductRecommenderModelOutputV1> InvokeModel(
             string id,
-            string version,
             [FromBody] ProductRecommenderInput input,
             bool? useInternalId = null)
         {
@@ -115,7 +110,7 @@ namespace SignalBox.Web.Controllers
                 Arguments = input.Arguments,
                 CommonUserId = input.CommonUserId,
             };
-            var recommendation = await invokationWorkflows.InvokeProductRecommender(recommender, version, convertedInput);
+            var recommendation = await invokationWorkflows.InvokeProductRecommender(recommender, convertedInput);
             return recommendation.GetOutput<ProductRecommenderModelOutputV1>();
         }
 

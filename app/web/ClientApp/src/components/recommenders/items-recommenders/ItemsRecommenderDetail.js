@@ -5,7 +5,7 @@ import {
   deleteItemsRecommenderAsync,
   createItemsRecommenderAsync,
 } from "../../../api/itemsRecommendersApi";
-import { ProductRow } from "../../products/ProductRow";
+import { ItemRow } from "../../items/ItemRow";
 import { useAccessToken } from "../../../api-hooks/token";
 import {
   Title,
@@ -162,9 +162,7 @@ export const RecommenderDetail = () => {
               <Subtitle>Associated Items</Subtitle>
             </div>
             {recommender.items &&
-              recommender.items.map((p) => (
-                <ProductRow product={p} key={p.id} />
-              ))}
+              recommender.items.map((i) => <ItemRow item={i} key={i.id} />)}
             {recommender.items && recommender.items.length === 0 && (
               <EmptyList>
                 This recommender works with all recommendable items.

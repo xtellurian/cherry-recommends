@@ -52,5 +52,17 @@ namespace SignalBox.Infrastructure.EntityFramework
             var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
             return new Paginated<ParameterSetRecommendation>(results, pageCount, itemCount, page);
         }
+
+        public async Task<IEnumerable<ParameterSetRecommendation>> RecommendationsSince(long recommenderId,
+                                                                                        TrackedUser trackedUser,
+                                                                                        DateTimeOffset since)
+        {
+            return await QuerySet
+                .Where(_ => _.RecommenderId == recommenderId &&
+                    _.TrackedUserId == trackedUser.Id &&
+                    _.Created > since)
+                .ToListAsync();
+
+        }
     }
 }

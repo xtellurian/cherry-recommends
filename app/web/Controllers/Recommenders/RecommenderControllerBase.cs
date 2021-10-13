@@ -78,10 +78,10 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpPost("{id}/Settings")]
-        public async Task<RecommenderSettings> SetSettings(string id, RecommenderSettings dto)
+        public async Task<RecommenderSettings> SetSettings(string id, RecommenderSettingsDto dto)
         {
             var recommender = await base.GetResource(id);
-            recommender.Settings = dto;
+            recommender.Settings = dto.ToCoreRepresentation(recommender.Settings, true);
             await store.Update(recommender);
             await store.Context.SaveChanges();
             return recommender.Settings;

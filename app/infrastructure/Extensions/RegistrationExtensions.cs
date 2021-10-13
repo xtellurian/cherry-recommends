@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SignalBox.Core;
+using SignalBox.Core.Recommendations;
+using SignalBox.Core.Recommenders;
 using SignalBox.Infrastructure.EntityFramework;
 using SignalBox.Infrastructure.ML;
 using SignalBox.Infrastructure.Services;
@@ -17,6 +19,8 @@ namespace SignalBox.Infrastructure
             services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();
             services.AddScoped<IHubspotService, HubspotService>();
             services.AddScoped<IAuth0Service, Auth0Manager>();
+            services.AddScoped<IRecommendationCache<ItemsRecommender, ItemsRecommendation>, SimpleItemsRecommendationCache>();
+            services.AddScoped<IRecommendationCache<ParameterSetRecommender, ParameterSetRecommendation>, SimpleParameterSetRecommendationCache>();
             services.AddHttpClient();
             return services;
         }

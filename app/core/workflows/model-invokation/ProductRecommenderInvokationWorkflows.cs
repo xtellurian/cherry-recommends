@@ -12,8 +12,6 @@ namespace SignalBox.Core.Workflows
         private readonly IStorageContext storageContext;
         private readonly IRecommenderModelClientFactory modelClientFactory;
         private readonly ITrackedUserStore trackedUserStore;
-        private readonly ITrackedUserTouchpointStore trackedUserTouchpointStore;
-        private readonly ITouchpointStore touchpointStore;
         private readonly IProductStore productStore;
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IProductRecommenderStore productRecommenderStore;
@@ -37,8 +35,6 @@ namespace SignalBox.Core.Workflows
             this.storageContext = storageContext;
             this.modelClientFactory = modelClientFactory;
             this.trackedUserStore = trackedUserStore;
-            this.trackedUserTouchpointStore = trackedUserTouchpointStore;
-            this.touchpointStore = touchpointStore;
             this.productStore = productStore;
             this.correlatorStore = correlatorStore;
             this.productRecommenderStore = productRecommenderStore;
@@ -47,16 +43,14 @@ namespace SignalBox.Core.Workflows
 
         public async Task<ProductRecommendation> InvokeProductRecommender(
             ProductRecommender recommender,
-            string version,
             ProductRecommenderModelInputV1 input)
         {
             await productRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             var invokationEntry = await base.StartTrackInvokation(recommender, input, saveOnComplete: false);
             var correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
             await storageContext.SaveChanges(); // save the correlator and invokatin entry
+            var context = new RecommendingContext(correlator, invokationEntry);
 
-            var recommendingContext = new RecommendingContext(version, correlator);
-            TrackedUser user = null;
             try
             {
                 if (string.IsNullOrEmpty(input.CommonUserId))
@@ -65,10 +59,10 @@ namespace SignalBox.Core.Workflows
                 }
 
                 // enrich values from the touchpoint
-                user = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
+                context.TrackedUser = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
 
                 // load the features of the tracked user
-                input.Features = await base.GetFeatures(user, invokationEntry);
+                input.Features = await base.GetFeatures(context);
 
                 IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1> client;
                 if (recommender.ModelRegistration == null)
@@ -90,7 +84,7 @@ namespace SignalBox.Core.Workflows
                        .GetClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(recommender);
                 }
 
-                var output = await client.Invoke(recommender, recommendingContext, input);
+                var output = await client.Invoke(recommender, context, input);
 
                 // load the product
                 if (output.ProductId.HasValue)
@@ -106,7 +100,7 @@ namespace SignalBox.Core.Workflows
                     throw new ModelInvokationException("The model did not return a product.");
                 }
 
-                return await HandleRecommendation(recommender, recommendingContext, input, invokationEntry, user, output);
+                return await HandleRecommendation(recommender, context, input, output);
             }
             catch (System.Exception ex)
             {
@@ -124,13 +118,11 @@ namespace SignalBox.Core.Workflows
                 if (recommender.ShouldThrowOnBadInput())
                 {
                     await base.EndTrackInvokation(
-                        invokationEntry,
+                        context,
                         false,
-                        user,
-                        null,
-                        $"Invoke failed for {user?.Name ?? user?.CommonId}",
-                        modelResponseContent,
-                        true);
+                        message: $"Invoke failed for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId}",
+                        modelResponse: modelResponseContent,
+                        saveOnComplete: true);
                     throw; // rethrow the error to propagate to calling client
                 }
                 else if (recommender.DefaultProductId != null)
@@ -144,7 +136,7 @@ namespace SignalBox.Core.Workflows
                         ProductCommonId = recommender.DefaultProduct.CommonId,
                         Product = recommender.DefaultProduct
                     };
-                    return await HandleRecommendation(recommender, recommendingContext, input, invokationEntry, user, output);
+                    return await HandleRecommendation(recommender, context, input, output);
                 }
                 else
                 {
@@ -158,38 +150,31 @@ namespace SignalBox.Core.Workflows
                         ProductCommonId = recommender.DefaultProduct.CommonId,
                         Product = recommender.DefaultProduct
                     };
-                    return await HandleRecommendation(recommender, recommendingContext, input, invokationEntry, user, output);
+                    return await HandleRecommendation(recommender, context, input, output);
                 }
             }
         }
 
         private async Task<ProductRecommendation> HandleRecommendation(ProductRecommender recommender,
-                                                                        RecommendingContext recommendingContext,
+                                                                        RecommendingContext context,
                                                                         ProductRecommenderModelInputV1 input,
-                                                                        InvokationLogEntry invokationEntry,
-                                                                        TrackedUser user,
                                                                         ProductRecommenderModelOutputV1 output)
         {
             // now save the result
 
-            var recommendation = new ProductRecommendation(recommender, user, recommendingContext.Correlator, recommendingContext.Version, output.Product);
-            output.CorrelatorId = recommendingContext.Correlator.Id;
+            var recommendation = new ProductRecommendation(recommender, context.TrackedUser, context.Correlator, output.Product);
+            output.CorrelatorId = context?.Correlator.Id;
             recommendation.SetInput(input);
             recommendation.SetOutput(output);
 
             recommendation = await productRecommendationStore.Create(recommendation);
-            await base.EndTrackInvokation(invokationEntry,
+            await base.EndTrackInvokation(context,
                                           true,
-                                          user,
-                                          recommendingContext.Correlator,
-                                          $"Invoked successfully for {user.Name ?? user.CommonId}",
-                                          null,
-                                          false);
-
-            await storageContext.SaveChanges();
+                                          $"Invoked successfully for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId}",
+                                          saveOnComplete: true);
 
             // set this after the context has been saved.
-            output.CorrelatorId = recommendingContext.Correlator.Id;
+            output.CorrelatorId = context?.Correlator.Id;
             return recommendation;
         }
     }

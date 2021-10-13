@@ -49,11 +49,7 @@ namespace SignalBox.Web.Controllers
                 dto.Parameters,
                 dto.Bounds,
                 dto.Arguments.ToCoreRepresentation(),
-                new RecommenderSettings
-                {
-                    ThrowOnBadInput = dto.ThrowOnBadInput,
-                    RequireConsumptionEvent = dto.RequireConsumptionEvent
-                });
+                dto.Settings.ToCoreRepresentation());
         }
 
         [HttpPost("{id}/ModelRegistration")]
@@ -77,9 +73,8 @@ namespace SignalBox.Web.Controllers
         [AllowApiKey]
         [EnableCors(CorsPolicies.WebApiKeyPolicy)]
         public async Task<ParameterSetRecommendationDto> InvokeModel(string id,
-                                                                            string version,
-                                                                            [FromBody] ModelInputDto input,
-                                                                            bool? useInternalId = null)
+                                                                    [FromBody] ModelInputDto input,
+                                                                    bool? useInternalId = null)
         {
             ValidateInvokationDto(input);
             var recommender = await base.GetResource(id, useInternalId);
@@ -88,7 +83,7 @@ namespace SignalBox.Web.Controllers
                 Arguments = input.Arguments,
                 CommonUserId = input.CommonUserId ?? System.Guid.NewGuid().ToString()
             };
-            var recommendation = await invokationWorkflows.InvokeParameterSetRecommender(recommender, version, convertedInput);
+            var recommendation = await invokationWorkflows.InvokeParameterSetRecommender(recommender, convertedInput);
             return new ParameterSetRecommendationDto(recommendation, recommendation.GetOutput<ParameterSetRecommenderModelOutputV1>().RecommendedParameters);
         }
 

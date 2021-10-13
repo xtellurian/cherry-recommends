@@ -7,11 +7,10 @@ namespace SignalBox.Core.Recommendations
     {
         protected RecommendationEntity()
         { }
-        public RecommendationEntity(RecommendationCorrelator correlator, RecommenderTypes recommenderType, string version)
+        public RecommendationEntity(RecommendationCorrelator correlator, RecommenderTypes recommenderType)
         {
             this.RecommendationCorrelator = correlator;
             this.RecommenderType = recommenderType;
-            this.Version = version;
         }
 #nullable enable
 
@@ -42,10 +41,10 @@ namespace SignalBox.Core.Recommendations
             return Deserialize<T>(this.ModelOutput);
         }
 
-        public string? Version { get; set; }
         public string? ModelInput { get; set; } // JSON serialised
         public string? ModelInputType { get; set; }
         public string? ModelOutput { get; set; } // JSON serialised
         public string? ModelOutputType { get; set; }
+        public bool IsFromCache { get; set; }
     }
 }

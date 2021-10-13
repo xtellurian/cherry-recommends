@@ -11,7 +11,7 @@ import {
   ErrorCard,
 } from "../../../molecules";
 import { ToggleSwitch } from "../../../molecules/ToggleSwitch";
-import { SettingRow } from "../../../molecules/SettingRow";
+import { SettingRow } from "../../../molecules/settings/SettingRow";
 import { useAccessToken } from "../../../../api-hooks/token";
 import { useParameterSetRecommender } from "../../../../api-hooks/parameterSetRecommendersApi";
 import { AsyncSelectParameterSetRecommender } from "../../../molecules/selectors/AsyncSelectParameterSetRecommender";

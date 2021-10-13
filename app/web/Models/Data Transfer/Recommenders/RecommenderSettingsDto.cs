@@ -1,6 +1,6 @@
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Web.Dto
 {
-    public class RecommenderSettings
+    public class RecommenderSettingsDto : DtoBase
     {
         public bool? ThrowOnBadInput { get; set; }
         public bool? RequireConsumptionEvent { get; set; }

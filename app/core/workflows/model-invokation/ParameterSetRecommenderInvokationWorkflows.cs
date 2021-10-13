@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommenders;
 
+#nullable enable
 namespace SignalBox.Core.Workflows
 {
     public class ParameterSetRecommenderInvokationWorkflows : RecommenderInvokationWorkflowBase<ParameterSetRecommender>, IWorkflow
@@ -16,6 +17,7 @@ namespace SignalBox.Core.Workflows
 
         private readonly ILogger<ParameterSetRecommenderInvokationWorkflows> logger;
         private readonly IStorageContext storageContext;
+        private readonly IRecommendationCache<ParameterSetRecommender, ParameterSetRecommendation> recommendationCache;
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
@@ -26,6 +28,7 @@ namespace SignalBox.Core.Workflows
         public ParameterSetRecommenderInvokationWorkflows(ILogger<ParameterSetRecommenderInvokationWorkflows> logger,
                                     IStorageContext storageContext,
                                     IDateTimeProvider dateTimeProvider,
+                                    IRecommendationCache<ParameterSetRecommender, ParameterSetRecommendation> recommendationCache,
                                     IRecommendationCorrelatorStore correlatorStore,
                                     IParameterSetRecommenderStore parameterSetRecommenderStore,
                                     IParameterSetRecommendationStore parameterSetRecommendationStore,
@@ -37,6 +40,7 @@ namespace SignalBox.Core.Workflows
         {
             this.logger = logger;
             this.storageContext = storageContext;
+            this.recommendationCache = recommendationCache;
             this.correlatorStore = correlatorStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
             this.parameterSetRecommendationStore = parameterSetRecommendationStore;
@@ -47,23 +51,39 @@ namespace SignalBox.Core.Workflows
 
         public async Task<ParameterSetRecommendation> InvokeParameterSetRecommender(
             ParameterSetRecommender recommender,
-            string version,
             ParameterSetRecommenderModelInputV1 input)
         {
             // use the correlator to begin with because need to pass an event ID into some models
             await parameterSetRecommenderStore.Load(recommender, _ => _.ModelRegistration);
-            var correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
-            var invokationEntry = await base.StartTrackInvokation(recommender, input, saveOnComplete: false);
-            await storageContext.SaveChanges(); // save the correlator and invokation entry
-            var recommendingContext = new RecommendingContext(version, correlator);
-            TrackedUser user = null;
+            var invokationEntry = await base.StartTrackInvokation(recommender, input);
+            RecommendingContext context = new RecommendingContext(invokationEntry);
+
             try
             {
                 var model = recommender.ModelRegistration;
-                user = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
+                if (input.CommonUserId == null)
+                {
+                    throw new BadRequestException("CommonUserId must be provided when invoking recommender");
+                }
+                context.TrackedUser = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
+
+                // check the cache and load the context 
+                if (await recommendationCache.HasCached(recommender, context.TrackedUser))
+                {
+                    var rec = await recommendationCache.GetCached(recommender, context.TrackedUser);
+                    await parameterSetRecommendationStore.Load(rec, _ => _.RecommendationCorrelator);
+                    context.Correlator = rec.RecommendationCorrelator;
+                    await base.EndTrackInvokation(context, true, "Completed using cached recommendation");
+                }
+                else
+                {
+                    context.Correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
+                    logger.LogInformation("Saving correlator to create Id");
+                    await storageContext.SaveChanges();
+                }
 
                 // load the features from the user
-                input.Features = await base.GetFeatures(user, invokationEntry);
+                input.Features = await base.GetFeatures(context);
 
                 IRecommenderModelClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1> client;
                 if (model == null)
@@ -78,7 +98,7 @@ namespace SignalBox.Core.Workflows
                 }
                 else
                 {
-                    correlator.ModelRegistration = recommender.ModelRegistration;
+                    context.Correlator.ModelRegistration = recommender.ModelRegistration;
                     client = await modelClientFactory
                         .GetClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1>(recommender);
                 }
@@ -89,37 +109,37 @@ namespace SignalBox.Core.Workflows
                     input.ParameterBounds = recommender.ParameterBounds;
                 }
                 // check all arguments are supplied, and add defaults if necessary
-                foreach (var r in recommender.Arguments)
+                if (recommender.Arguments != null)
                 {
-                    CheckArgument(recommender, r, input, invokationEntry);
+                    foreach (var r in recommender.Arguments)
+                    {
+                        CheckArgument(recommender, r, input, invokationEntry);
+                    }
                 }
 
                 // invoke the model
-                var output = await client.Invoke(recommender, recommendingContext, input);
+                var output = await client.Invoke(recommender, context, input);
 
 
-                var recommendation = new ParameterSetRecommendation(recommender, user, correlator, version);
+                var recommendation = new ParameterSetRecommendation(recommender, context.TrackedUser, context.Correlator);
                 recommendation.SetInput(input);
                 recommendation.SetOutput(output);
                 recommendation = await parameterSetRecommendationStore.Create(recommendation);
 
                 await storageContext.SaveChanges();
 
-                output.CorrelatorId = correlator.Id;
+                output.CorrelatorId = context.Correlator.Id;
 
-                await base.EndTrackInvokation(invokationEntry,
+                await base.EndTrackInvokation(context,
                                               true,
-                                              user,
-                                              correlator,
-                                              $"Invoked successfully for {user.Name ?? user.CommonId}",
-                                              null,
-                                              true);
+                                              $"Invoked successfully for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId}",
+                                              saveOnComplete: true);
                 return recommendation;
             }
             catch (ModelInvokationException modelEx)
             {
                 logger.LogError("Error invoking recommender", modelEx);
-                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId ?? input.CommonUserId}", modelEx.ModelResponseContent, saveOnComplete: true);
+                await base.EndTrackInvokation(context, false, message: $"Invoke failed for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId ?? input.CommonUserId}", modelEx.ModelResponseContent, saveOnComplete: true);
                 if (recommender.ShouldThrowOnBadInput())
                 {
                     throw;
@@ -130,10 +150,20 @@ namespace SignalBox.Core.Workflows
                     logger.LogError("Model invokation Error", modelEx);
                 }
             }
+            catch (BadRequestException badReqEx)
+            {
+                logger.LogError("Error invoking recommender", badReqEx);
+                await base.EndTrackInvokation(context, false,
+                    message: $"Panic! Bad Request: {badReqEx.Title}",
+                    saveOnComplete: true);
+                throw;
+            }
             catch (System.Exception ex)
             {
                 logger.LogError("Error invoking recommender", ex);
-                await base.EndTrackInvokation(invokationEntry, false, user, null, $"Invoke failed for {user?.Name ?? user?.CommonId ?? input.CommonUserId}", null, saveOnComplete: true);
+                await base.EndTrackInvokation(context, false,
+                    message: $"Invoke failed for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId ?? input.CommonUserId}",
+                    saveOnComplete: true);
                 if (recommender.ShouldThrowOnBadInput())
                 {
                     throw;
@@ -148,13 +178,13 @@ namespace SignalBox.Core.Workflows
             try
             {
                 await parameterSetRecommenderStore.LoadMany(recommender, _ => _.Parameters);
-                var recommendedParams = new Dictionary<string, object>();
+                var recommendedParams = new Dictionary<string, object?>();
                 foreach (var p in recommender.Parameters)
                 {
                     recommendedParams[p.CommonId] = p.DefaultValue?.Value;
                 }
 
-                var recommendation = new ParameterSetRecommendation(recommender, user, correlator, version);
+                var recommendation = new ParameterSetRecommendation(recommender, context.TrackedUser, context.Correlator);
                 return recommendation;
             }
             catch (System.Exception ex)
@@ -164,11 +194,9 @@ namespace SignalBox.Core.Workflows
             }
             finally
             {
-                await base.EndTrackInvokation(invokationEntry,
+                await base.EndTrackInvokation(context,
                                               false,
-                                              user,
-                                              null,
-                                              message: $"Invoke failed for {user?.Name ?? user?.CommonId ?? input.CommonUserId}",
+                                              message: $"Invoke failed for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId ?? input.CommonUserId}",
                                               modelResponse: null,
                                               saveOnComplete: true);
             }

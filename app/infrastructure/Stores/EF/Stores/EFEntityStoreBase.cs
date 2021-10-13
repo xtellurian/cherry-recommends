@@ -53,6 +53,10 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public virtual async Task<T> Create(T entity)
         {
+            if (context.Database.IsSqlite())
+            {
+                entity.Created = System.DateTimeOffset.Now;
+            }
             var result = await Set.AddAsync(entity);
             return result.Entity;
         }
@@ -148,6 +152,10 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<T> Update(T entity)
         {
+            if (context.Database.IsSqlite())
+            {
+                entity.LastUpdated = System.DateTimeOffset.Now;
+            }
             entity = await QuerySet.SingleAsync(_ => _.Id == entity.Id);
             return entity;
         }

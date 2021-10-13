@@ -228,7 +228,7 @@ namespace SignalBox.Web.Controllers
                 {
                     CommonUserId = trackedUser.CommonUserId
                 };
-                return await parameterSetRecommenderInvokation.InvokeParameterSetRecommender(recommender, "hubspot", input);
+                return await parameterSetRecommenderInvokation.InvokeParameterSetRecommender(recommender, input);
             }
             else if (behaviour.ProductRecommenderId != null)
             {
@@ -237,7 +237,7 @@ namespace SignalBox.Web.Controllers
                 {
                     CommonUserId = trackedUser.CommonUserId
                 };
-                return await productRecommenderInvokation.InvokeProductRecommender(recommender, "hubspot", input);
+                return await productRecommenderInvokation.InvokeProductRecommender(recommender, input);
             }
             else
             {

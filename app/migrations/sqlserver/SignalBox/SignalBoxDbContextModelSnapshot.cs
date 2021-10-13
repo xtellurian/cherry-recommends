@@ -572,9 +572,6 @@ namespace sqlserver.SignalBox
                     b.Property<long?>("TrackedUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Version")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RecommendationCorrelatorId");
@@ -628,9 +625,6 @@ namespace sqlserver.SignalBox
 
                     b.Property<long?>("TrackedUserId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Version")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -688,9 +682,6 @@ namespace sqlserver.SignalBox
 
                     b.Property<long?>("TrackedUserId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Version")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
