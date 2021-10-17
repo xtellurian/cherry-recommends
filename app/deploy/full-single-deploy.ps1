@@ -5,7 +5,7 @@ echo "Running deploy.ps1"
 ./deploy.ps1
 echo "Running update-sql-database.ps1"
 cd ../../../../../deploy
-./update-sql-database.ps1 db
+./update-sql-database.ps1 single
 echo "Running deploy-dotnet-functions.ps1"
 cd ../deploy
 ./deploy-dotnet-functions.ps1

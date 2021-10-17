@@ -1,4 +1,5 @@
 config:
+  appsvc:singleTenantDatabaseName: single
   appsvc:sku-name: B1
   appsvc:sku-tier: Basic
   appsvc:multitenant: "false"

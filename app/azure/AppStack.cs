@@ -36,22 +36,20 @@ namespace SignalBox.Azure
                 });
 
             var storage = new Storage(appRg);
-            var db = new DatabaseComponent(appRg);
             var multitenant = new MultitenantDatabaseComponent(databasesRg);
 
             // Create an Azure analytics environment
-            var analytics = new AzureML(analyticsRg, db);
+            var analytics = new AzureML(analyticsRg);
 
             // create the app svcs
-            var appSvc = new AppSvc(appRg, db, multitenant, storage, analytics, appInsights, tags);
+            var appSvc = new AppSvc(appRg, multitenant, storage, analytics, appInsights, tags);
             // set the stack outputs
-            this.DatabaseConnectionString = db.DatabaseConnectionString;
+
             this.SqlServerAzureId = multitenant.Server.Id;
             this.SqlServerName = multitenant.ServerName;
             this.SqlServerUsername = Output.Create(multitenant.UserName);
             this.SqlServerPassword = multitenant.Password;
             this.ElasticPoolName = multitenant.ElasticPool.Name;
-            this.DatabaseName = db.DatabaseName;
             this.PrimaryStorageKey = analytics.PrimaryStorageKey;
             this.AppResourceGroup = appSvc.WebApp.ResourceGroup;
             this.CanonicalRootDomain = Output.Create(appSvc.CanonicalRootDomain);
@@ -81,8 +79,6 @@ namespace SignalBox.Azure
         [Output]
         public Output<string> PrimaryStorageKey { get; set; }
         [Output]
-        public Output<string> DatabaseConnectionString { get; private set; }
-        [Output]
         public Output<string> TenantDatabaseConnectionString { get; private set; }
         [Output]
         public Output<string> ElasticPoolName { get; private set; }
@@ -94,8 +90,6 @@ namespace SignalBox.Azure
         public Output<string> SqlServerUsername { get; private set; }
         [Output]
         public Output<string> SqlServerPassword { get; private set; }
-        [Output]
-        public Output<string> DatabaseName { get; private set; }
         [Output]
         public Output<bool> Multitenant { get; private set; }
 

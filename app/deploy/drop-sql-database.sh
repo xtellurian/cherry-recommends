@@ -2,6 +2,7 @@ set -e
 
 cd ../azure
 
+
 DATABASE=$1
 
 if [ -z "$DATABASE" ]
@@ -10,7 +11,14 @@ then
       exit 1
 fi
 
-CS=$(pulumi stack output DatabaseConnectionString --show-secrets)
+STACK=$(pulumi stack --show-name)
+echo "Using Pulumi Stack $STACK"
+
+SERVER=$(pulumi stack output SqlServerName)
+USER=$(pulumi stack output SqlServerUsername)
+PW=$(pulumi stack output SqlServerPassword --show-secrets)
+
+CS="Server=tcp:$SERVER.database.windows.net,1433;Initial Catalog=$DATABASE;User ID=$USER;Password=$PW;Min Pool Size=0;Max Pool Size=30;Persist Security Info=False;";
 
 cd ../web
 

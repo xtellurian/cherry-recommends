@@ -12,12 +12,11 @@ namespace SignalBox.Azure
     partial class AppSvc : ComponentWithStorage
     {
         private WebApp CreateDotnetFuncs(ResourceGroup rg,
-                                                DatabaseComponent db,
-                                                MultitenantDatabaseComponent multiDb,
-                                                Storage storage,
-                                                Component insights,
-                                                AppServicePlan plan,
-                                                Auth0 auth0)
+                                        MultitenantDatabaseComponent multiDb,
+                                        Storage storage,
+                                        Component insights,
+                                        AppServicePlan plan,
+                                        Auth0 auth0)
         {
             var hubspotConfig = new Pulumi.Config("hubspot");
 
@@ -58,7 +57,7 @@ namespace SignalBox.Azure
                         },
                         new NameValuePairArgs{
                             Name = "Hosting__SingleTenantDatabaseName",
-                            Value = "db",
+                            Value = appSvcConfig.Get("singleTenantDatabaseName") ?? "single",
                         },
                         new NameValuePairArgs{
                             Name = "Hosting__CanonicalRootDomain",

@@ -19,7 +19,6 @@ namespace SignalBox.Azure
         private Dictionary<string, string> tags;
 
         public AppSvc(ResourceGroup rg,
-                      DatabaseComponent db,
                       MultitenantDatabaseComponent multiDb,
                       Storage storage,
                       AzureML ml,
@@ -100,7 +99,6 @@ namespace SignalBox.Azure
             // connect to Auth0 users
             var auth0 = new Auth0(webApp);
             var dotnetFunctionApp = CreateDotnetFuncs(rg,
-                                                      db,
                                                       multiDb,
                                                       storage,
                                                       insights,
@@ -155,7 +153,7 @@ namespace SignalBox.Azure
                     {"Provider", "sqlserver"},
                     {"Hosting__Multitenant", multitenant.ToString()},
                     {"Hosting__CanonicalRootDomain", canonicalRootDomain ?? ""},
-                    {"Hosting__SingleTenantDatabaseName", "db"},
+                    {"Hosting__SingleTenantDatabaseName", appSvcConfig.Get("singleTenantDatabaseName") ?? "single"},
 
                     // azure
                     {"AzureEnvironment__SqlServerName", multiDb.ServerName},

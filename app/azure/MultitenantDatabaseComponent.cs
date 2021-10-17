@@ -32,12 +32,6 @@ namespace SignalBox.Azure
                     Name = "S0",
                     Tier = "Standard",
                 }
-                // Sku = new Pulumi.AzureNative.Sql.Inputs.SkuArgs
-                // {
-                //     Name = "GP_Gen5",
-                //     Tier = "GeneralPurpose",
-                //     Capacity = 2
-                // }
             });
 
             var elasticPool = new ElasticPool("pool", new ElasticPoolArgs
@@ -46,7 +40,7 @@ namespace SignalBox.Azure
                 PerDatabaseSettings = new ElasticPoolPerDatabaseSettingsArgs
                 {
                     MaxCapacity = 2,
-                    MinCapacity = 0.25,
+                    MinCapacity = 0,
                 },
                 ResourceGroupName = rg.Name,
                 ServerName = sqlServer.Name,
@@ -56,6 +50,15 @@ namespace SignalBox.Azure
                     Name = "GP_Gen5",
                     Tier = "GeneralPurpose",
                 }
+            });
+
+            var database = new Database("single", new DatabaseArgs
+            {
+                DatabaseName = "single",
+                Location = sqlServer.Location,
+                ResourceGroupName = rg.Name,
+                ServerName = sqlServer.Name,
+                ElasticPoolId = elasticPool.Id,
             });
 
             var fisherStRule = new Pulumi.AzureNative.Sql.FirewallRule("mtFisher",

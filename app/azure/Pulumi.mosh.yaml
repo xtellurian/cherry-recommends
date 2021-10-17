@@ -1,4 +1,5 @@
 config:
+  appsvc:singleTenantDatabaseName: single
   appsvc:capacity: 2
   appsvc:sku-name: B3
   appsvc:sku-tier: Basic

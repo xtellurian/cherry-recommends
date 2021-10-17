@@ -14,7 +14,7 @@ namespace SignalBox.Azure
                 {"Component", "AzureML"}
             };
 
-        public AzureML(ResourceGroup rg, DatabaseComponent db)
+        public AzureML(ResourceGroup rg)
         {
             var azureConfig = new Config("azure-native");
             var config = new Config("azure-ml");
