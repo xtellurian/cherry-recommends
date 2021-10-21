@@ -1,0 +1,16 @@
+{
+    "Name": "Role Assigner",
+    "IsCustom": true,
+    "Description": "Can read and assign roles.",
+    "Actions": [
+      "Microsoft.Authorization/roleAssignments/read",
+      "Microsoft.Authorization/roleAssignments/write"
+    ],
+    "NotActions": [
+  
+    ],
+    "AssignableScopes": [
+      "/subscriptions/ad2a181b-b804-4179-904a-012445b7d1f5",
+      "/subscriptions/04b1ca0e-558c-48d0-ba28-fee796a82076"
+    ]
+  }

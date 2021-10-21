@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Pulumi.Auth0" Version="2.1.0" />
     <PackageReference Include="Pulumi.AzureNative" Version="1.*" />
+    <PackageReference Include="Pulumi.Random" Version="4.*" />
   </ItemGroup>
 
   <ItemGroup>

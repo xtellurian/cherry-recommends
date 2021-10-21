@@ -1,11 +1,13 @@
 config:
+  appsvc:corsorigins:
+  - http://localhost:5000
+  - https://localhost:5001
   appsvc:multitenant: "false"
-  appsvc:singleTenantDatabaseName: single
   appsvc:sku-name: B2
   appsvc:sku-tier: Basic
   auth0:clientId: cT3UPVNDzNim39AMgCZHYZpqgaIymr0x
   auth0:clientSecret:
-    secure: AAABAKbCIOUcfbxI+lV0GUQbanmlEsDq0/ZVQT5XMzjDsOaQzRJBlkRtzbbPNLtu3DeyldQ85fK9IC2phNotSp8CmAFlX02Qm2EaRxTQEFg/KagzJ0QQo149zM/RXkBM
+    secure: AAABALVcva/SyZ7Pl9NIigao4J9Kjb3KmWtgFmpP4fsmMcNRs9Y4JpgmRx1rOwWFK18E86h5MhPodIT/eSbm/7uOr0ODce9c8qDL5EXDivkcXw0vFUqUU8T/mtjOCliw
   auth0:domain: signalbox-dev.us.auth0.com
   azure-ml:description: Dev env
   azure-ml:friendlyname: DevEnvML
@@ -14,11 +16,11 @@ config:
   azure-native:subscriptionId: ad2a181b-b804-4179-904a-012445b7d1f5
   azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
   azure-synapse:sqlPassword:
-    secure: AAABAFUM1jp0w1J5uXy+ME9rhONhQFjll8SqLsF5imoOu4z6s+jn0hU6
+    secure: AAABABKTUTnpj2lYevs0DfXD8VYeilU8vmd3UgbR3U+7vMT/qfNlhtnWeQ==
   hubspot:appId: "308459"
   hubspot:clientId: 05e9c9c1-dcc7-4415-b6ed-fc772f26de66
   hubspot:clientSecret:
-    secure: AAABANXrxA8MZFDrLOhvp3dTdtYr4z7hiY2whrZdhdtpY3MmAG2Jh3rQCcARr/F+cZLsOAZHYzicvNkAkYVa/+r7kys=
+    secure: AAABAGD3TI4d1YORA+8kXkLZbWQCtF7Ik1uX56iEUcs=
   signalbox:environment: Development
   signalbox:sqlPassword:
-    secure: AAABAD6DocAHNTUipnB2trgYOep66/QmTPl/cPWo9tOUamfnFYKt9WiE
+    secure: AAABAEfEBd3Tcv1LYFXVO/uiSxTYrkecwGkAk69k7KpCKVyNqOstbkhr9g==

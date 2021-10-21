@@ -40,6 +40,7 @@ namespace SignalBox.Azure
 
             // Create an Azure analytics environment
             var analytics = new AzureML(analyticsRg);
+            var synapse = new AzureSynapse(analyticsRg);
 
             // create the app svcs
             var appSvc = new AppSvc(appRg, multitenant, storage, analytics, appInsights, tags);
@@ -49,6 +50,9 @@ namespace SignalBox.Azure
             this.SqlServerName = multitenant.ServerName;
             this.SqlServerUsername = Output.Create(multitenant.UserName);
             this.SqlServerPassword = multitenant.Password;
+            this.SynapseUsername = Output.Create(synapse.UserName);
+            this.SynapsePassword = synapse.Password;
+            this.SynapsePrimaryStorageKey = synapse.PrimaryStorageKey;
             this.ElasticPoolName = multitenant.ElasticPool.Name;
             this.PrimaryStorageKey = analytics.PrimaryStorageKey;
             this.AppResourceGroup = appSvc.WebApp.ResourceGroup;
@@ -90,6 +94,12 @@ namespace SignalBox.Azure
         public Output<string> SqlServerUsername { get; private set; }
         [Output]
         public Output<string> SqlServerPassword { get; private set; }
+        [Output]
+        public Output<string> SynapseUsername { get; private set; }
+        [Output]
+        public Output<string> SynapsePassword { get; private set; }
+        [Output]
+        public Output<string> SynapsePrimaryStorageKey { get; private set; }
         [Output]
         public Output<bool> Multitenant { get; private set; }
 
