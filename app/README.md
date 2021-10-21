@@ -46,6 +46,21 @@ Gist that helps:
 
 https://gist.github.com/ogrrd/5831371
 
+---
+
+## Networking in Production
+
+In production, stacks are placed into subdomains (e.g. canary.cherry.ai)
+The scripts in `deploy/azure-scripts/dns-cherry.ai` update the DNS Zone accordingly.
+
+> The DNS Zone is in a protected subscription.
+
+## SSL Certificates
+
+We use Azure App Service Certificates as a provider for SSL certificates.
+The scripts in `deploy/azure-scripts/dns-cherry.ai` should configure the verification.
+The final linking of certificates should be done in the Azure Portal.
+
 ## Development
 
 There is a SQLite database in the `/web` directory.

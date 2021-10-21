@@ -9,6 +9,8 @@ namespace SignalBox.Azure
 {
     partial class AppSvc : ComponentWithStorage
     {
+        public AppServiceCertificateOrder? CertificateOrder { get; private set; }
+
         private void AppSvcCertificate(ResourceGroup rg)
         {
             var tenantId = azureConfig.Require("tenantId");
@@ -56,6 +58,7 @@ namespace SignalBox.Azure
 
             var certificateOrder = new AppServiceCertificateOrder("appSvcCert", new AppServiceCertificateOrderArgs
             {
+                CertificateOrderName = Pulumi.Deployment.Instance.StackName.ToLower(),
                 ResourceGroupName = rg.Name,
                 Location = "global", // required because default location is invalid
                 AutoRenew = environment == "Production",
@@ -63,6 +66,8 @@ namespace SignalBox.Azure
                 ProductType = CertificateProductType.StandardDomainValidatedWildCardSsl,
                 Tags = tags,
             });
+
+            this.CertificateOrder = certificateOrder;
 
             System.Console.WriteLine("Final certificate linking should be done in Az Portal");
         }

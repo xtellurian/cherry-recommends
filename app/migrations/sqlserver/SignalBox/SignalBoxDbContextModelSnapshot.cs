@@ -1906,7 +1906,8 @@ namespace sqlserver.SignalBox
                 {
                     b.HasOne("SignalBox.Core.IntegratedSystem", "IntegratedSystem")
                         .WithMany("WebhookReceivers")
-                        .HasForeignKey("IntegratedSystemId");
+                        .HasForeignKey("IntegratedSystemId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("IntegratedSystem");
                 });

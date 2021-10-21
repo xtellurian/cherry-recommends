@@ -16,7 +16,7 @@ const MembershipRow = ({ tenant, hosting }) => {
     </div>
   );
 };
-export const WwwPage = () => {
+export const ManagementPage = () => {
   const memberships = useMemberships();
   const hosting = useHosting();
   if (memberships.error) {

@@ -1,9 +1,7 @@
-using System.Threading.Tasks;
 using Pulumi;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Web.Inputs;
 using Pulumi.AzureNative.Web;
-using System.Collections.Generic;
 using Pulumi.AzureNative.Insights;
 using Pulumi.AzureNative.Authorization;
 
@@ -11,6 +9,9 @@ namespace SignalBox.Azure
 {
     partial class AppSvc : ComponentWithStorage
     {
+        public Output<string?>? DotnetFunctionAppMasterKey { get; private set; }
+        public Output<string?>? DotnetFunctionAppDefaultKey { get; private set; }
+
         private WebApp CreateDotnetFuncs(ResourceGroup rg,
                                         MultitenantDatabaseComponent multiDb,
                                         Storage storage,
@@ -154,6 +155,29 @@ namespace SignalBox.Azure
                 RoleDefinitionId = $"/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
                 Scope = Output.Format($"subscriptions/{subscriptionId}/resourceGroups/{multiDb.ResourceGroup.Name}")
             });
+
+            var keys = Output.Tuple(dotnetFunctionApp.Name, dotnetFunctionApp.ResourceGroup, Output.CreateSecret(""))
+               .Apply(
+                   t => ListWebAppHostKeys.InvokeAsync(new ListWebAppHostKeysArgs
+                   {
+                       Name = t.Item1,
+                       ResourceGroupName = t.Item2,
+                   }));
+
+            this.DotnetFunctionAppMasterKey = keys.Apply(result => result.MasterKey);
+
+            this.DotnetFunctionAppDefaultKey = keys.Apply(k =>
+                {
+                    if (k.FunctionKeys != null && k.FunctionKeys.ContainsKey("default"))
+                    {
+                        return k.FunctionKeys["default"];
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("No function Keys.");
+                        return null;
+                    }
+                });
 
             return dotnetFunctionApp;
         }

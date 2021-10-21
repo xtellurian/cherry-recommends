@@ -1,0 +1,21 @@
+config:
+  appsvc:canonical-root-domain: canary.cherry.ai
+  appsvc:multitenant: "true"
+  appsvc:sku-name: B1
+  appsvc:sku-tier: Basic
+  auth0:clientId: 2Jyaz6bNXrB9H4Qer34QNtmHFhU3L9p1
+  auth0:clientSecret:
+    secure: AAABAG4K222e48pam822HRo+L5LZQGqlWw0bJOHAJ16pcS6T3y2vq9xHpjM5/Xbjy3dQ9JNXRvlO2Bcpi/mlghO16+2kM9mI/9sItgWQvDiR2k+HB/r1v1Ih/bIlQ61I
+  auth0:domain: signalbox.us.auth0.com
+  azure-ml:description: Canary Env
+  azure-ml:friendlyname: Canary
+  azure-ml:name: Canary
+  azure-native:location: australiaeast
+  azure-native:subscriptionId: 04b1ca0e-558c-48d0-ba28-fee796a82076
+  azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
+  hubspot:appId: ""
+  hubspot:clientId: ""
+  network:cherrySubdomain: canary
+  signalbox:environment: Production
+  signalbox:sqlPassword:
+    secure: AAABAH1u7gCAZNFR+abvbDeDvZEoNSe0qEtiDZYKQ/B2zAMfSAAyKldv

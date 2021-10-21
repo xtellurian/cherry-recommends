@@ -1,14 +1,13 @@
 import React from "react";
-import { useHosting } from "../../api-hooks/tenantsApi";
+import { useHosting, managementSubdomain } from "../../api-hooks/tenantsApi";
 import { Spinner } from "../molecules";
 
 export const TenantNotFound = ({ error }) => {
   const hosting = useHosting();
-  console.log(hosting)
   if (!hosting.loading && hosting.canonicalRootDomain) {
     const onTimedown = () => {
       console.log("redirecting...");
-      window.location = `https://www.${hosting.canonicalRootDomain}`;
+      window.location = `https://${managementSubdomain}.${hosting.canonicalRootDomain}`;
     };
     setTimeout(onTimedown, 5000);
   }

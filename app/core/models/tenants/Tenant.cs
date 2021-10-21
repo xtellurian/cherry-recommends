@@ -25,6 +25,7 @@ namespace SignalBox.Core
         private IEnumerable<string> reservedNames = new string[]
         {
             "www",
+            "manage",
             "tenant",
             "admin",
             "signup",
@@ -47,9 +48,9 @@ namespace SignalBox.Core
             {
                 throw new BadRequestException($"{n} is a reserved word");
             }
-            if (n.Length < 5)
+            if (n.Length < 4)
             {
-                throw new BadRequestException("Tenant names must be 5 or more characters");
+                throw new BadRequestException("Tenant names must be 4 or more characters");
             }
         }
 

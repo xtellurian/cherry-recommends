@@ -11,19 +11,33 @@ namespace SignalBox.Infrastructure.EntityFramework
         public override void Configure(EntityTypeBuilder<IntegratedSystem> builder)
         {
             base.Configure(builder);
-            builder.Property(t => t.Name)
+
+            builder
+                .Property(t => t.Name)
                 .IsRequired();
-            builder.Property(t => t.SystemType)
+
+            builder
+                .Property(t => t.SystemType)
                 .IsRequired()
                 .HasConversion<string>();
-            builder.Property(_ => _.TokenResponse)
+
+            builder
+                .Property(_ => _.TokenResponse)
                 .HasJsonConversion();
-            builder.Property(_ => _.IntegrationStatus)
+
+            builder
+                .Property(_ => _.IntegrationStatus)
                 .HasDefaultValueSql("('NotConfigured')")
                 .HasConversion<string>();
+
             builder
                 .Property(_ => _.Properties)
                 .HasJsonConversion();
+
+            builder
+                .HasMany(_ => _.WebhookReceivers)
+                .WithOne(_ => _.IntegratedSystem)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

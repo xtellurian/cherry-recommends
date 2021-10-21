@@ -4,7 +4,6 @@ using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Web.Inputs;
 using Pulumi.AzureNative.Web;
 using System.Collections.Generic;
-using Pulumi.AzureNative.CertificateRegistration;
 
 namespace SignalBox.Azure
 {

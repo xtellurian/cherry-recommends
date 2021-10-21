@@ -5,6 +5,7 @@ pulumi up -y
 
 cd ../deploy
 
+Hosting__Multitenant="true" ./update-tenant-sql-database.sh
 ./deploy-dotnet-functions.sh
 
 echo "Databases should be migrated using the Azure Function"

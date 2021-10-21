@@ -6,12 +6,18 @@ import {
   fetchMembershipsAsync,
 } from "../api/tenantsApi";
 
+export const managementSubdomain = "manage";
+
 const addIsCanonicalRoot = (s) => {
   s.isCanonicalRoot = window.location.host === s.canonicalRootDomain;
   return s;
 };
 const addIsWww = (s) => {
   s.isWwwPage = window.location.host.startsWith("www");
+  return s;
+};
+const addIsManagementSubdomain = (s) => {
+  s.isManagementSubdomain = window.location.host.startsWith(managementSubdomain);
   return s;
 };
 export const useHosting = () => {
@@ -25,6 +31,7 @@ export const useHosting = () => {
       })
         .then(addIsCanonicalRoot)
         .then(addIsWww)
+        .then(addIsManagementSubdomain)
         .then((s) => {
           setState(s);
         })
