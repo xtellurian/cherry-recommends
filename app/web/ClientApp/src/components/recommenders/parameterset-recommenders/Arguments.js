@@ -1,6 +1,6 @@
 import React from "react";
 import { setArgumentsAsync } from "../../../api/parameterSetRecommendersApi";
-import { ErrorCard } from "../../molecules";
+import { ErrorCard, Spinner } from "../../molecules";
 import { ArgumentsComponentUtil } from "../utils/argumentsComponent";
 export const ArgumentsSection = ({ recommender, setTrigger }) => {
   const [error, setError] = React.useState();
@@ -13,6 +13,13 @@ export const ArgumentsSection = ({ recommender, setTrigger }) => {
     }
     setTrigger({});
   };
+  if (recommender.loading) {
+    return (
+      <React.Fragment>
+        <Spinner />
+      </React.Fragment>
+    );
+  }
   return (
     <React.Fragment>
       <div>

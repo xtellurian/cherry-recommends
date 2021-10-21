@@ -1,8 +1,8 @@
 config:
+  appsvc:multitenant: "false"
   appsvc:singleTenantDatabaseName: single
   appsvc:sku-name: B1
   appsvc:sku-tier: Basic
-  appsvc:multitenant: "false"
   auth0:clientId: 2Jyaz6bNXrB9H4Qer34QNtmHFhU3L9p1
   auth0:clientSecret:
     secure: AAABAAYxRgDODwCrJKN8XdvAqS1PdJET7S0Ik787qpqFdhF2E7ATbh5bpjAy1Bab1Pvk3TeZHEM9pTtzglARTBmLGKB3V/dc8pSqqnQ2DY6v7Tuf9iqBkvmST510ZRnD
@@ -13,6 +13,9 @@ config:
   azure-native:location: westus2
   azure-native:subscriptionId: 04b1ca0e-558c-48d0-ba28-fee796a82076
   azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
+  azure-synapse:enable: "false"
+  azure-synapse:sqlPassword:
+    secure: AAABAGDo7aoL49reU+uhKR/Yi7Kxs2wsfJkN3K+1tdfaqd+VPV2P5XRB
   signalbox:environment: Development
   signalbox:sqlPassword:
     secure: AAABAEiZT8uNfDXRTjFt1Z/ijDTV8HDuHMO+smTLkzwMY9M/c3nqqlj7

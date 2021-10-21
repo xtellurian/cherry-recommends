@@ -91,7 +91,6 @@ export const ArgumentsEditor = ({
   placeholder,
 }) => {
   const [args, setArguments] = React.useState(initialArguments || {});
-  console.log(args);
   const handleChange = (oldEntry, newEntry, value) => {
     args[newEntry] = value;
     if (oldEntry !== newEntry) {

@@ -1,9 +1,9 @@
 config:
-  appsvc:singleTenantDatabaseName: single
   appsvc:capacity: "1"
+  appsvc:multitenant: "false"
+  appsvc:singleTenantDatabaseName: single
   appsvc:sku-name: B1
   appsvc:sku-tier: Basic
-  appsvc:multitenant: "false"
   auth0:clientId: 2Jyaz6bNXrB9H4Qer34QNtmHFhU3L9p1
   auth0:clientSecret:
     secure: AAABAB9Jfe4LCPZjvjQQAIwzbZtDifMpY6WmyR+A1u/CnpOj261w2CIcmIMGbgFfZBcSGr0zitNfQBQ1LgSyLPO/zS1l38AlImoml/m3rvTxFWc5fVpEzh7Diqz+x+bn
@@ -14,6 +14,9 @@ config:
   azure-native:location: australiaeast
   azure-native:subscriptionId: 04b1ca0e-558c-48d0-ba28-fee796a82076
   azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
+  azure-synapse:enable: "false"
+  azure-synapse:sqlPassword:
+    secure: AAABAMw5Y6E2Ng1bQRYJ+wOVAsTGdsscaZmJuacN0K1law59SN6IkLhF
   signalbox:environment: Development
   signalbox:sqlPassword:
     secure: AAABAJ+PwRLYysOyHwYZbgUDC8y8RT+c7OZ9Vib/5vXy5kNCpujmre5R

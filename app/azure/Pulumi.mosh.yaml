@@ -1,9 +1,9 @@
 config:
+  appsvc:capacity: "2"
+  appsvc:multitenant: "false"
   appsvc:singleTenantDatabaseName: single
-  appsvc:capacity: 2
   appsvc:sku-name: B3
   appsvc:sku-tier: Basic
-  appsvc:multitenant: "false"
   auth0:clientId: 2Jyaz6bNXrB9H4Qer34QNtmHFhU3L9p1
   auth0:clientSecret:
     secure: AAABAE3Qx25NWKA8e0tEVGPlZSYiCqvDUmye+e5C9NQZSMTWYW7qg+yJ1yiZtYMwS+CuvmBUjHy0gkjMEeYdGQY2z+N4sFzs76ZKok+7KMAxWLrUmFy5kdqG+0Tn1Qjg
@@ -14,6 +14,9 @@ config:
   azure-native:location: westus2
   azure-native:subscriptionId: 04b1ca0e-558c-48d0-ba28-fee796a82076
   azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
+  azure-synapse:enable: "false"
+  azure-synapse:sqlPassword:
+    secure: AAABAM2AN4ueZ8Z7lGfJGA29qZ5nVN0xpVt7wU9pJV4Lxnqwx6lpLzYp
   hubspot:appId: "319510"
   hubspot:clientId: 5fb5d0a3-1174-4689-b750-4147661972c1
   hubspot:clientSecret:
