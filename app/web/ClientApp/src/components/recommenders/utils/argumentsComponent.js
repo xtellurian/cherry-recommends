@@ -2,12 +2,10 @@ import React from "react";
 import { useAccessToken } from "../../../api-hooks/token";
 import { AsyncButton, ErrorCard, Spinner } from "../../molecules";
 import { ArgumentsEditor } from "../../molecules/ArgumentsEditor";
-export const ArgumentsComponentUtil = ({
-  recommender,
-  setArgumentsAsync,
-}) => {
+export const ArgumentsComponentUtil = ({ recommender, setArgumentsAsync }) => {
   const token = useAccessToken();
-  const [args, setArguments] = React.useState(recommender.arguments);
+  const initialArgs = recommender.arguments || [];
+  const [args, setArguments] = React.useState(initialArgs);
   const [saving, setSaving] = React.useState(false);
   const [error, setError] = React.useState();
 
@@ -32,13 +30,13 @@ export const ArgumentsComponentUtil = ({
         {error && <ErrorCard error={error} />}
         {args && (
           <ArgumentsEditor
-            initialArguments={recommender.arguments}
+            initialArguments={initialArgs}
             onArgumentsChanged={setArguments}
           />
         )}
       </div>
       {!args && <Spinner />}
-      <AsyncButton loading={saving} onClick={setArgs}>
+      <AsyncButton className="btn btn-primary w-25" loading={saving} onClick={setArgs}>
         Save
       </AsyncButton>
     </React.Fragment>

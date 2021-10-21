@@ -51,7 +51,7 @@ export const useDefaultItem = ({ id, trigger }) => {
   return result;
 };
 
-export const useItemsRecommender = ({ id }) => {
+export const useItemsRecommender = ({ id, trigger }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
@@ -64,7 +64,7 @@ export const useItemsRecommender = ({ id }) => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, id]);
+  }, [token, id, trigger]);
 
   return result;
 };

@@ -51,7 +51,7 @@ namespace SignalBox.Core.Workflows
                                                                     string? modelResponse = null,
                                                                     bool? saveOnComplete = true)
         {
-            if(context == null)
+            if (context == null)
             {
                 throw new System.NullReferenceException("RecommendingContext must not be null");
             }
@@ -78,6 +78,65 @@ namespace SignalBox.Core.Workflows
 
             context.InvokationLog.LogMessage($"Discovered {result.Count} features");
             return result;
+        }
+
+        /// <summary>
+        /// It meant to throw in some situations.
+        /// </summary>
+        protected void CheckArgument(RecommenderEntityBase recommender,
+                                    RecommenderArgument arg,
+                                    IModelInput input,
+                                    RecommendingContext context)
+        {
+            input.Arguments ??= new Dictionary<string, object>(); // ensure no null refs here
+            if (!input.Arguments.ContainsKey(arg.CommonId))
+            {
+                // argument is missing
+                if (arg.IsRequired && recommender.ShouldThrowOnBadInput())
+                {
+                    throw new BadRequestException("Missing recommender argument",
+                        $"The argument {arg.CommonId} is required, and the recommender is set to throw on errors.");
+                }
+                else
+                {
+                    context.InvokationLog.LogMessage($"Using default value ({arg.DefaultArgumentValue}) for argument {arg.CommonId}");
+                    input.Arguments[arg.CommonId] = arg.DefaultArgumentValue;
+                }
+            }
+            else
+            {
+                // incoming argument exists. check the type.
+                var val = input.Arguments[arg.CommonId]?.ToString();
+                if (val == null && arg.IsRequired && recommender.ShouldThrowOnBadInput())
+                {
+                    throw new BadRequestException("Null recommender argument",
+                        $"The argument {arg.CommonId} is null, and the recommender is set to throw on errors.");
+                }
+                else if (arg.ArgumentType == ArgumentTypes.Numerical)
+                {
+                    // try and parse as a number
+                    if (!double.TryParse(val, out _))
+                    {
+                        // the value was bad.
+                        if (recommender.ShouldThrowOnBadInput())
+                        {
+                            context.InvokationLog.LogMessage($"The argument {arg.CommonId} should be numeric, and the recommender is set to throw on errors.");
+                            throw new BadRequestException("Bad recommender argument",
+                                $"The argument {arg.CommonId} should be numeric, and the recommender is set to throw on errors.");
+                        }
+                        else
+                        {
+                            // try and set the value to the default
+                            context.InvokationLog.LogMessage($"Using default value ({arg.DefaultArgumentValue}) for argument {arg.CommonId}");
+                            input.Arguments[arg.CommonId] = arg.DefaultArgumentValue;
+                        }
+                    }
+                }
+                else
+                {
+                    context.InvokationLog.LogMessage($"Categorical arguments are not validated");
+                }
+            }
         }
     }
 }

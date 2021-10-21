@@ -48,3 +48,5 @@ export const setSettingsAsync = itemsRecommenders.setSettingsAsync;
 export const fetchItemsAsync = itemsRecommenders.fetchItemsAsync;
 export const addItemAsync = itemsRecommenders.addItemAsync;
 export const removeItemAsync = itemsRecommenders.removeItemAsync;
+
+export const setArgumentsAsync = itemsRecommenders.setArgumentsAsync;

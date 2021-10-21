@@ -1,6 +1,7 @@
+import Tippy from "@tippyjs/react";
 import React from "react";
 import { Selector } from "./selectors/Select";
-
+import { InputGroup, TextInput, commonIdValidator } from "./TextInput";
 const argumentTypeOptions = [
   { label: "Numerical", value: "numerical" },
   { label: "Categorical", value: "categorical" },
@@ -29,17 +30,12 @@ const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
         />
       </div>
       <div className="col">
-        <div className="input-group">
-          <div className="input-group-prepend ml-1">
-            <span className="input-group-text" id="basic-addon3">
-              Identifier:
-            </span>
-          </div>
-          <input
-            type="text"
-            className="form-control"
+        <InputGroup>
+          <TextInput
+            label="Identifier"
             placeholder="Identifier"
             value={commonId || ""}
+            validator={commonIdValidator}
             onChange={(e) =>
               onChange(entry, e.target.value, {
                 ...argument,
@@ -47,16 +43,10 @@ const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
               })
             }
           />
-          <div className="ml-l input-group-prepend ml-1">
-            <span className="input-group-text" id="basic-addon3">
-              Default Value:
-            </span>
-          </div>
 
-          <input
-            type={argumentType === "numerical" ? "number" : "text"}
-            className="form-control"
-            placeholder="Default Value"
+          <TextInput
+            label="Default Value"
+            placeholder="..."
             value={defaultValue || (argumentType === "numerical" ? 0 : "")}
             onChange={(e) =>
               onChange(entry, entry, {
@@ -65,7 +55,7 @@ const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
               })
             }
           />
-        </div>
+        </InputGroup>
       </div>
       <div className="col-2">
         <div className="form-check">
@@ -101,23 +91,25 @@ export const ArgumentsEditor = ({
   placeholder,
 }) => {
   const [args, setArguments] = React.useState(initialArguments || {});
-
+  console.log(args);
   const handleChange = (oldEntry, newEntry, value) => {
     args[newEntry] = value;
     if (oldEntry !== newEntry) {
       delete args[oldEntry];
     }
     if (Object.keys(args).length === 0) {
-      args[""] = "";
+      setArguments({});
+    } else {
+      setArguments({ ...args });
     }
-    setArguments({ ...args });
   };
   const handleRemove = (entry) => {
     delete args[entry];
     if (Object.keys(args).length === 0) {
-      args[""] = "";
+      setArguments({});
+    } else {
+      setArguments({ ...args });
     }
-    setArguments({ ...args });
   };
   const handleNewEntry = () => {
     args[""] = "";
@@ -164,12 +156,14 @@ export const ArgumentsEditor = ({
       ))}
       <div className="row mt-2 justify-content-end">
         <div className="col-1">
-          <button
-            onClick={handleNewEntry}
-            className="btn btn-outline-success btn-block"
-          >
-            +
-          </button>
+          <Tippy content="Add Argument" placement="left">
+            <button
+              onClick={handleNewEntry}
+              className="btn btn-outline-success btn-block"
+            >
+              +
+            </button>
+          </Tippy>
         </div>
       </div>
     </React.Fragment>

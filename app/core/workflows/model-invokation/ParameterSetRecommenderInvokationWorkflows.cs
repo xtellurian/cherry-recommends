@@ -55,8 +55,8 @@ namespace SignalBox.Core.Workflows
         {
             // use the correlator to begin with because need to pass an event ID into some models
             await parameterSetRecommenderStore.Load(recommender, _ => _.ModelRegistration);
-            var invokationEntry = await base.StartTrackInvokation(recommender, input);
-            RecommendingContext context = new RecommendingContext(invokationEntry);
+            var invokLog = await base.StartTrackInvokation(recommender, input);
+            RecommendingContext context = new RecommendingContext(invokLog);
 
             try
             {
@@ -113,7 +113,7 @@ namespace SignalBox.Core.Workflows
                 {
                     foreach (var r in recommender.Arguments)
                     {
-                        CheckArgument(recommender, r, input, invokationEntry);
+                        CheckArgument(recommender, r, input, context);
                     }
                 }
 
@@ -146,7 +146,7 @@ namespace SignalBox.Core.Workflows
                 }
                 else
                 {
-                    invokationEntry.LogMessage("There was an error, but the recommender is not set to throw.");
+                    context.InvokationLog.LogMessage("There was an error, but the recommender is not set to throw.");
                     logger.LogError("Model invokation Error", modelEx);
                 }
             }
@@ -170,7 +170,7 @@ namespace SignalBox.Core.Workflows
                 }
                 else
                 {
-                    invokationEntry.LogMessage("There was an error, but the recommender is not set to throw.");
+                    context.InvokationLog.LogMessage("There was an error, but the recommender is not set to throw.");
                     logger.LogError("Exception during Invokation.", ex);
                 }
             }
@@ -199,64 +199,6 @@ namespace SignalBox.Core.Workflows
                                               message: $"Invoke failed for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId ?? input.CommonUserId}",
                                               modelResponse: null,
                                               saveOnComplete: true);
-            }
-        }
-        /// <summary>
-        /// It meant to throw in some situations.
-        /// </summary>
-        private void CheckArgument(ParameterSetRecommender recommender,
-                                   RecommenderArgument arg,
-                                   ParameterSetRecommenderModelInputV1 input,
-                                   InvokationLogEntry invokationEntry)
-        {
-            input.Arguments ??= new Dictionary<string, object>(); // ensure no null refs here
-            if (!input.Arguments.ContainsKey(arg.CommonId))
-            {
-                // argument is missing
-                if (arg.IsRequired && recommender.ShouldThrowOnBadInput())
-                {
-                    throw new BadRequestException("Missing recommender argument",
-                        $"The argument {arg.CommonId} is required, and the recommender is set to throw on errors.");
-                }
-                else
-                {
-                    invokationEntry.LogMessage($"Using default value ({arg.DefaultArgumentValue}) for argument {arg.CommonId}");
-                    input.Arguments[arg.CommonId] = arg.DefaultArgumentValue;
-                }
-            }
-            else
-            {
-                // incoming argument exists. check the type.
-                var val = input.Arguments[arg.CommonId]?.ToString();
-                if (val == null && arg.IsRequired && recommender.ShouldThrowOnBadInput())
-                {
-                    throw new BadRequestException("Null recommender argument",
-                        $"The argument {arg.CommonId} is null, and the recommender is set to throw on errors.");
-                }
-                else if (arg.ArgumentType == ArgumentTypes.Numerical)
-                {
-                    // try and parse as a number
-                    if (!double.TryParse(val, out _))
-                    {
-                        // the value was bad.
-                        if (recommender.ShouldThrowOnBadInput())
-                        {
-                            invokationEntry.LogMessage($"The argument {arg.CommonId} should be numeric, and the recommender is set to throw on errors.");
-                            throw new BadRequestException("Bad recommender argument",
-                                $"The argument {arg.CommonId} should be numeric, and the recommender is set to throw on errors.");
-                        }
-                        else
-                        {
-                            // try and set the value to the default
-                            invokationEntry.LogMessage($"Using default value ({arg.DefaultArgumentValue}) for argument {arg.CommonId}");
-                            input.Arguments[arg.CommonId] = arg.DefaultArgumentValue;
-                        }
-                    }
-                }
-                else
-                {
-                    invokationEntry.LogMessage($"Categorical arguments are not validated");
-                }
             }
         }
     }

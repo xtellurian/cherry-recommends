@@ -19,14 +19,22 @@ import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
 import { ActionsButtonUtil } from "../utils/actionsButtonUtil";
 import { ConfirmationPopup } from "../../molecules/popups/ConfirmationPopup";
 import { CopyableField } from "../../molecules/fields/CopyableField";
+import { Tabs, TabActivator } from "../../molecules/Tabs";
 import { EntityField } from "../../molecules/EntityField";
 import { CloneRecommender } from "../utils/CloneRecommender";
+import { ArgumentsSection } from "./Arguments";
+
+const tabs = [
+  { id: "detail", label: "Detail" },
+  { id: "arguments", label: "Arguments" },
+];
 
 export const RecommenderDetail = () => {
   const { id } = useParams();
   const token = useAccessToken();
   const history = useHistory();
-  const recommender = useItemsRecommender({ id });
+  const [trigger, setTrigger] = React.useState();
+  const recommender = useItemsRecommender({ id, trigger });
   const [cloneOpen, setCloneOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState();
@@ -100,77 +108,84 @@ export const RecommenderDetail = () => {
       </BackButton>
       <Title>Item Recommender</Title>
       <Subtitle>{recommender.name || "..."}</Subtitle>
-      <hr />
+      <Tabs defaultTabId={tabs[0].id} tabs={tabs} />
       {recommender.loading && <Spinner>Loading Recommender</Spinner>}
       {recommender.error && <ErrorCard error={recommender.error} />}
 
-      <div className="row">
-        <div className="col-md order-last">
-          {!recommender.loading && !recommender.error && (
-            <React.Fragment>
-              <RecommenderStatusBox recommender={recommender} />
-              <button
-                className="btn btn-outline-primary btn-block"
-                onClick={() => setCloneOpen(true)}
-              >
-                Clone this Recommender
-              </button>
-              <ConfirmationPopup
-                isOpen={cloneOpen}
-                setIsOpen={setCloneOpen}
-                label="Clone this recommender?"
-              >
-                <CloneRecommender
-                  recommender={recommender}
-                  cloneAsync={cloneAsync}
-                  onCloned={(r) =>
-                    history.push(
-                      `/recommenders/items-recommenders/detail/${r.id}`
-                    )
-                  }
-                />
-              </ConfirmationPopup>
-            </React.Fragment>
-          )}
-        </div>
-        <div className="col-8">
-          {recommender.commonId && (
-            <CopyableField label="Common Id" value={recommender.commonId} />
-          )}
-
-          {recommender.id && (
-            <CopyableField
-              label="Invokation URL"
-              value={`${window.location.protocol}//${window.location.host}/api/Recommenders/ItemsRecommenders/${recommender.id}/invoke`}
-            />
-          )}
-
-          {recommender.defaultItem && (
-            <EntityField
-              label="Default Item"
-              entity={recommender.defaultItem}
-              to={`/recommendable-items/detail/${recommender.defaultItemId}`}
-            />
-          )}
-          <div className="mt-5">
-            <div className="mb-4">
-              <Link to={`/recommenders/items-recommenders/manage-items/${id}`}>
-                <button className="float-right btn btn-outline-primary">
-                  Manage Items
+      <TabActivator defaultTabId="detail" tabId="detail">
+        <div className="row">
+          <div className="col-md order-last">
+            {!recommender.loading && !recommender.error && (
+              <React.Fragment>
+                <RecommenderStatusBox recommender={recommender} />
+                <button
+                  className="btn btn-outline-primary btn-block"
+                  onClick={() => setCloneOpen(true)}
+                >
+                  Clone this Recommender
                 </button>
-              </Link>
-              <Subtitle>Associated Items</Subtitle>
-            </div>
-            {recommender.items &&
-              recommender.items.map((i) => <ItemRow item={i} key={i.id} />)}
-            {recommender.items && recommender.items.length === 0 && (
-              <EmptyList>
-                This recommender works with all recommendable items.
-              </EmptyList>
+                <ConfirmationPopup
+                  isOpen={cloneOpen}
+                  setIsOpen={setCloneOpen}
+                  label="Clone this recommender?"
+                >
+                  <CloneRecommender
+                    recommender={recommender}
+                    cloneAsync={cloneAsync}
+                    onCloned={(r) =>
+                      history.push(
+                        `/recommenders/items-recommenders/detail/${r.id}`
+                      )
+                    }
+                  />
+                </ConfirmationPopup>
+              </React.Fragment>
             )}
           </div>
+          <div className="col-8">
+            {recommender.commonId && (
+              <CopyableField label="Common Id" value={recommender.commonId} />
+            )}
+
+            {recommender.id && (
+              <CopyableField
+                label="Invokation URL"
+                value={`${window.location.protocol}//${window.location.host}/api/Recommenders/ItemsRecommenders/${recommender.id}/invoke`}
+              />
+            )}
+
+            {recommender.defaultItem && (
+              <EntityField
+                label="Default Item"
+                entity={recommender.defaultItem}
+                to={`/recommendable-items/detail/${recommender.defaultItemId}`}
+              />
+            )}
+            <div className="mt-5">
+              <div className="mb-4">
+                <Link
+                  to={`/recommenders/items-recommenders/manage-items/${id}`}
+                >
+                  <button className="float-right btn btn-outline-primary">
+                    Manage Items
+                  </button>
+                </Link>
+                <Subtitle>Associated Items</Subtitle>
+              </div>
+              {recommender.items &&
+                recommender.items.map((i) => <ItemRow item={i} key={i.id} />)}
+              {recommender.items && recommender.items.length === 0 && (
+                <EmptyList>
+                  This recommender works with all recommendable items.
+                </EmptyList>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
+      </TabActivator>
+      <TabActivator defaultTabId="detail" tabId="arguments">
+        <ArgumentsSection recommender={recommender} setTrigger={setTrigger} />
+      </TabActivator>
     </React.Fragment>
   );
 };

@@ -120,6 +120,15 @@ namespace SignalBox.Core.Workflows
                        .GetClient<IModelInput, ItemsRecommenderModelOutputV1>(recommender);
                 }
 
+                // check all arguments are supplied, and add defaults if necessary
+                if (recommender.Arguments != null)
+                {
+                    foreach (var r in recommender.Arguments)
+                    {
+                        CheckArgument(recommender, r, input, context);
+                    }
+                }
+
                 var output = await client.Invoke(recommender, context, input);
 
                 // load the items

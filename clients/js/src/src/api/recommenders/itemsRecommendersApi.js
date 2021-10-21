@@ -5,6 +5,7 @@ import { headers } from "../headers";
 import * as link from "./common/linkRegisteredModels";
 
 import * as actions from "./common/trackedUserActions";
+import * as ar from "./common/args";
 import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
 import * as eh from "./common/errorHandling";
@@ -242,5 +243,14 @@ export const fetchRecommenderTrackedUserActionsAsync = async ({
     token,
     page,
     revenueOnly,
+  });
+};
+
+export const setArgumentsAsync = async ({ id, token, args }) => {
+  return await ar.setArgumentsAsync({
+    recommenderApiName: "ItemsRecommenders",
+    id,
+    token,
+    args,
   });
 };

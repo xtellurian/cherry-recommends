@@ -1094,7 +1094,7 @@
     }
   };
 
-  const setArgumentsAsync$1 = async ({
+  const setArgumentsAsync$2 = async ({
     recommenderApiName,
     token,
     id,
@@ -1368,8 +1368,8 @@
     });
   };
 
-  const setArgumentsAsync = async ({ id, token, args }) => {
-    return await setArgumentsAsync$1({
+  const setArgumentsAsync$1 = async ({ id, token, args }) => {
+    return await setArgumentsAsync$2({
       recommenderApiName: "ParameterSetRecommenders",
       id,
       token,
@@ -1397,7 +1397,7 @@
     updateErrorHandlingAsync: updateErrorHandlingAsync$2,
     setSettingsAsync: setSettingsAsync$1,
     fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$2,
-    setArgumentsAsync: setArgumentsAsync
+    setArgumentsAsync: setArgumentsAsync$1
   });
 
   const fetchProductRecommendersAsync = async ({ token, page }) => {
@@ -1749,7 +1749,7 @@
     const response = await fetch(url, {
       headers: headers(token),
       method: "post",
-      payload: JSON.stringify(item),
+      body: JSON.stringify(item),
     });
     if (response.ok) {
       return await response.json();
@@ -1902,6 +1902,15 @@
     });
   };
 
+  const setArgumentsAsync = async ({ id, token, args }) => {
+    return await setArgumentsAsync$2({
+      recommenderApiName: "ItemsRecommenders",
+      id,
+      token,
+      args,
+    });
+  };
+
   var itemsRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchItemsRecommendersAsync: fetchItemsRecommendersAsync,
@@ -1922,7 +1931,8 @@
     createTargetVariableAsync: createTargetVariableAsync,
     updateErrorHandlingAsync: updateErrorHandlingAsync,
     setSettingsAsync: setSettingsAsync,
-    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync
+    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync,
+    setArgumentsAsync: setArgumentsAsync
   });
 
   const defaultHeaders$4 = { "Content-Type": "application/json" };
@@ -2040,9 +2050,13 @@
     }
   };
 
-  const fetchItemsAsync = async ({ token, page }) => {
-    const url = getUrl("api/RecommendableItems");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
+  const fetchItemsAsync = async ({ token, page, searchTerm }) => {
+    let url = getUrl("api/RecommendableItems");
+    url = `${url}?${pageQuery(page)}`;
+    if (searchTerm) {
+      url = `${url}&${searchEntities$2(searchTerm)}`;
+    }
+    const response = await fetch(url, {
       headers: headers(token),
     });
     if (response.ok) {
