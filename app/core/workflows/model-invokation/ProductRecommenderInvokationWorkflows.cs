@@ -64,13 +64,13 @@ namespace SignalBox.Core.Workflows
                 // load the features of the tracked user
                 input.Features = await base.GetFeatures(context);
 
-                IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1> client;
+                IRecommenderModelClient<ProductRecommenderModelOutputV1> client;
                 if (recommender.ModelRegistration == null)
                 {
                     // load the products required for the random recommender
                     await productRecommenderStore.LoadMany(recommender, _ => _.Products);
                     // create a random recommender here.
-                    client = await modelClientFactory.GetUnregisteredClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(recommender);
+                    client = await modelClientFactory.GetUnregisteredClient<ProductRecommenderModelOutputV1>(recommender);
                     logger.LogWarning($"Using unregistered model client for {recommender.Id}");
                 }
                 else if (recommender.ModelRegistration.ModelType != ModelTypes.ProductRecommenderV1)
@@ -81,7 +81,7 @@ namespace SignalBox.Core.Workflows
                 {
                     correlator.ModelRegistration = recommender.ModelRegistration;
                     client = await modelClientFactory
-                       .GetClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>(recommender);
+                       .GetClient<ProductRecommenderModelOutputV1>(recommender);
                 }
 
                 var output = await client.Invoke(recommender, context, input);

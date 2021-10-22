@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core
 {
@@ -11,6 +12,6 @@ namespace SignalBox.Core
         public string Version { get; set; }
         public IDictionary<string, object> Arguments { get; set; }
         public IDictionary<string, object> Features { get; set; }
-
+        public IEnumerable<ParameterBounds> ParameterBounds { get; set; }
     }
 }

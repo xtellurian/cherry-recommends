@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -85,11 +86,11 @@ namespace SignalBox.Core.Workflows
                 // load the features from the user
                 input.Features = await base.GetFeatures(context);
 
-                IRecommenderModelClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1> client;
+                IRecommenderModelClient<ParameterSetRecommenderModelOutputV1> client;
                 if (model == null)
                 {
                     // create a random recommender here.
-                    client = await modelClientFactory.GetUnregisteredClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1>(recommender);
+                    client = await modelClientFactory.GetUnregisteredClient<ParameterSetRecommenderModelOutputV1>(recommender);
                     logger.LogWarning($"Using unregistered model client for {recommender.Id}");
                 }
                 else if (model.ModelType != ModelTypes.ParameterSetRecommenderV1)
@@ -100,10 +101,10 @@ namespace SignalBox.Core.Workflows
                 {
                     context.Correlator.ModelRegistration = recommender.ModelRegistration;
                     client = await modelClientFactory
-                        .GetClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1>(recommender);
+                        .GetClient<ParameterSetRecommenderModelOutputV1>(recommender);
                 }
                 // enrich with the parameter bounds if not supplied.
-                if (input.ParameterBounds == null || input.ParameterBounds.Count == 0)
+                if (input.ParameterBounds == null || input.ParameterBounds.Count() == 0)
                 {
                     logger.LogInformation("Updating parameter bounds for invoke request");
                     input.ParameterBounds = recommender.ParameterBounds;

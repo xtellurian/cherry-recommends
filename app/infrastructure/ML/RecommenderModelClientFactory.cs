@@ -27,8 +27,7 @@ namespace SignalBox.Infrastructure.ML
             this.itemStore = itemStore;
         }
 
-        public Task<IRecommenderModelClient<TInput, TOutput>> GetClient<TInput, TOutput>(IRecommender recommender)
-            where TInput : IModelInput
+        public Task<IRecommenderModelClient<TOutput>> GetClient<TOutput>(IRecommender recommender)
             where TOutput : IModelOutput
         {
             var model = recommender.ModelRegistration;
@@ -38,22 +37,22 @@ namespace SignalBox.Infrastructure.ML
             }
             if (recommender.ModelRegistration.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ParameterSetRecommenderV1)
             {
-                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)
+                return Task.FromResult((IRecommenderModelClient<TOutput>)
                     new AzureMLParameterSetRecommenderClient(httpClient));
             }
             else if (model.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ItemsRecommenderV1)
             {
-                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)
+                return Task.FromResult((IRecommenderModelClient<TOutput>)
                     new AzureMLItemsRecommenderClient(httpClient));
             }
             else if (model.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ProductRecommenderV1)
             {
-                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)
+                return Task.FromResult((IRecommenderModelClient<TOutput>)
                     new AzureMLPProductRecommenderClient(httpClient));
             }
             else if (model.HostingType == HostingTypes.AzurePersonalizer && model.ModelType == ModelTypes.ProductRecommenderV1)
             {
-                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)
+                return Task.FromResult((IRecommenderModelClient<TOutput>)
                     new AzurePersonalizerRecommenderClient(httpClient, productRecommenderStore, productStore, telemetry));
             }
             else
@@ -74,17 +73,16 @@ namespace SignalBox.Infrastructure.ML
             }
         }
 
-        public Task<IRecommenderModelClient<TInput, TOutput>> GetUnregisteredClient<TInput, TOutput>(IRecommender recommender)
-            where TInput : IModelInput
+        public Task<IRecommenderModelClient<TOutput>> GetUnregisteredClient<TOutput>(IRecommender recommender)
             where TOutput : IModelOutput
         {
             if (typeof(TOutput) == typeof(ProductRecommenderModelOutputV1))
             {
-                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)new RandomProductRecommender(productStore));
+                return Task.FromResult((IRecommenderModelClient<TOutput>)new RandomProductRecommender(productStore));
             }
             else if (typeof(TOutput) == typeof(ParameterSetRecommenderModelOutputV1))
             {
-                return Task.FromResult((IRecommenderModelClient<TInput, TOutput>)new RandomParameterSetRecommender());
+                return Task.FromResult((IRecommenderModelClient<TOutput>)new RandomParameterSetRecommender());
             }
             else
             {
@@ -92,9 +90,9 @@ namespace SignalBox.Infrastructure.ML
             }
         }
 
-        public Task<IRecommenderModelClient<IModelInput, TOutput>> GetUnregisteredItemsRecommenderClient<TOutput>(IRecommender recommender) where TOutput : IModelOutput
+        public Task<IRecommenderModelClient<TOutput>> GetUnregisteredItemsRecommenderClient<TOutput>(IRecommender recommender) where TOutput : IModelOutput
         {
-            return Task.FromResult((IRecommenderModelClient<IModelInput, TOutput>)new RandomItemsRecommender(itemStore));
+            return Task.FromResult((IRecommenderModelClient<TOutput>)new RandomItemsRecommender(itemStore));
         }
     }
 }

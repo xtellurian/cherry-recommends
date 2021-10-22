@@ -36,7 +36,9 @@ export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
 
   React.useEffect(() => {
     if (!recommender.loading && !recommender.error) {
-      setSettings(recommender?.settings || initSettings);
+      setSettings(
+        recommender?.settings || { ...initSettings, _isInitial: false }
+      );
     }
   }, [recommender]);
 

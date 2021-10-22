@@ -8,7 +8,7 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.ML.Azure
 {
-    public class AzureMLPProductRecommenderClient : MLModelClient, IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>
+    public class AzureMLPProductRecommenderClient : MLModelClient, IRecommenderModelClient<ProductRecommenderModelOutputV1>
     {
         private readonly HttpClient httpClient;
 
@@ -21,14 +21,14 @@ namespace SignalBox.Infrastructure.ML.Azure
 
         public async Task<ProductRecommenderModelOutputV1> Invoke(IRecommender recommender,
                                                                   RecommendingContext recommendingContext,
-                                                                  ProductRecommenderModelInputV1 input)
+                                                                  IModelInput input)
         {
             string body = null;
             try
             {
                 base.SetKeyAsBearerToken(httpClient, recommender.ModelRegistration);
                 var response = await httpClient.PostAsJsonAsync(recommender.ModelRegistration.ScoringUrl,
-                    new ModelInputWrapper<ProductRecommenderModelInputV1>(input, recommendingContext.Correlator?.Id), serializerOptions);
+                    new ModelInputWrapper<IModelInput>(input, recommendingContext.Correlator?.Id), serializerOptions);
                 body = await response.Content.ReadAsStringAsync();
                 response.EnsureSuccessStatusCode();
                 return JsonSerializer.Deserialize<ProductRecommenderModelOutputV1>(body, serializerOptions);

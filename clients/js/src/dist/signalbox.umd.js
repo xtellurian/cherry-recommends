@@ -949,7 +949,7 @@
     createParameter: createParameter
   });
 
-  const fetchLinkedRegisteredModelAsync$2 = async ({
+  const fetchLinkedRegisteredModelAsync$3 = async ({
     recommenderApiName,
     token,
     id,
@@ -1259,8 +1259,8 @@
     });
   };
 
-  const fetchLinkedRegisteredModelAsync$1 = async ({ token, id }) => {
-    return await fetchLinkedRegisteredModelAsync$2({
+  const fetchLinkedRegisteredModelAsync$2 = async ({ token, id }) => {
+    return await fetchLinkedRegisteredModelAsync$3({
       recommenderApiName: "ParameterSetRecommenders",
       id,
       token,
@@ -1388,7 +1388,7 @@
     deleteParameterSetRecommender: deleteParameterSetRecommender,
     fetchParameterSetRecommendationsAsync: fetchParameterSetRecommendationsAsync,
     createLinkRegisteredModelAsync: createLinkRegisteredModelAsync$2,
-    fetchLinkedRegisteredModelAsync: fetchLinkedRegisteredModelAsync$1,
+    fetchLinkedRegisteredModelAsync: fetchLinkedRegisteredModelAsync$2,
     invokeParameterSetRecommenderAsync: invokeParameterSetRecommenderAsync,
     invokeParameterSetRecommender: invokeParameterSetRecommender,
     fetchInvokationLogsAsync: fetchInvokationLogsAsync$2,
@@ -1544,8 +1544,8 @@
     }
   };
 
-  const fetchLinkedRegisteredModelAsync = async ({ token, id }) => {
-    return await fetchLinkedRegisteredModelAsync$2({
+  const fetchLinkedRegisteredModelAsync$1 = async ({ token, id }) => {
+    return await fetchLinkedRegisteredModelAsync$3({
       recommenderApiName: "ProductRecommenders",
       id,
       token,
@@ -1657,7 +1657,7 @@
     createLinkRegisteredModelAsync: createLinkRegisteredModelAsync$1,
     setDefaultProductAsync: setDefaultProductAsync,
     getDefaultProductAsync: getDefaultProductAsync,
-    fetchLinkedRegisteredModelAsync: fetchLinkedRegisteredModelAsync,
+    fetchLinkedRegisteredModelAsync: fetchLinkedRegisteredModelAsync$1,
     invokeProductRecommenderAsync: invokeProductRecommenderAsync,
     invokeProductRecommender: invokeProductRecommender,
     fetchInvokationLogsAsync: fetchInvokationLogsAsync$1,
@@ -1812,8 +1812,8 @@
     });
   };
 
-  const fetchLinkedRegisteredModel = async ({ token, id }) => {
-    return await fetchLinkedRegisteredModelAsync$2({
+  const fetchLinkedRegisteredModelAsync = async ({ token, id }) => {
+    return await fetchLinkedRegisteredModelAsync$3({
       recommenderApiName: "ItemsRecommenders",
       id,
       token,
@@ -1924,7 +1924,7 @@
     setDefaultItemAsync: setDefaultItemAsync,
     getDefaultItemAsync: getDefaultItemAsync,
     createLinkRegisteredModelAsync: createLinkRegisteredModelAsync,
-    fetchLinkedRegisteredModel: fetchLinkedRegisteredModel,
+    fetchLinkedRegisteredModelAsync: fetchLinkedRegisteredModelAsync,
     invokeItemsRecommenderAsync: invokeItemsRecommenderAsync,
     fetchInvokationLogsAsync: fetchInvokationLogsAsync,
     fetchTargetVariablesAsync: fetchTargetVariablesAsync,

@@ -15,8 +15,8 @@ export const deleteItemsRecommenderAsync =
 export const createItemsRecommenderAsync =
   itemsRecommenders.createItemsRecommenderAsync;
 
-export const fetchLinkedRegisteredModel =
-  itemsRecommenders.fetchLinkedRegisteredModel;
+export const fetchLinkedRegisteredModelAsync =
+  itemsRecommenders.fetchLinkedRegisteredModelAsync;
 
 export const createLinkRegisteredModelAsync =
   itemsRecommenders.createLinkRegisteredModelAsync;

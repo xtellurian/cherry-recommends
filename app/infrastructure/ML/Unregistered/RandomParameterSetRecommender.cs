@@ -8,11 +8,11 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure
 {
-    public class RandomParameterSetRecommender : IRecommenderModelClient<ParameterSetRecommenderModelInputV1, ParameterSetRecommenderModelOutputV1>
+    public class RandomParameterSetRecommender : IRecommenderModelClient<ParameterSetRecommenderModelOutputV1>
     {
         public Task<ParameterSetRecommenderModelOutputV1> Invoke(IRecommender recommender,
                                                                  RecommendingContext recommendingContext,
-                                                                 ParameterSetRecommenderModelInputV1 input)
+                                                                 IModelInput input)
         {
             // model should be null
 

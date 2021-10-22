@@ -100,7 +100,7 @@ namespace SignalBox.Core.Workflows
                     invokationEntry.LogMessage($"Using all items as input, {input.Items.Count()} items");
                 }
 
-                IRecommenderModelClient<IModelInput, ItemsRecommenderModelOutputV1> client;
+                IRecommenderModelClient<ItemsRecommenderModelOutputV1> client;
                 if (recommender.ModelRegistration == null)
                 {
                     // load the items required for the random recommender
@@ -117,7 +117,7 @@ namespace SignalBox.Core.Workflows
                 {
                     context.Correlator.ModelRegistration = recommender.ModelRegistration;
                     client = await modelClientFactory
-                       .GetClient<IModelInput, ItemsRecommenderModelOutputV1>(recommender);
+                       .GetClient<ItemsRecommenderModelOutputV1>(recommender);
                 }
 
                 // check all arguments are supplied, and add defaults if necessary

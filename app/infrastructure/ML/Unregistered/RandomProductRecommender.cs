@@ -8,7 +8,7 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure
 {
-    public class RandomProductRecommender : IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>
+    public class RandomProductRecommender : IRecommenderModelClient<ProductRecommenderModelOutputV1>
     {
         private readonly IProductStore productStore;
 
@@ -16,7 +16,7 @@ namespace SignalBox.Infrastructure
         {
             this.productStore = productStore;
         }
-        public async Task<ProductRecommenderModelOutputV1> Invoke(IRecommender recommender, RecommendingContext recommendingContext, ProductRecommenderModelInputV1 input)
+        public async Task<ProductRecommenderModelOutputV1> Invoke(IRecommender recommender, RecommendingContext recommendingContext, IModelInput input)
         {
             var random = new Random();
             var productRecommender = (ProductRecommender)recommender;

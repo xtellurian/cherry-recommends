@@ -8,7 +8,7 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure
 {
-    public class RandomItemsRecommender : IRecommenderModelClient<IModelInput, ItemsRecommenderModelOutputV1>
+    public class RandomItemsRecommender : IRecommenderModelClient<ItemsRecommenderModelOutputV1>
     {
         private readonly IRecommendableItemStore itemStore;
 

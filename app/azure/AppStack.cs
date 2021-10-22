@@ -68,7 +68,7 @@ namespace SignalBox.Azure
 
             // for DNS and SSL later in the deployment process
             // see app/deploy/DeploymentProcess.md
-            this.NetworkSubdomain = Output.Create(networkConfig.Require("cherrySubdomain"));
+            this.NetworkSubdomain = Output.Create(networkConfig.Get("cherrySubdomain") ?? "");
             this.WebAppCustomDomainVerificationId = appSvc.WebApp.CustomDomainVerificationId;
             if (appSvc.CertificateOrder != null)
             {

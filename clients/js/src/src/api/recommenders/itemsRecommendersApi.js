@@ -156,7 +156,7 @@ export const createLinkRegisteredModelAsync = async ({
   });
 };
 
-export const fetchLinkedRegisteredModel = async ({ token, id }) => {
+export const fetchLinkedRegisteredModelAsync = async ({ token, id }) => {
   return await link.fetchLinkedRegisteredModelAsync({
     recommenderApiName: "ItemsRecommenders",
     id,

@@ -10,7 +10,7 @@ using SignalBox.Core.Recommenders;
 namespace SignalBox.Infrastructure.ML.Azure
 {
     public class AzurePersonalizerRecommenderClient :
-        IRecommenderModelClient<ProductRecommenderModelInputV1, ProductRecommenderModelOutputV1>,
+        IRecommenderModelClient<ProductRecommenderModelOutputV1>,
         IRecommenderModelRewardClient
     {
         public AzurePersonalizerRecommenderClient(HttpClient httpClient,
@@ -52,7 +52,7 @@ namespace SignalBox.Infrastructure.ML.Azure
 
             return client;
         }
-        public async Task<ProductRecommenderModelOutputV1> Invoke(IRecommender recommender, RecommendingContext recommendingContext, ProductRecommenderModelInputV1 input)
+        public async Task<ProductRecommenderModelOutputV1> Invoke(IRecommender recommender, RecommendingContext recommendingContext, IModelInput input)
         {
             var client = InitializePersonalizerClient(httpClient, recommender.ModelRegistration);
 

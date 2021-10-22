@@ -3,9 +3,9 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core
 {
-    public interface IRecommenderModelClient<TInput, TOutput> where TInput : IModelInput where TOutput : IModelOutput
+    public interface IRecommenderModelClient<TOutput> where TOutput : IModelOutput
     {
-        Task<TOutput> Invoke(IRecommender recommender, RecommendingContext context, TInput input);
+        Task<TOutput> Invoke(IRecommender recommender, RecommendingContext context, IModelInput input);
         Task Reward(IRecommender recommender, RewardingContext context, TrackedUserAction action);
     }
 }
