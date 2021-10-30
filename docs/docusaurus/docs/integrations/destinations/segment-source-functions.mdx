@@ -1,0 +1,52 @@
+---
+sidebar_position: 20
+title: Segment
+---
+
+# Segment Source Functions
+
+Segment Source Functions are the primary method for delivering recommendations to connected Segment accounts.
+
+[Read more about Segment Source Functions](https://segment.com/docs/connections/functions/source-functions/)
+
+:::note Creating a connection
+
+- For a recommendation destination to be valid, it must be associated with an existing Segment connection.
+
+:::
+
+## Creating a Segment Source Function Destination
+
+In the recommender options menu, click on `Destinations`.
+
+![Screenshot of where to find the destinations button](/img/screenshots/destinations/DestinationsMenuItem.png)
+
+Next, choose which `Segment Integrated System` you wish to associate the destination with.
+Finally, in the `Endpoint` field, enter the HTTP/HTTPS location of the webhook URL.
+This webhook will be called every time the recommender is [invoked](/docs/concepts/invokation).
+
+## Configure the Segment code
+
+In [Segment](https://app.segment.com/), you'll need to write some Javascript to transform the incoming recommendation.
+The sample below produces a [Segment TRACK event](https://segment.com/docs/connections/spec/track/) with the top recommended item. 
+
+```js
+/**
+ * Handle incoming HTTP request
+ *
+ * @param  {FunctionRequest} request
+ * @param  {FunctionSettings} settings
+ */
+async function onRequest(request, settings) {
+  const body = request.json();
+  // See https://segment.com/docs/connections/spec/track/
+  Segment.track({
+    event: "Recommendation Produced",
+    // assumes the commonUserId is the same userId as Segment userId
+    userId: body.trackedUser.commonId,
+    properties: {
+      recommendedItem: body.scoredItems[0].itemCommonId,
+    },
+  });
+}
+```

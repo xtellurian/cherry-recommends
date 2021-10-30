@@ -26,10 +26,11 @@ namespace SignalBox.Core.Workflows
                                     ITouchpointStore touchpointStore,
                                     IHistoricTrackedUserFeatureStore historicFeatureStore,
                                     IProductStore productStore,
+                                    IWebhookSenderClient webhookSenderClient,
                                     IRecommendationCorrelatorStore correlatorStore,
                                     IProductRecommenderStore productRecommenderStore,
                                     IProductRecommendationStore productRecommendationStore)
-                                     : base(storageContext, productRecommenderStore, historicFeatureStore, dateTimeProvider)
+                                    : base(storageContext, productRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider)
         {
             this.logger = logger;
             this.storageContext = storageContext;
@@ -45,6 +46,10 @@ namespace SignalBox.Core.Workflows
             ProductRecommender recommender,
             ProductRecommenderModelInputV1 input)
         {
+            if (true)
+            {
+                new System.NotImplementedException("Product Recommenders are deprecated");
+            }
             await productRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             var invokationEntry = await base.StartTrackInvokation(recommender, input, saveOnComplete: false);
             var correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));

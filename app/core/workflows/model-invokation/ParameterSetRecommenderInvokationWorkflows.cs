@@ -34,10 +34,11 @@ namespace SignalBox.Core.Workflows
                                     IParameterSetRecommenderStore parameterSetRecommenderStore,
                                     IParameterSetRecommendationStore parameterSetRecommendationStore,
                                     IModelRegistrationStore modelRegistrationStore,
+                                    IWebhookSenderClient webhookSenderClient,
                                     IHistoricTrackedUserFeatureStore historicFeatureStore,
                                     ITrackedUserStore trackedUserStore,
                                     IRecommenderModelClientFactory modelClientFactory)
-                                     : base(storageContext, parameterSetRecommenderStore, historicFeatureStore, dateTimeProvider)
+                                     : base(storageContext, parameterSetRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider)
         {
             this.logger = logger;
             this.storageContext = storageContext;
@@ -126,10 +127,15 @@ namespace SignalBox.Core.Workflows
                 recommendation.SetInput(input);
                 recommendation.SetOutput(output);
                 recommendation = await parameterSetRecommendationStore.Create(recommendation);
-
                 await storageContext.SaveChanges();
 
                 output.CorrelatorId = context.Correlator.Id;
+
+                context.LogMessage("Created a recommendation entity");
+
+                // send to any destinations
+                await base.SendToDestinations(recommender, context, recommendation);
+
 
                 await base.EndTrackInvokation(context,
                                               true,

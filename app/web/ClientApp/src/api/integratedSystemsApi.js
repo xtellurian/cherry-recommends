@@ -1,10 +1,16 @@
 import { integratedSystems } from "signalbox.js";
 
-export const fetchIntegratedSystems = integratedSystems.fetchIntegratedSystems;
+export const fetchIntegratedSystemsAsync =
+  integratedSystems.fetchIntegratedSystemsAsync;
 
-export const fetchIntegratedSystemAsync = integratedSystems.fetchIntegratedSystemAsync;
+export const fetchIntegratedSystemAsync =
+  integratedSystems.fetchIntegratedSystemAsync;
 
-export const createIntegratedSystemAsync = integratedSystems.createIntegratedSystemAsync;
+export const createIntegratedSystemAsync =
+  integratedSystems.createIntegratedSystemAsync;
+
+export const deleteIntegratedSystemAsync =
+  integratedSystems.deleteIntegratedSystemAsync;
 
 export const fetchWebhookReceivers = integratedSystems.fetchWebhookReceivers;
 

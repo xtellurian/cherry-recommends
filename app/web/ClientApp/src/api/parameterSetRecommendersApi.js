@@ -41,3 +41,7 @@ export const fetchRecommenderTrackedUserActionsAsync =
 
 export const setArgumentsAsync = parameterSetRecommenders.setArgumentsAsync;
 export const setSettingsAsync = parameterSetRecommenders.setSettingsAsync;
+
+export const fetchDestinationsAsync = parameterSetRecommenders.fetchDestinationsAsync;
+export const createDestinationAsync = parameterSetRecommenders.createDestinationAsync;
+export const removeDestinationAsync = parameterSetRecommenders.removeDestinationAsync;

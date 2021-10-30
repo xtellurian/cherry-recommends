@@ -13,6 +13,7 @@ import { InvokationLogs } from "./InvokationLogs";
 import { Settings } from "./Settings";
 import { MonitorRecommender } from "./MonitorItemsRecommender";
 import { ManageItems } from "./ManageItems";
+import { Destinations } from "./Destinations";
 
 export const ItemsRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -62,6 +63,10 @@ export const ItemsRecommendersComponent = () => {
         <AuthorizeRoute
           path={`${path}/manage-items/:id`}
           component={ManageItems}
+        />
+        <AuthorizeRoute
+          path={`${path}/destinations/:id`}
+          component={Destinations}
         />
         <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
       </Switch>

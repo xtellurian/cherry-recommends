@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
 using SignalBox.Core.Integrations;
+using SignalBox.Infrastructure;
 
 namespace SignalBox.Web.Controllers
 {
@@ -48,21 +49,19 @@ namespace SignalBox.Web.Controllers
                 var sigValue = sig.ToString();
                 var uri = $"{ Request.Scheme }://{ Request.Host }{ Request.Path }{ Request.QueryString }";
                 // need to include the body?
-                string valueToHash;
+                // string valueToHash;
+                string hashed;
 
                 if (useRequestBody)
                 {
                     requestBody ??= await Request.GetRawBodyStringAsync();
-                    valueToHash = $"{credentials.ClientSecret}{requestBody}";
+                    hashed = hasher.HashHttpRequestForWebhookValidation(credentials.ClientSecret, requestBody);
                 }
                 else
                 {
-                    valueToHash = $"{credentials.ClientSecret}{Request.Method}{uri}";
+                    hashed = hasher.HashHttpRequestForWebhookValidation(credentials.ClientSecret, Request.Method, uri);
                 }
 
-
-                var hashedBytes = hasher.HashToBytes(HashingAlgorithms.SHA256, valueToHash);
-                var hashed = Convert.ToHexString(hashedBytes).ToLower();
                 var isValid = string.Equals(hashed, sigValue);
 
                 if (!isValid)

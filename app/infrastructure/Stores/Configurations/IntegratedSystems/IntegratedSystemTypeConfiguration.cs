@@ -4,11 +4,12 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal class IntegratedSystemTypeConfiguration : EntityTypeConfigurationBase<IntegratedSystem>, IEntityTypeConfiguration<IntegratedSystem>
+    internal abstract class IntegratedSystemTypeConfigurationBase<TSystem> : EntityTypeConfigurationBase<TSystem>, IEntityTypeConfiguration<TSystem>
+    where TSystem : IntegratedSystem
     {
         // I don't inherit from CommonEntityTypeConfiguration because sometimes the CommonID of an integrated system is null
         // If you change this inheritence, be sure to go through the onboarding process for a new integrated system.
-        public override void Configure(EntityTypeBuilder<IntegratedSystem> builder)
+        public override void Configure(EntityTypeBuilder<TSystem> builder)
         {
             base.Configure(builder);
 
@@ -30,14 +31,26 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasDefaultValueSql("('NotConfigured')")
                 .HasConversion<string>();
 
+            builder.Property(_ => _.Discriminator).HasDefaultValue("IntegratedSystem");
+            builder.HasDiscriminator(_ => _.Discriminator);
+
             builder
                 .Property(_ => _.Properties)
                 .HasJsonConversion();
+        }
+    }
+
+    // keep this one for the base class, for backwards compat.
+    internal class IntegratedSystemTypeConfiguration : IntegratedSystemTypeConfigurationBase<IntegratedSystem>, IEntityTypeConfiguration<IntegratedSystem>
+    {
+        public override void Configure(EntityTypeBuilder<IntegratedSystem> builder)
+        {
+            base.Configure(builder);
 
             builder
-                .HasMany(_ => _.WebhookReceivers)
-                .WithOne(_ => _.IntegratedSystem)
-                .OnDelete(DeleteBehavior.Cascade);
+               .HasMany(_ => _.WebhookReceivers)
+               .WithOne(_ => _.IntegratedSystem)
+               .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

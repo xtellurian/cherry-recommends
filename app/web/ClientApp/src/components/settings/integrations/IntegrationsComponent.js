@@ -7,6 +7,7 @@ import { IntegratedSystemDetail } from "./IntegratedSystemDetail";
 import { CreateWebhookReceiver } from "./CreateWebhookReceiver";
 import { HubspotConnector } from "./hubspot/HubspotConnector";
 import { HubspotIntegrationComponent } from "./hubspot/HubspotIntegrationComponent";
+import { CustomIntegrationComponent } from "./custom/CustomIntegrationComponent";
 
 export const IntegrationsComponent = () => {
   const { path } = useRouteMatch();
@@ -38,6 +39,10 @@ export const IntegrationsComponent = () => {
         <AuthorizeRoute
           path={`${path}/hubspot-detail/:id`}
           component={HubspotIntegrationComponent}
+        />
+        <AuthorizeRoute
+          path={`${path}/custom/:id`}
+          component={CustomIntegrationComponent}
         />
       </Switch>
     </React.Fragment>

@@ -7,6 +7,7 @@ import {
   fetchInvokationLogsAsync,
   fetchRecommenderTrackedUserActionsAsync,
   fetchTargetVariablesAsync,
+  fetchDestinationsAsync,
 } from "../api/parameterSetRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -141,6 +142,24 @@ export const useRecommenderTrackedUserActions = ({ id, page, revenueOnly }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, page, revenueOnly]);
+
+  return state;
+};
+
+export const useDestinations = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchDestinationsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
 
   return state;
 };

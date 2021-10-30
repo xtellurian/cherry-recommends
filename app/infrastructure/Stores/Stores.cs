@@ -146,11 +146,16 @@ namespace SignalBox.Infrastructure
 
             services.AddScoped<IHashedApiKeyStore, EFHashedAPIKeyStore>();
             services.AddScoped<IModelRegistrationStore, EFModelRegistrationStore>();
-            services.AddScoped<IIntegratedSystemStore, EFIntegratedSystemStore>();
             services.AddScoped<ITrackedUserSystemMapStore, EFTrackedUserSystemMapStore>();
             services.AddScoped<IWebhookReceiverStore, EFSWebhookReceiverStore>();
 
+            // integrated systems
+            services.AddScoped<IIntegratedSystemStore, EFIntegratedSystemStore>();
+            services.AddScoped<ICustomIntegratedSystemStore, EFCustomIntegratedSystemStore>();
+
+
             services.AddScoped<IStorageContext, EFStorageContext>();
+            services.RegisterCollections();
 
             return services;
         }

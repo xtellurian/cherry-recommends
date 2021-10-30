@@ -50,3 +50,7 @@ export const addItemAsync = itemsRecommenders.addItemAsync;
 export const removeItemAsync = itemsRecommenders.removeItemAsync;
 
 export const setArgumentsAsync = itemsRecommenders.setArgumentsAsync;
+
+export const fetchDestinationsAsync = itemsRecommenders.fetchDestinationsAsync;
+export const createDestinationAsync = itemsRecommenders.createDestinationAsync;
+export const removeDestinationAsync = itemsRecommenders.removeDestinationAsync;

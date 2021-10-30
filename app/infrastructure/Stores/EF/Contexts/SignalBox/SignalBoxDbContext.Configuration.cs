@@ -6,13 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Core;
-using SignalBox.Core.Recommendations;
-using SignalBox.Core.Recommenders;
 using SignalBox.Infrastructure.EntityFramework;
 
 namespace SignalBox.Infrastructure
 {
-    public class SignalBoxDbContext : DbContextBase
+    public partial class SignalBoxDbContext : DbContextBase
     {
         public SignalBoxDbContext(DbContextOptions<SignalBoxDbContext> options) : base(options)
         { }
@@ -72,45 +70,5 @@ namespace SignalBox.Infrastructure
                 item.Property(nameof(Entity.LastUpdated)).CurrentValue = now;
             }
         }
-
-        // core stuff
-        public DbSet<Core.Environment> Environments { get; set; }
-        public DbSet<Rule> Rules { get; set; }
-        public DbSet<RecommendableItem> RecommendableItems { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Segment> Segments { get; set; }
-        public DbSet<TrackedUser> TrackedUsers { get; set; }
-        public DbSet<TrackedUserEvent> TrackedUserEvents { get; set; }
-        public DbSet<TrackedUserAction> TrackedUserActions { get; set; }
-        public DbSet<RewardSelector> RewardSelectors { get; set; }
-        public DbSet<Touchpoint> Touchpoints { get; set; }
-        public DbSet<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
-        public DbSet<Parameter> Parameters { get; set; }
-
-        // features
-        public DbSet<Feature> Features { get; set; }
-        public DbSet<FeatureGenerator> FeatureGenerators { get; set; }
-        public DbSet<HistoricTrackedUserFeature> HistoricTrackedUserFeatures { get; set; }
-        public DbSet<LatestFeatureVersion> LatestFeatureVersions { get; set; } // SQL view
-
-        // recommenders
-        public DbSet<RecommenderEntityBase> Recommenders { get; set; }
-        public DbSet<ProductRecommender> ProductRecommenders { get; set; }
-        public DbSet<ParameterSetRecommender> ParameterSetRecommenders { get; set; }
-        public DbSet<ItemsRecommender> ItemsRecommenders { get; set; }
-
-        // recommendations
-        public DbSet<RecommendationCorrelator> RecommendationCorrelators { get; set; }
-        public DbSet<ParameterSetRecommendation> ParameterSetRecommendations { get; set; }
-        public DbSet<ItemsRecommendation> ItemsRecommendations { get; set; }
-        public DbSet<ProductRecommendation> ProductRecommendations { get; set; }
-
-        // system stuff
-        public DbSet<HashedApiKey> ApiKeys { get; set; }
-        public DbSet<ModelRegistration> ModelRegistrations { get; set; }
-        public DbSet<IntegratedSystem> IntegratedSystems { get; set; }
-        public DbSet<WebhookReceiver> WebhookReceivers { get; set; }
-        public DbSet<TrackedUserSystemMap> TrackUserSystemMaps { get; set; }
-
     }
 }

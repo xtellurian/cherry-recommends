@@ -7,10 +7,9 @@ using SignalBox.Core.Recommenders;
 #nullable enable
 namespace SignalBox.Core.Workflows
 {
-    public class ParameterSetRecommenderWorkflows
+    public class ParameterSetRecommenderWorkflows : RecommenderWorkflowBase<ParameterSetRecommender>
     {
         private readonly IStorageContext storageContext;
-        private readonly IParameterSetRecommenderStore store;
         private readonly IParameterSetRecommendationStore recommendationStore;
         private readonly IModelRegistrationStore modelRegistrationStore;
         private readonly IParameterStore parameterStore;
@@ -18,11 +17,11 @@ namespace SignalBox.Core.Workflows
         public ParameterSetRecommenderWorkflows(IStorageContext storageContext,
                                                 IParameterSetRecommenderStore store,
                                                 IParameterSetRecommendationStore recommendationStore,
+                                                IIntegratedSystemStore systemStore,
                                                 IModelRegistrationStore modelRegistrationStore,
-                                                IParameterStore parameterStore)
+                                                IParameterStore parameterStore) : base(store, systemStore)
         {
             this.storageContext = storageContext;
-            this.store = store;
             this.recommendationStore = recommendationStore;
             this.modelRegistrationStore = modelRegistrationStore;
             this.parameterStore = parameterStore;

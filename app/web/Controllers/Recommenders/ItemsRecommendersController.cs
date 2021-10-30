@@ -9,8 +9,8 @@ using SignalBox.Core;
 using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommenders;
 using SignalBox.Core.Workflows;
+using SignalBox.Infrastructure.Dto;
 using SignalBox.Web.Dto;
-using SignalBox.Web.Dto.RecommenderInputs;
 
 namespace SignalBox.Web.Controllers
 {
@@ -27,7 +27,7 @@ namespace SignalBox.Web.Controllers
         public ItemsRecommendersController(ILogger<ItemsRecommendersController> logger,
                                                  IItemsRecommenderStore store,
                                                  ItemsRecommenderInvokationWorkflows invokationWorkflows,
-                                                 ItemsRecommenderWorkflows workflows) : base(store, invokationWorkflows)
+                                                 ItemsRecommenderWorkflows workflows) : base(store, workflows, invokationWorkflows)
         {
             this.logger = logger;
             this.invokationWorkflows = invokationWorkflows;

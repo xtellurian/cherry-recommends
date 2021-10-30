@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SignalBox.Core;
+using SignalBox.Core.Recommendations.Destinations;
 using SignalBox.Core.Recommenders;
 using SignalBox.Core.Workflows;
 using SignalBox.Web.Dto;
@@ -16,13 +17,17 @@ namespace SignalBox.Web.Controllers
     [Produces("application/json")]
     public abstract class RecommenderControllerBase<T> : CommonEntityControllerBase<T> where T : RecommenderEntityBase
     {
-        private readonly RecommenderInvokationWorkflowBase<T> workflows;
+        private readonly RecommenderInvokationWorkflowBase<T> invokationWorkflows;
         private readonly IRecommenderStore<T> recommenderStore;
+        private readonly RecommenderWorkflowBase<T> workflows;
 
-        protected RecommenderControllerBase(IRecommenderStore<T> store, RecommenderInvokationWorkflowBase<T> workflows) : base(store)
+        protected RecommenderControllerBase(IRecommenderStore<T> store,
+                                            RecommenderWorkflowBase<T> workflows,
+                                            RecommenderInvokationWorkflowBase<T> invokationWorkflows) : base(store)
         {
-            this.workflows = workflows;
+            this.invokationWorkflows = invokationWorkflows;
             this.recommenderStore = store;
+            this.workflows = workflows;
         }
 
         protected virtual void ValidateInvokationDto(IModelInput dto)
@@ -37,7 +42,7 @@ namespace SignalBox.Web.Controllers
         public async Task<Paginated<InvokationLogEntry>> GetInvokationLogs(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
         {
             var recommender = await base.GetEntity(id, useInternalId);
-            return await workflows.QueryInvokationLogs(recommender, p.Page);
+            return await invokationWorkflows.QueryInvokationLogs(recommender, p.Page);
         }
 
         [HttpGet("{id}/TargetVariableValues")]
@@ -125,6 +130,30 @@ namespace SignalBox.Web.Controllers
             recommender.TargetVariableValues.Add(value);
             await store.Context.SaveChanges();
             return value;
+        }
+
+        [HttpGet("{id}/Destinations")]
+        public async Task<IEnumerable<RecommendationDestinationBase>> GetDestinations(string id)
+        {
+            var recommender = await base.GetResource(id);
+            await store.LoadMany(recommender, _ => _.RecommendationDestinations);
+            return recommender.RecommendationDestinations;
+        }
+
+        [HttpPost("{id}/Destinations/")]
+        public async Task<RecommendationDestinationBase> AddDestination(string id, CreateDestinationDto dto)
+        {
+            var recommender = await base.GetResource(id);
+            var d = await workflows.AddDestination(recommender, dto.IntegratedSystemId, dto.DestinationType, dto.Endpoint);
+            return d;
+        }
+
+        [HttpDelete("{id}/Destinations/{destinationId}")]
+        public async Task<RecommenderEntityBase> RemoveDestination(string id, long destinationId)
+        {
+            var recommender = await base.GetResource(id);
+            var d = await workflows.RemoveDestination(recommender, destinationId);
+            return d;
         }
     }
 

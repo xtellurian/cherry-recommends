@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using SignalBox.Core.Recommendations;
+using SignalBox.Core.Recommendations.Destinations;
 
 namespace SignalBox.Core.Recommenders
 {
@@ -35,5 +36,8 @@ namespace SignalBox.Core.Recommenders
         public ICollection<InvokationLogEntry> RecommenderInvokationLogs { get; set; } = null!;
         [JsonIgnore]
         public ICollection<RecommendationCorrelator> RecommendationCorrelators { get; set; } = null!;
+
+        [JsonIgnore]
+        public ICollection<RecommendationDestinationBase> RecommendationDestinations { get; set; } = null!;
     }
 }

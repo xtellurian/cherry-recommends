@@ -28,10 +28,11 @@ namespace SignalBox.Core.Workflows
                                     ITrackedUserTouchpointStore trackedUserTouchpointStore,
                                     IHistoricTrackedUserFeatureStore historicFeatureStore,
                                     IRecommendableItemStore itemStore,
+                                    IWebhookSenderClient webhookSenderClient,
                                     IRecommendationCorrelatorStore correlatorStore,
                                     IItemsRecommenderStore itemsRecommenderStore,
                                     IItemsRecommendationStore itemsRecommendationStore)
-                                     : base(storageContext, itemsRecommenderStore, historicFeatureStore, dateTimeProvider)
+                                     : base(storageContext, itemsRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider)
         {
             this.logger = logger;
             this.storageContext = storageContext;
@@ -217,14 +218,17 @@ namespace SignalBox.Core.Workflows
                                                                         IModelInput input,
                                                                         ItemsRecommenderModelOutputV1 output)
         {
-            // now save the result
-
+            // produce the recommendation entity
             var recommendation = new ItemsRecommendation(recommender, context.TrackedUser, context.Correlator, output.ScoredItems);
             output.CorrelatorId = context.Correlator?.Id;
             recommendation.SetInput(input);
             recommendation.SetOutput(output);
-
             recommendation = await itemsRecommendationStore.Create(recommendation);
+            context.LogMessage("Created a recommendation entity");
+
+            // send to any destinations
+            await base.SendToDestinations(recommender, context, recommendation);
+
             await base.EndTrackInvokation(context,
                                           true,
                                           message: $"Invoked successfully for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId}",

@@ -4,13 +4,13 @@ import { useAccessToken } from "../../../api-hooks/token";
 import { createIntegratedSystemAsync } from "../../../api/integratedSystemsApi";
 import { BackButton } from "../../molecules/BackButton";
 import { Title } from "../../molecules/PageHeadings";
-import { DropdownComponent, DropdownItem } from "../../molecules/Dropdown";
 import { ErrorCard } from "../../molecules/ErrorCard";
 import { AsyncButton } from "../../molecules/AsyncButton";
 import { NoteBox } from "../../molecules/NoteBox";
 import { TextInput, InputGroup } from "../../molecules/TextInput";
+import { IntegrationIcon } from "./icons/IntegrationIcons";
 
-const systemTypes = ["Hubspot", "Segment"];
+const systemTypes = ["Hubspot", "Segment", "Custom"];
 
 export const CreateIntegration = () => {
   const history = useHistory();
@@ -44,14 +44,14 @@ export const CreateIntegration = () => {
       {error && <ErrorCard error={error} />}
       <NoteBox className="m-3" label="What is an integration?">
         Integrations allow you to automatically pull data or push
-        recommendations into various external systems. Select either Segment or
-        Hubspot below, and give your integration a name, for example:
+        recommendations into various external systems. Select either Segment,
+        Hubspot, or Custom below. Give your integration a name, for example:
         'Production Segment Connection'
       </NoteBox>
 
-      <DropdownComponent title={integratedSystem.systemType || "Choose a System Type"} className="w-100">
-        {systemTypes.map((t) => (
-          <DropdownItem key={t} className="text-center w-100">
+      {!integratedSystem.systemType && (
+        <div className="m-5">
+          {systemTypes.map((t) => (
             <div
               onClick={() =>
                 setIntegratedSystem({
@@ -59,15 +59,35 @@ export const CreateIntegration = () => {
                   systemType: t,
                 })
               }
+              key={t}
+              className="p-3 mb-3 shadow bg-body rounded"
+              style={{ cursor: "pointer" }}
             >
-              {t}
+              <div className="row justify-content-center">
+                <div className="col-3 text-center">
+                  <h5>{t}</h5>
+                </div>
+                <div className="col-2">
+                  <div style={{ maxWidth: "50px" }}>
+                    <IntegrationIcon systemType={t} />
+                  </div>
+                </div>
+              </div>
             </div>
-          </DropdownItem>
-        ))}
-      </DropdownComponent>
+          ))}
+        </div>
+      )}
 
       {integratedSystem.systemType && (
         <React.Fragment>
+          <div className="row justify-content-center align-items-center">
+            <div className="col-3 text-capitalize">
+              <h3>{integratedSystem.systemType}</h3>
+            </div>
+            <div className="col-2">
+              <IntegrationIcon systemType={integratedSystem.systemType} />
+            </div>
+          </div>
           <InputGroup className="mt-2 mb-2">
             <TextInput
               placeholder="System Name"
@@ -84,7 +104,9 @@ export const CreateIntegration = () => {
 
           <AsyncButton
             loading={creating}
-            disabled={!integratedSystem.name || integratedSystem.name.length < 3}
+            disabled={
+              !integratedSystem.name || integratedSystem.name.length < 3
+            }
             className="btn btn-primary btn-block mt-3"
             onClick={handleCreate}
           >

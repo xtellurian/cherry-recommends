@@ -21,6 +21,13 @@
             "database": "signalbox",
             "username": "SA",
             "password": "YourStrong@Passw0rd"
+        },
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "signalbox",
+            "group": "local",
+            "database": "${workspaceFolder:app}/web/databases/signalbox.db"
         }
     ],
     "sqltools.useNodeRuntime": true,

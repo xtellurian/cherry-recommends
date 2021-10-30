@@ -582,22 +582,24 @@
     fetchTrackedUserFeatureValuesAsync: fetchTrackedUserFeatureValuesAsync
   });
 
+  const fetchIntegratedSystemsAsync = async ({ token, page }) => {
+    const url = getUrl("api/integratedSystems");
+    const response = await fetch(`${url}?${pageQuery(page)}`, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
   const fetchIntegratedSystems = async ({
     success,
     error,
     token,
     page,
   }) => {
-    const url = getUrl("api/integratedSystems");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
+    fetchIntegratedSystemsAsync({ token, page }).then(success).error(error);
   };
 
   const fetchIntegratedSystemAsync = async ({ token, id }) => {
@@ -634,6 +636,19 @@
       headers: headers(token),
       method: "post",
       body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const deleteIntegratedSystemAsync = async ({ token, id }) => {
+    const url = getUrl(`api/integratedSystems/${id}`);
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "delete",
     });
     if (response.ok) {
       return await response.json();
@@ -682,11 +697,13 @@
 
   var integratedSystemsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
+    fetchIntegratedSystemsAsync: fetchIntegratedSystemsAsync,
     fetchIntegratedSystems: fetchIntegratedSystems,
     fetchIntegratedSystemAsync: fetchIntegratedSystemAsync,
     fetchIntegratedSystem: fetchIntegratedSystem,
     renameAsync: renameAsync,
     createIntegratedSystemAsync: createIntegratedSystemAsync,
+    deleteIntegratedSystemAsync: deleteIntegratedSystemAsync,
     fetchWebhookReceivers: fetchWebhookReceivers,
     createIntegratedSystem: createIntegratedSystem,
     createWebhookReceiver: createWebhookReceiver
@@ -1667,6 +1684,45 @@
     fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$1
   });
 
+  const fetchDestinationsAsync$1 = async ({
+    recommenderApiName,
+    token,
+    id,
+  }) => {
+    const url = getUrl(
+      `api/recommenders/${recommenderApiName}/${id}/Destinations`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
+  const createDestinationAsync$1 = async ({
+    recommenderApiName,
+    token,
+    id,
+    destination,
+  }) => {
+    const url = getUrl(
+      `api/recommenders/${recommenderApiName}/${id}/Destinations`
+    );
+    const response = await fetch(url, {
+      headers: headers(token),
+      method: "post",
+      body: JSON.stringify(destination),
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.json();
+    }
+  };
+
   const fetchItemsRecommendersAsync = async ({ token, page }) => {
     const url = getUrl("api/recommenders/ItemsRecommenders");
     const response = await fetch(`${url}?${pageQuery(page)}`, {
@@ -1911,6 +1967,23 @@
     });
   };
 
+  const fetchDestinationsAsync = async ({ id, token }) => {
+    return await fetchDestinationsAsync$1({
+      recommenderApiName: "ItemsRecommenders",
+      id,
+      token,
+    });
+  };
+
+  const createDestinationAsync = async ({ id, token, destination }) => {
+    return await createDestinationAsync$1({
+      recommenderApiName: "ItemsRecommenders",
+      id,
+      token,
+      destination,
+    });
+  };
+
   var itemsRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchItemsRecommendersAsync: fetchItemsRecommendersAsync,
@@ -1932,7 +2005,9 @@
     updateErrorHandlingAsync: updateErrorHandlingAsync,
     setSettingsAsync: setSettingsAsync,
     fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync,
-    setArgumentsAsync: setArgumentsAsync
+    setArgumentsAsync: setArgumentsAsync,
+    fetchDestinationsAsync: fetchDestinationsAsync,
+    createDestinationAsync: createDestinationAsync
   });
 
   const defaultHeaders$4 = { "Content-Type": "application/json" };

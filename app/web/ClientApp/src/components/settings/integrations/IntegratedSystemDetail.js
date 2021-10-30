@@ -1,22 +1,38 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { Check } from "react-bootstrap-icons";
-import { renameAsync } from "../../../api/integratedSystemsApi";
+import {
+  renameAsync,
+  deleteIntegratedSystemAsync,
+} from "../../../api/integratedSystemsApi";
 import { Top } from "./Top";
 import { WebhookPanel } from "./WebhookPanel";
 import { useIntegratedSystem } from "../../../api-hooks/integratedSystemsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { Spinner, ErrorCard, Subtitle } from "../../molecules";
 import { RenameEntityPopup } from "../../molecules/popups/RenameEntityPopup";
+import { ConfirmDeletePopup } from "../../molecules/popups/ConfirmDeletePopup";
 import { HubspotOverview } from "./hubspot/HubspotOverview";
+import { IntegrationIcon } from "./icons/IntegrationIcons";
 
 export const IntegratedSystemDetail = () => {
   const token = useAccessToken();
+  const history = useHistory();
   let { id } = useParams();
   const [trigger, setReloadTrigger] = React.useState({});
   const integratedSystem = useIntegratedSystem({ id, trigger });
 
   const [renameOpen, setRenameOpen] = React.useState(false);
+
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [deleteError, setDeleteError] = React.useState();
+
+  const handleDelete = () => {
+    deleteIntegratedSystemAsync({ id, token })
+      .then(setDeleteOpen(false))
+      .then(() => history.push("/settings/integrations"))
+      .catch(setDeleteError);
+  };
 
   return (
     <React.Fragment>
@@ -32,32 +48,55 @@ export const IntegratedSystemDetail = () => {
         </div>
       )}
       {integratedSystem.name && (
-        <RenameEntityPopup
-          onRename={(name) =>
-            renameAsync({ token, id: integratedSystem.id, name })
-              .then(setReloadTrigger)
-              .catch(() => alert("Rename error"))
-          }
-          isOpen={renameOpen}
-          setIsOpen={setRenameOpen}
-          entity={integratedSystem}
-          label="Rename Integrated System"
-        />
+        <React.Fragment>
+          <RenameEntityPopup
+            onRename={(name) =>
+              renameAsync({ token, id: integratedSystem.id, name })
+                .then(setReloadTrigger)
+                .catch(() => alert("Rename error"))
+            }
+            isOpen={renameOpen}
+            setIsOpen={setRenameOpen}
+            entity={integratedSystem}
+            label="Rename Integrated System"
+          />
+          <ConfirmDeletePopup
+            handleDelete={handleDelete}
+            error={deleteError}
+            open={deleteOpen}
+            setOpen={setDeleteOpen}
+            entity={integratedSystem}
+            label="Delete Integrated System"
+          />
+        </React.Fragment>
       )}
       {!integratedSystem.loading && !integratedSystem.error && (
-        <div className="col-4">
-          <Subtitle>Information</Subtitle>
-          <div>
-            Name: {integratedSystem.name}{" "}
-            <button
-              className="btn btn-link btn-sm"
-              onClick={() => setRenameOpen(true)}
-            >
-              (rename)
-            </button>
+        <div className="row justify-content-center">
+          <div className="col-4">
+            <Subtitle>Information</Subtitle>
+            <div>
+              Name: {integratedSystem.name}{" "}
+              <button
+                className="btn btn-link btn-sm"
+                onClick={() => setRenameOpen(true)}
+              >
+                (rename)
+              </button>
+            </div>
+            <div>Type: {integratedSystem.systemType}</div>
+            <div>Status: {integratedSystem.integrationStatus}</div>
+            <div className="m-2">
+              <button
+                className="btn btn-danger"
+                onClick={() => setDeleteOpen(true)}
+              >
+                Delete
+              </button>
+            </div>
           </div>
-          <div>Type: {integratedSystem.systemType}</div>
-          <div>Status: {integratedSystem.integrationStatus}</div>
+          <div className="col-2">
+            <IntegrationIcon integration={integratedSystem} />
+          </div>
         </div>
       )}
 

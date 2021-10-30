@@ -2,22 +2,24 @@ import { pageQuery } from "./paging";
 import { getUrl } from "../baseUrl";
 import { headers } from "./headers";
 
+export const fetchIntegratedSystemsAsync = async ({ token, page }) => {
+  const url = getUrl("api/integratedSystems");
+  const response = await fetch(`${url}?${pageQuery(page)}`, {
+    headers: headers(token),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
 export const fetchIntegratedSystems = async ({
   success,
   error,
   token,
   page,
 }) => {
-  const url = getUrl("api/integratedSystems");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: headers(token),
-  });
-  if (response.ok) {
-    const results = await response.json();
-    success(results);
-  } else {
-    error(await response.json());
-  }
+  fetchIntegratedSystemsAsync({ token, page }).then(success).error(error);
 };
 
 export const fetchIntegratedSystemAsync = async ({ token, id }) => {
@@ -54,6 +56,19 @@ export const createIntegratedSystemAsync = async ({ token, payload }) => {
     headers: headers(token),
     method: "post",
     body: JSON.stringify(payload),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};
+
+export const deleteIntegratedSystemAsync = async ({ token, id }) => {
+  const url = getUrl(`api/integratedSystems/${id}`);
+  const response = await fetch(url, {
+    headers: headers(token),
+    method: "delete",
   });
   if (response.ok) {
     return await response.json();

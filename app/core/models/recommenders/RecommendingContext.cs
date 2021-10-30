@@ -16,6 +16,10 @@ namespace SignalBox.Core.Recommenders
             InvokationLog = invokationLogEntry;
         }
 
+        public void LogMessage(string message)
+        {
+            this.InvokationLog?.LogMessage(message);
+        }
 
         public TrackedUser? TrackedUser { get; set; }
         public RecommendationCorrelator? Correlator { get; set; }

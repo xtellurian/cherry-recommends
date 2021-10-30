@@ -313,6 +313,12 @@ namespace sqlite.SignalBox
                         .HasColumnType("INTEGER")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("IntegratedSystem");
+
                     b.Property<long?>("EnvironmentId")
                         .HasColumnType("INTEGER");
 
@@ -349,6 +355,8 @@ namespace sqlite.SignalBox
                     b.HasIndex("EnvironmentId");
 
                     b.ToTable("IntegratedSystems");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IntegratedSystem");
                 });
 
             modelBuilder.Entity("SignalBox.Core.LatestFeatureVersion", b =>
@@ -521,6 +529,49 @@ namespace sqlite.SignalBox
                     b.ToTable("RecommendableItems");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("RecommendableItem");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ConnectedSystemId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("RecommenderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Trigger")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConnectedSystemId");
+
+                    b.HasIndex("RecommenderId");
+
+                    b.ToTable("RecommendationDestinations");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("RecommendationDestinationBase");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ItemsRecommendation", b =>
@@ -1432,11 +1483,45 @@ namespace sqlite.SignalBox
                     b.ToTable("WebhookReceivers");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Integrations.Custom.CustomIntegratedSystem", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.IntegratedSystem");
+
+                    b.Property<string>("ApplicationId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ApplicationSecret")
+                        .HasColumnType("TEXT");
+
+                    b.HasDiscriminator().HasValue("CustomIntegratedSystem");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Product", b =>
                 {
                     b.HasBaseType("SignalBox.Core.RecommendableItem");
 
                     b.HasDiscriminator().HasValue("Product");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.SegmentSourceFunctionDestination", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase");
+
+                    b.Property<string>("Endpoint")
+                        .HasColumnType("TEXT");
+
+                    b.HasDiscriminator().HasValue("SegmentSourceFunctionDestination");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.WebhookDestination", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase");
+
+                    b.Property<string>("Endpoint")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("WebhookDestination_Endpoint");
+
+                    b.HasDiscriminator().HasValue("WebhookDestination");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ItemsRecommender", b =>
@@ -1624,6 +1709,25 @@ namespace sqlite.SignalBox
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase", b =>
+                {
+                    b.HasOne("SignalBox.Core.IntegratedSystem", "ConnectedSystem")
+                        .WithMany()
+                        .HasForeignKey("ConnectedSystemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", "Recommender")
+                        .WithMany("RecommendationDestinations")
+                        .HasForeignKey("RecommenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ConnectedSystem");
+
+                    b.Navigation("Recommender");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ItemsRecommendation", b =>
@@ -1947,6 +2051,8 @@ namespace sqlite.SignalBox
             modelBuilder.Entity("SignalBox.Core.Recommenders.RecommenderEntityBase", b =>
                 {
                     b.Navigation("RecommendationCorrelators");
+
+                    b.Navigation("RecommendationDestinations");
 
                     b.Navigation("RecommenderInvokationLogs");
 

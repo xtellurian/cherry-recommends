@@ -2,7 +2,7 @@ import React from "react";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
 import {
-  fetchIntegratedSystems,
+  fetchIntegratedSystemsAsync,
   fetchIntegratedSystemAsync,
   fetchWebhookReceivers,
 } from "../api/integratedSystemsApi";
@@ -17,15 +17,12 @@ export const useIntegratedSystems = () => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchIntegratedSystems({
-        success: setState,
-        error: (e) =>
-          setState({
-            error: e,
-          }),
+      fetchIntegratedSystemsAsync({
         token,
         page,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, page]);
 

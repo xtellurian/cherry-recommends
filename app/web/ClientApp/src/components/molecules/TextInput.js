@@ -37,6 +37,16 @@ export const createLengthValidator = (minLength) => (value) => {
   }
 };
 
+export const createStartsWithValidator = (substring) => (value) => {
+  if (!value || value.length === 0) {
+    return [];
+  } else if (value && value.startsWith(substring)) {
+    return [];
+  } else {
+    return [`Value must start with ${substring}`];
+  }
+};
+
 export const createRequiredByServerValidator = (serverError) => (value) => {
   if (serverError && (!value || value.length === 0)) {
     return ["Required"];

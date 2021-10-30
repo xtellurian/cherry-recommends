@@ -26,6 +26,11 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder.Property(_ => _.Arguments).IsRequired(false).HasJsonConversion();
             builder.Property(_ => _.ErrorHandling).HasJsonConversion();
             builder.Property(_ => _.Settings).HasJsonConversion();
+
+            builder
+                .HasMany(_ => _.RecommendationDestinations)
+                .WithOne(_ => _.Recommender)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

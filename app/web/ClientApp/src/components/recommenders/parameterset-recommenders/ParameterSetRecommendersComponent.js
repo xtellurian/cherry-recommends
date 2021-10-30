@@ -12,6 +12,7 @@ import { TargetVariableValues } from "./TargetVariableValues";
 import { Settings } from "./Settings";
 import { InvokationLogs } from "./InvokationLogs";
 import { MonitorParameterSetRecommender } from "./MonitorParameterSetRecommender";
+import { Destinations } from "./Destinations";
 
 export const ParameterSetRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -59,6 +60,10 @@ export const ParameterSetRecommendersComponent = () => {
         <AuthorizeRoute
           path={`${path}/monitor/:id`}
           component={MonitorParameterSetRecommender}
+        />
+        <AuthorizeRoute
+          path={`${path}/destinations/:id`}
+          component={Destinations}
         />
         <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
       </Switch>

@@ -29,7 +29,9 @@ export const InvokationLogsUtil = ({ invokations }) => {
         invokations.items.map((i) => (
           <InvokationRow key={i.id} invokation={i} />
         ))}
-      {invokations.items.length === 0 && <EmptyList>No invokations.</EmptyList>}
+      {invokations.items && invokations.items.length === 0 && (
+        <EmptyList>No invokations.</EmptyList>
+      )}
 
       <Paginator {...invokations.pagination} />
     </React.Fragment>

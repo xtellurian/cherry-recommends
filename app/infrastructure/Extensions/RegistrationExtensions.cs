@@ -6,6 +6,7 @@ using SignalBox.Infrastructure.EntityFramework;
 using SignalBox.Infrastructure.ML;
 using SignalBox.Infrastructure.Services;
 using SignalBox.Infrastructure.Shims;
+using SignalBox.Infrastructure.Webhooks;
 
 namespace SignalBox.Infrastructure
 {
@@ -19,6 +20,7 @@ namespace SignalBox.Infrastructure
             services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();
             services.AddScoped<IHubspotService, HubspotService>();
             services.AddScoped<IAuth0Service, Auth0Manager>();
+            services.AddScoped<IWebhookSenderClient, WebhookSenderClient>();
             services.AddScoped<IRecommendationCache<ItemsRecommender, ItemsRecommendation>, SimpleItemsRecommendationCache>();
             services.AddScoped<IRecommendationCache<ParameterSetRecommender, ParameterSetRecommendation>, SimpleParameterSetRecommendationCache>();
             services.AddHttpClient();

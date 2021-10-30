@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using SignalBox.Core;
 
 namespace SignalBox.Web.Dto
 {

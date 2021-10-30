@@ -1,5 +1,4 @@
 
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -9,8 +8,8 @@ using SignalBox.Core;
 using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommenders;
 using SignalBox.Core.Workflows;
+using SignalBox.Infrastructure.Dto;
 using SignalBox.Web.Dto;
-using SignalBox.Web.Dto.RecommenderInputs;
 
 namespace SignalBox.Web.Controllers
 {
@@ -27,7 +26,7 @@ namespace SignalBox.Web.Controllers
         public ParameterSetRecommendersController(ILogger<ParameterSetRecommendersController> logger,
                                                  IParameterSetRecommenderStore store,
                                                  ParameterSetRecommenderInvokationWorkflows invokationWorkflows,
-                                                 ParameterSetRecommenderWorkflows workflows) : base(store, invokationWorkflows)
+                                                 ParameterSetRecommenderWorkflows workflows) : base(store, workflows, invokationWorkflows)
         {
             this.logger = logger;
             this.invokationWorkflows = invokationWorkflows;

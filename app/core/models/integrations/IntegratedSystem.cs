@@ -6,9 +6,9 @@ using SignalBox.Core.OAuth;
 
 namespace SignalBox.Core
 {
-    public class IntegratedSystem : CommonEntity
+    public class IntegratedSystem : CommonEntity, IHierarchyBase
     {
-        public IntegratedSystem()
+        protected IntegratedSystem()
         { }
         public IntegratedSystem(string commonId, string name, IntegratedSystemTypes systemType) : base(commonId, name)
         {
@@ -46,5 +46,6 @@ namespace SignalBox.Core
         public DateTimeOffset? CacheLastRefreshed { get; set; }
         [JsonIgnore]
         public string Cache { get; set; }
+        public string Discriminator { get; set; }
     }
 }

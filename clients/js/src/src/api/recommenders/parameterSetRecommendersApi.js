@@ -10,6 +10,9 @@ import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
 import * as ar from "./common/args";
 import * as st from "./common/settings";
+import * as ds from "./common/destinations";
+
+const recommenderApiName = "ParameterSetRecommenders";
 
 export const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
   const url = getUrl("api/recommenders/ParameterSetRecommenders");
@@ -131,7 +134,7 @@ export const createLinkRegisteredModelAsync = async ({
   modelId,
 }) => {
   return await link.createLinkedRegisteredModelAsync({
-    recommenderApiName: "ParameterSetRecommenders",
+    recommenderApiName,
     id,
     modelId,
     token,
@@ -140,7 +143,7 @@ export const createLinkRegisteredModelAsync = async ({
 
 export const fetchLinkedRegisteredModelAsync = async ({ token, id }) => {
   return await link.fetchLinkedRegisteredModelAsync({
-    recommenderApiName: "ParameterSetRecommenders",
+    recommenderApiName,
     id,
     token,
   });
@@ -181,7 +184,7 @@ export const invokeParameterSetRecommender = ({
 
 export const fetchInvokationLogsAsync = async ({ id, token, page }) => {
   return await il.fetchRecommenderInvokationLogsAsync({
-    recommenderApiName: "ParameterSetRecommenders",
+    recommenderApiName,
     id,
     token,
     page,
@@ -190,7 +193,7 @@ export const fetchInvokationLogsAsync = async ({ id, token, page }) => {
 
 export const fetchTargetVariablesAsync = async ({ id, token, name }) => {
   return await tv.fetchRecommenderTargetVariableValuesAsync({
-    recommenderApiName: "ParameterSetRecommenders",
+    recommenderApiName,
     id,
     token,
     name,
@@ -216,7 +219,7 @@ export const updateErrorHandlingAsync = async ({
   errorHandling,
 }) => {
   return await eh.updateErrorHandlingAsync({
-    recommenderApiName: "ParameterSetRecommenders",
+    recommenderApiName,
     id,
     token,
     errorHandling,
@@ -225,7 +228,7 @@ export const updateErrorHandlingAsync = async ({
 
 export const setSettingsAsync = async ({ id, token, settings }) => {
   return await st.setSettingsAsync({
-    recommenderApiName: "ParameterSetRecommenders",
+    recommenderApiName,
     id,
     token,
     settings,
@@ -239,7 +242,7 @@ export const fetchRecommenderTrackedUserActionsAsync = async ({
   revenueOnly,
 }) => {
   return await actions.fetchRecommenderTrackedUserActionsAsync({
-    recommenderApiName: "ParameterSetRecommenders",
+    recommenderApiName,
     id,
     token,
     page,
@@ -249,9 +252,35 @@ export const fetchRecommenderTrackedUserActionsAsync = async ({
 
 export const setArgumentsAsync = async ({ id, token, args }) => {
   return await ar.setArgumentsAsync({
-    recommenderApiName: "ParameterSetRecommenders",
+    recommenderApiName,
     id,
     token,
     args,
+  });
+};
+
+export const fetchDestinationsAsync = async ({ id, token }) => {
+  return await ds.fetchDestinationsAsync({
+    recommenderApiName,
+    id,
+    token,
+  });
+};
+
+export const createDestinationAsync = async ({ id, token, destination }) => {
+  return await ds.createDestinationAsync({
+    recommenderApiName,
+    id,
+    token,
+    destination,
+  });
+};
+
+export const removeDestinationAsync = async ({ id, token, destinationId }) => {
+  return await ds.removeDestinationAsync({
+    recommenderApiName,
+    id,
+    token,
+    destinationId,
   });
 };

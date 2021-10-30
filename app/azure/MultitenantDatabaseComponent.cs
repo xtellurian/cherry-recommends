@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using Pulumi;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Sql;
@@ -61,14 +62,22 @@ namespace SignalBox.Azure
                 ElasticPoolId = elasticPool.Id,
             });
 
-            var fisherStRule = new Pulumi.AzureNative.Sql.FirewallRule("mtFisher",
-                new Pulumi.AzureNative.Sql.FirewallRuleArgs
-                {
-                    ResourceGroupName = rg.Name,
-                    ServerName = sqlServer.Name,
-                    StartIpAddress = IpAddresses.FisherSt,
-                    EndIpAddress = IpAddresses.FisherSt,
-                });
+            var rules = new List<Pulumi.AzureNative.Sql.FirewallRule>();
+            foreach (var ipAddress in IpAddresses.SqlServerWhitelist)
+            {
+                rules.Add(new Pulumi.AzureNative.Sql.FirewallRule(ipAddress.Key,
+                    new Pulumi.AzureNative.Sql.FirewallRuleArgs
+                    {
+                        ResourceGroupName = rg.Name,
+                        ServerName = sqlServer.Name,
+                        StartIpAddress = ipAddress.Value,
+                        EndIpAddress = ipAddress.Value,
+                    }, new CustomResourceOptions
+                    {
+                        DeleteBeforeReplace = true
+                    })
+                );
+            }
 
             var azureServicesRule = new Pulumi.AzureNative.Sql.FirewallRule("mtAzureServices", new FirewallRuleArgs
             {

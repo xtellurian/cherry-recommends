@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SignalBox.Core.Recommendations;
+using SignalBox.Core.Recommendations.Destinations;
 using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core.Workflows
@@ -11,16 +12,19 @@ namespace SignalBox.Core.Workflows
         private readonly IStorageContext storageContext;
         private readonly IRecommenderStore<T> store;
         private readonly IHistoricTrackedUserFeatureStore trackedUserFeatureStore;
+        private readonly IWebhookSenderClient webhookSender;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public RecommenderInvokationWorkflowBase(IStorageContext storageContext,
                                                  IRecommenderStore<T> store,
                                                  IHistoricTrackedUserFeatureStore trackedUserFeatureStore,
+                                                 IWebhookSenderClient webhookSender,
                                                  IDateTimeProvider dateTimeProvider)
         {
             this.storageContext = storageContext;
             this.store = store;
             this.trackedUserFeatureStore = trackedUserFeatureStore;
+            this.webhookSender = webhookSender;
             this.dateTimeProvider = dateTimeProvider;
         }
 
@@ -28,6 +32,29 @@ namespace SignalBox.Core.Workflows
         public async Task<Paginated<InvokationLogEntry>> QueryInvokationLogs(RecommenderEntityBase recommender, int page)
         {
             return await store.QueryInvokationLogs(recommender.Id, page);
+        }
+
+        protected async Task SendToDestinations(T recommender, RecommendingContext context, RecommendationEntity recommendation)
+        {
+            await store.LoadMany(recommender, _ => _.RecommendationDestinations);
+            context.LogMessage($"Discovered {recommender.RecommendationDestinations.Count} destinations");
+            foreach (var d in recommender.RecommendationDestinations)
+            {
+                if (d is WebhookDestination webhookDestination)
+                {
+                    await webhookSender.Send(webhookDestination, recommendation);
+                    context.LogMessage($"Send to Webhook endpoint: {webhookDestination.Endpoint}");
+                }
+                else if (d is SegmentSourceFunctionDestination segDestination)
+                {
+                    await webhookSender.Send(segDestination, recommendation);
+                    context.LogMessage($"Send to Segment endpoint: {segDestination.Endpoint}");
+                }
+                else
+                {
+                    context.LogMessage($"Warning: Cannot handle destination Type {d.DestinationType}");
+                }
+            }
         }
 
         protected async Task<InvokationLogEntry> StartTrackInvokation(T recommender, IModelInput input, bool? saveOnComplete = true)

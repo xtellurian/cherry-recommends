@@ -315,6 +315,12 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("IntegratedSystem");
+
                     b.Property<long?>("EnvironmentId")
                         .HasColumnType("bigint");
 
@@ -351,6 +357,8 @@ namespace sqlserver.SignalBox
                     b.HasIndex("EnvironmentId");
 
                     b.ToTable("IntegratedSystems");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IntegratedSystem");
                 });
 
             modelBuilder.Entity("SignalBox.Core.LatestFeatureVersion", b =>
@@ -523,6 +531,49 @@ namespace sqlserver.SignalBox
                     b.ToTable("RecommendableItems");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("RecommendableItem");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ConnectedSystemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("RecommenderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Trigger")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConnectedSystemId");
+
+                    b.HasIndex("RecommenderId");
+
+                    b.ToTable("RecommendationDestinations");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("RecommendationDestinationBase");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ItemsRecommendation", b =>
@@ -1441,11 +1492,45 @@ namespace sqlserver.SignalBox
                     b.ToTable("WebhookReceivers");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Integrations.Custom.CustomIntegratedSystem", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.IntegratedSystem");
+
+                    b.Property<string>("ApplicationId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationSecret")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("CustomIntegratedSystem");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Product", b =>
                 {
                     b.HasBaseType("SignalBox.Core.RecommendableItem");
 
                     b.HasDiscriminator().HasValue("Product");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.SegmentSourceFunctionDestination", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase");
+
+                    b.Property<string>("Endpoint")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("SegmentSourceFunctionDestination");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.WebhookDestination", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase");
+
+                    b.Property<string>("Endpoint")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("WebhookDestination_Endpoint");
+
+                    b.HasDiscriminator().HasValue("WebhookDestination");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ItemsRecommender", b =>
@@ -1633,6 +1718,25 @@ namespace sqlserver.SignalBox
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase", b =>
+                {
+                    b.HasOne("SignalBox.Core.IntegratedSystem", "ConnectedSystem")
+                        .WithMany()
+                        .HasForeignKey("ConnectedSystemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", "Recommender")
+                        .WithMany("RecommendationDestinations")
+                        .HasForeignKey("RecommenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ConnectedSystem");
+
+                    b.Navigation("Recommender");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ItemsRecommendation", b =>
@@ -1956,6 +2060,8 @@ namespace sqlserver.SignalBox
             modelBuilder.Entity("SignalBox.Core.Recommenders.RecommenderEntityBase", b =>
                 {
                     b.Navigation("RecommendationCorrelators");
+
+                    b.Navigation("RecommendationDestinations");
 
                     b.Navigation("RecommenderInvokationLogs");
 

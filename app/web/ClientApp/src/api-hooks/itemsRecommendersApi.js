@@ -8,6 +8,7 @@ import {
   fetchTargetVariablesAsync,
   fetchItemsAsync,
   fetchRecommenderTrackedUserActionsAsync,
+  fetchDestinationsAsync,
   getDefaultItemAsync,
 } from "../api/itemsRecommendersApi";
 import { useAccessToken } from "./token";
@@ -95,7 +96,7 @@ export const useInvokationLogs = ({ id }) => {
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchInvokationLogsAsync({
         token,
         id,
@@ -180,6 +181,24 @@ export const useRecommenderTrackedUserActions = ({ id, page, revenueOnly }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, page]);
+
+  return state;
+};
+
+export const useDestinations = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchDestinationsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
 
   return state;
 };

@@ -18,19 +18,16 @@ export const ActionsButtonUtil = ({
         {/* <OptionLink to={`${basePath}/recommendations/${id}`}>
           Latest Recommendations
         </OptionLink> */}
-        <OptionLink to={`${basePath}/monitor/${id}`}>
-          Monitor
-        </OptionLink>
-        <OptionLink to={`${basePath}/test/${id}`}>
-          Test
-        </OptionLink>
+        <OptionLink to={`${basePath}/monitor/${id}`}>Monitor</OptionLink>
+        <OptionLink to={`${basePath}/test/${id}`}>Test</OptionLink>
         <OptionLink to={`${basePath}/settings/${id}`}>Settings</OptionLink>
+        <OptionLink to={`${basePath}/destinations/${id}`}>
+          Destinations
+        </OptionLink>
         {/* <OptionLink to={`${basePath}/target-variable/${id}`}>
           Target Variable
         </OptionLink> */}
-        <OptionLink to={`${basePath}/integrate/${id}`}>
-          Integrate
-        </OptionLink>
+        <OptionLink to={`${basePath}/integrate/${id}`}>Integrate</OptionLink>
         {/* <OptionLink to={`${basePath}/invokation-logs/${id}`}>
           Invokation Logs
         </OptionLink> */}

@@ -1,0 +1,43 @@
+---
+sidebar_position: 10
+title: Webhooks
+---
+
+# Webhook Destinations
+
+Webhooks are the primary method for delivering recommendations to connected integrated systems.
+
+:::warning Feature Limitation
+
+- At this stage, webhook destinations are only available on `Custom Integrated Systems`.
+
+:::
+
+## Creating a Webhook Destination
+
+In the recommender options menu, click on `Destinations`.
+
+![Screenshot of where to find the destinations button](/img/screenshots/destinations/DestinationsMenuItem.png)
+
+Next, choose which `Custom Integrated System` you wish to associate the destination with.
+Finally, in the `Endpoint` field, enter the HTTP/HTTPS location of the webhook destination.
+This webhook will be called every time the recommender is [invoked](/docs/concepts/invokation).
+
+## Security
+
+All webhooks contain a signature validating that Four2 sent the webhook.
+The validation method is similar to Hubspot's `X-HubSpot-Signature` method.
+
+The `X-Four2-Signature` header contains an important value.
+Your should independantly calculate the signature, and compare the value to this header.
+
+To calculate the signature value:
+
+1. Append the Request Body to the `Application Secret` of the associated `Custom Integrated System.`
+1. Take the SHA256 hash of that value.
+1. Convert the hashed value to a lowercase hexadecimal string.
+
+:::warning Secret
+Do not expose your Application Secret
+:::
+

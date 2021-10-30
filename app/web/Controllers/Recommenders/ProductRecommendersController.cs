@@ -26,7 +26,7 @@ namespace SignalBox.Web.Controllers
         public ProductRecommendersController(ILogger<ProductRecommendersController> logger,
                                                  IProductRecommenderStore store,
                                                  ProductRecommenderInvokationWorkflows invokationWorkflows,
-                                                 ProductRecommenderWorkflows workflows) : base(store, invokationWorkflows)
+                                                 ProductRecommenderWorkflows workflows) : base(store, workflows, invokationWorkflows)
         {
             this.logger = logger;
             this.invokationWorkflows = invokationWorkflows;
