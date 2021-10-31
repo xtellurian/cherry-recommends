@@ -6,7 +6,7 @@ namespace SignalBox.Azure
     {
         public static Dictionary<string, string> SqlServerWhitelist = new Dictionary<string, string>
         {
-            { "mtFisher", "149.167.140.224" }
+            { "mtFisher", "120.159.97.212" }
         };
     }
 }
