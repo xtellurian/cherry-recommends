@@ -2,8 +2,8 @@ import React from "react";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
 import {
-  fetchModelRegistration,
-  fetchModelRegistrations,
+  fetchModelRegistrationAsync,
+  fetchModelRegistrationsAsync,
 } from "../api/modelRegistrationsApi";
 
 export const useModelRegistrations = (p) => {
@@ -14,12 +14,12 @@ export const useModelRegistrations = (p) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchModelRegistrations({
-        success: setState,
-        error: (error) => setState({ error }),
+      fetchModelRegistrationsAsync({
         token,
         page,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, page, trigger]);
   return result;
@@ -31,12 +31,12 @@ export const useModelRegistration = ({ id }) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token && id) {
-      fetchModelRegistration({
-        success: setState,
-        error: console.log,
+      fetchModelRegistrationAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
 

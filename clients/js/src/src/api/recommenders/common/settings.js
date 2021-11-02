@@ -1,5 +1,4 @@
-import { getUrl } from "../../../baseUrl";
-import { headers } from "../../headers";
+import { executeFetch } from "../../client/apiClient";
 
 export const setSettingsAsync = async ({
   recommenderApiName,
@@ -7,27 +6,17 @@ export const setSettingsAsync = async ({
   id,
   settings,
 }) => {
-  const url = getUrl(`api/recommenders/${recommenderApiName}/${id}/Settings`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/${recommenderApiName}/${id}/Settings`,
+    token,
     method: "post",
-    body: JSON.stringify(settings),
+    body: settings,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const getSettingsAsync = async ({ recommenderApiName, token, id }) => {
-  const url = getUrl(`api/recommenders/${recommenderApiName}/${id}/Settings`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    token,
+    path: `api/recommenders/${recommenderApiName}/${id}/Settings`,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

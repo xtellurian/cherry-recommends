@@ -1,22 +1,14 @@
-import { getUrl } from "../../../baseUrl";
-import { headers } from "../../headers";
+import { executeFetch } from "../../client/apiClient";
 
 export const fetchLinkedRegisteredModelAsync = async ({
   recommenderApiName,
   token,
   id,
 }) => {
-  const url = getUrl(
-    `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`,
+    token,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const createLinkedRegisteredModelAsync = async ({
@@ -25,17 +17,10 @@ export const createLinkedRegisteredModelAsync = async ({
   id,
   modelId,
 }) => {
-  const url = getUrl(
-    `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`,
+    token,
     method: "post",
-    body: JSON.stringify({ modelId }),
+    body: { modelId },
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

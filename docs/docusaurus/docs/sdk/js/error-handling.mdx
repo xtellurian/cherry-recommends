@@ -1,0 +1,99 @@
+---
+sidebar_position: 1
+title: Error Handling
+---
+
+# Javascript Error Handling
+
+:::note Version
+
+This behaviour was introducted in signalbox.js 2.0.0
+
+:::
+
+The Javascript SDK allows developers to implement custom error handling logic.
+
+## Default Behaviour
+
+By default, the SDK exhibits the following behaviour:
+
+### Network Errors
+
+The SDK will _throw_ on network errors. i.e. the promise will reject.
+This mirrors the underlying behaviour of the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/fetch).
+
+### 400 Errors
+
+The SDK will _throw_ on 400 errors. i.e. the promise will reject.
+This means that badly formed requests will always return an error
+
+### 500 Errors
+
+The SDK will log an error to console on 500 errors. i.e. the promise will not reject.
+This means that if, for whatever reason, the server encounters an error, that error should not propagate.
+
+## Custom Behaviour
+
+### Network Errors
+
+The network error fetch handler is called if the Fetch API promise rejects.
+You can replace the default network error handling with the following code:
+
+```js
+import { errorHandling } from "signalbox.js";
+
+errorHandling.setErrorFetchHandler((error) => {
+  // add your network error handing code here
+  console.log(error);
+  return error;
+});
+```
+
+### Server responded with an error
+
+To change the error handling behaviour, you can replace the error handling function.
+The error handling function is called if `!response.ok`
+
+
+:::note Async Method
+`errorResponseHander` should be an async method.
+:::
+
+```js
+import { setErrorResponseHandler } from "signalbox.js";
+
+// this is actually the same as the default error handling function
+setErrorResponseHandler(async (response) => {
+  // response is a Response
+  const json = await response.json();
+  console.log(`Server responded: ${response.statusText}`);
+  console.log(json);
+  if (response.status >= 500) {
+    return { error: json };
+  } else if (response.status >= 400) {
+    throw json;
+  }
+});
+```
+
+```ts
+// typescript definition of Response
+interface Response {
+  readonly headers: Headers;
+  readonly ok: boolean;
+  readonly redirected: boolean;
+  readonly status: number;
+  readonly statusText: string;
+  readonly type: ResponseType;
+  readonly url: string;
+  clone(): Response;
+  // inherited from Body
+  readonly body: ReadableStream<Uint8Array> | null;
+  readonly bodyUsed: boolean;
+  arrayBuffer(): Promise<ArrayBuffer>;
+  blob(): Promise<Blob>;
+  formData(): Promise<FormData>;
+  json(): Promise<any>;
+  text(): Promise<string>;
+}
+```

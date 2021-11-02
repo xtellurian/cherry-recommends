@@ -1,5 +1,4 @@
-import { getUrl } from "../../../baseUrl";
-import { headers } from "../../headers";
+import { executeFetch } from "../../client/apiClient";
 
 export const setArgumentsAsync = async ({
   recommenderApiName,
@@ -7,15 +6,10 @@ export const setArgumentsAsync = async ({
   id,
   args,
 }) => {
-  const url = getUrl(`api/recommenders/${recommenderApiName}/${id}/Arguments`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/${recommenderApiName}/${id}/Arguments`,
+    token,
     method: "post",
-    body: JSON.stringify(args),
+    body: args,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

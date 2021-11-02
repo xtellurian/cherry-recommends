@@ -1,3 +1,3 @@
 import { models } from "signalbox.js";
 
-export const invokeGenericModel = models.invokeGenericModel;
+export const invokeGenericModelAsync = models.invokeGenericModelAsync;

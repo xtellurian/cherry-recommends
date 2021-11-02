@@ -1,14 +1,14 @@
 import { modelRegistrations } from "signalbox.js";
 
-export const fetchModelRegistrations =
-  modelRegistrations.fetchModelRegistrations;
+export const fetchModelRegistrationsAsync =
+  modelRegistrations.fetchModelRegistrationsAsync;
 
-export const fetchModelRegistration = modelRegistrations.fetchModelRegistration;
+export const fetchModelRegistrationAsync = modelRegistrations.fetchModelRegistrationAsync;
 
 export const createModelRegistrationAsync =
   modelRegistrations.createModelRegistrationAsync;
 
-export const deleteModelRegistration =
-  modelRegistrations.deleteModelRegistration;
+export const deleteModelRegistrationAsync =
+  modelRegistrations.deleteModelRegistrationAsync;
 
-export const invokeModel = modelRegistrations.invokeModel;
+export const invokeModelAsync = modelRegistrations.invokeModelAsync;

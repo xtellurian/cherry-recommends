@@ -1,44 +1,29 @@
-import { pageQuery } from "./paging";
-import { getUrl } from "../baseUrl";
-import { headers, setDefaultEnvironmentId as setEnv } from "./headers";
+import { setDefaultEnvironmentId as setEnv } from "./client/headers";
+import { executeFetch } from "./client/apiClient";
 
 export const fetchEnvironmentsAsync = async ({ token, page }) => {
-  const url = getUrl("api/Environments");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/Environments",
+    token,
+    page,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw response.json();
-  }
 };
 
 export const createEnvironmentAsync = async ({ token, environment }) => {
-  const url = getUrl("api/Environments");
-  const response = await fetch(`${url}?`, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/Environments",
+    token,
     method: "post",
-    body: JSON.stringify(environment),
+    body: environment,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw response.json();
-  }
 };
 
 export const deleteEnvironmentAsync = async ({ token, id }) => {
-  const url = getUrl(`api/Environments/${id}`);
-  const response = await fetch(`${url}?`, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/Environments/${id}`,
+    token,
     method: "delete",
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw response.json();
-  }
 };
 
 export const setDefaultEnvironmentId = setEnv;

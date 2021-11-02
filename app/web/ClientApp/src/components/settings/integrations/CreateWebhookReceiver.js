@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useIntegratedSystem } from "../../../api-hooks/integratedSystemsApi";
 import { useAccessToken } from "../../../api-hooks/token";
-import { createWebhookReceiver } from "../../../api/integratedSystemsApi";
+import { createWebhookReceiverAsync } from "../../../api/integratedSystemsApi";
 import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 import { ErrorCard } from "../../molecules/ErrorCard";
 import { Spinner } from "../../molecules/Spinner";
@@ -18,13 +18,13 @@ export const CreateWebhookReceiver = () => {
 
   const onClickCreate = () => {
     setResult({ loading: true });
-    createWebhookReceiver({
-      success: setResult,
-      error: (e) => setResult({ error: e }),
+    createWebhookReceiverAsync({
       token,
       id,
       useSharedSecret,
-    });
+    })
+      .then(setResult)
+      .catch((error) => setResult({ error }));
   };
 
   if (integratedSystem.loading) {

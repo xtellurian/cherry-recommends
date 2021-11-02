@@ -25,21 +25,22 @@ To add a new Tracked User
 ```js
 const signalbox = require("signalbox.js");
 
-signalbox.trackedUsers.createOrUpdateTrackedUser({
-  user: {
-    commonUserId: "test-user@testing1234.org",
-    name: "Jonny Goldfish",
-  },
-  success: (u) => {
+signalbox.trackedUsers
+  .createOrUpdateTrackedUserAsync({
+    token: "Your access token",
+    user: {
+      commonUserId: "test-user@testing1234.org",
+      name: "Jonny Goldfish",
+    },
+  })
+  .then((u) => {
     console.log("created a tracked user");
     console.log(u);
-  },
-  error: (e) => {
+  })
+  .catch((e) => {
     console.log("An error occurred");
     console.log(e);
-  },
-  token: "Your access token",
-});
+  });
 ```
 
 </TabItem>

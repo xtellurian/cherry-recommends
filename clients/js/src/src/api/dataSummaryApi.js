@@ -1,62 +1,30 @@
-import { getUrl } from "../baseUrl";
-import { headers } from "./headers";
+import { executeFetch } from "./client/apiClient";
 
-export const fetchEventSummary = async ({ success, error, token }) => {
-  const url = getUrl("api/datasummary/events");
-  const response = await fetch(url, {
-    headers: headers(token),
+export const fetchEventSummaryAsync = async ({ token }) => {
+  return await executeFetch({
+    path: "api/datasummary/events",
+    token,
   });
-  if (response.ok) {
-    const results = await response.json();
-    success(results);
-  } else {
-    error(await response.json());
-  }
 };
 
-export const fetchEventTimeline = async ({
-  success,
-  error,
-  token,
-  kind,
-  eventType,
-}) => {
-  const url = getUrl(`api/datasummary/events/timeline/${kind}/${eventType}`);
-
-  const response = await fetch(url, {
-    headers: headers(token),
+export const fetchEventTimelineAsync = async ({ token, kind, eventType }) => {
+  return await executeFetch({
+    path: `api/datasummary/events/timeline/${kind}/${eventType}`,
+    token,
   });
-  if (response.ok) {
-    const results = await response.json();
-    success(results);
-  } else {
-    error(await response.json());
-  }
 };
 
-export const fetchDashboard = async ({ success, error, token, scope }) => {
-  const url = getUrl(`api/datasummary/dashboard`);
-
-  const response = await fetch(`${url}?scope=${scope}`, {
-    headers: headers(token),
+export const fetchDashboardAsync = async ({ token, scope }) => {
+  return await executeFetch({
+    path: "api/datasummary/dashboard",
+    token,
+    query: { scope },
   });
-  if (response.ok) {
-    const results = await response.json();
-    success(results);
-  } else {
-    error(await response.json());
-  }
 };
 
 export const fetchLatestActionsAsync = async ({ token }) => {
-  const url = getUrl(`api/datasummary/actions`);
-
-  const response = await fetch(`${url}`, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/datasummary/actions",
+    token,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

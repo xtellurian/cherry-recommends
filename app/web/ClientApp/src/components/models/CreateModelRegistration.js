@@ -7,7 +7,6 @@ import { AzurePersonalizerModelRegistration } from "./AzurePersonalizerModelRegi
 const modelTypes = [
   { label: "Items Recommender", value: "ItemsRecommenderV1" },
   { label: "Parameter Set Recommender", value: "ParameterSetRecommenderV1" },
-  { label: "Product Recommender", value: "ProductRecommenderV1" },
   { label: "Classifier", value: "SingleClassClassifier" },
 ];
 const hostingTypes = [

@@ -14,11 +14,13 @@ export const fetchLatestRecommendationsAsync =
 export const fetchTrackedUserActionAsync =
   trackedUsers.fetchTrackedUserActionAsync;
 
-export const uploadUserData = trackedUsers.uploadUserData;
+export const uploadUserDataAsync = trackedUsers.uploadUserDataAsync;
 
-export const fetchTrackedUsersActionsAsync = trackedUsers.fetchTrackedUsersActionsAsync;
+export const fetchTrackedUsersActionsAsync =
+  trackedUsers.fetchTrackedUsersActionsAsync;
 
-export const createOrUpdateTrackedUser = trackedUsers.createOrUpdateTrackedUser;
+export const createOrUpdateTrackedUserAsync =
+  trackedUsers.createOrUpdateTrackedUserAsync;
 export const updateMergePropertiesAsync =
   trackedUsers.updateMergePropertiesAsync;
 

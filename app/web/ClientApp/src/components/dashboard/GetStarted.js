@@ -25,7 +25,7 @@ export const GetStarted = () => {
       <ExpandableCard label="Step 2: Create some Catalogue items.">
         <ul>
           <li>
-            Catalogues are offers, products, parameters, etc. that you
+            Catalogues are offers, items, parameters, etc. that you
             optionally provide your customers.
           </li>
           <li>

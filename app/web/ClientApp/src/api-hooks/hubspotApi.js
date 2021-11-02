@@ -1,15 +1,15 @@
 import React from "react";
 import { useAccessToken } from "./token";
 import {
-  fetchHubspotAccount,
+  fetchHubspotAccountAsync,
   fetchHubspotAppInformationAsync,
   fetchHubspotWebhookBehaviourAsync,
   fetchHubspotPushBehaviourAsync,
   fetchHubspotCrmCardBehaviourAsync,
-  fetchHubspotClientAllContactProperties,
+  fetchHubspotClientAllContactPropertiesAsync,
   fetchHubspotClientContactEventsAsync,
   fetchHubspotConnectedContactPropertiesAsync,
-  fetchHubspotContacts,
+  fetchHubspotContactsAsync,
 } from "../api/hubspotApi";
 
 export const useHubspotAppInformation = () => {
@@ -109,12 +109,12 @@ export const useHubspotAccount = ({ id }) => {
   React.useEffect(() => {
     if (token && id) {
       setState({ loading: true });
-      fetchHubspotAccount({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchHubspotAccountAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
   return result;
@@ -126,12 +126,12 @@ export const useHubspotClientAllContactProperties = ({ id }) => {
   React.useEffect(() => {
     if (token && id) {
       setState({ loading: true });
-      fetchHubspotClientAllContactProperties({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchHubspotClientAllContactPropertiesAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
   return result;
@@ -160,12 +160,12 @@ export const useHubspotContacts = ({ id }) => {
   React.useEffect(() => {
     if (token && id) {
       setState({ loading: true });
-      fetchHubspotContacts({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchHubspotContactsAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch(setState((error) => setState({ error })));
     }
   }, [token, id]);
   return result;

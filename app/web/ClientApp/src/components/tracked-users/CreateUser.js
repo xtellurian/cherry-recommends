@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { createOrUpdateTrackedUser } from "../../api/trackedUsersApi";
+import { createOrUpdateTrackedUserAsync } from "../../api/trackedUsersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { Subtitle, Title } from "../molecules/PageHeadings";
@@ -32,16 +32,13 @@ export const CreateUser = () => {
     if (integratedSystemReference.integratedSystemId > 0) {
       newUser.integratedSystemReference = integratedSystemReference;
     }
-    console.log(newUser);
-    createOrUpdateTrackedUser({
-      success: (u) => history.push(`/tracked-users/detail/${u.id}`),
-      error: (e) => {
-        setLoading(false);
-        setError(e);
-      },
+    createOrUpdateTrackedUserAsync({
       user: newUser,
       token,
-    });
+    })
+      .then((u) => history.push(`/tracked-users/detail/${u.id}`))
+      .catch(setError)
+      .finally(() => setLoading(false));
   };
   return (
     <React.Fragment>

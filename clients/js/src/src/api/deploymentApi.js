@@ -1,21 +1,8 @@
-import { getUrl } from "../baseUrl";
-const defaultHeaders = { "Content-Type": "application/json" };
+import { executeFetch } from "./client/apiClient";
 
-export const fetchDeploymentConfiguration = async ({
-  success,
-  error,
-  token,
-}) => {
-  const url = getUrl(`api/deployment/configuration`);
-
-  const result = await fetch(url, {
-    headers: !token
-      ? defaultHeaders
-      : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+export const fetchDeploymentConfigurationAsync = async ({ token }) => {
+  return await executeFetch({
+    path: "api/deployment/configuration",
+    token,
   });
-  if (result.ok) {
-    success(await result.json());
-  } else {
-    error(await result.json());
-  }
 };

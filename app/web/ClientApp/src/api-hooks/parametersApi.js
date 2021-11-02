@@ -1,5 +1,5 @@
 import React from "react";
-import { fetchParameters } from "../api/parametersApi";
+import { fetchParametersAsync } from "../api/parametersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
 import { useEnvironment } from "./environmentsApi";
@@ -13,12 +13,12 @@ export const useParameters = (p) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchParameters({
-        success: setState,
-        error: (error) => setState({ error }),
+      fetchParametersAsync({
         token,
         page,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, page, trigger, environment]);
 

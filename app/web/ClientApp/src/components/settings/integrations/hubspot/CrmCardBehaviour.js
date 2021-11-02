@@ -15,8 +15,8 @@ import { SettingRow } from "../../../molecules/settings/SettingRow";
 import { useAccessToken } from "../../../../api-hooks/token";
 import { useParameterSetRecommender } from "../../../../api-hooks/parameterSetRecommendersApi";
 import { AsyncSelectParameterSetRecommender } from "../../../molecules/selectors/AsyncSelectParameterSetRecommender";
-import { AsyncSelectProductRecommender } from "../../../molecules/selectors/AsyncSelectProductRecommender";
-import { useProductRecommender } from "../../../../api-hooks/productRecommendersApi";
+import { AsyncSelectItemsRecommender } from "../../../molecules/selectors/AsyncSelectItemsRecommender";
+import { useItemsRecommender } from "../../../../api-hooks/itemsRecommendersApi";
 
 const Top = ({ integratedSystem }) => {
   return (
@@ -37,7 +37,7 @@ const Top = ({ integratedSystem }) => {
 };
 
 const recommenderTypeOptions = [
-  { label: "Product Recommender", value: "PRODUCT" },
+  { label: "Item Recommender", value: "ITEMS" },
   { label: "Parameter Set Recommender", value: "PARAMETER-SET" },
   { label: "None", value: "None" },
 ];
@@ -53,8 +53,8 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
   const parameterSetRecommender = useParameterSetRecommender({
     id: behaviour.parameterSetRecommenderId,
   });
-  const productRecommender = useProductRecommender({
-    id: behaviour.productRecommenderId,
+  const itemsRecommender = useItemsRecommender({
+    id: behaviour.itemsRecommenderId,
   });
 
   const [recommenderType, setRecommenderType] = React.useState();
@@ -64,9 +64,9 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
       setRecommenderType(
         recommenderTypeOptions.find((x) => x.value === "PARAMETER-SET")
       );
-    } else if (behaviour.productRecommenderId) {
+    } else if (behaviour.itemsRecommenderId) {
       setRecommenderType(
-        recommenderTypeOptions.find((x) => x.value === "PRODUCT")
+        recommenderTypeOptions.find((x) => x.value === "ITEMS")
       );
     }
   }, [behaviour]);
@@ -149,10 +149,10 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
     }
     if (
       newRecommender &&
-      recommenderType.value === "PRODUCT" &&
-      newRecommender.id !== behaviour.productRecommenderId
+      recommenderType.value === "ITEMS" &&
+      newRecommender.id !== behaviour.itemsRecommenderId
     ) {
-      payload.productRecommenderId = newRecommender.id;
+      payload.itemsRecommenderId = newRecommender.id;
     }
     setHubspotCrmCardBehaviourAsync({
       id: integratedSystem.id,
@@ -189,12 +189,10 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
               onChange={(v) => setRecommender(v.value)}
             />
           ))}
-        {recommenderType && recommenderType.value === "PRODUCT" && (
-          <AsyncSelectProductRecommender
+        {recommenderType && recommenderType.value === "ITEMS" && (
+          <AsyncSelectItemsRecommender
             allowNone={true}
-            placeholder={
-              productRecommender.name || "Choose a product recommender"
-            }
+            placeholder={itemsRecommender.name || "Choose an items recommender"}
             onChange={(v) => setRecommender(v.value)}
           />
         )}

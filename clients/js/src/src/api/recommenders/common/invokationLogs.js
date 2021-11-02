@@ -1,24 +1,14 @@
-import { getUrl } from "../../../baseUrl";
-import { headers } from "../../headers";
-import { pageQuery } from "../../paging";
+import { executeFetch } from "../../client/apiClient";
 
 export const fetchRecommenderInvokationLogsAsync = async ({
   recommenderApiName,
   token,
   id,
-  page
+  page,
 }) => {
-  const url = getUrl(
-    `api/recommenders/${recommenderApiName}/${id}/InvokationLogs?${pageQuery(
-      page
-    )}`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/${recommenderApiName}/${id}/InvokationLogs`,
+    page,
+    token,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

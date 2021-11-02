@@ -29,30 +29,32 @@ Every recommendation comes with a `correlatorId`
 <TabItem value="js">
 
 ```js
-signalbox.events.logUserEvents({
-  success: (s) => {
+signalbox.events
+  .createEventsAsync({
+    token: "Your Access Token", // one of token or apiKey is required
+    apiKey: "Your API Key",
+    events: [
+      {
+        recommendationCorrelatorId: 104346873, // optional - when referencing a recommendation
+        commonUserId: "test-common-user-id",
+        eventId: "unique event Id", // required
+        timestamp: new Date(), // optional - defaults to current time.
+        kind: "Purchases", // required - high level categorisation of event
+        eventType: "ItemPurchased", //required - specific categorisation of event
+        properties: {
+          value: 33.6, // optional - additional information attached to the event
+        },
+      },
+    ],
+  })
+  .then((s) => {
     console.log("logged events");
     console.log(s);
-  },
-  error: (e) => {
+  })
+  .catch((e) => {
     console.log("An error occurred");
     console.log(e);
-  },
-  token,
-  events: [
-    {
-      recommendationCorrelatorId: 104346873, //
-      commonUserId: "test-common-user-id",
-      eventId: "unique event Id", // required
-      timestamp: new Date(), // optional - defaults to current time.
-      kind: "Purchases", // required - high level categorisation of event
-      eventType: "ItemPurchased", //required - specific categorisation of event
-      properties: {
-        value: 33.6,
-      },
-    },
-  ],
-});
+  });
 ```
 
 </TabItem>

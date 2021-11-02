@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { CSVReader } from "react-papaparse";
-import { uploadUserData } from "../../api/trackedUsersApi";
+import { uploadUserDataAsync } from "../../api/trackedUsersApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { ToggleSwitch } from "../molecules/ToggleSwitch";
 import { Spinner } from "../molecules/Spinner";
@@ -50,18 +50,13 @@ export const UploadTrackedUserComponent = () => {
       .filter((_) => !!_.commonUserId);
 
     // Execute the created function directly
-    uploadUserData({
+    uploadUserDataAsync({
       payload,
-      success: (data) =>
-        setProcessState({
-          complete: true,
-        }),
-      error: (error) =>
-        setProcessState({
-          error,
-        }),
+
       token,
-    });
+    })
+      .then(() => setProcessState({ complete: true }))
+      .catch((error) => setProcessState({ error }));
   };
 
   const handleSelectUserId = (value, index) => {

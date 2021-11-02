@@ -1,6 +1,4 @@
-import { getUrl } from "../../../baseUrl";
-import { headers } from "../../headers";
-import { pageQuery } from "../../paging";
+import { executeFetch } from "../../client/apiClient";
 
 export const fetchRecommenderTrackedUserActionsAsync = async ({
   recommenderApiName,
@@ -9,17 +7,12 @@ export const fetchRecommenderTrackedUserActionsAsync = async ({
   id,
   page,
 }) => {
-  let url = getUrl(
-    `api/recommenders/${recommenderApiName}/${id}/TrackedUserActions`
-  );
-
-  url = `${url}?${pageQuery(page)}&revenueOnly=${!!revenueOnly}`;
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/${recommenderApiName}/${id}/TrackedUserActions`,
+    token,
+    page,
+    query: {
+      revenueOnly,
+    },
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

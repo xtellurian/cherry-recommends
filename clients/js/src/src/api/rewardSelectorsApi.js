@@ -1,61 +1,34 @@
-import { pageQuery } from "./paging";
-import { getUrl } from "../baseUrl";
-import { headers } from "./headers";
+import { executeFetch } from "./client/apiClient";
 
 export const fetchRewardSelectorsAsync = async ({ token, page }) => {
-  const url = getUrl("api/RewardSelectors");
-  let path = `${url}?${pageQuery(page)}`;
-
-  const response = await fetch(path, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/RewardSelectors",
+    token,
+    page,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
-export const fetchRewardSelectorAsync = async ({ token, page, id }) => {
-  const url = getUrl(`api/RewardSelectors/${id}`);
-  let path = `${url}?${pageQuery(page)}`;
-
-  const response = await fetch(path, {
-    headers: headers(token),
+export const fetchRewardSelectorAsync = async ({ token, id }) => {
+  return await executeFetch({
+    path: `api/RewardSelectors/${id}`,
+    token,
+    page,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
-export const deleteRewardSelectorAsync = async ({ token, page, id }) => {
-  const url = getUrl(`api/RewardSelectors/${id}`);
-  let path = `${url}?${pageQuery(page)}`;
-
-  const response = await fetch(path, {
-    headers: headers(token),
+export const deleteRewardSelectorAsync = async ({ token, id }) => {
+  return await executeFetch({
+    path: `api/RewardSelectors/${id}`,
+    token,
     method: "delete",
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const createRewardSelectorAsync = async ({ token, entity }) => {
-  const url = getUrl("api/RewardSelectors");
-
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/RewardSelectors",
+    token,
     method: "post",
-    body: JSON.stringify(entity),
+    body: entity,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

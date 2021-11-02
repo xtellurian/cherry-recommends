@@ -7,7 +7,7 @@ import {
   Subtitle,
   Title,
 } from "../../molecules";
-import { invokeGenericModel } from "../../../api/modelsApi";
+import { invokeGenericModelAsync } from "../../../api/modelsApi";
 import { JsonView } from "../../molecules/JsonView";
 import { useAccessToken } from "../../../api-hooks/token";
 import { getSampleInput } from "./sampleModelInputs";
@@ -48,14 +48,14 @@ export const GenericModelTester = ({ model }) => {
   const handleInvoke = () => {
     setLoading(true);
     if (isInputJson) {
-      invokeGenericModel({
-        success: setModelOutput,
-        error: setError,
-        onFinally: () => setLoading(false),
+      invokeGenericModelAsync({
         token,
         id: model.id,
         input: JSON.parse(input),
-      });
+      })
+        .then(setModelOutput)
+        .catch(setError)
+        .finally(() => setLoading(false));
     } else {
       setError({ title: "Input must be JSON Serialisable" });
     }

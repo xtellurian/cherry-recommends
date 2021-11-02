@@ -1,6 +1,4 @@
-import { pageQuery } from "../paging";
-import { getUrl } from "../../baseUrl";
-import { headers } from "../headers";
+import { executeFetch } from "../client/apiClient";
 
 import * as link from "./common/linkRegisteredModels";
 
@@ -15,135 +13,83 @@ import * as ds from "./common/destinations";
 const recommenderApiName = "ItemsRecommenders";
 
 export const fetchItemsRecommendersAsync = async ({ token, page }) => {
-  const url = getUrl("api/recommenders/ItemsRecommenders");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: headers(token),
+  return await executeFetch({
+    token,
+    path: "api/recommenders/ItemsRecommenders",
+    page,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const fetchItemsRecommenderAsync = async ({ token, id }) => {
-  const url = getUrl(`api/recommenders/ItemsRecommenders/${id}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/ItemsRecommenders/${id}`,
+    token,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const fetchItemsRecommendationsAsync = async ({ token, page, id }) => {
-  const url = getUrl(
-    `api/recommenders/ItemsRecommenders/${id}/Recommendations`
-  );
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: headers(token),
+  return await executeFetch({
+    token,
+    path: `api/recommenders/ItemsRecommenders/${id}/Recommendations`,
+    page,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const deleteItemsRecommenderAsync = async ({ token, id }) => {
-  const url = getUrl(`api/recommenders/ItemsRecommenders/${id}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/ItemsRecommenders/${id}`,
+    token,
     method: "delete",
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const createItemsRecommenderAsync = async ({ token, payload }) => {
-  const url = getUrl("api/recommenders/ItemsRecommenders");
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/recommenders/ItemsRecommenders",
+    token,
     method: "post",
-    body: JSON.stringify(payload),
+    body: payload,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const fetchItemsAsync = async ({ token, id }) => {
-  const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/Items`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/ItemsRecommenders/${id}/Items`,
+    token,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const addItemAsync = async ({ token, id, item }) => {
-  const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/Items`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/ItemsRecommenders/${id}/Items`,
+    token,
     method: "post",
-    body: JSON.stringify(item),
+    body: item,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const removeItemAsync = async ({ token, id, itemId }) => {
-  const url = getUrl(
-    `api/recommenders/ItemsRecommenders/${id}/Items/${itemId}`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
-    method: "delete",
+  return await executeFetch({
+    path: `api/recommenders/ItemsRecommenders/${id}/Items/${itemId}`,
+    token,
+    method: "post",
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const setDefaultItemAsync = async ({ token, id, itemId }) => {
-  const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/DefaultItem`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/ItemsRecommenders/${id}/DefaultItem`,
+    token,
     method: "post",
-    body: JSON.stringify({ itemId }),
+    body: { itemId },
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const getDefaultItemAsync = async ({ token, id }) => {
-  const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/DefaultItem`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/ItemsRecommenders/${id}/DefaultItem`,
+    token,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const createLinkRegisteredModelAsync = async ({
@@ -168,17 +114,12 @@ export const fetchLinkedRegisteredModelAsync = async ({ token, id }) => {
 };
 
 export const invokeItemsRecommenderAsync = async ({ token, id, input }) => {
-  const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/Invoke`);
-  const result = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/ItemsRecommenders/${id}/Invoke`,
+    token,
     method: "post",
-    body: JSON.stringify(input),
+    body: input,
   });
-  if (result.ok) {
-    return await result.json();
-  } else {
-    throw await result.json();
-  }
 };
 
 export const fetchInvokationLogsAsync = async ({ id, token, page }) => {

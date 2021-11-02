@@ -4,7 +4,7 @@ import { usePagination } from "../utility/utility";
 import {
   fetchIntegratedSystemsAsync,
   fetchIntegratedSystemAsync,
-  fetchWebhookReceivers,
+  fetchWebhookReceiversAsync,
 } from "../api/integratedSystemsApi";
 
 export const useIntegratedSystems = () => {
@@ -60,16 +60,13 @@ export const useWebhookReceivers = ({ id }) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token && id) {
-      fetchWebhookReceivers({
-        success: setState,
-        error: (e) =>
-          setState({
-            error: e,
-          }),
+      fetchWebhookReceiversAsync({
         token,
         page,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id, page]);
 

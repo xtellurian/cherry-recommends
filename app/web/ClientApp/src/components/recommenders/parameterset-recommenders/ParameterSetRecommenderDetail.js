@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
 import {
-  deleteParameterSetRecommender,
+  deleteParameterSetRecommenderAsync,
   createParameterSetRecommenderAsync,
 } from "../../../api/parameterSetRecommendersApi";
 import { ActionsButtonUtil } from "../utils/actionsButtonUtil";
@@ -80,17 +80,17 @@ export const ParameterSetRecommenderDetail = () => {
             <button
               className="btn btn-danger"
               onClick={() => {
-                deleteParameterSetRecommender({
-                  success: () => {
+                deleteParameterSetRecommenderAsync({
+                  token,
+                  id: recommender.id,
+                })
+                  .then(() => {
                     setDeleteOpen(false);
                     if (onDeleted) {
                       onDeleted();
                     }
-                  },
-                  error: setDeleteError,
-                  token,
-                  id: recommender.id,
-                });
+                  })
+                  .catch(setDeleteError);
               }}
             >
               Delete

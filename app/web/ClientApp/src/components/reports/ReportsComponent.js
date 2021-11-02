@@ -3,7 +3,7 @@ import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { useAccessToken } from "../../api-hooks/token";
 import { useReports } from "../../api-hooks/reportsApi";
-import { downloadReport } from "../../api/reportsApi";
+import { downloadReportAsync } from "../../api/reportsApi";
 import { Title } from "../molecules/PageHeadings";
 import { Spinner } from "../molecules/Spinner";
 
@@ -28,12 +28,12 @@ const ReportRow = ({ reportInfo }) => {
         <button
           className="btn btn-primary float-right"
           onClick={() =>
-            downloadReport({
+            downloadReportAsync({
               token,
-              success: (blob) => saveBlob({ blob, name: reportInfo.name }),
-              error: (e) => alert(JSON.stringify(e)),
               reportName: reportInfo.name,
             })
+              .then((blob) => saveBlob({ blob, name: reportInfo.name }))
+              .catch((e) => alert(JSON.stringify(e)))
           }
         >
           Download

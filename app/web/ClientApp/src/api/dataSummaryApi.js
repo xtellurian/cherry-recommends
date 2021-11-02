@@ -1,9 +1,9 @@
 import { dataSummary } from "signalbox.js";
 
-export const fetchEventSummary = dataSummary.fetchEventSummary;
+export const fetchEventSummaryAsync = dataSummary.fetchEventSummaryAsync;
 
-export const fetchEventTimeline = dataSummary.fetchEventTimeline;
+export const fetchEventTimelineAsync = dataSummary.fetchEventTimelineAsync;
 
-export const fetchDashboard = dataSummary.fetchDashboard;
+export const fetchDashboardAsync = dataSummary.fetchDashboardAsync;
 
 export const fetchLatestActionsAsync = dataSummary.fetchLatestActionsAsync;

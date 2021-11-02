@@ -1,42 +1,26 @@
-import { pageQuery } from "./paging";
-import { getUrl } from "../baseUrl";
-import { headers } from "./headers";
+import { executeFetch } from "./client/apiClient";
 
 export const fetchFeatureGeneratorsAsync = async ({ page, token }) => {
-  const url = getUrl(`api/FeatureGenerators?${pageQuery(page)}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/FeatureGenerators",
+    token,
+    page,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const createFeatureGeneratorAsync = async ({ token, payload }) => {
-  const url = getUrl(`api/FeatureGenerators`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/FeatureGenerators",
+    token,
     method: "post",
-    body: JSON.stringify(payload),
+    body: payload,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const deleteFeatureGeneratorAsync = async ({ token, id }) => {
-  const url = getUrl(`api/FeatureGenerators/${id}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/FeatureGenerators/${id}`,
+    token,
     method: "delete",
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

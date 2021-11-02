@@ -1,19 +1,19 @@
 import { touchpoints } from "signalbox.js";
 
-export const fetchTouchpoints = touchpoints.fetchTouchpoints;
+export const fetchTouchpointsAsync = touchpoints.fetchTouchpointsAsync;
 
-export const fetchTouchpoint = touchpoints.fetchTouchpoint;
+export const fetchTouchpointAsync = touchpoints.fetchTouchpointAsync;
 
-export const createTouchpointMetadata = touchpoints.createTouchpointMetadata;
+export const createTouchpointMetadataAsync = touchpoints.createTouchpointMetadataAsync;
 
-export const fetchTrackedUserTouchpoints =
-  touchpoints.fetchTrackedUserTouchpoints;
+export const fetchTrackedUserTouchpointsAsync =
+  touchpoints.fetchTrackedUserTouchpointsAsync;
 
-export const createTrackedUserTouchpoint =
-  touchpoints.createTrackedUserTouchpoint;
+export const createTrackedUserTouchpointAsync =
+  touchpoints.createTrackedUserTouchpointAsync;
 
-export const fetchTrackedUsersInTouchpoint =
-  touchpoints.fetchTrackedUsersInTouchpoint;
+export const fetchTrackedUsersInTouchpointAsync =
+  touchpoints.fetchTrackedUsersInTouchpointAsync;
 
-export const fetchTrackedUserTouchpointValues =
-  touchpoints.fetchTrackedUserTouchpointValues;
+export const fetchTrackedUserTouchpointValuesAsync =
+  touchpoints.fetchTrackedUserTouchpointValuesAsync;

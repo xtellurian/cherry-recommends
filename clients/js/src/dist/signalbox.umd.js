@@ -4,13 +4,6 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory((global.signalbox = global.signalbox || {}, global.signalbox.js = {})));
 }(this, (function (exports) { 'use strict';
 
-  const pageQuery = (page) => `p.page=${page || 1}`;
-
-  var paging = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    pageQuery: pageQuery
-  });
-
   let storedBaseUrl = "";
 
   const setBaseUrl = (baseUrl) => {
@@ -28,10 +21,10 @@
     defaultApiKey = k;
   };
 
-  const defaultHeaders$8 = { "Content-Type": "application/json" };
+  const defaultHeaders$1 = { "Content-Type": "application/json" };
 
   const headers = (token, apiKey) => {
-    let headers = { ...defaultHeaders$8 };
+    let headers = { ...defaultHeaders$1 };
     if (token) {
       headers.Authorization = `Bearer ${token}`;
     }
@@ -46,225 +39,216 @@
     return headers;
   };
 
-  const fetchApiKeysAsync = async ({ token, page }) => {
-    const url = getUrl("api/apiKeys");
-    let path = `${url}?${pageQuery(page)}`;
-    const response = await fetch(path, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
+  // type ErrorHandler = (response: Response) => Promise<any>;
+
+  const defaultErrorResponseHandler = async (response) => {
+    const json = await response.json();
+    console.log(`Server responded: ${response.statusText}`);
+    console.log(json);
+    if (response.status >= 500) {
+      return { error: json };
+    } else if (response.status >= 400) {
+      throw json;
     }
   };
 
-  const fetchApiKeys = async ({ success, error, token, page }) => {
-    fetchApiKeysAsync({ token, page }).then(success).catch(error);
+  let errorResponseHandler = defaultErrorResponseHandler;
+
+  const setErrorResponseHandler = (errorHandler) => {
+    errorResponseHandler = errorHandler;
+  };
+
+  // this function is called in api.js functions.
+  const handleErrorResponse = async (response) => {
+    console.log("SDK is handling an error response");
+    return await errorResponseHandler(response);
+  };
+
+  // the below all function as handlers of a fetch promise rejected
+  const defaultErrorFetchHandler = (ex) => {
+    throw ex;
+  };
+
+  let errorFetchHandler = defaultErrorFetchHandler;
+
+  const handleErrorFetch = (ex) => {
+    errorFetchHandler(ex);
+  };
+
+  const setErrorFetchHandler = (handler) => {
+    errorFetchHandler = handler;
+  };
+
+  var errorHandling = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    setErrorResponseHandler: setErrorResponseHandler,
+    handleErrorResponse: handleErrorResponse,
+    handleErrorFetch: handleErrorFetch,
+    setErrorFetchHandler: setErrorFetchHandler
+  });
+
+  const info = (message) => {
+    console.log(`INFO: ${message}`);
+  };
+  const error = (error) => {
+    console.log(`ERROR: ${error}`);
+  };
+
+  var logger = {
+    info,
+    error,
+  };
+
+  const executeFetch = async ({
+    token,
+    apiKey,
+    path,
+    page,
+    body,
+    method,
+    query,
+  }) => {
+    const url = getUrl(path);
+    const q = new URLSearchParams();
+    for (const [key, value] of Object.entries(query || {})) {
+      if (key && value) {
+        q.append(key, value);
+      }
+    }
+    if (page) {
+      q.append("p.page", `${page}`);
+    }
+    if (apiKey) {
+      q.append("apiKey", `${apiKey}`);
+    }
+    const qs = q.toString();
+    const fullUrl = `${url}?${qs}`;
+    logger.info(`Executing Fetch ${fullUrl}`);
+    let response;
+    try {
+      response = await fetch(fullUrl, {
+        headers: headers(token),
+        method: method || "get",
+        body: JSON.stringify(body),
+      });
+    } catch (ex) {
+      return handleErrorFetch(ex);
+    }
+    if (response.ok) {
+      return await response.json();
+    } else {
+      logger.error("Response was not OK.");
+      return await handleErrorResponse(response);
+    }
+  };
+
+  const fetchApiKeysAsync = async ({ token, page }) => {
+    return await executeFetch({
+      path: "api/apiKeys",
+      token,
+      page,
+    });
   };
 
   const createApiKeyAsync = async ({ token, payload }) => {
-    const url = getUrl("api/apiKeys");
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/apiKeys",
+      token,
       method: "post",
-      body: JSON.stringify(payload),
+      body: payload,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-
-  const createApiKey = async ({ success, error, token, payload }) => {
-    createApiKeyAsync({ token, payload }).then(success).catch(error);
   };
 
   const exchangeApiKeyAsync = async ({ apiKey }) => {
-    const url = getUrl("api/apiKeys/exchange");
-    const response = await fetch(url, {
-      headers: headers(),
+    return await executeFetch({
+      path: "api/apiKeys/exchange",
       method: "post",
-      body: JSON.stringify({ apiKey }),
+      body: { apiKey },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-
-  const exchangeApiKey = ({ success, error, apiKey }) => {
-    exchangeApiKeyAsync({ apiKey }).then(success).catch(error);
   };
 
   const deleteApiKeyAsync = async ({ token, id }) => {
-    const url = getUrl(`api/apiKeys/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/apiKeys/${id}`,
+      token,
       method: "delete",
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   var apiKeyApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchApiKeysAsync: fetchApiKeysAsync,
-    fetchApiKeys: fetchApiKeys,
     createApiKeyAsync: createApiKeyAsync,
-    createApiKey: createApiKey,
     exchangeApiKeyAsync: exchangeApiKeyAsync,
-    exchangeApiKey: exchangeApiKey,
     deleteApiKeyAsync: deleteApiKeyAsync
   });
 
-  const fetchEventSummary = async ({ success, error, token }) => {
-    const url = getUrl("api/datasummary/events");
-    const response = await fetch(url, {
-      headers: headers(token),
+  const fetchEventSummaryAsync = async ({ token }) => {
+    return await executeFetch({
+      path: "api/datasummary/events",
+      token,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
-  const fetchEventTimeline = async ({
-    success,
-    error,
-    token,
-    kind,
-    eventType,
-  }) => {
-    const url = getUrl(`api/datasummary/events/timeline/${kind}/${eventType}`);
-
-    const response = await fetch(url, {
-      headers: headers(token),
+  const fetchEventTimelineAsync = async ({ token, kind, eventType }) => {
+    return await executeFetch({
+      path: `api/datasummary/events/timeline/${kind}/${eventType}`,
+      token,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
-  const fetchDashboard = async ({ success, error, token, scope }) => {
-    const url = getUrl(`api/datasummary/dashboard`);
-
-    const response = await fetch(`${url}?scope=${scope}`, {
-      headers: headers(token),
+  const fetchDashboardAsync = async ({ token, scope }) => {
+    return await executeFetch({
+      path: "api/datasummary/dashboard",
+      token,
+      query: { scope },
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
   const fetchLatestActionsAsync = async ({ token }) => {
-    const url = getUrl(`api/datasummary/actions`);
-
-    const response = await fetch(`${url}`, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/datasummary/actions",
+      token,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   var dataSummaryApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchEventSummary: fetchEventSummary,
-    fetchEventTimeline: fetchEventTimeline,
-    fetchDashboard: fetchDashboard,
+    fetchEventSummaryAsync: fetchEventSummaryAsync,
+    fetchEventTimelineAsync: fetchEventTimelineAsync,
+    fetchDashboardAsync: fetchDashboardAsync,
     fetchLatestActionsAsync: fetchLatestActionsAsync
   });
 
-  const defaultHeaders$7 = { "Content-Type": "application/json" };
-
-  const fetchDeploymentConfiguration = async ({
-    success,
-    error,
-    token,
-  }) => {
-    const url = getUrl(`api/deployment/configuration`);
-
-    const result = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$7
-        : { ...defaultHeaders$7, Authorization: `Bearer ${token}` },
+  const fetchDeploymentConfigurationAsync = async ({ token }) => {
+    return await executeFetch({
+      path: "api/deployment/configuration",
+      token,
     });
-    if (result.ok) {
-      success(await result.json());
-    } else {
-      error(await result.json());
-    }
   };
 
   var deploymentApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchDeploymentConfiguration: fetchDeploymentConfiguration
+    fetchDeploymentConfigurationAsync: fetchDeploymentConfigurationAsync
   });
-
-  const internalId = (useInternalId) => {
-    if (useInternalId === null || useInternalId === undefined) {
-      return "";
-    } else if (useInternalId === true) {
-      return "useInternalId=true";
-    } else if (useInternalId === false) {
-      return "useInternalId=false";
-    } else {
-      return "";
-    }
-  };
-
-  const searchEntities$2 = (term) => {
-      if (term) {
-        return `q.term=${term}`;
-      } else {
-        return "";
-      }
-    };
 
   const ConsumeRecommendation = "ConsumeRecommendation";
 
   const fetchEventAsync = async ({ id, token }) => {
-    const url = getUrl(`api/events/${id}`);
-
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      token,
+      path: `api/events/${id}`,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
-  const createEventsAsync = async ({ token, events }) => {
-    const url = getUrl(`api/events`);
-
-    const response = await fetch(url, {
-      headers: headers(token),
+  const createEventsAsync = async ({ apiKey, token, events }) => {
+    return await executeFetch({
+      path: "api/events",
       method: "post",
-      body: JSON.stringify(events),
+      token,
+      apiKey,
+      body: events,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchTrackedUsersEventsAsync = async ({
@@ -272,65 +256,13 @@
     id,
     useInternalId,
   }) => {
-    let url = getUrl(`api/TrackedUsers/${id}/events`);
-    url = `${url}?${internalId(useInternalId)}`;
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/TrackedUsers/${id}/events`,
+      token,
+      query: {
+        useInternalId,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-  const fetchUserEvents = async ({
-    success,
-    error,
-    token,
-    commonUserId,
-  }) => {
-    fetchTrackedUsersEventsAsync({ id: commonUserId, token })
-      .then(success)
-      .catch(error);
-  };
-
-  const logUserEvents = async ({ success, error, token, events }) => {
-    const url = getUrl("api/events");
-    if (events.some((e) => !e.commonUserId)) {
-      error({
-        title: "Every Event requires a commonUserId",
-      });
-      return;
-    }
-    if (events.some((e) => !e.eventId)) {
-      error({
-        title: "Every Event requires a unique eventId",
-      });
-      return;
-    }
-    if (events.some((e) => !e.eventType)) {
-      error({
-        title: "Every Event requires an eventType",
-      });
-      return;
-    }
-    if (events.some((e) => !e.kind)) {
-      error({
-        title: "Every Event requires a kind",
-      });
-      return;
-    }
-
-    const response = await fetch(url, {
-      headers: headers(token),
-      method: "post",
-      body: JSON.stringify(events),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
   };
 
   // useful extension methods to create certain event kinds
@@ -354,48 +286,32 @@
     fetchEventAsync: fetchEventAsync,
     createEventsAsync: createEventsAsync,
     fetchTrackedUsersEventsAsync: fetchTrackedUsersEventsAsync,
-    fetchUserEvents: fetchUserEvents,
-    logUserEvents: logUserEvents,
     createRecommendationConsumedEventAsync: createRecommendationConsumedEventAsync
   });
 
   const fetchEnvironmentsAsync = async ({ token, page }) => {
-    const url = getUrl("api/Environments");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/Environments",
+      token,
+      page,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw response.json();
-    }
   };
 
   const createEnvironmentAsync = async ({ token, environment }) => {
-    const url = getUrl("api/Environments");
-    const response = await fetch(`${url}?`, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/Environments",
+      token,
       method: "post",
-      body: JSON.stringify(environment),
+      body: environment,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw response.json();
-    }
   };
 
   const deleteEnvironmentAsync = async ({ token, id }) => {
-    const url = getUrl(`api/Environments/${id}`);
-    const response = await fetch(`${url}?`, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/Environments/${id}`,
+      token,
       method: "delete",
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw response.json();
-    }
   };
 
   const setDefaultEnvironmentId = setDefaultEnvironmentId$1;
@@ -409,42 +325,28 @@
   });
 
   const fetchFeatureGeneratorsAsync = async ({ page, token }) => {
-    const url = getUrl(`api/FeatureGenerators?${pageQuery(page)}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/FeatureGenerators",
+      token,
+      page,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const createFeatureGeneratorAsync = async ({ token, payload }) => {
-    const url = getUrl(`api/FeatureGenerators`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/FeatureGenerators",
+      token,
       method: "post",
-      body: JSON.stringify(payload),
+      body: payload,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const deleteFeatureGeneratorAsync = async ({ token, id }) => {
-    const url = getUrl(`api/FeatureGenerators/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/FeatureGenerators/${id}`,
+      token,
       method: "delete",
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   var featureGeneratorsApi = /*#__PURE__*/Object.freeze({
@@ -455,43 +357,29 @@
   });
 
   const fetchFeaturesAsync = async ({ token, page, searchTerm }) => {
-    let url = getUrl("api/features");
-    url = `${url}?${pageQuery(page)}`;
-    if (searchTerm) {
-      url = `${url}&${searchEntities$2(searchTerm)}`;
-    }
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/Features",
+      token,
+      page,
+      query: {
+        "q.term": searchTerm,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchFeatureAsync = async ({ token, id }) => {
-    const url = getUrl(`api/features/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/features/${id}`,
+      token,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchFeatureTrackedUsersAsync = async ({ token, page, id }) => {
-    const url = getUrl(`api/Features/${id}/TrackedUsers?${pageQuery(page)}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/Features/${id}/TrackedUsers`,
+      token,
+      page,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchFeatureTrackedUserFeaturesAsync = async ({
@@ -499,56 +387,35 @@
     page,
     id,
   }) => {
-    const url = getUrl(
-      `api/Features/${id}/TrackedUserFeatures?${pageQuery(page)}`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/Features/${id}/TrackedUserFeatures`,
+      token,
+      page,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const createFeatureAsync = async ({ token, feature }) => {
-    const url = getUrl(`api/features/`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/Features",
+      token,
       method: "post",
-      body: JSON.stringify(feature),
+      body: feature,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const deleteFeatureAsync = async ({ token, id }) => {
-    const url = getUrl(`api/features/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/features/${id}`,
+      token,
       method: "delete",
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchTrackedUserFeaturesAsync = async ({ token, id }) => {
-    const url = getUrl(`api/TrackedUsers/${id}/features`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/TrackedUsers/${id}/features`,
+      token,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchTrackedUserFeatureValuesAsync = async ({
@@ -557,17 +424,13 @@
     feature,
     version,
   }) => {
-    const url = getUrl(
-      `api/TrackedUsers/${id}/features/${feature}?version=${version || ""}`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/TrackedUsers/${id}/features/${feature}`,
+      token,
+      query: {
+        version,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   var featuresApi = /*#__PURE__*/Object.freeze({
@@ -583,405 +446,195 @@
   });
 
   const fetchIntegratedSystemsAsync = async ({ token, page }) => {
-    const url = getUrl("api/integratedSystems");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/IntegratedSystems",
+      token,
+      page,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-  const fetchIntegratedSystems = async ({
-    success,
-    error,
-    token,
-    page,
-  }) => {
-    fetchIntegratedSystemsAsync({ token, page }).then(success).error(error);
   };
 
   const fetchIntegratedSystemAsync = async ({ token, id }) => {
-    const url = getUrl(`api/integratedSystems/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/IntegratedSystems/${id}`,
+      token,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-  const fetchIntegratedSystem = async ({ success, error, token, id }) => {
-    fetchIntegratedSystemAsync({ id, token }).then(success).catch(error);
   };
 
   const renameAsync = async ({ token, id, name }) => {
-    const url = getUrl(`api/integratedSystems/${id}/name?name=${name}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/integratedSystems/${id}/name`,
+      token,
       method: "post",
+      query: {
+        name,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const createIntegratedSystemAsync = async ({ token, payload }) => {
-    const url = getUrl("api/integratedSystems");
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/IntegratedSystems",
+      token,
       method: "post",
-      body: JSON.stringify(payload),
+      body: payload,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const deleteIntegratedSystemAsync = async ({ token, id }) => {
-    const url = getUrl(`api/integratedSystems/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/integratedSystems/${id}`,
+      token,
       method: "delete",
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
-  const fetchWebhookReceivers = async ({ success, error, token, id }) => {
-    const url = getUrl(`api/integratedSystems/${id}/webhookreceivers`);
-    const response = await fetch(url, {
-      headers: headers(token),
+  const fetchWebhookReceiversAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/integratedSystems/${id}/webhookreceivers`,
+      token,
     });
-    if (response.ok) {
-      const data = await response.json();
-      success(data);
-    } else {
-      error(await response.json());
-    }
   };
 
-  const createIntegratedSystem = ({ success, error, token, payload }) => {
-    createIntegratedSystemAsync({ token, payload }).then(success).catch(error);
-  };
-
-  const createWebhookReceiver = async ({
-    success,
-    error,
+  const createWebhookReceiverAsync = async ({
     token,
     id,
     useSharedSecret,
   }) => {
-    const url = getUrl(`api/integratedSystems/${id}/webhookreceivers`);
-    const response = await fetch(`${url}?useSharedSecret=${useSharedSecret}`, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/integratedSystems/${id}/webhookreceivers`,
+      token,
       method: "post",
-      body: JSON.stringify({}), // body is just empty for this
+      body: {}, // empty, no args
+      query: {
+        useSharedSecret,
+      },
     });
-    if (response.ok) {
-      const data = await response.json();
-      success(data);
-    } else {
-      error(await response.json());
-    }
   };
 
   var integratedSystemsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchIntegratedSystemsAsync: fetchIntegratedSystemsAsync,
-    fetchIntegratedSystems: fetchIntegratedSystems,
     fetchIntegratedSystemAsync: fetchIntegratedSystemAsync,
-    fetchIntegratedSystem: fetchIntegratedSystem,
     renameAsync: renameAsync,
     createIntegratedSystemAsync: createIntegratedSystemAsync,
     deleteIntegratedSystemAsync: deleteIntegratedSystemAsync,
-    fetchWebhookReceivers: fetchWebhookReceivers,
-    createIntegratedSystem: createIntegratedSystem,
-    createWebhookReceiver: createWebhookReceiver
+    fetchWebhookReceiversAsync: fetchWebhookReceiversAsync,
+    createWebhookReceiverAsync: createWebhookReceiverAsync
   });
 
-  const fetchModelRegistrations = async ({
-    success,
-    error,
-    token,
-    page,
-  }) => {
-    const url = getUrl("api/ModelRegistrations");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
+  const fetchModelRegistrationsAsync = async ({ token, page }) => {
+    return await executeFetch({
+      path: "api/ModelRegistrations",
+      token,
+      page,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
-  const fetchModelRegistration = async ({ success, error, token, id }) => {
-    const url = getUrl(`api/ModelRegistrations/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+  const fetchModelRegistrationAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/ModelRegistrations/${id}`,
+      token,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
-  const deleteModelRegistration = async ({
-    success,
-    error,
-    token,
-    id,
-  }) => {
-    const url = getUrl(`api/ModelRegistrations/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+  const deleteModelRegistrationAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/ModelRegistrations/${id}`,
+      token,
       method: "delete",
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
   const createModelRegistrationAsync = async ({ token, payload }) => {
-    const url = getUrl("api/ModelRegistrations");
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/ModelRegistrations",
+      token,
       method: "post",
-      body: JSON.stringify(payload),
+      body: payload,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
-  const createModelRegistration = ({ success, error, token, payload }) => {
-    createModelRegistrationAsync({ token, payload }).then(success).catch(error);
-  };
-
-  const invokeModel = async ({
-    success,
-    error,
-    token,
-    modelId,
-    features,
-  }) => {
-    const url = getUrl(`api/ModelRegistrations/${modelId}/invoke`);
-    const response = await fetch(url, {
-      headers: headers(token),
+  const invokeModelAsync = async ({ token, modelId, features }) => {
+    return await executeFetch({
+      path: `api/ModelRegistrations/${modelId}/invoke`,
+      token,
       method: "post",
-      body: JSON.stringify(features),
+      body: features,
     });
-    if (response.ok) {
-      const data = await response.json();
-      success(data);
-    } else {
-      error(await response.json());
-    }
   };
 
   var modelRegistrationsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchModelRegistrations: fetchModelRegistrations,
-    fetchModelRegistration: fetchModelRegistration,
-    deleteModelRegistration: deleteModelRegistration,
+    fetchModelRegistrationsAsync: fetchModelRegistrationsAsync,
+    fetchModelRegistrationAsync: fetchModelRegistrationAsync,
+    deleteModelRegistrationAsync: deleteModelRegistrationAsync,
     createModelRegistrationAsync: createModelRegistrationAsync,
-    createModelRegistration: createModelRegistration,
-    invokeModel: invokeModel
+    invokeModelAsync: invokeModelAsync
   });
 
-  const defaultHeaders$6 = { "Content-Type": "application/json" };
-
-  const invokeGenericModel = async ({
-    success,
-    error,
-    onFinally,
-    token,
-    id,
-    input,
-  }) => {
-    try {
-      const url = getUrl(`api/models/generic/${id}/invoke`);
-      const result = await fetch(url, {
-        headers: !token
-          ? defaultHeaders$6
-          : { ...defaultHeaders$6, Authorization: `Bearer ${token}` },
-        method: "post",
-        body: JSON.stringify(input),
-      });
-      if (result.ok) {
-        success(await result.json());
-      } else {
-        error(await result.json());
-      }
-    } finally {
-      if (onFinally) {
-        onFinally();
-      }
-    }
+  const invokeGenericModelAsync = async ({ token, id, input }) => {
+    return await executeFetch({
+      path: `api/models/generic/${id}/invoke`,
+      body: input,
+      method: "post",
+      token,
+    });
   };
 
   var index = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    invokeGenericModel: invokeGenericModel
+    invokeGenericModelAsync: invokeGenericModelAsync
   });
 
-  const defaultHeaders$5 = { "Content-Type": "application/json" };
-
-  const fetchOffers = async ({ success, error, token, page }) => {
-    const url = getUrl("api/offers");
-    let path = `${url}?${pageQuery(page)}`;
-    const response = await fetch(path, {
-      headers: !token
-        ? defaultHeaders$5
-        : { ...defaultHeaders$5, Authorization: `Bearer ${token}` },
+  const fetchParametersAsync = async ({ token, page }) => {
+    return await executeFetch({
+      path: "api/Parameters",
+      token,
+      page,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
-  const fetchOffer = async ({ success, error, token, id }) => {
-    var url = getUrl(`api/offers/${id}`);
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$5
-        : { ...defaultHeaders$5, Authorization: `Bearer ${token}` },
+  const fetchParameterAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/parameters/${id}`,
+      token,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
-  };
-
-  const createOffer = async ({ success, error, token, payload }) => {
-    var url = getUrl("api/offers");
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$5
-        : { ...defaultHeaders$5, Authorization: `Bearer ${token}` },
-      method: "post",
-      body: JSON.stringify(payload),
-    });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
-  };
-
-  var offersApi = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    fetchOffers: fetchOffers,
-    fetchOffer: fetchOffer,
-    createOffer: createOffer
-  });
-
-  const fetchParameters = async ({ success, error, token, page }) => {
-    const url = getUrl("api/parameters");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
-  };
-
-  const fetchParameter = async ({ success, error, token, id }) => {
-    const url = getUrl(`api/parameters/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
   };
 
   const deleteParameterAsync = async ({ token, id }) => {
-    const url = getUrl(`api/parameters/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/parameters/${id}`,
+      token,
       method: "delete",
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const createParameterAsync = async ({ token, payload }) => {
-    const url = getUrl("api/parameters");
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/Parameters",
+      token,
       method: "post",
-      body: JSON.stringify(payload),
+      body: payload,
     });
-
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-
-  const createParameter = ({ success, error, token, payload }) => {
-    createParameterAsync({ token, payload }).then(success).catch(error);
   };
 
   var parametersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchParameters: fetchParameters,
-    fetchParameter: fetchParameter,
+    fetchParametersAsync: fetchParametersAsync,
+    fetchParameterAsync: fetchParameterAsync,
     deleteParameterAsync: deleteParameterAsync,
-    createParameterAsync: createParameterAsync,
-    createParameter: createParameter
+    createParameterAsync: createParameterAsync
   });
 
-  const fetchLinkedRegisteredModelAsync$3 = async ({
+  const fetchLinkedRegisteredModelAsync$2 = async ({
     recommenderApiName,
     token,
     id,
   }) => {
-    const url = getUrl(
-      `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`,
+      token,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const createLinkedRegisteredModelAsync = async ({
@@ -990,62 +643,43 @@
     id,
     modelId,
   }) => {
-    const url = getUrl(
-      `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`,
+      token,
       method: "post",
-      body: JSON.stringify({ modelId }),
+      body: { modelId },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
-  const fetchRecommenderTrackedUserActionsAsync$3 = async ({
+  const fetchRecommenderTrackedUserActionsAsync$2 = async ({
     recommenderApiName,
     revenueOnly,
     token,
     id,
     page,
   }) => {
-    let url = getUrl(
-      `api/recommenders/${recommenderApiName}/${id}/TrackedUserActions`
-    );
-
-    url = `${url}?${pageQuery(page)}&revenueOnly=${!!revenueOnly}`;
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/TrackedUserActions`,
+      token,
+      page,
+      query: {
+        revenueOnly,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
-  const updateErrorHandlingAsync$3 = async ({
+  const updateErrorHandlingAsync$2 = async ({
     recommenderApiName,
     token,
     id,
     errorHandling,
   }) => {
-    const url = getUrl(
-      `api/recommenders/${recommenderApiName}/${id}/ErrorHandling`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/ErrorHandling`,
+      token,
       method: "post",
-      body: JSON.stringify(errorHandling),
+      body: errorHandling,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchRecommenderTargetVariableValuesAsync = async ({
@@ -1054,19 +688,13 @@
     token,
     id,
   }) => {
-    const url = getUrl(
-      `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues?name=${
-      name || ""
-    }`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues`,
+      token,
+      query: {
+        name,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const createRecommenderTargetVariableValueAsync = async ({
@@ -1075,40 +703,25 @@
     token,
     id,
   }) => {
-    const url = getUrl(
-      `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues`,
+      token,
       method: "post",
-      body: JSON.stringify(targetVariableValue),
+      body: targetVariableValue,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchRecommenderInvokationLogsAsync = async ({
     recommenderApiName,
     token,
     id,
-    page
+    page,
   }) => {
-    const url = getUrl(
-      `api/recommenders/${recommenderApiName}/${id}/InvokationLogs?${pageQuery(
-      page
-    )}`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/InvokationLogs`,
+      page,
+      token,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const setArgumentsAsync$2 = async ({
@@ -1117,17 +730,12 @@
     id,
     args,
   }) => {
-    const url = getUrl(`api/recommenders/${recommenderApiName}/${id}/Arguments`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/Arguments`,
+      token,
       method: "post",
-      body: JSON.stringify(args),
+      body: args,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const setSettingsAsync$2 = async ({
@@ -1136,40 +744,60 @@
     id,
     settings,
   }) => {
-    const url = getUrl(`api/recommenders/${recommenderApiName}/${id}/Settings`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/Settings`,
+      token,
       method: "post",
-      body: JSON.stringify(settings),
+      body: settings,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
+
+  const fetchDestinationsAsync$2 = async ({
+    recommenderApiName,
+    token,
+    id,
+  }) => {
+    return await executeFetch({
+      token,
+      path: `api/recommenders/${recommenderApiName}/${id}/Destinations`,
+    });
+  };
+
+  const createDestinationAsync$2 = async ({
+    recommenderApiName,
+    token,
+    id,
+    destination,
+  }) => {
+    return await executeFetch({
+      token,
+      path: `api/recommenders/${recommenderApiName}/${id}/Destinations`,
+      method: "post",
+      body: destination,
+    });
+  };
+
+  const removeDestinationAsync$2 = async ({
+    recommenderApiName,
+    token,
+    id,
+    destinationId,
+  }) => {
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/Destinations/${destinationId}`,
+      token,
+      method: "delete",
+    });
+  };
+
+  const recommenderApiName$1 = "ParameterSetRecommenders";
 
   const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
-    const url = getUrl("api/recommenders/ParameterSetRecommenders");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/recommenders/ParameterSetRecommenders",
+      token,
+      page,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-
-  const fetchParameterSetRecommenders = async ({
-    success,
-    error,
-    token,
-    page,
-  }) => {
-    fetchParameterSetRecommendersAsync({ token, page })
-      .then(success)
-      .catch(error);
   };
 
   const fetchParameterSetRecommenderAsync = async ({
@@ -1177,72 +805,33 @@
     id,
     searchTerm,
   }) => {
-    let url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}`);
-    if (searchTerm) {
-      url = url + `?${searchEntities(searchTerm)}`;
-    }
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/ParameterSetRecommenders/${id}`,
+      token,
+      query: {
+        "q.term": searchTerm,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-
-  const fetchParameterSetRecommender = async ({
-    success,
-    error,
-    token,
-    id,
-  }) => {
-    fetchParameterSetRecommenderAsync({ id, token }).then(success).catch(error);
   };
 
   const createParameterSetRecommenderAsync = async ({
     token,
     payload,
   }) => {
-    const url = getUrl("api/recommenders/ParameterSetRecommenders");
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/recommenders/ParameterSetRecommenders",
+      token,
       method: "post",
-      body: JSON.stringify(payload),
+      body: payload,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-  const createParameterSetRecommender = async ({
-    success,
-    error,
-    token,
-    payload,
-  }) => {
-    createParameterSetRecommenderAsync({ token, payload })
-      .then(success)
-      .catch(error);
   };
 
-  const deleteParameterSetRecommender = async ({
-    success,
-    error,
-    token,
-    id,
-  }) => {
-    const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+  const deleteParameterSetRecommenderAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/recommenders/ParameterSetRecommenders/${id}`,
+      token,
       method: "delete",
     });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
   };
 
   const fetchParameterSetRecommendationsAsync = async ({
@@ -1250,272 +839,11 @@
     page,
     id,
   }) => {
-    const url = getUrl(
-      `api/recommenders/ParameterSetRecommenders/${id}/recommendations`
-    );
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-
-  const createLinkRegisteredModelAsync$2 = async ({
-    token,
-    id,
-    modelId,
-  }) => {
-    return await createLinkedRegisteredModelAsync({
-      recommenderApiName: "ParameterSetRecommenders",
-      id,
-      modelId,
-      token,
-    });
-  };
-
-  const fetchLinkedRegisteredModelAsync$2 = async ({ token, id }) => {
-    return await fetchLinkedRegisteredModelAsync$3({
-      recommenderApiName: "ParameterSetRecommenders",
-      id,
-      token,
-    });
-  };
-
-  const invokeParameterSetRecommenderAsync = async ({
-    token,
-    id,
-    version,
-    input,
-  }) => {
-    const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}/invoke`);
-    const result = await fetch(`${url}?version=${version || "default"}`, {
-      headers: headers(token),
-      method: "post",
-      body: JSON.stringify(input),
-    });
-    if (result.ok) {
-      return await result.json();
-    } else {
-      throw await result.json();
-    }
-  };
-  const invokeParameterSetRecommender = ({
-    success,
-    error,
-    onFinally,
-    token,
-    id,
-    version,
-    input,
-  }) => {
-    invokeParameterSetRecommenderAsync({ token, id, version, input })
-      .then(success)
-      .catch(error)
-      .finally(onFinally);
-  };
-
-  const fetchInvokationLogsAsync$2 = async ({ id, token, page }) => {
-    return await fetchRecommenderInvokationLogsAsync({
-      recommenderApiName: "ParameterSetRecommenders",
-      id,
+    return await executeFetch({
+      path: `api/recommenders/ParameterSetRecommenders/${id}/recommendations`,
       token,
       page,
     });
-  };
-
-  const fetchTargetVariablesAsync$2 = async ({ id, token, name }) => {
-    return await fetchRecommenderTargetVariableValuesAsync({
-      recommenderApiName: "ParameterSetRecommenders",
-      id,
-      token,
-      name,
-    });
-  };
-
-  const createTargetVariableAsync$2 = async ({
-    id,
-    token,
-    targetVariableValue,
-  }) => {
-    return await createRecommenderTargetVariableValueAsync({
-      recommenderApiName: "ParameterSetRecommenders",
-      id,
-      token,
-      targetVariableValue,
-    });
-  };
-
-  const updateErrorHandlingAsync$2 = async ({
-    id,
-    token,
-    errorHandling,
-  }) => {
-    return await updateErrorHandlingAsync$3({
-      recommenderApiName: "ParameterSetRecommenders",
-      id,
-      token,
-      errorHandling,
-    });
-  };
-
-  const setSettingsAsync$1 = async ({ id, token, settings }) => {
-    return await setSettingsAsync$2({
-      recommenderApiName: "ParameterSetRecommenders",
-      id,
-      token,
-      settings,
-    });
-  };
-
-  const fetchRecommenderTrackedUserActionsAsync$2 = async ({
-    id,
-    token,
-    page,
-    revenueOnly,
-  }) => {
-    return await fetchRecommenderTrackedUserActionsAsync$3({
-      recommenderApiName: "ParameterSetRecommenders",
-      id,
-      token,
-      page,
-      revenueOnly,
-    });
-  };
-
-  const setArgumentsAsync$1 = async ({ id, token, args }) => {
-    return await setArgumentsAsync$2({
-      recommenderApiName: "ParameterSetRecommenders",
-      id,
-      token,
-      args,
-    });
-  };
-
-  var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    fetchParameterSetRecommendersAsync: fetchParameterSetRecommendersAsync,
-    fetchParameterSetRecommenders: fetchParameterSetRecommenders,
-    fetchParameterSetRecommenderAsync: fetchParameterSetRecommenderAsync,
-    fetchParameterSetRecommender: fetchParameterSetRecommender,
-    createParameterSetRecommenderAsync: createParameterSetRecommenderAsync,
-    createParameterSetRecommender: createParameterSetRecommender,
-    deleteParameterSetRecommender: deleteParameterSetRecommender,
-    fetchParameterSetRecommendationsAsync: fetchParameterSetRecommendationsAsync,
-    createLinkRegisteredModelAsync: createLinkRegisteredModelAsync$2,
-    fetchLinkedRegisteredModelAsync: fetchLinkedRegisteredModelAsync$2,
-    invokeParameterSetRecommenderAsync: invokeParameterSetRecommenderAsync,
-    invokeParameterSetRecommender: invokeParameterSetRecommender,
-    fetchInvokationLogsAsync: fetchInvokationLogsAsync$2,
-    fetchTargetVariablesAsync: fetchTargetVariablesAsync$2,
-    createTargetVariableAsync: createTargetVariableAsync$2,
-    updateErrorHandlingAsync: updateErrorHandlingAsync$2,
-    setSettingsAsync: setSettingsAsync$1,
-    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$2,
-    setArgumentsAsync: setArgumentsAsync$1
-  });
-
-  const fetchProductRecommendersAsync = async ({ token, page }) => {
-    const url = getUrl("api/recommenders/ProductRecommenders");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-  const fetchProductRecommenders = async ({
-    success,
-    error,
-    token,
-    page,
-  }) => {
-    fetchProductRecommendersAsync({ page, token }).then(success).catch(error);
-  };
-
-  const fetchProductRecommender = async ({
-    success,
-    error,
-    token,
-    id,
-  }) => {
-    const url = getUrl(`api/recommenders/ProductRecommenders/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
-  };
-
-  const fetchProductRecommendations = async ({
-    success,
-    error,
-    token,
-    page,
-    id,
-  }) => {
-    const url = getUrl(
-      `api/recommenders/ProductRecommenders/${id}/recommendations`
-    );
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
-  };
-
-  const deleteProductRecommender = async ({
-    success,
-    error,
-    token,
-    id,
-  }) => {
-    const url = getUrl(`api/recommenders/ProductRecommenders/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
-      method: "delete",
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
-  };
-
-  const createProductRecommenderAsync = async ({ token, payload }) => {
-    const url = getUrl("api/recommenders/ProductRecommenders");
-    const response = await fetch(url, {
-      headers: headers(token),
-      method: "post",
-      body: JSON.stringify(payload),
-    });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-  const createProductRecommender = async ({
-    success,
-    error,
-    token,
-    payload,
-    onFinally,
-  }) => {
-    createProductRecommenderAsync({ token, payload })
-      .then(success)
-      .catch(error)
-      .finally(onFinally);
   };
 
   const createLinkRegisteredModelAsync$1 = async ({
@@ -1524,88 +852,37 @@
     modelId,
   }) => {
     return await createLinkedRegisteredModelAsync({
-      recommenderApiName: "ProductRecommenders",
+      recommenderApiName: recommenderApiName$1,
       id,
       modelId,
       token,
     });
   };
 
-  const setDefaultProductAsync = async ({ token, id, productId }) => {
-    const url = getUrl(
-      `api/recommenders/ProductRecommenders/${id}/DefaultProduct`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
-      method: "post",
-      body: JSON.stringify({ productId }),
-    });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-
-  const getDefaultProductAsync = async ({ token, id }) => {
-    const url = getUrl(
-      `api/recommenders/ProductRecommenders/${id}/DefaultProduct`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-
   const fetchLinkedRegisteredModelAsync$1 = async ({ token, id }) => {
-    return await fetchLinkedRegisteredModelAsync$3({
-      recommenderApiName: "ProductRecommenders",
+    return await fetchLinkedRegisteredModelAsync$2({
+      recommenderApiName: recommenderApiName$1,
       id,
       token,
     });
   };
 
-  const invokeProductRecommenderAsync = async ({
+  const invokeParameterSetRecommenderAsync = async ({
     token,
     id,
-    version,
     input,
   }) => {
-    const url = getUrl(`api/recommenders/ProductRecommenders/${id}/invoke`);
-    const result = await fetch(`${url}?version=${version || "default"}`, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/ParameterSetRecommenders/${id}/invoke`,
+      token,
       method: "post",
-      body: JSON.stringify(input),
+      body: input,
     });
-    if (result.ok) {
-      return await result.json();
-    } else {
-      throw await result.json();
-    }
-  };
-
-  const invokeProductRecommender = async ({
-    success,
-    error,
-    onFinally,
-    token,
-    id,
-    version,
-    input,
-  }) => {
-    invokeProductRecommenderAsync({ token, id, version, input })
-      .then(success)
-      .catch(error)
-      .finally(onFinally || (() => console.log()));
   };
 
   const fetchInvokationLogsAsync$1 = async ({ id, token, page }) => {
     return await fetchRecommenderInvokationLogsAsync({
-      recommenderApiName: "ProductRecommenders",
+      recommenderApiName: recommenderApiName$1,
       id,
       token,
       page,
@@ -1614,7 +891,7 @@
 
   const fetchTargetVariablesAsync$1 = async ({ id, token, name }) => {
     return await fetchRecommenderTargetVariableValuesAsync({
-      recommenderApiName: "ProductRecommenders",
+      recommenderApiName: recommenderApiName$1,
       id,
       token,
       name,
@@ -1627,7 +904,7 @@
     targetVariableValue,
   }) => {
     return await createRecommenderTargetVariableValueAsync({
-      recommenderApiName: "ProductRecommenders",
+      recommenderApiName: recommenderApiName$1,
       id,
       token,
       targetVariableValue,
@@ -1639,11 +916,20 @@
     token,
     errorHandling,
   }) => {
-    return await updateErrorHandlingAsync$3({
-      recommenderApiName: "ProductRecommenders",
+    return await updateErrorHandlingAsync$2({
+      recommenderApiName: recommenderApiName$1,
       id,
       token,
       errorHandling,
+    });
+  };
+
+  const setSettingsAsync$1 = async ({ id, token, settings }) => {
+    return await setSettingsAsync$2({
+      recommenderApiName: recommenderApiName$1,
+      id,
+      token,
+      settings,
     });
   };
 
@@ -1653,8 +939,8 @@
     page,
     revenueOnly,
   }) => {
-    return await fetchRecommenderTrackedUserActionsAsync$3({
-      recommenderApiName: "ProductRecommenders",
+    return await fetchRecommenderTrackedUserActionsAsync$2({
+      recommenderApiName: recommenderApiName$1,
       id,
       token,
       page,
@@ -1662,197 +948,143 @@
     });
   };
 
-  var productRecommendersApi = /*#__PURE__*/Object.freeze({
+  const setArgumentsAsync$1 = async ({ id, token, args }) => {
+    return await setArgumentsAsync$2({
+      recommenderApiName: recommenderApiName$1,
+      id,
+      token,
+      args,
+    });
+  };
+
+  const fetchDestinationsAsync$1 = async ({ id, token }) => {
+    return await fetchDestinationsAsync$2({
+      recommenderApiName: recommenderApiName$1,
+      id,
+      token,
+    });
+  };
+
+  const createDestinationAsync$1 = async ({ id, token, destination }) => {
+    return await createDestinationAsync$2({
+      recommenderApiName: recommenderApiName$1,
+      id,
+      token,
+      destination,
+    });
+  };
+
+  const removeDestinationAsync$1 = async ({ id, token, destinationId }) => {
+    return await removeDestinationAsync$2({
+      recommenderApiName: recommenderApiName$1,
+      id,
+      token,
+      destinationId,
+    });
+  };
+
+  var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchProductRecommendersAsync: fetchProductRecommendersAsync,
-    fetchProductRecommenders: fetchProductRecommenders,
-    fetchProductRecommender: fetchProductRecommender,
-    fetchProductRecommendations: fetchProductRecommendations,
-    deleteProductRecommender: deleteProductRecommender,
-    createProductRecommenderAsync: createProductRecommenderAsync,
-    createProductRecommender: createProductRecommender,
+    fetchParameterSetRecommendersAsync: fetchParameterSetRecommendersAsync,
+    fetchParameterSetRecommenderAsync: fetchParameterSetRecommenderAsync,
+    createParameterSetRecommenderAsync: createParameterSetRecommenderAsync,
+    deleteParameterSetRecommenderAsync: deleteParameterSetRecommenderAsync,
+    fetchParameterSetRecommendationsAsync: fetchParameterSetRecommendationsAsync,
     createLinkRegisteredModelAsync: createLinkRegisteredModelAsync$1,
-    setDefaultProductAsync: setDefaultProductAsync,
-    getDefaultProductAsync: getDefaultProductAsync,
     fetchLinkedRegisteredModelAsync: fetchLinkedRegisteredModelAsync$1,
-    invokeProductRecommenderAsync: invokeProductRecommenderAsync,
-    invokeProductRecommender: invokeProductRecommender,
+    invokeParameterSetRecommenderAsync: invokeParameterSetRecommenderAsync,
     fetchInvokationLogsAsync: fetchInvokationLogsAsync$1,
     fetchTargetVariablesAsync: fetchTargetVariablesAsync$1,
     createTargetVariableAsync: createTargetVariableAsync$1,
     updateErrorHandlingAsync: updateErrorHandlingAsync$1,
-    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$1
+    setSettingsAsync: setSettingsAsync$1,
+    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync$1,
+    setArgumentsAsync: setArgumentsAsync$1,
+    fetchDestinationsAsync: fetchDestinationsAsync$1,
+    createDestinationAsync: createDestinationAsync$1,
+    removeDestinationAsync: removeDestinationAsync$1
   });
 
-  const fetchDestinationsAsync$1 = async ({
-    recommenderApiName,
-    token,
-    id,
-  }) => {
-    const url = getUrl(
-      `api/recommenders/${recommenderApiName}/${id}/Destinations`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
-    });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-
-  const createDestinationAsync$1 = async ({
-    recommenderApiName,
-    token,
-    id,
-    destination,
-  }) => {
-    const url = getUrl(
-      `api/recommenders/${recommenderApiName}/${id}/Destinations`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
-      method: "post",
-      body: JSON.stringify(destination),
-    });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
+  const recommenderApiName = "ItemsRecommenders";
 
   const fetchItemsRecommendersAsync = async ({ token, page }) => {
-    const url = getUrl("api/recommenders/ItemsRecommenders");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
+    return await executeFetch({
+      token,
+      path: "api/recommenders/ItemsRecommenders",
+      page,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchItemsRecommenderAsync = async ({ token, id }) => {
-    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/ItemsRecommenders/${id}`,
+      token,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchItemsRecommendationsAsync = async ({ token, page, id }) => {
-    const url = getUrl(
-      `api/recommenders/ItemsRecommenders/${id}/Recommendations`
-    );
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: headers(token),
+    return await executeFetch({
+      token,
+      path: `api/recommenders/ItemsRecommenders/${id}/Recommendations`,
+      page,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const deleteItemsRecommenderAsync = async ({ token, id }) => {
-    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/ItemsRecommenders/${id}`,
+      token,
       method: "delete",
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const createItemsRecommenderAsync = async ({ token, payload }) => {
-    const url = getUrl("api/recommenders/ItemsRecommenders");
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/recommenders/ItemsRecommenders",
+      token,
       method: "post",
-      body: JSON.stringify(payload),
+      body: payload,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchItemsAsync$1 = async ({ token, id }) => {
-    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/Items`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/ItemsRecommenders/${id}/Items`,
+      token,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const addItemAsync = async ({ token, id, item }) => {
-    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/Items`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/ItemsRecommenders/${id}/Items`,
+      token,
       method: "post",
-      body: JSON.stringify(item),
+      body: item,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const removeItemAsync = async ({ token, id, itemId }) => {
-    const url = getUrl(
-      `api/recommenders/ItemsRecommenders/${id}/Items/${itemId}`
-    );
-    const response = await fetch(url, {
-      headers: headers(token),
-      method: "delete",
+    return await executeFetch({
+      path: `api/recommenders/ItemsRecommenders/${id}/Items/${itemId}`,
+      token,
+      method: "post",
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const setDefaultItemAsync = async ({ token, id, itemId }) => {
-    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/DefaultItem`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/ItemsRecommenders/${id}/DefaultItem`,
+      token,
       method: "post",
-      body: JSON.stringify({ itemId }),
+      body: { itemId },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const getDefaultItemAsync = async ({ token, id }) => {
-    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/DefaultItem`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/ItemsRecommenders/${id}/DefaultItem`,
+      token,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const createLinkRegisteredModelAsync = async ({
@@ -1861,7 +1093,7 @@
     modelId,
   }) => {
     return await createLinkedRegisteredModelAsync({
-      recommenderApiName: "ItemsRecommenders",
+      recommenderApiName,
       id,
       modelId,
       token,
@@ -1869,30 +1101,25 @@
   };
 
   const fetchLinkedRegisteredModelAsync = async ({ token, id }) => {
-    return await fetchLinkedRegisteredModelAsync$3({
-      recommenderApiName: "ItemsRecommenders",
+    return await fetchLinkedRegisteredModelAsync$2({
+      recommenderApiName,
       id,
       token,
     });
   };
 
   const invokeItemsRecommenderAsync = async ({ token, id, input }) => {
-    const url = getUrl(`api/recommenders/ItemsRecommenders/${id}/Invoke`);
-    const result = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/recommenders/ItemsRecommenders/${id}/Invoke`,
+      token,
       method: "post",
-      body: JSON.stringify(input),
+      body: input,
     });
-    if (result.ok) {
-      return await result.json();
-    } else {
-      throw await result.json();
-    }
   };
 
   const fetchInvokationLogsAsync = async ({ id, token, page }) => {
     return await fetchRecommenderInvokationLogsAsync({
-      recommenderApiName: "ItemsRecommenders",
+      recommenderApiName,
       id,
       token,
       page,
@@ -1901,7 +1128,7 @@
 
   const fetchTargetVariablesAsync = async ({ id, token, name }) => {
     return await fetchRecommenderTargetVariableValuesAsync({
-      recommenderApiName: "ItemsRecommenders",
+      recommenderApiName,
       id,
       token,
       name,
@@ -1914,7 +1141,7 @@
     targetVariableValue,
   }) => {
     return await createRecommenderTargetVariableValueAsync({
-      recommenderApiName: "ItemsRecommenders",
+      recommenderApiName,
       id,
       token,
       targetVariableValue,
@@ -1926,8 +1153,8 @@
     token,
     errorHandling,
   }) => {
-    return await updateErrorHandlingAsync$3({
-      recommenderApiName: "ItemsRecommenders",
+    return await updateErrorHandlingAsync$2({
+      recommenderApiName,
       id,
       token,
       errorHandling,
@@ -1936,7 +1163,7 @@
 
   const setSettingsAsync = async ({ id, token, settings }) => {
     return await setSettingsAsync$2({
-      recommenderApiName: "ItemsRecommenders",
+      recommenderApiName,
       id,
       token,
       settings,
@@ -1949,8 +1176,8 @@
     page,
     revenueOnly,
   }) => {
-    return await fetchRecommenderTrackedUserActionsAsync$3({
-      recommenderApiName: "ItemsRecommenders",
+    return await fetchRecommenderTrackedUserActionsAsync$2({
+      recommenderApiName,
       id,
       token,
       page,
@@ -1960,7 +1187,7 @@
 
   const setArgumentsAsync = async ({ id, token, args }) => {
     return await setArgumentsAsync$2({
-      recommenderApiName: "ItemsRecommenders",
+      recommenderApiName,
       id,
       token,
       args,
@@ -1968,19 +1195,28 @@
   };
 
   const fetchDestinationsAsync = async ({ id, token }) => {
-    return await fetchDestinationsAsync$1({
-      recommenderApiName: "ItemsRecommenders",
+    return await fetchDestinationsAsync$2({
+      recommenderApiName,
       id,
       token,
     });
   };
 
   const createDestinationAsync = async ({ id, token, destination }) => {
-    return await createDestinationAsync$1({
-      recommenderApiName: "ItemsRecommenders",
+    return await createDestinationAsync$2({
+      recommenderApiName,
       id,
       token,
       destination,
+    });
+  };
+
+  const removeDestinationAsync = async ({ id, token, destinationId }) => {
+    return await removeDestinationAsync$2({
+      recommenderApiName,
+      id,
+      token,
+      destinationId,
     });
   };
 
@@ -2007,86 +1243,18 @@
     fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync,
     setArgumentsAsync: setArgumentsAsync,
     fetchDestinationsAsync: fetchDestinationsAsync,
-    createDestinationAsync: createDestinationAsync
+    createDestinationAsync: createDestinationAsync,
+    removeDestinationAsync: removeDestinationAsync
   });
 
-  const defaultHeaders$4 = { "Content-Type": "application/json" };
-
-  const fetchProducts = async ({ success, error, token, page }) => {
-    const url = getUrl("api/products");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: !token
-        ? defaultHeaders$4
-        : { ...defaultHeaders$4, Authorization: `Bearer ${token}` },
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
-  };
-
-  const fetchProduct = async ({ success, error, token, id }) => {
-    const url = getUrl(`api/products/${id}`);
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$4
-        : { ...defaultHeaders$4, Authorization: `Bearer ${token}` },
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
-  };
-
-  const createProduct = async ({ success, error, token, product }) => {
-    const url = getUrl(`api/products/`);
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$4
-        : { ...defaultHeaders$4, Authorization: `Bearer ${token}` },
-      method: "post",
-      body: JSON.stringify(product),
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
-  };
-
-  const deleteProduct = async ({ success, error, token, id }) => {
-    const url = getUrl(`api/products/${id}`);
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$4
-        : { ...defaultHeaders$4, Authorization: `Bearer ${token}` },
-      method: "delete",
-    });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
-  };
-
-  var productsApi = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    fetchProducts: fetchProducts,
-    fetchProduct: fetchProduct,
-    createProduct: createProduct,
-    deleteProduct: deleteProduct
-  });
-
-  const defaultHeaders$3 = { "Content-Type": "application/json" };
+  const defaultHeaders = { "Content-Type": "application/json" };
 
   let config = null; // caches this because it rarely change
-  const fetchAuth0Configuration = async () => {
+  const fetchAuth0ConfigurationAsync = async () => {
     if (!config) {
       console.log("fetching auth0 from server...");
       const result = await fetch(getUrl("api/reactConfig/auth0"), {
-        headers: defaultHeaders$3,
+        headers: defaultHeaders,
       });
       config = await result.json();
       console.log(config);
@@ -2096,102 +1264,67 @@
 
   var reactConfigApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchAuth0Configuration: fetchAuth0Configuration
+    fetchAuth0ConfigurationAsync: fetchAuth0ConfigurationAsync
   });
 
   const getPropertiesAsync$1 = async ({ api, token, id }) => {
-    const url = getUrl(`api/${api}/${id}/Properties`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/${api}/${id}/Properties`,
+      token,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const setPropertiesAsync$1 = async ({ api, token, id, properties }) => {
-    const url = getUrl(`api/${api}/${id}/Properties`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/${api}/${id}/Properties`,
+      token,
       method: "post",
-      body: JSON.stringify(properties),
+      body: properties,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchItemsAsync = async ({ token, page, searchTerm }) => {
-    let url = getUrl("api/RecommendableItems");
-    url = `${url}?${pageQuery(page)}`;
-    if (searchTerm) {
-      url = `${url}&${searchEntities$2(searchTerm)}`;
-    }
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/RecommendableItems",
+      token,
+      page,
+      query: {
+        "q.term": searchTerm,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchItemAsync = async ({ token, id }) => {
-    const url = getUrl(`api/RecommendableItems/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/RecommendableItems/${id}`,
+      token,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const createItemAsync = async ({ token, item }) => {
-    const url = getUrl(`api/RecommendableItems/`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/RecommendableItems",
+      token,
       method: "post",
-      body: JSON.stringify(item),
+      body: item,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const updateItemAsync = async ({ token, id, item }) => {
-    const url = getUrl(`api/RecommendableItems/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/RecommendableItems/${id}`,
+      token,
       method: "post",
-      body: JSON.stringify(item),
+      body: item,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const deleteItemAsync = async ({ token, id }) => {
-    const url = getUrl(`api/RecommendableItems/${id}`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/RecommendableItems/${id}`,
+      token,
       method: "delete",
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const getPropertiesAsync = async ({ token, id }) => {
@@ -2222,299 +1355,132 @@
     setPropertiesAsync: setPropertiesAsync
   });
 
-  const defaultHeaders$2 = { "Content-Type": "application/json" };
-
-  const fetchReports = async ({ success, error, token }) => {
-    const url = getUrl("api/reports");
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$2
-        : { ...defaultHeaders$2, Authorization: `Bearer ${token}` },
+  const fetchReportsAsync = async ({ token }) => {
+    return await executeFetch({
+      path: "api/Reports",
+      token,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
-  const downloadReport = async ({ success, error, token, reportName }) => {
-    const url = getUrl("api/reports/download");
-    let path = `${url}?report=${reportName}`;
-
-    const response = await fetch(path, {
-      headers: !token
-        ? defaultHeaders$2
-        : { ...defaultHeaders$2, Authorization: `Bearer ${token}` },
+  const downloadReportAsync = async ({ token, reportName }) => {
+    return await executeFetch({
+      path: "api/reports/download",
+      token,
+      query: {
+        report: reportName,
+      },
     });
-    if (response.ok) {
-      const results = await response.blob();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
   var reportsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchReports: fetchReports,
-    downloadReport: downloadReport
+    fetchReportsAsync: fetchReportsAsync,
+    downloadReportAsync: downloadReportAsync
   });
 
-  const defaultHeaders$1 = { "Content-Type": "application/json" };
-
-  const fetchSegments = async ({ success, error, token, page }) => {
-    const url = getUrl("api/segments");
-    const response = await fetch(`${url}?${pageQuery(page)}`, {
-      headers: !token
-        ? defaultHeaders$1
-        : { ...defaultHeaders$1, Authorization: `Bearer ${token}` },
+  const fetchSegmentsAsync = async ({ token, page }) => {
+    return await executeFetch({
+      path: "api/Segments",
+      token,
+      page,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
-  const fetchSegment = async ({ success, error, token, id }) => {
-    const url = getUrl(`api/segments/${id}`);
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$1
-        : { ...defaultHeaders$1, Authorization: `Bearer ${token}` },
+  const fetchSegmentAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/segments/${id}`,
+      token,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
-  const createSegment = async ({ success, error, token, payload }) => {
-    const url = getUrl("api/segments");
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders$1
-        : { ...defaultHeaders$1, Authorization: `Bearer ${token}` },
+  const createSegmentAsync = async ({ token, payload }) => {
+    return await executeFetch({
+      path: "api/Segments",
+      token,
       method: "post",
-      body: JSON.stringify(payload),
+      body: payload,
     });
-
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
   var segmentsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchSegments: fetchSegments,
-    fetchSegment: fetchSegment,
-    createSegment: createSegment
+    fetchSegmentsAsync: fetchSegmentsAsync,
+    fetchSegmentAsync: fetchSegmentAsync,
+    createSegmentAsync: createSegmentAsync
   });
 
-  const defaultHeaders = { "Content-Type": "application/json" };
-
-  const fetchTouchpoints = async ({
-    success,
-    error,
-    token,
-    page,
-    onFinally,
-  }) => {
-    try {
-      const url = getUrl("api/touchpoints");
-      const response = await fetch(`${url}?${pageQuery(page)}`, {
-        headers: !token
-          ? defaultHeaders
-          : { ...defaultHeaders, Authorization: `Bearer ${token}` },
-      });
-      if (response.ok) {
-        const results = await response.json();
-        success(results);
-      } else {
-        error(await response.json());
-      }
-    } finally {
-      if (onFinally) {
-        onFinally();
-      }
-    }
-  };
-
-  const fetchTouchpoint = async ({ success, error, token, id }) => {
-    const url = getUrl(`api/touchpoints/${id}`);
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders
-        : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+  const fetchTouchpointsAsync = async ({ token, page }) => {
+    return await executeFetch({
+      path: "api/Touchpoints",
+      token,
+      page,
     });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
   };
 
-  const createTouchpointMetadata = async ({
-    success,
-    error,
-    token,
-    payload,
-    onFinally,
-  }) => {
-    try {
-      const url = getUrl("api/touchpoints");
-      const response = await fetch(url, {
-        headers: !token
-          ? defaultHeaders
-          : { ...defaultHeaders, Authorization: `Bearer ${token}` },
-        method: "post",
-        body: JSON.stringify(payload),
-      });
-      if (response.ok) {
-        const results = await response.json();
-        success(results);
-      } else {
-        error(await response.json());
-      }
-    } finally {
-      if (onFinally) {
-        onFinally();
-      }
-    }
-  };
-
-  const fetchTrackedUserTouchpoints = async ({
-    success,
-    error,
-    token,
-    id,
-  }) => {
-    if (!id) {
-      error({
-        title: "Tracked User ID is required.",
-      });
-      return;
-    }
-    const url = getUrl(`api/trackedusers/${id}/touchpoints`);
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders
-        : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+  const fetchTouchpointAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/touchpoints/${id}`,
+      token,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
-  const fetchTrackedUsersInTouchpoint = async ({
-    success,
-    error,
-    token,
-    id,
-  }) => {
-    if (!id) {
-      error({
-        title: "Touchpoint ID is required.",
-      });
-      return;
-    }
-    const url = getUrl(`api/touchpoints/${id}/trackedusers`);
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders
-        : { ...defaultHeaders, Authorization: `Bearer ${token}` },
-    });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
-  };
-
-  const createTrackedUserTouchpoint = async ({
-    success,
-    error,
-    token,
-    id,
-    touchpointCommonId,
-    payload,
-  }) => {
-    if (!id || !touchpointCommonId) {
-      error({
-        title: "Tracked User ID and touchpoint ID are required.",
-      });
-      return;
-    }
-    const url = getUrl(
-      `api/trackedusers/${id}/touchpoints/${touchpointCommonId}`
-    );
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders
-        : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+  const createTouchpointMetadataAsync = async ({ token, payload }) => {
+    return await executeFetch({
+      path: "api/Touchpoints",
+      token,
       method: "post",
-      body: JSON.stringify(payload),
+      body: payload,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
   };
 
-  const fetchTrackedUserTouchpointValues = async ({
-    success,
-    error,
+  const fetchTrackedUserTouchpointsAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/trackedusers/${id}/touchpoints`,
+      token,
+    });
+  };
+
+  const fetchTrackedUsersInTouchpointAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/touchpoints/${id}/trackedusers`,
+      token,
+    });
+  };
+
+  const createTrackedUserTouchpointAsync = async ({
     token,
     id,
     touchpointCommonId,
-    version,
+    payload,
   }) => {
-    if (!id || !touchpointCommonId) {
-      error({
-        title: "Tracked User ID and touchpoint ID are required.",
-      });
-      return;
-    }
-
-    const url = getUrl(
-      `api/trackedusers/${id}/touchpoints/${touchpointCommonId}`
-    );
-    const response = await fetch(url, {
-      headers: !token
-        ? defaultHeaders
-        : { ...defaultHeaders, Authorization: `Bearer ${token}` },
+    return await executeFetch({
+      path: `api/trackedusers/${id}/touchpoints/${touchpointCommonId}`,
+      token,
+      method: "post",
+      body: payload,
     });
-    if (response.ok) {
-      const results = await response.json();
-      success(results);
-    } else {
-      error(await response.json());
-    }
+  };
+
+  const fetchTrackedUserTouchpointValuesAsync = async ({
+    token,
+    id,
+    touchpointCommonId,
+  }) => {
+    return await executeFetch({
+      path: `api/trackedusers/${id}/touchpoints/${touchpointCommonId}`,
+      token,
+    });
   };
 
   var touchpointsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchTouchpoints: fetchTouchpoints,
-    fetchTouchpoint: fetchTouchpoint,
-    createTouchpointMetadata: createTouchpointMetadata,
-    fetchTrackedUserTouchpoints: fetchTrackedUserTouchpoints,
-    fetchTrackedUsersInTouchpoint: fetchTrackedUsersInTouchpoint,
-    createTrackedUserTouchpoint: createTrackedUserTouchpoint,
-    fetchTrackedUserTouchpointValues: fetchTrackedUserTouchpointValues
+    fetchTouchpointsAsync: fetchTouchpointsAsync,
+    fetchTouchpointAsync: fetchTouchpointAsync,
+    createTouchpointMetadataAsync: createTouchpointMetadataAsync,
+    fetchTrackedUserTouchpointsAsync: fetchTrackedUserTouchpointsAsync,
+    fetchTrackedUsersInTouchpointAsync: fetchTrackedUsersInTouchpointAsync,
+    createTrackedUserTouchpointAsync: createTrackedUserTouchpointAsync,
+    fetchTrackedUserTouchpointValuesAsync: fetchTrackedUserTouchpointValuesAsync
   });
 
   /**
@@ -2539,103 +1505,51 @@
 
   const MAX_ARRAY = 5000;
 
-  const searchEntities$1 = (term) => {
-    if (term) {
-      return `&q.term=${term}`;
-    } else {
-      return "";
-    }
-  };
   const fetchTrackedUsersAsync = async ({ token, page, searchTerm }) => {
-    const url = getUrl("api/trackedUsers");
-    const response = await fetch(
-      `${url}?${pageQuery(page)}${searchEntities$1(searchTerm)}`,
-      {
-        headers: headers(token),
-      }
-    );
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-  const fetchTrackedUsers = async ({
-    success,
-    error,
-    token,
-    page,
-    searchTerm,
-  }) => {
-    fetchTrackedUsersAsync({ token, page, searchTerm })
-      .then(success)
-      .catch(error);
+    return await executeFetch({
+      path: "api/trackedUsers",
+      token,
+      page,
+      query: {
+        "q.term": searchTerm,
+      },
+    });
   };
 
   const updateMergePropertiesAsync = async ({ token, id, properties }) => {
-    const url = getUrl(`api/trackedUsers/${id}/properties`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      token,
+      path: `api/trackedUsers/${id}/properties`,
       method: "post",
-      body: JSON.stringify(properties),
+      body: properties,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchTrackedUserAsync = async ({ token, id, useInternalId }) => {
-    let url = getUrl(`api/trackedUsers/${id}`);
-    url = `${url}?${internalId(useInternalId)}`;
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/trackedUsers/${id}`,
+      token,
+      query: {
+        useInternalId,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-
-  const fetchTrackedUser = async ({
-    success,
-    error,
-    token,
-    id,
-    useInternalId,
-  }) => {
-    fetchTrackedUserAsync({ token, id, useInternalId })
-      .then(success)
-      .catch(error);
   };
 
   const fetchUniqueTrackedUserActionGroupsAsync = async ({
     token,
     id,
   }) => {
-    const url = getUrl(`api/trackedUsers/${id}/action-groups`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      token,
+      path: `api/trackedUsers/${id}/action-groups`,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchLatestRecommendationsAsync = async ({ token, id }) => {
-    const url = getUrl(`api/trackedUsers/${id}/latest-recommendations`);
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      token,
+      path: `api/trackedUsers/${id}/latest-recommendations`,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchTrackedUserActionAsync = async ({
@@ -2644,70 +1558,42 @@
     category,
     actionName,
   }) => {
-    let url = getUrl(`api/trackedUsers/${id}/actions/${category}`);
-    if (actionName) {
-      url = url + `?actionName=${actionName}`;
-    }
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/trackedUsers/${id}/actions/${category}`,
+      token,
+      query: {
+        actionName,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
-  };
-  const fetchTrackedUserAction = async ({
-    success,
-    error,
-    token,
-    id,
-    category,
-    actionName,
-  }) => {
-    fetchTrackedUserActionAsync({ id, token, category, actionName })
-      .then(success)
-      .catch(error);
   };
 
-  const uploadUserData = async ({ success, error, token, payload }) => {
-    const url = getUrl(`api/trackedUsers`);
+  const uploadUserDataAsync = async ({ token, payload }) => {
     const payloads = chunkArray(payload.users, MAX_ARRAY).map((users) => ({
       users,
     }));
     const responses = [];
     for (const p of payloads) {
-      const response = await fetch(url, {
-        headers: headers(token),
+      const response = await executeFetch({
+        token,
+        path: "api/trackedUsers",
         method: "put",
-        body: JSON.stringify(p),
+        body: p,
       });
       if (response.ok) {
         responses.push(await response.json());
       } else {
-        error(await response.json());
+        return await handleErrorResponse(response);
       }
     }
-    success(responses);
+    return responses;
   };
 
-  const createOrUpdateTrackedUser = async ({
-    success,
-    error,
-    token,
-    user,
-  }) => {
-    const url = getUrl(`api/trackedUsers/`);
-    const response = await fetch(url, {
-      headers: headers(token),
+  const createOrUpdateTrackedUserAsync = async ({ token, user }) => {
+    return await executeFetch({
+      path: "api/trackedUsers",
       method: "post",
-      body: JSON.stringify(user),
+      body: user,
     });
-    if (response.ok) {
-      success(await response.json());
-    } else {
-      error(await response.json());
-    }
   };
 
   const fetchTrackedUsersActionsAsync = async ({
@@ -2716,90 +1602,60 @@
     id,
     revenueOnly,
   }) => {
-    let url = getUrl(`api/TrackedUsers/${id}/Actions`);
-    url = `${url}?${pageQuery(page)}&revenueOnly=${!!revenueOnly}`;
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: `api/TrackedUsers/${id}/Actions`,
+      token,
+      page,
+      query: {
+        revenueOnly: !!revenueOnly,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   var trackedUsersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchTrackedUsersAsync: fetchTrackedUsersAsync,
-    fetchTrackedUsers: fetchTrackedUsers,
     updateMergePropertiesAsync: updateMergePropertiesAsync,
     fetchTrackedUserAsync: fetchTrackedUserAsync,
-    fetchTrackedUser: fetchTrackedUser,
     fetchUniqueTrackedUserActionGroupsAsync: fetchUniqueTrackedUserActionGroupsAsync,
     fetchLatestRecommendationsAsync: fetchLatestRecommendationsAsync,
     fetchTrackedUserActionAsync: fetchTrackedUserActionAsync,
-    fetchTrackedUserAction: fetchTrackedUserAction,
-    uploadUserData: uploadUserData,
-    createOrUpdateTrackedUser: createOrUpdateTrackedUser,
+    uploadUserDataAsync: uploadUserDataAsync,
+    createOrUpdateTrackedUserAsync: createOrUpdateTrackedUserAsync,
     fetchTrackedUsersActionsAsync: fetchTrackedUsersActionsAsync
   });
 
   const fetchRewardSelectorsAsync = async ({ token, page }) => {
-    const url = getUrl("api/RewardSelectors");
-    let path = `${url}?${pageQuery(page)}`;
-
-    const response = await fetch(path, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/RewardSelectors",
+      token,
+      page,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
-  const fetchRewardSelectorAsync = async ({ token, page, id }) => {
-    const url = getUrl(`api/RewardSelectors/${id}`);
-    let path = `${url}?${pageQuery(page)}`;
-
-    const response = await fetch(path, {
-      headers: headers(token),
+  const fetchRewardSelectorAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/RewardSelectors/${id}`,
+      token,
+      page,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
-  const deleteRewardSelectorAsync = async ({ token, page, id }) => {
-    const url = getUrl(`api/RewardSelectors/${id}`);
-    let path = `${url}?${pageQuery(page)}`;
-
-    const response = await fetch(path, {
-      headers: headers(token),
+  const deleteRewardSelectorAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/RewardSelectors/${id}`,
+      token,
       method: "delete",
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const createRewardSelectorAsync = async ({ token, entity }) => {
-    const url = getUrl("api/RewardSelectors");
-
-    const response = await fetch(url, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/RewardSelectors",
+      token,
       method: "post",
-      body: JSON.stringify(entity),
+      body: entity,
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   var rewardSelectorsApi = /*#__PURE__*/Object.freeze({
@@ -2811,36 +1667,25 @@
   });
 
   const fetchUniqueActionNamesAsync = async ({ token, page, term }) => {
-    const url = getUrl("api/actions/distinct-groups");
-    let path = `${url}?${pageQuery(page)}`;
-    if (term) {
-      path = path + `&term=${term}`;
-    }
-
-    const response = await fetch(path, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/actions/distinct-groups",
+      token,
+      page,
+      query: {
+        term,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   const fetchDistinctGroupsAsync = async ({ token, page, term }) => {
-    const url = getUrl(
-      `api/actions/distinct-groups?${term ? "term=" + term : ""}`
-    );
-    let path = `${url}${pageQuery(page)}`;
-
-    const response = await fetch(path, {
-      headers: headers(token),
+    return await executeFetch({
+      path: "api/actions/distinct-groups",
+      token,
+      page,
+      query: {
+        term,
+      },
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw await response.json();
-    }
   };
 
   var actionsApi = /*#__PURE__*/Object.freeze({
@@ -2867,6 +1712,7 @@
   exports.dataSummary = dataSummaryApi;
   exports.deployment = deploymentApi;
   exports.environments = environmentsApi;
+  exports.errorHandling = errorHandling;
   exports.events = index$1;
   exports.featureGenerators = featureGeneratorsApi;
   exports.features = featuresApi;
@@ -2874,12 +1720,8 @@
   exports.itemsRecommenders = itemsRecommendersApi;
   exports.modelRegistrations = modelRegistrationsApi;
   exports.models = index;
-  exports.offers = offersApi;
-  exports.paging = paging;
   exports.parameterSetRecommenders = parameterSetRecommendersApi;
   exports.parameters = parametersApi;
-  exports.productRecommenders = productRecommendersApi;
-  exports.products = productsApi;
   exports.reactConfig = reactConfigApi;
   exports.recommendableItems = recommendableItemsApi;
   exports.reports = reportsApi;

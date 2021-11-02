@@ -6,7 +6,7 @@ const inputWrapper = (payload) => {
 };
 
 export const getSampleInput = (model) => {
-  if (model.modelType === "productRecommenderV1") {
+  if (model.modelType === "itemsRecommenderV1") {
     return inputWrapper({
       commonUserId: "1234",
       arguments: {

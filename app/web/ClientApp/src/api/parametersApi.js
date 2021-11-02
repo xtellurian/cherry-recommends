@@ -1,8 +1,8 @@
 import { parameters } from "signalbox.js";
 
-export const fetchParameters = parameters.fetchParameters;
+export const fetchParametersAsync = parameters.fetchParametersAsync;
 
-export const fetchParameter = parameters.fetchParameter;
+export const fetchParameterAsync = parameters.fetchParameterAsync;
 
 export const deleteParameterAsync = parameters.deleteParameterAsync;
 

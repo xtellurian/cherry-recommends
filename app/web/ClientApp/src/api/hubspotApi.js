@@ -106,9 +106,7 @@ export const setHubspotPushBehaviourAsync = async ({
   }
 };
 
-export const fetchHubspotClientAllContactProperties = async ({
-  success,
-  error,
+export const fetchHubspotClientAllContactPropertiesAsync = async ({
   token,
   id,
 }) => {
@@ -118,9 +116,9 @@ export const fetchHubspotClientAllContactProperties = async ({
     headers: headers(token),
   });
   if (response.ok) {
-    success(await response.json());
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
   }
 };
 
@@ -137,35 +135,33 @@ export const fetchHubspotClientContactEventsAsync = async ({ token, id }) => {
   }
 };
 
-export const fetchHubspotAccount = async ({ success, error, token, id }) => {
+export const fetchHubspotAccountAsync = async ({ token, id }) => {
   const url = `api/integratedsystems/${id}/hubspot/account`;
 
   const response = await fetch(url, {
     headers: headers(token),
   });
   if (response.ok) {
-    success(await response.json());
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
   }
 };
 
-export const fetchHubspotContacts = async ({ success, error, token, id }) => {
+export const fetchHubspotContactsAsync = async ({ token, id }) => {
   const url = `api/integratedsystems/${id}/hubspot/contacts`;
 
   const response = await fetch(url, {
     headers: headers(token),
   });
   if (response.ok) {
-    success(await response.json());
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
   }
 };
 
-export const saveHubspotCode = async ({
-  success,
-  error,
+export const saveHubspotCodeAsync = async ({
   token,
   integratedSystemId,
   code,
@@ -179,9 +175,9 @@ export const saveHubspotCode = async ({
   });
 
   if (response.ok) {
-    success(await response.json());
+    return await response.json();
   } else {
-    error(await response.json());
+    throw await response.json();
   }
 };
 

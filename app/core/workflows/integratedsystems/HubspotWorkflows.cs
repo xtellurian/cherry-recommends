@@ -15,7 +15,7 @@ namespace SignalBox.Core.Workflows
         private readonly ITrackedUserEventStore eventStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
-        private readonly IProductRecommenderStore productRecommenderStore;
+        private readonly IItemsRecommenderStore itemsRecommenderStore;
         private readonly IStorageContext storageContext;
         private readonly ITelemetry telemetry;
 
@@ -25,7 +25,7 @@ namespace SignalBox.Core.Workflows
                                 ITrackedUserEventStore eventStore,
                                 ITrackedUserSystemMapStore systemMapStore,
                                 IParameterSetRecommenderStore parameterSetRecommenderStore,
-                                IProductRecommenderStore productRecommenderStore,
+                                IItemsRecommenderStore itemsRecommenderStore,
                                 IStorageContext storageContext,
                                 IHubspotService hubspotService,
                                 IDateTimeProvider dateTimeProvider,
@@ -38,7 +38,7 @@ namespace SignalBox.Core.Workflows
             this.eventStore = eventStore;
             this.systemMapStore = systemMapStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
-            this.productRecommenderStore = productRecommenderStore;
+            this.itemsRecommenderStore = itemsRecommenderStore;
             this.storageContext = storageContext;
             this.telemetry = telemetry;
         }
@@ -61,9 +61,9 @@ namespace SignalBox.Core.Workflows
                 behaviour.ExcludedFeatures = behaviour.ExcludedFeatures.Where(_ => _ != null).ToHashSet(); // remove nulls
             }
 
-            if (behaviour.ParameterSetRecommenderId != null && behaviour.ProductRecommenderId != null)
+            if (behaviour.ParameterSetRecommenderId != null && behaviour.ItemsRecommenderId != null)
             {
-                throw new BadRequestException("Must choose only ONE of a product recommender or parameter-set recommender");
+                throw new BadRequestException("Must choose only ONE of a items recommender or parameter-set recommender");
             }
 
             var cache = system.GetCache<HubspotCache>();
@@ -89,12 +89,12 @@ namespace SignalBox.Core.Workflows
                     }
                 }
 
-                else if (behaviour.ProductRecommenderId.HasValue && behaviour.ProductRecommenderId != cache.FeatureCrmCardBehaviour.ProductRecommenderId)
+                else if (behaviour.ItemsRecommenderId.HasValue && behaviour.ItemsRecommenderId != cache.FeatureCrmCardBehaviour.ItemsRecommenderId)
                 {
-                    if (!await productRecommenderStore.Exists(behaviour.ProductRecommenderId.Value))
+                    if (!await itemsRecommenderStore.Exists(behaviour.ItemsRecommenderId.Value))
                     {
                         // doesn't exist - throw
-                        throw new BadRequestException($"Product Recommender Id={behaviour.ProductRecommenderId} doesnt exist");
+                        throw new BadRequestException($"Items Recommender Id={behaviour.ItemsRecommenderId} doesnt exist");
                     }
                 }
             }

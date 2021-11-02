@@ -1,5 +1,5 @@
 import { reports } from "signalbox.js";
 
-export const fetchReports = reports.fetchReports;
+export const fetchReportsAsync = reports.fetchReportsAsync;
 
-export const downloadReport = reports.downloadReport;
+export const downloadReportAsync = reports.downloadReportAsync;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Title } from "../molecules/PageHeadings";
-import { createTouchpointMetadata } from "../../api/touchpointsApi";
+import { createTouchpointMetadataAsync } from "../../api/touchpointsApi";
 import { useAccessToken } from "../../api-hooks/token";
 
 export const CreateTouchpoint = () => {
@@ -43,12 +43,12 @@ export const CreateTouchpoint = () => {
         <button
           className="btn btn-primary"
           onClick={() => {
-            createTouchpointMetadata({
-              success: () => alert("created a touchpoint!"),
-              error: (e) => alert(e),
+            createTouchpointMetadataAsync({
               payload: touchpoint,
               token,
-            });
+            })
+              .then(() => alert("created a touchpoint!"))
+              .catch((e) => alert(e));
           }}
         >
           Create

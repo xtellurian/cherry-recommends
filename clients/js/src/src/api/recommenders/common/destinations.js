@@ -1,22 +1,14 @@
-import { getUrl } from "../../../baseUrl";
-import { headers } from "../../headers";
+import { executeFetch } from "../../client/apiClient";
 
 export const fetchDestinationsAsync = async ({
   recommenderApiName,
   token,
   id,
 }) => {
-  const url = getUrl(
-    `api/recommenders/${recommenderApiName}/${id}/Destinations`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    token,
+    path: `api/recommenders/${recommenderApiName}/${id}/Destinations`,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const createDestinationAsync = async ({
@@ -25,19 +17,12 @@ export const createDestinationAsync = async ({
   id,
   destination,
 }) => {
-  const url = getUrl(
-    `api/recommenders/${recommenderApiName}/${id}/Destinations`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    token,
+    path: `api/recommenders/${recommenderApiName}/${id}/Destinations`,
     method: "post",
-    body: JSON.stringify(destination),
+    body: destination,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const removeDestinationAsync = async ({
@@ -46,16 +31,9 @@ export const removeDestinationAsync = async ({
   id,
   destinationId,
 }) => {
-  const url = getUrl(
-    `api/recommenders/${recommenderApiName}/${id}/Destinations/${destinationId}`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/${recommenderApiName}/${id}/Destinations/${destinationId}`,
+    token,
     method: "delete",
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

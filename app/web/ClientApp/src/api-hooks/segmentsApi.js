@@ -1,7 +1,7 @@
 import React from "react";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
-import { fetchSegments, fetchSegment } from "../api/segmentsApi";
+import { fetchSegmentsAsync, fetchSegmentAsync } from "../api/segmentsApi";
 
 export const useSegments = () => {
   const token = useAccessToken();
@@ -9,12 +9,12 @@ export const useSegments = () => {
   const [result, setState] = React.useState();
   React.useEffect(() => {
     if (token) {
-      fetchSegments({
-        success: setState,
-        error: console.log,
+      fetchSegmentsAsync({
         token,
         page,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, page]);
 
@@ -26,12 +26,12 @@ export const useSegment = ({ id }) => {
   const [segment, setState] = React.useState();
   React.useEffect(() => {
     if (token) {
-      fetchSegment({
-        success: setState,
-        error: console.log,
+      fetchSegmentAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
 

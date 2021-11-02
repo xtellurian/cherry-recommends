@@ -31,7 +31,14 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<TResult> Min<TResult>(Expression<Func<T, TResult>> selector)
         {
-            return await QuerySet.DefaultIfEmpty(null).MinAsync(selector);
+            if (await QuerySet.AnyAsync())
+            {
+                return await QuerySet.MinAsync(selector);
+            }
+            else
+            {
+                return default(TResult);
+            }
         }
 
         public async Task<TResult> Min<TResult>(Expression<Func<T, bool>> predicate, Expression<Func<T, TResult>> selector)

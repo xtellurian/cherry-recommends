@@ -2,11 +2,11 @@ import React from "react";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
 import {
-  fetchTouchpoints,
-  fetchTouchpoint,
-  fetchTrackedUsersInTouchpoint,
-  fetchTrackedUserTouchpoints,
-  fetchTrackedUserTouchpointValues,
+  fetchTouchpointsAsync,
+  fetchTouchpointAsync,
+  fetchTrackedUsersInTouchpointAsync,
+  fetchTrackedUserTouchpointsAsync,
+  fetchTrackedUserTouchpointValuesAsync,
 } from "../api/touchpointsApi";
 
 export const useTouchpoints = () => {
@@ -16,12 +16,12 @@ export const useTouchpoints = () => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchTouchpoints({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchTouchpointsAsync({
         token,
         page,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, page]);
 
@@ -34,12 +34,12 @@ export const useTouchpoint = ({ id }) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchTouchpoint({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchTouchpointAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
 
@@ -52,12 +52,12 @@ export const useTrackedUserTouchpoints = ({ id }) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token && id) {
-      fetchTrackedUserTouchpoints({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchTrackedUserTouchpointsAsync({
         token,
         id,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
 
@@ -74,14 +74,14 @@ export const useTrackedUserTouchpointValues = ({
   React.useEffect(() => {
     setState({ loading: true });
     if (token && id && touchpointCommonId) {
-      fetchTrackedUserTouchpointValues({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchTrackedUserTouchpointValuesAsync({
         id,
         touchpointCommonId,
         version: version,
         token,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id, touchpointCommonId, version]);
 
@@ -94,12 +94,12 @@ export const useTrackedUsersInTouchpoint = ({ id }) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token && id) {
-      fetchTrackedUsersInTouchpoint({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchTrackedUsersInTouchpointAsync({
         id,
         token,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, id]);
 

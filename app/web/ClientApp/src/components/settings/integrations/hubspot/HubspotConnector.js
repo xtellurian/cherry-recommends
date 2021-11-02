@@ -3,7 +3,7 @@ import { useAccessToken } from "../../../../api-hooks/token";
 import { useQuery } from "../../../../utility/utility";
 import { useIntegratedSystem } from "../../../../api-hooks/integratedSystemsApi";
 import { useHubspotAppInformation } from "../../../../api-hooks/hubspotApi";
-import { saveHubspotCode } from "../../../../api/hubspotApi";
+import { saveHubspotCodeAsync } from "../../../../api/hubspotApi";
 import { Title } from "../../../molecules/PageHeadings";
 import { Spinner } from "../../../molecules/Spinner";
 import { ErrorCard } from "../../../molecules/ErrorCard";
@@ -79,14 +79,14 @@ export const HubspotConnector = () => {
 
   React.useEffect(() => {
     if (code && token) {
-      saveHubspotCode({
-        success: () => setStage(stages[3]),
-        error: setError,
+      saveHubspotCodeAsync({
         code,
         redirectUri,
         integratedSystemId,
         token,
-      });
+      })
+        .then(() => setStage(stages[3]))
+        .catch(setError);
     }
   }, [code, token, integratedSystemId]);
 

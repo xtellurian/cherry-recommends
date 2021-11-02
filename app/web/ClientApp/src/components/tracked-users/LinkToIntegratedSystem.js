@@ -1,14 +1,14 @@
 import React from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useTrackedUser } from "../../api-hooks/trackedUserApi";
-import { createOrUpdateTrackedUser } from "../../api/trackedUsersApi";
+import { createOrUpdateTrackedUserAsync } from "../../api/trackedUsersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { JsonView } from "../molecules/JsonView";
 import { Title, BackButton, Spinner } from "../molecules";
 import { Selector } from "../molecules/selectors/Select";
 import { useAccessToken } from "../../api-hooks/token";
 
-const Top = ({id}) => {
+const Top = ({ id }) => {
   return (
     <React.Fragment>
       <BackButton className="float-right" to={`/tracked-users/detail/${id}`}>
@@ -52,13 +52,12 @@ export const LinkToIntegratedSystem = () => {
       integratedSystemId: selectedIntegratedSystem.id,
       userId: externalUserId,
     };
-    createOrUpdateTrackedUser({
-      success: () => history.push(`/tracked-users/detail/${trackedUser.id}`),
-      error: () => alert("Something went wrong"),
+    createOrUpdateTrackedUserAsync({
       token,
       user: trackedUser,
-    });
-    console.log(trackedUser);
+    })
+      .then(() => history.push(`/tracked-users/detail/${trackedUser.id}`))
+      .catch((e) => console.log(e));
   };
   return (
     <div>

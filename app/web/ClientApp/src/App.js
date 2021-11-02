@@ -5,7 +5,6 @@ import { Home } from "./components/Home";
 import { TrackedUsersComponent } from "./components/tracked-users/TrackedUsersComponent";
 import AuthorizeRoute from "./components/auth0/ProtectedRoute";
 import { SegmentsComponent } from "./components/segments/SegmentsComponent";
-import { OffersComponent } from "./components/offers/OffersComponent";
 import { ModelRegistrationsComponent } from "./components/models/ModelRegistrationsComponent";
 import { ApiDocs } from "./components/docs/ApiDocs";
 import { Profile } from "./components/auth0/Profile";
@@ -16,7 +15,6 @@ import { TouchpointsComponent } from "./components/touchpoints/TouchpointsCompon
 import { ParametersComponent } from "./components/parameters/ParametersComponent";
 import { RecommendersComponent } from "./components/recommenders/RecommendersComponent";
 import { RecommendableItemsComponent } from "./components/items/RecommendableItemsComponent";
-import { ProductsComponent } from "./components/products/ProductsComponent";
 import { EventsComponent } from "./components/events/EventsComponent";
 import { AdminComponent } from "./components/admin/AdminComponent";
 
@@ -35,13 +33,11 @@ export default class App extends Component {
           component={TrackedUsersComponent}
         />
         <AuthorizeRoute path="/segments" component={SegmentsComponent} />
-        <AuthorizeRoute path="/offers" component={OffersComponent} />
         <AuthorizeRoute path="/parameters" component={ParametersComponent} />
         <AuthorizeRoute
           path="/recommenders"
           component={RecommendersComponent}
         />
-        <AuthorizeRoute path="/products" component={ProductsComponent} />
         <AuthorizeRoute
           path="/recommendable-items"
           component={RecommendableItemsComponent}

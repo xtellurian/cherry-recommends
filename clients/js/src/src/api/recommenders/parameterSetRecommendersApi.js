@@ -1,6 +1,4 @@
-import { pageQuery } from "../paging";
-import { getUrl } from "../../baseUrl";
-import { headers } from "../headers";
+import { executeFetch } from "../client/apiClient";
 
 import * as link from "./common/linkRegisteredModels";
 
@@ -15,26 +13,11 @@ import * as ds from "./common/destinations";
 const recommenderApiName = "ParameterSetRecommenders";
 
 export const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
-  const url = getUrl("api/recommenders/ParameterSetRecommenders");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/recommenders/ParameterSetRecommenders",
+    token,
+    page,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
-
-export const fetchParameterSetRecommenders = async ({
-  success,
-  error,
-  token,
-  page,
-}) => {
-  fetchParameterSetRecommendersAsync({ token, page })
-    .then(success)
-    .catch(error);
 };
 
 export const fetchParameterSetRecommenderAsync = async ({
@@ -42,72 +25,33 @@ export const fetchParameterSetRecommenderAsync = async ({
   id,
   searchTerm,
 }) => {
-  let url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}`);
-  if (searchTerm) {
-    url = url + `?${searchEntities(searchTerm)}`;
-  }
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/ParameterSetRecommenders/${id}`,
+    token,
+    query: {
+      "q.term": searchTerm,
+    },
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
-
-export const fetchParameterSetRecommender = async ({
-  success,
-  error,
-  token,
-  id,
-}) => {
-  fetchParameterSetRecommenderAsync({ id, token }).then(success).catch(error);
 };
 
 export const createParameterSetRecommenderAsync = async ({
   token,
   payload,
 }) => {
-  const url = getUrl("api/recommenders/ParameterSetRecommenders");
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/recommenders/ParameterSetRecommenders",
+    token,
     method: "post",
-    body: JSON.stringify(payload),
+    body: payload,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
-export const createParameterSetRecommender = async ({
-  success,
-  error,
-  token,
-  payload,
-}) => {
-  createParameterSetRecommenderAsync({ token, payload })
-    .then(success)
-    .catch(error);
 };
 
-export const deleteParameterSetRecommender = async ({
-  success,
-  error,
-  token,
-  id,
-}) => {
-  const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+export const deleteParameterSetRecommenderAsync = async ({ token, id }) => {
+  return await executeFetch({
+    path: `api/recommenders/ParameterSetRecommenders/${id}`,
+    token,
     method: "delete",
   });
-  if (response.ok) {
-    success(await response.json());
-  } else {
-    error(await response.json());
-  }
 };
 
 export const fetchParameterSetRecommendationsAsync = async ({
@@ -115,17 +59,11 @@ export const fetchParameterSetRecommendationsAsync = async ({
   page,
   id,
 }) => {
-  const url = getUrl(
-    `api/recommenders/ParameterSetRecommenders/${id}/recommendations`
-  );
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/ParameterSetRecommenders/${id}/recommendations`,
+    token,
+    page,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const createLinkRegisteredModelAsync = async ({
@@ -152,34 +90,14 @@ export const fetchLinkedRegisteredModelAsync = async ({ token, id }) => {
 export const invokeParameterSetRecommenderAsync = async ({
   token,
   id,
-  version,
   input,
 }) => {
-  const url = getUrl(`api/recommenders/ParameterSetRecommenders/${id}/invoke`);
-  const result = await fetch(`${url}?version=${version || "default"}`, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/ParameterSetRecommenders/${id}/invoke`,
+    token,
     method: "post",
-    body: JSON.stringify(input),
+    body: input,
   });
-  if (result.ok) {
-    return await result.json();
-  } else {
-    throw await result.json();
-  }
-};
-export const invokeParameterSetRecommender = ({
-  success,
-  error,
-  onFinally,
-  token,
-  id,
-  version,
-  input,
-}) => {
-  invokeParameterSetRecommenderAsync({ token, id, version, input })
-    .then(success)
-    .catch(error)
-    .finally(onFinally);
 };
 
 export const fetchInvokationLogsAsync = async ({ id, token, page }) => {
@@ -206,7 +124,7 @@ export const createTargetVariableAsync = async ({
   targetVariableValue,
 }) => {
   return await tv.createRecommenderTargetVariableValueAsync({
-    recommenderApiName: "ParameterSetRecommenders",
+    recommenderApiName,
     id,
     token,
     targetVariableValue,

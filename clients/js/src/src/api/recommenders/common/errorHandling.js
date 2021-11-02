@@ -1,5 +1,4 @@
-import { getUrl } from "../../../baseUrl";
-import { headers } from "../../headers";
+import { executeFetch } from "../../client/apiClient";
 
 export const updateErrorHandlingAsync = async ({
   recommenderApiName,
@@ -7,17 +6,10 @@ export const updateErrorHandlingAsync = async ({
   id,
   errorHandling,
 }) => {
-  const url = getUrl(
-    `api/recommenders/${recommenderApiName}/${id}/ErrorHandling`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/${recommenderApiName}/${id}/ErrorHandling`,
+    token,
     method: "post",
-    body: JSON.stringify(errorHandling),
+    body: errorHandling,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

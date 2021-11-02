@@ -2,23 +2,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Title } from "../molecules/PageHeadings";
 import { useAccessToken } from "../../api-hooks/token";
-import { createSegment } from "../../api/segmentsApi";
+import { createSegmentAsync } from "../../api/segmentsApi";
 
 export const CreateSegment = () => {
   const token = useAccessToken();
   const [name, setName] = React.useState("");
   const [segment, setSegment] = React.useState();
   const submit = () => {
-    createSegment({
-      success: (segment) => {
-        setSegment(segment);
-      },
-      error: () => alert("Something broke."),
+    createSegmentAsync({
       payload: {
         name,
       },
-      token
-    });
+      token,
+    })
+      .then(setSegment)
+      .error(() => alert("error"));
   };
 
   return (

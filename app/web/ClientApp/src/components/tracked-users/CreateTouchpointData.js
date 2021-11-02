@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
-import { createTrackedUserTouchpoint } from "../../api/touchpointsApi";
+import { createTrackedUserTouchpointAsync } from "../../api/touchpointsApi";
 import { useTrackedUser } from "../../api-hooks/trackedUserApi";
 import { useQuery } from "../../utility/utility";
 import { Subtitle, Title } from "../molecules/PageHeadings";
@@ -30,21 +30,24 @@ export const CreateTouchpointData = () => {
   const [properties, setProperties] = React.useState({});
 
   const handleSave = () => {
-    createTrackedUserTouchpoint({
-      success: () => alert("touchpoint created"),
-      error: () => alert("An error occurred"),
+    createTrackedUserTouchpointAsync({
       token,
       id,
       touchpointCommonId: touchpointData.commonId,
       payload: {
         values: properties,
       },
-    });
+    })
+      .then(() => alert("touchpoint created"))
+      .catch(() => alert("An error occurred"));
   };
 
   return (
     <React.Fragment>
-      <BackButton className="float-right" to={`/tracked-users/touchpoints/${trackedUser.id}`}>
+      <BackButton
+        className="float-right"
+        to={`/tracked-users/touchpoints/${trackedUser.id}`}
+      >
         Touchpoints
       </BackButton>
       <Top />

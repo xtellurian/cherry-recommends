@@ -1,6 +1,6 @@
 import React from "react";
 import { useAccessToken } from "./token";
-import { fetchDeploymentConfiguration } from "../api/deploymentApi";
+import { fetchDeploymentConfigurationAsync } from "../api/deploymentApi";
 
 export const useDeploymentConfiguration = () => {
   const token = useAccessToken();
@@ -8,11 +8,11 @@ export const useDeploymentConfiguration = () => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchDeploymentConfiguration({
-        success: setState,
-        error: (e) => setState({ error: e }),
+      fetchDeploymentConfigurationAsync({
         token,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token]);
 

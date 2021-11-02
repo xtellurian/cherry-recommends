@@ -1,59 +1,33 @@
-import { pageQuery } from "./paging";
-import { getUrl } from "../baseUrl";
-import { headers } from "./headers";
+import { executeFetch } from "./client/apiClient";
 
-export const fetchParameters = async ({ success, error, token, page }) => {
-  const url = getUrl("api/parameters");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: headers(token),
+export const fetchParametersAsync = async ({ token, page }) => {
+  return await executeFetch({
+    path: "api/Parameters",
+    token,
+    page,
   });
-  if (response.ok) {
-    success(await response.json());
-  } else {
-    error(await response.json());
-  }
 };
 
-export const fetchParameter = async ({ success, error, token, id }) => {
-  const url = getUrl(`api/parameters/${id}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+export const fetchParameterAsync = async ({ token, id }) => {
+  return await executeFetch({
+    path: `api/parameters/${id}`,
+    token,
   });
-  if (response.ok) {
-    success(await response.json());
-  } else {
-    error(await response.json());
-  }
 };
 
 export const deleteParameterAsync = async ({ token, id }) => {
-  const url = getUrl(`api/parameters/${id}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/parameters/${id}`,
+    token,
     method: "delete",
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const createParameterAsync = async ({ token, payload }) => {
-  const url = getUrl("api/parameters");
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/Parameters",
+    token,
     method: "post",
-    body: JSON.stringify(payload),
+    body: payload,
   });
-
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
-
-export const createParameter = ({ success, error, token, payload }) => {
-  createParameterAsync({ token, payload }).then(success).catch(error);
 };

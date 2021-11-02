@@ -1,7 +1,7 @@
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useModelRegistrations } from "../../api-hooks/modelRegistrationsApi";
-import { deleteModelRegistration } from "../../api/modelRegistrationsApi";
+import { deleteModelRegistrationAsync } from "../../api/modelRegistrationsApi";
 import { Title } from "../molecules/PageHeadings";
 import { JsonView } from "../molecules/JsonView";
 import { CreateButton } from "../molecules/CreateButton";
@@ -54,7 +54,7 @@ const ModelRow = ({ model, onDeleted }) => {
               <button
                 className="btn btn-danger"
                 onClick={() => {
-                  deleteModelRegistration({
+                  deleteModelRegistrationAsync({
                     success: () => {
                       if (onDeleted) {
                         onDeleted();
@@ -64,6 +64,11 @@ const ModelRow = ({ model, onDeleted }) => {
                     error: setError,
                     token,
                     id: model.id,
+                  }).then(() => {
+                    if (onDeleted) {
+                      onDeleted();
+                    }
+                    setOpen(false);
                   });
                 }}
               >

@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import Modal from "react-modal";
 import { BrowserRouter } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
-import { fetchAuth0Configuration } from "./api/reactConfigApi";
+import { fetchAuth0ConfigurationAsync } from "./api/reactConfigApi";
 import { FunloaderContainer } from "./components/molecules/FunLoader";
 import { FunError } from "./components/molecules/FunError";
 import EnvironmentStore from "./contexts/EnvironmentStore";
@@ -17,7 +17,7 @@ const baseUrl = document.getElementsByTagName("base")[0].getAttribute("href");
 const rootElement = document.getElementById("root");
 
 ReactDOM.render(<FunloaderContainer />, rootElement);
-fetchAuth0Configuration()
+fetchAuth0ConfigurationAsync()
   .then((x) => new Promise((resolve) => setTimeout(() => resolve(x), 1500))) // ensure you wait a second for the loading screen
   .then((auth0Config) => {
     ReactDOM.render(

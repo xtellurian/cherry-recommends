@@ -1,92 +1,42 @@
-import { pageQuery } from "./paging";
-import { getUrl } from "../baseUrl";
-import { headers } from "./headers";
+import { executeFetch } from "./client/apiClient";
 
-export const fetchModelRegistrations = async ({
-  success,
-  error,
-  token,
-  page,
-}) => {
-  const url = getUrl("api/ModelRegistrations");
-  const response = await fetch(`${url}?${pageQuery(page)}`, {
-    headers: headers(token),
+export const fetchModelRegistrationsAsync = async ({ token, page }) => {
+  return await executeFetch({
+    path: "api/ModelRegistrations",
+    token,
+    page,
   });
-  if (response.ok) {
-    const results = await response.json();
-    success(results);
-  } else {
-    error(await response.json());
-  }
 };
 
-export const fetchModelRegistration = async ({ success, error, token, id }) => {
-  const url = getUrl(`api/ModelRegistrations/${id}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+export const fetchModelRegistrationAsync = async ({ token, id }) => {
+  return await executeFetch({
+    path: `api/ModelRegistrations/${id}`,
+    token,
   });
-  if (response.ok) {
-    const results = await response.json();
-    success(results);
-  } else {
-    error(await response.json());
-  }
 };
 
-export const deleteModelRegistration = async ({
-  success,
-  error,
-  token,
-  id,
-}) => {
-  const url = getUrl(`api/ModelRegistrations/${id}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+export const deleteModelRegistrationAsync = async ({ token, id }) => {
+  return await executeFetch({
+    path: `api/ModelRegistrations/${id}`,
+    token,
     method: "delete",
   });
-  if (response.ok) {
-    const results = await response.json();
-    success(results);
-  } else {
-    error(await response.json());
-  }
 };
 
 export const createModelRegistrationAsync = async ({ token, payload }) => {
-  const url = getUrl("api/ModelRegistrations");
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/ModelRegistrations",
+    token,
     method: "post",
-    body: JSON.stringify(payload),
+    body: payload,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
-export const createModelRegistration = ({ success, error, token, payload }) => {
-  createModelRegistrationAsync({ token, payload }).then(success).catch(error);
-};
-
-export const invokeModel = async ({
-  success,
-  error,
-  token,
-  modelId,
-  features,
-}) => {
-  const url = getUrl(`api/ModelRegistrations/${modelId}/invoke`);
-  const response = await fetch(url, {
-    headers: headers(token),
+export const invokeModelAsync = async ({ token, modelId, features }) => {
+  return await executeFetch({
+    path: `api/ModelRegistrations/${modelId}/invoke`,
+    token,
     method: "post",
-    body: JSON.stringify(features),
+    body: features,
   });
-  if (response.ok) {
-    const data = await response.json();
-    success(data);
-  } else {
-    error(await response.json());
-  }
 };

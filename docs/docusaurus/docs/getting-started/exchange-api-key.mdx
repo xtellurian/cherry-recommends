@@ -30,13 +30,14 @@ const fs = require("fs");
 const signalbox = require("signalbox.js");
 
 signalbox.apiKeys
-  .exchangeApiKey({
-    success: (token_response) =>
-      fs.writeFileSync(".token.json", JSON.stringify(token_response)),
-    error: (e) => console.log(e),
+  .exchangeApiKeyAsync({
     apiKey: "YOUR_API_KEY",
   })
-  .then(() => console.log("Wrote Access Token to .token.json"));
+  .then((token_response) =>
+    fs.writeFileSync(".token.json", JSON.stringify(token_response))
+  )
+  .then(() => console.log("Wrote Access Token to .token.json"))
+  .catch(console.log);
 ```
 
 </TabItem>

@@ -1,5 +1,4 @@
-import { getUrl } from "../../../baseUrl";
-import { headers } from "../../headers";
+import { executeFetch } from "../../client/apiClient";
 
 export const fetchRecommenderTargetVariableValuesAsync = async ({
   recommenderApiName,
@@ -7,19 +6,13 @@ export const fetchRecommenderTargetVariableValuesAsync = async ({
   token,
   id,
 }) => {
-  const url = getUrl(
-    `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues?name=${
-      name || ""
-    }`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues`,
+    token,
+    query: {
+      name,
+    },
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const createRecommenderTargetVariableValueAsync = async ({
@@ -28,17 +21,10 @@ export const createRecommenderTargetVariableValueAsync = async ({
   token,
   id,
 }) => {
-  const url = getUrl(
-    `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues`,
+    token,
     method: "post",
-    body: JSON.stringify(targetVariableValue),
+    body: targetVariableValue,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

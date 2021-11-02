@@ -1,9 +1,9 @@
 import React from "react";
 import { useAccessToken } from "./token";
 import {
-  fetchEventSummary,
-  fetchEventTimeline,
-  fetchDashboard,
+  fetchEventSummaryAsync,
+  fetchEventTimelineAsync,
+  fetchDashboardAsync,
   fetchLatestActionsAsync,
 } from "../api/dataSummaryApi";
 
@@ -14,11 +14,11 @@ export const useEventDataSummary = () => {
   });
   React.useEffect(() => {
     if (token) {
-      fetchEventSummary({
-        success: setState,
-        error: console.log,
+      fetchEventSummaryAsync({
         token,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token]);
 
@@ -52,13 +52,13 @@ export const useEventTimeline = ({ kind, eventType }) => {
   React.useEffect(() => {
     if (token && kind && eventType) {
       setState({ loading: true });
-      fetchEventTimeline({
-        success: setState,
-        error: console.log,
+      fetchEventTimelineAsync({
         token,
         kind,
         eventType,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, kind, eventType]);
 
@@ -73,15 +73,12 @@ export const useDashboard = ({ scope }) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchDashboard({
-        success: setState,
-        error: (e) =>
-          setState({
-            error: e,
-          }),
+      fetchDashboardAsync({
         token,
         scope,
-      });
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
     }
   }, [token, scope]);
 

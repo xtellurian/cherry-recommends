@@ -1,46 +1,29 @@
-import { pageQuery } from "./paging";
-import { getUrl } from "../baseUrl";
-import { headers } from "./headers";
-import { searchEntities } from "../utilities/search";
+import { executeFetch } from "./client/apiClient";
 
 export const fetchFeaturesAsync = async ({ token, page, searchTerm }) => {
-  let url = getUrl("api/features");
-  url = `${url}?${pageQuery(page)}`;
-  if (searchTerm) {
-    url = `${url}&${searchEntities(searchTerm)}`;
-  }
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/Features",
+    token,
+    page,
+    query: {
+      "q.term": searchTerm,
+    },
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const fetchFeatureAsync = async ({ token, id }) => {
-  const url = getUrl(`api/features/${id}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/features/${id}`,
+    token,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const fetchFeatureTrackedUsersAsync = async ({ token, page, id }) => {
-  const url = getUrl(`api/Features/${id}/TrackedUsers?${pageQuery(page)}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/Features/${id}/TrackedUsers`,
+    token,
+    page,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const fetchFeatureTrackedUserFeaturesAsync = async ({
@@ -48,56 +31,35 @@ export const fetchFeatureTrackedUserFeaturesAsync = async ({
   page,
   id,
 }) => {
-  const url = getUrl(
-    `api/Features/${id}/TrackedUserFeatures?${pageQuery(page)}`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/Features/${id}/TrackedUserFeatures`,
+    token,
+    page,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const createFeatureAsync = async ({ token, feature }) => {
-  const url = getUrl(`api/features/`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: "api/Features",
+    token,
     method: "post",
-    body: JSON.stringify(feature),
+    body: feature,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const deleteFeatureAsync = async ({ token, id }) => {
-  const url = getUrl(`api/features/${id}`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/features/${id}`,
+    token,
     method: "delete",
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const fetchTrackedUserFeaturesAsync = async ({ token, id }) => {
-  const url = getUrl(`api/TrackedUsers/${id}/features`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/TrackedUsers/${id}/features`,
+    token,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const fetchTrackedUserFeatureValuesAsync = async ({
@@ -106,15 +68,11 @@ export const fetchTrackedUserFeatureValuesAsync = async ({
   feature,
   version,
 }) => {
-  const url = getUrl(
-    `api/TrackedUsers/${id}/features/${feature}?version=${version || ""}`
-  );
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/TrackedUsers/${id}/features/${feature}`,
+    token,
+    query: {
+      version,
+    },
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };

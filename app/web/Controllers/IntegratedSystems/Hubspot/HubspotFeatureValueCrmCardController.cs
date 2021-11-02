@@ -30,9 +30,9 @@ namespace SignalBox.Web.Controllers
         private readonly ITrackedUserSystemMapStore systemMapStore;
         private readonly ITrackedUserTouchpointStore trackedUserTouchpointStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
-        private readonly IProductRecommenderStore productRecommenderStore;
+        private readonly IItemsRecommenderStore itemsRecommenderStore;
         private readonly ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation;
-        private readonly ProductRecommenderInvokationWorkflows productRecommenderInvokation;
+        private readonly ItemsRecommenderInvokationWorkflows itemsRecommenderInvokation;
         private readonly IFeatureStore featureStore;
         private readonly IHistoricTrackedUserFeatureStore trackedUserFeatureStore;
         private readonly HubspotAppCredentials credentials;
@@ -48,9 +48,9 @@ namespace SignalBox.Web.Controllers
                                          ITrackedUserSystemMapStore systemMapStore,
                                          ITrackedUserTouchpointStore trackedUserTouchpointStore,
                                          IParameterSetRecommenderStore parameterSetRecommenderStore,
-                                         IProductRecommenderStore productRecommenderStore,
+                                         IItemsRecommenderStore itemsRecommenderStore,
                                          ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation,
-                                         ProductRecommenderInvokationWorkflows productRecommenderInvokation,
+                                         ItemsRecommenderInvokationWorkflows itemsRecommenderInvokation,
                                          IFeatureStore featureStore,
                                          IHistoricTrackedUserFeatureStore trackedUserFeatureStore)
                                           : base(logger, deploymentOptions, hasher, hubspotOptions)
@@ -63,9 +63,9 @@ namespace SignalBox.Web.Controllers
             this.systemMapStore = systemMapStore;
             this.trackedUserTouchpointStore = trackedUserTouchpointStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
-            this.productRecommenderStore = productRecommenderStore;
+            this.itemsRecommenderStore = itemsRecommenderStore;
             this.parameterSetRecommenderInvokation = parameterSetRecommenderInvokation;
-            this.productRecommenderInvokation = productRecommenderInvokation;
+            this.itemsRecommenderInvokation = itemsRecommenderInvokation;
             this.featureStore = featureStore;
             this.trackedUserFeatureStore = trackedUserFeatureStore;
             this.credentials = hubspotOptions.Value;
@@ -230,14 +230,14 @@ namespace SignalBox.Web.Controllers
                 };
                 return await parameterSetRecommenderInvokation.InvokeParameterSetRecommender(recommender, input);
             }
-            else if (behaviour.ProductRecommenderId != null)
+            else if (behaviour.ItemsRecommenderId != null)
             {
-                var recommender = await productRecommenderStore.Read(behaviour.ProductRecommenderId.Value);
-                var input = new ProductRecommenderModelInputV1
+                var recommender = await itemsRecommenderStore.Read(behaviour.ItemsRecommenderId.Value);
+                var input = new ItemsModelInputDto
                 {
                     CommonUserId = trackedUser.CommonUserId
                 };
-                return await productRecommenderInvokation.InvokeProductRecommender(recommender, input);
+                return await itemsRecommenderInvokation.InvokeItemsRecommender(recommender, input);
             }
             else
             {

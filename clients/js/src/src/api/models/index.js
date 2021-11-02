@@ -1,3 +1,3 @@
-import { invokeGenericModel } from "./genericModelApi";
+import { invokeGenericModelAsync } from "./genericModelApi";
 
-export { invokeGenericModel };
+export { invokeGenericModelAsync };

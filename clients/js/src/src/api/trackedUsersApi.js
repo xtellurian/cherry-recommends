@@ -1,107 +1,54 @@
-import { pageQuery } from "./paging";
 import { chunkArray } from "../utilities/chunk";
-import { getUrl } from "../baseUrl";
-import { headers } from "./headers";
-import { internalId } from "../utilities/index";
+import { handleErrorResponse } from "../utilities/errorHandling";
+import { executeFetch } from "./client/apiClient";
+
 const MAX_ARRAY = 5000;
 
-const searchEntities = (term) => {
-  if (term) {
-    return `&q.term=${term}`;
-  } else {
-    return "";
-  }
-};
 export const fetchTrackedUsersAsync = async ({ token, page, searchTerm }) => {
-  const url = getUrl("api/trackedUsers");
-  const response = await fetch(
-    `${url}?${pageQuery(page)}${searchEntities(searchTerm)}`,
-    {
-      headers: headers(token),
-    }
-  );
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
-export const fetchTrackedUsers = async ({
-  success,
-  error,
-  token,
-  page,
-  searchTerm,
-}) => {
-  fetchTrackedUsersAsync({ token, page, searchTerm })
-    .then(success)
-    .catch(error);
+  return await executeFetch({
+    path: "api/trackedUsers",
+    token,
+    page,
+    query: {
+      "q.term": searchTerm,
+    },
+  });
 };
 
 export const updateMergePropertiesAsync = async ({ token, id, properties }) => {
-  const url = getUrl(`api/trackedUsers/${id}/properties`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    token,
+    path: `api/trackedUsers/${id}/properties`,
     method: "post",
-    body: JSON.stringify(properties),
+    body: properties,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const fetchTrackedUserAsync = async ({ token, id, useInternalId }) => {
-  let url = getUrl(`api/trackedUsers/${id}`);
-  url = `${url}?${internalId(useInternalId)}`;
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/trackedUsers/${id}`,
+    token,
+    query: {
+      useInternalId,
+    },
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
-
-export const fetchTrackedUser = async ({
-  success,
-  error,
-  token,
-  id,
-  useInternalId,
-}) => {
-  fetchTrackedUserAsync({ token, id, useInternalId })
-    .then(success)
-    .catch(error);
 };
 
 export const fetchUniqueTrackedUserActionGroupsAsync = async ({
   token,
   id,
 }) => {
-  const url = getUrl(`api/trackedUsers/${id}/action-groups`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    token,
+    path: `api/trackedUsers/${id}/action-groups`,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const fetchLatestRecommendationsAsync = async ({ token, id }) => {
-  const url = getUrl(`api/trackedUsers/${id}/latest-recommendations`);
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    token,
+    path: `api/trackedUsers/${id}/latest-recommendations`,
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
 
 export const fetchTrackedUserActionAsync = async ({
@@ -110,70 +57,42 @@ export const fetchTrackedUserActionAsync = async ({
   category,
   actionName,
 }) => {
-  let url = getUrl(`api/trackedUsers/${id}/actions/${category}`);
-  if (actionName) {
-    url = url + `?actionName=${actionName}`;
-  }
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/trackedUsers/${id}/actions/${category}`,
+    token,
+    query: {
+      actionName,
+    },
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
-export const fetchTrackedUserAction = async ({
-  success,
-  error,
-  token,
-  id,
-  category,
-  actionName,
-}) => {
-  fetchTrackedUserActionAsync({ id, token, category, actionName })
-    .then(success)
-    .catch(error);
 };
 
-export const uploadUserData = async ({ success, error, token, payload }) => {
-  const url = getUrl(`api/trackedUsers`);
+export const uploadUserDataAsync = async ({ token, payload }) => {
   const payloads = chunkArray(payload.users, MAX_ARRAY).map((users) => ({
     users,
   }));
   const responses = [];
   for (const p of payloads) {
-    const response = await fetch(url, {
-      headers: headers(token),
+    const response = await executeFetch({
+      token,
+      path: "api/trackedUsers",
       method: "put",
-      body: JSON.stringify(p),
+      body: p,
     });
     if (response.ok) {
       responses.push(await response.json());
     } else {
-      error(await response.json());
+      return await handleErrorResponse(response);
     }
   }
-  success(responses);
+  return responses;
 };
 
-export const createOrUpdateTrackedUser = async ({
-  success,
-  error,
-  token,
-  user,
-}) => {
-  const url = getUrl(`api/trackedUsers/`);
-  const response = await fetch(url, {
-    headers: headers(token),
+export const createOrUpdateTrackedUserAsync = async ({ token, user }) => {
+  return await executeFetch({
+    path: "api/trackedUsers",
     method: "post",
-    body: JSON.stringify(user),
+    body: user,
   });
-  if (response.ok) {
-    success(await response.json());
-  } else {
-    error(await response.json());
-  }
 };
 
 export const fetchTrackedUsersActionsAsync = async ({
@@ -182,14 +101,12 @@ export const fetchTrackedUsersActionsAsync = async ({
   id,
   revenueOnly,
 }) => {
-  let url = getUrl(`api/TrackedUsers/${id}/Actions`);
-  url = `${url}?${pageQuery(page)}&revenueOnly=${!!revenueOnly}`;
-  const response = await fetch(url, {
-    headers: headers(token),
+  return await executeFetch({
+    path: `api/TrackedUsers/${id}/Actions`,
+    token,
+    page,
+    query: {
+      revenueOnly: !!revenueOnly,
+    },
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
 };
