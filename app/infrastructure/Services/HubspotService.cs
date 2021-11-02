@@ -114,7 +114,7 @@ namespace SignalBox.Infrastructure.Services
             AuthorizeHttpClient(system);
             var contactPropertiesClient = new ContactPropertiesClient(httpClient);
             var res = await contactPropertiesClient.CrmV3PropertiesGetAsync(contactObjectType, false);
-            return res.Results.Select(_ => new HubspotContactProperty(_.Name, _.Label, _.Type, _.Description, _.HubspotDefined));
+            return res.Results.Select(_ => new HubspotContactProperty(_.Name, _.Label, _.Type, _.Description, _.HubspotDefined, _.GroupName));
         }
 
 

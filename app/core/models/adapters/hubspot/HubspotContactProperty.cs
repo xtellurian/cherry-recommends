@@ -12,15 +12,12 @@ namespace SignalBox.Core.Adapters.Hubspot
             HubspotDefined = hubspotDefined;
             GroupName = groupName;
         }
-        public HubspotContactProperty(string name, string label, string type, string description, bool hubspotDefined)
-        : this(name, label, type, description, hubspotDefined, hubspotDefined ? null : "four2")
-        { }
 
         public string Name { get; set; } // the internal name
         public string Label { get; set; } // the human readable label
         public string Type { get; set; } // the data type
         public string Description { get; set; } // a description of the property
         public bool HubspotDefined { get; set; } // whether the property is defined by Hubspot
-        public string? GroupName { get; set; }
+        public string? GroupName { get; set; } // the Hubspot property group name
     }
 }

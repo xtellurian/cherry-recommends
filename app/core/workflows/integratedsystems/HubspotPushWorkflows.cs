@@ -38,12 +38,14 @@ namespace SignalBox.Core.Workflows
             await base.CheckAndRefreshCredentials(system);
 
             var report = new HubspotDataPushReport(system.CommonId);
-            await hubspotService.EnsureContactPropertyGroupCreated(system, new HubspotContactPropertyGroup("four2", "Four2"));
+            var groupName = "four2";
+            await hubspotService.EnsureContactPropertyGroupCreated(system, new HubspotContactPropertyGroup(groupName, "Four2"));
             var property = await hubspotService.EnsureContactPropertyCreated(system, new HubspotContactProperty(recommender.CommonId,
                                                                                                          recommender.Name,
                                                                                                          "string",
-                                                                                                         null,
-                                                                                                         false));
+                                                                                                         description: null,
+                                                                                                         false,
+                                                                                                         groupName));
 
             // do this for all tracked users
             int page = 1;
