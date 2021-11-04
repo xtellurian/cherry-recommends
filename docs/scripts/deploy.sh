@@ -1,4 +1,4 @@
-cd azure-docs
+cd ../azure-docs
 
 STACK=$(pulumi stack --show-name)
 echo "Using Pulumi Stack $STACK"

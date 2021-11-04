@@ -77,7 +77,8 @@ namespace SignalBox.Azure
             };
             if (!string.IsNullOrEmpty(canonicalRootDomain))
             {
-                hosts.Add($"https://*.{canonicalRootDomain}");
+                hosts.Add($"https://{canonicalRootDomain}"); // allow the canonical root to login
+                hosts.Add($"https://*.{canonicalRootDomain}"); // allow all subdomains (tenants + specials) to login
             }
             var clientApp = new Client("reactApp", new ClientArgs
             {

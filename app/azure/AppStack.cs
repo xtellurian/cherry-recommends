@@ -8,14 +8,17 @@ namespace SignalBox.Azure
 {
     class AppStack : Stack
     {
+        private string environment;
+
         public AppStack()
         {
             var config = new Config();
+            this.environment = config.Require("environment");
             var networkConfig = new Config("network");
             var tags = new Dictionary<string, string>
             {
                 {"Pulumi Stack", Pulumi.Deployment.Instance.StackName},
-                {"Environment", config.Require("environment")}
+                {"Environment", environment}
             };
 
             var commonRgArgs = new ResourceGroupArgs

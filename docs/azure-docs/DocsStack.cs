@@ -13,10 +13,12 @@ class DocsStack : Stack
 {
     public DocsStack()
     {
+        var docsConfig = new Config("docs");
+        var rgName = docsConfig.Get("resourceGroupName") ?? $"docs-{Pulumi.Deployment.Instance.StackName}";
         // Create an Azure Resource Group
         var resourceGroup = new ResourceGroup("docs", new ResourceGroupArgs
         {
-            ResourceGroupName = $"docs-{Pulumi.Deployment.Instance.StackName}"
+            ResourceGroupName = rgName
         });
 
         // Create an Azure resource (Storage Account)
@@ -52,6 +54,7 @@ class DocsStack : Stack
         });
 
         this.StaticEndpoint = storageAccount.PrimaryEndpoints.Apply(primaryEndpoints => primaryEndpoints.Web);
+        this.WebEndpointCNameValue = this.StaticEndpoint.Apply(e => e.Replace("https://", "").TrimEnd('/'));
         this.StorageAccountName = storageAccount.Name;
 
         // Export the primary key of the Storage Account
@@ -61,6 +64,8 @@ class DocsStack : Stack
 
     [Output]
     public Output<string> StaticEndpoint { get; set; }
+    [Output]
+    public Output<string> WebEndpointCNameValue { get; set; }
     [Output]
     public Output<string> StorageAccountName { get; private set; }
     [Output]
@@ -87,39 +92,4 @@ class DocsStack : Stack
             return "application/octet-stream";
         }
     }
-
-    private static List<string> FindAllFiles(string rootDir)
-    {
-        var pathsToSearch = new Queue<string>();
-        var foundFiles = new List<string>();
-
-        pathsToSearch.Enqueue(rootDir);
-
-        while (pathsToSearch.Count > 0)
-        {
-            var dir = pathsToSearch.Dequeue();
-
-            try
-            {
-                var files = Directory.GetFiles(dir);
-                foreach (var file in Directory.GetFiles(dir))
-                {
-                    foundFiles.Add(file);
-                }
-
-                foreach (var subDir in Directory.GetDirectories(dir))
-                {
-                    pathsToSearch.Enqueue(subDir);
-                }
-
-            }
-            catch (Exception /* TODO: catch correct exception */)
-            {
-                // Swallow.  Gulp!
-            }
-        }
-
-        return foundFiles.ToList();
-    }
-
 }

@@ -4,6 +4,7 @@ using Pulumi.AzureNative.Web.Inputs;
 using Pulumi.AzureNative.Web;
 using Pulumi.AzureNative.Insights;
 using Pulumi.AzureNative.Authorization;
+using System.Threading.Tasks;
 
 namespace SignalBox.Azure
 {
@@ -157,29 +158,44 @@ namespace SignalBox.Azure
             });
 
             var keys = Output.Tuple(dotnetFunctionApp.Name, dotnetFunctionApp.ResourceGroup, Output.CreateSecret(""))
-               .Apply(
-                   t => ListWebAppHostKeys.InvokeAsync(new ListWebAppHostKeysArgs
-                   {
-                       Name = t.Item1,
-                       ResourceGroupName = t.Item2,
-                   }));
+               .Apply(GetHostKeys);
 
-            this.DotnetFunctionAppMasterKey = keys.Apply(result => result.MasterKey);
+            this.DotnetFunctionAppMasterKey = keys.Apply(k => k?.MasterKey);
 
             this.DotnetFunctionAppDefaultKey = keys.Apply(k =>
+            {
+                if (k?.FunctionKeys != null && k.FunctionKeys.ContainsKey("default"))
                 {
-                    if (k.FunctionKeys != null && k.FunctionKeys.ContainsKey("default"))
-                    {
-                        return k.FunctionKeys["default"];
-                    }
-                    else
-                    {
-                        System.Console.WriteLine("No function Keys.");
-                        return null;
-                    }
-                });
+                    return k.FunctionKeys["default"];
+                }
+                else
+                {
+                    System.Console.WriteLine("No function Keys.");
+                    return null;
+                }
+            });
 
             return dotnetFunctionApp;
+        }
+
+        // this fixes an issue
+        // when the func app is initially created, there's an error thrown by this method
+        // the func app must be deployed BEFORE this method calls.
+        // therefore, we catch the error here the first time.
+        private static async Task<ListWebAppHostKeysResult?> GetHostKeys((string, string, string) t)
+        {
+            try
+            {
+                return await ListWebAppHostKeys.InvokeAsync(new ListWebAppHostKeysArgs
+                {
+                    Name = t.Item1,
+                    ResourceGroupName = t.Item2,
+                });
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private WebApp CreatePythonFunctions(ResourceGroup rg,

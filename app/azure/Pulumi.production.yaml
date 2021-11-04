@@ -1,0 +1,25 @@
+config:
+  appsvc:canonical-root-domain: app.cherry.ai
+  appsvc:capacity: "2"
+  appsvc:multitenant: "true"
+  appsvc:sku-name: B1
+  appsvc:sku-tier: Basic
+  auth0:clientId: tB4g1JLH2kQLPbwrLq66Cb8R8KLcT7YT
+  auth0:clientSecret:
+    secure: AAABAO1tgobqrRkuG8oxau9Skg5su+50qF2SuGGZ25AI3RdTlGOhnrktkkLfW9oqLUbxTxlxLG/H/n60DDlPW+XesQGB2mmZXd0u48UuJLgDr2SFNSuV2r3tlTcv4xhT
+  auth0:domain: cherry.au.auth0.com
+  azure-ml:description: (do not use) Cherry Prod
+  azure-ml:friendlyname: CherryProd
+  azure-ml:name: CherryProd
+  azure-native:location: australiaeast
+  azure-native:subscriptionId: 04b1ca0e-558c-48d0-ba28-fee796a82076
+  azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
+  azure-synapse:enable: "true"
+  azure-synapse:sqlPassword:
+    secure: AAABAMCoCQ8kDUX9lbWcvPd5L/Z0oLKjB9wV4mRzObU7DXDfJlmVDFU8w8w=
+  hubspot:appId: todo
+  hubspot:clientId: todo
+  network:cherrySubdomain: app
+  signalbox:environment: Production
+  signalbox:sqlPassword:
+    secure: AAABANL6gVEu+m2/baJ75BQatHutfwmtAGA4rRLwht3ClgTUkPSSp5+XmzM=

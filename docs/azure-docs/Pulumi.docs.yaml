@@ -1,0 +1,5 @@
+config:
+  azure-native:location: australiaeast
+  azure-native:subscriptionId: 04b1ca0e-558c-48d0-ba28-fee796a82076
+  azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
+  docs:resourceGroupName: cherry-docs
