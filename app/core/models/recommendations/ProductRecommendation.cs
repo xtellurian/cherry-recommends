@@ -1,15 +1,21 @@
 using System.Text.Json.Serialization;
 using SignalBox.Core.Recommenders;
 
+
 namespace SignalBox.Core.Recommendations
 {
     public class ProductRecommendation : RecommendationEntity
     {
         protected ProductRecommendation()
         { }
-
-        public ProductRecommendation(ProductRecommender recommender, TrackedUser trackedUser, RecommendationCorrelator correlator, Product product)
-         : base(correlator, RecommenderTypes.Product)
+#nullable enable
+        public ProductRecommendation(
+            ProductRecommender recommender,
+            TrackedUser trackedUser,
+            RecommendationCorrelator correlator,
+            Product product,
+            string? trigger)
+         : base(correlator, RecommenderTypes.Product, trigger)
         {
             Recommender = recommender;
             RecommenderId = recommender.Id;

@@ -47,11 +47,12 @@ namespace SignalBox.Core.Workflows
 
         public async Task<ItemsRecommendation> InvokeItemsRecommender(
             ItemsRecommender recommender,
-            IItemsModelInput input)
+            IItemsModelInput input,
+            string? trigger = null)
         {
             await itemsRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             var invokationEntry = await base.StartTrackInvokation(recommender, input);
-            RecommendingContext context = new RecommendingContext(invokationEntry);
+            RecommendingContext context = new RecommendingContext(invokationEntry, trigger);
             var userName = input.CommonUserId;
             try
             {
@@ -219,7 +220,7 @@ namespace SignalBox.Core.Workflows
                                                                         ItemsRecommenderModelOutputV1 output)
         {
             // produce the recommendation entity
-            var recommendation = new ItemsRecommendation(recommender, context.TrackedUser, context.Correlator, output.ScoredItems);
+            var recommendation = new ItemsRecommendation(recommender, context, output.ScoredItems);
             output.CorrelatorId = context.Correlator?.Id;
             recommendation.SetInput(input);
             recommendation.SetOutput(output);

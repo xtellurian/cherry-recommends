@@ -6,20 +6,17 @@ namespace SignalBox.Core
     {
         protected HistoricTrackedUserFeature()
         { }
-        private HistoricTrackedUserFeature(TrackedUser trackedUser, Feature feature, int version) : base(trackedUser, feature)
+
+        public HistoricTrackedUserFeature(TrackedUser trackedUser, Feature feature, string value, int version)
+        : base(trackedUser, feature, value)
         {
             Version = version;
         }
-        public HistoricTrackedUserFeature(TrackedUser trackedUser, Feature feature, string value, int version)
-        : this(trackedUser, feature, version)
-        {
-            StringValue = value;
-        }
 
         public HistoricTrackedUserFeature(TrackedUser trackedUser, Feature feature, double value, int version)
-        : this(trackedUser, feature, version)
+        : base(trackedUser, feature, value)
         {
-            NumericValue = value;
+            Version = version;
         }
 
 #nullable enable

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SignalBox.Core;
 using SignalBox.Core.Recommendations.Destinations;
+using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
@@ -25,8 +26,9 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(_ => _.Recommender)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(nameof(RecommenderEntityBase.RecommendationDestinations))
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(true);
         }
     }
 

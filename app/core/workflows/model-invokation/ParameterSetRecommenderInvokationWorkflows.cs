@@ -53,12 +53,14 @@ namespace SignalBox.Core.Workflows
 
         public async Task<ParameterSetRecommendation> InvokeParameterSetRecommender(
             ParameterSetRecommender recommender,
-            ParameterSetRecommenderModelInputV1 input)
+            ParameterSetRecommenderModelInputV1 input,
+            string? trigger = null)
         {
             // use the correlator to begin with because need to pass an event ID into some models
             await parameterSetRecommenderStore.Load(recommender, _ => _.ModelRegistration);
-            var invokLog = await base.StartTrackInvokation(recommender, input);
-            RecommendingContext context = new RecommendingContext(invokLog);
+            await parameterSetRecommenderStore.LoadMany(recommender, _ => _.Parameters);
+            var invokeLog = await base.StartTrackInvokation(recommender, input);
+            RecommendingContext context = new RecommendingContext(invokeLog, trigger);
 
             try
             {
@@ -123,7 +125,7 @@ namespace SignalBox.Core.Workflows
                 var output = await client.Invoke(recommender, context, input);
 
 
-                var recommendation = new ParameterSetRecommendation(recommender, context.TrackedUser, context.Correlator);
+                var recommendation = new ParameterSetRecommendation(recommender, context);
                 recommendation.SetInput(input);
                 recommendation.SetOutput(output);
                 recommendation = await parameterSetRecommendationStore.Create(recommendation);
@@ -191,7 +193,7 @@ namespace SignalBox.Core.Workflows
                     recommendedParams[p.CommonId] = p.DefaultValue?.Value;
                 }
 
-                var recommendation = new ParameterSetRecommendation(recommender, context.TrackedUser, context.Correlator);
+                var recommendation = new ParameterSetRecommendation(recommender, context);
                 return recommendation;
             }
             catch (System.Exception ex)

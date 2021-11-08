@@ -1,0 +1,29 @@
+---
+sidebar_position: 10
+title: Features Changed Trigger
+---
+
+## Invoking a recommender when a Feature changes
+
+Recommenders can be automatically invoked based on various triggers.
+The `Features Changed trigger` will invoke the recommender when the chosen Feature(s) value changes for a specific customer.
+
+### Example
+
+Let's assume we have crated a Total Revenue Feature. i.e. we're calculating the total revenue for each Customer,
+and storing that value in a Feature.
+
+To calculate the total revenue for each Customer, we've created a Feature Generator job that runs every week.
+Now, every time the Feature generator runs (weekly), Customers with new payments will have increased their total revenue.
+When the new Total Revenue Feature value is calculated for a Customer, 
+the linked Recommender will be invoked, and the recommendation will be sent to any connected destinations.
+
+The following scenario describes a common setup:
+
+1. Alice is a GetCoffee Customer.
+1. GetCoffee has created an Item Recommender to find the best loyalty reward for Customers.
+1. GetCoffee sets up a `Features Changed` trigger based on the `Total Revenue` feature.
+1. Alice buys 2 coffees this week.
+1. At the end of the week, because Alice's total revenue has increased, and her Feature value is updated.
+1. The loyalty reward recommender is triggered, producing a new loyalty reward recommendation for Alice.
+1. GetCoffee has a [webhook destination](../../integrations/destinations/webhooks) that automatically receives the new recommendation.

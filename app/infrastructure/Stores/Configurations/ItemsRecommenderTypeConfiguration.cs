@@ -5,11 +5,12 @@ using SignalBox.Core.Recommenders;
 namespace SignalBox.Infrastructure.EntityFramework
 {
     internal class ItemsRecommenderTypeConfiguration
-    : CommonEntityTypeConfigurationBase<ItemsRecommender>, IEntityTypeConfiguration<ItemsRecommender>
+    : RecommenderEntityBaseTypeConfigurationBase<ItemsRecommender>, IEntityTypeConfiguration<ItemsRecommender>
     {
         public override void Configure(EntityTypeBuilder<ItemsRecommender> builder)
         {
             builder.Property(_ => _.Arguments).HasJsonConversion();
+            builder.Property(_ => _.TriggerCollection).HasJsonConversion();
 
             builder
                 .HasMany(_ => _.Items)

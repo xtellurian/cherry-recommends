@@ -7,16 +7,19 @@ namespace SignalBox.Core.Recommendations
     {
         protected RecommendationEntity()
         { }
-        public RecommendationEntity(RecommendationCorrelator correlator, RecommenderTypes recommenderType)
+#nullable enable
+        public RecommendationEntity(RecommendationCorrelator correlator, RecommenderTypes recommenderType, string? trigger)
         {
             this.RecommendationCorrelator = correlator;
             this.RecommenderType = recommenderType;
+            this.Trigger = trigger;
         }
-#nullable enable
 
         public RecommenderTypes? RecommenderType { get; set; } // nullable for backwards compat
         public long? TrackedUserId { get; set; }
         public TrackedUser? TrackedUser { get; set; }
+
+        public string? Trigger { get; set; }
 
         public long? RecommendationCorrelatorId { get; set; }
         [JsonIgnore]

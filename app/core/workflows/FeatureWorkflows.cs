@@ -12,9 +12,9 @@ namespace SignalBox.Core.Workflows
 
         public FeatureWorkflows(IFeatureStore featureStore,
                                    IHistoricTrackedUserFeatureStore trackedUserFeatureStore,
+                                   RecommenderTriggersWorkflows triggersWorkflows,
                                    ITrackedUserStore trackedUserStore,
-                                   ILogger<FeatureWorkflows> logger,
-                                   IStorageContext storageContext) : base(featureStore, trackedUserFeatureStore, storageContext, logger)
+                                   ILogger<FeatureWorkflows> logger) : base(featureStore, trackedUserFeatureStore, triggersWorkflows, logger)
         {
             this.trackedUserStore = trackedUserStore;
         }
@@ -22,7 +22,7 @@ namespace SignalBox.Core.Workflows
         public async Task<Feature> CreateFeature(string commonId, string name)
         {
             var feature = await featureStore.Create(new Feature(commonId, name));
-            await storageContext.SaveChanges();
+            await featureStore.Context.SaveChanges();
             return feature;
         }
 

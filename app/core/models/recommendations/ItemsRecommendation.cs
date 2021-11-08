@@ -11,14 +11,13 @@ namespace SignalBox.Core.Recommendations
         { }
 
         public ItemsRecommendation(ItemsRecommender recommender,
-                                   TrackedUser trackedUser,
-                                   RecommendationCorrelator correlator,
+                                    RecommendingContext context,
                                    IEnumerable<ScoredRecommendableItem> items)
-         : base(correlator, RecommenderTypes.Items)
+         : base(context.Correlator, RecommenderTypes.Items, context.Trigger)
         {
             Recommender = recommender;
             RecommenderId = recommender.Id;
-            TrackedUser = trackedUser;
+            TrackedUser = context.TrackedUser;
             Items = items.Select(_ => _.Item).ToList();
             Scores = items.Select(_ => new ScoreContainer(_.Item, _.Score)).ToList();
         }

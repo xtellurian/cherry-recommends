@@ -15,12 +15,14 @@ namespace SignalBox.Infrastructure.Dto
             this.CorrelatorId = recommendation.RecommendationCorrelatorId;
             this.CommonUserId = recommendation.TrackedUser.CommonUserId;
             this.Customer = recommendation.TrackedUser;
+            this.Trigger = recommendation.Trigger;
         }
 
-        public System.DateTimeOffset? Created { get; set; }
+        public System.DateTimeOffset Created { get; set; }
         public long? CorrelatorId { get; set; }
         public string CommonUserId { get; private set; }
         public IEnumerable<ScoredRecommendableItem> ScoredItems { get; set; }
         public TrackedUser Customer { get; set; }
+        public string Trigger { get; set; }
     }
 }

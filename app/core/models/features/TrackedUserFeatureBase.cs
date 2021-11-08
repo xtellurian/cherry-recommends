@@ -7,7 +7,7 @@ namespace SignalBox.Core
         protected TrackedUserFeatureBase()
         { }
 #nullable enable
-        protected TrackedUserFeatureBase(TrackedUser trackedUser, Feature feature)
+        private TrackedUserFeatureBase(TrackedUser trackedUser, Feature feature)
         {
             TrackedUser = trackedUser;
             Feature = feature;

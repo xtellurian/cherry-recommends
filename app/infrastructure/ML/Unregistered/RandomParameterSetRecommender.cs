@@ -24,6 +24,11 @@ namespace SignalBox.Infrastructure
                 RecommendedParameters = new Dictionary<string, object>()
             };
 
+            if (parameterSetRecommender.Parameters == null)
+            {
+                throw new NullReferenceException("Parameter List is null. The parameters must be loaded before being passed to the client");
+            }
+
             foreach (var p in parameterSetRecommender.Parameters)
             {
                 var bounds = parameterSetRecommender.ParameterBounds.FirstOrDefault(_ => _.CommonId == p.CommonId);

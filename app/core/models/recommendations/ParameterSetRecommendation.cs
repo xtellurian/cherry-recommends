@@ -8,13 +8,11 @@ namespace SignalBox.Core.Recommendations
         protected ParameterSetRecommendation()
         { }
 
-        public ParameterSetRecommendation(ParameterSetRecommender recommender,
-                                          TrackedUser trackedUser,
-                                          RecommendationCorrelator correlator)
-        : base(correlator, RecommenderTypes.ParameterSet)
+        public ParameterSetRecommendation(ParameterSetRecommender recommender, RecommendingContext context)
+        : base(context.Correlator, RecommenderTypes.ParameterSet, context.Trigger)
         {
             Recommender = recommender;
-            TrackedUser = trackedUser;
+            TrackedUser = context.TrackedUser;
         }
 
 #nullable enable

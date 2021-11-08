@@ -790,6 +790,27 @@
     });
   };
 
+  const setTriggerAsync$2 = async ({
+    recommenderApiName,
+    token,
+    id,
+    trigger,
+  }) => {
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/TriggerCollection`,
+      token,
+      method: "post",
+      body: trigger,
+    });
+  };
+
+  const fetchTriggerAsync$2 = async ({ recommenderApiName, token, id }) => {
+    return await executeFetch({
+      token,
+      path: `api/recommenders/${recommenderApiName}/${id}/TriggerCollection`,
+    });
+  };
+
   const recommenderApiName$1 = "ParameterSetRecommenders";
 
   const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
@@ -983,6 +1004,23 @@
     });
   };
 
+  const fetchTriggerAsync$1 = async ({ id, token }) => {
+    return await fetchTriggerAsync$2({
+      recommenderApiName: recommenderApiName$1,
+      id,
+      token,
+    });
+  };
+
+  const setTriggerAsync$1 = async ({ id, token, trigger }) => {
+    return await setTriggerAsync$2({
+      recommenderApiName: recommenderApiName$1,
+      id,
+      token,
+      trigger,
+    });
+  };
+
   var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchParameterSetRecommendersAsync: fetchParameterSetRecommendersAsync,
@@ -1002,7 +1040,9 @@
     setArgumentsAsync: setArgumentsAsync$1,
     fetchDestinationsAsync: fetchDestinationsAsync$1,
     createDestinationAsync: createDestinationAsync$1,
-    removeDestinationAsync: removeDestinationAsync$1
+    removeDestinationAsync: removeDestinationAsync$1,
+    fetchTriggerAsync: fetchTriggerAsync$1,
+    setTriggerAsync: setTriggerAsync$1
   });
 
   const recommenderApiName = "ItemsRecommenders";
@@ -1220,6 +1260,23 @@
     });
   };
 
+  const fetchTriggerAsync = async ({ id, token }) => {
+    return await fetchTriggerAsync$2({
+      recommenderApiName,
+      id,
+      token,
+    });
+  };
+
+  const setTriggerAsync = async ({ id, token, trigger }) => {
+    return await setTriggerAsync$2({
+      recommenderApiName,
+      id,
+      token,
+      trigger,
+    });
+  };
+
   var itemsRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchItemsRecommendersAsync: fetchItemsRecommendersAsync,
@@ -1244,7 +1301,9 @@
     setArgumentsAsync: setArgumentsAsync,
     fetchDestinationsAsync: fetchDestinationsAsync,
     createDestinationAsync: createDestinationAsync,
-    removeDestinationAsync: removeDestinationAsync
+    removeDestinationAsync: removeDestinationAsync,
+    fetchTriggerAsync: fetchTriggerAsync,
+    setTriggerAsync: setTriggerAsync
   });
 
   const defaultHeaders = { "Content-Type": "application/json" };

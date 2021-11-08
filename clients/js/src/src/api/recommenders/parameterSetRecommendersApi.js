@@ -9,6 +9,7 @@ import * as il from "./common/invokationLogs";
 import * as ar from "./common/args";
 import * as st from "./common/settings";
 import * as ds from "./common/destinations";
+import * as trig from "./common/trigger";
 
 const recommenderApiName = "ParameterSetRecommenders";
 
@@ -200,5 +201,22 @@ export const removeDestinationAsync = async ({ id, token, destinationId }) => {
     id,
     token,
     destinationId,
+  });
+};
+
+export const fetchTriggerAsync = async ({ id, token }) => {
+  return await trig.fetchTriggerAsync({
+    recommenderApiName,
+    id,
+    token,
+  });
+};
+
+export const setTriggerAsync = async ({ id, token, trigger }) => {
+  return await trig.setTriggerAsync({
+    recommenderApiName,
+    id,
+    token,
+    trigger,
   });
 };

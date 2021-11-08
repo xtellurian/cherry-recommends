@@ -6,17 +6,17 @@ namespace SignalBox.Core.Workflows
     {
         protected readonly IFeatureStore featureStore;
         protected readonly IHistoricTrackedUserFeatureStore trackedUserFeatureStore;
-        protected readonly IStorageContext storageContext;
+        private readonly RecommenderTriggersWorkflows triggersWorkflows;
         protected readonly ILogger<FeatureWorkflowBase> logger;
 
         protected FeatureWorkflowBase(IFeatureStore featureStore,
                                    IHistoricTrackedUserFeatureStore trackedUserFeatureStore,
-                                   IStorageContext storageContext,
+                                   RecommenderTriggersWorkflows triggersWorkflows,
                                    ILogger<FeatureWorkflowBase> logger)
         {
             this.featureStore = featureStore;
             this.trackedUserFeatureStore = trackedUserFeatureStore;
-            this.storageContext = storageContext;
+            this.triggersWorkflows = triggersWorkflows;
             this.logger = logger;
         }
         public async Task<HistoricTrackedUserFeature> CreateFeatureOnUser(TrackedUser trackedUser,
@@ -39,19 +39,14 @@ namespace SignalBox.Core.Workflows
             var newFeatureValue = GenerateFeatureValues(trackedUser, feature, value, currentVersion + 1);
             if (forceIncrementVersion == true || currentVersion == 0) // first time or incrementing
             {
-                newFeatureValue = await trackedUserFeatureStore.Create(newFeatureValue);
-                await storageContext.SaveChanges();
-                return newFeatureValue;
+                return await HandleCreateNewFeatureValue(newFeatureValue);
             }
             else // check whether the value has changed before updating.
             {
                 var currentFeatureValue = await trackedUserFeatureStore.ReadFeature(trackedUser, feature, currentVersion);
                 if (!newFeatureValue.ValuesEqual(currentFeatureValue))
                 {
-                    // values aren't equal, create a new feature.
-                    newFeatureValue = await trackedUserFeatureStore.Create(newFeatureValue);
-                    await storageContext.SaveChanges();
-                    return newFeatureValue;
+                    return await HandleCreateNewFeatureValue(newFeatureValue);
                 }
                 else // values are equal, do don't create a new feature.
                 {
@@ -59,6 +54,14 @@ namespace SignalBox.Core.Workflows
                     return currentFeatureValue;
                 }
             }
+        }
+
+        private async Task<HistoricTrackedUserFeature> HandleCreateNewFeatureValue(HistoricTrackedUserFeature newFeatureValue)
+        {
+            newFeatureValue = await trackedUserFeatureStore.Create(newFeatureValue);
+            await triggersWorkflows.HandleFeatureValue(newFeatureValue);
+            await trackedUserFeatureStore.Context.SaveChanges();
+            return newFeatureValue;
         }
 
         private HistoricTrackedUserFeature GenerateFeatureValues(TrackedUser user, Feature feature, object value, int version)

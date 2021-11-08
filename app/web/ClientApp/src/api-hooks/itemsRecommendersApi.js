@@ -10,6 +10,7 @@ import {
   fetchRecommenderTrackedUserActionsAsync,
   fetchDestinationsAsync,
   getDefaultItemAsync,
+  fetchTriggerAsync,
 } from "../api/itemsRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -192,6 +193,25 @@ export const useDestinations = ({ id, trigger }) => {
     setState({ loading: true });
     if (token) {
       fetchDestinationsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+// the trigger param is a different trigger
+export const useTrigger = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchTriggerAsync({
         token,
         id,
       })

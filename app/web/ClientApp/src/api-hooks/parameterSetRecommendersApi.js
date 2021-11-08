@@ -8,6 +8,7 @@ import {
   fetchRecommenderTrackedUserActionsAsync,
   fetchTargetVariablesAsync,
   fetchDestinationsAsync,
+  fetchTriggerAsync,
 } from "../api/parameterSetRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -153,6 +154,24 @@ export const useDestinations = ({ id, trigger }) => {
     setState({ loading: true });
     if (token && id) {
       fetchDestinationsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useTrigger = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchTriggerAsync({
         token,
         id,
       })

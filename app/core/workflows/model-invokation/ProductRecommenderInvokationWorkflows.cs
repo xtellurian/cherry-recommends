@@ -44,7 +44,8 @@ namespace SignalBox.Core.Workflows
 
         public async Task<ProductRecommendation> InvokeProductRecommender(
             ProductRecommender recommender,
-            ProductRecommenderModelInputV1 input)
+            ProductRecommenderModelInputV1 input,
+            string trigger = null)
         {
             if (true)
             {
@@ -54,7 +55,7 @@ namespace SignalBox.Core.Workflows
             var invokationEntry = await base.StartTrackInvokation(recommender, input, saveOnComplete: false);
             var correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
             await storageContext.SaveChanges(); // save the correlator and invokatin entry
-            var context = new RecommendingContext(correlator, invokationEntry);
+            var context = new RecommendingContext(correlator, invokationEntry, trigger);
 
             try
             {
@@ -167,7 +168,7 @@ namespace SignalBox.Core.Workflows
         {
             // now save the result
 
-            var recommendation = new ProductRecommendation(recommender, context.TrackedUser, context.Correlator, output.Product);
+            var recommendation = new ProductRecommendation(recommender, context.TrackedUser, context.Correlator, output.Product, context.Trigger);
             output.CorrelatorId = context?.Correlator.Id;
             recommendation.SetInput(input);
             recommendation.SetOutput(output);

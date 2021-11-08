@@ -5,15 +5,17 @@ namespace SignalBox.Core.Recommenders
 {
     public class RecommendingContext
     {
-        public RecommendingContext(InvokationLogEntry invokationLogEntry)
+        public RecommendingContext(InvokationLogEntry invokationLogEntry, string? trigger)
         {
             InvokationLog = invokationLogEntry;
+            this.Trigger = trigger;
         }
 
-        public RecommendingContext(RecommendationCorrelator correlator, InvokationLogEntry invokationLogEntry)
+        public RecommendingContext(RecommendationCorrelator correlator, InvokationLogEntry invokationLogEntry, string? trigger)
         {
             Correlator = correlator;
             InvokationLog = invokationLogEntry;
+            this.Trigger = trigger;
         }
 
         public void LogMessage(string message)
@@ -21,6 +23,7 @@ namespace SignalBox.Core.Recommenders
             this.InvokationLog?.LogMessage(message);
         }
 
+        public string? Trigger { get; set; }
         public TrackedUser? TrackedUser { get; set; }
         public RecommendationCorrelator? Correlator { get; set; }
         public InvokationLogEntry InvokationLog { get; }

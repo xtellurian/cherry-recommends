@@ -13,6 +13,7 @@ import { Settings } from "./Settings";
 import { InvokationLogs } from "./InvokationLogs";
 import { MonitorParameterSetRecommender } from "./MonitorParameterSetRecommender";
 import { Destinations } from "./Destinations";
+import { Triggers } from "./Triggers";
 
 export const ParameterSetRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -65,6 +66,7 @@ export const ParameterSetRecommendersComponent = () => {
           path={`${path}/destinations/:id`}
           component={Destinations}
         />
+        <AuthorizeRoute path={`${path}/triggers/:id`} component={Triggers} />
         <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
       </Switch>
     </React.Fragment>

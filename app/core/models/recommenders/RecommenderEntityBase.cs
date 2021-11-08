@@ -10,13 +10,13 @@ namespace SignalBox.Core.Recommenders
     {
         protected RecommenderEntityBase()
         { }
+
 #nullable enable
-        public RecommenderEntityBase(string commonId,
-                                     string? name,
-                                     IEnumerable<RecommenderArgument>? arguments,
-                                     RecommenderSettings? settings) : base(commonId, name)
+        public RecommenderEntityBase(string commonId, string? name, IEnumerable<RecommenderArgument>? arguments, RecommenderSettings? settings) : base(commonId, name)
         {
-            this.ErrorHandling = settings as RecommenderErrorHandling ?? new RecommenderErrorHandling(settings);
+            this.ErrorHandling = settings is RecommenderErrorHandling
+                ? (RecommenderErrorHandling)settings
+                : new RecommenderErrorHandling(settings);
             this.Settings = settings;
             this.Arguments = arguments?.ToList() ?? new List<RecommenderArgument>();
         }
@@ -26,6 +26,8 @@ namespace SignalBox.Core.Recommenders
         public RecommenderErrorHandling? ErrorHandling { get; set; }
         public RecommenderSettings? Settings { get; set; }
         public List<RecommenderArgument>? Arguments { get; set; }
+        public TriggerCollection? TriggerCollection { get; set; }
+
         public long? ModelRegistrationId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ModelRegistration? ModelRegistration { get; set; }

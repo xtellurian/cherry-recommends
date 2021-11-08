@@ -7,6 +7,13 @@ namespace SignalBox.Core
 #nullable enable
     public class ParameterSetRecommenderModelInputV1 : IModelInput
     {
+        public ParameterSetRecommenderModelInputV1()
+        { }
+        public ParameterSetRecommenderModelInputV1(string commonUserId)
+        {
+            this.CommonUserId = commonUserId;
+        }
+
         [Required]
         [StringLength(256, MinimumLength = 3)]
         public string? CommonUserId { get; set; } = System.Guid.NewGuid().ToString(); // create a new GUID here if empty

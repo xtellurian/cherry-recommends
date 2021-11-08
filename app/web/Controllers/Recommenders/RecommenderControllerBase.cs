@@ -155,6 +155,24 @@ namespace SignalBox.Web.Controllers
             var d = await workflows.RemoveDestination(recommender, destinationId);
             return d;
         }
+
+        [HttpGet("{id}/TriggerCollection")]
+        public async Task<TriggerCollection> GetTrigger(string id, bool? useInternalId = null)
+        {
+            var recommender = await base.GetEntity(id, useInternalId);
+            return recommender.TriggerCollection;
+        }
+
+        [HttpPost("{id}/TriggerCollection")]
+        public async Task<TriggerCollection> SetTrigger(string id, SetTriggersDto dto, bool? useInternalId = null)
+        {
+            var recommender = await base.GetResource(id, useInternalId);
+            recommender.TriggerCollection ??= new TriggerCollection();
+            recommender.TriggerCollection = dto.ToCoreRepresentation(recommender.TriggerCollection);
+            await store.Update(recommender);
+            await store.Context.SaveChanges();
+            return recommender.TriggerCollection;
+        }
     }
 
 }

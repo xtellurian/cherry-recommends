@@ -54,3 +54,6 @@ export const setArgumentsAsync = itemsRecommenders.setArgumentsAsync;
 export const fetchDestinationsAsync = itemsRecommenders.fetchDestinationsAsync;
 export const createDestinationAsync = itemsRecommenders.createDestinationAsync;
 export const removeDestinationAsync = itemsRecommenders.removeDestinationAsync;
+
+export const fetchTriggerAsync = itemsRecommenders.fetchTriggerAsync;
+export const setTriggerAsync = itemsRecommenders.setTriggerAsync;

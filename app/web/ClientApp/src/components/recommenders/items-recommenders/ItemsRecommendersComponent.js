@@ -14,6 +14,7 @@ import { Settings } from "./Settings";
 import { MonitorRecommender } from "./MonitorItemsRecommender";
 import { ManageItems } from "./ManageItems";
 import { Destinations } from "./Destinations";
+import { Triggers } from "./Triggers";
 
 export const ItemsRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -68,6 +69,7 @@ export const ItemsRecommendersComponent = () => {
           path={`${path}/destinations/:id`}
           component={Destinations}
         />
+        <AuthorizeRoute path={`${path}/triggers/:id`} component={Triggers} />
         <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
       </Switch>
     </React.Fragment>

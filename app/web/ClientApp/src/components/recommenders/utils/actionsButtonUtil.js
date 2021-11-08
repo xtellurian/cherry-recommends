@@ -24,6 +24,7 @@ export const ActionsButtonUtil = ({
         <OptionLink to={`${basePath}/destinations/${id}`}>
           Destinations
         </OptionLink>
+        <OptionLink to={`${basePath}/triggers/${id}`}>Triggers</OptionLink>
         {/* <OptionLink to={`${basePath}/target-variable/${id}`}>
           Target Variable
         </OptionLink> */}

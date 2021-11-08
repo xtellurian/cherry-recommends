@@ -18,5 +18,13 @@ namespace SignalBox.Web
                 DefaultValue = new DefaultArgumentContainer(a.ArgumentType, a.DefaultValue)
             })?.ToList();
         }
+
+        public static TriggerCollection ToCoreRepresentation(this SetTriggersDto triggersDto, TriggerCollection? current)
+        {
+            return new TriggerCollection
+            {
+                FeaturesChanged = triggersDto.FeaturesChanged
+            };
+        }
     }
 }

@@ -37,6 +37,8 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ItemsRecommenderInvokationWorkflows>();
             services.AddScoped<ProductRecommenderInvokationWorkflows>();
             services.AddScoped<ParameterSetRecommenderInvokationWorkflows>();
+
+            services.AddScoped<RecommenderTriggersWorkflows>();
             return services;
         }
     }

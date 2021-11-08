@@ -3,11 +3,14 @@ import { AsyncSelector } from "./AsyncSelect";
 import { useFeatures } from "../../../api-hooks/featuresApi";
 import { fetchFeaturesAsync } from "../../../api/featuresApi";
 import { useAccessToken } from "../../../api-hooks/token";
+import { Selector } from "..";
 
 export const AsyncSelectFeature = ({
   onChange,
   placeholder,
   allowNone,
+  isMulti,
+  defaultCommonIds,
 }) => {
   const token = useAccessToken();
   const features = useFeatures();
@@ -22,6 +25,20 @@ export const AsyncSelectFeature = ({
       value: { commonId: null },
       label: "None",
     });
+  }
+
+  let defaultFeatures = null;
+  if (defaultCommonIds && defaultCommonIds.length > 0) {
+    if (isMulti) {
+      defaultFeatures = featuresSelectable.filter((_) =>
+        defaultCommonIds.includes(_.value.commonId)
+      );
+    } else {
+      const defaultId = defaultCommonIds[0];
+      defaultFeatures = featuresSelectable.filter(
+        (_) => _.value.commonId == defaultId
+      )[0];
+    }
   }
 
   const loadSelectable = (inputValue, callback) => {
@@ -45,12 +62,17 @@ export const AsyncSelectFeature = ({
       .catch((e) => console.log(e));
   };
 
+  if (features.loading) {
+    return <Selector placeholder="Loading Features..." />;
+  }
   return (
     <AsyncSelector
       defaultOptions={featuresSelectable}
+      defaultValue={defaultFeatures}
       placeholder={placeholder || "Search for a Feature."}
       cacheOptions
       loadOptions={loadSelectable}
+      isMulti={isMulti}
       onChange={onChange}
     />
   );

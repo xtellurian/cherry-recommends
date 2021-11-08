@@ -621,6 +621,9 @@ namespace sqlite.SignalBox
                     b.Property<long?>("TrackedUserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Trigger")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RecommendationCorrelatorId");
@@ -674,6 +677,9 @@ namespace sqlite.SignalBox
 
                     b.Property<long?>("TrackedUserId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Trigger")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -731,6 +737,9 @@ namespace sqlite.SignalBox
 
                     b.Property<long?>("TrackedUserId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Trigger")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -899,6 +908,9 @@ namespace sqlite.SignalBox
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Settings")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TriggerCollection")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
