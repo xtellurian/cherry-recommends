@@ -52,7 +52,8 @@ namespace SignalBox.Core.Workflows
         {
             await itemsRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             var invokationEntry = await base.StartTrackInvokation(recommender, input);
-            RecommendingContext context = new RecommendingContext(invokationEntry, trigger);
+            var context = new RecommendingContext(invokationEntry, trigger);
+            context.SetLogger(logger);
             var userName = input.CommonUserId;
             try
             {
@@ -84,7 +85,7 @@ namespace SignalBox.Core.Workflows
 
 
                 // load the features of the tracked user
-                input.Features = await base.GetFeatures(context);
+                input.Features = await base.GetFeatures(recommender, context);
 
                 // load the items that a model can choose from
                 await itemsRecommenderStore.LoadMany(recommender, _ => _.Items);

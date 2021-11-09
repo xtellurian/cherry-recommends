@@ -15,13 +15,15 @@ namespace SignalBox.Core.Workflows
         private readonly ITouchpointStore touchpointStore;
         private readonly IProductStore productStore;
 
-        public ProductRecommenderWorkflows(IStorageContext storageContext,
-                                                IProductRecommenderStore store,
-                                                IProductRecommendationStore recommendationStore,
-                                                IIntegratedSystemStore systemStore,
-                                                IModelRegistrationStore modelRegistrationStore,
-                                                ITouchpointStore touchpointStore,
-                                                IProductStore productStore) : base(store, systemStore)
+        public ProductRecommenderWorkflows(
+            IStorageContext storageContext,
+            IProductRecommenderStore store,
+            IProductRecommendationStore recommendationStore,
+            IFeatureStore featureStore,
+            IIntegratedSystemStore systemStore,
+            IModelRegistrationStore modelRegistrationStore,
+            ITouchpointStore touchpointStore,
+            IProductStore productStore) : base(store, systemStore, featureStore)
         {
             this.storageContext = storageContext;
             this.recommendationStore = recommendationStore;

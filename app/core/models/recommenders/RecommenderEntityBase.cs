@@ -33,6 +33,8 @@ namespace SignalBox.Core.Recommenders
         public ModelRegistration? ModelRegistration { get; set; }
 
         [JsonIgnore]
+        public ICollection<Feature> LearningFeatures { get; set; } = null!;
+        [JsonIgnore]
         public ICollection<RecommenderTargetVariableValue> TargetVariableValues { get; set; } = null!;
         [JsonIgnore]
         public ICollection<InvokationLogEntry> RecommenderInvokationLogs { get; set; } = null!;
