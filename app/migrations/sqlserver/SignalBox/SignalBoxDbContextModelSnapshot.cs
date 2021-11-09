@@ -19,6 +19,21 @@ namespace sqlserver.SignalBox
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("FeatureRecommenderEntityBase", b =>
+                {
+                    b.Property<long>("LearningFeaturesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RecommendersId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("LearningFeaturesId", "RecommendersId");
+
+                    b.HasIndex("RecommendersId");
+
+                    b.ToTable("FeatureRecommenderEntityBase");
+                });
+
             modelBuilder.Entity("ItemsRecommendationRecommendableItem", b =>
                 {
                     b.Property<long>("ItemsId")
@@ -1586,6 +1601,21 @@ namespace sqlserver.SignalBox
                     b.HasIndex("DefaultProductId");
 
                     b.HasDiscriminator().HasValue("ProductRecommender");
+                });
+
+            modelBuilder.Entity("FeatureRecommenderEntityBase", b =>
+                {
+                    b.HasOne("SignalBox.Core.Feature", null)
+                        .WithMany()
+                        .HasForeignKey("LearningFeaturesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", null)
+                        .WithMany()
+                        .HasForeignKey("RecommendersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ItemsRecommendationRecommendableItem", b =>
