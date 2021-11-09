@@ -176,7 +176,7 @@ namespace SignalBox.Core.Workflows
                 }
                 else
                 {
-                    logger.LogError("Error invoking recommender model");
+                    logger.LogError($"Error invoking recommender model: ${ex.Message}");
                 }
 
                 if (recommender.ShouldThrowOnBadInput())
