@@ -9,6 +9,9 @@ namespace SignalBox.Core
         }
 
         public long? CorrelatorId { get; set; }
-        public T Payload { get; set; }
+
+        // making this an object ensures every property is serialized
+        // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism
+        public object Payload { get; set; }
     }
 }
