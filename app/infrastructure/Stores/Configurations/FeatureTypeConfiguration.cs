@@ -9,6 +9,10 @@ namespace SignalBox.Infrastructure.EntityFramework
         public override void Configure(EntityTypeBuilder<Feature> builder)
         {
             base.Configure(builder);
+
+            builder
+                .HasMany(_ => _.Recommenders)
+                .WithMany(_ => _.LearningFeatures);
         }
     }
 }

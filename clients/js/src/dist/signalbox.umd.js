@@ -811,6 +811,35 @@
     });
   };
 
+  const fetchLearningFeaturesAsync$2 = async ({
+    recommenderApiName,
+    token,
+    id,
+    useInternalId,
+  }) => {
+    return await executeFetch({
+      token,
+      query: { useInternalId },
+      path: `api/recommenders/${recommenderApiName}/${id}/LearningFeatures`,
+    });
+  };
+
+  const setLearningFeaturesAsync$2 = async ({
+    recommenderApiName,
+    token,
+    id,
+    useInternalId,
+    featureIds,
+  }) => {
+    return await executeFetch({
+      path: `api/recommenders/${recommenderApiName}/${id}/LearningFeatures`,
+      token,
+      method: "post",
+      query: { useInternalId },
+      body: { featureIds, useInternalId },
+    });
+  };
+
   const recommenderApiName$1 = "ParameterSetRecommenders";
 
   const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
@@ -1021,6 +1050,34 @@
     });
   };
 
+  const fetchLearningFeaturesAsync$1 = async ({
+    id,
+    token,
+    useInternalId,
+  }) => {
+    return await fetchLearningFeaturesAsync$2({
+      recommenderApiName: recommenderApiName$1,
+      id,
+      token,
+      useInternalId,
+    });
+  };
+
+  const setLearningFeaturesAsync$1 = async ({
+    id,
+    token,
+    featureIds,
+    useInternalId,
+  }) => {
+    return await setLearningFeaturesAsync$2({
+      recommenderApiName: recommenderApiName$1,
+      id,
+      token,
+      useInternalId,
+      featureIds,
+    });
+  };
+
   var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchParameterSetRecommendersAsync: fetchParameterSetRecommendersAsync,
@@ -1042,7 +1099,9 @@
     createDestinationAsync: createDestinationAsync$1,
     removeDestinationAsync: removeDestinationAsync$1,
     fetchTriggerAsync: fetchTriggerAsync$1,
-    setTriggerAsync: setTriggerAsync$1
+    setTriggerAsync: setTriggerAsync$1,
+    fetchLearningFeaturesAsync: fetchLearningFeaturesAsync$1,
+    setLearningFeaturesAsync: setLearningFeaturesAsync$1
   });
 
   const recommenderApiName = "ItemsRecommenders";
@@ -1277,6 +1336,34 @@
     });
   };
 
+  const fetchLearningFeaturesAsync = async ({
+    id,
+    token,
+    useInternalId,
+  }) => {
+    return await fetchLearningFeaturesAsync$2({
+      recommenderApiName,
+      id,
+      token,
+      useInternalId,
+    });
+  };
+
+  const setLearningFeaturesAsync = async ({
+    id,
+    token,
+    featureIds,
+    useInternalId,
+  }) => {
+    return await setLearningFeaturesAsync$2({
+      recommenderApiName,
+      id,
+      token,
+      useInternalId,
+      featureIds,
+    });
+  };
+
   var itemsRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchItemsRecommendersAsync: fetchItemsRecommendersAsync,
@@ -1303,7 +1390,9 @@
     createDestinationAsync: createDestinationAsync,
     removeDestinationAsync: removeDestinationAsync,
     fetchTriggerAsync: fetchTriggerAsync,
-    setTriggerAsync: setTriggerAsync
+    setTriggerAsync: setTriggerAsync,
+    fetchLearningFeaturesAsync: fetchLearningFeaturesAsync,
+    setLearningFeaturesAsync: setLearningFeaturesAsync
   });
 
   const defaultHeaders = { "Content-Type": "application/json" };

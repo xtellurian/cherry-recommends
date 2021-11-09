@@ -96,14 +96,24 @@ namespace SignalBox.Core.Workflows
             return context;
         }
 
-        protected async Task<IDictionary<string, object>> GetFeatures(RecommendingContext context)
+        protected async Task<IDictionary<string, object>> GetFeatures(T recommender, RecommendingContext context)
         {
-            var features = await trackedUserFeatureStore.ReadAllLatestFeatures(context.TrackedUser);
-            var result = features
+            await store.LoadMany(recommender, _ => _.LearningFeatures);
+            var featureValues = new List<TrackedUserFeatureBase>();
+            context.LogMessage($"Recommender has {recommender.LearningFeatures.Count} Learning Features.");
+            foreach (var feature in recommender.LearningFeatures)
+            {
+                if (await trackedUserFeatureStore.FeatureExists(context.TrackedUser, feature))
+                {
+                    featureValues.Add(await trackedUserFeatureStore.ReadFeature(context.TrackedUser, feature));
+                }
+            }
+            // var features = await trackedUserFeatureStore.ReadAllLatestFeatures(context.TrackedUser);
+            var result = featureValues
                 .Where(_ => _.Value != null)
                 .ToDictionary(_ => _.Feature.CommonId, _ => _.Value ?? "");
 
-            context.InvokationLog.LogMessage($"Discovered {result.Count} features");
+            context.LogMessage($"Discovered {result.Count} Feature values.");
             return result;
         }
 

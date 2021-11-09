@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using SignalBox.Core.Recommendations;
 
 #nullable enable
@@ -18,8 +19,15 @@ namespace SignalBox.Core.Recommenders
             this.Trigger = trigger;
         }
 
+        public void SetLogger(ILogger logger)
+        {
+            this.logger = logger;
+        }
+        private ILogger? logger;
+
         public void LogMessage(string message)
         {
+            logger?.LogInformation(message);
             this.InvokationLog?.LogMessage(message);
         }
 

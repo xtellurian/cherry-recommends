@@ -56,7 +56,7 @@ namespace SignalBox.Core.Workflows
             var correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
             await storageContext.SaveChanges(); // save the correlator and invokatin entry
             var context = new RecommendingContext(correlator, invokationEntry, trigger);
-
+            context.SetLogger(logger);
             try
             {
                 if (string.IsNullOrEmpty(input.CommonUserId))
@@ -68,7 +68,7 @@ namespace SignalBox.Core.Workflows
                 context.TrackedUser = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
 
                 // load the features of the tracked user
-                input.Features = await base.GetFeatures(context);
+                input.Features = await base.GetFeatures(recommender, context);
 
                 IRecommenderModelClient<ProductRecommenderModelOutputV1> client;
                 if (recommender.ModelRegistration == null)

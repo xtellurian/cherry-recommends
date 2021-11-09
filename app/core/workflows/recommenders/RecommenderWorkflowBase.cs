@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SignalBox.Core.Recommendations.Destinations;
@@ -9,13 +10,16 @@ namespace SignalBox.Core.Workflows
     {
         protected readonly IRecommenderStore<TRecommender> store;
         protected readonly IIntegratedSystemStore systemStore;
+        protected readonly IFeatureStore featureStore;
 
-        protected RecommenderWorkflowBase(IRecommenderStore<TRecommender> store, IIntegratedSystemStore systemStore)
+        protected RecommenderWorkflowBase(IRecommenderStore<TRecommender> store, IIntegratedSystemStore systemStore, IFeatureStore featureStore)
         {
             this.store = store;
             this.systemStore = systemStore;
+            this.featureStore = featureStore;
         }
 
+        // ------ ADD/REMOVE DESTINATIONS -----
         public async Task<RecommenderEntityBase> RemoveDestination(TRecommender recommender, long destinationId)
         {
             await store.LoadMany(recommender, _ => _.RecommendationDestinations);
@@ -73,6 +77,24 @@ namespace SignalBox.Core.Workflows
             }
 
             return destination;
+        }
+
+        // ------ SET LEARNING FEATURES -----
+
+        public async Task<TRecommender> SetLearningFeatures(TRecommender recommender, IEnumerable<string> featureIds, bool? useInternalId = null)
+        {
+            var features = new List<Feature>();
+            foreach (var featureId in featureIds)
+            {
+                features.Add(await featureStore.GetEntity(featureId, useInternalId));
+            }
+
+            await store.LoadMany(recommender, _ => _.LearningFeatures);
+
+            recommender.LearningFeatures = features;
+
+            await store.Context.SaveChanges();
+            return recommender;
         }
     }
 }

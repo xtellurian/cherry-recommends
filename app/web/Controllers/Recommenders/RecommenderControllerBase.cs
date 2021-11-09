@@ -173,6 +173,23 @@ namespace SignalBox.Web.Controllers
             await store.Context.SaveChanges();
             return recommender.TriggerCollection;
         }
+
+        [HttpGet("{id}/LearningFeatures")]
+        public async Task<IEnumerable<Feature>> GetLearningFeatures(string id, bool? useInternalId = null)
+        {
+            var recommender = await base.GetEntity(id, useInternalId);
+            await store.LoadMany(recommender, _ => _.LearningFeatures);
+            return recommender.LearningFeatures;
+        }
+
+        [HttpPost("{id}/LearningFeatures")]
+        public async Task<IEnumerable<Feature>> SetLearningFeatures(string id, SetLearningFeatures dto, bool? useInternalId = null)
+        {
+            var recommender = await base.GetResource(id, useInternalId);
+            dto.Validate();
+            recommender = await workflows.SetLearningFeatures(recommender, dto.FeatureIds, dto.UseInternalId);
+            return recommender.LearningFeatures;
+        }
     }
 
 }

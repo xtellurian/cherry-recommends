@@ -14,12 +14,14 @@ namespace SignalBox.Core.Workflows
         private readonly IModelRegistrationStore modelRegistrationStore;
         private readonly IParameterStore parameterStore;
 
-        public ParameterSetRecommenderWorkflows(IStorageContext storageContext,
-                                                IParameterSetRecommenderStore store,
-                                                IParameterSetRecommendationStore recommendationStore,
-                                                IIntegratedSystemStore systemStore,
-                                                IModelRegistrationStore modelRegistrationStore,
-                                                IParameterStore parameterStore) : base(store, systemStore)
+        public ParameterSetRecommenderWorkflows(
+            IStorageContext storageContext,
+            IParameterSetRecommenderStore store,
+            IParameterSetRecommendationStore recommendationStore,
+            IFeatureStore featureStore,
+            IIntegratedSystemStore systemStore,
+            IModelRegistrationStore modelRegistrationStore,
+            IParameterStore parameterStore) : base(store, systemStore, featureStore)
         {
             this.storageContext = storageContext;
             this.recommendationStore = recommendationStore;

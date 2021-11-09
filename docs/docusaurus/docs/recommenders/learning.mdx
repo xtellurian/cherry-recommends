@@ -1,0 +1,30 @@
+---
+sidebar_position: 1
+title: Learning Features
+---
+
+# Learning Features
+
+Recommenders discover the best item or parameter for each customer.
+To do this, they must be told how to segment customers into similar groups.
+These segments are created using [Features](../concepts/features).
+
+:::note Limitation
+There is currently a limit of 2 learning Features per recommender.
+This limit can be increased upon request.
+:::
+
+## Choosing Learning Features
+
+When choosing Learning Features, you should consider the following
+
+### Potential Predictive Power
+
+Does the Feature potentially give Cherry a hint for the best recommendation?
+For example, if you're recommending marketing campaign products, then `Most Recent Purchase` is probably a good feauture to choose.
+
+### Variability
+
+Are Feature values likely to change across customers recieving recommendations?
+For example, if you're recommending plans to brand new customers,
+then `Lifetime Value` is not a good learning feature, as it will be zero for all users (i.e. no variability)

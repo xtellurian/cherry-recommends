@@ -60,7 +60,8 @@ namespace SignalBox.Core.Workflows
             await parameterSetRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             await parameterSetRecommenderStore.LoadMany(recommender, _ => _.Parameters);
             var invokeLog = await base.StartTrackInvokation(recommender, input);
-            RecommendingContext context = new RecommendingContext(invokeLog, trigger);
+            var context = new RecommendingContext(invokeLog, trigger);
+            context.SetLogger(logger);
 
             try
             {
@@ -87,7 +88,7 @@ namespace SignalBox.Core.Workflows
                 }
 
                 // load the features from the user
-                input.Features = await base.GetFeatures(context);
+                input.Features = await base.GetFeatures(recommender, context);
 
                 IRecommenderModelClient<ParameterSetRecommenderModelOutputV1> client;
                 if (model == null)

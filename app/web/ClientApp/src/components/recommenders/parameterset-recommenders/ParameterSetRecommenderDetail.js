@@ -23,10 +23,12 @@ import { useAccessToken } from "../../../api-hooks/token";
 import { CloneRecommender } from "../utils/CloneRecommender";
 import { ArgumentsSection } from "./Arguments";
 import { ParameterRow } from "../../parameters/ParameterRow";
+import { LearningFeatures } from "./LearningFeatures";
 
 const tabs = [
   { id: "detail", label: "Detail" },
   { id: "arguments", label: "Arguments" },
+  { id: "features", label: "Learning Features" },
 ];
 export const ParameterSetRecommenderDetail = () => {
   const { id } = useParams();
@@ -176,6 +178,9 @@ export const ParameterSetRecommenderDetail = () => {
       </TabActivator>
       <TabActivator defaultTabId={"detail"} tabId="arguments">
         <ArgumentsSection recommender={recommender} setTrigger={setTrigger} />
+      </TabActivator>
+      <TabActivator defaultTabId="detail" tabId="features">
+        <LearningFeatures />
       </TabActivator>
     </React.Fragment>
   );
