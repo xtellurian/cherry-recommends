@@ -4,8 +4,19 @@
 # https://aka.ms/yaml
 
 trigger:
-  - main
-  - develop/*
+  batch: true # batch changes if true; start a new build for every push if false (default)
+  branches:
+    include:
+      - main
+      - develop/*
+    # exclude: [string]
+  # tags:
+  #   include: [string] # tag names which will trigger a build
+  #   exclude: [string] # tag names which will not
+  paths:
+    include:
+      - docs/* # file paths which must match to trigger a build
+    # exclude: [] # file paths which will not trigger a build
 
 pool:
   vmImage: ubuntu-latest
