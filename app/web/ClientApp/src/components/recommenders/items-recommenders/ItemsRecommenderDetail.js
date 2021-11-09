@@ -23,10 +23,12 @@ import { Tabs, TabActivator } from "../../molecules/Tabs";
 import { EntityField } from "../../molecules/EntityField";
 import { CloneRecommender } from "../utils/CloneRecommender";
 import { ArgumentsSection } from "./Arguments";
+import { LearningFeatures } from "./LearningFeatures";
 
 const tabs = [
   { id: "detail", label: "Detail" },
   { id: "arguments", label: "Arguments" },
+  { id: "features", label: "Learning Features" },
 ];
 
 export const RecommenderDetail = () => {
@@ -185,6 +187,9 @@ export const RecommenderDetail = () => {
       </TabActivator>
       <TabActivator defaultTabId="detail" tabId="arguments">
         <ArgumentsSection recommender={recommender} setTrigger={setTrigger} />
+      </TabActivator>
+      <TabActivator defaultTabId="detail" tabId="features">
+        <LearningFeatures />
       </TabActivator>
     </React.Fragment>
   );

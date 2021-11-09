@@ -10,6 +10,7 @@ import * as ar from "./common/args";
 import * as st from "./common/settings";
 import * as ds from "./common/destinations";
 import * as trig from "./common/trigger";
+import * as lf from "./common/learningFeatures";
 
 const recommenderApiName = "ParameterSetRecommenders";
 
@@ -218,5 +219,33 @@ export const setTriggerAsync = async ({ id, token, trigger }) => {
     id,
     token,
     trigger,
+  });
+};
+
+export const fetchLearningFeaturesAsync = async ({
+  id,
+  token,
+  useInternalId,
+}) => {
+  return await lf.fetchLearningFeaturesAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
+  });
+};
+
+export const setLearningFeaturesAsync = async ({
+  id,
+  token,
+  featureIds,
+  useInternalId,
+}) => {
+  return await lf.setLearningFeaturesAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
+    featureIds,
   });
 };

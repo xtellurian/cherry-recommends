@@ -51,3 +51,8 @@ export const removeDestinationAsync =
 
 export const fetchTriggerAsync = parameterSetRecommenders.fetchTriggerAsync;
 export const setTriggerAsync = parameterSetRecommenders.setTriggerAsync;
+
+export const fetchLearningFeaturesAsync =
+  parameterSetRecommenders.fetchLearningFeaturesAsync;
+export const setLearningFeaturesAsync =
+  parameterSetRecommenders.setLearningFeaturesAsync;

@@ -9,6 +9,7 @@ import {
   fetchTargetVariablesAsync,
   fetchDestinationsAsync,
   fetchTriggerAsync,
+  fetchLearningFeaturesAsync,
 } from "../api/parameterSetRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -172,6 +173,24 @@ export const useTrigger = ({ id, trigger }) => {
     setState({ loading: true });
     if (token && id) {
       fetchTriggerAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useLearningFeatures = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchLearningFeaturesAsync({
         token,
         id,
       })
