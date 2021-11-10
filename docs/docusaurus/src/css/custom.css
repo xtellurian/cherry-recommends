@@ -6,24 +6,46 @@
  */
 
 /* You can override the default Infima variables here. */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+@font-face {
+  font-family: "Prelia";
+  src: url('/static/Prelia.ttf') format('truetype');
+}
+
 :root {
-  --ifm-color-primary: #747a80;
+  --ifm-color-primary: #270938;
   --ifm-color-primary-dark: #5c6266;
   --ifm-color-primary-darker: #45494c;
   --ifm-color-primary-darkest: #2e3133;
-  --ifm-color-primary-light: #8b9299;
+  --ifm-color-primary-light: #23598f;
   --ifm-color-primary-lighter: #a2abb3;
   --ifm-color-primary-lightest: #b9c3cc;
   --ifm-code-font-size: 95%;
+  --ifm-font-family-base: 'Nunito'
 }
 
 .docusaurus-highlight-code-line {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: #E5008A;
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
 }
 
-html[data-theme='dark'] .docusaurus-highlight-code-line {
-  background-color: rgba(0, 0, 0, 0.3);
+h1 {
+  font-family: Prelia;
+  text-transform: lowercase;
+  font-weight: normal;
 }
+
+h2 {
+  font-family: Prelia;
+  text-transform: lowercase; 
+  font-weight: normal;
+}
+
+/*html[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: rgb(52, 158, 73);
+}*/
+

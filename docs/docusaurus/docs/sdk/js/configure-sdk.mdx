@@ -1,0 +1,28 @@
+---
+sidebar_position: 2
+title: "Configure SDK"
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+After you install the SDK, you must configure it when your application starts.
+
+<Tabs
+  defaultValue="js"
+  values={[
+    { label: 'JavaScript', value: 'js', }
+  ]
+}>
+
+<TabItem value="js">
+
+Install using npm
+
+```js
+const signalbox = require("signalbox.js");
+signalbox.setBaseUrl("https://YOUR_HOST.xxx.net/");
+```
+
+</TabItem>
+</Tabs>

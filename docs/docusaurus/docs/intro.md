@@ -2,21 +2,22 @@
 sidebar_position: 1
 ---
 
-# Four2 Introduction
+# Introduction
 
-Let's discover **Four2|SignalBox in less than 5 minutes**.
+Cherry Recommends is an AI product and promotion recommender platform. Cherry naturally recommends the best products and promotions, for your customers
 
-## Getting Started
+## Who is Cherry Recommends for?
 
-Four2 is currently in private preview. 
+Cherry Recommends is for early adopting subscription companies like food boxes of SaaS. It's built for marketers and growth teams to use and requires minimal integration by engineering teams.
 
-[Join the waitlist.](https://get.four2.ai/)
+## Where can Cherry Recommends add value?
 
-## What's SignalBox
+Cherry helps with 
+1. Free-to-paid conversion for SaaS companies
+1. Boosting basket size and conversion on checkout for consumer subscription companies
+1. Churn reduction for SaaS and consumer subscription companies.
 
-SignalBox is a software application made by Four2.
+## How should I use these docs?
 
-## Accessing Four2
-
-When your registration is complete, you'll be provided a username/password combination, plus a URL where you can access the SignalBox application.
+We suggest you start by understanding how Cherry Recommends works and some core concepts. Then look at Recommend and Access to determine your best implementation solution. Check out Access and our SDKs as you need too.
 

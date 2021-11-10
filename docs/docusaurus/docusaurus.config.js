@@ -3,29 +3,36 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: "Four2 Developer Center",
+  title: "Document and support centre",
   tagline:
-    "The leading Customer Recommendation Platform for subscription companies",
+    "If you can't find what you need in the docs, reach out and we'll help.",
   url: "https://your-docusaurus-test-site.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
-  favicon: "img/favicon.ico",
+  favicon: "img/cherry-colour-pink.svg",
   organizationName: "", // Usually your GitHub org/user name.
   projectName: "", // Usually your repo name.
   themeConfig: {
+    colorMode:{
+      disableSwitch: true,
+    },
     navbar: {
-      title: "Four2 Developer",
       logo: {
-        alt: "Four2 Logo",
-        src: "img/four2_logo.png",
+        alt: "Cherry Recommends Logo",
+        src: "img/cherry-logo-colour-white-pink.svg",
       },
       items: [
         {
           type: "doc",
           docId: "intro",
           position: "left",
-          label: "Docs",
+          label: "Technical Docs",
+        },
+        {
+          href: "mailto:gethelp@cherry.ai",
+          label: "Ask for help",
+          position: "left",
         },
         {
           href: "https://four2.ai",
@@ -33,9 +40,11 @@ module.exports = {
           position: "right",
         },
       ],
+      style: 'primary',
+
     },
     footer: {
-      style: "dark",
+      style: 'light',
       links: [
         {
           title: "Docs",
@@ -77,7 +86,7 @@ module.exports = {
         //   ],
         // },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Four2.ai | Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Cherry Recommends | Built with Docusaurus.`,
     },
     prism: {
       theme: lightCodeTheme,

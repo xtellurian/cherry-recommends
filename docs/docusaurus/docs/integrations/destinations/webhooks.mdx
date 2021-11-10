@@ -25,10 +25,10 @@ This webhook will be called every time the recommender is [invoked](/docs/concep
 
 ## Security
 
-All webhooks contain a signature validating that Four2 sent the webhook.
+All webhooks contain a signature validating that Cherry Recommends sent the webhook.
 The validation method is similar to Hubspot's `X-HubSpot-Signature` method.
 
-The `X-Four2-Signature` header contains an important value.
+The `X-Cherry-Signature` header contains an important value.
 Your should independantly calculate the signature, and compare the value to this header.
 
 To calculate the signature value:
