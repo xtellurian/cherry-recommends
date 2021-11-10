@@ -92,6 +92,7 @@ export const createOrUpdateTrackedUserAsync = async ({ token, user }) => {
     path: "api/trackedUsers",
     method: "post",
     body: user,
+    token
   });
 };
 

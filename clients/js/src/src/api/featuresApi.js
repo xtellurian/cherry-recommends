@@ -76,3 +76,31 @@ export const fetchTrackedUserFeatureValuesAsync = async ({
     },
   });
 };
+
+export const fetchDestinationsAsync = async ({ token, id }) => {
+  return await executeFetch({
+    path: `api/features/${id}/Destinations`,
+    token,
+  });
+};
+
+export const createDestinationAsync = async ({
+  token,
+  id,
+  destination,
+}) => {
+  return await executeFetch({
+    path: `api/features/${id}/Destinations`,
+    token,
+    method: "post",
+    body: destination,
+  });
+};
+
+export const deleteDestinationAsync = async ({ token, id, destinationId }) => {
+  return await executeFetch({
+    path: `api/features/${id}/Destinations/${destinationId}`,
+    token,
+    method: "delete",
+  });
+};
