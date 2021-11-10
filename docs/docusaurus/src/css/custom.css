@@ -39,12 +39,6 @@ h1 {
   font-weight: normal;
 }
 
-h2 {
-  font-family: Prelia;
-  text-transform: lowercase; 
-  font-weight: normal;
-}
-
 /*html[data-theme='dark'] .docusaurus-highlight-code-line {
   background-color: rgb(52, 158, 73);
 }*/
