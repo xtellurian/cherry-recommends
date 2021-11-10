@@ -1,7 +1,7 @@
 import React from "react";
 import { AsyncSelectFeature } from "../../molecules/selectors/AsyncSelectFeature";
 import { BigPopup } from "../../molecules/popups/BigPopup";
-import { EntityRow } from "../../molecules/EntityRow";
+import { EntityRow } from "../../molecules/layout/EntityRow";
 
 import { EmptyList, ErrorCard, Spinner } from "../../molecules";
 

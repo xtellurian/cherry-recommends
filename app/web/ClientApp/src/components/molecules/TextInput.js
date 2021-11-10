@@ -79,6 +79,7 @@ export const TextInput = ({
   validator,
   resetTrigger,
   required,
+  disabled,
 }) => {
   const [hide, setHide] = React.useState(false);
   const [errorMessages, setErrorMessages] = React.useState([]);
@@ -139,6 +140,7 @@ export const TextInput = ({
           onChange={onChange}
           onBlur={onBlur}
           required={required}
+          disabled={disabled}
         />
       </Tippy>
     </React.Fragment>

@@ -1,22 +1,33 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useTrackedUsers } from "../../api-hooks/trackedUserApi";
 import { JsonView } from "./JsonView";
 import { Spinner } from "./Spinner";
 import { ExpandableCard } from "./ExpandableCard";
-import { Link } from "react-router-dom";
+import { EntityRow } from "./layout/EntityRow";
+
 export const TrackedUserListItem = ({ trackedUser }) => {
   return (
-    <ExpandableCard label={trackedUser.name || trackedUser.commonId || trackedUser.id}>
-      <div>
-        <Link
-          to={`/tracked-users/detail/${trackedUser.id}`}
-          className="float-right"
-        >
-          <button className="btn btn-primary">Detail</button>
-        </Link>
-        <JsonView data={trackedUser} />
+    <EntityRow>
+      <div className="col">
+        <div className="mb-3">
+          <Link
+            to={`/tracked-users/detail/${trackedUser.id}`}
+            className="float-right"
+          >
+            <button className="btn btn-primary btn-sm">Detail</button>
+          </Link>
+          <div>
+            {trackedUser.name || trackedUser.commonId || trackedUser.id}
+          </div>
+        </div>
+        <div className="mt-2">
+          <ExpandableCard label="Properties">
+            <JsonView data={trackedUser} />
+          </ExpandableCard>
+        </div>
       </div>
-    </ExpandableCard>
+    </EntityRow>
   );
 };
 

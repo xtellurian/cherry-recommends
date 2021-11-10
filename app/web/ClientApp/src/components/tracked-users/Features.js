@@ -25,14 +25,17 @@ const FeatureValues = ({ userId, feature }) => {
     return <Spinner>Loading Feature Value</Spinner>;
   } else if (values.error) {
     return <ErrorCard error={values.error} />;
-  } else
+  } else {
+    const valueType = values.numericValue ? "Numeric" : "String";
     return (
       <div>
         <CopyableField label="Feature Common Id" value={feature.commonId} />
         <CopyableField label="Current Version" value={values.version} />
         <CopyableField label="Current Value" value={`${values.value}`} />
+        <CopyableField label="Value Type" value={valueType} />
       </div>
     );
+  }
 };
 const FeatureValuesRow = ({ userId, feature }) => {
   return (
