@@ -213,6 +213,40 @@ namespace sqlserver.SignalBox
                     b.ToTable("FeatureGenerators");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Features.Destinations.FeatureDestinationBase", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ConnectedSystemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FeatureId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConnectedSystemId");
+
+                    b.HasIndex("FeatureId");
+
+                    b.ToTable("FeatureDestinations");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("FeatureDestinationBase");
+                });
+
             modelBuilder.Entity("SignalBox.Core.HashedApiKey", b =>
                 {
                     b.Property<long>("Id")
@@ -1519,6 +1553,28 @@ namespace sqlserver.SignalBox
                     b.ToTable("WebhookReceivers");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.Features.Destinations.HubspotContactPropertyFeatureDestination", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.Features.Destinations.FeatureDestinationBase");
+
+                    b.Property<string>("HubspotPropertyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("HubspotContactPropertyFeatureDestination");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Features.Destinations.WebhookFeatureDestination", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.Features.Destinations.FeatureDestinationBase");
+
+                    b.Property<string>("Endpoint")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("WebhookFeatureDestination");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Integrations.Custom.CustomIntegratedSystem", b =>
                 {
                     b.HasBaseType("SignalBox.Core.IntegratedSystem");
@@ -1554,6 +1610,7 @@ namespace sqlserver.SignalBox
                     b.HasBaseType("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase");
 
                     b.Property<string>("Endpoint")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("WebhookDestination_Endpoint");
 
@@ -1710,6 +1767,25 @@ namespace sqlserver.SignalBox
                         .HasForeignKey("FeatureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Feature");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Features.Destinations.FeatureDestinationBase", b =>
+                {
+                    b.HasOne("SignalBox.Core.IntegratedSystem", "ConnectedSystem")
+                        .WithMany()
+                        .HasForeignKey("ConnectedSystemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.Feature", "Feature")
+                        .WithMany("Destinations")
+                        .HasForeignKey("FeatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ConnectedSystem");
 
                     b.Navigation("Feature");
                 });
@@ -2079,6 +2155,8 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Feature", b =>
                 {
+                    b.Navigation("Destinations");
+
                     b.Navigation("HistoricTrackedUserFeatures");
                 });
 
