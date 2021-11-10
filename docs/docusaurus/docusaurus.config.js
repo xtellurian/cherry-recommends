@@ -30,7 +30,7 @@ module.exports = {
           label: "Technical Docs",
         },
         {
-          href: "mailto:gethelp@cherry.ai",
+          href: "mailto:help@cherry.ai",
           label: "Ask for help",
           position: "left",
         },
