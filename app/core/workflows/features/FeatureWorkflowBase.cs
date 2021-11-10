@@ -1,5 +1,8 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core.Features.Destinations;
+
 namespace SignalBox.Core.Workflows
 {
     public abstract class FeatureWorkflowBase
@@ -7,16 +10,25 @@ namespace SignalBox.Core.Workflows
         protected readonly IFeatureStore featureStore;
         protected readonly IHistoricTrackedUserFeatureStore trackedUserFeatureStore;
         private readonly RecommenderTriggersWorkflows triggersWorkflows;
+        private readonly HubspotPushWorkflows hubspotPushWorkflows;
+        private readonly IWebhookSenderClient webhookSenderClient;
+        private readonly ITelemetry telemetry;
         protected readonly ILogger<FeatureWorkflowBase> logger;
 
         protected FeatureWorkflowBase(IFeatureStore featureStore,
                                    IHistoricTrackedUserFeatureStore trackedUserFeatureStore,
                                    RecommenderTriggersWorkflows triggersWorkflows,
+                                   HubspotPushWorkflows hubspotPushWorkflows,
+                                   IWebhookSenderClient webhookSenderClient,
+                                   ITelemetry telemetry,
                                    ILogger<FeatureWorkflowBase> logger)
         {
             this.featureStore = featureStore;
             this.trackedUserFeatureStore = trackedUserFeatureStore;
             this.triggersWorkflows = triggersWorkflows;
+            this.hubspotPushWorkflows = hubspotPushWorkflows;
+            this.webhookSenderClient = webhookSenderClient;
+            this.telemetry = telemetry;
             this.logger = logger;
         }
         public async Task<HistoricTrackedUserFeature> CreateFeatureOnUser(TrackedUser trackedUser,
@@ -59,13 +71,61 @@ namespace SignalBox.Core.Workflows
         private async Task<HistoricTrackedUserFeature> HandleCreateNewFeatureValue(HistoricTrackedUserFeature newFeatureValue)
         {
             newFeatureValue = await trackedUserFeatureStore.Create(newFeatureValue);
+            await SendToFeatureDestinations(newFeatureValue);
             await triggersWorkflows.HandleFeatureValue(newFeatureValue);
             await trackedUserFeatureStore.Context.SaveChanges();
             return newFeatureValue;
         }
 
+        private async Task SendToFeatureDestinations(HistoricTrackedUserFeature newFeatureValue)
+        {
+            var feature = newFeatureValue.Feature;
+            await featureStore.LoadMany(feature, _ => _.Destinations);
+            var destinations = feature.Destinations;
+            if (destinations != null && destinations.Any())
+            {
+                foreach (var dest in destinations)
+                {
+                    if (dest is WebhookFeatureDestination webhookDestination)
+                    {
+                        try
+                        {
+
+                            await webhookSenderClient.Send(webhookDestination, newFeatureValue);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            telemetry.TrackException(ex);
+                            logger.LogError($"Error sending webhook to Endpoint: {ex.Message}");
+                        }
+                    }
+                    else if (dest is HubspotContactPropertyFeatureDestination hubspotDest)
+                    {
+                        try
+                        {
+                            await hubspotPushWorkflows.SetFeatureValueOnContact(hubspotDest, newFeatureValue);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            telemetry.TrackException(ex);
+                            logger.LogError($"Error sending webhook to Hubspot: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        throw new BadRequestException($"Cannot send a feature value to destination of type {dest?.GetType()}");
+                    }
+                }
+            }
+        }
+
         private HistoricTrackedUserFeature GenerateFeatureValues(TrackedUser user, Feature feature, object value, int version)
         {
+            if (double.TryParse(value?.ToString(), out var doubleValue))
+            {
+                value = doubleValue;
+            };
+
             if (value == null)
             {
                 throw new System.NullReferenceException("Feature value cannot be null");

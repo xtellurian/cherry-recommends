@@ -21,7 +21,7 @@ namespace SignalBox.Infrastructure.Webhooks
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
-        private const string SignatureHeaderName = "X-Four2-Signature";
+        private const string SignatureHeaderName = "X-Four2-Signature"; // this is public API
 
         public WebhookSenderClient(HttpClient httpClient,
                                    IHasher hasher,
@@ -65,12 +65,12 @@ namespace SignalBox.Infrastructure.Webhooks
             {
                 var parameters = recommendation.GetOutput<ParameterSetRecommenderModelOutputV1>().RecommendedParameters;
                 var serialized = Serialize(new ParameterSetRecommendationDto(psRec, parameters));
-                await SendStringWithSig(destination, serialized, customIntegratedSystem);
+                await SendStringWithSig(destination, serialized);
             }
             else if (recommendation is ItemsRecommendation itemRec)
             {
                 var serialized = Serialize(new ItemsRecommendationDto(itemRec));
-                await SendStringWithSig(destination, serialized, customIntegratedSystem);
+                await SendStringWithSig(destination, serialized);
             }
             else
             {
@@ -105,9 +105,14 @@ namespace SignalBox.Infrastructure.Webhooks
             }
         }
 
-        private async Task SendStringWithSig(WebhookDestination destination, string serialized, CustomIntegratedSystem customIntegratedSystem)
+        public async Task Send<TPayload>(IWebhookDestination destination, TPayload payload)
         {
-            var sig = hasher.HashHttpRequestForWebhookValidation(customIntegratedSystem.ApplicationSecret, serialized);
+            await SendStringWithSig(destination, JsonSerializer.Serialize(payload, jOptions));
+        }
+
+        private async Task SendStringWithSig(IWebhookDestination destination, string serialized)
+        {
+            var sig = hasher.HashHttpRequestForWebhookValidation(destination.ApplicationSecret, serialized);
             await HttpPostToDestination(destination, serialized, sig);
         }
 

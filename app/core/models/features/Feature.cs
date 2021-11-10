@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using SignalBox.Core.Features.Destinations;
 using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core
@@ -15,5 +16,7 @@ namespace SignalBox.Core
         public ICollection<RecommenderEntityBase> Recommenders { get; set; }
         [JsonIgnore]
         public ICollection<HistoricTrackedUserFeature> HistoricTrackedUserFeatures { get; set; }
+        [JsonIgnore]
+        public ICollection<FeatureDestinationBase> Destinations { get; set; }
     }
 }

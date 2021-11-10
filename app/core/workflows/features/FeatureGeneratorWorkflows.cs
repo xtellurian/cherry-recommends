@@ -11,15 +11,19 @@ namespace SignalBox.Core.Workflows
         private readonly IFeatureGeneratorStore featureGeneratorStore;
         private readonly IDateTimeProvider dateTimeProvider;
 
-        public FeatureGeneratorWorkflows(ITrackedUserStore trackedUserStore,
-                                         IFeatureStore featureStore,
-                                         ITrackedUserEventStore trackedUserEventStore,
-                                         IFeatureGeneratorStore featureGeneratorStore,
-                                         IHistoricTrackedUserFeatureStore historicTrackedUserFeatureStore,
-                                         RecommenderTriggersWorkflows triggersWorkflows,
-                                         IDateTimeProvider dateTimeProvider,
-                                         ILogger<FeatureGeneratorWorkflows> logger)
-                                        : base(featureStore, historicTrackedUserFeatureStore, triggersWorkflows, logger)
+        public FeatureGeneratorWorkflows(
+            ITrackedUserStore trackedUserStore,
+            IFeatureStore featureStore,
+            ITrackedUserEventStore trackedUserEventStore,
+            IFeatureGeneratorStore featureGeneratorStore,
+            IHistoricTrackedUserFeatureStore historicTrackedUserFeatureStore,
+            RecommenderTriggersWorkflows triggersWorkflows,
+            HubspotPushWorkflows hubspotPushWorkflows,
+            IWebhookSenderClient webhookSenderClient,
+            IDateTimeProvider dateTimeProvider,
+            ITelemetry telemetry,
+            ILogger<FeatureGeneratorWorkflows> logger)
+            : base(featureStore, historicTrackedUserFeatureStore, triggersWorkflows, hubspotPushWorkflows, webhookSenderClient, telemetry, logger)
         {
             this.trackedUserStore = trackedUserStore;
             this.trackedUserEventStore = trackedUserEventStore;

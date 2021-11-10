@@ -1,18 +1,17 @@
 using System.Collections.Generic;
 using SignalBox.Core.Integrations.Custom;
-using SignalBox.Core.Recommenders;
 
 #nullable enable
-namespace SignalBox.Core.Recommendations.Destinations
+namespace SignalBox.Core.Features.Destinations
 {
-    public class WebhookDestination : RecommendationDestinationBase, IWebhookDestination
+    public class WebhookFeatureDestination : FeatureDestinationBase, IWebhookDestination
     {
-        protected WebhookDestination()
+        protected WebhookFeatureDestination()
         {
             Endpoint = null!;
         }
-        public WebhookDestination(RecommenderEntityBase recommender, IntegratedSystem connectedSystem, string endpoint)
-         : base(recommender, connectedSystem)
+        public WebhookFeatureDestination(Feature feature, IntegratedSystem connectedSystem, string endpoint)
+         : base(feature, connectedSystem)
         {
 
             if (System.Uri.TryCreate(endpoint, System.UriKind.Absolute, out var u))
@@ -26,7 +25,6 @@ namespace SignalBox.Core.Recommendations.Destinations
         }
 
         public string? ApplicationSecret => (this.ConnectedSystem as CustomIntegratedSystem)?.ApplicationSecret;
-
         public override string DestinationType => WebhookDestinationType;
         public string Endpoint { get; set; }
 

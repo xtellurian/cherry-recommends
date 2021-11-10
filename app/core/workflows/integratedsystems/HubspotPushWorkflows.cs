@@ -1,10 +1,10 @@
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SignalBox.Core.Adapters.Hubspot;
+using SignalBox.Core.Features.Destinations;
 using SignalBox.Core.Integrations;
 using SignalBox.Core.Recommenders;
 
@@ -81,6 +81,21 @@ namespace SignalBox.Core.Workflows
             {
                 logger.LogWarning($"Tracked User {tu.Id} has not system map for system {system.Id}");
                 return false;
+            }
+        }
+
+        public async Task SetFeatureValueOnContact(HubspotContactPropertyFeatureDestination destination, HistoricTrackedUserFeature featureValue)
+        {
+            var system = await integratedSystemStore.Read(destination.ConnectedSystemId);
+            await CheckAndRefreshCredentials(system);
+            if (await systemMapStore.MapExists(featureValue.TrackedUser, system))
+            {
+                var map = await systemMapStore.FindMap(featureValue.TrackedUser, system);
+                await hubspotService.SetPropertyValue(system, new HubspotContactPropertyValue(map.UserId, destination.HubspotPropertyName, featureValue.Value.ToString()));
+            }
+            else
+            {
+                logger.LogWarning($"Missing System Map for user {featureValue.TrackedUserId}");
             }
         }
     }

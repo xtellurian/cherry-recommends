@@ -10,5 +10,6 @@ namespace SignalBox.Core
         where TRecommendation : RecommendationEntity;
         Task Send<TRecommendation>(SegmentSourceFunctionDestination destination, TRecommendation recommendation)
         where TRecommendation : RecommendationEntity;
+        Task Send<TPayload>(IWebhookDestination destination, TPayload payload);
     }
 }
