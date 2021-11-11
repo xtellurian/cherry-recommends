@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
+using SignalBox.Core.Features.Destinations;
 using SignalBox.Core.Integrations.Custom;
 using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommendations.Destinations;
@@ -36,10 +37,16 @@ namespace SignalBox.Infrastructure
         public DbSet<ParameterSetRecommender> ParameterSetRecommenders { get; set; }
         public DbSet<ItemsRecommender> ItemsRecommenders { get; set; }
 
-        // destinations
+        // ----- destinations -----
+        // recommendation destinations
         public DbSet<RecommendationDestinationBase> RecommendationDestinations { get; set; }
         public DbSet<WebhookDestination> WebhookRecommendationDestinations { get; set; }
         public DbSet<SegmentSourceFunctionDestination> SegmentSourceFunctionDestinations { get; set; }
+
+        // feature destinations
+        public DbSet<FeatureDestinationBase> FeatureDestinations { get; set; }
+        public DbSet<WebhookFeatureDestination> WebhookFeatureDestinations { get; set; }
+        public DbSet<HubspotContactPropertyFeatureDestination> HubspotContactPropertyFeatureDestinations { get; set; }
 
         // recommendations
         public DbSet<RecommendationCorrelator> RecommendationCorrelators { get; set; }

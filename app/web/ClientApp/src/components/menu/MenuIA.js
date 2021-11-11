@@ -11,6 +11,10 @@ const AuthenticatedIA = [
         to: "/tracked-users/create",
       },
       {
+        name: "Features",
+        to: "/features/",
+      },
+      {
         name: "Events Overview",
         to: "/dataview",
       },

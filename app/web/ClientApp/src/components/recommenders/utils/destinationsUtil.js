@@ -125,7 +125,6 @@ export const DestinationsUtil = ({
           />
         ))}
 
-      <React.Fragment></React.Fragment>
       <React.Fragment>
         <BigPopup isOpen={createPopupOpen} setIsOpen={setCreatePopupOpen}>
           <Subtitle>Add a new destination</Subtitle>

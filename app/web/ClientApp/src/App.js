@@ -12,6 +12,7 @@ import { SettingsComponent } from "./components/settings/SettingsComponent";
 import { DataViewComponent } from "./components/data/DataViewComponent";
 import { ReportsComponent } from "./components/reports/ReportsComponent";
 import { TouchpointsComponent } from "./components/touchpoints/TouchpointsComponent";
+import { FeaturesComponent } from "./components/features/FeaturesComponent";
 import { ParametersComponent } from "./components/parameters/ParametersComponent";
 import { RecommendersComponent } from "./components/recommenders/RecommendersComponent";
 import { RecommendableItemsComponent } from "./components/items/RecommendableItemsComponent";
@@ -32,6 +33,7 @@ export default class App extends Component {
           path="/tracked-users"
           component={TrackedUsersComponent}
         />
+        <AuthorizeRoute path="/features" component={FeaturesComponent} />
         <AuthorizeRoute path="/segments" component={SegmentsComponent} />
         <AuthorizeRoute path="/parameters" component={ParametersComponent} />
         <AuthorizeRoute

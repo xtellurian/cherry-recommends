@@ -2,10 +2,11 @@ import React from "react";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
 import {
+  fetchDestinationsAsync,
   fetchFeatureAsync,
   fetchFeaturesAsync,
   fetchTrackedUserFeaturesAsync,
-  fetchTrackedUserFeatureValuesAsync
+  fetchTrackedUserFeatureValuesAsync,
 } from "../api/featuresApi";
 
 export const useFeatures = () => {
@@ -87,6 +88,26 @@ export const useTrackedUserFeatureValues = ({ id, feature, version }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, feature, version]);
+
+  return state;
+};
+
+export const useDestinations = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({
+    loading: true,
+  });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchDestinationsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
 
   return state;
 };

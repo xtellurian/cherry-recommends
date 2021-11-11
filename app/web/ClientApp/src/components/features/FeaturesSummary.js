@@ -1,16 +1,16 @@
 import React from "react";
-import { EmptyList, Paginator, Title, ErrorCard } from "../../molecules";
-import { ClickableRow } from "../../molecules/layout/ClickableRow";
+import { EmptyList, Paginator, Title, ErrorCard } from "../molecules";
+import { ClickableRow } from "../molecules/layout/ClickableRow";
 
-import { useFeatures } from "../../../api-hooks/featuresApi";
-import { CreateButton } from "../../molecules/CreateButton";
+import { useFeatures } from "../../api-hooks/featuresApi";
+import { CreateButton } from "../molecules/CreateButton";
 
 const FeatureRow = ({ feature }) => {
   return (
     <ClickableRow
       buttonText="Detail"
       label={feature.name}
-      to={`/admin/features/detail/${feature.id}`}
+      to={`/features/detail/${feature.id}`}
     />
   );
 };
@@ -18,7 +18,7 @@ export const FeaturesSummary = () => {
   const features = useFeatures();
   return (
     <React.Fragment>
-      <CreateButton className="float-right" to="/admin/features/create">
+      <CreateButton className="float-right" to="/features/create">
         Create Feature
       </CreateButton>
       <Title>Features</Title>

@@ -38,7 +38,7 @@ export const TrackedUserSummary = () => {
           </div>
         </EmptyList>
       )}
-      <div>
+      <div className="mt-3">
         {trackedUsers.items &&
           trackedUsers.items.map((u) => (
             <TrackedUserListItem

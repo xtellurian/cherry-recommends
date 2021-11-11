@@ -28,5 +28,7 @@ namespace SignalBox.Core.Recommendations.Destinations
         {
             {"endpoint", Endpoint}
         };
+
+        public string ApplicationSecret => null;
     }
 }

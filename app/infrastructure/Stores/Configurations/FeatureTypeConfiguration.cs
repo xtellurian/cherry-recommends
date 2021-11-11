@@ -13,6 +13,10 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder
                 .HasMany(_ => _.Recommenders)
                 .WithMany(_ => _.LearningFeatures);
+           
+            builder
+                .HasMany(_ => _.Destinations)
+                .WithOne(_ => _.Feature);
         }
     }
 }

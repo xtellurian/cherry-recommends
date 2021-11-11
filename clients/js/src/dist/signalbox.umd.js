@@ -433,6 +433,34 @@
     });
   };
 
+  const fetchDestinationsAsync$3 = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/features/${id}/Destinations`,
+      token,
+    });
+  };
+
+  const createDestinationAsync$3 = async ({
+    token,
+    id,
+    destination,
+  }) => {
+    return await executeFetch({
+      path: `api/features/${id}/Destinations`,
+      token,
+      method: "post",
+      body: destination,
+    });
+  };
+
+  const deleteDestinationAsync = async ({ token, id, destinationId }) => {
+    return await executeFetch({
+      path: `api/features/${id}/Destinations/${destinationId}`,
+      token,
+      method: "delete",
+    });
+  };
+
   var featuresApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchFeaturesAsync: fetchFeaturesAsync,
@@ -442,7 +470,10 @@
     createFeatureAsync: createFeatureAsync,
     deleteFeatureAsync: deleteFeatureAsync,
     fetchTrackedUserFeaturesAsync: fetchTrackedUserFeaturesAsync,
-    fetchTrackedUserFeatureValuesAsync: fetchTrackedUserFeatureValuesAsync
+    fetchTrackedUserFeatureValuesAsync: fetchTrackedUserFeatureValuesAsync,
+    fetchDestinationsAsync: fetchDestinationsAsync$3,
+    createDestinationAsync: createDestinationAsync$3,
+    deleteDestinationAsync: deleteDestinationAsync
   });
 
   const fetchIntegratedSystemsAsync = async ({ token, page }) => {
@@ -1741,6 +1772,7 @@
       path: "api/trackedUsers",
       method: "post",
       body: user,
+      token
     });
   };
 
