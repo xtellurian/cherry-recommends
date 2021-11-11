@@ -17,6 +17,12 @@ import {
 } from "../../api/featuresApi";
 import { useAccessToken } from "../../api-hooks/token";
 
+const initDestination = {
+  destinationType: "",
+  integratedSystemId: 0,
+  endpoint: "",
+  propertyName: "",
+};
 const DestinationRow = ({ feature, destination, setTrigger, setError }) => {
   const token = useAccessToken();
   const handleRemove = () => {
@@ -33,7 +39,10 @@ const DestinationRow = ({ feature, destination, setTrigger, setError }) => {
       <div className="col">
         <h5>{destination.destinationType}</h5>
       </div>
-      <div className="col-4">{destination.properties?.endpoint || destination.properties?.propertyName}</div>
+      <div className="col-4">
+        {destination.properties?.endpoint ||
+          destination.properties?.propertyName}
+      </div>
       <div className="col-2">
         <button className="btn btn-danger" onClick={handleRemove}>
           Remove
@@ -51,12 +60,7 @@ export const FeatureDestinations = ({ feature }) => {
   const [error, setError] = React.useState();
   const [selectedIntegratedSystem, setSelectedIntegratedSystem] =
     React.useState();
-  const [destination, setDestination] = React.useState({
-    destinationType: "",
-    integratedSystemId: 0,
-    endpoint: "",
-    propertyName: "",
-  });
+  const [destination, setDestination] = React.useState(initDestination);
 
   const handleCreate = () => {
     setError(null);
@@ -64,7 +68,11 @@ export const FeatureDestinations = ({ feature }) => {
     createDestinationAsync({ token, id: feature.id, destination })
       .then(setTrigger)
       .catch(setError)
-      .finally(() => setCreatePopupOpen(false));
+      .finally(() => {
+        setCreatePopupOpen(false);
+        setDestination(initDestination);
+        setSelectedIntegratedSystem(null);
+      });
   };
 
   React.useEffect(() => {
