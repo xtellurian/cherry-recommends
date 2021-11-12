@@ -18,14 +18,36 @@ trigger:
       - docs/* # file paths which must match to trigger a build
     # exclude: [] # file paths which will not trigger a build
 
-pool:
-  vmImage: ubuntu-latest
+variables:
+  var1: value1
+jobs:
+  - job: build_docs
+    displayName: Build Docs
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - script: npm i
+        workingDirectory: docs/docusaurus
+        displayName: "NPM Install"
 
-steps:
-  - script: npm i
-    workingDirectory: docs/docusaurus
-    displayName: "NPM Install"
+      - script: npm run build
+        workingDirectory: docs/docusaurus
+        displayName: "NPM Build"
 
-  - script: npm run build
-    workingDirectory: docs/docusaurus
-    displayName: "NPM Build"
+  - deployment: dev_docs # name of the deployment job, A-Z, a-z, 0-9, and underscore. The word "deploy" is a keyword and is unsupported as the deployment name.
+    displayName: Dev Docs Deploy # friendly name to display in the UI
+    pool:
+      vmImage: ubuntu-latest
+    workspace:
+      clean: outputs # what to clean up before the job runs
+    dependsOn: build_docs
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/develop/'))
+    continueOnError: false
+    environment: development # target environment name and optionally a resource name to record the deployment history; format: <environment-name>.<resource-name>
+    strategy:
+      runOnce: #rolling, canary are the other strategies that are supported
+        deploy:
+          steps:
+            - script: |
+                echo HELLO DEPLOYMENTS!
+              displayName: Test runnning a deployment job
