@@ -1,0 +1,54 @@
+---
+sidebar_position: 1
+title: Consume Recommendations
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+
+By default, new recommenders are configured to track recommendations from every [invokation](/docs/recommenders/deploy-recommenders/invoke/invoke-items-recommender).
+In some situations however, you may wish to preload a recommendation, and only track the recommendation when shown to the tracked user.
+
+:::caution Configuration Required
+
+Your recommender must be set to require consumption events for this learning behaviour to be enforced.
+This can be toggled in the recommender's `Settings` options.
+
+:::
+
+These situations may include:
+
+- Preloading a recommendation in a browser application to minimise latency
+- Preloading a recommendation into a custom CRM, but not necessarily acting on the recommendation.
+
+### Generate a recommendation consumption event
+
+<Tabs
+  defaultValue="js"
+  values={[
+    { label: 'JavaScript', value: 'js', }
+  ]
+}>
+
+<TabItem value="js">
+
+> Helpder syntax events.createRecommendationConsumedEventAsync() was introduced in version 1.4.5
+
+```js
+import { events } from "signalbox.js";
+const ACCESS_TOKEN = "your access token";
+
+// the recommendation comes from invoking the recommender
+events
+  .createRecommendationConsumedEventAsync({
+    token: ACCESS_TOKEN,
+    commonUserId: recommendation.commonUserId,
+    correlatorId: recommendation.correlatorId,
+  })
+  .then(console.log) // log information about the response.
+  .catch((error) => alert("Server responsed with an error"));
+```
+
+</TabItem>
+</Tabs>

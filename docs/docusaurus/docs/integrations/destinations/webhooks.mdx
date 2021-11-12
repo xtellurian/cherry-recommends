@@ -21,14 +21,14 @@ In the recommender options menu, click on `Destinations`.
 
 Next, choose which `Custom Integrated System` you wish to associate the destination with.
 Finally, in the `Endpoint` field, enter the HTTP/HTTPS location of the webhook destination.
-This webhook will be called every time the recommender is [invoked](/docs/concepts/invokation).
+This webhook will be called every time the recommender is [invoked](/docs/recommenders/deploy-recommenders/invoke/invoke-items-recommender).
 
 ## Security
 
-All webhooks contain a signature validating that Four2 sent the webhook.
+All webhooks contain a signature validating that Cherry Recommends sent the webhook.
 The validation method is similar to Hubspot's `X-HubSpot-Signature` method.
 
-The `X-Four2-Signature` header contains an important value.
+The `X-Cherry-Signature` header contains an important value.
 Your should independantly calculate the signature, and compare the value to this header.
 
 To calculate the signature value:

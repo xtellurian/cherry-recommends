@@ -30,7 +30,7 @@ export default function Home() {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="Developer center for SignalBox and Four2.ai">
+      description="Developer center for Cherry Recommends">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

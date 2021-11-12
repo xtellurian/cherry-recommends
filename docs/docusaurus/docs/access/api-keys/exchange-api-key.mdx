@@ -1,0 +1,54 @@
+---
+sidebar_position: 4
+title: Exchange Key
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+
+To authenticate the client using an API Key, you must exchange the API Key for an Access Token
+
+:::caution Exchange Rate Limits
+
+Once you have an Access Token, you should store and re-use it for up to a month.
+This is because API Key exchanges are rate limited on a per-month basis.
+
+:::
+
+<Tabs
+  defaultValue="js"
+  values={[
+    { label: 'JavaScript', value: 'js', }
+  ]
+}>
+
+<TabItem value="js">
+
+```js
+const fs = require("fs");
+const signalbox = require("signalbox.js");
+
+signalbox.apiKeys
+  .exchangeApiKeyAsync({
+    apiKey: "YOUR_API_KEY",
+  })
+  .then((token_response) =>
+    fs.writeFileSync(".token.json", JSON.stringify(token_response))
+  )
+  .then(() => console.log("Wrote Access Token to .token.json"))
+  .catch(console.log);
+```
+
+</TabItem>
+<TabItem value="py">
+
+```py
+def hello_world():
+  print 'Hello, world!'
+```
+
+</TabItem>
+</Tabs>
+
+You must include the access token in every subsequent request.

@@ -1,0 +1,78 @@
+---
+sidebar_position: 2
+title: Invoke Item Recommender
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+
+Once a Item Recommender has been created, you can invoke it (i.e. get a recommendation) like so.
+
+<Tabs
+  defaultValue="js"
+  values={[
+    { label: 'JavaScript', value: 'js', }
+  ]}>
+
+<TabItem value="js">
+
+```js
+const signalbox = require("signalbox.js");
+
+signalbox.itemsRecommenders
+  .invokeItemsRecommenderAsync({
+    id: "recommender_id_123", // the recommender Id
+    input: {
+      commonUserId: "The User Id", // the user Id to recommend for,
+      arguments: {},
+    },
+    token: "Your access token",
+  })
+  .then((r) => {
+    console.log("Got a recommendation");
+    console.log(r);
+  })
+  .catch((e) => {
+    console.log("Server returned an error");
+    console.log(e);
+  });
+```
+
+Response
+
+```json
+{
+  "scoredItems": [
+    {
+      "itemId": 139,
+      "itemCommonId": "HKDNBFIKSLKNVFISNLFKG",
+      "item": {
+        "listPrice": 1.0893,
+        "directCost": null,
+        "description": "The item's description, set upon creation",
+        "commonId": "HKDNBFIKSLKNVFISNLFKG",
+        "properties": {
+          "code": "GIFT-50"
+        },
+        "name": "Corolla",
+        "id": 139,
+        "created": "2021-07-01T00:31:32.58+00:00",
+        "lastUpdated": "2021-07-01T00:31:32.58+00:00"
+      },
+      "score": 26 // how applicable is the item, higher is better.
+    }
+  ],
+  "correlatorId": 122
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+## Tracking Outcomes with Correlator Id
+
+To explicitly link outcomes of recommendations to events, you can use the `correlatorId` value in the Recommendation response.
+
+[Read more about tracking outcomes](../../tracking/correlator-id).
