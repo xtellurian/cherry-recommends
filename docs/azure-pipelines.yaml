@@ -43,7 +43,7 @@ jobs:
     dependsOn: build_docs
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/develop/'))
     continueOnError: false
-    environment: development # target environment name and optionally a resource name to record the deployment history; format: <environment-name>.<resource-name>
+    environment: docs-development # target environment name and optionally a resource name to record the deployment history; format: <environment-name>.<resource-name>
     strategy:
       runOnce: #rolling, canary are the other strategies that are supported
         deploy:
