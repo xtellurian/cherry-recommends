@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
 namespace sqlserver.SignalBox.SubMultiTenantDbContext
 {
     [DbContext(typeof(MultiTenantDbContext))]
-    partial class MultiTenantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211115042946_develop_tenant-create-page")]
+    partial class develop_tenantcreatepage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
