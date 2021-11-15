@@ -107,6 +107,7 @@ namespace SignalBox.Infrastructure
         {
             services.AddScoped<ITrackedUserEventQueueStore, TrackedUserEventQueueStore>();
             services.AddScoped<INewTrackedUserEventQueueStore, NewTrackedUserEventQueueStore>();
+            services.AddScoped<INewTenantQueueStore, NewTenantQueueStore>();
             return services;
         }
         public static IServiceCollection AddEFStores(this IServiceCollection services)

@@ -1,17 +1,26 @@
-using System.Text.RegularExpressions;
-using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 
+#nullable enable
 namespace SignalBox.Core
 {
     public class Tenant : Entity
     {
-        protected Tenant() { }
+        public static string Status_Creating = "Creating";
+        public static string Status_Database_Created = "DatabaseCreated";
+        public static string Status_Created = "Created";
+
+        protected Tenant()
+        {
+            this.Name = null!;
+            this.DatabaseName = null!;
+        }
+
         public Tenant(string name, string databaseName)
         {
-            this.Name = name?.ToLower();
+            this.Name = name?.ToLower() ?? throw new BadRequestException("Tenant name cannot be null");
             this.DatabaseName = databaseName;
+            this.Status = Status_Creating;
             Validate();
         }
 
@@ -61,5 +70,6 @@ namespace SignalBox.Core
 
         public string Name { get; set; }
         public string DatabaseName { get; set; }
+        public string? Status { get; set; }
     }
 }

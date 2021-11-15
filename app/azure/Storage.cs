@@ -57,7 +57,7 @@ namespace SignalBox.Azure
                                         }
                                     }
                                 },
-                                Filters = new ManagementPolicyFilterArgs 
+                                Filters = new ManagementPolicyFilterArgs
                                 {
                                     PrefixMatch = { "queue-messages" },
                                     BlobTypes = { "blockBlob" }
@@ -70,14 +70,21 @@ namespace SignalBox.Azure
 
             var trackedUserQueue = new Queue("newTrackedUsers", new QueueArgs
             {
-                QueueName = "new-tracked-users",
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.NewTrackedUsers,
                 AccountName = storageAccount.Name,
                 ResourceGroupName = rg.Name
             });
 
             var trackedUserEventsQueue = new Queue("trackedUserEvents", new QueueArgs
             {
-                QueueName = "tracked-user-events",
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.TrackedUserEvents,
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name
+            });
+
+            var newTenantsQueue = new Queue("newTenantsQ", new QueueArgs
+            {
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.NewTenants,
                 AccountName = storageAccount.Name,
                 ResourceGroupName = rg.Name
             });

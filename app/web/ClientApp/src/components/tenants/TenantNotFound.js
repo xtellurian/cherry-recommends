@@ -7,7 +7,7 @@ export const TenantNotFound = ({ error }) => {
   if (!hosting.loading && hosting.canonicalRootDomain) {
     const onTimedown = () => {
       console.log("redirecting...");
-      window.location = `https://${managementSubdomain}.${hosting.canonicalRootDomain}`;
+      window.location = `https://${managementSubdomain}.${hosting.canonicalRootDomain}?autoSignIn=true`;
     };
     setTimeout(onTimedown, 5000);
   }

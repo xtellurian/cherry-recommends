@@ -27,7 +27,8 @@ namespace SignalBox.Functions
         }
 
         [Function("ProcessTrackedUserEventQueue")]
-        public async Task ProcessTrackedUserEvents([QueueTrigger("tracked-user-events")] TrackedUserEventsQueueMessage message,
+        public async Task ProcessTrackedUserEvents(
+            [QueueTrigger(SignalBox.Core.Constants.AzureQueueNames.TrackedUserEvents)] TrackedUserEventsQueueMessage message,
             FunctionContext context)
         {
             var logger = context.GetLogger(nameof(ProcessTrackedUserEvents));
@@ -52,7 +53,8 @@ namespace SignalBox.Functions
         }
 
         [Function("ProcessNewTrackedUsersEventQueue")]
-        public async Task ProcessNewTrackedUsersEvents([QueueTrigger("new-tracked-users")] NewTrackedUserEventQueueMessage message,
+        public async Task ProcessNewTrackedUsersEvents(
+            [QueueTrigger(SignalBox.Core.Constants.AzureQueueNames.NewTrackedUsers)] NewTrackedUserEventQueueMessage message,
             FunctionContext context)
         {
             var logger = context.GetLogger(nameof(ProcessNewTrackedUsersEvents));
