@@ -26,12 +26,12 @@ namespace SignalBox.Core
 
         public override void Validate()
         {
-            this.ValidateName(this.Name);
-            this.ValidateName(this.DatabaseName);
+            ValidateName(this.Name);
+            ValidateName(this.DatabaseName);
             base.Validate();
         }
 
-        private IEnumerable<string> reservedNames = new string[]
+        private static IEnumerable<string> reservedNames => new string[]
         {
             "www",
             "manage",
@@ -46,7 +46,7 @@ namespace SignalBox.Core
             "four2"
         };
 
-        private void ValidateName(string n)
+        public static void ValidateName(string n)
         {
             if (!n.ContainsOnlyLowercaseAlphaNumeric('-', '_'))
             {

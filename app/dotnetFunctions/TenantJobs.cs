@@ -239,6 +239,7 @@ namespace SignalBox.Functions
             tenant.Status = Tenant.Status_Database_Created;
             await tenantStore.SaveChanges();
             await AddUserToTenant(info.CreatorId, tenant, logger);
+            tenant.Status = Tenant.Status_Created;
             await tenantStore.SaveChanges();
             return tenant;
         }

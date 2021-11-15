@@ -48,8 +48,6 @@ namespace SignalBox.Web.Controllers
                 if (await tenantStore.TenantExists(name))
                 {
                     var tenant = await tenantStore.ReadFromName(name);
-                    await tenantAuthorizationStrategy.Authorize(User, tenant);
-
                     return new StatusDto(tenant.Status);
                 }
                 else
@@ -68,6 +66,7 @@ namespace SignalBox.Web.Controllers
         {
             if (hostingOptions.CurrentValue.Multitenant)
             {
+                Tenant.ValidateName(dto.Name);
                 var creatorId = User.Auth0Id();
                 await newTenantQueue.Enqueue(new NewTenantQueueMessage(dto.Name, creatorId));
 

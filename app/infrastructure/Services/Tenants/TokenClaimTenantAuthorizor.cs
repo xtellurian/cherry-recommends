@@ -32,7 +32,12 @@ namespace SignalBox.Infrastructure.Services
 
         public async Task Authorize(ClaimsPrincipal principal, Tenant tenant)
         {
-            if (!await this.IsAuthorized(principal, tenant))
+            if (tenant == null)
+            {
+                logger.LogInformation("Allow access - tenant is null");
+                return;
+            }
+            else if (!await this.IsAuthorized(principal, tenant))
             {
                 throw new ForbiddenException("Tenant Access Forbidden", $"ClaimsPrincipal Identity {principal?.Identity?.Name ?? "null"} not allowed to access tenant {tenant.Name}");
             }

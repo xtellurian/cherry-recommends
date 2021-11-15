@@ -26,7 +26,7 @@ namespace SignalBox.Web.Services
             var resolver = context.RequestServices.GetRequiredService<ITenantResolutionStrategy>();
 
             // only try to authorize the request if the server is multitenant and the request isnt anonymous
-            if (!isAllowAnonymous && resolver?.IsMultitenant == true)
+            if (context.Request.Path.StartsWithSegments("/api") && !isAllowAnonymous && resolver?.IsMultitenant == true)
             {
                 var tenant = tenantProvider.Current();
                 var authorizor = context.RequestServices.GetRequiredService<ITenantAuthorizationStrategy>();
