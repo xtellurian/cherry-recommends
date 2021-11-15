@@ -1,5 +1,5 @@
 config:
-  appsvc:canonical-root-domain: querent.ai
+  appsvc:canonical-root-domain: dev.cherry.ai
   appsvc:multitenant: "true"
   appsvc:sku-name: B1
   appsvc:sku-tier: Basic
@@ -20,6 +20,7 @@ config:
   hubspot:clientId: 05e9c9c1-dcc7-4415-b6ed-fc772f26de66
   hubspot:clientSecret:
     secure: AAABAGh8zwPTkHWrlgGw0H1mgvEm7soykdfBChUT9iQsyfnd85azSzFgUApjwsEd1/JdKZ0/26Dn8aANnmYldIKEs7U=
+  network:cherrySubdomain: dev
   signalbox:environment: Development
   signalbox:sqlPassword:
     secure: AAABANfzkAy6nNmVK/eYVMtNfDhFNrkCpmq7tDbmEIo7YxEQSLSNogU8
