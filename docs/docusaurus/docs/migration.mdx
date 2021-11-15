@@ -1,0 +1,35 @@
+---
+sidebar_position: 100
+title: Migrate
+---
+
+# Migrate
+
+Four2 is changing to Cherry Recommends, but “under the hood” we’re still the same. 
+This document outlines the steps we’ll take together to ensure continuity of service as you move from your single tenant Four2 application to our multi-tenant Cherry Recommends platform.
+
+
+## Migrations Steps
+
+There are 5 steps that should be taken to migrate, but only step 2 is mandatory.
+
+### Step 1 – Update your JavaScript Dependencies (for JavaScript SDK users)
+This step only applied to customers using the SignalBox Javascript SDK. We will be releasing a new SDK under a new name, which should be backwards compatible with the SignalBox library. 
+The new SDK should be compatible with your Four2 application. 
+
+### Step 2 – Data Migration (for all users)
+When you’re ready, we’re going to move your existing database into your new environment at ```https://[your-unique-subdomain].app.cherry.ai```. 
+To do this, just send us an email and we’ll coordinate the timing with you.
+Once the migration is complete, all your customer data, recommenders, items, etc. will be available in your new environment. 
+You’ll be able to start getting recommendations from there. It’s important to move to step 3 as soon as possible after step 2 is complete. 
+
+### Step 3 – Endpoint Migration (for JavaScript SDK users)
+When you’ve been informed that step 2 is complete, then you’ll need to update the endpoint reference when initialising the SDK. 
+The ```setBaseUrl``` should be used to point to the new endpoints defined in step 2.
+
+### Step 4 – Update Segment Webhooks (Segment users only)
+The endpoint for your segment webhooks will have changed. You should update the destination in Segment.
+
+### Step 5 – Install Cherry Hubspot App (Hubspot users only)
+You’ll need to install the Cherry App on your Hubspot account. This will be possible later this year.
+
