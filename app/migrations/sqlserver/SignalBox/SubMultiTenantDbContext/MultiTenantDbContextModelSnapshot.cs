@@ -34,6 +34,7 @@ namespace sqlserver.SignalBox.SubMultiTenantDbContext
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("DatabaseName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset>("LastUpdated")
@@ -42,17 +43,19 @@ namespace sqlserver.SignalBox.SubMultiTenantDbContext
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DatabaseName")
-                        .IsUnique()
-                        .HasFilter("[DatabaseName] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Tenants");
                 });

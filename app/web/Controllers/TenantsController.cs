@@ -9,6 +9,7 @@ using SignalBox.Core;
 using SignalBox.Infrastructure;
 using SignalBox.Infrastructure.Models;
 using SignalBox.Web.Config;
+using SignalBox.Web.Dto;
 
 namespace SignalBox.Web.Controllers
 {
@@ -18,16 +19,63 @@ namespace SignalBox.Web.Controllers
     public class TenantsController : SignalBoxControllerBase
     {
         private readonly ITenantProvider tenantProvider;
+        private readonly ITenantStore tenantStore;
+        private readonly INewTenantQueueStore newTenantQueue;
+        private readonly ITenantAuthorizationStrategy tenantAuthorizationStrategy;
         private readonly ITenantMembershipStore membershipStore;
         private readonly IOptionsMonitor<Hosting> hostingOptions;
 
         public TenantsController(ITenantProvider tenantProvider,
+                                 ITenantStore tenantStore,
+                                 INewTenantQueueStore newTenantQueue,
+                                 ITenantAuthorizationStrategy tenantAuthorizationStrategy,
                                  ITenantMembershipStore membershipStore,
                                  IOptionsMonitor<Hosting> hostingOptions)
         {
             this.tenantProvider = tenantProvider;
+            this.tenantStore = tenantStore;
+            this.newTenantQueue = newTenantQueue;
+            this.tenantAuthorizationStrategy = tenantAuthorizationStrategy;
             this.membershipStore = membershipStore;
             this.hostingOptions = hostingOptions;
+        }
+
+        [HttpGet("Status/{name}")]
+        public async Task<StatusDto> GetTenantStatus(string name)
+        {
+            if (hostingOptions.CurrentValue.Multitenant)
+            {
+                if (await tenantStore.TenantExists(name))
+                {
+                    var tenant = await tenantStore.ReadFromName(name);
+                    return new StatusDto(tenant.Status);
+                }
+                else
+                {
+                    return new StatusDto("Not Exist");
+                }
+            }
+            else
+            {
+                return new StatusDto("Single Tenant");
+            }
+        }
+
+        [HttpPost]
+        public async Task<StatusDto> CreateTenant(NewTenantDto dto)
+        {
+            if (hostingOptions.CurrentValue.Multitenant)
+            {
+                Tenant.ValidateName(dto.Name);
+                var creatorId = User.Auth0Id();
+                await newTenantQueue.Enqueue(new NewTenantQueueMessage(dto.Name, creatorId));
+
+                return new StatusDto("Submitted");
+            }
+            else
+            {
+                return new StatusDto("Single Tenant");
+            }
         }
 
         [HttpGet("current")]
@@ -73,7 +121,7 @@ namespace SignalBox.Web.Controllers
                 }
                 else
                 {
-                    throw new MembershipNotFoundException(userId);
+                    return new List<Tenant>();
                 }
             }
             else

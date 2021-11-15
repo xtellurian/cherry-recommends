@@ -14,25 +14,39 @@ namespace SignalBox.Infrastructure.Services
         {
             this.logger = logger;
         }
-        public Task Authorize(ClaimsPrincipal principal, Tenant tenant)
+
+        public Task<bool> IsAuthorized(ClaimsPrincipal principal, Tenant tenant)
         {
             if (principal.Identity.IsAuthenticated)
             {
                 if (tenant != null)
                 {
                     var scopes = principal.Claims.First(_ => _.Type == "scope").Value.Split(' ');
-                    if (scopes.Any(_ => _ == tenant.AccessScope()))
-                    {
-                        logger.LogInformation($"ClaimsPrincipal {principal.Identity.Name} given access to tenant {tenant.Name}");
-                    }
-                    else
-                    {
-                        throw new ForbiddenException("Tenant Access Forbidden", $"ClaimsPrincipal Identity {principal?.Identity?.Name ?? "null"} not allowed to access tenant {tenant.Name}");
-                    }
+                    return Task.FromResult(scopes.Any(_ => _ == tenant.AccessScope()));
                 }
             }
 
-            return Task.CompletedTask;
+            // default to false;
+            return Task.FromResult(false);
+        }
+
+        public async Task Authorize(ClaimsPrincipal principal, Tenant tenant)
+        {
+            if (tenant == null)
+            {
+                logger.LogInformation("Allow access - tenant is null");
+                return;
+            }
+            else if (!await this.IsAuthorized(principal, tenant))
+            {
+                throw new ForbiddenException("Tenant Access Forbidden", $"ClaimsPrincipal Identity {principal?.Identity?.Name ?? "null"} not allowed to access tenant {tenant.Name}");
+            }
+            else
+            {
+                logger.LogInformation($"ClaimsPrincipal {principal.Identity.Name} given access to tenant {tenant.Name}");
+                return;
+            }
+
         }
     }
 }

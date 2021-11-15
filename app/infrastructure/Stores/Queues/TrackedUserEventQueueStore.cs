@@ -5,7 +5,7 @@ namespace SignalBox.Infrastructure.Queues
 {
     public class TrackedUserEventQueueStore : AzureQueueStoreBase<TrackedUserEventsQueueMessage>, ITrackedUserEventQueueStore
     {
-        public TrackedUserEventQueueStore(IOptions<AzureQueueConfig> options) : base(options, "tracked-user-events")
+        public TrackedUserEventQueueStore(IOptions<AzureQueueConfig> options) : base(options, SignalBox.Core.Constants.AzureQueueNames.TrackedUserEvents)
         {
         }
     }

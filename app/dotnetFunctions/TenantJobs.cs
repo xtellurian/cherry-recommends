@@ -37,6 +37,28 @@ namespace SignalBox.Functions
             this.auth0Service = auth0Service;
         }
 
+        [Function("CreateTenant_FromQueue")]
+        public async Task TriggerCreateTenant_FromQueue(
+            [QueueTrigger(SignalBox.Core.Constants.AzureQueueNames.NewTenants)] NewTenantQueueMessage message,
+            FunctionContext executionContext)
+        {
+            var logger = executionContext.GetLogger("CreateTenant_QueueTrigger");
+            if (hostingOptions.Value.Multitenant)
+            {
+                var info = new NamedDatabase
+                {
+                    Name = message.Name,
+                    CreatorId = message.CreatorId
+                };
+
+                await CreateTenant(info, logger);
+            }
+            else
+            {
+                throw new BadRequestException("Cannot create a tenant in a non-multitenant environment");
+            }
+        }
+
         [Function("CreateTenant")]
         public async Task<Tenant> TriggerCreateTenant([HttpTrigger(AuthorizationLevel.Function, "post",
             Route = "Tenants")]
@@ -205,14 +227,19 @@ namespace SignalBox.Functions
         private async Task<Tenant> CreateTenant(NamedDatabase info, ILogger logger)
         {
             info.Validate();
-            var tenant = new Tenant(info.Name, info.Name + '-' + System.Guid.NewGuid().ToString().ToLowerInvariant());
             if (await tenantStore.TenantExists(info.Name))
             {
                 throw new BadRequestException($"Tenant {info.Name} already exists");
             }
-            await dbManager.CreateDatabase(tenant, _ => _.FixSqliteConnectionString());
+
+            var tenant = new Tenant(info.Name, info.Name + '-' + System.Guid.NewGuid().ToString().ToLowerInvariant());
             tenant = await tenantStore.Create(tenant);
+            await tenantStore.SaveChanges();
+            await dbManager.CreateDatabase(tenant, _ => _.FixSqliteConnectionString());
+            tenant.Status = Tenant.Status_Database_Created;
+            await tenantStore.SaveChanges();
             await AddUserToTenant(info.CreatorId, tenant, logger);
+            tenant.Status = Tenant.Status_Created;
             await tenantStore.SaveChanges();
             return tenant;
         }
