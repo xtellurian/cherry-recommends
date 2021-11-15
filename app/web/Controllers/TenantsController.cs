@@ -121,7 +121,7 @@ namespace SignalBox.Web.Controllers
                 }
                 else
                 {
-                    throw new MembershipNotFoundException(userId);
+                    return new List<Tenant>();
                 }
             }
             else
