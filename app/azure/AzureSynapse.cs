@@ -84,6 +84,10 @@ namespace SignalBox.Azure
                     SqlAdministratorLoginPassword = password
                 });
 
+                this.SynapsePrincipalId = workspace.Identity.Apply(identity => identity?.PrincipalId ?? "<preview>");
+                this.SynapseWorkspaceName = workspace.Name;
+                this.SynapseStorageAccountName = storageAccount.Name;
+
                 var allowAll = new IpFirewallRule("synapseIPFirewallRule", new IpFirewallRuleArgs
                 {
                     ResourceGroupName = rg.Name,
@@ -136,16 +140,21 @@ namespace SignalBox.Azure
             }
             else
             {
+                SynapsePrincipalId = Output.Create("");
+                SynapseWorkspaceName = Output.Create("");
+                SynapseStorageAccountName = Output.Create("");
                 PrimaryStorageKey = Output.Create("");
                 PrimaryStorageConnectionString = Output.Create("");
             }
-
 
             this.UserName = username;
             this.Password = password;
         }
         public string UserName { get; }
         public Output<string> Password { get; }
+        public Output<string> SynapsePrincipalId { get; }
+        public Output<string> SynapseWorkspaceName { get; }
+        public Output<string> SynapseStorageAccountName { get; }
         public Output<string> PrimaryStorageKey { get; }
         public Output<string> PrimaryStorageConnectionString { get; }
     }

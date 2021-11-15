@@ -7,3 +7,6 @@
 **/*.db
 
 web/databases/*.db
+
+app/deploy/azure-scripts/synapse-environment-build/*.json
+app/deploy/azure-scripts/synapse-environment-build/*.ipynb

@@ -14,10 +14,11 @@ namespace SignalBox.Azure
                 {"Component", "AzureML"}
             };
 
-        public AzureML(ResourceGroup rg)
+        public AzureML(ResourceGroup rg, AzureSynapse synapse, MultitenantDatabaseComponent multitenant)
         {
             var azureConfig = new Config("azure-native");
             var config = new Config("azure-ml");
+            var multitenantDbSecretName = config.Get("dbSecretName") ?? "multitenantDbPassword";
 
             var storageAccount = new StorageAccount("sa", new StorageAccountArgs
             {
@@ -67,7 +68,7 @@ namespace SignalBox.Azure
 
             });
 
-            var keyVault = new AzureNative.KeyVault.Vault("MLKV", new AzureNative.KeyVault.VaultArgs
+            var keyVault = new AzureNative.KeyVault.Vault("AnalyticsKV", new AzureNative.KeyVault.VaultArgs
             {
                 ResourceGroupName = rg.Name,
                 Tags = tags,
@@ -78,35 +79,69 @@ namespace SignalBox.Azure
                     EnabledForDiskEncryption = true,
                     EnabledForTemplateDeployment = true,
                     AccessPolicies =
-    {
-        new AzureNative.KeyVault.Inputs.AccessPolicyEntryArgs
-        {
-            ObjectId = Output.Create(AzureNative.Authorization.GetClientConfig.InvokeAsync()).Apply(_ => _.ObjectId),
-            Permissions = new AzureNative.KeyVault.Inputs.PermissionsArgs
-            {
-                Certificates =
                 {
-                    "all"
-                },
-                Keys =
-                {
-                    "all"
-                },
-                Secrets =
-                {
-                    "all"
+                    new AzureNative.KeyVault.Inputs.AccessPolicyEntryArgs
+                    {
+                        ObjectId = Output.Create(AzureNative.Authorization.GetClientConfig.InvokeAsync()).Apply(_ => _.ObjectId),
+                        Permissions = new AzureNative.KeyVault.Inputs.PermissionsArgs
+                        {
+                            Certificates =
+                            {
+                                "all"
+                            },
+                            Keys =
+                            {
+                                "all"
+                            },
+                            Secrets =
+                            {
+                                "all"
 
+                            },
+                        },
+                        TenantId = azureConfig.Require("tenantId"),
+                    },
+                    new AzureNative.KeyVault.Inputs.AccessPolicyEntryArgs
+                    {
+                        ObjectId = Output.Format(@$"{synapse.SynapsePrincipalId}"),
+                        Permissions = new AzureNative.KeyVault.Inputs.PermissionsArgs
+                        {
+                            Certificates =
+                            {
+                                "all"
+                            },
+                            Keys =
+                            {
+                                "all"
+                            },
+                            Secrets =
+                            {
+                                "all"
+
+                            },
+                        },
+                        TenantId = azureConfig.Require("tenantId"),
+                    },
                 },
-            },
-            TenantId = azureConfig.Require("tenantId"),
-        },
-    },
                     Sku = new AzureNative.KeyVault.Inputs.SkuArgs
                     {
                         Name = AzureNative.KeyVault.SkuName.Standard,
                         Family = AzureNative.KeyVault.SkuFamily.A
                     }
                 },
+            },
+            new CustomResourceOptions { Aliases = { new Alias { Name = "MLKV"} } }
+            );
+
+            var secret = new AzureNative.KeyVault.Secret("multitenantDbPassword", new AzureNative.KeyVault.SecretArgs
+            {
+                Properties = new AzureNative.KeyVault.Inputs.SecretPropertiesArgs
+                {
+                    Value = multitenant.Password,
+                },
+                ResourceGroupName = rg.Name,
+                SecretName = multitenantDbSecretName,
+                VaultName = keyVault.Name,
             });
 
             var workspace = new AzureNative.MachineLearningServices.Workspace("workspace", new AzureNative.MachineLearningServices.WorkspaceArgs
@@ -130,8 +165,11 @@ namespace SignalBox.Azure
                 StorageAccount = storageAccount.Id,
                 WorkspaceName = config.Require("name"),
             });
+
+            this.AnalyticsKeyVaultName = keyVault.Name;
         }
 
+        public Output<string> AnalyticsKeyVaultName { get; }
         public Output<string> PrimaryStorageKey { get; }
         public Output<string> PrimaryStorageConnectionString { get; }
     }

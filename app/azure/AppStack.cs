@@ -43,8 +43,8 @@ namespace SignalBox.Azure
             var multitenant = new MultitenantDatabaseComponent(databasesRg);
 
             // Create an Azure analytics environment
-            var analytics = new AzureML(analyticsRg);
             var synapse = new AzureSynapse(analyticsRg);
+            var analytics = new AzureML(analyticsRg, synapse, multitenant);
 
             // create the app svcs
             var appSvc = new AppSvc(appRg, multitenant, storage, analytics, appInsights, tags);
@@ -54,10 +54,13 @@ namespace SignalBox.Azure
             this.SqlServerName = multitenant.ServerName;
             this.SqlServerUsername = Output.Create(multitenant.UserName);
             this.SqlServerPassword = multitenant.Password;
+            this.SynapseWorkspaceName = synapse.SynapseWorkspaceName;
+            this.SynapseStorageAccountName = synapse.SynapseStorageAccountName;
             this.SynapseUsername = Output.Create(synapse.UserName);
             this.SynapsePassword = synapse.Password;
             this.SynapsePrimaryStorageKey = synapse.PrimaryStorageKey;
             this.ElasticPoolName = multitenant.ElasticPool.Name;
+            this.AnalyticsKeyVaultName = analytics.AnalyticsKeyVaultName;
             this.PrimaryStorageKey = analytics.PrimaryStorageKey;
             this.AppResourceGroup = appSvc.WebApp.ResourceGroup;
             this.CanonicalRootDomain = Output.Create(appSvc.CanonicalRootDomain);
@@ -101,7 +104,8 @@ namespace SignalBox.Azure
         // public Output<string> FunctionAppDefaultKey { get; set;}
         [Output]
         public Output<string> AppResourceGroup { get; set; }
-
+        [Output]
+        public Output<string> AnalyticsKeyVaultName { get; set; }
         [Output]
         public Output<string> PrimaryStorageKey { get; set; }
         [Output]
@@ -116,6 +120,10 @@ namespace SignalBox.Azure
         public Output<string> SqlServerUsername { get; private set; }
         [Output]
         public Output<string> SqlServerPassword { get; private set; }
+        [Output]
+        public Output<string> SynapseWorkspaceName { get; set; }
+        [Output]
+        public Output<string> SynapseStorageAccountName { get; set; }
         [Output]
         public Output<string> SynapseUsername { get; private set; }
         [Output]
