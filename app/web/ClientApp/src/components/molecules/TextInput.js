@@ -47,6 +47,16 @@ export const createStartsWithValidator = (substring) => (value) => {
   }
 };
 
+export const lowercaseOnlyValidator = (value) => {
+  if (!value || value.length === 0) {
+    return [];
+  } else if (value && value.toLowerCase() == value) {
+    return [];
+  } else {
+    return ["Value must be lowercase only"];
+  }
+};
+
 export const createRequiredByServerValidator = (serverError) => (value) => {
   if (serverError && (!value || value.length === 0)) {
     return ["Required"];

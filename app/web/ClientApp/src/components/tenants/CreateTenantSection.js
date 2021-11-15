@@ -3,7 +3,7 @@ import { useAccessToken } from "../../api-hooks/token";
 import { createTenantAsync, fetchStatusAsync } from "../../api/tenantsApi";
 import { useInterval } from "../../utility/useInterval";
 import { useHosting } from "../../api-hooks/tenantsApi";
-import { AsyncButton, ErrorCard, Spinner, Subtitle, Title } from "../molecules";
+import { AsyncButton, ErrorCard, Spinner, Title } from "../molecules";
 import { NoteBox } from "../molecules/NoteBox";
 import {
   TextInput,
@@ -11,6 +11,7 @@ import {
   createLengthValidator,
   createServerErrorValidator,
   joinValidators,
+  lowercaseOnlyValidator,
 } from "../molecules/TextInput";
 
 const nameRequirements = [
@@ -92,6 +93,7 @@ export const CreateTenantSection = () => {
                 validator={joinValidators([
                   createLengthValidator(4),
                   createServerErrorValidator("Name", error),
+                  lowercaseOnlyValidator,
                 ])}
                 value={tenant.name}
                 onChange={(e) => setTenant({ ...tenant, name: e.target.value })}
