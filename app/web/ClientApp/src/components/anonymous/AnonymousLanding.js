@@ -1,9 +1,7 @@
 import React from "react";
-import { useLocation } from "react-router";
 import LoginButton from "../auth0/LoginButton";
 
-export const AnonymousLanding = ({ isLoading }) => {
-
+export const AnonymousLanding = () => {
   return (
     <React.Fragment>
       <div>
@@ -16,7 +14,7 @@ export const AnonymousLanding = ({ isLoading }) => {
         </div>
         <div className="mt-5">
           <div className="w-25 m-auto">
-            <LoginButton isLoading={isLoading} />
+            <LoginButton />
           </div>
         </div>
         <div className="mt-2">
