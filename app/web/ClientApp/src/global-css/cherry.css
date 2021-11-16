@@ -1,0 +1,63 @@
+:root {
+  --cherry-purple: #280938;
+  --cherry-pink: #e5008a;
+  --cherry-dark-pink: #cc047c;
+  --cherry-teal: #00dae5;
+  --cherry-dark-teal: #00b6bf;
+  --cherry-white: #ffffff;
+
+  --cherry-pink-alpha: rgba(229, 0, 138, 0.1);
+}
+
+@font-face {
+  font-family: "Prelia";
+  src: local("Prelia"), url(./fonts/Prelia.otf) format("truetype");
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                                'embedded-opentype', and 'svg' */
+}
+
+h1 {
+  font-family: Prelia;
+}
+
+body {
+  font-family: Nunito;
+  background-color: var(--cherry-white);
+}
+
+header {
+  background-color: var(--cherry-purple);
+}
+
+header a {
+  color: var(--cherry-white);
+}
+
+/* BUTTONS */
+.btn {
+  transition: all 0.3s ease 0s;
+  border-radius: 20px;
+}
+.btn-primary {
+  color: var(--cherry-white);
+  background-color: var(--cherry-dark-pink);
+  border-color: var(--cherry-dark-pink);
+}
+.btn-primary:hover {
+  color: var(--cherry-white);
+  background-color: var(--cherry-pink);
+  border-color: var(--cherry-dark-pink);
+
+  box-shadow: 0px 15px 20px var(--cherry-pink-alpha);
+  transform: translateY(-1px);
+}
+
+/* archive */
+
+a {
+  color: #0366d6;
+}
+
+code {
+  color: #e01a76;
+}

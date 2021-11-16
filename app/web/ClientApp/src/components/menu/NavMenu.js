@@ -91,21 +91,16 @@ export const NavMenu = () => {
     <React.Fragment>
       <header>
         <Navbar
-          className="navbar-expand-md navbar-toggleable-md ng-white border-bottom box-shadow mb-3"
-          light
+          className="navbar-expand-md navbar-toggleable-md text-white ng-white border-bottom box-shadow mb-3"
         >
           <Container>
-            {/* <NavbarBrand tag={Link} to="/">Four2</NavbarBrand> */}
             <NavbarBrand tag={Link} to="/">
               <img
-                style={{
-                  maxWidth: 150,
-                  maxHeight: 100,
-                }}
                 className="img-fluid nav-logo"
-                alt="The Four2 Logo"
+                alt="The Cherry Recommends Logo"
+                src="/images/cherry-logo-colour-white-pink.svg"
                 // src="/images/Four2_logo_white_background.png"
-                src="https://docshostcce3f6dc.blob.core.windows.net/content/images/Four2_logo_white_background.png"
+                // src="https://docshostcce3f6dc.blob.core.windows.net/content/images/Four2_logo_white_background.png"
               />
             </NavbarBrand>
 

@@ -14,9 +14,10 @@ html {
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  /* box shadow in cherry pink, with alpha */
+  box-shadow: 0 0.25rem 0.75rem rgba(229, 0, 138, 0.1);
 }
 
 .nav-logo {
-  max-height: 50px;
+  min-height: 2em;
 }

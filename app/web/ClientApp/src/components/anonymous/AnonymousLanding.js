@@ -1,14 +1,15 @@
 import React from "react";
 import LoginButton from "../auth0/LoginButton";
+import SignupButton from "../auth0/SignupButton";
 
 export const AnonymousLanding = () => {
   return (
     <React.Fragment>
       <div>
-        <div className="text-center">
-          <h1 className="display-3">Four 2</h1>
+        <div className="text-center mt-4">
+          <h1 className="display-3">Cherry Recommends</h1>
           <p>
-            SignalBox is the leading Customer Recommendation Platform for
+            Cherry is the leading Customer Recommendation Platform for
             subscription companies.
           </p>
         </div>
@@ -17,13 +18,9 @@ export const AnonymousLanding = () => {
             <LoginButton />
           </div>
         </div>
-        <div className="mt-2">
+        <div className="mt-1">
           <div className="w-25 m-auto">
-            <a href="https://get.four2.ai/sign-up">
-              <button className="btn btn-block btn-outline-primary">
-                Sign Up
-              </button>
-            </a>
+            <SignupButton />
           </div>
         </div>
       </div>
