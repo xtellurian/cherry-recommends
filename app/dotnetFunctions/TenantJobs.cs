@@ -45,7 +45,7 @@ namespace SignalBox.Functions
             var logger = executionContext.GetLogger("CreateTenant_QueueTrigger");
             if (hostingOptions.Value.Multitenant)
             {
-                var info = new NamedDatabase
+                var info = new CreateTenantModel
                 {
                     Name = message.Name,
                     CreatorId = message.CreatorId
@@ -68,7 +68,7 @@ namespace SignalBox.Functions
             var logger = executionContext.GetLogger("CreateTenant");
             if (hostingOptions.Value.Multitenant)
             {
-                var info = await JsonSerializer.DeserializeAsync<NamedDatabase>(req.Body, serializerOptions);
+                var info = await JsonSerializer.DeserializeAsync<CreateTenantModel>(req.Body, serializerOptions);
                 return await CreateTenant(info, logger);
             }
             else
@@ -224,7 +224,7 @@ namespace SignalBox.Functions
 
         }
 
-        private async Task<Tenant> CreateTenant(NamedDatabase info, ILogger logger)
+        private async Task<Tenant> CreateTenant(CreateTenantModel info, ILogger logger)
         {
             info.Validate();
             if (await tenantStore.TenantExists(info.Name))
@@ -234,6 +234,7 @@ namespace SignalBox.Functions
 
             var tenant = new Tenant(info.Name, info.Name + '-' + System.Guid.NewGuid().ToString().ToLowerInvariant());
             tenant = await tenantStore.Create(tenant);
+            var terms = new TenantTermsOfServiceAcceptance(tenant, info.TermsOfServiceVersion, info.CreatorId);
             await tenantStore.SaveChanges();
             await dbManager.CreateDatabase(tenant, _ => _.FixSqliteConnectionString());
             tenant.Status = Tenant.Status_Database_Created;

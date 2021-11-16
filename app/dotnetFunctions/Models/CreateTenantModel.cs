@@ -3,12 +3,13 @@ using SignalBox.Core;
 
 namespace SignalBox.Functions
 {
-    public class NamedDatabase
+    public class CreateTenantModel
     {
         [Required]
         public string Name { get; set; }
         [Required]
         public string CreatorId { get; set; }
+        public string TermsOfServiceVersion { get; set; }
 
         public void Validate()
         {

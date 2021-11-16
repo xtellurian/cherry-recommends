@@ -4,7 +4,10 @@ import { createTenantAsync, fetchStatusAsync } from "../../api/tenantsApi";
 import { useInterval } from "../../utility/useInterval";
 import { useHosting } from "../../api-hooks/tenantsApi";
 import { AsyncButton, ErrorCard, Spinner, Title } from "../molecules";
+import { BigPopup } from "../molecules/popups/BigPopup";
+import { Markdown } from "../molecules/Markdown";
 import { NoteBox } from "../molecules/NoteBox";
+import { ButtonGroup } from "../molecules/buttons/ButtonGroup";
 import {
   TextInput,
   InputGroup,
@@ -12,6 +15,7 @@ import {
   createServerErrorValidator,
   joinValidators,
   lowercaseOnlyValidator,
+  createServerNameUnavailableValidator,
 } from "../molecules/TextInput";
 
 const nameRequirements = [
@@ -21,25 +25,63 @@ const nameRequirements = [
   "Must start with a letter",
 ];
 
+const termsVersion = "v1";
+
 export const CreateTenantSection = () => {
   const [status, setStatus] = React.useState();
   const token = useAccessToken();
   const [creating, setCreating] = React.useState(false);
   const [error, setError] = React.useState();
   const [nameCreated, setNameCreated] = React.useState();
+  const [termsPopupOpen, setTermsPopupOpen] = React.useState(false);
+  const [termsOfService, setTermsOfService] = React.useState();
+  const [serverDryRun, setServerDryRun] = React.useState();
   const hosting = useHosting();
 
   const [tenant, setTenant] = React.useState({
     name: "",
+    termsOfServiceVersion: null,
   });
 
-  const handleCreate = () => {
+  const isLongEnoughName = tenant?.name?.length > 3;
+
+  React.useEffect(() => {
+    if (!termsOfService) {
+      fetch(`/terms/${termsVersion}.md`)
+        .then((response) => response.text())
+        .then(setTermsOfService)
+        .catch((e) => {
+          console.log("Failed to fetch terms");
+          console.log(e);
+        });
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (tenant.name && isLongEnoughName) {
+      createTenantAsync({
+        token,
+        ...tenant,
+        termsOfServiceVersion: "dryrun",
+        dryRun: true,
+      })
+        .then(() => setServerDryRun(null))
+        .catch(setServerDryRun);
+    }
+  }, [tenant]);
+
+  const handleCreate = (termsOfServiceVersion) => {
     setCreating(true);
-    createTenantAsync({ token, name: tenant.name })
-      .then((r) => setStatus(r.status))
-      .then(() => setNameCreated(tenant.name))
-      .catch(setError)
-      .finally(() => setCreating(false));
+    if (termsOfServiceVersion) {
+      setTermsPopupOpen(false);
+      createTenantAsync({ token, ...tenant, termsOfServiceVersion })
+        .then((r) => setStatus(r.status))
+        .then(() => setNameCreated(tenant.name))
+        .catch(setError)
+        .finally(() => setCreating(false));
+    } else {
+      setTermsPopupOpen(true);
+    }
   };
 
   const updateStatus = () => {
@@ -63,10 +105,41 @@ export const CreateTenantSection = () => {
     }
   }, [status]);
 
-  const isLongEnoughName = tenant?.name?.length > 3;
-
   return (
     <div className="container">
+      <BigPopup isOpen={termsPopupOpen} setIsOpen={setTermsPopupOpen}>
+        <div>
+          <div className="overflow-auto" style={{ maxHeight: "75vh" }}>
+            <Markdown>{termsOfService}</Markdown>
+          </div>
+          <div>
+            <ButtonGroup className="w-100 mt-2">
+              <button
+                onClick={() => {
+                  setTermsPopupOpen(false);
+                  setCreating(false);
+                  setTenant({ ...tenant, termsOfServiceVersion: null });
+                }}
+                className="btn btn-outline-danger"
+              >
+                Decline
+              </button>
+              <button
+                onClick={() => {
+                  setTenant({ ...tenant, termsOfServiceVersion: termsVersion });
+                  if (creating) {
+                    handleCreate(termsVersion); // call create again, because we must have been popup during create process
+                  }
+                  setTermsPopupOpen(false);
+                }}
+                className="btn btn-primary"
+              >
+                Accept
+              </button>
+            </ButtonGroup>
+          </div>
+        </div>
+      </BigPopup>
       <div className="mt-5">
         <div className="text-center">
           <Title>Create a new Tenant</Title>
@@ -79,8 +152,7 @@ export const CreateTenantSection = () => {
           {status && (
             <div>
               <NoteBox label="Creation Status">
-                <Spinner />
-                <div>{status}</div>
+                <Spinner>{status}</Spinner>
               </NoteBox>
             </div>
           )}
@@ -94,6 +166,7 @@ export const CreateTenantSection = () => {
                   createLengthValidator(4),
                   createServerErrorValidator("Name", error),
                   lowercaseOnlyValidator,
+                  createServerNameUnavailableValidator(serverDryRun),
                 ])}
                 value={tenant.name}
                 onChange={(e) => setTenant({ ...tenant, name: e.target.value })}
@@ -118,15 +191,24 @@ export const CreateTenantSection = () => {
               </ul>
             </div>
           </div>
+
           <div className="w-50 m-auto">
             <AsyncButton
               disabled={!isLongEnoughName}
               className="btn btn-primary btn-block"
               loading={creating}
-              onClick={handleCreate}
+              onClick={() => handleCreate(tenant.termsOfServiceVersion)}
             >
               Create
             </AsyncButton>
+          </div>
+          <div className="text-center text-small">
+            <button
+              className="btn btn-link"
+              onClick={() => setTermsPopupOpen(true)}
+            >
+              View the Terms of Service
+            </button>
           </div>
         </div>
       </div>

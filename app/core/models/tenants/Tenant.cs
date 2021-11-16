@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 #nullable enable
 namespace SignalBox.Core
@@ -55,7 +56,7 @@ namespace SignalBox.Core
 
             if (reservedNames.Any(_ => string.Equals(_, n)))
             {
-                throw new BadRequestException($"{n} is a reserved word");
+                throw new NameNotAvailableException(n);
             }
             if (n.Length < 4)
             {
@@ -71,5 +72,8 @@ namespace SignalBox.Core
         public string Name { get; set; }
         public string DatabaseName { get; set; }
         public string? Status { get; set; }
+
+        [JsonIgnore]
+        public ICollection<TenantTermsOfServiceAcceptance>? AcceptedTerms { get; set; }
     }
 }

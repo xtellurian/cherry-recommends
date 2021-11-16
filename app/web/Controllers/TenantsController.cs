@@ -62,13 +62,21 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<StatusDto> CreateTenant(NewTenantDto dto)
+        public async Task<StatusDto> CreateTenant(NewTenantDto dto, bool dryRun = false)
         {
             if (hostingOptions.CurrentValue.Multitenant)
             {
                 Tenant.ValidateName(dto.Name);
+                if (await tenantStore.TenantExists(dto.Name))
+                {
+                    throw new NameNotAvailableException(dto.Name);
+                }
+
                 var creatorId = User.Auth0Id();
-                await newTenantQueue.Enqueue(new NewTenantQueueMessage(dto.Name, creatorId));
+                if (!dryRun)
+                {
+                    await newTenantQueue.Enqueue(new NewTenantQueueMessage(dto.Name, creatorId, dto.TermsOfServiceVersion));
+                }
 
                 return new StatusDto("Submitted");
             }

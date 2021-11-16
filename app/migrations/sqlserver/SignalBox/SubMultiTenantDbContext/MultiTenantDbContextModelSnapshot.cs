@@ -86,6 +86,36 @@ namespace sqlserver.SignalBox.SubMultiTenantDbContext
                     b.ToTable("Memberships");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.TenantTermsOfServiceAcceptance", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AcceptedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("TenantId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("TenantTermsOfServiceAcceptance");
+                });
+
             modelBuilder.Entity("SignalBox.Core.TenantMembership", b =>
                 {
                     b.HasOne("SignalBox.Core.Tenant", "Tenant")
@@ -95,6 +125,20 @@ namespace sqlserver.SignalBox.SubMultiTenantDbContext
                         .IsRequired();
 
                     b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.TenantTermsOfServiceAcceptance", b =>
+                {
+                    b.HasOne("SignalBox.Core.Tenant", "Tenant")
+                        .WithMany("AcceptedTerms")
+                        .HasForeignKey("TenantId");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Tenant", b =>
+                {
+                    b.Navigation("AcceptedTerms");
                 });
 #pragma warning restore 612, 618
         }

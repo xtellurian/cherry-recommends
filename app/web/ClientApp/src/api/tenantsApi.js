@@ -40,12 +40,17 @@ export const fetchStatusAsync = async ({ token, name }) => {
   }
 };
 
-export const createTenantAsync = async ({ token, name }) => {
-  const url = `api/tenants`;
+export const createTenantAsync = async ({
+  token,
+  name,
+  termsOfServiceVersion,
+  dryRun,
+}) => {
+  const url = `api/tenants?dryRun=${!!dryRun}`;
   const response = await fetch(url, {
     headers: headers(token),
     method: "post",
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name, termsOfServiceVersion }),
   });
   if (response.ok) {
     return await response.json();

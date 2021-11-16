@@ -42,6 +42,7 @@
     "react-dev-utils": "^10.2.1",
     "react-dom": "^16.14.0",
     "react-json-tree": "^0.15.0",
+    "react-markdown": "^7.1.0",
     "react-modal": "^3.14.3",
     "react-papaparse": "^3.16.0",
     "react-popper": "^2.2.5",
