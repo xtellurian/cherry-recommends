@@ -1,8 +1,8 @@
 export default {
   input: "src/index.js",
   output: {
-    file: "dist/signalbox.umd.js",
+    file: "dist/cherry.ai.umd.js",
     format: "umd",
-    name: "signalbox.js",
+    name: "cherry.ai",
   },
 };

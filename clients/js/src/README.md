@@ -1,17 +1,17 @@
-# SignalBox.js
+# Cherry.ai
 
-A vanilla JS package for interacting with the [Four2](https://four2.ai) SignalBox API
+A vanilla JS package for interacting with the [Cherry](https://cherry.ai) Recommends API
 
 ## Installation
 
 ```
-npm i --save signalbox.js
+npm i --save cherry.ai
 ```
 
 or
 
 ```
-yarn add signalbox.js
+yarn add cherry.ai
 ```
 
 ## Usage
@@ -20,9 +20,9 @@ Each API resource has a corresponding import. For example
 
 ```js
 // modern js
-import { trackedUsers } from "signalbox.js";
+import { trackedUsers } from "cherry.ai";
 // or common js
-const { trackedUsers } = require("signalbox.js");
+const { trackedUsers } = require("cherry.ai");
 
 trackedUsers.fetchTrackedUser({
   // successful fetch callback
@@ -38,13 +38,13 @@ trackedUsers.fetchTrackedUser({
 
 ### Setting the base URL
 
-You must set the base url (i.e. host) of the SignalBox server when your application starts.
+You must set the base url (i.e. host) of the Cherry server when your application starts.
 
 ```js
-const { setBaseUrl } = require("signalbox.js");
-setBaseUrl("https://app58a44e6b.azurewebsites.net");
+const { setBaseUrl } = require("cherry.ai");
+setBaseUrl("https://[tenant-name].app.cherry.ai");
 ```
 
 ## Contributing
 
-If you would like to contribute to this package, contact rian@four2.ai
+If you would like to contribute to this package, contact rian@cherry.ai
