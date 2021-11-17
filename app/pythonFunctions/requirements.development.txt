@@ -1,0 +1,3 @@
+# These requirements are for local testing
+
+pytest

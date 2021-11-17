@@ -1,19 +1,36 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Python Functions Testing Pipeline
+# https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-python?tabs=azurecli-linux%2Capplication-level#unit-testing
 
 trigger:
 - main
+- develop/*
+- migrate_afs
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.6'
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    pip install -r requirements.txt
+    pip install -r requirements.development.txt
+  workingDirectory: app/pythonFunctions
+  displayName: Install Dependencies
+
+- script: |
+    pip install pytest-azurepipelines pytest-cov
+  workingDirectory: app/pythonFunctions
+  displayName: Install azure-pipelines testing modules
+
+- script: pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml
+  workingDirectory: app/pythonFunctions
+  displayName: Run tests
+
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFiles: '**/test-*.xml'
+    testRunTitle: 'Publish test results for Python $(python.version)'

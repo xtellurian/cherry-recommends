@@ -1,102 +1,48 @@
+import collections
 import logging
 import json
-import random
 import azure.functions as func
 import numpy as np
 import pandas as pd
 
-def error_response(error, status_code=400):
-    logging.error(error)
-    j = json.dumps({'error': error})
-    return func.HttpResponse(j, status_code=status_code, headers={'Content-Type': 'application/json'})
-
-
-def success_response(content):
-    j = json.dumps(content)
-    return func.HttpResponse(j, headers={'Content-Type': 'application/json'})
-
-
-def is_valid_request_body(req_body):
-
-    if 'payload' not in req_body:
-        return (False, "the payload property is required")
-    if ('features' not in req_body['payload']) & ('arguments' not in req_body['payload']):
-        return (False, "At least one feature or argument is required")
-    else:
-        return (True, None)
-
-    return (True, None)
-
-def distribution_update_features_are_items(user_features, live_distribution):
-
-    for key in user_features:
-
-        if user_features[key] in live_distribution['ItemId'].tolist():
-            entry_index = np.where(live_distribution['ItemId'] == user_features[key])[0][0]
-            live_distribution['Probability'][entry_index] = live_distribution['Probability'][entry_index] + 0.2
-        else:
-            ## Not an error but worth tracking
-            logging.info('Couldnt update live distribution ' + key)
-
-    return live_distribution
-
+from shared_code import responses, request_validation, populations
 
 
 def main(req: func.HttpRequest, inputblob: str, record: str) -> func.HttpResponse:
-    
-    logging.info('Invoking a categorical optimiser.')
 
+    logging.info('Invoking a categorical optimiser.')
     req_body = {}
     try:
         req_body = req.get_json()
     except:
         # you can return as error with this method.
-        return error_response("Body of request must be JSON")
+        return responses.error("Body of request must be JSON")
 
-    try:
-            
-        # get data you require from the caller
-        is_valid, reason = is_valid_request_body(req_body)
-        if not is_valid:
-            return error_response(reason)
+    record = json.loads(record)
 
-        user_features = req_body['payload']['features']
-        
-        logging.info(user_features)
+    # get data you require from the caller
+    is_valid, reason = request_validation.is_valid_invoke_optimiser_request_body(
+        req_body)
 
-        population_id = user_features['PopulationId'] 
+    if not is_valid:
+        return responses.error(reason)
 
-        # the model data saved when created
-        model_parameters = json.loads(inputblob)
-        # the id of the optimiser model
-        id = req.route_params.get('id')
+    payload = req_body['payload']
+    items = payload['items']
+    print(items)
+    # Pull the relevant distribution for this model
+    collection = populations.PopulationDistributionCollection(dict=json.loads(inputblob))
 
-        if population_id in model_parameters['SourceDistributionList'].keys():
-            source_distribution = pd.DataFrame.from_dict(model_parameters['SourceDistributionList'][population_id])
-            logging.info('Loaded distribution')
-        else: 
-            source_distribution = pd.DataFrame.from_dict(model_parameters['SourceDistributionList']["A"])
-            logging.info('Using default distribution')
-        number_of_items = model_parameters['NumberOfItems']
+    # Get the population id given specific personalisation features
+    population_id = populations.calculate_population_id(payload)
+    
+    relevant_population = collection.get_population(population_id)
 
-        ###### SECTION NEEDED ######
-        #UPDATE LIVEDDISTRIBUTION AND PROBABILITY WITH NEW INCOMING ITEMS
-        live_distribution = source_distribution
-        live_distribution = distribution_update_features_are_items(user_features, live_distribution)
+    if(relevant_population is None):
+        relevant_population = populations.PopulationItemDistribution(population_id, collection.default_item, items )
 
-        ## Ensure live distribution is a true probability distribution
-        live_distribution['Probability'] = live_distribution['Probability']/sum(live_distribution['Probability'])
-        recommendedProductArray = np.random.choice(live_distribution['ItemId'], size=number_of_items, replace=False, p = live_distribution['Probability'])
-        logging.info('Got the product array')
+    # Draw the items to recommend
+    chosen_items = relevant_population.choose_items(items = items, n_items=collection.n_items)
 
-        productIdList = recommendedProductArray.tolist()
-        recommendedProducts = []
-        
-        for i in range(number_of_items):
-            recommendedProducts.append({'itemCommonId':productIdList[i],'Score':number_of_items-i})
-
-        response = {"recommendedProducts": recommendedProducts}
-        return success_response(response)
-
-    except:
-        return error_response("An error occurred in the model")
+    response = {"items": chosen_items}
+    return responses.success(response)
