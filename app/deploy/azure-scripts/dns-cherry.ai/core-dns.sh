@@ -26,5 +26,9 @@ az network dns record-set cname set-record -g $RG -z $ZONE -n www -c "proxy-ssl.
 az network dns record-set a add-record -g $RG -z $ZONE -n @ -a "75.2.70.75"
 az network dns record-set a add-record -g $RG -z $ZONE -n @ -a "99.83.190.102"
 
+## ------- HUBSPOT ------------
+echo "Setting Hubspot DNS"
+az network dns record-set cname set-record -g $RG -z $ZONE -n "hs1-7572639._domainkey" -c "cherry-ai.hs20a.dkim.hubspotemail.net."
+az network dns record-set cname set-record -g $RG -z $ZONE -n "hs2-7572639._domainkey" -c "cherry-ai.hs20b.dkim.hubspotemail.net."
 
 echo "Done."
