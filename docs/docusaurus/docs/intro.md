@@ -17,6 +17,14 @@ Cherry helps with
 1. Boosting basket size and conversion on checkout for consumer subscription companies
 1. Churn reduction for SaaS and consumer subscription companies.
 
+## How do I get started with Cherry?
+
+You need to do three things to start with Cherry
+1. Login: Go to ```https://[your_tenant_name].cherry.ai``` and click ```Sign in```.
+2. Connect data: [Segment](/docs/integrations/sources/segment) takes less than a minute to connect.
+3. Create a recommender: [Super easy to do](/docs/recommenders/create/create-item-recommender) in our web application
+
+
 ## How should I use these docs?
 
 We suggest you start by understanding how Cherry Recommends works and some core concepts. Then look at Recommend and Access to determine your best implementation solution. Check out Access and our SDKs as you need too.

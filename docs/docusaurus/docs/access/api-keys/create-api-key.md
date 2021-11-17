@@ -1,6 +1,6 @@
 ---
-sidebar_position: 3
-title: Create API Key
+sidebar_position: 30
+title: Create API key
 ---
 
 

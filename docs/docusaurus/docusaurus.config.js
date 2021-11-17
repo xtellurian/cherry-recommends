@@ -17,6 +17,11 @@ module.exports = {
     colorMode:{
       disableSwitch: true,
     },
+    googleAnalytics: {
+      trackingID: 'G-KF3NHJ2YMY',
+      // Optional fields.
+      anonymizeIP: true, // Should IPs be anonymized?
+    },
     navbar: {
       logo: {
         alt: "Cherry Recommends Logo",
