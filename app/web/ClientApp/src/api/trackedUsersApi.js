@@ -1,4 +1,4 @@
-import { trackedUsers } from "signalbox.js";
+import { trackedUsers } from "cherry.ai";
 
 export const fetchTrackedUsersAsync = trackedUsers.fetchTrackedUsersAsync;
 

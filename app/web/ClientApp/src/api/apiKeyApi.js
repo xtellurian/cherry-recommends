@@ -1,4 +1,4 @@
-import { apiKeys } from "signalbox.js";
+import { apiKeys } from "cherry.ai";
 
 export const fetchApiKeysAsync = apiKeys.fetchApiKeysAsync;
 export const createApiKeyAsync = apiKeys.createApiKeyAsync;

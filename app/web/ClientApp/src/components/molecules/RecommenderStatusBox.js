@@ -11,11 +11,19 @@ export const RecommenderStatusBox = ({ recommender }) => {
         Exploring for good recommendations.
       </NoteBox>
     );
-  } else {
+  } else if (
+    recommender.modelRegistration &&
+    recommender.modelRegistration.hostingType === "azureFunctions"
+  ) {
+    return (
+      <NoteBox cardBodyClassName="ready" label={label}>
+        Using Cherry Auto-AI
+      </NoteBox>
+    );
+  } else
     return (
       <NoteBox cardBodyClassName="ready" label={label}>
         Discovered good recommendations.
       </NoteBox>
     );
-  }
 };

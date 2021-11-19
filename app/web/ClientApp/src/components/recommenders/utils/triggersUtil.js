@@ -8,7 +8,7 @@ import {
   AsyncButton,
 } from "../../molecules";
 
-import { SettingRow } from "../../molecules/settings/SettingRow";
+import { SettingRow } from "../../molecules/layout/SettingRow";
 import { AsyncSelectFeature } from "../../molecules/selectors/AsyncSelectFeature";
 import { useAccessToken } from "../../../api-hooks/token";
 import {

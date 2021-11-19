@@ -18,8 +18,10 @@ import { RecommendersComponent } from "./components/recommenders/RecommendersCom
 import { RecommendableItemsComponent } from "./components/items/RecommendableItemsComponent";
 import { EventsComponent } from "./components/events/EventsComponent";
 import { AdminComponent } from "./components/admin/AdminComponent";
+import { configure } from "./api/customisation";
+import "./global-css/cherry.css";
 
-import "./global-css/cherry.css"
+configure()
 export default class App extends Component {
   static displayName = App.name;
 

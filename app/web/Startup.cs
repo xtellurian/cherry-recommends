@@ -27,6 +27,7 @@ using SignalBox.Web.Services;
 using SignalBox.Core.Security;
 using SignalBox.Infrastructure.Models;
 using SignalBox.Core.Serialization;
+using SignalBox.Core.Optimisers;
 
 namespace SignalBox.Web
 {
@@ -163,6 +164,9 @@ namespace SignalBox.Web
             services.Configure<Auth0M2MClient>(Configuration.GetSection("Auth0").GetSection("M2M"));
             services.Configure<HubspotAppCredentials>(Configuration.GetSection("HubSpot").GetSection("AppCredentials"));
             services.Configure<Hosting>(Configuration.GetSection("Hosting"));
+            services.Configure<PythonAzureFunctionsConnectionOptions>(Configuration.GetSection("PythonFunctions"));
+
+
             services.AddScoped<ITenantAuthorizationStrategy, TokenClaimTenantAuthorizor>();
 
             services.AddApiVersioning(o =>

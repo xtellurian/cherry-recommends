@@ -11,6 +11,7 @@ namespace SignalBox.Core.Workflows
     {
         private readonly IStorageContext storageContext;
         private readonly IItemsRecommendationStore recommendationStore;
+        private readonly ICategoricalOptimiserClient optimiserClient;
         private readonly IModelRegistrationStore modelRegistrationStore;
         private readonly IRecommendableItemStore itemStore;
 
@@ -20,11 +21,13 @@ namespace SignalBox.Core.Workflows
             IItemsRecommendationStore recommendationStore,
             IFeatureStore featureStore,
             IIntegratedSystemStore systemStore,
+            ICategoricalOptimiserClient optimiserClient,
             IModelRegistrationStore modelRegistrationStore,
             IRecommendableItemStore itemStore) : base(store, systemStore, featureStore)
         {
             this.storageContext = storageContext;
             this.recommendationStore = recommendationStore;
+            this.optimiserClient = optimiserClient;
             this.modelRegistrationStore = modelRegistrationStore;
             this.itemStore = itemStore;
         }
@@ -38,14 +41,16 @@ namespace SignalBox.Core.Workflows
                                                   from.Items?.Select(_ => _.CommonId),
                                                   from.NumberOfItemsToRecommend,
                                                   from.Arguments,
-                                                  from.ErrorHandling ?? new RecommenderSettings());
+                                                  from.ErrorHandling ?? new RecommenderSettings(),
+                                                  true);
         }
         public async Task<ItemsRecommender> CreateItemsRecommender(CreateCommonEntityModel common,
                                                                        string? defaultItemId,
                                                                        IEnumerable<string>? itemsCommonIds,
                                                                        int? numberOfItemsToRecommend,
                                                                        IEnumerable<RecommenderArgument>? arguments,
-                                                                       RecommenderSettings settings)
+                                                                       RecommenderSettings settings,
+                                                                       bool useOptimiser)
         {
             RecommendableItem? defaultItem = null;
             if (!string.IsNullOrEmpty(defaultItemId))
@@ -53,6 +58,7 @@ namespace SignalBox.Core.Workflows
                 defaultItem = await itemStore.GetEntity(defaultItemId);
             }
 
+            ItemsRecommender recommender;
             if (itemsCommonIds != null && itemsCommonIds.Any())
             {
                 var items = new List<RecommendableItem>();
@@ -61,20 +67,27 @@ namespace SignalBox.Core.Workflows
                     items.Add(await itemStore.ReadFromCommonId(id));
                 }
 
-                var recommender = await store.Create(
+                recommender = await store.Create(
                     new ItemsRecommender(common.CommonId, common.Name, defaultItem, items, arguments, settings)
                     { NumberOfItemsToRecommend = numberOfItemsToRecommend });
-                await storageContext.SaveChanges();
-                return recommender;
+
             }
             else
             {
-                var recommender = await store.Create(
+                recommender = await store.Create(
                     new ItemsRecommender(common.CommonId, common.Name, defaultItem, null, arguments, settings)
                     { NumberOfItemsToRecommend = numberOfItemsToRecommend });
-                await storageContext.SaveChanges();
-                return recommender;
             }
+
+            if (useOptimiser)
+            {
+                var registration = new ModelRegistration(
+                    System.Guid.NewGuid().ToString(), ModelTypes.ItemsRecommenderV1, HostingTypes.AzureFunctions, null, null, null);
+                recommender.ModelRegistration = registration;
+                var optimiser = await optimiserClient.Create(recommender);
+            }
+            await storageContext.SaveChanges();
+            return recommender;
         }
 
         public async Task<RecommendableItem> SetDefaultItem(ItemsRecommender recommender, string itemId)

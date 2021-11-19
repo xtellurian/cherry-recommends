@@ -15,7 +15,7 @@ const LoginButton = () => {
           console.log("Automatically signed in");
         })
         .catch((e) => console.log(e));
-    }, 5000);
+    }, 500);
   }
   return (
     <AsyncButton

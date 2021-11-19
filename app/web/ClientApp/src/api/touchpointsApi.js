@@ -1,4 +1,4 @@
-import { touchpoints } from "signalbox.js";
+import { touchpoints } from "cherry.ai";
 
 export const fetchTouchpointsAsync = touchpoints.fetchTouchpointsAsync;
 

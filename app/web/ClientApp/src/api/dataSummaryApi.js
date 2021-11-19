@@ -1,4 +1,4 @@
-import { dataSummary } from "signalbox.js";
+import { dataSummary } from "cherry.ai";
 
 export const fetchEventSummaryAsync = dataSummary.fetchEventSummaryAsync;
 

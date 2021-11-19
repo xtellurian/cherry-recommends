@@ -2,35 +2,39 @@
 # https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-python?tabs=azurecli-linux%2Capplication-level#unit-testing
 
 trigger:
-- main
-- develop/*
-- migrate_afs
+  - main
+  - develop/*
+  - migrate_afs
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.6'
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "3.6"
 
-- script: |
-    pip install -r requirements.txt
-    pip install -r requirements.development.txt
-  workingDirectory: app/pythonFunctions
-  displayName: Install Dependencies
+  - script: |
+      pip install -r requirements.txt
+      pip install -r requirements.development.txt
+    workingDirectory: app/pythonFunctions
+    displayName: Install Dependencies
 
-- script: |
-    pip install pytest-azurepipelines pytest-cov
-  workingDirectory: app/pythonFunctions
-  displayName: Install azure-pipelines testing modules
+  - script: |
+      pip install pytest-azurepipelines pytest-cov
+    workingDirectory: app/pythonFunctions
+    displayName: Install azure-pipelines testing modules
 
-- script: pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml
-  workingDirectory: app/pythonFunctions
-  displayName: Run tests
+  - task: ShellScript@2
+    inputs:
+      scriptPath: app/pythonFunctions/tests.sh
 
-- task: PublishTestResults@2
-  condition: succeededOrFailed()
-  inputs:
-    testResultsFiles: '**/test-*.xml'
-    testRunTitle: 'Publish test results for Python $(python.version)'
+  - script:
+    workingDirectory: app/pythonFunctions
+    displayName: Run tests
+
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFiles: "**/test-*.xml"
+      testRunTitle: "Publish test results for Python $(python.version)"

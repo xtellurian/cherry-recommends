@@ -10,18 +10,21 @@ namespace SignalBox.Infrastructure.ML
     {
         private readonly HttpClient httpClient;
         private readonly ITelemetry telemetry;
+        private readonly ITenantProvider tenantProvider;
         private readonly IProductRecommenderStore productRecommenderStore;
         private readonly IProductStore productStore;
         private readonly IRecommendableItemStore itemStore;
 
         public RecommenderModelClientFactory(HttpClient httpClient,
                                              ITelemetry telemetry,
+                                             ITenantProvider tenantProvider,
                                              IProductRecommenderStore productRecommenderStore,
                                              IProductStore productStore,
                                              IRecommendableItemStore itemStore)
         {
             this.httpClient = httpClient;
             this.telemetry = telemetry;
+            this.tenantProvider = tenantProvider;
             this.productRecommenderStore = productRecommenderStore;
             this.productStore = productStore;
             this.itemStore = itemStore;
@@ -34,6 +37,11 @@ namespace SignalBox.Infrastructure.ML
             if (model == null)
             {
                 throw new ArgumentException("You should call GetUnregisteredClient when there is no linked Model Registration");
+            }
+            if (recommender.ModelRegistration.HostingType == HostingTypes.AzureFunctions && model.ModelType == ModelTypes.ItemsRecommenderV1)
+            {
+                return Task.FromResult((IRecommenderModelClient<TOutput>)
+                    new PythonFunctionsOptimiserRecommenderClient(httpClient, tenantProvider));
             }
             if (recommender.ModelRegistration.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ParameterSetRecommenderV1)
             {

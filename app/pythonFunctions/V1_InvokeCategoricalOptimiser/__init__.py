@@ -16,7 +16,7 @@ def main(req: func.HttpRequest, inputblob: str, record: str) -> func.HttpRespons
         req_body = req.get_json()
     except:
         # you can return as error with this method.
-        return responses.error("Body of request must be JSON")
+        return responses.bad_request("Body of request must be JSON")
 
     record = json.loads(record)
 
@@ -25,24 +25,31 @@ def main(req: func.HttpRequest, inputblob: str, record: str) -> func.HttpRespons
         req_body)
 
     if not is_valid:
-        return responses.error(reason)
+        return responses.bad_request(reason)
 
     payload = req_body['payload']
     items = payload['items']
-    print(items)
     # Pull the relevant distribution for this model
-    collection = populations.PopulationDistributionCollection(dict=json.loads(inputblob))
+    collection = populations.PopulationDistributionCollection(
+        deserialized_dict=json.loads(inputblob))
 
     # Get the population id given specific personalisation features
     population_id = populations.calculate_population_id(payload)
-    
+
     relevant_population = collection.get_population(population_id)
 
-    if(relevant_population is None):
-        relevant_population = populations.PopulationItemDistribution(population_id, collection.default_item, items )
+    if relevant_population is None:
+        logging.warning("Population not found")
+        relevant_population = populations.PopulationItemDistribution(
+            population_id, collection.default_item, items)
+    else:
+        logging.info(f'Found population, id = {population_id}')
 
     # Draw the items to recommend
-    chosen_items = relevant_population.choose_items(items = items, n_items=collection.n_items)
-
-    response = {"items": chosen_items}
+    chosen_items = relevant_population.choose_items(
+        items=items, n_items=collection.n_items_to_recommend)
+    # set the scores
+    for i in chosen_items:
+        i['score'] = relevant_population.get_item_probability(i['commonId'])
+    response = {"scoredItems": chosen_items}
     return responses.success(response)

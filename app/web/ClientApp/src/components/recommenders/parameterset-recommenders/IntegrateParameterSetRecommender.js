@@ -18,7 +18,7 @@ const tabs = [
 ];
 
 const jsIntegrate = ({ id, argumentsExample }) => `
-import { parameterSetRecommenders } from "signalbox.js";
+import { parameterSetRecommenders } from "cherry.ai";
 
 parameterSetRecommenders.invokeParameterSetRecommender({
   success: (recommendation) => console.log('Success callback'),

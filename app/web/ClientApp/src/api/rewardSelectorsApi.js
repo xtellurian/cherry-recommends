@@ -1,4 +1,4 @@
-import { rewardSelectors } from "signalbox.js";
+import { rewardSelectors } from "cherry.ai";
 
 export const fetchRewardSelectorsAsync = rewardSelectors.fetchRewardSelectorsAsync;
 export const fetchRewardSelectorAsync = rewardSelectors.fetchRewardSelectorAsync;

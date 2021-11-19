@@ -8,6 +8,7 @@ from .data import test_create_body
 from V1_CreateCategoricalOptimiser import main
 from shared_code import request_validation, populations
 
+
 class TestFunction(unittest.TestCase):
     def test_is_valid_create_optimiser_request_body_fails(self):
         is_valid, reason = request_validation.is_valid_create_optimiser_request_body({
@@ -41,7 +42,7 @@ class TestFunction(unittest.TestCase):
             url='v1/testtenant/categorical',
             params={})
 
-        ## SUT
+        # SUT
         response = main(req, mockRecord, mockBlob)
         ###
         self.assertIsNotNone(response.get_body())
@@ -59,7 +60,8 @@ class TestFunction(unittest.TestCase):
         self.assertIsNotNone(mockRecord)
         self.assertEqual(json.loads(mockRecord.value), responseData)
 
-        all_distributions = populations.PopulationDistributionCollection(dict =json.loads(mockBlob.value))
+        all_distributions = populations.PopulationDistributionCollection(
+            deserialized_dict=json.loads(mockBlob.value))
         self.assertIsNotNone(all_distributions)
         self.assertTrue(len(all_distributions.populations) > 0)
         for pop in all_distributions.populations:

@@ -14,33 +14,36 @@ def main(req: func.HttpRequest, record: func.Out[str],  outputBlob: func.Out[str
         req_body = req.get_json()
     except:
         # you can return as error with this method.
-        return responses.error("Body of request must be JSON")
+        logging.info(req.get_body().decode('utf-8'))
+        return responses.bad_request("Body of request must be JSON xx")
 
     # get data you require from the caller
     is_valid, reason = request_validation.is_valid_create_optimiser_request_body(
         req_body)
     if not is_valid:
-        return responses.error(reason)
+        return responses.bad_request(reason)
 
     id = req_body['id']
     name = req_body['name']
     tenant = req.route_params.get('tenant')
+    n_items_to_recommend = req_body["nItemsToRecommend"]
 
     # Compute number of popluations (used for copies of distributions)
-    n_populations = 250
-    # 5*5*2*5 We need to improve this later on to be dependent on the Personalisation Features included.
-    # To hard basket as of 10/21
+    # TODO: make these populations real
+    population_ids = [populations.constant_population_id]
 
     # create some intitial distribution used in model
     items = req_body['items']
     default_item = req_body['defaultItem']
 
-    distributions = populations.PopulationDistributionCollection()
+    distributions = populations.PopulationDistributionCollection(
+        default_item=default_item, n_items_to_recommend=n_items_to_recommend)
 
-    for p in range(n_populations):
+    for p in population_ids:
         # distribution_specific_pop = populations.new_distribution_for_population(items, default_item_id)
         pop_distribution = populations.PopulationItemDistribution(
             p, default_item, items)
+        pop_distribution.normalize_probabilities()
         distributions.add(pop_distribution)
 
     # save it to a blob for use later.
@@ -54,8 +57,9 @@ def main(req: func.HttpRequest, record: func.Out[str],  outputBlob: func.Out[str
         "tenant": tenant,
         "id": id,
         "name": name,
-        "nItemsToRecommend": req_body["nItemsToRecommend"],
-        "nPopulations": n_populations,
+        "nItemsToRecommend": n_items_to_recommend,
+        "nPopulations": len(population_ids),
+        "defaultItem": default_item,
         "defaultItemCommonId": default_item['commonId']
     }
 

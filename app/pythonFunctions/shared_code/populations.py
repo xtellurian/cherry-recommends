@@ -2,6 +2,8 @@ import random
 from typing import List
 from .request_validation import is_valid_invoke_payload
 
+constant_population_id = 1
+
 
 def renormalize_dict(dict_values: dict):
     dict_values = dict_values.copy()
@@ -9,14 +11,15 @@ def renormalize_dict(dict_values: dict):
     for item_id, probability in dict_values.items():
         total_p += probability
     for item_id in dict_values:
-        dict_values[item_id] = dict_values[item_id] / total_p
+        # round to 4 decimal places
+        dict_values[item_id] = round(dict_values[item_id] / total_p, 4)
 
     return dict_values
 
 
 class PopulationItemDistribution():
-    def __init__(self, population_id: str = None, default_item: dict = None, items: List[dict] = None, probabilities: dict = None, dict: dict = None) -> None:
-        if dict is None:
+    def __init__(self, population_id: str = None, default_item: dict = None, items: List[dict] = None, probabilities: dict = None, deserialized_dict: dict = None) -> None:
+        if deserialized_dict is None:
             self.population_id = population_id
             self.default_item = default_item
             if items == None:
@@ -25,18 +28,31 @@ class PopulationItemDistribution():
                 self.items = items
 
             if probabilities == None:
+                probs = {}
+                if items is None:
+                    raise Exception("items is required if not deserializing")
+                n_items = len(items)
+                for i in items:
+                    probs[i['commonId']] = 1 / n_items
                 # 100% on the default when constructing
-                self.probabilities = {self.default_item['commonId']: 1}
+                probs[default_item['commonId']] = 1
+                self.probabilities = probs
             else:
                 self.probabilities = probabilities
         else:
-            self.population_id = dict['population_id']
-            self.default_item = dict['default_item']
-            self.items = dict['items']
-            self.probabilities = dict['probabilities']
+            self.population_id = deserialized_dict['population_id']
+            self.default_item = deserialized_dict['default_item']
+            self.items = deserialized_dict['items']
+            self.probabilities = deserialized_dict['probabilities']
 
     def to_dict(self):
         return self.__dict__
+
+    def get_item_probability(self, item_id):
+        if item_id in self.probabilities:
+            return self.probabilities[item_id]
+        else:
+            return 0
 
     def get_item(self, item_id):
         if item_id == None:
@@ -66,35 +82,31 @@ class PopulationItemDistribution():
         for item in self.items:
             item_ids.append(item['commonId'])
 
-        probabilities = {}
+        new_probabilities = {}
         for item in items:
-            probabilities[item['commonId']] = self.probabilities[item['commonId']
-                                                                 ] if item['commonId'] in self.probabilities else 1/len(items)
+            new_probabilities[item['commonId']] = self.probabilities[item['commonId']
+                                                                     ] if item['commonId'] in self.probabilities else 1/len(items)
 
-        print(items)
-        print(probabilities)
-        probabilities = renormalize_dict(probabilities)
+        self.probabilities = renormalize_dict(new_probabilities)
         choices = sorted(items, key=lambda x: x['commonId'])
         probability_array = []
-        for key, p in sorted(probabilities.items()):
+        for key, p in sorted(self.probabilities.items()):
             probability_array.append(p)
-        print(probabilities)
-        print(probability_array)
-        print(choices)
-        print(n_items)
+
         return random.choices(choices, weights=probability_array, k=n_items)
 
 
 class PopulationDistributionCollection():
-    def __init__(self, default_item: dict = None, populations=None, n_items: int = None, dict: dict = None):
-        if dict is not None:
-            self.default_item = dict['defaultItem']
-            self.n_items = dict['nItems']
+    def __init__(self, default_item: dict = None, populations=None, n_items_to_recommend: int = None, deserialized_dict: dict = None):
+        if deserialized_dict is not None:
+            self.default_item = deserialized_dict['defaultItem']
+            self.n_items_to_recommend = deserialized_dict['nItemsToRecommend']
             self.populations = []
-            for pop_d in dict['populations']:
-                self.populations.append(PopulationItemDistribution(dict=pop_d))
+            for pop_d in deserialized_dict['populations']:
+                self.populations.append(
+                    PopulationItemDistribution(deserialized_dict=pop_d))
         else:
-            self.n_items = n_items
+            self.n_items_to_recommend = n_items_to_recommend
             self.default_item = default_item
             self.populations: List[PopulationItemDistribution] = populations if populations is not None else [
             ]
@@ -110,10 +122,10 @@ class PopulationDistributionCollection():
     def to_dict(self):
         populations = []
         for p in self.populations:
-            populations.append( p.to_dict())
+            populations.append(p.to_dict())
         return {
             'populations': populations,
-            'nItems': self.n_items,
+            'nItemsToRecommend': self.n_items_to_recommend,
             'defaultItem': self.default_item
         }
 
@@ -123,9 +135,4 @@ def calculate_population_id(payload):
     if not is_valid:
         raise Exception(message)
 
-    features = payload['features']
-    population = ""
-    for key, value in features.items():
-        population += key
-        population += str(value)
-    return population
+    return constant_population_id

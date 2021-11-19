@@ -1,4 +1,4 @@
-import { reports } from "signalbox.js";
+import { reports } from "cherry.ai";
 
 export const fetchReportsAsync = reports.fetchReportsAsync;
 

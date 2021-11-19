@@ -4,6 +4,7 @@ using AzureNative = Pulumi.AzureNative;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Storage;
 using Pulumi.AzureNative.Storage.Inputs;
+using System.Collections.Generic;
 
 namespace SignalBox.Azure
 {
@@ -68,6 +69,56 @@ namespace SignalBox.Azure
 
             });
 
+            var accessPolicies = new List<AzureNative.KeyVault.Inputs.AccessPolicyEntryArgs>
+            {
+                new AzureNative.KeyVault.Inputs.AccessPolicyEntryArgs
+                {
+                    ObjectId = Output.Create(AzureNative.Authorization.GetClientConfig.InvokeAsync()).Apply(_ => _.ObjectId),
+                    Permissions = new AzureNative.KeyVault.Inputs.PermissionsArgs
+                    {
+                        Certificates =
+                        {
+                            "all"
+                        },
+                        Keys =
+                        {
+                            "all"
+                        },
+                        Secrets =
+                        {
+                            "all"
+
+                        },
+                    },
+                    TenantId = azureConfig.Require("tenantId"),
+                }
+            };
+
+            if ((new Config("azure-synapse")).GetBoolean("enable") != false)
+            {
+                accessPolicies.Add(new AzureNative.KeyVault.Inputs.AccessPolicyEntryArgs
+                {
+                    ObjectId = Output.Format(@$"{synapse.SynapsePrincipalId}"),
+                    Permissions = new AzureNative.KeyVault.Inputs.PermissionsArgs
+                    {
+                        Certificates =
+                            {
+                                "all"
+                            },
+                        Keys =
+                            {
+                                "all"
+                            },
+                        Secrets =
+                            {
+                                "all"
+
+                            },
+                    },
+                    TenantId = azureConfig.Require("tenantId"),
+                });
+            }
+
             var keyVault = new AzureNative.KeyVault.Vault("AnalyticsKV", new AzureNative.KeyVault.VaultArgs
             {
                 ResourceGroupName = rg.Name,
@@ -78,51 +129,7 @@ namespace SignalBox.Azure
                     EnabledForDeployment = true,
                     EnabledForDiskEncryption = true,
                     EnabledForTemplateDeployment = true,
-                    AccessPolicies =
-                {
-                    new AzureNative.KeyVault.Inputs.AccessPolicyEntryArgs
-                    {
-                        ObjectId = Output.Create(AzureNative.Authorization.GetClientConfig.InvokeAsync()).Apply(_ => _.ObjectId),
-                        Permissions = new AzureNative.KeyVault.Inputs.PermissionsArgs
-                        {
-                            Certificates =
-                            {
-                                "all"
-                            },
-                            Keys =
-                            {
-                                "all"
-                            },
-                            Secrets =
-                            {
-                                "all"
-
-                            },
-                        },
-                        TenantId = azureConfig.Require("tenantId"),
-                    },
-                    new AzureNative.KeyVault.Inputs.AccessPolicyEntryArgs
-                    {
-                        ObjectId = Output.Format(@$"{synapse.SynapsePrincipalId}"),
-                        Permissions = new AzureNative.KeyVault.Inputs.PermissionsArgs
-                        {
-                            Certificates =
-                            {
-                                "all"
-                            },
-                            Keys =
-                            {
-                                "all"
-                            },
-                            Secrets =
-                            {
-                                "all"
-
-                            },
-                        },
-                        TenantId = azureConfig.Require("tenantId"),
-                    },
-                },
+                    AccessPolicies = accessPolicies,
                     Sku = new AzureNative.KeyVault.Inputs.SkuArgs
                     {
                         Name = AzureNative.KeyVault.SkuName.Standard,
@@ -130,7 +137,7 @@ namespace SignalBox.Azure
                     }
                 },
             },
-            new CustomResourceOptions { Aliases = { new Alias { Name = "MLKV"} } }
+            new CustomResourceOptions { Aliases = { new Alias { Name = "MLKV" } } }
             );
 
             var secret = new AzureNative.KeyVault.Secret("multitenantDbPassword", new AzureNative.KeyVault.SecretArgs

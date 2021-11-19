@@ -141,6 +141,11 @@ namespace SignalBox.Azure
                     {"Queues__ContainerName", "queue-messages"},
                     {"Queues__EnableWriteQueue", true.ToString()},
                     {"Queues__EnableReadQueue", false.ToString()},
+
+                    // python functions connection
+                    {"PythonFunctions__Url",  Output.Format($"https://{pythonFuncs.DefaultHostName}/")},
+                    {"PythonFunctions__Key",  Output.Format($"{this.PythonFunctionAppDefaultKey}")},
+
                     // hubspot connection
                     {"HubSpot__AppCredentials__AppId", hubspotConfig.Get("appId") ?? ""},
                     {"HubSpot__AppCredentials__ClientId", hubspotConfig.Get("clientId") ?? ""},

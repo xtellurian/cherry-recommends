@@ -1,4 +1,4 @@
-import { environments } from "signalbox.js";
+import { environments } from "cherry.ai";
 
 export const fetchEnvironmentsAsync = environments.fetchEnvironmentsAsync;
 export const createEnvironmentAsync = environments.createEnvironmentAsync;

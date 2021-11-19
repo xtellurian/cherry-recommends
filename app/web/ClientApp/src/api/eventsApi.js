@@ -1,4 +1,4 @@
-import { events } from "signalbox.js";
+import { events } from "cherry.ai";
 
 export const fetchTrackedUsersEventsAsync = events.fetchTrackedUsersEventsAsync;
 export const fetchEventAsync = events.fetchEventAsync;

@@ -17,7 +17,7 @@ const tabs = [
 ];
 
 const jsIntegrate = ({ id }) => `
-import { itemsRecommenders } from "signalbox.js";
+import { itemsRecommenders } from "cherry.ai";
 
 itemsRecommenders.invokeItemsRecommenderAsync({
     token: "Your JSON Web Token / access token",

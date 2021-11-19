@@ -23,6 +23,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IWebhookSenderClient, WebhookSenderClient>();
             services.AddScoped<IRecommendationCache<ItemsRecommender, ItemsRecommendation>, SimpleItemsRecommendationCache>();
             services.AddScoped<IRecommendationCache<ParameterSetRecommender, ParameterSetRecommendation>, SimpleParameterSetRecommendationCache>();
+            services.AddScoped<ICategoricalOptimiserClient, AzureFunctionsOptimiserClient>();
             services.AddHttpClient();
             return services;
         }

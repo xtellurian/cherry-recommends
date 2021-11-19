@@ -6,7 +6,7 @@ import {
   Spinner,
   ErrorCard,
 } from "../../molecules";
-import { SettingRow } from "../../molecules/settings/SettingRow";
+import { SettingRow } from "../../molecules/layout/SettingRow";
 import { TimespanSelector } from "../../molecules/selectors/TimespanSelector";
 import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 

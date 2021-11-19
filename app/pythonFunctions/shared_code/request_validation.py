@@ -1,18 +1,35 @@
 
+def is_duplicate_common_ids(items):
+    seen = []
+    for i in items:
+        common_id = i['commonId']
+        if common_id in seen:
+            return (True, f'Duplicate common id {common_id}')
+        else:
+            seen.append(common_id)
+    return (False, None)
+
+
 def is_valid_invoke_payload(payload):
     if ('features' not in payload):
-        return (True, "payload:features is required.")
+        return (False, "payload:features is required.")
     if ('items' not in payload):
         return (False, "payload:items is required.")
+
+    dup_items, message = is_duplicate_common_ids(payload['items'])
+    if dup_items:
+        return (False, message)
     else:
         return (True, None)
+
 
 def is_valid_invoke_optimiser_request_body(req_body):
 
     if 'payload' not in req_body:
         return (False, "the payload property is required")
-    
+
     return is_valid_invoke_payload(req_body['payload'])
+
 
 def is_valid_create_optimiser_request_body(req_body: dict):
     if 'id' not in req_body:

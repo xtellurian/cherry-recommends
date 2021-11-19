@@ -1,4 +1,3 @@
-import collections
 import uuid
 import json
 
@@ -48,8 +47,10 @@ def test_serialized_distribution():
     }, {
         'commonId': str(uuid.uuid1())
     }]
-    collection = pops.PopulationDistributionCollection(default_item, n_items=1, populations=[
-        pops.PopulationItemDistribution('pop1', default_item, items)
-    ])
+    collection = pops.PopulationDistributionCollection(default_item=default_item, n_items_to_recommend=1,
+                                                       populations=[
+                                                           pops.PopulationItemDistribution(
+                                                               pops.constant_population_id, default_item, items=items)
+                                                       ])
 
     return json.dumps(collection.to_dict())

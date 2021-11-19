@@ -2,12 +2,14 @@ import unittest
 
 import azure.functions as func
 import json
+
+from shared_code import populations
 from .data import test_serialized_distribution, test_invokation_payload
 from V1_InvokeCategoricalOptimiser import main
 from shared_code import request_validation
 
 
-class TestFunction(unittest.TestCase):
+class TestInvoke(unittest.TestCase):
     def test_is_valid_invoke_optimiser_request_body_fails(self):
         is_valid, reason = request_validation.is_valid_invoke_optimiser_request_body({
         })

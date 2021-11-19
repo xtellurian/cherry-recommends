@@ -1,4 +1,4 @@
-import { recommendableItems } from "signalbox.js";
+import { recommendableItems } from "cherry.ai";
 
 export const fetchItemsAsync = recommendableItems.fetchItemsAsync;
 export const fetchItemAsync = recommendableItems.fetchItemAsync;

@@ -1,4 +1,4 @@
-import { modelRegistrations } from "signalbox.js";
+import { modelRegistrations } from "cherry.ai";
 
 export const fetchModelRegistrationsAsync =
   modelRegistrations.fetchModelRegistrationsAsync;

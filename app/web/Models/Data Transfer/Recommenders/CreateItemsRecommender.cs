@@ -10,5 +10,6 @@ namespace SignalBox.Web.Dto
         [Required]
         public string? DefaultItemId { get; set; }
         public int? NumberOfItemsToRecommend { get; set; }
+        public bool? UseAutoAi { get; set; }
     }
 }

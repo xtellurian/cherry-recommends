@@ -1,6 +1,6 @@
 .loader-container {
   height: 100vh;
-  background: #1c789e;
+  background: var(--cherry-purple);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -15,7 +15,7 @@ import {
 import { setHubspotWebhookBehaviourAsync } from "../../../../api/hubspotApi";
 import { useAccessToken } from "../../../../api-hooks/token";
 import { TextInput, InputGroup } from "../../../molecules/TextInput";
-import { SettingRow } from "../../../molecules/settings/SettingRow";
+import { SettingRow } from "../../../molecules/layout/SettingRow";
 
 const Top = ({ integratedSystem }) => {
   return (

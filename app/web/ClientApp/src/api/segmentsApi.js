@@ -1,4 +1,4 @@
-import { segments } from "signalbox.js";
+import { segments } from "cherry.ai";
 
 export const fetchSegmentsAsync = segments.fetchSegmentsAsync;
 

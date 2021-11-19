@@ -1,4 +1,4 @@
-import { featureGenerators } from "signalbox.js";
+import { featureGenerators } from "cherry.ai";
 
 export const fetchFeatureGeneratorsAsync =
   featureGenerators.fetchFeatureGeneratorsAsync;

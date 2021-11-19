@@ -1,4 +1,4 @@
-import { parameterSetRecommenders } from "signalbox.js";
+import { parameterSetRecommenders } from "cherry.ai";
 
 export const fetchParameterSetRecommendersAsync =
   parameterSetRecommenders.fetchParameterSetRecommendersAsync;

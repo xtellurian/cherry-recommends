@@ -1,4 +1,4 @@
-import { integratedSystems } from "signalbox.js";
+import { integratedSystems } from "cherry.ai";
 
 export const fetchIntegratedSystemsAsync =
   integratedSystems.fetchIntegratedSystemsAsync;

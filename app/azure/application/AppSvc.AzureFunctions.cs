@@ -12,6 +12,8 @@ namespace SignalBox.Azure
     {
         public Output<string?>? DotnetFunctionAppMasterKey { get; private set; }
         public Output<string?>? DotnetFunctionAppDefaultKey { get; private set; }
+        public Output<string?>? PythonFunctionAppMasterKey { get; private set; }
+        public Output<string?>? PythonFunctionAppDefaultKey { get; private set; }
 
         private WebApp CreateDotnetFuncs(ResourceGroup rg,
                                         MultitenantDatabaseComponent multiDb,
@@ -203,7 +205,7 @@ namespace SignalBox.Azure
                                                     Component insights,
                                                     AppServicePlan plan)
         {
-            return new WebApp("pythonJobs", new WebAppArgs
+            var funcs = new WebApp("pythonJobs", new WebAppArgs
             {
                 Tags = tags,
                 ResourceGroupName = rg.Name,
@@ -236,6 +238,26 @@ namespace SignalBox.Azure
                     Http20Enabled = true,
                 },
             });
+
+            var keys = Output.Tuple(funcs.Name, funcs.ResourceGroup, Output.CreateSecret(""))
+               .Apply(GetHostKeys);
+
+            this.PythonFunctionAppMasterKey = keys.Apply(k => k?.MasterKey);
+
+            this.PythonFunctionAppDefaultKey = keys.Apply(k =>
+            {
+                if (k?.FunctionKeys != null && k.FunctionKeys.ContainsKey("default"))
+                {
+                    return k.FunctionKeys["default"];
+                }
+                else
+                {
+                    System.Console.WriteLine("No function Keys.");
+                    return null;
+                }
+            });
+
+            return funcs;
         }
     }
 }

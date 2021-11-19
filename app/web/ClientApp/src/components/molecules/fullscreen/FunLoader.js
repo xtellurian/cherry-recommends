@@ -10,7 +10,7 @@ export const FunloaderContainer = () => {
   return (
     <div className="loader-container">
       <div className="text-center text-white w-100" style={textStyle}>
-        <h5>Repostulating Matrices</h5>
+        <h5>Firing up neurons</h5>
       </div>
       <Funloader color="white" />
     </div>

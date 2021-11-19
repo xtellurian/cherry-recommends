@@ -10,6 +10,7 @@ import {
   AsyncButton,
   ErrorCard,
 } from "../../molecules";
+import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 import {
   TextInput,
   InputGroup,
@@ -18,6 +19,8 @@ import {
   joinValidators,
 } from "../../molecules/TextInput";
 import { IntegerRangeSelector } from "../../molecules/selectors/IntegerRangeSelector";
+import { SettingRow } from "../../molecules/layout/SettingRow";
+import { Container, Row } from "../../molecules/layout";
 
 export const CreateRecommender = () => {
   const token = useAccessToken();
@@ -35,6 +38,7 @@ export const CreateRecommender = () => {
     itemIds: null,
     defaultItemId: "",
     numberOfItemsToRecommend: null,
+    useAutoAi: true,
   });
 
   const [loading, setLoading] = React.useState(false);
@@ -60,40 +64,57 @@ export const CreateRecommender = () => {
       <Title>Create Item Recommender</Title>
       <hr />
       {error && <ErrorCard error={error} />}
+      <Container>
+        <Row className="mb-1">
+          <InputGroup>
+            <TextInput
+              label="Display Name"
+              value={recommender.name}
+              placeholder="A memorable name that you recognise later."
+              onChange={(e) =>
+                setRecommender({
+                  ...recommender,
+                  name: e.target.value,
+                })
+              }
+            />
+          </InputGroup>
+        </Row>
+        <Row className="mb-1">
+          <InputGroup>
+            <TextInput
+              label="Common Id"
+              value={recommender.commonId}
+              placeholder="A unique ID for this recommender resource."
+              validator={joinValidators([
+                commonIdValidator,
+                createServerErrorValidator("CommonId", error),
+              ])}
+              onChange={(e) =>
+                setRecommender({
+                  ...recommender,
+                  commonId: e.target.value,
+                })
+              }
+            />
+          </InputGroup>
+        </Row>
+      </Container>
 
-      <InputGroup>
-        <TextInput
-          label="Display Name"
-          value={recommender.name}
-          placeholder="A memorable name that you recognise later."
-          onChange={(e) =>
-            setRecommender({
-              ...recommender,
-              name: e.target.value,
-            })
-          }
-        />
-      </InputGroup>
+      <Container>
+        <SettingRow label="Use Auto-AI">
+          <div className="text-right">
+            <ToggleSwitch
+              name="Use Auto AI"
+              id="use-auto-ai"
+              checked={recommender.useAutoAi}
+              onChange={(v) => setRecommender({ ...recommender, useAutoAi: v })}
+            />
+          </div>
+        </SettingRow>
+      </Container>
 
-      <InputGroup>
-        <TextInput
-          label="Common Id"
-          value={recommender.commonId}
-          placeholder="A unique ID for this recommender resource."
-          validator={joinValidators([
-            commonIdValidator,
-            createServerErrorValidator("CommonId", error),
-          ])}
-          onChange={(e) =>
-            setRecommender({
-              ...recommender,
-              commonId: e.target.value,
-            })
-          }
-        />
-      </InputGroup>
-
-      <div className="m-2">
+      <div className="mt-2">
         <Selector
           isMulti
           isSearchable
@@ -120,7 +141,7 @@ export const CreateRecommender = () => {
         />
       </div>
 
-      <div className="m-2">
+      <div className="mt-2">
         Default Item
         <Selector
           isSearchable
@@ -135,7 +156,7 @@ export const CreateRecommender = () => {
           options={itemsOptions}
         />
       </div>
-      <div>
+      <div className="mt-2 text-right">
         <AsyncButton onClick={handleCreate} loading={loading}>
           Create
         </AsyncButton>

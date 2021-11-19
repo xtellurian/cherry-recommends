@@ -1,4 +1,4 @@
-import { parameters } from "signalbox.js";
+import { parameters } from "cherry.ai";
 
 export const fetchParametersAsync = parameters.fetchParametersAsync;
 

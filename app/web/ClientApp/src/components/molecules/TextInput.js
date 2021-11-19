@@ -79,13 +79,14 @@ export const createServerErrorValidator =
     }
   };
 
-export const createServerNameUnavailableValidator = (serverError) => (value) => {
-  if (serverError && serverError.title) {
-    return [serverError.title];
-  } else {
-    return [];
-  }
-};
+export const createServerNameUnavailableValidator =
+  (serverError) => (value) => {
+    if (serverError && serverError.title) {
+      return [serverError.title];
+    } else {
+      return [];
+    }
+  };
 
 export const TextInput = ({
   label,

@@ -1,4 +1,4 @@
-import { deployment } from "signalbox.js";
+import { deployment } from "cherry.ai";
 
 export const fetchDeploymentConfigurationAsync =
   deployment.fetchDeploymentConfigurationAsync;

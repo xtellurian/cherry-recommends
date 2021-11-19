@@ -58,7 +58,8 @@ namespace SignalBox.Web.Controllers
             return await workflows.CreateItemsRecommender(c,
                 dto.DefaultItemId, dto.ItemIds, dto.NumberOfItemsToRecommend,
                 dto.Arguments.ToCoreRepresentation(),
-                dto.Settings.ToCoreRepresentation());
+                dto.Settings.ToCoreRepresentation(),
+                dto.UseAutoAi ?? false);
         }
 
         /// <summary>Sets the default item id.</summary>

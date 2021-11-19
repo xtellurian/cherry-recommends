@@ -16,7 +16,8 @@ namespace SignalBox.Core
     public enum HostingTypes
     {
         AzureMLContainerInstance,
-        AzurePersonalizer
+        AzurePersonalizer,
+        AzureFunctions,
     }
 
     public class ModelRegistration : Entity
