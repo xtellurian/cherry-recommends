@@ -14,7 +14,7 @@ namespace SignalBox.Azure
 
             var apiResource = new ResourceServer("apiResource", new ResourceServerArgs
             {
-                Name = $"{stackName}-SignalBoxAPI",
+                Name = $"{stackName}-CherryAPI",
                 Identifier = Output.Format($"https://{webApp.DefaultHostName}"),
                 SigningAlg = "RS256",
                 TokenLifetime = 60 * 60 * 24 * 30, // 30 days for tokens from this endpoint
@@ -82,8 +82,8 @@ namespace SignalBox.Azure
             }
             var clientApp = new Client("reactApp", new ClientArgs
             {
-                Name = "Signal Box",
-                Description = "React Application frontend",
+                Name = "Cherry Recommends",
+                Description = "The Cherry Recommends web application.",
                 AppType = "spa",
                 IsFirstParty = true,
                 TokenEndpointAuthMethod = "none",
