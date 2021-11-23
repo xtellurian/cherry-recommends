@@ -31,4 +31,9 @@ echo "Setting Hubspot DNS"
 az network dns record-set cname set-record -g $RG -z $ZONE -n "hs1-7572639._domainkey" -c "cherry-ai.hs20a.dkim.hubspotemail.net."
 az network dns record-set cname set-record -g $RG -z $ZONE -n "hs2-7572639._domainkey" -c "cherry-ai.hs20b.dkim.hubspotemail.net."
 
+## ------- MAILCHIMP ------------
+echo "Setting Mailchimp DNS"
+az network dns record-set cname set-record -g $RG -z $ZONE -n "k2._domainkey" -c "dkim2.mcsv.net"
+az network dns record-set cname set-record -g $RG -z $ZONE -n "k3._domainkey" -c "dkim3.mcsv.net"
+
 echo "Done."
