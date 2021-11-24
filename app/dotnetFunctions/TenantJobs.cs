@@ -97,7 +97,7 @@ namespace SignalBox.Functions
 
         [Function("ListMemberships")]
         public async Task<IEnumerable<TenantMembership>> ListMemberships([HttpTrigger(AuthorizationLevel.Function, "get",
-            Route = "Tenants/{tenantName:alpha}/Members")]
+            Route = "Tenants/{tenantName}/Members")]
             HttpRequestData req,
             FunctionContext executionContext,
             string tenantName)
@@ -125,7 +125,7 @@ namespace SignalBox.Functions
 
         [Function("AddMember")]
         public async Task<Tenant> TriggerAddMember([HttpTrigger(AuthorizationLevel.Function, "post",
-            Route = "Tenants/{tenantName:alpha}/Members")] HttpRequestData req, string tenantName,
+            Route = "Tenants/{tenantName}/Members")] HttpRequestData req, string tenantName,
             FunctionContext executionContext)
         {
             var logger = executionContext.GetLogger("AddMember");
