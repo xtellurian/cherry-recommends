@@ -1,9 +1,11 @@
 ---
-sidebar_position: 40
+sidebar_position: 30
 title: Features
 ---
 
-# Features
+Features enable the AI to understand customer behaviour and personalize the offers for them.
+
+## What is a Feature
 
 A `Feature` is a named, derived property of a Customer.
 Features are calculated from a stream of behavioural events.
@@ -11,7 +13,20 @@ Commonly used features include:
 * Lifetime Revenue
 * Account Status
 
-Features are created globally within your tenant.
-Feature values are calculated *per customer*
+## Creating a feature
 
-For example, when you create a Lifetime Revenue feature, the value is calculated for each customer.
+Navigate to `https://[yourtenant].cherry.ai/features` and click `Create Feature` in the top-right of the screen. 
+
+You should see a screen like this.
+![Create Feature](/img/screenshots/understand/create_feature.png)
+Add in the name and the id for the feature and your done. 
+
+:::note Restrictions
+
+Features are created globally within your tenant. 
+Feature values are calculated *per customer*.
+
+:::
+
+Features are currently automatically computed from your Segment event stream and discussions with you.
+We will be releasing a Feature Generator which will enable you to define how Features are defined shortly.
