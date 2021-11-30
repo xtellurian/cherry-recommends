@@ -236,6 +236,7 @@ namespace SignalBox.Azure
                         }
                     },
                     Http20Enabled = true,
+                    AlwaysOn = true,
                 },
             });
 

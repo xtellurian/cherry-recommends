@@ -17,7 +17,7 @@ WEBAPPNAME=$(pulumi stack output WebappName)
 CANONICAL_ROOT_DOMAIN=$(pulumi stack output CanonicalRootDomain)
 RG=$(pulumi stack output AppResourceGroup)
 
-cd $APP_PATH/web
+cd ../web
 echo "Deploying Web App to ${WEBAPPNAME}"
 
 dotnet publish -c Release

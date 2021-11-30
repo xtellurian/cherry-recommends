@@ -1,0 +1,11 @@
+name: pythonFunctions
+channels:
+  - defaults
+dependencies:
+  - python=3.6
+  - pip:
+      - azure-functions
+      - azure-functions-durable
+      - boto3
+      - pandas
+      - signalboxclient==0.1.10
