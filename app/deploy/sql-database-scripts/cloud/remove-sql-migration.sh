@@ -1,25 +1,21 @@
 set -e
 
-cd ../azure
-
-
-MIGRATION=$1
-
-if [ -z "$MIGRATION" ]
+if [ -z "$APP_PATH" ]
 then
-      echo "Usage: $0 <migration> <database>"
-      exit 1
+    echo "Using default app path"
+    cd ../../../
+    APP_PATH=$(pwd)
+else
+    echo "Using APP_PATH $APP_PATH"
 fi
 
-DATABASE=$2
+DATABASE=$1
 
 if [ -z "$DATABASE" ]
 then
-      echo "Usage: $0 <database> <database> "
+      echo "Usage: $0 <database-name>"
       exit 1
 fi
-
-CONTEXT="SignalBoxDbContext"
 
 STACK=$(pulumi stack --show-name)
 echo "Using Pulumi Stack $STACK"
@@ -32,7 +28,11 @@ CS="Server=tcp:$SERVER.database.windows.net,1433;Initial Catalog=$DATABASE;User 
 
 cd ../web
 
+
+MIGRATIONS_DIR="SignalBox"
 CONTEXT="SignalBoxDbContext"
+PROVIDER='sqlserver'
 
+dotnet ef migrations remove --context $CONTEXT --project "../migrations/$PROVIDER" -- --Provider $PROVIDER  --ConnectionStrings:Application "$CS"
 
-dotnet ef database update $MIGRATION --context $CONTEXT --connection "$CS" --project ../migrations/sqlserver -- --Provider sqlserver --Hosting:SingleTenantDatabaseName $DATABASE
+echo "Done"

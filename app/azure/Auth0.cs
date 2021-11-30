@@ -71,14 +71,14 @@ namespace SignalBox.Azure
                 }
             });
 
-            var hosts = new InputList<string>
+            var hosts = new System.Collections.Generic.List<Pulumi.Output<string>>
             {
                 Output.Format($"https://{webApp.DefaultHostName}")
             };
             if (!string.IsNullOrEmpty(canonicalRootDomain))
             {
-                hosts.Add($"https://{canonicalRootDomain}"); // allow the canonical root to login
-                hosts.Add($"https://*.{canonicalRootDomain}"); // allow all subdomains (tenants + specials) to login
+                hosts.Add(Output.Create($"https://{canonicalRootDomain}")); // allow the canonical root to login
+                hosts.Add(Output.Create($"https://*.{canonicalRootDomain}")); // allow all subdomains (tenants + specials) to login
             }
             var clientApp = new Client("reactApp", new ClientArgs
             {

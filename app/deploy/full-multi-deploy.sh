@@ -1,19 +1,22 @@
 set -e
-cd ../azure
+cd ..
+APP_PATH=$(pwd)
 
+cd $APP_PATH/azure
 pulumi up -y
 
-cd ../deploy
+cd $APP_PATH/deploy/sql-database-scripts/cloud
+Hosting__Multitenant="true" APP_PATH=$APP_PATH ./update-tenant-sql-database.sh
 
-Hosting__Multitenant="true" ./update-tenant-sql-database.sh
-./deploy-dotnet-functions.sh
+cd $APP_PATH/deploy/azure-scripts/functions
+APP_PATH=$APP_PATH ./deploy-dotnet-functions.sh
 
 echo "Databases should be migrated using the Azure Function"
 echo "Press any key to continue..."
 read;
 
-echo "OK. Deploying app..."
-
-./deploy.sh
+cd $APP_PATH/deploy/webapp
+echo "OK. Deploying webapp..."
+APP_PATH=$APP_PATH ./deploy.sh
 
 echo "Finished multi deploy."

@@ -1,6 +1,15 @@
 set -e
 home_dir=$(pwd)
-cd ../azure
+
+if [ -z "$APP_PATH" ]
+then
+    echo "Using default app path"
+    APP_PATH="../.."
+else
+    echo "Using APP_PATH $APP_PATH"
+fi
+
+cd $APP_PATH/azure
 
 STACK=$(pulumi stack --show-name)
 echo "Using Pulumi Stack $STACK"
@@ -8,7 +17,7 @@ WEBAPPNAME=$(pulumi stack output WebappName)
 CANONICAL_ROOT_DOMAIN=$(pulumi stack output CanonicalRootDomain)
 RG=$(pulumi stack output AppResourceGroup)
 
-cd ../web
+cd $APP_PATH/web
 echo "Deploying Web App to ${WEBAPPNAME}"
 
 dotnet publish -c Release

@@ -1,5 +1,5 @@
 $home_dir=$(pwd)
-cd ../azure
+cd ../../../azure
 
 $STACK=$(pulumi stack --show-name)
 echo "Using Pulumi Stack $STACK"

@@ -1,5 +1,5 @@
 set -e
-cd ../web
+cd ../../web
 
 CONFIGURATION=$1
 
@@ -17,4 +17,3 @@ echo "Running dotnet publish..."
 dotnet publish -c $CONFIGURATION
 
 echo "dotnet publish complete"
-echo "stopping"

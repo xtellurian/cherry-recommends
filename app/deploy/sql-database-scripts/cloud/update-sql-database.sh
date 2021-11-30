@@ -1,5 +1,17 @@
 set -e
-cd ../azure
+
+echo "Updating cloud SQL database"
+
+if [ -z "$APP_PATH" ]
+then
+    echo "Using default app path"
+    cd ../../../
+    APP_PATH=$(pwd)
+else
+    echo "Using APP_PATH $APP_PATH"
+fi
+
+cd $APP_PATH/azure
 
 DATABASE=$1
 
@@ -16,12 +28,10 @@ SERVER=$(pulumi stack output SqlServerName)
 USER=$(pulumi stack output SqlServerUsername)
 PW=$(pulumi stack output SqlServerPassword --show-secrets)
 
-
 CS="Server=tcp:$SERVER.database.windows.net,1433;Initial Catalog=$DATABASE;User ID=$USER;Password=$PW;Min Pool Size=0;Max Pool Size=30;Persist Security Info=False;";
 
-cd ../web
+cd $APP_PATH/web
 
-MIGRATIONS_DIR="SignalBox"
 CONTEXT="SignalBoxDbContext"
 
-dotnet ef migrations list --context $CONTEXT --connection "$CS" --project "../migrations/sqlserver" -- --Provider sqlserver --Hosting:SingleTenantDatabaseName $DATABASE
+dotnet ef database update --context $CONTEXT --connection "$CS" --project ../migrations/sqlserver -- --Provider sqlserver --Hosting:SingleTenantDatabaseName $DATABASE

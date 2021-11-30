@@ -1,8 +1,8 @@
 cd ../azure
 pulumi up -y
 cd ../deploy
-echo "Running deploy.ps1"
-./deploy.ps1
+echo "Running webapp/deploy.ps1"
+./webapp/deploy.ps1
 echo "Running update-sql-database.ps1"
 cd ../../../../../deploy
 ./update-sql-database.ps1 single

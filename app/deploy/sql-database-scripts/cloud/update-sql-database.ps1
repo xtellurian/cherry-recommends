@@ -1,4 +1,4 @@
-cd ../azure
+cd ../../../azure
 
 $DATABASE=$args[0]
 
