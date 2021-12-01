@@ -10,6 +10,7 @@ Hosting__Multitenant="true" APP_PATH=$APP_PATH ./update-tenant-sql-database.sh
 
 cd $APP_PATH/deploy/azure-scripts/functions
 APP_PATH=$APP_PATH ./deploy-dotnet-functions.sh
+APP_PATH=$APP_PATH ./deploy-python-functions.sh
 
 echo "Databases should be migrated using the Azure Function"
 echo "Press any key to continue..."

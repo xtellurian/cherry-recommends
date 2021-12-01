@@ -18,7 +18,6 @@ namespace SignalBox.Azure
             var tags = new Dictionary<string, string>
             {
                 {"Pulumi Stack", Pulumi.Deployment.Instance.StackName},
-                {"Environment", environment}
             };
 
             var commonRgArgs = new ResourceGroupArgs
