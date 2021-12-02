@@ -1,18 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Auth0.ManagementApi;
 using Auth0.ManagementApi.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
+using SignalBox.Core.Internal;
 
 namespace SignalBox.Infrastructure.Services
 {
     public class Auth0Manager : IAuth0Service
     {
+        private readonly ILogger<Auth0Manager> logger;
         private readonly IApiTokenFactory tokenFactory;
         private readonly Auth0ManagementCredentials credentials;
+        private readonly Auth0ReactConfig auth0ReactConfig;
         private ManagementApiClient client;
 
         public ManagementApiClient ApiClient => client ?? throw new System.NullReferenceException("ManagementApiClient must be initialized");
@@ -23,10 +26,15 @@ namespace SignalBox.Infrastructure.Services
             client = value;
         }
 
-        public Auth0Manager(IOptions<Auth0ManagementCredentials> options, IApiTokenFactory tokenFactory)
+        public Auth0Manager(IOptions<Auth0ManagementCredentials> options,
+                            IOptions<Auth0ReactConfig> auth0ReactConfigOptions,
+                            ILogger<Auth0Manager> logger,
+                            IApiTokenFactory tokenFactory)
         {
+            this.logger = logger;
             this.tokenFactory = tokenFactory;
             this.credentials = options.Value;
+            this.auth0ReactConfig = auth0ReactConfigOptions.Value;
             if (string.IsNullOrEmpty(credentials.DefaultAudience))
             {
                 throw new System.NullReferenceException("Default Audience cannot be null");
@@ -37,6 +45,65 @@ namespace SignalBox.Infrastructure.Services
         {
             var token = await tokenFactory.GetManagementToken();
             this.SetApiClient(new ManagementApiClient(token, credentials.Domain));
+        }
+
+        public async Task<UserInfo> GetUserInfo(string userId)
+        {
+            await Initialize();
+
+            var userInfo = await ApiClient.Users.GetAsync(userId);
+            return new UserInfo
+            {
+                UserId = userId,
+                Email = userInfo.Email,
+                EmailVerified = userInfo.EmailVerified
+            };
+        }
+
+        public async Task<UserInfo> AddUser(InviteRequest invite)
+        {
+            logger.LogInformation($"Inviting {invite.Email}");
+            await Initialize();
+
+            var connections = await ApiClient.Connections.GetAllAsync(new GetConnectionsRequest
+            {
+                Name = "Username-Password-Authentication"
+            }, new Auth0.ManagementApi.Paging.PaginationInfo());
+
+            var connection = connections.First();
+            User user;
+            var usersExisting = await ApiClient.Users.GetUsersByEmailAsync(invite.Email);
+            user = usersExisting.FirstOrDefault();
+
+            user ??= await ApiClient.Users.CreateAsync(new UserCreateRequest
+            {
+                EmailVerified = false,
+                Email = invite.Email,
+                Connection = connection.Name,
+                Password = System.Guid.NewGuid().ToString()
+            });
+            var userInfo = new UserInfo
+            {
+                Email = invite.Email,
+                UserId = user.UserId,
+            };
+
+            if (user.EmailVerified == false)
+            {
+                var ticket = await ApiClient.Tickets.CreatePasswordChangeTicketAsync(new PasswordChangeTicketRequest
+                {
+                    MarkEmailAsVerified = false,
+                    UserId = user.UserId,
+                    ClientId = auth0ReactConfig.ClientId
+                });
+
+                // TODO: now edit the ticket link with some useful info to customise the Auth0 Reset Password page.
+                // TODO: Email the link to the new user
+                logger.LogInformation($"Ticket URL is {ticket.Value}");
+                userInfo.InvitationUrl = ticket.Value;
+            }
+
+            return userInfo;
         }
 
         public async Task AddTenantPermission(string creatorId, Tenant tenant)

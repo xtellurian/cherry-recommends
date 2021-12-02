@@ -52,6 +52,11 @@ header a {
   transform: translateY(-1px);
 }
 
+.btn-primary:disabled {
+  color: var(--cherry-white);
+  background-color: var(--cherry-pink);
+  border-color: var(--cherry-dark-pink);
+}
 /* archive */
 
 a {

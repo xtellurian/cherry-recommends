@@ -65,6 +65,16 @@ export const createRequiredByServerValidator = (serverError) => (value) => {
   }
 };
 
+export const emailValidator = (value) => {
+  const x = " ";
+  x.indexOf();
+  if (value && (value.indexOf("@") < 0 || value.indexOf(".") < 0)) {
+    return ["Not a valid email"];
+  } else {
+    return [];
+  }
+};
+
 export const createServerErrorValidator =
   (serverErrorKey, serverError) => (value) => {
     let hasError =
@@ -94,6 +104,7 @@ export const TextInput = ({
   type,
   placeholder,
   onChange,
+  onReturn,
   onBlur,
   validator,
   resetTrigger,
@@ -126,6 +137,13 @@ export const TextInput = ({
   } else if (value && value.length > 0) {
     formControlValidationClass = "is-valid";
   }
+
+  const handleOnKeyPress = (e) => {
+    if (e.key == "Enter" && onReturn) {
+      onReturn(value);
+      e.preventDefault();
+    }
+  };
   return (
     <React.Fragment>
       {label && (
@@ -157,6 +175,7 @@ export const TextInput = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          onKeyPress={handleOnKeyPress}
           onBlur={onBlur}
           required={required}
           disabled={disabled}

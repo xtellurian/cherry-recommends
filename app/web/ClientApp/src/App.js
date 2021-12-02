@@ -18,10 +18,11 @@ import { RecommendersComponent } from "./components/recommenders/RecommendersCom
 import { RecommendableItemsComponent } from "./components/items/RecommendableItemsComponent";
 import { EventsComponent } from "./components/events/EventsComponent";
 import { AdminComponent } from "./components/admin/AdminComponent";
+import { TenantSettingsComponent } from "./components/tenant-settings/TenantSettingsComponent";
 import { configure } from "./api/customisation";
 import "./global-css/cherry.css";
 
-configure()
+configure();
 export default class App extends Component {
   static displayName = App.name;
 
@@ -52,6 +53,11 @@ export default class App extends Component {
         />
         <AuthorizeRoute path="/events" component={EventsComponent} />
         <AuthorizeRoute path="/settings" component={SettingsComponent} />
+
+        <AuthorizeRoute
+          path="/tenant-settings"
+          component={TenantSettingsComponent}
+        />
 
         <AuthorizeRoute path="/dataview" component={DataViewComponent} />
         <AuthorizeRoute path="/reports" component={ReportsComponent} />

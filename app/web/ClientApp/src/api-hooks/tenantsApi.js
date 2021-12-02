@@ -4,6 +4,7 @@ import {
   fetchCurrentTenantAsync,
   fetchHostingAsync,
   fetchMembershipsAsync,
+  fetchCurrentTenantMembershipsAsync,
 } from "../api/tenantsApi";
 
 export const managementSubdomain = "manage";
@@ -17,7 +18,8 @@ const addIsWww = (s) => {
   return s;
 };
 const addIsManagementSubdomain = (s) => {
-  s.isManagementSubdomain = window.location.host.startsWith(managementSubdomain);
+  s.isManagementSubdomain =
+    window.location.host.startsWith(managementSubdomain);
   return s;
 };
 export const useHosting = () => {
@@ -48,6 +50,24 @@ export const useCurrentTenant = () => {
     if (token) {
       setState({ loading: true });
       fetchCurrentTenantAsync({
+        token,
+      })
+        .then((s) => {
+          setState(s);
+        })
+        .catch((error) => setState({ error }));
+    }
+  }, [token]);
+  return result;
+};
+
+export const useCurrentTenantMemberships = () => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    if (token) {
+      setState({ loading: true });
+      fetchCurrentTenantMembershipsAsync({
         token,
       })
         .then((s) => {

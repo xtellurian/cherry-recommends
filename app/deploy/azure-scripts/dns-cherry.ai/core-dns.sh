@@ -36,4 +36,11 @@ echo "Setting Mailchimp DNS"
 az network dns record-set cname set-record -g $RG -z $ZONE -n "k2._domainkey" -c "dkim2.mcsv.net"
 az network dns record-set cname set-record -g $RG -z $ZONE -n "k3._domainkey" -c "dkim3.mcsv.net"
 
+## ------- AMAZON AWS ------------
+echo "Setting Amazon AWS DNS"
+
+az network dns record-set cname set-record -g $RG -z $ZONE -n "ayh5h7ueo5tgd6uvalxmvl2l6kwrlmgc._domainkey" -c "ayh5h7ueo5tgd6uvalxmvl2l6kwrlmgc.dkim.amazonses.com"
+az network dns record-set cname set-record -g $RG -z $ZONE -n "3rz4rxlb3gvf6bnlqs2b3kf3nts2irou._domainkey" -c "3rz4rxlb3gvf6bnlqs2b3kf3nts2irou.dkim.amazonses.com"
+az network dns record-set cname set-record -g $RG -z $ZONE -n "axhxhqlvoj45nzxr6erxovohnzcxqpig._domainkey" -c "axhxhqlvoj45nzxr6erxovohnzcxqpig.dkim.amazonses.com"
+
 echo "Done."

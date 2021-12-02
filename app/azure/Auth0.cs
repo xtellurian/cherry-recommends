@@ -75,6 +75,10 @@ namespace SignalBox.Azure
             {
                 Output.Format($"https://{webApp.DefaultHostName}")
             };
+            var defaultLoginUri = string.IsNullOrEmpty(canonicalRootDomain)
+                ? $"https://{webApp.DefaultHostName}"
+                : $"https://manage.{canonicalRootDomain}";
+
             if (!string.IsNullOrEmpty(canonicalRootDomain))
             {
                 hosts.Add(Output.Create($"https://{canonicalRootDomain}")); // allow the canonical root to login
@@ -90,6 +94,7 @@ namespace SignalBox.Azure
                 Callbacks = hosts,
                 WebOrigins = hosts,
                 AllowedOrigins = hosts,
+                InitiateLoginUri = defaultLoginUri,
                 GrantTypes = {
                     "implicit",
                     "authorization_code",

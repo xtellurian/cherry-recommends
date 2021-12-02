@@ -134,6 +134,14 @@ namespace SignalBox.Azure
                     {"Auth0__M2M__ClientId", auth0.M2MClientId},
                     {"Auth0__M2M__ClientSecret", auth0.M2MClientSecret},
                     {"Auth0__M2M__Endpoint", auth0.M2MEndpoint},
+
+                      // auth0
+                    {"Auth0__Management__DefaultAudience", auth0.DefaultAudience},
+                    {"Auth0__Management__ClientId", auth0Config.Require("clientId")},
+                    {"Auth0__Management__ClientSecret", auth0Config.Require("clientSecret")},
+                    {"Auth0__Management__Domain", auth0Config.Require("domain")},
+                    {"Auth0__Management__Endpoint", $"https://{auth0Config.Require("domain")}/oauth/token"},
+
                     {"ReportFileHosting__ConnectionString", ml.PrimaryStorageConnectionString},
                     {"ReportFileHosting__ContainerName", "reports"},
                     {"ReportFileHosting__Source", "blob"},

@@ -78,10 +78,6 @@ export const getAuthenticatedIA = (scopes) => {
 
 export const settingsItems = [
   {
-    name: "Deployment Information",
-    to: "/settings/info",
-  },
-  {
     name: "API Docs",
     to: "/docs/api",
   },
@@ -94,7 +90,11 @@ export const settingsItems = [
     to: "/settings/integrations",
   },
   {
-    name: "Reward Settings",
-    to: "/settings/rewards",
+    name: "Tenant Settings",
+    to: "/tenant-settings",
+  },
+  {
+    name: "Deployment Information",
+    to: "/settings/info",
   },
 ];

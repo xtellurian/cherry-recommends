@@ -10,7 +10,6 @@ using SignalBox.Infrastructure;
 using SignalBox.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SignalBox.Core.Workflows;
-using SignalBox.Web.Config;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.OpenApi.Models;
@@ -161,6 +160,7 @@ namespace SignalBox.Web
             services.RegisterWorkflows();
             services.RegisterDefaultInfrastructureServices();
 
+            services.Configure<Auth0ManagementCredentials>(Configuration.GetSection("Auth0").GetSection("Management"));
             services.Configure<Auth0M2MClient>(Configuration.GetSection("Auth0").GetSection("M2M"));
             services.Configure<HubspotAppCredentials>(Configuration.GetSection("HubSpot").GetSection("AppCredentials"));
             services.Configure<Hosting>(Configuration.GetSection("Hosting"));

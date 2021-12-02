@@ -89,6 +89,13 @@ namespace SignalBox.Azure
                 ResourceGroupName = rg.Name
             });
 
+            var newTenantMembershipsQueue = new Queue("newTntMembershipsQ", new QueueArgs
+            {
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.NewTenantMemberships,
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name
+            });
+
             this.StorageAccount = storageAccount;
 
             this.PrimaryStorageKey = Output.Tuple(rg.Name, storageAccount.Name).Apply(names =>

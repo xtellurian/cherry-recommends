@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
-using SignalBox.Web.Config;
+using SignalBox.Infrastructure;
 
 namespace SignalBox.Web.Controllers
 {

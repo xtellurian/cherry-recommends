@@ -123,20 +123,36 @@ namespace SignalBox.Functions
             }
         }
 
+
+        [Function("CreateTenantMembership_FromQueue")]
+        public async Task TriggerCreateTenantMembership_FromQueue(
+           [QueueTrigger(SignalBox.Core.Constants.AzureQueueNames.NewTenantMemberships)] NewTenantMembershipQueueMessage message,
+           FunctionContext executionContext)
+        {
+            var logger = executionContext.GetLogger("TriggerCreateTenantMembership_FromQueue");
+            // create a 
+            await AddTenantMember(new AddMember { UserId = message.UserId }, message.TenantName, logger);
+        }
+
         [Function("AddMember")]
         public async Task<Tenant> TriggerAddMember([HttpTrigger(AuthorizationLevel.Function, "post",
             Route = "Tenants/{tenantName}/Members")] HttpRequestData req, string tenantName,
             FunctionContext executionContext)
         {
             var logger = executionContext.GetLogger("AddMember");
+            var addMember = await JsonSerializer.DeserializeAsync<AddMember>(req.Body, serializerOptions);
+            return await AddTenantMember(addMember, tenantName, logger);
+        }
+
+        private async Task<Tenant> AddTenantMember(AddMember addMember, string tenantName, ILogger logger)
+        {
             if (hostingOptions.Value.Multitenant)
             {
-                var info = await JsonSerializer.DeserializeAsync<AddMember>(req.Body, serializerOptions);
 
                 if (await tenantStore.TenantExists(tenantName))
                 {
                     var tenant = await tenantStore.ReadFromName(tenantName);
-                    await AddUserToTenant(info.UserId, tenant, logger);
+                    await AddUserToTenant(addMember.UserId, tenant, logger);
                     await tenantStore.SaveChanges();
                     return tenant;
                 }

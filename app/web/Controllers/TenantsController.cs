@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
+using SignalBox.Core.Internal;
 using SignalBox.Infrastructure;
 using SignalBox.Infrastructure.Models;
-using SignalBox.Web.Config;
 using SignalBox.Web.Dto;
 
 namespace SignalBox.Web.Controllers
@@ -21,8 +21,10 @@ namespace SignalBox.Web.Controllers
         private readonly ITenantProvider tenantProvider;
         private readonly ITenantStore tenantStore;
         private readonly INewTenantQueueStore newTenantQueue;
+        private readonly INewTenantMembershipQueueStore newTenantMembersQueue;
         private readonly ITenantAuthorizationStrategy tenantAuthorizationStrategy;
         private readonly ITenantMembershipStore membershipStore;
+        private readonly IAuth0Service auth0Service;
         private readonly IOptionsMonitor<Hosting> hostingOptions;
 
         public TenantsController(ITenantProvider tenantProvider,
@@ -30,6 +32,8 @@ namespace SignalBox.Web.Controllers
                                  INewTenantQueueStore newTenantQueue,
                                  ITenantAuthorizationStrategy tenantAuthorizationStrategy,
                                  ITenantMembershipStore membershipStore,
+                                 INewTenantMembershipQueueStore newTenantMembersQueue,
+                                 IAuth0Service auth0Service,
                                  IOptionsMonitor<Hosting> hostingOptions)
         {
             this.tenantProvider = tenantProvider;
@@ -37,6 +41,8 @@ namespace SignalBox.Web.Controllers
             this.newTenantQueue = newTenantQueue;
             this.tenantAuthorizationStrategy = tenantAuthorizationStrategy;
             this.membershipStore = membershipStore;
+            this.newTenantMembersQueue = newTenantMembersQueue;
+            this.auth0Service = auth0Service;
             this.hostingOptions = hostingOptions;
         }
 
@@ -107,6 +113,37 @@ namespace SignalBox.Web.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpGet("current/memberships")]
+        public async Task<Paginated<UserInfo>> GetCurrentMemberships()
+        {
+            var tenant = tenantProvider.Current();
+            var memberships = await membershipStore.ReadMemberships(tenant);
+            var dtos = new List<UserInfo>();
+            foreach (var m in memberships)
+            {
+                var info = await auth0Service.GetUserInfo(m.UserId);
+                dtos.Add(info);
+            }
+            return new Paginated<UserInfo>(dtos, 1, memberships.Count(), 1);
+        }
+
+        [HttpPost("current/memberships")]
+        public async Task<UserInfo> AddAMembership(CreateTenantMembershipDto dto)
+        {
+            var tenant = tenantProvider.Current();
+            var newUser = await auth0Service.AddUser(new InviteRequest
+            {
+                Email = dto.Email
+            });
+            await newTenantMembersQueue.Enqueue(new NewTenantMembershipQueueMessage
+            {
+                UserId = newUser.UserId,
+                TenantName = tenant.Name
+            });
+
+            return newUser;
         }
 
         [HttpGet("hosting")]
