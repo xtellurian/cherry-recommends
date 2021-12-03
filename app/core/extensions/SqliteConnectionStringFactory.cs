@@ -2,7 +2,7 @@ namespace SignalBox.Core
 {
     public static class SqlLiteConnectionStringFactory
     {
-        public static string GenerateConnectionString(string directory, string dbName)
+        private static string GenerateConnectionString(string directory, string dbName)
         {
             return $"DataSource={directory}/{dbName}.db;Cache=Shared";
         }

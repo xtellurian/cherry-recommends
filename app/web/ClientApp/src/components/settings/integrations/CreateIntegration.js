@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createIntegratedSystemAsync } from "../../../api/integratedSystemsApi";
 import { BackButton } from "../../molecules/BackButton";
-import { Title } from "../../molecules/PageHeadings";
+import { Title } from "../../molecules/layout";
 import { ErrorCard } from "../../molecules/ErrorCard";
 import { AsyncButton } from "../../molecules/AsyncButton";
 import { NoteBox } from "../../molecules/NoteBox";

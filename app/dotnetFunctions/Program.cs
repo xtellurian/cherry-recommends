@@ -40,6 +40,8 @@ namespace SignalBox.Functions
 
                     var useMulti = configuration.GetSection("Hosting").GetValue<bool>("Multitenant", false);
 
+                    var sqliteConfig = AutomagicFixSqliteDatabasePath(provider, configuration);
+
                     if (useMulti)
                     {
                         services.RegisterMultiTenantInfrastructure();
@@ -69,7 +71,7 @@ namespace SignalBox.Functions
                         {
                             // the multitenant once works for single tenants too now
                             services.UseSqlite<MultiTenantDbContext>(configuration.GetConnectionString("Tenants").FixSqliteConnectionString());
-                            services.UseMultitenantSqlite("databases", manipulateConnectionString: _ => _.FixSqliteConnectionString());
+                            services.UseMultitenantSqlite("databases", dbConfig: sqliteConfig, manipulateConnectionString: _ => _.FixSqliteConnectionString());
                         }
                         else
                         {
@@ -102,7 +104,7 @@ namespace SignalBox.Functions
                         else if (provider == "sqlite")
                         {
                             // the multitenant once works for single tenants too now
-                            services.UseMultitenantSqlite("databases", manipulateConnectionString: _ => _.FixSqliteConnectionString());
+                            services.UseMultitenantSqlite("databases", dbConfig: sqliteConfig, manipulateConnectionString: _ => _.FixSqliteConnectionString());
                         }
                         else
                         {
@@ -138,7 +140,7 @@ namespace SignalBox.Functions
                     services.AddScoped<IQueueMessagesFileStore, AzureBlobQueueMessagesFileStore>();
                     services.AddScoped<IEnvironmentService, AzFunctionEnvironmentService>();
 
-                    ConfigureAppSettings(services, configuration);
+                    ConfigureAppSettings(services, configuration, sqliteConfig);
 
                     services.AddAzureStorageQueueStores();
                     services.AddEFStores();
@@ -151,7 +153,9 @@ namespace SignalBox.Functions
             host.Run();
         }
 
-        private static void ConfigureAppSettings(IServiceCollection services, IConfiguration configuration)
+        private static void ConfigureAppSettings(IServiceCollection services,
+                                                 IConfiguration configuration,
+                                                 SqliteDatabasesConfig sqliteConfig)
         {
             var azureWebJobsConnectionString = configuration.GetValue<string>("AzureWebJobsStorage");
             if (string.IsNullOrEmpty(azureWebJobsConnectionString))
@@ -166,18 +170,31 @@ namespace SignalBox.Functions
 
             });
 
-            var sqliteConfig = new SqliteDatabasesConfig();
-            configuration.Bind("Sqlite", sqliteConfig);
-            sqliteConfig.AppDir = Directory.GetCurrentDirectory().Replace("dotnetFunctions/bin/output/", "");
+
             services.Configure<SqliteDatabasesConfig>(_ =>
             {
-                _.AppDir = sqliteConfig.AppDir;
-                _.Directory = sqliteConfig.Directory;
+                _.AppDir = sqliteConfig?.AppDir;
+                _.Directory = sqliteConfig?.Directory;
             });
 
             services.Configure<HubspotAppCredentials>(configuration.GetSection("HubSpot").GetSection("AppCredentials"));
             services.Configure<Auth0ManagementCredentials>(configuration.GetSection("Auth0").GetSection("Management"));
             services.Configure<Hosting>(configuration.GetSection("Hosting"));
+        }
+
+        private static SqliteDatabasesConfig AutomagicFixSqliteDatabasePath(string provider, IConfiguration configuration)
+        {
+            if (provider == "sqlite")
+            {
+                var sqliteConfig = new SqliteDatabasesConfig();
+                configuration.Bind("Sqlite", sqliteConfig);
+                sqliteConfig.AppDir = Directory.GetCurrentDirectory().Replace("dotnetFunctions/bin/output/", "");
+                return sqliteConfig;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

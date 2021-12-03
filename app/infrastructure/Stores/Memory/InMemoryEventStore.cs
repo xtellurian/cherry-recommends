@@ -43,7 +43,22 @@ namespace SignalBox.Infrastructure
             throw new NotImplementedException();
         }
 
+        public Task<TrackedUserEvent> Create(TrackedUserEvent entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Exists(long id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<TrackedUserEvent>> Latest(DateTimeOffset after)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Load<TProperty>(TrackedUserEvent entity, Expression<Func<TrackedUserEvent, TProperty>> propertyExpression) where TProperty : class
         {
             throw new NotImplementedException();
         }
@@ -68,7 +83,27 @@ namespace SignalBox.Infrastructure
             throw new NotImplementedException();
         }
 
+        public Task<Paginated<TrackedUserEvent>> Query(int page, Expression<Func<TrackedUserEvent, bool>> predicate = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Paginated<TrackedUserEvent>> Query<TProperty>(int page, Expression<Func<TrackedUserEvent, TProperty>> include, Expression<Func<TrackedUserEvent, bool>> predicate = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<TrackedUserEvent> Read(string eventId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TrackedUserEvent> Read(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TrackedUserEvent> Read<TProperty>(long id, Expression<Func<TrackedUserEvent, TProperty>> include)
         {
             throw new NotImplementedException();
         }
@@ -84,6 +119,11 @@ namespace SignalBox.Infrastructure
         }
 
         public Task<Paginated<TrackedUserEvent>> ReadEventsForUser(int page, TrackedUser user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Paginated<TrackedUserEvent>> ReadEventsForUser(int page, TrackedUser user, Expression<Func<TrackedUserEvent, bool>> predicate = null)
         {
             throw new NotImplementedException();
         }
@@ -116,6 +156,16 @@ namespace SignalBox.Infrastructure
         public Task<IEnumerable<string>> ReadUniqueKinds()
         {
             throw new System.NotImplementedException();
+        }
+
+        public Task<bool> Remove(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TrackedUserEvent> Update(TrackedUserEvent entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

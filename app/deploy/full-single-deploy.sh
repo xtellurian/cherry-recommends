@@ -3,16 +3,15 @@ cd ..
 APP_PATH=$(pwd)
 
 cd azure
-# pulumi up -y
+pulumi up -y
 cd $APP_PATH/deploy
 
+cd azure-scripts/functions/
+APP_PATH=$APP_PATH ./deploy-dotnet-functions.sh 
+APP_PATH=$APP_PATH ./deploy-python-functions.sh
 
-# cd azure-scripts/functions/
-# APP_PATH=$APP_PATH ./deploy-dotnet-functions.sh 
-# APP_PATH=$APP_PATH ./deploy-python-functions.sh
-
-# cd $APP_PATH/deploy/sql-database-scripts/cloud
-# APP_PATH=$APP_PATH ./update-sql-database.sh single
+cd $APP_PATH/deploy/sql-database-scripts/cloud
+APP_PATH=$APP_PATH ./update-sql-database.sh single
 
 cd $APP_PATH/deploy/webapp
 APP_PATH=$APP_PATH ./deploy.sh

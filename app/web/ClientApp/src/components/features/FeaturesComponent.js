@@ -5,6 +5,7 @@ import { FeaturesSummary } from "./FeaturesSummary";
 import { CreateFeature } from "./CreateFeature";
 import { FeatureDetail } from "./FeatureDetail";
 import { SetFeatureValue } from "./SetFeatureValue";
+import { FeatureGeneratorsComponent } from "./feature-generators/FeatureGeneratorsComponent";
 
 export const FeaturesComponent = () => {
   const { path } = useRouteMatch();
@@ -26,6 +27,11 @@ export const FeaturesComponent = () => {
           exact
           path={`${path}/set-value/:id`}
           component={SetFeatureValue}
+        />
+        <AuthorizeRoute
+          exact
+          path={`${path}/generators`}
+          component={FeatureGeneratorsComponent}
         />
       </Switch>
     </React.Fragment>

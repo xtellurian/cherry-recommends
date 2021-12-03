@@ -84,11 +84,7 @@ export const fetchDestinationsAsync = async ({ token, id }) => {
   });
 };
 
-export const createDestinationAsync = async ({
-  token,
-  id,
-  destination,
-}) => {
+export const createDestinationAsync = async ({ token, id, destination }) => {
   return await executeFetch({
     path: `api/features/${id}/Destinations`,
     token,
@@ -102,5 +98,12 @@ export const deleteDestinationAsync = async ({ token, id, destinationId }) => {
     path: `api/features/${id}/Destinations/${destinationId}`,
     token,
     method: "delete",
+  });
+};
+
+export const fetchGeneratorsAsync = async ({ token, id }) => {
+  return await executeFetch({
+    path: `api/features/${id}/Generators`,
+    token,
   });
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Title } from "../molecules/PageHeadings";
+import { Title } from "../molecules/layout";
 import { useAccessToken } from "../../api-hooks/token";
 import { createSegmentAsync } from "../../api/segmentsApi";
 

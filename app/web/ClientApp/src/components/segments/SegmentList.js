@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { useSegments } from "../../api-hooks/segmentsApi";
 import { DropdownComponent, DropdownItem } from "../molecules/Dropdown";
-import { CreateButton } from "../molecules/CreateButton";
+import { CreateButtonClassic } from "../molecules/CreateButton";
 import { Spinner } from "../molecules/Spinner";
 import { Paginator } from "../molecules/Paginator";
 
@@ -51,9 +51,9 @@ export const SegmentList = () => {
       {result && result.items.length === 0 && (
         <div className="text-center p-5">
           <div>There are no segments.</div>
-          <CreateButton to={`${path}/create`} className="mt-4">
+          <CreateButtonClassic to={`${path}/create`} className="mt-4">
             Create New Segment
-          </CreateButton>
+          </CreateButtonClassic>
         </div>
       )}
       {result && <Paginator {...result.pagination} />}

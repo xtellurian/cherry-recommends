@@ -8,7 +8,7 @@ import {
   Spinner,
   ErrorCard,
 } from "../../molecules";
-import { CreateButton } from "../../molecules/CreateButton";
+import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { DateTimeField } from "../../molecules/DateTimeField";
 import { ConfirmDeletePopup } from "../../molecules/popups/ConfirmDeletePopup";
 import { CopyableField } from "../../molecules/fields/CopyableField";
@@ -73,9 +73,9 @@ export const EnvironmentsSummary = () => {
   const environments = useEnvironments();
   return (
     <React.Fragment>
-      <CreateButton className="float-right" to="/settings/environments/create">
+      <CreateButtonClassic className="float-right" to="/settings/environments/create">
         Create environment
-      </CreateButton>
+      </CreateButtonClassic>
       <Title>Environments</Title>
       <Subtitle></Subtitle>
 

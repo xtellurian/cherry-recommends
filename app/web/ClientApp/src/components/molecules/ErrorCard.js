@@ -3,6 +3,9 @@ import { ExpandableCard } from "./ExpandableCard";
 import { JsonView } from "./JsonView";
 
 export const ErrorCard = ({ error }) => {
+  if (!error) {
+    return <React.Fragment />;
+  }
   const validationErrorList = [];
   if (error.errors) {
     for (const [label, errorMessage] of Object.entries(error.errors)) {

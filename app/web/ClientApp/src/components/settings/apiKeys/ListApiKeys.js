@@ -1,8 +1,8 @@
 import React from "react";
 import { deleteApiKeyAsync } from "../../../api/apiKeyApi";
 import { useApiKeys } from "../../../api-hooks/apiKeyApi";
-import { Title } from "../../molecules/PageHeadings";
-import { CreateButton } from "../../molecules/CreateButton";
+import { Title } from "../../molecules/layout";
+import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { Spinner } from "../../molecules/Spinner";
 import { ErrorCard } from "../../molecules";
 import { ConfirmDeletePopup } from "../../molecules/popups/ConfirmDeletePopup";
@@ -47,9 +47,12 @@ const ApiKeyRow = ({ apiKey, onDelete, onDeleteError }) => {
 const Top = () => {
   return (
     <React.Fragment>
-      <CreateButton to="/settings/api-keys/create" className="float-right">
+      <CreateButtonClassic
+        to="/settings/api-keys/create"
+        className="float-right"
+      >
         New API key
-      </CreateButton>
+      </CreateButtonClassic>
       <Title>API keys</Title>
       <hr />
     </React.Fragment>

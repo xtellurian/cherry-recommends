@@ -18,7 +18,7 @@ import { ConfirmationPopup } from "../../molecules/popups/ConfirmationPopup";
 import { JsonView } from "../../molecules/JsonView";
 import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
 import { CopyableField } from "../../molecules/fields/CopyableField";
-import { Tabs, TabActivator } from "../../molecules/Tabs";
+import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
 import { useAccessToken } from "../../../api-hooks/token";
 import { CloneRecommender } from "../utils/CloneRecommender";
 import { ArgumentsSection } from "./Arguments";

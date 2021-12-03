@@ -21,7 +21,7 @@ export const TableBody = ({ children }) => {
 export const TableRow = ({ label, children }) => {
   return (
     <tr>
-      <th scope="row">{label}</th>
+      {label && <th scope="row">{label}</th>}
       {children}
     </tr>
   );

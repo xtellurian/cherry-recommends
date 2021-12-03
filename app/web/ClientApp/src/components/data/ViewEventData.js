@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col, Card, CardBody } from "reactstrap";
-import { Subtitle } from "../molecules/PageHeadings";
+import { Subtitle } from "../molecules/layout";
 import { useEventDataSummary } from "../../api-hooks/dataSummaryApi";
 import { Spinner } from "../molecules/Spinner";
 import { JsonView } from "../molecules/JsonView";

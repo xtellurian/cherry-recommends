@@ -2,7 +2,7 @@ name: pythonFunctions
 channels:
   - defaults
 dependencies:
-  - python=3.6
+  - python=3.7
   - pip:
       - azure-functions
       - azure-functions-durable

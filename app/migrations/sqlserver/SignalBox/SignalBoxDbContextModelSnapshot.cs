@@ -16,7 +16,7 @@ namespace sqlserver.SignalBox
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.10")
+                .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("FeatureRecommenderEntityBase", b =>
@@ -197,9 +197,18 @@ namespace sqlserver.SignalBox
                     b.Property<long>("FeatureId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("FilterSelectAggregateSteps")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("GeneratorType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastCompleted")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("LastEnqueued")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
@@ -1155,6 +1164,7 @@ namespace sqlserver.SignalBox
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("DatabaseName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset>("LastUpdated")
@@ -1163,17 +1173,19 @@ namespace sqlserver.SignalBox
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DatabaseName")
-                        .IsUnique()
-                        .HasFilter("[DatabaseName] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Tenant", t => t.ExcludeFromMigrations());
                 });
@@ -1183,25 +1195,75 @@ namespace sqlserver.SignalBox
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<DateTimeOffset>("LastUpdated")
-                        .HasColumnType("datetimeoffset");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<long>("TenantId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TenantId");
 
+                    b.HasIndex("UserId", "TenantId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
                     b.ToTable("TenantMembership", t => t.ExcludeFromMigrations());
+                });
+
+            modelBuilder.Entity("SignalBox.Core.TenantTermsOfServiceAcceptance", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AcceptedByUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long?>("TenantId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("Version", "AcceptedByUserId")
+                        .IsUnique()
+                        .HasFilter("[AcceptedByUserId] IS NOT NULL");
+
+                    b.ToTable("TenantTermsOfServiceAcceptance", t => t.ExcludeFromMigrations());
                 });
 
             modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>
@@ -2024,6 +2086,15 @@ namespace sqlserver.SignalBox
                     b.Navigation("Tenant");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.TenantTermsOfServiceAcceptance", b =>
+                {
+                    b.HasOne("SignalBox.Core.Tenant", "Tenant")
+                        .WithMany("AcceptedTerms")
+                        .HasForeignKey("TenantId");
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>
                 {
                     b.HasOne("SignalBox.Core.Environment", "Environment")
@@ -2186,6 +2257,11 @@ namespace sqlserver.SignalBox
                     b.Navigation("RecommenderInvokationLogs");
 
                     b.Navigation("TargetVariableValues");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Tenant", b =>
+                {
+                    b.Navigation("AcceptedTerms");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>

@@ -4,7 +4,7 @@ import { HubspotContactProperties } from "./HubspotContactProperties";
 import { PushDataBehaviour } from "./PushDataBehaviour";
 // import { HubspotContactEvents } from "./HubspotContactEvents";
 import { HubspotLinkBehaviour } from "./LinkBehaviour";
-import { TabActivator, Tabs } from "../../../molecules/Tabs";
+import { TabActivator, Tabs } from "../../../molecules/layout/Tabs";
 import { useIntegratedSystem } from "../../../../api-hooks/integratedSystemsApi";
 import { useHubspotAccount } from "../../../../api-hooks/hubspotApi";
 import { BackButton, EmptyList, ErrorCard, Spinner } from "../../../molecules";

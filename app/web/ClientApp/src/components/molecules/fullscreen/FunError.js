@@ -369,7 +369,7 @@ export const FunError = () => {
       </svg>
       <div className="col">
         <h1>Uh Oh</h1>
-        <p>Four2 has a configuration problem...</p>
+        <p>We have a configuration problem...</p>
       </div>
     </div>
   );

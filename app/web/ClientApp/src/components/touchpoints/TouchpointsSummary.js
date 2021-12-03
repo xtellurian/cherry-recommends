@@ -1,8 +1,8 @@
 import React from "react";
 import { useTouchpoints } from "../../api-hooks/touchpointsApi";
-import { ActionsButton } from "../molecules/ActionsButton";
+import { ActionsButton } from "../molecules/buttons/ActionsButton";
 import { Title, EmptyList, Spinner } from "../molecules";
-import { CreateButton } from "../molecules/CreateButton";
+import { CreateButtonClassic } from "../molecules/CreateButton";
 import { Paginator } from "../molecules/Paginator";
 
 const TouchpointRow = ({ touchpoint }) => {
@@ -25,9 +25,9 @@ const TouchpointRow = ({ touchpoint }) => {
 const Top = () => {
   return (
     <React.Fragment>
-      <CreateButton className="float-right" to="/touchpoints/create">
+      <CreateButtonClassic className="float-right" to="/touchpoints/create">
         Create a Touchpoint
-      </CreateButton>
+      </CreateButtonClassic>
       <Title>Touchpoints</Title>
       <hr />
     </React.Fragment>
@@ -52,9 +52,9 @@ export const TouchpointsSummary = () => {
       {touchpoints.items.length === 0 && (
         <EmptyList>
           There are no Touchpoints yet.
-          <CreateButton className="mt-3" to="/touchpoints/create">
+          <CreateButtonClassic className="mt-3" to="/touchpoints/create">
             Create a Touchpoint
-          </CreateButton>
+          </CreateButtonClassic>
         </EmptyList>
       )}
       <Paginator {...touchpoints.pagination} />

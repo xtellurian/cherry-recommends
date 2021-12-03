@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Spinner } from "../../molecules";
-import { EmptyList } from "../../molecules/EmptyList";
+import { EmptyList } from "../../molecules";
 const RevenueChart = React.lazy(() =>
   import("../../molecules/charts/RevenueChart")
 );

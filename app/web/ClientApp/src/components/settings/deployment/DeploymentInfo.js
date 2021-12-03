@@ -1,6 +1,6 @@
 import React from "react";
 import { useDeploymentConfiguration } from "../../../api-hooks/deploymentApi";
-import { Title } from "../../molecules/PageHeadings";
+import { Title } from "../../molecules/layout";
 import { Spinner } from "../../molecules/Spinner";
 export const DeploymentInfo = () => {
   const info = useDeploymentConfiguration();

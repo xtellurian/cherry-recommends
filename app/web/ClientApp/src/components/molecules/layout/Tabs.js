@@ -1,8 +1,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useTabs, useQuery } from "../../utility/utility";
+import { useTabs, useQuery } from "../../../utility/utility";
 
-const TabListItem = ({ active, tab, basePath }) => {
+const QueryStringTabListItem = ({ active, tab, basePath }) => {
   const qs = useQuery();
   qs.set("tab", tab.id);
   return (
@@ -24,7 +24,7 @@ export const Tabs = ({ tabs, defaultTabId }) => {
   return (
     <ul className="nav nav-tabs nav-fill mb-2">
       {tabs.map((t) => (
-        <TabListItem
+        <QueryStringTabListItem
           key={t.id}
           {...t}
           tab={t}

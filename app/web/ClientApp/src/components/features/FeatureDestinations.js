@@ -1,6 +1,7 @@
 import React from "react";
 import { useDestinations } from "../../api-hooks/featuresApi";
-import { EmptyList, ErrorCard, Spinner, Subtitle } from "../molecules";
+import { ErrorCard, Spinner, Subtitle } from "../molecules";
+import { EmptyList, EmptyStateText } from "../molecules/empty";
 import {
   InputGroup,
   TextInput,
@@ -16,6 +17,9 @@ import {
   deleteDestinationAsync,
 } from "../../api/featuresApi";
 import { useAccessToken } from "../../api-hooks/token";
+import { SectionHeading } from "../molecules/layout";
+import { DeleteButton } from "../molecules/buttons/DeleteButton";
+import { CreateButton } from "../molecules/CreateButton";
 
 const initDestination = {
   destinationType: "",
@@ -38,15 +42,11 @@ const DestinationRow = ({ feature, destination, setTrigger, setError }) => {
     <EntityRow>
       <div className="col">
         <h5>{destination.destinationType}</h5>
-      </div>
-      <div className="col-4">
         {destination.properties?.endpoint ||
           destination.properties?.propertyName}
       </div>
-      <div className="col-2">
-        <button className="btn btn-danger" onClick={handleRemove}>
-          Remove
-        </button>
+      <div className="col-2 text-right">
+        <DeleteButton onClick={handleRemove} />
       </div>
     </EntityRow>
   );
@@ -92,7 +92,15 @@ export const FeatureDestinations = ({ feature }) => {
   return (
     <React.Fragment>
       <div className="mt-3 mb-2">
-        <h4>Destinations</h4>
+        <div className="mb-3">
+          <CreateButton
+            tooltip="Add a Destination"
+            onClick={() => setCreatePopupOpen(true)}
+          >
+            Add a Destination
+          </CreateButton>
+          <SectionHeading>Destinations</SectionHeading>
+        </div>
         {error && <ErrorCard error={error} />}
         {destinations.error && <ErrorCard error={destinations.error} />}
         {destinations.loading && <Spinner />}
@@ -108,16 +116,16 @@ export const FeatureDestinations = ({ feature }) => {
             />
           ))}
         {!destinations.loading && !destinations.length && (
-          <EmptyList> No Destinations</EmptyList>
+          <EmptyList>
+            <EmptyStateText>No Destinations</EmptyStateText>
+            <button
+              className="btn btn-outline-primary"
+              onClick={() => setCreatePopupOpen(true)}
+            >
+              Add a destination
+            </button>
+          </EmptyList>
         )}
-        <div className="text-center">
-          <button
-            className="btn btn-outline-primary"
-            onClick={() => setCreatePopupOpen(true)}
-          >
-            Add a destination
-          </button>
-        </div>
       </div>
       <React.Fragment>
         <BigPopup isOpen={createPopupOpen} setIsOpen={setCreatePopupOpen}>

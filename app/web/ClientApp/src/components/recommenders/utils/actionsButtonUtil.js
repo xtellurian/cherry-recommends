@@ -4,7 +4,7 @@ import {
   OptionItem,
   OptionItemsGroup,
   OptionLink,
-} from "../../molecules/MoreOptionsDropdown";
+} from "../../molecules/buttons/MoreOptionsDropdown";
 
 export const ActionsButtonUtil = ({
   basePath,

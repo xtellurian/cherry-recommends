@@ -55,7 +55,6 @@ export const TriggersUtil = ({
       !featuresChanged.name &&
       featuresChanged.featureCommonIds.length === 0
     ) {
-      console.log('xxxxx')
       featuresChanged = null;
     }
     setTriggerAsync({

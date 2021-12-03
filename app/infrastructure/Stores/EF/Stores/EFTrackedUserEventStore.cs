@@ -13,8 +13,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         protected override Expression<Func<TrackedUserEvent, DateTimeOffset>> defaultOrderBy => _ => _.Timestamp;
         public EFTrackedUserEventStore(IDbContextProvider<SignalBoxDbContext> contextProvider)
         : base(contextProvider, (c) => c.TrackedUserEvents)
-        {
-        }
+        { }
 
         public async Task<TrackedUserEvent> Read(string eventId)
         {
@@ -60,16 +59,20 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await QuerySet.Where(predicate ?? ((x) => true)).Select(_ => _.CommonUserId).Distinct().CountAsync();
         }
 
-        public async Task<Paginated<TrackedUserEvent>> ReadEventsForUser(int page, TrackedUser trackedUser)
+        public async Task<Paginated<TrackedUserEvent>> ReadEventsForUser(int page,
+                                                                         TrackedUser trackedUser,
+                                                                         Expression<Func<TrackedUserEvent, bool>> predicate = null)
         {
-            Expression<Func<TrackedUserEvent, bool>> predicate = _ => _.CommonUserId == trackedUser.CommonId;
-            var itemCount = await QuerySet.CountAsync(predicate);
+            predicate ??= _ => true; // default to all
+            Expression<Func<TrackedUserEvent, bool>> selectTrackedUser = _ => _.CommonUserId == trackedUser.CommonId;
+            var itemCount = await QuerySet.Where(selectTrackedUser).CountAsync(predicate);
             List<TrackedUserEvent> results;
 
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
-                results = await Set
+                results = await QuerySet
                     .Where(predicate)
+                    .Where(selectTrackedUser)
                     .OrderByDescending(_ => _.Timestamp)
                     .Skip((page - 1) * PageSize).Take(PageSize)
                     .ToListAsync();

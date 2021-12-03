@@ -7,19 +7,23 @@ const LoginButton = () => {
   const query = useQuery();
   const autoSignIn = query.get("autoSignIn");
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
+  const [aboutToLogin, setAboutToLogin] = React.useState(autoSignIn);
 
-  if (autoSignIn && !isAuthenticated) {
-    setTimeout(() => {
-      loginWithRedirect()
-        .then(() => {
-          console.log("Automatically signed in");
-        })
-        .catch((e) => console.log(e));
-    }, 500);
+  const signIn = () => {
+    console.log("Attempting signin...");
+    loginWithRedirect()
+      .then(() => {
+        console.log("Automatically signed in...");
+      })
+      .catch((e) => console.log(e))
+      .finally(setAboutToLogin(false));
+  };
+  if (autoSignIn && !isAuthenticated && !isLoading) {
+    setTimeout(signIn, 100);
   }
   return (
     <AsyncButton
-      loading={isLoading}
+      loading={isLoading || aboutToLogin}
       className="btn btn-primary btn-block"
       onClick={() => loginWithRedirect()}
     >

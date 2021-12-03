@@ -5,12 +5,12 @@ import { BackButton } from "../molecules/BackButton";
 import { Subtitle, Title, ErrorCard, Spinner, EmptyList } from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { CopyableField } from "../molecules/fields/CopyableField";
-import { Tabs, TabActivator } from "../molecules/Tabs";
+import { Tabs, TabActivator } from "../molecules/layout/Tabs";
 import {
   ActionsButton,
   ActionItemsGroup,
   ActionLink,
-} from "../molecules/ActionsButton";
+} from "../molecules/buttons/ActionsButton";
 import { JsonView } from "../molecules/JsonView";
 
 import { HistorySection } from "./HistorySection";
@@ -20,16 +20,16 @@ import { RevenueSection } from "./RevenueSection";
 const tabs = [
   {
     id: "properties",
-    label: "Properties",
+    label: "Current Properties",
   },
   {
     id: "history",
-    label: "History",
+    label: "Event History",
   },
-  {
-    id: "revenue",
-    label: "Revenue",
-  },
+  // {
+  //   id: "revenue",
+  //   label: "Revenue",
+  // },
   {
     id: "latest-recommendations",
     label: "Recommendations",

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useDashboard } from "../../api-hooks/dataSummaryApi";
 import {
+  Title,
   Subtitle,
   ExpandableCard,
   Spinner,
@@ -10,7 +11,8 @@ import {
 } from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { JsonView } from "../molecules/JsonView";
-import { GetStarted } from "./GetStarted";
+import { NoteBox } from "../molecules/NoteBox";
+// import { GetStarted } from "./GetStarted";
 
 // const ActionRow = ({ action }) => {
 //   const ts = new Date(action.timestamp);
@@ -63,9 +65,12 @@ export const Dashboard = () => {
   const dashboard = useDashboard({ scope: null }); // choose null, kind, or type
   return (
     <React.Fragment>
-      <Subtitle>Get Started</Subtitle>
-      <GetStarted />
+      <Title>Cherry Recommends</Title>
       <hr />
+      <NoteBox className="mb-3" label="Total Tracked Customers">
+        {dashboard.loading && <Spinner />}
+        <div className="display-4">{dashboard.totalTrackedUsers}</div>
+      </NoteBox>
       <Subtitle>Recent Activity</Subtitle>
       {dashboard.loading && <Spinner />}
       {dashboard.error && <ErrorCard error={dashboard.error} />}

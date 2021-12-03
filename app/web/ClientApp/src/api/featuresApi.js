@@ -13,3 +13,5 @@ export const deleteFeatureAsync = features.deleteFeatureAsync;
 export const fetchDestinationsAsync = features.fetchDestinationsAsync;
 export const createDestinationAsync = features.createDestinationAsync;
 export const deleteDestinationAsync = features.deleteDestinationAsync;
+
+export const fetchGeneratorsAsync = features.fetchGeneratorsAsync;

@@ -57,9 +57,9 @@ namespace SignalBox.Web.Controllers
             return await eventStore.ReadEventsForUser(p.Page, trackedUser);
         }
 
-        // /// <summary>Returns a list of events for a given user.</summary>
+        /// <summary> Updates the properties of a customer.</summary>
         [HttpPost("{id}/properties")]
-        public async Task<IDictionary<string, object>> UpdateProperties(string id, [FromBody] Dictionary<string, object> properties)
+        public override async Task<DynamicPropertyDictionary> SetProperties(string id, [FromBody] DynamicPropertyDictionary properties, bool? useInternalId = null)
         {
             var trackedUser = await base.GetResource(id);
             trackedUser = await workflows.MergeUpdateProperties(trackedUser, properties, null, saveOnComplete: true);

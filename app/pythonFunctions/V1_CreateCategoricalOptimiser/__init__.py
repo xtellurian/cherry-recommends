@@ -15,7 +15,7 @@ def main(req: func.HttpRequest, record: func.Out[str],  outputBlob: func.Out[str
     except:
         # you can return as error with this method.
         logging.info(req.get_body().decode('utf-8'))
-        return responses.bad_request("Body of request must be JSON xx")
+        return responses.bad_request("Body of request must be JSON")
 
     # get data you require from the caller
     is_valid, reason = request_validation.is_valid_create_optimiser_request_body(

@@ -1,6 +1,6 @@
 import React from "react";
-import { Subtitle } from "./PageHeadings";
-import { EmptyList } from "./EmptyList";
+import { Subtitle } from "./layout";
+import { EmptyList } from "./empty/EmptyList";
 
 const PropertyRow = ({ id, entry, value, onChange, onRemove }) => {
   const [state, setState] = React.useState({

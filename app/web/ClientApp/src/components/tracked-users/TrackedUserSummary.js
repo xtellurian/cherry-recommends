@@ -4,7 +4,7 @@ import { useTrackedUsers } from "../../api-hooks/trackedUserApi";
 import { Title, Spinner, Paginator, ErrorCard } from "../molecules";
 import { SearchBox } from "../molecules/SearchBox";
 import { TrackedUserListItem } from "../molecules/TrackedUser";
-import { EmptyList } from "../molecules/EmptyList";
+import { EmptyList } from "../molecules/";
 
 const CreateButton = () => {
   return (

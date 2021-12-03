@@ -40,7 +40,7 @@ namespace SignalBox.Azure
                         },
                         new NameValuePairArgs{
                             Name = "FUNCTIONS_EXTENSION_VERSION",
-                            Value = "~3",
+                            Value = "~4",
                         },
                         new NameValuePairArgs{
                             Name = "FUNCTIONS_WORKER_RUNTIME",
@@ -140,7 +140,7 @@ namespace SignalBox.Azure
                         },
                     },
                     Http20Enabled = true,
-                    LinuxFxVersion = "dotnet|5.0",
+                    LinuxFxVersion = "DOTNET-ISOLATED|6.0",
                 },
                 Identity = new ManagedServiceIdentityArgs
                 {
@@ -220,7 +220,7 @@ namespace SignalBox.Azure
                         },
                         new NameValuePairArgs{
                             Name = "FUNCTIONS_EXTENSION_VERSION",
-                            Value = "~3",
+                            Value = "~4",
                         },
                         new NameValuePairArgs{
                             Name = "FUNCTIONS_WORKER_RUNTIME",
@@ -237,6 +237,7 @@ namespace SignalBox.Azure
                     },
                     Http20Enabled = true,
                     AlwaysOn = true,
+                    LinuxFxVersion = "Python|3.7"
                 },
             });
 

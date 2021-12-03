@@ -22,6 +22,7 @@ namespace SignalBox.Infrastructure
             FixSqlLite(modelBuilder);
             modelBuilder.Entity<Tenant>().Metadata.SetIsTableExcludedFromMigrations(true);
             modelBuilder.Entity<TenantMembership>().Metadata.SetIsTableExcludedFromMigrations(true);
+            modelBuilder.Entity<TenantTermsOfServiceAcceptance>().Metadata.SetIsTableExcludedFromMigrations(true);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

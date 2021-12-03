@@ -1,7 +1,7 @@
 import React from "react";
 import { useItems } from "../../api-hooks/recommendableItemsApi";
 import { Title, EmptyList, Spinner, ErrorCard, Paginator } from "../molecules";
-import { CreateButton } from "../molecules/CreateButton";
+import { CreateButtonClassic } from "../molecules/CreateButton";
 
 import { ItemRow } from "./ItemRow";
 
@@ -9,18 +9,18 @@ export const RecommendableItemsSummary = () => {
   const items = useItems();
   return (
     <React.Fragment>
-      <CreateButton className="float-right" to="/recommendable-items/create">
+      <CreateButtonClassic className="float-right" to="/recommendable-items/create">
         Create Recommendable Item
-      </CreateButton>
+      </CreateButtonClassic>
       <Title>Item Catalogue</Title>
       <hr />
       {items.loading && <Spinner>Loading Items</Spinner>}
       {items.items && items.items.length === 0 && (
         <EmptyList>
           <div>No Existing Items</div>
-          <CreateButton to="/recommendable-items/create">
+          <CreateButtonClassic to="/recommendable-items/create">
             Create Recommendable Item
-          </CreateButton>
+          </CreateButtonClassic>
         </EmptyList>
       )}
       {items.error && <ErrorCard error={items.error} />}

@@ -4,7 +4,7 @@ import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { useAccessToken } from "../../api-hooks/token";
 import { useReports } from "../../api-hooks/reportsApi";
 import { downloadReportAsync } from "../../api/reportsApi";
-import { Title } from "../molecules/PageHeadings";
+import { Title } from "../molecules/layout";
 import { Spinner } from "../molecules/Spinner";
 
 const saveBlob = ({ blob, name }) => {

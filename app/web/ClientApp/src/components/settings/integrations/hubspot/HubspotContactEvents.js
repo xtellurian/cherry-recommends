@@ -1,5 +1,5 @@
 import React from "react";
-import { Subtitle, Title } from "../../../molecules/PageHeadings";
+import { Subtitle, Title } from "../../../molecules/layout";
 import { Spinner } from "../../../molecules/Spinner";
 import { useHubspotContactEvents } from "../../../../api-hooks/hubspotApi";
 import { ErrorCard } from "../../../molecules/ErrorCard";

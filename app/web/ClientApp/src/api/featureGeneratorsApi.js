@@ -6,3 +6,5 @@ export const createFeatureGeneratorAsync =
   featureGenerators.createFeatureGeneratorAsync;
 export const deleteFeatureGeneratorAsync =
   featureGenerators.deleteFeatureGeneratorAsync;
+export const manualTriggerFeatureGeneratorsAsync =
+  featureGenerators.manualTriggerFeatureGeneratorsAsync;

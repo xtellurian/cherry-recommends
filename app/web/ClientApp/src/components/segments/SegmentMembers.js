@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useSegment } from "../../api-hooks/segmentsApi";
-import { Title, Subtitle } from "../molecules/PageHeadings";
+import { Title, Subtitle } from "../molecules/layout";
 import { TrackedUserList } from "../molecules/TrackedUser";
 import { Spinner } from "../molecules/Spinner";
 

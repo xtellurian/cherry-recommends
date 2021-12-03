@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SignalBox.Core.Features;
 using SignalBox.Core.Recommenders;
 using SignalBox.Web.Dto;
 
@@ -25,6 +26,28 @@ namespace SignalBox.Web
             {
                 FeaturesChanged = triggersDto.FeaturesChanged
             };
+        }
+
+        public static List<FilterSelectAggregateStep>? ToCoreRepresentation(
+           this IEnumerable<FilterSelectAggregateStepDto>? dtoSteps)
+        {
+            return dtoSteps?.Select(s =>
+            {
+                switch (s.Type)
+                {
+                    case "Filter":
+                        return new FilterSelectAggregateStep(s.Order, new FilterStep(s.EventTypeMatch));
+                    case "Select":
+                        return new FilterSelectAggregateStep(s.Order, new SelectStep(s.PropertyNameMatch));
+                    case "Aggregate":
+                        return new FilterSelectAggregateStep(s.Order, new AggregateStep
+                        {
+                            AggregationType = System.Enum.Parse<AggregationTypes>(s.AggregationType)
+                        });
+                    default:
+                        throw new Core.BadRequestException($"{s.Type} is an unknown step type");
+                }
+            })?.OrderBy(_ => _.Order).ToList();
         }
     }
 }

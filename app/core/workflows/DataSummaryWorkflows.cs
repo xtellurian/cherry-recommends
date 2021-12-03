@@ -12,6 +12,7 @@ namespace SignalBox.Core.Workflows
     {
         private readonly ITrackedUserEventStore eventStore;
         private readonly ILogger<DataSummaryWorkflows> logger;
+        private readonly ITrackedUserStore trackedUserStore;
         private readonly ITrackedUserActionStore actionStore;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IItemsRecommendationStore itemsRecommendationStore;
@@ -20,6 +21,7 @@ namespace SignalBox.Core.Workflows
 
         public DataSummaryWorkflows(ITrackedUserEventStore eventStore,
                                     ILogger<DataSummaryWorkflows> logger,
+                                    ITrackedUserStore trackedUserStore,
                                     ITrackedUserActionStore actionStore,
                                     IDateTimeProvider dateTimeProvider,
                                     IItemsRecommendationStore itemsRecommendationStore,
@@ -28,6 +30,7 @@ namespace SignalBox.Core.Workflows
         {
             this.eventStore = eventStore;
             this.logger = logger;
+            this.trackedUserStore = trackedUserStore;
             this.actionStore = actionStore;
             this.dateTimeProvider = dateTimeProvider;
             this.itemsRecommendationStore = itemsRecommendationStore;
@@ -94,6 +97,7 @@ namespace SignalBox.Core.Workflows
         {
             IEnumerable<TrackedUserAction> actions = new List<TrackedUserAction>();
             IEnumerable<TrackedUserEvent> latestEvents = new List<TrackedUserEvent>();
+            var totalTrackedUsers = await trackedUserStore.Count();
             var recommendations = new List<RecommendationEntity>();
             var timeCutoff = dateTimeProvider.Now.AddMonths(-1);
             try
@@ -133,7 +137,7 @@ namespace SignalBox.Core.Workflows
 
 
 
-            return new Dashboard(latestEvents, actions, recommendations);
+            return new Dashboard(totalTrackedUsers, latestEvents, actions, recommendations);
         }
     }
 }

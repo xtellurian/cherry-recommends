@@ -19,16 +19,21 @@ namespace SignalBox.Web.Controllers
     {
         private readonly ILogger<FeaturesController> logger;
         private readonly FeatureWorkflows workflows;
+        private readonly FeatureGeneratorWorkflows generatorWorkflows;
 
-        public FeaturesController(ILogger<FeaturesController> logger, IFeatureStore store, FeatureWorkflows workflows) : base(store)
+        public FeaturesController(
+            ILogger<FeaturesController> logger,
+            IFeatureStore store,
+            FeatureWorkflows workflows,
+            FeatureGeneratorWorkflows generatorWorkflows) : base(store)
         {
             this.logger = logger;
             this.workflows = workflows;
+            this.generatorWorkflows = generatorWorkflows;
         }
 
         /// <summary>Creates a new generic Feature that can used on any tracked user.</summary>
         [HttpPost]
-        [Authorize(Policies.AdminOnlyPolicyName)]
         public async Task<Feature> CreateFeature([FromBody] CreateFeatureMetadata dto)
         {
             return await workflows.CreateFeature(dto.CommonId, dto.Name);
@@ -40,6 +45,14 @@ namespace SignalBox.Web.Controllers
         {
             var feature = await base.GetResource(id);
             return await workflows.GetTrackedUsers(feature, p.Page);
+        }
+
+        /// <summary>Get's the Generators associated with the Feature.</summary>
+        [HttpGet("{id}/Generators")]
+        public async Task<Paginated<FeatureGenerator>> GetGenerators(string id, [FromQuery] PaginateRequest p)
+        {
+            var feature = await base.GetResource(id);
+            return await generatorWorkflows.GetGenerators(p.Page, feature);
         }
 
         /// <summary>Get's the latest tracked user features (values) for a feature.</summary>
@@ -70,8 +83,8 @@ namespace SignalBox.Web.Controllers
         {
             var feature = await base.GetResource(id);
             dto.Validate();
-            var d = await workflows.AddDestination(feature, dto.IntegratedSystemId, dto.DestinationType, 
-                endpoint: dto.Endpoint, 
+            var d = await workflows.AddDestination(feature, dto.IntegratedSystemId, dto.DestinationType,
+                endpoint: dto.Endpoint,
                 propertyName: dto.PropertyName);
             return d;
         }

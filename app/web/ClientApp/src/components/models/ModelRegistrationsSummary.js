@@ -2,9 +2,9 @@ import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useModelRegistrations } from "../../api-hooks/modelRegistrationsApi";
 import { deleteModelRegistrationAsync } from "../../api/modelRegistrationsApi";
-import { Title } from "../molecules/PageHeadings";
+import { Title } from "../molecules/layout";
 import { JsonView } from "../molecules/JsonView";
-import { CreateButton } from "../molecules/CreateButton";
+import { CreateButtonClassic } from "../molecules/CreateButton";
 import {
   EmptyList,
   Paginator,
@@ -16,7 +16,7 @@ import {
   ActionsButton,
   ActionItem,
   ActionItemsGroup,
-} from "../molecules/ActionsButton";
+} from "../molecules/buttons/ActionsButton";
 import { ConfirmationPopup } from "../molecules/popups/ConfirmationPopup";
 import { useAccessToken } from "../../api-hooks/token";
 
@@ -95,9 +95,9 @@ export const ModelRegistrationsSummary = () => {
   return (
     <React.Fragment>
       <div>
-        <CreateButton to={`${path}/create`} className="float-right">
+        <CreateButtonClassic to={`${path}/create`} className="float-right">
           Register New Model
-        </CreateButton>
+        </CreateButtonClassic>
 
         <Title>Models</Title>
       </div>
@@ -113,9 +113,9 @@ export const ModelRegistrationsSummary = () => {
         {result.items && result.items.length === 0 && (
           <EmptyList>
             <div>There are no models registered.</div>
-            <CreateButton to={`${path}/create`} className="mt-4">
+            <CreateButtonClassic to={`${path}/create`} className="mt-4">
               Create New Model
-            </CreateButton>
+            </CreateButtonClassic>
           </EmptyList>
         )}
       </div>

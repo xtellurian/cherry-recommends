@@ -24,3 +24,12 @@ export const deleteFeatureGeneratorAsync = async ({ token, id }) => {
     method: "delete",
   });
 };
+
+export const manualTriggerFeatureGeneratorsAsync = async ({ token, id }) => {
+  return await executeFetch({
+    token,
+    path: `api/FeatureGenerators/${id}/Trigger`,
+    method: "post",
+    body: {},
+  });
+};

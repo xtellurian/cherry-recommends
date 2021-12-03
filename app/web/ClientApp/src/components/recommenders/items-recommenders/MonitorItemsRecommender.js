@@ -5,7 +5,7 @@ import {
   useRecommenderTrackedUserActions,
 } from "../../../api-hooks/itemsRecommendersApi";
 import { Subtitle, Title, BackButton, Spinner } from "../../molecules";
-import { Tabs, TabActivator } from "../../molecules/Tabs";
+import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
 import { RevenueChartUtil } from "../utils/revenueChartUtil";
 import { RecommendationList } from "./RecommendationList";
 import { TargetVariableValues } from "./TargetVariableValues";

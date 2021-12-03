@@ -349,11 +349,21 @@
     });
   };
 
+  const manualTriggerFeatureGeneratorsAsync = async ({ token, id }) => {
+    return await executeFetch({
+      token,
+      path: `api/FeatureGenerators/${id}/Trigger`,
+      method: "post",
+      body: {},
+    });
+  };
+
   var featureGeneratorsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchFeatureGeneratorsAsync: fetchFeatureGeneratorsAsync,
     createFeatureGeneratorAsync: createFeatureGeneratorAsync,
-    deleteFeatureGeneratorAsync: deleteFeatureGeneratorAsync
+    deleteFeatureGeneratorAsync: deleteFeatureGeneratorAsync,
+    manualTriggerFeatureGeneratorsAsync: manualTriggerFeatureGeneratorsAsync
   });
 
   const fetchFeaturesAsync = async ({ token, page, searchTerm }) => {
@@ -440,11 +450,7 @@
     });
   };
 
-  const createDestinationAsync$3 = async ({
-    token,
-    id,
-    destination,
-  }) => {
+  const createDestinationAsync$3 = async ({ token, id, destination }) => {
     return await executeFetch({
       path: `api/features/${id}/Destinations`,
       token,
@@ -461,6 +467,13 @@
     });
   };
 
+  const fetchGeneratorsAsync = async ({ token, id }) => {
+    return await executeFetch({
+      path: `api/features/${id}/Generators`,
+      token,
+    });
+  };
+
   var featuresApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchFeaturesAsync: fetchFeaturesAsync,
@@ -473,7 +486,8 @@
     fetchTrackedUserFeatureValuesAsync: fetchTrackedUserFeatureValuesAsync,
     fetchDestinationsAsync: fetchDestinationsAsync$3,
     createDestinationAsync: createDestinationAsync$3,
-    deleteDestinationAsync: deleteDestinationAsync
+    deleteDestinationAsync: deleteDestinationAsync,
+    fetchGeneratorsAsync: fetchGeneratorsAsync
   });
 
   const fetchIntegratedSystemsAsync = async ({ token, page }) => {

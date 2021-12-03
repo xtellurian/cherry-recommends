@@ -10,7 +10,7 @@ import {
   TableHead,
   TableRow,
 } from "../../molecules/Table";
-import { CreateButton } from "../../molecules/CreateButton";
+import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { useAccessToken } from "../../../api-hooks/token";
 
 const GeneratorTableRow = ({ generator, onDeleted }) => {
@@ -50,9 +50,9 @@ export const FeatureGeneratorsSummary = () => {
   const generators = useFeatureGenerators({ trigger });
   return (
     <React.Fragment>
-      <CreateButton className="float-right" to="feature-generators/create">
+      <CreateButtonClassic className="float-right" to="feature-generators/create">
         Create Feature Generator
-      </CreateButton>
+      </CreateButtonClassic>
       <Title>Feature Generators</Title>
 
       <hr />

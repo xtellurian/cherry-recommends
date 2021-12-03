@@ -1,9 +1,9 @@
 import React from "react";
-import { EmptyList, Paginator, Title, ErrorCard } from "../molecules";
+import { EmptyList, Paginator, Title, ErrorCard, Spinner } from "../molecules";
 import { ClickableRow } from "../molecules/layout/ClickableRow";
 
 import { useFeatures } from "../../api-hooks/featuresApi";
-import { CreateButton } from "../molecules/CreateButton";
+import { CreateButtonClassic } from "../molecules/CreateButton";
 
 const FeatureRow = ({ feature }) => {
   return (
@@ -14,15 +14,17 @@ const FeatureRow = ({ feature }) => {
     />
   );
 };
+
 export const FeaturesSummary = () => {
   const features = useFeatures();
   return (
     <React.Fragment>
-      <CreateButton className="float-right" to="/features/create">
+      <CreateButtonClassic className="float-right" to="/features/create">
         Create Feature
-      </CreateButton>
+      </CreateButtonClassic>
       <Title>Features</Title>
       <hr />
+      {features.loading && <Spinner />}
       {features.items && features.items.length === 0 && (
         <EmptyList>There are no features.</EmptyList>
       )}

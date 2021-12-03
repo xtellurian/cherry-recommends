@@ -8,7 +8,7 @@ import {
   EmptyList,
   ExpandableCard,
 } from "../../molecules";
-import { CreateButton } from "../../molecules/CreateButton";
+import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { useItemsRecommenders } from "../../../api-hooks/itemsRecommendersApi";
 import { JsonView } from "../../molecules/JsonView";
 
@@ -26,12 +26,12 @@ export const ItemsRecommendersSummary = () => {
   const itemsRecommenders = useItemsRecommenders();
   return (
     <React.Fragment>
-      <CreateButton
+      <CreateButtonClassic
         className="float-right"
         to="/recommenders/items-recommenders/create"
       >
         Create
-      </CreateButton>
+      </CreateButtonClassic>
       <Title>Item Recommenders</Title>
 
       <hr />
@@ -40,9 +40,9 @@ export const ItemsRecommendersSummary = () => {
       {itemsRecommenders.items && itemsRecommenders.items.length === 0 && (
         <EmptyList>
           <div className="text-muted m-3">There are no item recommenders.</div>
-          <CreateButton to="/recommenders/items-recommenders/create">
+          <CreateButtonClassic to="/recommenders/items-recommenders/create">
             Create
-          </CreateButton>
+          </CreateButtonClassic>
         </EmptyList>
       )}
 

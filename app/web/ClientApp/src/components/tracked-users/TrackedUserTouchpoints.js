@@ -5,10 +5,10 @@ import {
   useTrackedUserTouchpointValues,
 } from "../../api-hooks/touchpointsApi";
 import { useTrackedUser } from "../../api-hooks/trackedUserApi";
-import { Subtitle, Title } from "../molecules/PageHeadings";
+import { Subtitle, Title } from "../molecules/layout";
 import { Spinner } from "../molecules/Spinner";
-import { EmptyList } from "../molecules/EmptyList";
-import { CreateButton } from "../molecules/CreateButton";
+import { EmptyList } from "../molecules/";
+import { CreateButtonClassic } from "../molecules/CreateButton";
 import { BackButton } from "../molecules/BackButton";
 import { ExpandableCard } from "../molecules/ExpandableCard";
 import { JsonView } from "../molecules/JsonView";
@@ -60,12 +60,12 @@ export const TrackedUserTouchpoints = () => {
   }
   return (
     <React.Fragment>
-      <CreateButton
+      <CreateButtonClassic
         className="ml-1 float-right"
         to={`/tracked-users/create-touchpoint-data/${trackedUser.id}`}
       >
         Create Touchpoint Data
-      </CreateButton>
+      </CreateButtonClassic>
       <BackButton
         className="float-right"
         to={`/tracked-users/detail/${trackedUser.id}`}

@@ -3,7 +3,7 @@ import { useRouteMatch } from "react-router-dom";
 import { createTrackedUserTouchpointAsync } from "../../api/touchpointsApi";
 import { useTrackedUser } from "../../api-hooks/trackedUserApi";
 import { useQuery } from "../../utility/utility";
-import { Subtitle, Title } from "../molecules/PageHeadings";
+import { Subtitle, Title } from "../molecules/layout";
 import { PropertiesEditor } from "../molecules/PropertiesEditor";
 import { BackButton } from "../molecules/BackButton";
 import { useAccessToken } from "../../api-hooks/token";

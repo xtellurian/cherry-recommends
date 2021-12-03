@@ -1,5 +1,5 @@
 import React from "react";
-import { Title } from "../molecules/PageHeadings";
+import { Title } from "../molecules/layout";
 import { createTouchpointMetadataAsync } from "../../api/touchpointsApi";
 import { useAccessToken } from "../../api-hooks/token";
 

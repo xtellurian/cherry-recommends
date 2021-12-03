@@ -9,7 +9,7 @@ import {
   EmptyList,
   Paginator,
 } from "../../molecules";
-import { CreateButton } from "../../molecules/CreateButton";
+import { CreateButtonClassic } from "../../molecules/CreateButton";
 
 const SelectorRow = ({ selector }) => {
   return (
@@ -28,12 +28,12 @@ export const RewardsSummary = () => {
   const selectors = useRewardSelectors();
   return (
     <React.Fragment>
-      <CreateButton
+      <CreateButtonClassic
         className="float-right"
         to="/settings/rewards/create-selector"
       >
         Define a new Reward
-      </CreateButton>
+      </CreateButtonClassic>
       <Title>Rewards</Title>
       <Subtitle>Reward Definitions</Subtitle>
 

@@ -3,10 +3,14 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useFeature } from "../../api-hooks/featuresApi";
 import { deleteFeatureAsync } from "../../api/featuresApi";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
+
 import { Title, Subtitle, Spinner, ErrorCard, BackButton } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
-import { useAccessToken } from "../../api-hooks/token";
+import { useAccessToken, useTokenScopes } from "../../api-hooks/token";
 import { FeatureDestinations } from "./FeatureDestinations";
+
+import { FeatureGenerators } from "./FeatureGenerators";
+
 export const FeatureDetail = () => {
   const { id } = useParams();
   const token = useAccessToken();
@@ -20,16 +24,21 @@ export const FeatureDetail = () => {
       .then(() => history.push("/features"))
       .catch(setDeleteError);
   };
+
+  const scopes = useTokenScopes();
+  const canWriteFeatures = scopes && scopes.find((_) => _ == "write:features");
   return (
     <React.Fragment>
       <BackButton className="float-right" to="/features">
         All Features
       </BackButton>
-      <Link to={`/features/set-value/${id}`}>
-        <button className="btn btn-primary float-right">
-          Set Value for Tracked User
-        </button>
-      </Link>
+      {canWriteFeatures && (
+        <Link to={`/features/set-value/${id}`}>
+          <button className="btn btn-primary float-right">
+            Manually Set a Feature Value
+          </button>
+        </Link>
+      )}
       <Title>Feature</Title>
       <Subtitle>{feature.name ? feature.name : "..."}</Subtitle>
       <hr />
@@ -45,10 +54,19 @@ export const FeatureDetail = () => {
         error={deleteError}
         handleDelete={handleDelete}
       />
-      <FeatureDestinations feature={feature} />
-      <button onClick={() => setDeleteOpen(true)} className="btn btn-danger">
-        Delete Feature
-      </button>
+      <div className="row">
+        <div className="col">
+          <FeatureGenerators feature={feature} />
+        </div>
+        <div className="col">
+          <FeatureDestinations feature={feature} />
+        </div>
+      </div>
+      <div className="mt-2">
+        <button onClick={() => setDeleteOpen(true)} className="btn btn-danger">
+          Delete Feature
+        </button>
+      </div>
     </React.Fragment>
   );
 };

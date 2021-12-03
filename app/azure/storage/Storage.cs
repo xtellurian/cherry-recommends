@@ -5,7 +5,7 @@ using Pulumi.AzureNative.Storage.Inputs;
 
 namespace SignalBox.Azure
 {
-    class Storage : ComponentWithStorage
+    partial class Storage : ComponentWithStorage
     {
         private static InputMap<string> tags = new InputMap<string>
             {
@@ -68,33 +68,7 @@ namespace SignalBox.Azure
                 }
             });
 
-            var trackedUserQueue = new Queue("newTrackedUsers", new QueueArgs
-            {
-                QueueName = SignalBox.Core.Constants.AzureQueueNames.NewTrackedUsers,
-                AccountName = storageAccount.Name,
-                ResourceGroupName = rg.Name
-            });
-
-            var trackedUserEventsQueue = new Queue("trackedUserEvents", new QueueArgs
-            {
-                QueueName = SignalBox.Core.Constants.AzureQueueNames.TrackedUserEvents,
-                AccountName = storageAccount.Name,
-                ResourceGroupName = rg.Name
-            });
-
-            var newTenantsQueue = new Queue("newTenantsQ", new QueueArgs
-            {
-                QueueName = SignalBox.Core.Constants.AzureQueueNames.NewTenants,
-                AccountName = storageAccount.Name,
-                ResourceGroupName = rg.Name
-            });
-
-            var newTenantMembershipsQueue = new Queue("newTntMembershipsQ", new QueueArgs
-            {
-                QueueName = SignalBox.Core.Constants.AzureQueueNames.NewTenantMemberships,
-                AccountName = storageAccount.Name,
-                ResourceGroupName = rg.Name
-            });
+            CreateQueues(rg, storageAccount);
 
             this.StorageAccount = storageAccount;
 

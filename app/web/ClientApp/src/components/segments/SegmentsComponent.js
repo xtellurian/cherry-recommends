@@ -4,15 +4,15 @@ import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { CreateSegment } from "./CreateSegment";
 import { SegmentList } from "./SegmentList";
 import { SegmentMembers } from "./SegmentMembers";
-import { CreateButton } from "../molecules/CreateButton";
+import { CreateButtonClassic } from "../molecules/CreateButton";
 
 const SegmentsHome = () => {
   let { path } = useRouteMatch();
   return (
     <div>
-      <CreateButton to={`${path}/create`} className="float-right">
+      <CreateButtonClassic to={`${path}/create`} className="float-right">
         Create New Segment
-      </CreateButton>
+      </CreateButtonClassic>
       <SegmentList />
     </div>
   );

@@ -10,6 +10,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             base.Configure(builder);
             builder.Property(_ => _.GeneratorType).HasConversion<string>();
+            builder.Property(_ => _.FilterSelectAggregateSteps).HasJsonConversion();
         }
     }
 }

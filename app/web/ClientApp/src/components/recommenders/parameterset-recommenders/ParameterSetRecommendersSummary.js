@@ -1,10 +1,10 @@
 import React from "react";
 import {Link} from "react-router-dom"
-import { Title } from "../../molecules/PageHeadings";
-import { CreateButton } from "../../molecules/CreateButton";
+import { Title } from "../../molecules/layout";
+import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { Spinner } from "../../molecules/Spinner";
 import { ErrorCard } from "../../molecules/ErrorCard";
-import { EmptyList } from "../../molecules/EmptyList";
+import { EmptyList } from "../../molecules";
 import { Paginator } from "../../molecules/Paginator";
 import { useParameterSetRecommenders } from "../../../api-hooks/parameterSetRecommendersApi";
 import { ExpandableCard } from "../../molecules/ExpandableCard";
@@ -28,12 +28,12 @@ export const ParameterSetRecommendersSummary = () => {
   const parameterSetRecommenders = useParameterSetRecommenders();
   return (
     <React.Fragment>
-      <CreateButton
+      <CreateButtonClassic
         className="float-right"
         to="/recommenders/parameter-set-recommenders/create"
       >
         Create Recommender
-      </CreateButton>
+      </CreateButtonClassic>
       <Title>Parameter Set Recommenders</Title>
       <hr />
       {parameterSetRecommenders.error && (
@@ -44,9 +44,9 @@ export const ParameterSetRecommendersSummary = () => {
         parameterSetRecommenders.items.length === 0 && (
           <EmptyList>
             <p>You have not created any Parameter-Set Recommenders. </p>
-            <CreateButton to="/recommenders/parameter-set-recommenders/create">
+            <CreateButtonClassic to="/recommenders/parameter-set-recommenders/create">
               Create Parameter-Set Recommender
-            </CreateButton>
+            </CreateButtonClassic>
           </EmptyList>
         )}
       {parameterSetRecommenders.items &&

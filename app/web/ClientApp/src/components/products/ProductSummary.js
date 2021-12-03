@@ -2,7 +2,7 @@ import React from "react";
 import { useProducts } from "../../api-hooks/productsApi";
 import { Title, EmptyList, Spinner, ErrorCard, Paginator } from "../molecules";
 import { NoteBox } from "../molecules/NoteBox";
-import { CreateButton } from "../molecules/CreateButton";
+import { CreateButtonClassic } from "../molecules/CreateButton";
 
 import { ProductRow } from "./ProductRow";
 import { Link } from "react-router-dom";
@@ -11,9 +11,9 @@ export const ProductSummary = () => {
   const products = useProducts();
   return (
     <React.Fragment>
-      <CreateButton className="float-right" to="/products/create">
+      <CreateButtonClassic className="float-right" to="/products/create">
         Create Product
-      </CreateButton>
+      </CreateButtonClassic>
       <Title>Product Catalogue</Title>
       <hr />
       <div className="m-3">
@@ -32,7 +32,7 @@ export const ProductSummary = () => {
       {products.items && products.items.length === 0 && (
         <EmptyList>
           <div>No Existing Products</div>
-          <CreateButton to="/products/create">Create Product</CreateButton>
+          <CreateButtonClassic to="/products/create">Create Product</CreateButtonClassic>
         </EmptyList>
       )}
       {products.error && <ErrorCard error={products.error} />}

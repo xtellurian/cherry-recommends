@@ -14,14 +14,16 @@ export const ActionsButton = ({ to, label, className, children }) => {
   };
 
   return (
-    <span className={className || "float-right"}>
-      <ButtonDropdown isOpen={isOpen} toggle={toggle}>
-        <Link to={to}>
-          <button className="btn btn-primary float-right">{label}</button>
-        </Link>
-        {children && <DropdownToggle split color="primary" />}
-        {children}
-      </ButtonDropdown>
+    <span className={className || "float-right btn-group"}>
+      <Link to={to}>
+        <button className="btn btn-primary mr-1">{label}</button>
+      </Link>
+      {children && (
+        <ButtonDropdown isOpen={isOpen} toggle={toggle}>
+          <DropdownToggle className="pl-2 pr-2" split color="primary" />
+          {children}
+        </ButtonDropdown>
+      )}
     </span>
   );
 };

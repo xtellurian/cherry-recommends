@@ -1,5 +1,5 @@
 import React from "react";
-import { EmptyList } from "./EmptyList";
+import { EmptyList } from "./empty/EmptyList";
 import { TableRow, Cell, Table, TableBody, TableHead } from "./Table";
 
 export const PropertiesTableView = ({ properties, onEdit }) => {

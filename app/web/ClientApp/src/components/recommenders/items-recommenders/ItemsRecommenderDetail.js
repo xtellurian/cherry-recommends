@@ -19,7 +19,7 @@ import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
 import { ActionsButtonUtil } from "../utils/actionsButtonUtil";
 import { ConfirmationPopup } from "../../molecules/popups/ConfirmationPopup";
 import { CopyableField } from "../../molecules/fields/CopyableField";
-import { Tabs, TabActivator } from "../../molecules/Tabs";
+import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
 import { EntityField } from "../../molecules/EntityField";
 import { CloneRecommender } from "../utils/CloneRecommender";
 import { ArgumentsSection } from "./Arguments";

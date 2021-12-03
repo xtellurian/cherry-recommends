@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useIntegratedSystems } from "../../../api-hooks/integratedSystemsApi";
-import { Title } from "../../molecules/PageHeadings";
-import { CreateButton } from "../../molecules/CreateButton";
+import { Title } from "../../molecules/layout";
+import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { Spinner } from "../../molecules/Spinner";
 import { ErrorCard } from "../../molecules/ErrorCard";
-import { EmptyList } from "../../molecules/EmptyList";
+import { EmptyList } from "../../molecules/";
 import { IntegrationIcon } from "./icons/IntegrationIcons";
 
 const IntegrationRow = ({ integration }) => {
@@ -39,12 +39,12 @@ export const ListIntegrations = () => {
   return (
     <React.Fragment>
       <div>
-        <CreateButton
+        <CreateButtonClassic
           to="/settings/integrations/create"
           className="float-right"
         >
           Create Integration
-        </CreateButton>
+        </CreateButtonClassic>
         <Title>Integrations</Title>
         <hr />
         {result.loading && <Spinner />}
@@ -57,9 +57,9 @@ export const ListIntegrations = () => {
         {result && result.items && result.items.length === 0 && (
           <EmptyList>
             No Integrated Systems.
-            <CreateButton to="/settings/integrations/create">
+            <CreateButtonClassic to="/settings/integrations/create">
               Create Integrated System
-            </CreateButton>
+            </CreateButtonClassic>
           </EmptyList>
         )}
       </div>

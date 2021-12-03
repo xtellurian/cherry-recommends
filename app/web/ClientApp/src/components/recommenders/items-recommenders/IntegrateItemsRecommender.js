@@ -9,7 +9,7 @@ import {
   ErrorCard,
 } from "../../molecules";
 import { CodeView } from "../../molecules/CodeView";
-import { Tabs, TabActivator } from "../../molecules/Tabs";
+import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
 
 const tabs = [
   { id: "api", label: "REST API" },

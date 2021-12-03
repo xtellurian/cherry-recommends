@@ -7,7 +7,7 @@ export const ClickableRow = ({ label, to, buttonText }) => {
       <div className="col-md-9">{label}</div>
       <div className="col-md-3">
         <Link to={to}>
-          <button className="btn btn-primary btn-block">
+          <button className="btn btn-outline-primary btn-block">
             {buttonText || "Go"}
           </button>
         </Link>

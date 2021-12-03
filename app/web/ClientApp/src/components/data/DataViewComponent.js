@@ -1,8 +1,8 @@
 import React from "react";
 import { useRouteMatch, Switch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
-import { Title } from "../molecules/PageHeadings";
-import { Tabs, TabActivator } from "../molecules/Tabs";
+import { Title } from "../molecules/layout";
+import { Tabs, TabActivator } from "../molecules/layout/Tabs";
 import { ViewEventData } from "./ViewEventData";
 
 const tabs = [

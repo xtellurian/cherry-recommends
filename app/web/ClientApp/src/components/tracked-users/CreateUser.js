@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { createOrUpdateTrackedUserAsync } from "../../api/trackedUsersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { useAccessToken } from "../../api-hooks/token";
-import { Subtitle, Title } from "../molecules/PageHeadings";
+import { Subtitle, Title } from "../molecules/layout";
 import { ErrorCard } from "../molecules/ErrorCard";
 import { DropdownItem, DropdownComponent } from "../molecules/Dropdown";
 import { Spinner } from "../molecules/Spinner";

@@ -63,6 +63,7 @@ namespace SignalBox.Infrastructure
 
         public static IServiceCollection UseMultitenantSqlite(this IServiceCollection services,
                                                     string directoryName,
+                                                    SqliteDatabasesConfig dbConfig = null,
                                                     string migrationAssembly = "sqlite",
                                                     Func<string, string> manipulateConnectionString = null)
         {
@@ -71,6 +72,7 @@ namespace SignalBox.Infrastructure
                 {
                     var tenantProvider = sp.GetRequiredService<ITenantProvider>();
                     var cs = SqlLiteConnectionStringFactory.GenerateConnectionString(
+                        dbConfig?.AppDir,
                         directoryName,
                         tenantProvider.CurrentDatabaseName);
                     if (manipulateConnectionString != null)
@@ -109,6 +111,8 @@ namespace SignalBox.Infrastructure
             services.AddScoped<INewTrackedUserEventQueueStore, NewTrackedUserEventQueueStore>();
             services.AddScoped<INewTenantQueueStore, NewTenantQueueStore>();
             services.AddScoped<INewTenantMembershipQueueStore, NewTenantMembershipQueueStore>();
+            services.AddScoped<IRunFeatureGeneratorQueueStore, RunFeatureGeneratorQueueStore>();
+            services.AddScoped<IRunAllFeatureGeneratorsQueueStore, RunAllFeatureGeneratorsQueueStore>();
             return services;
         }
         public static IServiceCollection AddEFStores(this IServiceCollection services)

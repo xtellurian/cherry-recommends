@@ -22,7 +22,8 @@ namespace SignalBox.Functions
             this.integratedSystemStore = integratedSystemStore;
         }
 
-        [Function("ScheduledHubspotEtlJobs")]
+        // [Function("ScheduledHubspotEtlJobs")]
+        // TODO: Fix in multitenant hubspot
         // should run once per day at 1500 UTC (approx 2 am Australia time)
         public async Task RunFromTimer([TimerTrigger("0 0 15 * * * ")] TimerStatus timer, FunctionContext context)
 

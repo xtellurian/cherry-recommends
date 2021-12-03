@@ -3,7 +3,7 @@ import { EmptyList, Paginator, Title, ErrorCard } from "../../molecules";
 import { ClickableRow } from "../../molecules/layout/ClickableRow";
 
 import { useFeatures } from "../../../api-hooks/featuresApi";
-import { CreateButton } from "../../molecules/CreateButton";
+import { CreateButtonClassic } from "../../molecules/CreateButton";
 
 const FeatureRow = ({ feature }) => {
   return (
@@ -18,9 +18,9 @@ export const FeaturesSummary = () => {
   const features = useFeatures();
   return (
     <React.Fragment>
-      <CreateButton className="float-right" to="/admin/features/create">
+      <CreateButtonClassic className="float-right" to="/admin/features/create">
         Create Feature
-      </CreateButton>
+      </CreateButtonClassic>
       <Title>Features</Title>
       <hr />
       {features.items && features.items.length === 0 && (

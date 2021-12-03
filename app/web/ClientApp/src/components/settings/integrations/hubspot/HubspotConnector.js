@@ -4,7 +4,7 @@ import { useQuery } from "../../../../utility/utility";
 import { useIntegratedSystem } from "../../../../api-hooks/integratedSystemsApi";
 import { useHubspotAppInformation } from "../../../../api-hooks/hubspotApi";
 import { saveHubspotCodeAsync } from "../../../../api/hubspotApi";
-import { Title } from "../../../molecules/PageHeadings";
+import { Title } from "../../../molecules/layout";
 import { Spinner } from "../../../molecules/Spinner";
 import { ErrorCard } from "../../../molecules/ErrorCard";
 import { BackButton } from "../../../molecules/BackButton";
