@@ -7,7 +7,7 @@ const AuthenticatedIA = [
         to: "/tracked-users",
       },
       {
-        name: "Track a new user",
+        name: "Add a Customer",
         to: "/tracked-users/create",
       },
       {

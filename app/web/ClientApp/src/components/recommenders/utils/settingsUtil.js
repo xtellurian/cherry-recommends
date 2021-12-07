@@ -56,15 +56,7 @@ export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
 
   return (
     <React.Fragment>
-      <BackButton
-        className="float-right"
-        to={`${basePath}/detail/${recommender.id}`}
-      >
-        Back to Recommender
-      </BackButton>
-      <Title>Settings</Title>
-      <Subtitle>{recommender.name}</Subtitle>
-      <hr />
+      
 
       {recommender.loading && <Spinner />}
       {recommender.error && <ErrorCard error={recommender.error} />}

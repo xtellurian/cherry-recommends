@@ -20,16 +20,22 @@ const tabs = [
 const jsIntegrate = ({ id, argumentsExample }) => `
 import { parameterSetRecommenders } from "cherry.ai";
 
-parameterSetRecommenders.invokeParameterSetRecommender({
-  success: (recommendation) => console.log('Success callback'),
-  error: (error) => alert('Error callback'),
-  token: "Your JSON Web Token / access token",
-  id: ${id}, // the id of this recommender
-  input: {
-    commonUserId: "The common Id of the user to recommend for",
-    arguments: ${JSON.stringify(argumentsExample, null, 2)},
-  }
-});
+parameterSetRecommenders
+  .invokeParameterSetRecommenderAsync({
+    token: "Your JSON Web Token / access token",
+    id: 1, // the id of this recommender
+    input: {
+      commonUserId: "The common Id of the user to recommend for",
+      arguments: {
+        p_age: null,
+        favourite: "gheklo",
+        cats: "cats",
+      },
+    },
+  })
+  .then((recommendation) => console.log(recommendation))
+  .catch((error) => alert("error callback"));
+
 `;
 
 const restIntegrate = ({ id, basePath, argumentsExample }) => `
@@ -45,6 +51,33 @@ Content-Type: 'application/json'
     "arguments": ${JSON.stringify(argumentsExample, null, 2)}
 }
 `;
+
+export const JsIntegrate = ({ id }) => {
+  const recommender = useParameterSetRecommender({ id });
+
+  const argumentsExample = recommender.arguments
+    ? mapArgumentsToObject(recommender.arguments)
+    : [];
+  return (
+    <CodeView
+      language="js"
+      text={jsIntegrate({ id, argumentsExample })}
+    ></CodeView>
+  );
+};
+
+export const RESTIntegrate = ({ id }) => {
+  const recommender = useParameterSetRecommender({ id });
+  const argumentsExample = recommender.arguments
+    ? mapArgumentsToObject(recommender.arguments)
+    : [];
+  return (
+    <CodeView
+      language="bash"
+      text={restIntegrate({ id, argumentsExample, basePath: origin })}
+    ></CodeView>
+  );
+};
 
 const mapArgumentsToObject = (args) => {
   const example = {};

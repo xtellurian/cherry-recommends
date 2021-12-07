@@ -6,6 +6,7 @@ import {
   useTrigger,
 } from "../../../api-hooks/itemsRecommendersApi";
 import { setTriggerAsync } from "../../../api/itemsRecommendersApi";
+import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import { Spinner } from "../../molecules";
 
 export const Triggers = () => {
@@ -23,16 +24,19 @@ export const Triggers = () => {
       setError(e);
     }
   };
-  if (triggerCollection.loading) {
-    return <Spinner>Loading Triggers</Spinner>;
-  }
+
   return (
-    <TriggersUtil
-      error={error}
-      recommender={recommender}
-      basePath="/recommenders/items-recommenders"
-      triggerCollection={triggerCollection}
-      setTriggerAsync={handleSetTriggerAsync}
-    />
+    <ItemRecommenderLayout>
+      {triggerCollection.loading && <Spinner />}
+      {!triggerCollection.loading && (
+        <TriggersUtil
+          error={error}
+          recommender={recommender}
+          basePath="/recommenders/items-recommenders"
+          triggerCollection={triggerCollection}
+          setTriggerAsync={handleSetTriggerAsync}
+        />
+      )}
+    </ItemRecommenderLayout>
   );
 };

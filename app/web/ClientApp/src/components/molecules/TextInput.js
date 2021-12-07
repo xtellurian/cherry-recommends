@@ -16,12 +16,15 @@ export const joinValidators = (validators) => {
   };
 };
 
+var commonIdFormat = /[!$%*+\\[\]{};':",.\/?]+/;
 const minCommonIdLength = 4;
 export const commonIdValidator = (value) => {
   if (!value || value.length === 0) {
     return [];
   } else if (value && value.length < minCommonIdLength) {
     return [`Must be at least ${minCommonIdLength} characters`];
+  } else if (value && commonIdFormat.test(value)) {
+    return ["Must not contain special characters"];
   } else {
     return [];
   }

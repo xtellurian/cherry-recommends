@@ -141,6 +141,10 @@ namespace SignalBox.Core.Workflows
                     {
                         throw new ModelInvokationException("Model returned a null ScoredItem");
                     }
+                    else if (!string.IsNullOrEmpty(scoredItem.CommonId))
+                    {
+                        scoredItem.Item ??= await itemStore.ReadFromCommonId(scoredItem.CommonId);
+                    }
                     else if (scoredItem.ItemId.HasValue)
                     {
                         scoredItem.Item ??= await itemStore.Read(scoredItem.ItemId.Value);
@@ -151,7 +155,8 @@ namespace SignalBox.Core.Workflows
                     }
                     else if (scoredItem.Item == null)
                     {
-                        throw new ModelInvokationException("The model did not return a valid item.");
+                        throw new ModelInvokationException("The model did not return a valid item." +
+                         $"ItemCommonId: {scoredItem.ItemCommonId}, CommonId: {scoredItem.CommonId}, ItemId: {scoredItem.ItemId}, Score: {scoredItem.Score}");
                     }
                 }
 

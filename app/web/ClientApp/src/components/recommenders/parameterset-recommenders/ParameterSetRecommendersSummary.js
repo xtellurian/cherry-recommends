@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 import { Title } from "../../molecules/layout";
 import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { Spinner } from "../../molecules/Spinner";
@@ -7,20 +7,22 @@ import { ErrorCard } from "../../molecules/ErrorCard";
 import { EmptyList } from "../../molecules";
 import { Paginator } from "../../molecules/Paginator";
 import { useParameterSetRecommenders } from "../../../api-hooks/parameterSetRecommendersApi";
-import { ExpandableCard } from "../../molecules/ExpandableCard";
-import { CopyableField } from "../../molecules/fields/CopyableField";
+import { EntityRow } from "../../molecules/layout/EntityRow";
 
 const ParameterSetRecommenderRow = ({ recommender }) => {
   return (
-    <ExpandableCard label={recommender.name}>
-      <CopyableField label="Identifier" value={recommender.commonId} />
-      <p>{recommender.description}</p>
-      <Link to={`/recommenders/parameter-set-recommenders/detail/${recommender.id}`}>
-      <button className="btn btn-primary float-right w-25">
-        Detail
-      </button>
-      </Link>
-    </ExpandableCard>
+    <EntityRow>
+      <div className="col">
+        <h5>{recommender.name}</h5>
+      </div>
+      <div className="col-3">
+        <Link
+          to={`/recommenders/parameter-set-recommenders/detail/${recommender.id}`}
+        >
+          <button className="btn btn-outline-primary btn-block">Detail</button>
+        </Link>
+      </div>
+    </EntityRow>
   );
 };
 
@@ -32,7 +34,7 @@ export const ParameterSetRecommendersSummary = () => {
         className="float-right"
         to="/recommenders/parameter-set-recommenders/create"
       >
-        Create Recommender
+        Create Parameter Recommender
       </CreateButtonClassic>
       <Title>Parameter Set Recommenders</Title>
       <hr />

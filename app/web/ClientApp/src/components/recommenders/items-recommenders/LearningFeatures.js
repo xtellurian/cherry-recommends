@@ -9,6 +9,7 @@ import { LearningFeaturesUtil } from "../utils/learningFeaturesUtil";
 import { Spinner } from "../../molecules";
 import { setLearningFeaturesAsync } from "../../../api/itemsRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
+import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 
 export const LearningFeatures = () => {
   const { id } = useParams();
@@ -25,16 +26,17 @@ export const LearningFeatures = () => {
       .catch(setError);
   };
 
-  if (recommender.loading || learningFeatures.loading) {
-    return <Spinner />;
-  }
-
   return (
-    <LearningFeaturesUtil
-      recommender={recommender}
-      learningFeatures={learningFeatures}
-      error={error}
-      setLearningFeatures={handleSetLearningFeatures}
-    />
+    <ItemRecommenderLayout>
+      {(recommender.loading || learningFeatures.loading) && <Spinner />}
+      {!recommender.loading && !learningFeatures.loading && (
+        <LearningFeaturesUtil
+          recommender={recommender}
+          learningFeatures={learningFeatures}
+          error={error}
+          setLearningFeatures={handleSetLearningFeatures}
+        />
+      )}
+    </ItemRecommenderLayout>
   );
 };

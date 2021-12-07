@@ -6,7 +6,14 @@ import { useAccessToken } from "../../api-hooks/token";
 import { Subtitle, Title } from "../molecules/layout";
 import { ErrorCard } from "../molecules/ErrorCard";
 import { DropdownItem, DropdownComponent } from "../molecules/Dropdown";
-import { Spinner } from "../molecules/Spinner";
+import { AsyncButton, ExpandableCard } from "../molecules";
+import {
+  InputGroup,
+  TextInput,
+  commonIdValidator,
+  createRequiredByServerValidator,
+  joinValidators,
+} from "../molecules/TextInput";
 
 export const CreateUser = () => {
   const [newUser, setNewUser] = React.useState({
@@ -43,20 +50,13 @@ export const CreateUser = () => {
   return (
     <React.Fragment>
       <div>
-        <Title>Create a tracked User</Title>
+        <Title>Add a Customer (Tracked User)</Title>
         <hr />
         {error && <ErrorCard error={error} />}
-
-        <div className="input-group m-1">
-          <div className="input-group-prepend ml-1">
-            <span className="input-group-text" id="basic-addon3">
-              Friendly Name
-            </span>
-          </div>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Name"
+        <InputGroup>
+          <TextInput
+            label="Customer Name"
+            placeholder="Johnny Greensleaves"
             value={newUser.name}
             onChange={(e) =>
               setNewUser({
@@ -65,17 +65,15 @@ export const CreateUser = () => {
               })
             }
           />
-        </div>
-        <div className="input-group m-1">
-          <div className="input-group-prepend ml-1">
-            <span className="input-group-text" id="basic-addon3">
-              Unique Identifier
-            </span>
-          </div>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Common Id"
+        </InputGroup>
+        <InputGroup>
+          <TextInput
+            validator={joinValidators([
+              commonIdValidator,
+              createRequiredByServerValidator(error),
+            ])}
+            label="Customer ID"
+            placeholder="XXXXXX-XXXX-XXXXX"
             value={newUser.commonUserId}
             onChange={(e) =>
               setNewUser({
@@ -84,56 +82,64 @@ export const CreateUser = () => {
               })
             }
           />
-        </div>
-        <div className="mt-3">
-          <Subtitle>Link to integrated system</Subtitle>
-          <div className="input-group m-1">
-            <div className="input-group-prepend ml-1">
-              <span className="input-group-text" id="basic-addon3">
-                User Identifier in integrated system
-              </span>
+        </InputGroup>
+
+        <div className="mt-4">
+          <ExpandableCard label="Advanced">
+            <div className="mt-3">
+              <Subtitle>Link to integrated system</Subtitle>
+              <div className="input-group m-1">
+                <div className="input-group-prepend ml-1">
+                  <span className="input-group-text" id="basic-addon3">
+                    User Identifier in integrated system
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="User Id"
+                  value={integratedSystemReference.userId}
+                  onChange={(e) =>
+                    setIntegratedSystemReference({
+                      ...integratedSystemReference,
+                      userId: e.target.value,
+                    })
+                  }
+                />
+                <DropdownComponent
+                  title={integratedSystemReference.integratedSystemName}
+                >
+                  <DropdownItem header>Integrated System</DropdownItem>
+                  {!integratedSystems.loading &&
+                    integratedSystems.items &&
+                    integratedSystems.items.map((i) => (
+                      <DropdownItem
+                        key={i.id}
+                        onClick={() => {
+                          setIntegratedSystemReference({
+                            ...integratedSystemReference,
+                            integratedSystemId: i.id,
+                            integratedSystemName: i.name,
+                          });
+                        }}
+                      >
+                        {i.name}
+                      </DropdownItem>
+                    ))}
+                </DropdownComponent>
+              </div>
             </div>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="User Id"
-              value={integratedSystemReference.userId}
-              onChange={(e) =>
-                setIntegratedSystemReference({
-                  ...integratedSystemReference,
-                  userId: e.target.value,
-                })
-              }
-            />
-            <DropdownComponent
-              title={integratedSystemReference.integratedSystemName}
-            >
-              <DropdownItem header>Integrated System</DropdownItem>
-              {!integratedSystems.loading &&
-                integratedSystems.items &&
-                integratedSystems.items.map((i) => (
-                  <DropdownItem
-                    key={i.id}
-                    onClick={() => {
-                      setIntegratedSystemReference({
-                        ...integratedSystemReference,
-                        integratedSystemId: i.id,
-                        integratedSystemName: i.name,
-                      });
-                    }}
-                  >
-                    {i.name}
-                  </DropdownItem>
-                ))}
-            </DropdownComponent>
-          </div>
+          </ExpandableCard>
         </div>
-        <div className="mt-5">
-          <button className="btn btn-primary" onClick={handleCreate}>
+        <div className="mt-4">
+          <AsyncButton
+            loading={loading}
+            className="btn btn-primary"
+            onClick={handleCreate}
+          >
             Create
-          </button>
+          </AsyncButton>
         </div>
-        {loading && <Spinner>Creating User</Spinner>}
       </div>
     </React.Fragment>
   );

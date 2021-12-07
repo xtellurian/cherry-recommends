@@ -6,7 +6,7 @@ import { ExpandableCard } from "./ExpandableCard";
 import { ErrorCard } from "./ErrorCard";
 import { Paginator } from "./Paginator";
 import { Spinner } from "./Spinner";
-import { Title, Subtitle } from "./layout/PageHeadings";
+import { Title, Subtitle, PageSectionTitle } from "./layout/PageHeadings";
 import { Selector } from "./selectors/Select";
 
 export {
@@ -19,6 +19,7 @@ export {
   Paginator,
   Spinner,
   Title,
+  PageSectionTitle,
   Subtitle,
   Selector,
 };

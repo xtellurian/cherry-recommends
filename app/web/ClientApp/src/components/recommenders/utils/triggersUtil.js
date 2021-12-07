@@ -68,15 +68,6 @@ export const TriggersUtil = ({
 
   return (
     <React.Fragment>
-      <BackButton
-        className="float-right"
-        to={`${basePath}/detail/${recommender.id}`}
-      >
-        Back to Recommender
-      </BackButton>
-      <Title>Triggers</Title>
-      <Subtitle>{recommender.name}</Subtitle>
-      <hr />
       {error && <ErrorCard error={error} />}
       {triggerCollection.loading && <Spinner />}
       {!triggerCollection.loading && (

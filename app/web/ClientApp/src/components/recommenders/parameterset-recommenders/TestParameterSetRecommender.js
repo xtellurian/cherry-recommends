@@ -15,21 +15,8 @@ import {
 import { JsonView } from "../../molecules/JsonView";
 import { AsyncSelectTrackedUser } from "../../molecules/selectors/AsyncSelectTrackedUser";
 import { ConsumeRecommendationPopup } from "../utils/consumeRecommendationPopup";
+import { ParameterSetRecommenderLayout } from "./ParameterSetRecommenderLayout";
 
-const Top = ({ id }) => {
-  return (
-    <React.Fragment>
-      <BackButton
-        to={`/recommenders/parameter-set-recommenders/detail/${id}`}
-        className="float-right"
-      >
-        Recommender
-      </BackButton>
-      <Title>Recommender Testing</Title>
-      <Subtitle>Parameter Sets</Subtitle>
-    </React.Fragment>
-  );
-};
 const CategoricalArgumentInput = ({ arg, value, onChange }) => {
   return (
     <div className="row">
@@ -132,73 +119,68 @@ export const TestParameterSetRecommender = () => {
 
   return (
     <React.Fragment>
-      <Top id={id} />
-      <hr />
-      <div className="mt-2">
-        <ExpandableCard label="Recommender Information">
-          <JsonView data={parameterSetRecommender} />
-        </ExpandableCard>
-      </div>
-      {error && <ErrorCard error={error} />}
-      <AsyncSelectTrackedUser
-        placeholder="Search for a user to make a recommendation for."
-        onChange={(v) => setSelectedTrackedUser(v.value)}
-      />
-      <div className="row mt-3">
-        <div className="col">
-          <Subtitle>Arguments</Subtitle>
-          {parameterSetRecommender.loading && <Spinner />}
-          {parameterSetRecommender.arguments &&
-            parameterSetRecommender.arguments.map((a) => (
-              <ArgumentInput
-                key={a.commonId}
-                arg={a}
-                value={argValues[a.commonId]}
-                onChange={(v) =>
-                  setArgValues({ ...argValues, [a.commonId]: v })
-                }
-              />
-            ))}
+      <ParameterSetRecommenderLayout>
+        {error && <ErrorCard error={error} />}
+        <AsyncSelectTrackedUser
+          placeholder="Search for a user to make a recommendation for."
+          onChange={(v) => setSelectedTrackedUser(v.value)}
+        />
+        <div className="row mt-3">
+          <div className="col">
+            <Subtitle>Arguments</Subtitle>
+            {parameterSetRecommender.loading && <Spinner />}
+            {parameterSetRecommender.arguments &&
+              parameterSetRecommender.arguments.map((a) => (
+                <ArgumentInput
+                  key={a.commonId}
+                  arg={a}
+                  value={argValues[a.commonId]}
+                  onChange={(v) =>
+                    setArgValues({ ...argValues, [a.commonId]: v })
+                  }
+                />
+              ))}
 
-          <AsyncButton
-            disabled={!selectedTrackedUser}
-            onClick={handleInvoke}
-            className="btn btn-primary m-2 w-50"
-            loading={loading}
-          >
-            Invoke
-          </AsyncButton>
-        </div>
-        <div className="col">
-          <Subtitle>Model Response</Subtitle>
-          {response && (
-            <JsonView
-              data={response}
-              shouldExpandNode={(n) => n.includes("recommendedParameters")}
-            />
-          )}
-          {loading && <Spinner />}
-          {!response && !loading && (
-            <div className="text-muted text-center">No Response.</div>
-          )}
-          {response && (
-            <React.Fragment>
-              <button
-                className="btn btn-primary"
-                onClick={() => setConsumePopupOpen(true)}
-              >
-                Consume Recommendation
-              </button>
-              <ConsumeRecommendationPopup
-                recommendation={response}
-                isOpen={consumePopupOpen}
-                setIsOpen={setConsumePopupOpen}
-                onConsumed={() => setResponse(null)}
+            <AsyncButton
+              disabled={!selectedTrackedUser}
+              onClick={handleInvoke}
+              className="btn btn-primary m-2 w-50"
+              loading={loading}
+            >
+              Invoke
+            </AsyncButton>
+          </div>
+          <div className="col">
+            <Subtitle>Model Response</Subtitle>
+            {response && (
+              <JsonView
+                data={response}
+                shouldExpandNode={(n) => n.includes("recommendedParameters")}
               />
-            </React.Fragment>
-          )}
+            )}
+            {loading && <Spinner />}
+            {!response && !loading && (
+              <div className="text-muted text-center">No Response.</div>
+            )}
+            {response && (
+              <React.Fragment>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setConsumePopupOpen(true)}
+                >
+                  Consume Recommendation
+                </button>
+                <ConsumeRecommendationPopup
+                  recommendation={response}
+                  isOpen={consumePopupOpen}
+                  setIsOpen={setConsumePopupOpen}
+                  onConsumed={() => setResponse(null)}
+                />
+              </React.Fragment>
+            )}
+          </div>
         </div>
-      </div>
+      </ParameterSetRecommenderLayout>
     </React.Fragment>
   );
 };

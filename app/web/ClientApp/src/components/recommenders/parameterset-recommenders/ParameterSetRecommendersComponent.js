@@ -5,7 +5,6 @@ import { ParameterSetRecommendersSummary } from "./ParameterSetRecommendersSumma
 import { CreateParameterSetRecommender } from "./CreateParameterSetRecommender";
 import { ParameterSetRecommenderDetail } from "./ParameterSetRecommenderDetail";
 import { TestParameterSetRecommender } from "./TestParameterSetRecommender";
-import { IntegrateParameterSetRecommender } from "./IntegrateParameterSetRecommender";
 import { RecommendationList } from "./RecommendationList";
 import { LinkToModel } from "./LinkToModel";
 import { TargetVariableValues } from "./TargetVariableValues";
@@ -14,6 +13,8 @@ import { InvokationLogs } from "./InvokationLogs";
 import { MonitorParameterSetRecommender } from "./MonitorParameterSetRecommender";
 import { Destinations } from "./Destinations";
 import { Triggers } from "./Triggers";
+import { LearningFeatures } from "./LearningFeatures";
+import { Arguments } from "./Arguments";
 
 export const ParameterSetRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -47,10 +48,6 @@ export const ParameterSetRecommendersComponent = () => {
           component={RecommendationList}
         />
         <AuthorizeRoute
-          path={`${path}/integrate/:id`}
-          component={IntegrateParameterSetRecommender}
-        />
-        <AuthorizeRoute
           path={`${path}/target-variable/:id`}
           component={TargetVariableValues}
         />
@@ -65,6 +62,15 @@ export const ParameterSetRecommendersComponent = () => {
         <AuthorizeRoute
           path={`${path}/destinations/:id`}
           component={Destinations}
+        />
+        <AuthorizeRoute
+          path={`${path}/learning-features/:id`}
+          component={LearningFeatures}
+        />
+        <AuthorizeRoute path={`${path}/arguments/:id`} component={Arguments} />
+        <AuthorizeRoute
+          path={`${path}/learning-features/:id`}
+          component={LearningFeatures}
         />
         <AuthorizeRoute path={`${path}/triggers/:id`} component={Triggers} />
         <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />

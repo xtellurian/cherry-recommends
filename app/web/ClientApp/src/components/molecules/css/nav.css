@@ -1,0 +1,19 @@
+.primary-nav-item {
+  color: var(--cherry-purple);
+}
+
+.primary-nav-link:hover {
+  color: var(--cherry-purple);
+}
+
+.primary-nav-link.active {
+  color: var(--cherry-purple);
+  border-bottom: 2px solid var(--cherry-purple) ;
+}
+
+.list-group-item {
+  padding-left: 0.4rem;
+  padding-top: 0.75rem;
+  padding-right: 0.4rem;
+  padding-bottom: 0px;
+}

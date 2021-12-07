@@ -10,10 +10,12 @@ namespace SignalBox.Core
             this.Item = item;
             this.ItemId = item?.Id;
             this.ItemCommonId = item?.CommonId;
+            this.CommonId = item?.CommonId;
             this.Score = score;
         }
         public long? ItemId { get; set; }
         public string? ItemCommonId { get; set; }
+        public string? CommonId { get; set; }
         public RecommendableItem Item { get; set; }
         public double? Score { get; set; }
     }

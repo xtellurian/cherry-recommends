@@ -6,7 +6,6 @@ import { CreateRecommender } from "./CreateItemsRecommender";
 import { RecommenderDetail } from "./ItemsRecommenderDetail";
 import { TestRecommender } from "./TestItemsRecommender";
 import { RecommendationList } from "./RecommendationList";
-import { IntegrateItemsRecommender } from "./IntegrateItemsRecommender";
 import { LinkToModel } from "./LinkToModel";
 import { TargetVariableValues } from "./TargetVariableValues";
 import { InvokationLogs } from "./InvokationLogs";
@@ -15,6 +14,8 @@ import { MonitorRecommender } from "./MonitorItemsRecommender";
 import { ManageItems } from "./ManageItems";
 import { Destinations } from "./Destinations";
 import { Triggers } from "./Triggers";
+import { LearningFeatures } from "./LearningFeatures";
+import { Arguments } from "./Arguments";
 
 export const ItemsRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -46,10 +47,6 @@ export const ItemsRecommendersComponent = () => {
           component={RecommendationList}
         />
         <AuthorizeRoute
-          path={`${path}/integrate/:id`}
-          component={IntegrateItemsRecommender}
-        />
-        <AuthorizeRoute
           path={`${path}/target-variable/:id`}
           component={TargetVariableValues}
         />
@@ -71,6 +68,11 @@ export const ItemsRecommendersComponent = () => {
         />
         <AuthorizeRoute path={`${path}/triggers/:id`} component={Triggers} />
         <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
+        <AuthorizeRoute
+          path={`${path}/learning-features/:id`}
+          component={LearningFeatures}
+        />
+        <AuthorizeRoute path={`${path}/arguments/:id`} component={Arguments} />
       </Switch>
     </React.Fragment>
   );

@@ -5,7 +5,7 @@ import {
   Spinner,
   EmptyList,
   ErrorCard,
-  BackButton,
+  PageSectionTitle,
 } from "../../molecules";
 
 import { AsyncSelectIntegratedSystem } from "../../molecules/selectors/AsyncSelectIntegratedSystem";
@@ -100,16 +100,7 @@ export const DestinationsUtil = ({
         setCreatePopupOpen={setCreatePopupOpen}
         className="float-right"
       />
-      <BackButton
-        className="mr-1 float-right"
-        to={`${rootPath}/detail/${recommender.id}`}
-      >
-        Back
-      </BackButton>
-      <Title>Recommendation Destinations</Title>
-      <Subtitle>{recommender.name}</Subtitle>
-      <hr />
-
+      <PageSectionTitle>Integrated System Destinations</PageSectionTitle>
       {destinations.error && <ErrorCard error={destinations.error} />}
 
       {error && <ErrorCard error={error} />}

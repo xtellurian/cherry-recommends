@@ -9,7 +9,7 @@ import { EmptyList } from "../molecules/";
 const CreateButton = () => {
   return (
     <Link to="/tracked-users/create">
-      <button className="btn btn-primary">Create a User</button>
+      <button className="btn btn-primary">Add a Customer</button>
     </Link>
   );
 };
@@ -21,9 +21,9 @@ export const TrackedUserSummary = () => {
     <div>
       <div className="float-right">
         <CreateButton />
-        <Link to="tracked-users/upload">
+        {/* <Link to="tracked-users/upload">
           <button className="btn btn-outline-primary ml-1">Upload CSV</button>
-        </Link>
+        </Link> */}
       </div>
       <Title>Tracked Users</Title>
       <hr />

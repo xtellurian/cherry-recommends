@@ -2,12 +2,19 @@ import React from "react";
 import { NoteBox } from "./NoteBox";
 
 import "./css/recommender-status-box.css";
+import { Spinner } from ".";
 
 const label = "Recommender Status";
-export const RecommenderStatusBox = ({ recommender }) => {
-  if (!recommender.modelRegistrationId) {
+export const RecommenderStatusBox = ({ className, recommender }) => {
+  if (recommender.loading) {
     return (
-      <NoteBox cardBodyClassName="training" label={label}>
+      <NoteBox className={className} label={label}>
+        <Spinner />
+      </NoteBox>
+    );
+  } else if (!recommender.modelRegistrationId) {
+    return (
+      <NoteBox className={className} cardBodyClassName="training" label={label}>
         Exploring for good recommendations.
       </NoteBox>
     );
@@ -16,13 +23,13 @@ export const RecommenderStatusBox = ({ recommender }) => {
     recommender.modelRegistration.hostingType === "azureFunctions"
   ) {
     return (
-      <NoteBox cardBodyClassName="ready" label={label}>
+      <NoteBox className={className} cardBodyClassName="ready" label={label}>
         Using Cherry Auto-AI
       </NoteBox>
     );
   } else
     return (
-      <NoteBox cardBodyClassName="ready" label={label}>
+      <NoteBox className={className} cardBodyClassName="ready" label={label}>
         Discovered good recommendations.
       </NoteBox>
     );

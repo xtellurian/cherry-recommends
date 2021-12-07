@@ -11,15 +11,20 @@ import {
 import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { useItemsRecommenders } from "../../../api-hooks/itemsRecommendersApi";
 import { JsonView } from "../../molecules/JsonView";
+import { EntityRow } from "../../molecules/layout/EntityRow";
 
 const ItemsRecommenderRow = ({ recommender }) => {
   return (
-    <ExpandableCard label={recommender.name}>
-      <Link to={`/recommenders/items-recommenders/detail/${recommender.id}`}>
-        <button className="float-right btn btn-primary">View Details</button>
-      </Link>
-      <JsonView data={recommender} />
-    </ExpandableCard>
+    <EntityRow>
+      <div className="col">
+        <h5>{recommender.name}</h5>
+      </div>
+      <div className="col-3">
+        <Link to={`/recommenders/items-recommenders/detail/${recommender.id}`}>
+          <button className="btn btn-outline-primary btn-block">View</button>
+        </Link>
+      </div>
+    </EntityRow>
   );
 };
 export const ItemsRecommendersSummary = () => {
@@ -30,7 +35,7 @@ export const ItemsRecommendersSummary = () => {
         className="float-right"
         to="/recommenders/items-recommenders/create"
       >
-        Create
+        Create Item Recommender
       </CreateButtonClassic>
       <Title>Item Recommenders</Title>
 

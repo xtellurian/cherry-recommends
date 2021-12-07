@@ -4,6 +4,7 @@ import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecom
 import { useAccessToken } from "../../../api-hooks/token";
 import { setSettingsAsync } from "../../../api/parameterSetRecommendersApi";
 import { SettingsUtil } from "../utils/settingsUtil";
+import { ParameterSetRecommenderLayout } from "./ParameterSetRecommenderLayout";
 export const Settings = () => {
   const { id } = useParams();
   const [updated, setUpdated] = React.useState({});
@@ -23,10 +24,12 @@ export const Settings = () => {
     }
   };
   return (
-    <SettingsUtil
-      recommender={recommender}
-      basePath="/recommenders/parameter-set-recommenders"
-      updateSettings={handleUpdate}
-    />
+    <ParameterSetRecommenderLayout>
+      <SettingsUtil
+        recommender={recommender}
+        basePath="/recommenders/parameter-set-recommenders"
+        updateSettings={handleUpdate}
+      />
+    </ParameterSetRecommenderLayout>
   );
 };

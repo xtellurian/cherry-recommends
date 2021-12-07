@@ -7,6 +7,7 @@ import {
 } from "../../../api-hooks/parameterSetRecommendersApi";
 import { setTriggerAsync } from "../../../api/parameterSetRecommendersApi";
 import { Spinner } from "../../molecules";
+import { ParameterSetRecommenderLayout } from "./ParameterSetRecommenderLayout";
 
 export const Triggers = () => {
   const { id } = useParams();
@@ -23,16 +24,19 @@ export const Triggers = () => {
       setError(e);
     }
   };
-  if (triggerCollection.loading) {
-    return <Spinner>Loading Triggers</Spinner>;
-  }
+
   return (
-    <TriggersUtil
-      error={error}
-      recommender={recommender}
-      basePath="/recommenders/parameter-set-recommenders"
-      triggerCollection={triggerCollection}
-      setTriggerAsync={handleSetTriggerAsync}
-    />
+    <ParameterSetRecommenderLayout>
+      {triggerCollection.loading && <Spinner />}
+      {!triggerCollection.loading && (
+        <TriggersUtil
+          error={error}
+          recommender={recommender}
+          basePath="/recommenders/parameter-set-recommenders"
+          triggerCollection={triggerCollection}
+          setTriggerAsync={handleSetTriggerAsync}
+        />
+      )}
+    </ParameterSetRecommenderLayout>
   );
 };
