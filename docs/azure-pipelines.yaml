@@ -6,6 +6,7 @@ trigger:
     include:
       - main
       - develop/*
+      - docs/*
   paths:
     include:
       - docs/*
@@ -38,7 +39,10 @@ jobs:
       - group: Azure_Docs_Dev
     continueOnError: false
     dependsOn: build_docs
-    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/develop/'))
+    condition: |
+      and(succeeded(), or(
+      startsWith(variables['Build.SourceBranch'], 'refs/heads/develop/'), 
+      startsWith(variables['Build.SourceBranch'], 'refs/heads/docs/')))
     steps:
       - task: Pulumi@1
         displayName: Pulumi Preview
