@@ -1,53 +1,87 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Cherry Docs Pipeline
 
 trigger:
-  batch: true # batch changes if true; start a new build for every push if false (default)
+  batch: true
   branches:
     include:
       - main
       - develop/*
-    # exclude: [string]
-  # tags:
-  #   include: [string] # tag names which will trigger a build
-  #   exclude: [string] # tag names which will not
   paths:
     include:
-      - docs/* # file paths which must match to trigger a build
-    # exclude: [] # file paths which will not trigger a build
+      - docs/*
 
-variables:
-  var1: value1
+pool:
+      vmImage: ubuntu-latest
+
 jobs:
   - job: build_docs
     displayName: Build Docs
-    pool:
-      vmImage: ubuntu-latest
+    continueOnError: false
     steps:
       - script: npm i
         workingDirectory: docs/docusaurus
-        displayName: "NPM Install"
+        displayName: "npm Install"
 
       - script: npm run build
         workingDirectory: docs/docusaurus
-        displayName: "NPM Build"
+        displayName: "npm Builds"
 
-  - deployment: dev_docs # name of the deployment job, A-Z, a-z, 0-9, and underscore. The word "deploy" is a keyword and is unsupported as the deployment name.
-    displayName: Dev Docs Deploy # friendly name to display in the UI
-    pool:
-      vmImage: ubuntu-latest
-    workspace:
-      clean: outputs # what to clean up before the job runs
+      - task: PublishPipelineArtifact@1
+        displayName: Publish docs Artifacts
+        inputs:
+          targetPath: $(System.DefaultWorkingDirectory)/docs/docusaurus/build
+          artifactName: "docs"
+
+  - job: deploy_dev
+    displayName: Deploy devdocs
+    variables:
+      - group: Azure_Docs_Dev
+    continueOnError: false
     dependsOn: build_docs
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/develop/'))
+    steps:
+      - task: Pulumi@1
+        displayName: Pulumi Preview
+        inputs:
+          command: "preview"
+          stack: $(DEV_PULUMI_STACK)
+          cwd: $(WORKING_DIRECTORY_PULUMI)
+          createStack: true
+
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Published Build Artifacts
+        inputs:
+          artifact: "docs"
+          path: $(System.DefaultWorkingDirectory)/docs/docusaurus/build/
+
+      - script: |
+          sh ./devops-deploy.sh
+        workingDirectory: docs/scripts
+        displayName: Deploy docs to Azure dev
+
+  - job: deploy_prod
+    displayName: Deploy prod docs
+    variables:
+      - group: Azure_Docs_Prod
     continueOnError: false
-    environment: docs-development # target environment name and optionally a resource name to record the deployment history; format: <environment-name>.<resource-name>
-    strategy:
-      runOnce: #rolling, canary are the other strategies that are supported
-        deploy:
-          steps:
-            - script: |
-                echo HELLO DEPLOYMENTS!
-              displayName: Test runnning a deployment job
+    dependsOn: build_docs
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    steps:
+      - task: Pulumi@1
+        displayName: Pulumi Preview
+        inputs:
+          command: "preview"
+          stack: $(PROD_PULUMI_STACK)
+          cwd: $(WORKING_DIRECTORY_PULUMI)
+          createStack: true
+
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Published Build Artifacts
+        inputs:
+          artifact: "docs"
+          path: $(System.DefaultWorkingDirectory)/docs/docusaurus/build/
+
+      - script: |
+          sh ./devops-deploy.sh
+        workingDirectory: docs/scripts
+        displayName: Deploy docs to Azure Prod

@@ -2,9 +2,14 @@
 # https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-python?tabs=azurecli-linux%2Capplication-level#unit-testing
 
 trigger:
-  - main
-  - develop/*
-  - migrate_afs
+  branches:
+    include:
+      - main
+      - develop/*
+      - migrate_afs
+  paths:
+    exclude:
+      - docs/*
 
 pool:
   vmImage: ubuntu-latest

@@ -6,8 +6,13 @@
 name: Dotnet Solution Build
 
 trigger:
-  - main
-  - develop/*
+  branches:
+    include:
+      - main
+      - develop/*
+  paths:
+    exclude:
+      - docs/*
 
 pool:
   vmImage: ubuntu-latest
