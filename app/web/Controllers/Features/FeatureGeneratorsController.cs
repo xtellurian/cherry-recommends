@@ -74,7 +74,7 @@ namespace SignalBox.Web.Controllers
         {
             var generator = await store.Read(id);
 
-            if (generator.LastEnqueued < dateTimeProvider.Now.AddMinutes(-5))
+            if (generator.LastEnqueued > dateTimeProvider.Now.AddMinutes(-5))
             {
                 throw new BadRequestException("Wait at least 5 minutes.", "Can't trigger a generator that was enqueued less than 5 minutes ago.");
             }

@@ -9,17 +9,24 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public static class ValueConversionExtensions
     {
-        private static JsonSerializerOptions _options;
-        private static JsonSerializerOptions GetOptions()
+        // private static JsonSerializerOptions _options;
+        private static JsonSerializerOptions _options = new JsonSerializerOptions
         {
-            if (_options == null)
-            {
-                _options = new JsonSerializerOptions();
-                _options.Converters.Add(new TimeSpanJsonConverter()); // required to put timespans in JSON in the db
+            Converters = {
+                new TimeSpanJsonConverter()
             }
+        };
+        private static JsonSerializerOptions GetOptions() => _options;
+        // private static JsonSerializerOptions GetOptions()
+        // {
+        //     if (_options == null)
+        //     {
+        //         _options = new JsonSerializerOptions();
+        //         _options.Converters.Add(new TimeSpanJsonConverter()); // required to put timespans in JSON in the db
+        //     }
 
-            return _options;
-        }
+        //     return _options;
+        // }
 
         public static PropertyBuilder<T> HasJsonConversion<T>(this PropertyBuilder<T> propertyBuilder) where T : class, new()
         {

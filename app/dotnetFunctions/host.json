@@ -9,7 +9,7 @@
       }
     },
     "logLevel": {
-      "default": "Information",
+      "default": "Warning",
       "Microsoft.EntityFrameworkCore": "Warning",
       "Host.Results": "Warning",
       "Function": "Information",

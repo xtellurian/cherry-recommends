@@ -14,36 +14,37 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, environmentService, (c) => c.TrackedUsers)
         { }
 
-        public async IAsyncEnumerable<TrackedUser> Iterate(int? limit = null)
+        public async IAsyncEnumerable<TrackedUser> Iterate()
         {
-            int page = 1;
-            bool hasMoreItems = true;
+            bool hasMoreItems = await QuerySet.AnyAsync();
+            if (!hasMoreItems)
+            {
+                yield break;
+            }
+            var maxId = await QuerySet.MaxAsync(_ => _.Id);
+            var currentId = maxId + 1; // we query for ids less than this.
             while (hasMoreItems)
             {
-                var itemCount = await QuerySet.CountAsync();
-                List<TrackedUser> results;
+                var results = await QuerySet
+                    .Where(_ => _.Id < currentId)
+                    .OrderByDescending(_ => _.Id)
+                    .Take(PageSize)
+                    .ToListAsync();
 
-                if (itemCount > 0) // check and let's see whether the query is worth running against the database
+                if (results.Any())
                 {
-                    results = await QuerySet
-                        .OrderByDescending(_ => _.Created)
-                        .Skip((page - 1) * PageSize).Take(PageSize)
-                        .ToListAsync();
+                    currentId = results.Min(_ => _.Id); // get the smallest in the result
+
+                    foreach (var item in results)
+                    {
+                        yield return item;
+                    }
+
+                    hasMoreItems = await QuerySet.AnyAsync(_ => _.Id < currentId);
                 }
                 else
                 {
-                    results = new List<TrackedUser>();
-                }
-                var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
-                var q = new Paginated<TrackedUser>(results, pageCount, itemCount, page);
-                foreach (var item in q.Items)
-                {
-                    yield return item;
-                }
-                page++;
-                hasMoreItems = q.Pagination.HasNextPage;
-                if (limit != null && q.Pagination.PageNumber * PageSize > limit.Value)
-                {
+                    // break out of the iteration. no more results.
                     hasMoreItems = false;
                 }
             }

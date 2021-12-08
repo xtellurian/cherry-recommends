@@ -50,17 +50,17 @@ namespace SignalBox.Core.Workflows
             return runSummaries;
         }
 
-        public async Task<FeatureGeneratorRunSummary> RunFeatureGeneration(FeatureGenerator generator, bool subsetOnly = false)
+        public async Task<FeatureGeneratorRunSummary> RunFeatureGeneration(FeatureGenerator generator)
         {
             await featureGeneratorStore.Load(generator, _ => _.Feature);
             FeatureGeneratorRunSummary summary;
             switch (generator.GeneratorType)
             {
                 case FeatureGeneratorTypes.MonthsSinceEarliestEvent:
-                    summary = await RunMonthsSinceEarliestEventGenerator(generator, subsetOnly);
+                    summary = await RunMonthsSinceEarliestEventGenerator(generator);
                     break;
                 case FeatureGeneratorTypes.FilterSelectAggregate:
-                    summary = await RunFilterSelectAggregateGenerator(generator, subsetOnly);
+                    summary = await RunFilterSelectAggregateGenerator(generator);
                     break;
                 default:
                     throw new BadRequestException($"{generator.GeneratorType} is an unhandlable generator type");

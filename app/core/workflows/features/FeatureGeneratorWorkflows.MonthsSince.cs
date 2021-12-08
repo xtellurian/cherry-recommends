@@ -7,7 +7,7 @@ namespace SignalBox.Core.Workflows
 {
     public partial class FeatureGeneratorWorkflows : FeatureWorkflowBase, IWorkflow
     {
-        protected async Task<FeatureGeneratorRunSummary> RunMonthsSinceEarliestEventGenerator(FeatureGenerator generator, bool subsetOnly)
+        protected async Task<FeatureGeneratorRunSummary> RunMonthsSinceEarliestEventGenerator(FeatureGenerator generator)
         {
             var page = 1;
             var hasNextPage = true;

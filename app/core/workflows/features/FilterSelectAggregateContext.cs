@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SignalBox.Core.Features.Generators
@@ -18,22 +19,16 @@ namespace SignalBox.Core.Features.Generators
         public TrackedUser TrackedUser { get; set; }
         public Feature Feature { get; }
         public List<TrackedUserEvent> Events { get; private set; }
-        
 
         public async Task LoadEventsIntoContext(FilterStep filter = null)
         {
-            bool moreEvents = true;
-            int page = 1;
-            var results = new List<TrackedUserEvent>();
             var isAllEvents = filter?.EventTypeMatch == null;
-            while (moreEvents)
+            var result = await eventStore.ReadEventsForUser(TrackedUser, new EventQueryOptions
             {
-                var e = await eventStore.ReadEventsForUser(page++, TrackedUser, _ => isAllEvents || (_.EventType == filter.EventTypeMatch));
-                moreEvents = e.Pagination.HasNextPage;
-                results.AddRange(e.Items);
-            }
+                Filter = _ => isAllEvents || (_.EventType == filter.EventTypeMatch)
+            });
 
-            this.Events = results;
+            this.Events = result.ToList();
         }
     }
 }

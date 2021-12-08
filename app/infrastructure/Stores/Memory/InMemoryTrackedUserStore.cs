@@ -76,7 +76,7 @@ namespace SignalBox.Infrastructure
             throw new NotImplementedException();
         }
 
-        public IAsyncEnumerable<TrackedUser> Iterate(int? limit = null)
+        public IAsyncEnumerable<TrackedUser> Iterate()
         {
             throw new NotImplementedException();
         }

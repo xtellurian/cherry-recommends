@@ -12,21 +12,18 @@ namespace SignalBox.Core.Workflows
     public partial class FeatureGeneratorWorkflows : FeatureWorkflowBase, IWorkflow
     {
         protected const int MaxSubsetSize = 25;
-        protected async Task<FeatureGeneratorRunSummary> RunFilterSelectAggregateGenerator(FeatureGenerator generator, bool subsetOnly)
+        protected async Task<FeatureGeneratorRunSummary> RunFilterSelectAggregateGenerator(FeatureGenerator generator)
         {
             logger.LogInformation($"Running FilterSelectAggregate generator: {generator.Id} for Feature {generator.FeatureId}");
             await featureGeneratorStore.Load(generator, _ => _.Feature);
             var steps = new List<FilterSelectAggregateStep>(generator.FilterSelectAggregateSteps).OrderBy(_ => _.Order);
             logger.LogInformation($"There are {steps.Count()} steps in generator {generator.Id}");
             var summary = new FeatureGeneratorRunSummary(0);
-            if (subsetOnly)
-            {
-                summary.MaxSubsetSize = MaxSubsetSize;
-            }
-            await foreach (var user in trackedUserStore.Iterate(subsetOnly ? MaxSubsetSize : (int?)null))
+
+            await foreach (var user in trackedUserStore.Iterate())
             {
                 var context = new FilterSelectAggregateContext(user, generator.Feature, trackedUserEventStore);
-                logger.LogInformation($"Running generator {generator.Id} for Tracked User {user.Id}.");
+                logger.LogInformation($"Running generator {generator.Id} for feature {generator.FeatureId} and Tracked User {user.Id}.");
                 try
                 {
                     var value = await GenerateFeatureValueForTrackedUser(steps, context);

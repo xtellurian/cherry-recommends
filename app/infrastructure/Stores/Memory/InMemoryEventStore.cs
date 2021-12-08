@@ -128,6 +128,11 @@ namespace SignalBox.Infrastructure
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<TrackedUserEvent>> ReadEventsForUser(TrackedUser user, EventQueryOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<TrackedUserEvent>> ReadEventsOfKind(string kind, DateTimeOffset? since = null, DateTimeOffset? until = null)
         {
             throw new NotImplementedException();

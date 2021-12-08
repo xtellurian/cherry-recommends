@@ -59,6 +59,27 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await QuerySet.Where(predicate ?? ((x) => true)).Select(_ => _.CommonUserId).Distinct().CountAsync();
         }
 
+        public async Task<IEnumerable<TrackedUserEvent>> ReadEventsForUser(TrackedUser trackedUser, EventQueryOptions options = null)
+        {
+            options ??= new EventQueryOptions();
+            options.Filter ??= _ => true;
+
+            var query = QuerySet
+                .Where(_ => _.TrackedUserId == trackedUser.Id)
+                .Where(options.Filter);
+
+            if (options.NoTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            var results = await query
+                .OrderByDescending(_ => _.Timestamp)
+                .ToListAsync();
+
+            return results;
+        }
+
         public async Task<Paginated<TrackedUserEvent>> ReadEventsForUser(int page,
                                                                          TrackedUser trackedUser,
                                                                          Expression<Func<TrackedUserEvent, bool>> predicate = null)

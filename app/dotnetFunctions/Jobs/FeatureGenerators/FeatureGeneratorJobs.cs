@@ -16,11 +16,15 @@ namespace SignalBox.Functions
     {
         private readonly FeatureGeneratorWorkflows workflows;
         private readonly IFeatureGeneratorStore featureGeneratorStore;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public ScheduledFeatureGenerators(FeatureGeneratorWorkflows workflows, IFeatureGeneratorStore featureGeneratorStore)
+        public ScheduledFeatureGenerators(FeatureGeneratorWorkflows workflows,
+                                          IFeatureGeneratorStore featureGeneratorStore,
+                                          IDateTimeProvider dateTimeProvider)
         {
             this.workflows = workflows;
             this.featureGeneratorStore = featureGeneratorStore;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         [Function("Run_QueuedFeatureGeneratorsForTenant")]
@@ -39,6 +43,13 @@ namespace SignalBox.Functions
             {
                 logger.LogWarning("Generators are being skipped due to pagination!");
             }
+            // update the last enqueued time for all generators.
+            foreach (var g in generators.Items)
+            {
+                g.LastEnqueued = dateTimeProvider.Now;
+                await featureGeneratorStore.Update(g);
+            }
+            await featureGeneratorStore.Context.SaveChanges();
             return generators.Items.Select(_ => new RunFeatureGeneratorQueueMessage(message.TenantName, _.Id));
         }
 
@@ -50,7 +61,7 @@ namespace SignalBox.Functions
 
             logger.LogInformation($"Starting to run one feature generator with id = {message.FeatureGeneratorId}.");
             var generator = await featureGeneratorStore.Read(message.FeatureGeneratorId);
-            var summary = await workflows.RunFeatureGeneration(generator, subsetOnly: false);
+            var summary = await workflows.RunFeatureGeneration(generator);
 
             logger.LogInformation($"Finished RunOneGeneratorFromQueue for generator {generator.Id} with total writes: {summary.TotalWrites}");
         }
