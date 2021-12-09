@@ -42,3 +42,7 @@ export const useItem = ({ id, trigger }) => {
 
   return result;
 };
+
+export const useDefaultItem = (props) => {
+  return useItem({ id: -1, trigger: props?.trigger });
+};

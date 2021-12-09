@@ -5,6 +5,13 @@ namespace SignalBox.Core
 {
     public class TrackedUser : CommonEntity
     {
+        private const string anonymousCommonId = "anonymous";
+        private const long anonymousId = -1;
+        public static TrackedUser Anonymous => new TrackedUser(anonymousCommonId, "Anonymous Customer")
+        {
+            Id = anonymousId // need to include the primary key for EF Core reasons
+        };
+
         protected override int CommonIdMinLength => 1;
         protected TrackedUser()
         { }

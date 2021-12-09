@@ -2,10 +2,13 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createItemsRecommenderAsync } from "../../../api/itemsRecommendersApi";
-import { useItems } from "../../../api-hooks/recommendableItemsApi";
+import {
+  useDefaultItem,
+  useItems,
+} from "../../../api-hooks/recommendableItemsApi";
 import {
   Title,
-  BackButton,
+  PrimaryBackButton,
   Selector,
   AsyncButton,
   ErrorCard,
@@ -17,10 +20,13 @@ import {
   commonIdValidator,
   createServerErrorValidator,
   joinValidators,
+  createRequiredByServerValidator,
+  createLengthValidator,
 } from "../../molecules/TextInput";
 import { IntegerRangeSelector } from "../../molecules/selectors/IntegerRangeSelector";
 import { SettingRow } from "../../molecules/layout/SettingRow";
 import { Container, Row } from "../../molecules/layout";
+import { AdvancedOptionsPanel } from "../../molecules/layout/AdvancedOptionsPanel";
 
 export const CreateRecommender = () => {
   const token = useAccessToken();
@@ -31,6 +37,8 @@ export const CreateRecommender = () => {
     ? items.items.map((p) => ({ label: p.name, value: p.commonId }))
     : [];
 
+  const defaultItem = useDefaultItem();
+
   const [selectedItems, setSelectedItems] = React.useState();
   const [recommender, setRecommender] = React.useState({
     commonId: "",
@@ -40,6 +48,15 @@ export const CreateRecommender = () => {
     numberOfItemsToRecommend: null,
     useAutoAi: true,
   });
+
+  React.useEffect(() => {
+    if (defaultItem.commonId) {
+      setRecommender({
+        ...recommender,
+        defaultItemId: defaultItem.commonId,
+      });
+    }
+  }, [defaultItem]);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -58,9 +75,17 @@ export const CreateRecommender = () => {
 
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/recommenders/items-recommenders">
+      <AsyncButton
+        className="btn btn-primary float-right"
+        onClick={handleCreate}
+        loading={loading}
+      >
+        Create and Save
+      </AsyncButton>
+      <PrimaryBackButton to="/recommenders/items-recommenders">
         All Item Recommenders
-      </BackButton>
+      </PrimaryBackButton>
+
       <Title>Create Item Recommender</Title>
       <hr />
       {error && <ErrorCard error={error} />}
@@ -69,6 +94,12 @@ export const CreateRecommender = () => {
           <InputGroup>
             <TextInput
               label="Display Name"
+              hint="Choose a name for this recommender."
+              validator={joinValidators([
+                createRequiredByServerValidator(error),
+                createServerErrorValidator("Name", error),
+                createLengthValidator(4),
+              ])}
               value={recommender.name}
               placeholder="A memorable name that you recognise later."
               onChange={(e) =>
@@ -84,9 +115,11 @@ export const CreateRecommender = () => {
           <InputGroup>
             <TextInput
               label="Common Id"
+              hint="An unique ID that you'll use to reference this recommender."
               value={recommender.commonId}
               placeholder="A unique ID for this recommender resource."
               validator={joinValidators([
+                createRequiredByServerValidator(error),
                 commonIdValidator,
                 createServerErrorValidator("CommonId", error),
               ])}
@@ -101,25 +134,14 @@ export const CreateRecommender = () => {
         </Row>
       </Container>
 
-      <Container>
-        <SettingRow label="Use Auto-AI">
-          <div className="text-right">
-            <ToggleSwitch
-              name="Use Auto AI"
-              id="use-auto-ai"
-              checked={recommender.useAutoAi}
-              onChange={(v) => setRecommender({ ...recommender, useAutoAi: v })}
-            />
-          </div>
-        </SettingRow>
-      </Container>
-
-      <div className="mt-2">
+      <div className="mt-2 mb-2">
         <Selector
           isMulti
           isSearchable
           placeholder="Select items. Leave empty to include all."
-          noOptionsMessage={(inputValue) => "No Items Available"}
+          noOptionsMessage={(inputValue) =>
+            `No items found matching ${inputValue}`
+          }
           defaultValue={selectedItems}
           onChange={(so) => {
             setSelectedItems(so);
@@ -130,37 +152,49 @@ export const CreateRecommender = () => {
           }}
           options={itemsOptions}
         />
-        <IntegerRangeSelector
-          min={1}
-          max={9}
-          defaultValue={1}
-          placeholder="Select number of items recommended"
-          onSelected={(numberOfItemsToRecommend) =>
-            setRecommender({ ...recommender, numberOfItemsToRecommend })
-          }
-        />
       </div>
 
-      <div className="mt-2">
-        Default Item
-        <Selector
-          isSearchable
-          placeholder="Choose a default item."
-          noOptionsMessage={(inputValue) => "No Items Available"}
-          onChange={(so) => {
-            setRecommender({
-              ...recommender,
-              defaultItemId: so.value,
-            });
-          }}
-          options={itemsOptions}
-        />
-      </div>
-      <div className="mt-2 text-right">
-        <AsyncButton onClick={handleCreate} loading={loading}>
-          Create
-        </AsyncButton>
-      </div>
+      <AdvancedOptionsPanel>
+        <SettingRow label="Use Auto-AI">
+          <div className="text-right">
+            <ToggleSwitch
+              name="Use Auto AI"
+              id="use-auto-ai"
+              checked={recommender.useAutoAi}
+              onChange={(v) => setRecommender({ ...recommender, useAutoAi: v })}
+            />
+          </div>
+        </SettingRow>
+        <div className="mt-2">
+          Default Item
+          {!defaultItem.loading && (
+            <Selector
+              isSearchable
+              placeholder="Choose a default item."
+              noOptionsMessage={(inputValue) => "No Items Available"}
+              defaultValue={{ label: defaultItem.name, value: defaultItem.id }}
+              onChange={(so) => {
+                setRecommender({
+                  ...recommender,
+                  defaultItemId: so.value,
+                });
+              }}
+              options={itemsOptions}
+            />
+          )}
+        </div>
+        <div className="mt-2">
+          <IntegerRangeSelector
+            min={1}
+            max={selectedItems?.length || 1}
+            defaultValue={1}
+            placeholder="Select number of items recommended"
+            onSelected={(numberOfItemsToRecommend) =>
+              setRecommender({ ...recommender, numberOfItemsToRecommend })
+            }
+          />
+        </div>
+      </AdvancedOptionsPanel>
     </React.Fragment>
   );
 };

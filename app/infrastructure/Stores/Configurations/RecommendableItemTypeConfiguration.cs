@@ -15,6 +15,8 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .WithMany(_ => _.Items);
 
             builder.Property("Discriminator").HasDefaultValue("Product");
+
+            builder.HasData(RecommendableItem.DefaultRecommendableItem);
         }
     }
 }

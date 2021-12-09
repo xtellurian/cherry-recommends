@@ -13,13 +13,13 @@ namespace SignalBox.Web.Controllers
                                                           bool? useInternalId = null)
         {
             TrackedUser trackedUser;
-            if ((useInternalId == null || useInternalId == true) && int.TryParse(internalOrCommonId, out var internalId))
+            if ((useInternalId == null || useInternalId == true) && long.TryParse(internalOrCommonId, out var internalId))
             {
                 trackedUser = await trackedUserStore.Read(internalId);
             }
             else if (useInternalId == true)
             {
-                throw new BadRequestException("Internal Ids must be integers");
+                throw new BadRequestException("Internal Ids must be long integers");
             }
             else
             {

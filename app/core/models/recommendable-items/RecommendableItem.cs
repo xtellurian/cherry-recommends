@@ -7,10 +7,20 @@ namespace SignalBox.Core
 {
     public class RecommendableItem : CommonEntity
     {
+        private const string defaultRecommendableItemCommonId = "default";
+        private const long defaultRecommendableItemId = -1;
+        public static RecommendableItem DefaultRecommendableItem => new RecommendableItem(defaultRecommendableItemCommonId, "Default Item")
+        {
+            Id = defaultRecommendableItemId,
+            Description = "The default recommendable item. When this item is recommended, no action should be taken.",
+        };
         protected RecommendableItem()
         { }
 
 #nullable enable
+        protected RecommendableItem(string commonId, string name) : base(commonId, name)
+        { }
+
         public RecommendableItem(string commonId, string name, double? listPrice, double? directCost, DynamicPropertyDictionary? properties)
         : base(commonId, name, properties)
         {

@@ -103,6 +103,7 @@ export const createServerNameUnavailableValidator =
 
 export const TextInput = ({
   label,
+  hint,
   value,
   type,
   placeholder,
@@ -150,9 +151,19 @@ export const TextInput = ({
   return (
     <React.Fragment>
       {label && (
-        <div className="input-group-prepend">
-          <span className="input-group-text">{label}</span>
-        </div>
+        <Tippy
+          content={
+            hint && (
+              <div className="bg-light text-center border border-primary rounded p-1">
+                {hint}
+              </div>
+            )
+          }
+        >
+          <div className="input-group-prepend">
+            <span className="input-group-text">{label}</span>
+          </div>
+        </Tippy>
       )}
       <Tippy
         placement="bottom-start"

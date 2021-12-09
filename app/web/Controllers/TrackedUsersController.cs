@@ -35,13 +35,13 @@ namespace SignalBox.Web.Controllers
 
         public override async Task<TrackedUser> GetResource(string id, bool? useInternalId = null)
         {
-            if ((useInternalId == null || useInternalId == true) && int.TryParse(id, out var internalId))
+            if ((useInternalId == null || useInternalId == true) && long.TryParse(id, out var internalId))
             {
                 return await store.Read(internalId, _ => _.IntegratedSystemMaps);
             }
             else if (useInternalId == true)
             {
-                throw new BadRequestException("Internal Ids must be integers");
+                throw new BadRequestException("Internal Ids must be long integers");
             }
             else
             {

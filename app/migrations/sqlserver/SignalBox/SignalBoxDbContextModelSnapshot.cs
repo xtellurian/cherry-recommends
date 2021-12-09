@@ -589,6 +589,18 @@ namespace sqlserver.SignalBox
                     b.ToTable("RecommendableItems");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("RecommendableItem");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1L,
+                            CommonId = "default",
+                            Created = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "The default recommendable item. When this item is recommended, no action should be taken.",
+                            LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Default Item",
+                            Properties = "{}"
+                        });
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase", b =>
@@ -1349,6 +1361,17 @@ namespace sqlserver.SignalBox
                     b.HasIndex("EnvironmentId");
 
                     b.ToTable("TrackedUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1L,
+                            CommonId = "anonymous",
+                            Created = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Anonymous Customer",
+                            Properties = "{}"
+                        });
                 });
 
             modelBuilder.Entity("SignalBox.Core.TrackedUserAction", b =>

@@ -1,5 +1,5 @@
 import { AsyncButton } from "./AsyncButton";
-import { BackButton } from "./BackButton";
+import { BackButton, PrimaryBackButton } from "./BackButton";
 import { EmptyList } from "./empty/EmptyList";
 import { EmptyState } from "./empty/EmptyState";
 import { ExpandableCard } from "./ExpandableCard";
@@ -17,6 +17,7 @@ export {
   ErrorCard,
   ExpandableCard,
   Paginator,
+  PrimaryBackButton,
   Spinner,
   Title,
   PageSectionTitle,
