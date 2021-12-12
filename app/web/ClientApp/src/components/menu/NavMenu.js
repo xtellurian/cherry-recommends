@@ -14,7 +14,6 @@ import {
 } from "reactstrap";
 import { GearFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
-import LoginMenu from "./../auth0/AuthNav";
 import { useAuth } from "../../utility/useAuth";
 import { getAuthenticatedIA, settingsItems } from "./MenuIA";
 import { useTokenScopes } from "../../api-hooks/token";
@@ -24,6 +23,7 @@ import {
   useEnvironments,
 } from "../../api-hooks/environmentsApi";
 import { ActiveIndicator } from "../molecules/ActiveIndicator";
+import { ToggleGettingStartedChecklistButton } from "../onboarding/GettingStartedChecklist";
 
 import "./NavMenu.css";
 
@@ -66,7 +66,7 @@ const SmartMenuItem = ({ section }) => {
   }
 };
 export const NavMenu = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const [state, setState] = React.useState({
     collapsed: true,
   });
@@ -90,9 +90,7 @@ export const NavMenu = () => {
   return (
     <React.Fragment>
       <header>
-        <Navbar
-          className="navbar-expand-md navbar-toggleable-md text-white ng-white border-bottom box-shadow mb-3"
-        >
+        <Navbar className="navbar-expand-md navbar-toggleable-md text-white ng-white border-bottom box-shadow mb-3">
           <Container>
             <NavbarBrand tag={Link} to="/">
               <img
@@ -182,11 +180,18 @@ export const NavMenu = () => {
                           </NavItem>
                         </DropdownItem>
                       ))}
+                      <DropdownItem>
+                        <NavItem>
+                          <div className="text-dark nav-link" onClick={logout}>
+                            Logout
+                          </div>
+                        </NavItem>
+                      </DropdownItem>
                     </DropdownMenu>
                   </UncontrolledDropdown>
                 )}
 
-                <LoginMenu />
+                <ToggleGettingStartedChecklistButton />
               </ul>
             </Collapse>
           </Container>

@@ -7,6 +7,8 @@ namespace SignalBox.Core
     {
         Task AddTenantPermission(string creatorId, Tenant tenant);
         Task<UserInfo> AddUser(InviteRequest invite);
+        Task<UserMetadata> GetMetadata(string userId);
         Task<UserInfo> GetUserInfo(string userId);
+        Task<UserInfo> SetMetadata(string userId, UserMetadata metadata);
     }
 }

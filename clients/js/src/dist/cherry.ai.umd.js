@@ -1149,6 +1149,28 @@
     setLearningFeaturesAsync: setLearningFeaturesAsync$1
   });
 
+  const setMetadataAsync = async ({ token, metadata }) => {
+    return await executeFetch({
+      path: "api/profile/metadata",
+      token,
+      method: "post",
+      body: metadata,
+    });
+  };
+
+  const getMetadataAsync = async ({ token }) => {
+    return await executeFetch({
+      path: "api/profile/metadata",
+      token,
+    });
+  };
+
+  var profileApi = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    setMetadataAsync: setMetadataAsync,
+    getMetadataAsync: getMetadataAsync
+  });
+
   const recommenderApiName = "ItemsRecommenders";
 
   const fetchItemsRecommendersAsync = async ({ token, page }) => {
@@ -1916,6 +1938,7 @@
   exports.models = index;
   exports.parameterSetRecommenders = parameterSetRecommendersApi;
   exports.parameters = parametersApi;
+  exports.profile = profileApi;
   exports.reactConfig = reactConfigApi;
   exports.recommendableItems = recommendableItemsApi;
   exports.reports = reportsApi;

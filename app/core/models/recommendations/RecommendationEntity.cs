@@ -30,7 +30,7 @@ namespace SignalBox.Core.Recommendations
             this.ModelInput = Serialize(input);
             this.ModelInputType = typeof(T).FullName;
         }
-        public T GetInput<T>() where T : IModelInput
+        public T GetInput<T>() where T : class, IModelInput
         {
             return Deserialize<T>(this.ModelInput);
         }
@@ -39,7 +39,7 @@ namespace SignalBox.Core.Recommendations
             this.ModelOutput = Serialize(output);
             this.ModelOutputType = typeof(T).FullName;
         }
-        public T GetOutput<T>() where T : IModelOutput
+        public T GetOutput<T>() where T : class, IModelOutput
         {
             return Deserialize<T>(this.ModelOutput);
         }

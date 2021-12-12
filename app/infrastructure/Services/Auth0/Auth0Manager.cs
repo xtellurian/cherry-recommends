@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
 using SignalBox.Core.Internal;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace SignalBox.Infrastructure.Services
 {
@@ -47,17 +49,52 @@ namespace SignalBox.Infrastructure.Services
             this.SetApiClient(new ManagementApiClient(token, credentials.Domain));
         }
 
+        public async Task<UserInfo> SetMetadata(string userId, UserMetadata metadata)
+        {
+            await Initialize();
+            var user = await ApiClient.Users.UpdateAsync(userId, new UserUpdateRequest
+            {
+                UserMetadata = metadata,
+            });
+
+            return user.ToCoreRepresentation();
+        }
+
+        public async Task<UserMetadata> GetMetadata(string userId)
+        {
+            await Initialize();
+
+            var user = await ApiClient.Users.GetAsync(userId);
+            try
+            {
+                if (user.UserMetadata is JObject jObj)
+                {
+                    // the underlying object should be a JObject
+                    var result = jObj.ToObject<UserMetadata>();
+                    result.EnsureInitialised();
+                    return result;
+                }
+            }
+            catch (JsonSerializationException jsonEx)
+            {
+                logger.LogWarning($"Unable to deserialize user metadata. UserId = ${userId}. " + jsonEx.Message);
+            }
+            catch (System.Exception ex)
+            {
+                logger.LogError(ex.Message);
+                throw new ConfigurationException("Error getting metadata", ex);
+            }
+
+            return new UserMetadata();
+
+        }
+
         public async Task<UserInfo> GetUserInfo(string userId)
         {
             await Initialize();
 
             var userInfo = await ApiClient.Users.GetAsync(userId);
-            return new UserInfo
-            {
-                UserId = userId,
-                Email = userInfo.Email,
-                EmailVerified = userInfo.EmailVerified
-            };
+            return userInfo.ToCoreRepresentation();
         }
 
         public async Task<UserInfo> AddUser(InviteRequest invite)

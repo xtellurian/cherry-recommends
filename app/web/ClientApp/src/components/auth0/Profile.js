@@ -1,27 +1,19 @@
 import React from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useAuth0AccessToken, useAccessToken } from "../../api-hooks/token";
-import { useAuth0Config } from "../../api-hooks/reactConfigApi";
+import { useAccessToken } from "../../api-hooks/token";
+import { useMetadataDirectly } from "../../api-hooks/profileApi";
+import { setMetadataAsync } from "../../api/profileApi";
+import { ExpandableCard } from "../molecules/ExpandableCard";
+import { ErrorCard } from "../molecules/ErrorCard";
+import { JsonView } from "../molecules/JsonView";
+import { useAuth } from "../../utility/useAuth";
 
 export const Profile = () => {
-  const config = useAuth0Config();
-  const { user, isAuthenticated } = useAuth0();
-  const [userMetadata, setUserMetadata] = React.useState();
-  const token = useAuth0AccessToken();
-  const accessToken = useAccessToken();
-  React.useEffect(() => {
-    if (token && user && config && config.domain) {
-      const userDetailsByIdUrl = `https://${config.domain}/api/v2/users/${user.sub}`;
-      fetch(userDetailsByIdUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((m) => m.json())
-        .then((res) => setUserMetadata(res))
-        .catch(() => alert("broke"));
-    }
-  }, [token, user, config]);
+  const { user, isAuthenticated } = useAuth();
+  const token = useAccessToken();
+  const [trigger, setTrigger] = React.useState({});
+  const [error, setError] = React.useState();
+
+  const metadata = useMetadataDirectly({ trigger });
 
   return (
     isAuthenticated && (
@@ -30,13 +22,29 @@ export const Profile = () => {
         <h2>{user.name}</h2>
         <p>{user.email}</p>
         <h3>User Metadata</h3>
-        {userMetadata ? (
-          <pre>{JSON.stringify(userMetadata, null, 2)}</pre>
-        ) : (
-          "No user metadata defined"
-        )}
-        <h4>Access Token</h4>
-        <div>{accessToken}</div>
+        <ExpandableCard label="User Metadata">
+          <div>
+            <ErrorCard error={error} />
+            <button
+              className="btn btn-danger float-right"
+              onClick={() =>
+                setMetadataAsync({
+                  token,
+                  metadata: {},
+                })
+                  .then(setTrigger)
+                  .catch(setError)
+              }
+            >
+              Reset Metadata
+            </button>
+          </div>
+          <JsonView data={metadata} />
+        </ExpandableCard>
+        <hr />
+        <ExpandableCard label="Access Token">
+          <div>{token}</div>
+        </ExpandableCard>
       </div>
     )
   );

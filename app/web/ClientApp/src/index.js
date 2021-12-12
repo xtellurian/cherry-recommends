@@ -24,7 +24,7 @@ if (window.location.host.startsWith("hidden-cherry-secret.local.zone")) {
   ReactDOM.render(<CherrySecret />, rootElement);
 } else {
   fetchAuth0ConfigurationAsync()
-    .then((x) => new Promise((resolve) => setTimeout(() => resolve(x), 1500))) // ensure you wait a second for the loading screen
+    .then((x) => new Promise((resolve) => setTimeout(() => resolve(x), 500))) // ensure you wait half a second for the loading screen
     .then((auth0Config) => {
       ReactDOM.render(
         <Auth0Provider

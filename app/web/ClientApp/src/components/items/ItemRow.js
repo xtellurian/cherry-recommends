@@ -1,20 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ExpandableCard } from "../molecules";
-import { CopyableField } from "../molecules/fields/CopyableField";
+import { EntityRow } from "../molecules/layout/EntityRow";
 
 export const ItemRow = ({ item, children }) => {
   return (
-    <ExpandableCard label={item.name}>
-      <CopyableField label="Item Id" value={item.commonId} />
-      <p>{item.description}</p>
+    <EntityRow>
+      <div className="col-4">
+        <h5>{item.name}</h5>
+      </div>
+      <div className="col">
+        <p>{item.description}</p>
+      </div>
 
-      <div>
+      <div className="col-3 text-right">
         <Link to={`/recommendable-items/detail/${item.id}`}>
-          <button className="float-right btn btn-primary">Details</button>
+          <button className="btn btn-outline-primary">View</button>
         </Link>
         {children}
       </div>
-    </ExpandableCard>
+    </EntityRow>
   );
 };

@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
+using SignalBox.Core.Internal;
 
 namespace SignalBox.Infrastructure
 {
@@ -16,6 +17,16 @@ namespace SignalBox.Infrastructure
             {
                 throw new System.ArgumentException("principal must be authenticated to access Auth0Id");
             }
+        }
+
+        public static UserInfo ToCoreRepresentation(this Auth0.ManagementApi.Models.User user)
+        {
+            return new UserInfo
+            {
+                UserId = user.UserId,
+                Email = user.Email,
+                EmailVerified = user.EmailVerified
+            };
         }
     }
 }

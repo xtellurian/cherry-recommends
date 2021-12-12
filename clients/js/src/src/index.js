@@ -23,6 +23,7 @@ import * as modelRegistrations from "./api/modelRegistrationsApi";
 import * as models from "./api/models/index";
 import * as parameters from "./api/parametersApi";
 import * as parameterSetRecommenders from "./api/recommenders/parameterSetRecommendersApi";
+import * as profile from "./api/profileApi";
 import * as itemsRecommenders from "./api/recommenders/itemsRecommendersApi";
 import * as reactConfig from "./api/reactConfigApi";
 import * as recommendableItems from "./api/recommendableItemsApi";
@@ -55,6 +56,7 @@ export {
   models,
   parameters,
   parameterSetRecommenders,
+  profile,
   reactConfig,
   recommendableItems,
   reports,

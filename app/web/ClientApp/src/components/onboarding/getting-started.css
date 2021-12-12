@@ -1,0 +1,28 @@
+.getting-started-step {
+  border-left: 2px solid var(--cherry-dark-pink);
+  padding-bottom: 30px;
+}
+.getting-started-step div {
+  padding-left: 20px;
+}
+
+.step-complete {
+  color: var(--cherry-dark-pink);
+}
+.step-incomplete {
+  color: var(--cherry-dark-pink);
+}
+
+.getting-started-circle {
+  float: left;
+  margin-left: -0.6em;
+  background-color: white;
+  /* margin-top: -1.2em; */
+}
+
+.step-done-button {
+  color: var(--cherry-purple);
+}
+.step-done-button:hover {
+  color: var(--cherry-purple);
+}

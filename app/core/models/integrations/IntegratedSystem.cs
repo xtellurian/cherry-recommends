@@ -21,7 +21,7 @@ namespace SignalBox.Core
             this.Cache = base.Serialize(value);
         }
 
-        public T GetCache<T>() where T : IIntegratedSystemCache
+        public T GetCache<T>() where T : class, IIntegratedSystemCache
         {
             if (this.Cache == null)
             {

@@ -1,11 +1,9 @@
 using System;
-using System.Text.Json;
 
 namespace SignalBox.Core
 {
     public abstract class Entity
     {
-        private JsonSerializerOptions serializerOptions => new JsonSerializerOptions();
         protected Entity()
         { }
 
@@ -19,17 +17,12 @@ namespace SignalBox.Core
         // useful conversion methods
         protected string Serialize<T>(T value)
         {
-            return JsonSerializer.Serialize(value, typeof(T), serializerOptions);
+            return Serialization.Serializer.Serialize(value);
         }
 
-        public T Deserialize<T>(string value)
+        public T Deserialize<T>(string value) where T : class
         {
-            if (value == null)
-            {
-                return default(T);
-            }
-            return JsonSerializer.Deserialize<T>(value, serializerOptions);
+            return Serialization.Serializer.Deserialize<T>(value);
         }
-
     }
 }
