@@ -43,4 +43,8 @@ az network dns record-set cname set-record -g $RG -z $ZONE -n "ayh5h7ueo5tgd6uva
 az network dns record-set cname set-record -g $RG -z $ZONE -n "3rz4rxlb3gvf6bnlqs2b3kf3nts2irou._domainkey" -c "3rz4rxlb3gvf6bnlqs2b3kf3nts2irou.dkim.amazonses.com"
 az network dns record-set cname set-record -g $RG -z $ZONE -n "axhxhqlvoj45nzxr6erxovohnzcxqpig._domainkey" -c "axhxhqlvoj45nzxr6erxovohnzcxqpig.dkim.amazonses.com"
 
+## ------- Google Postmaster ------------
+echo "Google DNS Verification"
+az network dns record-set txt add-record -g $RG -z $ZONE -n @ -v "google-site-verification=khcyAISyeAvaQhoyfG5tiIKkcWPR_1spxCfFjcZoZpg"
+
 echo "Done."
