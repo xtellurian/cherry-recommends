@@ -35,12 +35,12 @@ module.exports = {
           label: "Technical Docs",
         },
         {
-          href: "mailto:help@cherry.ai",
-          label: "Ask for help",
+          href: "https://share.hsforms.com/16Vc2K-c1Qz6aDe1TNaZzwQ4ib33",
+          label: "New Ticket",
           position: "left",
         },
         {
-          href: "https://four2.ai",
+          href: "https://www.cherry.ai",
           label: "Home",
           position: "right",
         },
