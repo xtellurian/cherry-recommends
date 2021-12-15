@@ -1,9 +1,4 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import {
-  useItemsRecommender,
-  useRecommenderTrackedUserActions,
-} from "../../../api-hooks/itemsRecommendersApi";
 import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
 import { RecommendationList } from "./RecommendationList";
 import { InvokationLogs } from "./InvokationLogs";

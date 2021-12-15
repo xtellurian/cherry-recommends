@@ -1,12 +1,15 @@
 {
   "name": "cherry.ai",
-  "version": "1.0.1-dev2",
+  "version": "1.0.2-dev9",
   "description": "API Client for Cherry Recommends ",
   "main": "dist/cherry.ai.umd.js",
-  "module": "src/index.js",
+  "module": "dist/cherry.ai.es.js",
+  "types": "dist/cherry.ai.d.ts",
   "scripts": {
+    "api": "openapi-typescript spec.json --output src/model/api.ts",
+    "compile": "tsc",
     "rollup": "rollup -c",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rimraf compiled && rimraf dist && tsc && rollup -c rollup.config.js"
   },
   "keywords": [
     "Four2",
@@ -23,7 +26,11 @@
   "license": "MIT",
   "readme": "README.md",
   "devDependencies": {
-    "rollup": "^2.51.0"
+    "openapi-typescript": "^4.4.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.51.0",
+    "rollup-plugin-dts": "^4.0.1",
+    "typescript": "^4.5.3"
   },
   "dependencies": {
     "node-fetch": "^2.6.*"

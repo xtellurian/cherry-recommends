@@ -128,26 +128,6 @@ export const useTargetVariables = ({ id, name }) => {
   return state;
 };
 
-export const useRecommenderTrackedUserActions = ({ id, page, revenueOnly }) => {
-  const token = useAccessToken();
-  const [state, setState] = React.useState({ loading: true });
-  React.useEffect(() => {
-    setState({ loading: true });
-    if (token && id && page) {
-      fetchRecommenderTrackedUserActionsAsync({
-        token,
-        id,
-        revenueOnly,
-        page,
-      })
-        .then(setState)
-        .catch((error) => setState({ error }));
-    }
-  }, [token, id, page, revenueOnly]);
-
-  return state;
-};
-
 export const useDestinations = ({ id, trigger }) => {
   const token = useAccessToken();
   const [state, setState] = React.useState({ loading: true });
