@@ -48,7 +48,11 @@ const GettingStartedStep = ({
         <h4>{step.label}</h4>
         {`${step.description} `}
 
-        <a target="_blank" href={`http://docs.cherry.ai${step.docsLink}`}>
+        <a
+          target="_blank"
+          style={{ textDecoration: "underline" }}
+          href={`http://docs.cherry.ai${step.docsLink}`}
+        >
           Learn More
         </a>
 

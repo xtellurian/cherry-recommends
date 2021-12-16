@@ -39,7 +39,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             {
                 results = await QuerySet
                     .Where(_ => _.RecommenderId == recommenderId)
-                    .Include(_ => _.TrackedUser)
+                    .Include(_ => _.Customer)
                     .OrderByDescending(_ => _.Created)
                     .OrderByDescending(_ => _.LastUpdated)
                     .Skip((page - 1) * PageSize).Take(PageSize)
@@ -54,12 +54,12 @@ namespace SignalBox.Infrastructure.EntityFramework
         }
 
         public async Task<IEnumerable<ParameterSetRecommendation>> RecommendationsSince(long recommenderId,
-                                                                                        TrackedUser trackedUser,
+                                                                                        Customer customer,
                                                                                         DateTimeOffset since)
         {
             return await QuerySet
                 .Where(_ => _.RecommenderId == recommenderId &&
-                    _.TrackedUserId == trackedUser.Id &&
+                    _.TrackedUserId == customer.Id &&
                     _.Created > since)
                 .ToListAsync();
 

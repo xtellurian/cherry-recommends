@@ -88,7 +88,7 @@ namespace SignalBox.Core.Workflows
                         break;
                 }
 
-                return await base.CreateFeatureOnUser(context.TrackedUser, context.Feature.CommonId, finalValue, false);
+                return await base.CreateFeatureOnUser(context.Customer, context.Feature.CommonId, finalValue, false);
             }
             else
             {

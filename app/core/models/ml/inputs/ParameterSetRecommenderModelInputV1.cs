@@ -9,17 +9,23 @@ namespace SignalBox.Core
     {
         public ParameterSetRecommenderModelInputV1()
         { }
-        public ParameterSetRecommenderModelInputV1(string commonUserId)
+        public ParameterSetRecommenderModelInputV1(string customerId)
         {
-            this.CommonUserId = commonUserId;
+            this.CustomerId = customerId;
         }
 
         [Required]
         [StringLength(256, MinimumLength = 3)]
-        public string? CommonUserId { get; set; } = System.Guid.NewGuid().ToString(); // create a new GUID here if empty
+        public string? CustomerId { get; set; } = System.Guid.NewGuid().ToString(); // create a new GUID here if empty
+        public string? CommonUserId { get; set; }
         [Required]
         public IDictionary<string, object>? Arguments { get; set; } = null!;
         public IDictionary<string, object>? Features { get; set; }
         public IEnumerable<ParameterBounds>? ParameterBounds { get; set; }
+
+        public string GetCustomerId()
+        {
+            return CustomerId ?? CommonUserId ?? throw new BadRequestException("Customer ID and CommonUserId were null");
+        }
     }
 }

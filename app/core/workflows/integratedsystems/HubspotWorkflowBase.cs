@@ -12,21 +12,21 @@ namespace SignalBox.Core.Workflows
         protected readonly IHubspotService hubspotService;
         protected readonly HubspotAppCredentials hubspotCreds;
         protected readonly IIntegratedSystemStore integratedSystemStore;
-        protected readonly ITrackedUserStore trackedUserStore;
+        protected readonly ICustomerStore customerStore;
         protected readonly IDateTimeProvider dateTimeProvider;
 
         public HubspotWorkflowBase(ILogger<HubspotWorkflowBase> logger,
                                    IHubspotService hubspotService,
                                    IOptions<HubspotAppCredentials> hubspotCredOptions,
                                    IIntegratedSystemStore integratedSystemStore,
-                                   ITrackedUserStore trackedUserStore,
+                                   ICustomerStore trackedUserStore,
                                    IDateTimeProvider dateTimeProvider)
         {
             this.logger = logger;
             this.hubspotService = hubspotService;
             this.hubspotCreds = hubspotCredOptions.Value;
             this.integratedSystemStore = integratedSystemStore;
-            this.trackedUserStore = trackedUserStore;
+            this.customerStore = trackedUserStore;
             this.dateTimeProvider = dateTimeProvider;
         }
 
@@ -38,13 +38,13 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        protected async Task<TrackedUserSystemMap> GetSystemMap(IntegratedSystem system, TrackedUser trackedUser)
+        protected async Task<TrackedUserSystemMap> GetSystemMap(IntegratedSystem system, Customer customer)
         {
-            await trackedUserStore.LoadMany(trackedUser, _ => _.IntegratedSystemMaps);
-            var map = trackedUser.IntegratedSystemMaps.FirstOrDefault(_ => _.IntegratedSystemId == system.Id);
+            await customerStore.LoadMany(customer, _ => _.IntegratedSystemMaps);
+            var map = customer.IntegratedSystemMaps.FirstOrDefault(_ => _.IntegratedSystemId == system.Id);
             if (map == null)
             {
-                throw new ConfigurationException($"Tracked User {trackedUser.CommonId} is not lined to system {system.CommonId}");
+                throw new ConfigurationException($"Tracked User {customer.CommonId} is not linked to system {system.CommonId}");
             }
 
             return map;

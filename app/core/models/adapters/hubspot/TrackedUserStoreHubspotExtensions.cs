@@ -6,7 +6,7 @@ namespace SignalBox.Core.Adapters.Hubspot
     public static class TrackedUserStoreHubspotExtensions
     {
 #nullable enable
-        public static async Task<TrackedUser> CreateOrUpdateFromHubspotContact(this ITrackedUserStore trackedUserStore, IntegratedSystem system, HubspotContact contact, string? commonIdPropertyName = null, string? propertyPrefix = null)
+        public static async Task<Customer> CreateOrUpdateFromHubspotContact(this ICustomerStore customerStore, IntegratedSystem system, HubspotContact contact, string? commonIdPropertyName = null, string? propertyPrefix = null)
         {
             var commonId = string.Empty;
             if (string.IsNullOrEmpty(commonIdPropertyName))
@@ -26,22 +26,22 @@ namespace SignalBox.Core.Adapters.Hubspot
 
             string? name = null;
             contact.Properties.TryGetValue("firstname", out name);
-            TrackedUser tu;
-            if (await trackedUserStore.ExistsFromCommonId(commonId))
+            Customer tu;
+            if (await customerStore.ExistsFromCommonId(commonId))
             {
-                tu = await trackedUserStore.ReadFromCommonId(commonId);
+                tu = await customerStore.ReadFromCommonId(commonId);
                 tu.Properties ??= new DynamicPropertyDictionary();
                 tu.Name ??= name;
 
                 tu.Properties.Merge(newProperties);
-                await trackedUserStore.Update(tu);
+                await customerStore.Update(tu);
             }
             else
             {
-                tu = await trackedUserStore.Create(new TrackedUser(commonId, name, newProperties));
+                tu = await customerStore.Create(new Customer(commonId, name, newProperties));
             }
 
-            await trackedUserStore.LoadMany(tu, _ => _.IntegratedSystemMaps);
+            await customerStore.LoadMany(tu, _ => _.IntegratedSystemMaps);
 
             if (!tu.IntegratedSystemMaps.Any(_ => _.Id == system.Id))
             {

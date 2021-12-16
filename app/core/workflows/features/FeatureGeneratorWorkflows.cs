@@ -8,15 +8,15 @@ namespace SignalBox.Core.Workflows
 {
     public partial class FeatureGeneratorWorkflows : FeatureWorkflowBase, IWorkflow
     {
-        private readonly ITrackedUserStore trackedUserStore;
-        private readonly ITrackedUserEventStore trackedUserEventStore;
+        private readonly ICustomerStore trackedUserStore;
+        private readonly ICustomerEventStore trackedUserEventStore;
         private readonly IFeatureGeneratorStore featureGeneratorStore;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public FeatureGeneratorWorkflows(
-            ITrackedUserStore trackedUserStore,
+            ICustomerStore trackedUserStore,
             IFeatureStore featureStore,
-            ITrackedUserEventStore trackedUserEventStore,
+            ICustomerEventStore trackedUserEventStore,
             IFeatureGeneratorStore featureGeneratorStore,
             IHistoricTrackedUserFeatureStore historicTrackedUserFeatureStore,
             RecommenderTriggersWorkflows triggersWorkflows,

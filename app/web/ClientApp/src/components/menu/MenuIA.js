@@ -1,14 +1,14 @@
 const AuthenticatedIA = [
   {
-    name: "Users",
+    name: "Customers",
     items: [
       {
-        name: "Tracked Users",
-        to: "/tracked-users",
+        name: "Customers",
+        to: "/customers",
       },
       {
         name: "Add a Customer",
-        to: "/tracked-users/create",
+        to: "/customers/create",
       },
       {
         name: "Features",

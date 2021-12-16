@@ -85,7 +85,6 @@ header a {
 
 a {
   color: var(--cherry-purple);
-  text-decoration: underline;
 }
 a:hover {
   color: var(--cherry-pink);

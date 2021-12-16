@@ -35,9 +35,9 @@ const RecommendationRow = ({ recommendation }) => {
   return (
     <ExpandableCard label={label}>
       {recommendation.trackedUser && (
-        <Link to={`/tracked-users/detail/${recommendation.trackedUser.id}`}>
+        <Link to={`/customers/detail/${recommendation.trackedUser.id}`}>
           <button className="btn btn-primary float-right">
-            View Tracked User <Link45deg />
+            View Customer <Link45deg />
           </button>
         </Link>
       )}

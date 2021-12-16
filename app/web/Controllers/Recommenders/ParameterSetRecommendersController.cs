@@ -80,7 +80,7 @@ namespace SignalBox.Web.Controllers
             var convertedInput = new ParameterSetRecommenderModelInputV1
             {
                 Arguments = input.Arguments,
-                CommonUserId = input.CommonUserId ?? System.Guid.NewGuid().ToString()
+                CustomerId = input.GetCustomerId() ?? System.Guid.NewGuid().ToString()
             };
             var recommendation = await invokationWorkflows.InvokeParameterSetRecommender(recommender, convertedInput);
             return new ParameterSetRecommendationDto(recommendation, recommendation.GetOutput<ParameterSetRecommenderModelOutputV1>().RecommendedParameters);

@@ -10,18 +10,18 @@ namespace SignalBox.Core.Workflows
 {
     public class DataSummaryWorkflows : IWorkflow
     {
-        private readonly ITrackedUserEventStore eventStore;
+        private readonly ICustomerEventStore eventStore;
         private readonly ILogger<DataSummaryWorkflows> logger;
-        private readonly ITrackedUserStore trackedUserStore;
+        private readonly ICustomerStore customerStore;
         private readonly ITrackedUserActionStore actionStore;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IItemsRecommendationStore itemsRecommendationStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
         private readonly ITelemetry telemetry;
 
-        public DataSummaryWorkflows(ITrackedUserEventStore eventStore,
+        public DataSummaryWorkflows(ICustomerEventStore eventStore,
                                     ILogger<DataSummaryWorkflows> logger,
-                                    ITrackedUserStore trackedUserStore,
+                                    ICustomerStore customerStore,
                                     ITrackedUserActionStore actionStore,
                                     IDateTimeProvider dateTimeProvider,
                                     IItemsRecommendationStore itemsRecommendationStore,
@@ -30,7 +30,7 @@ namespace SignalBox.Core.Workflows
         {
             this.eventStore = eventStore;
             this.logger = logger;
-            this.trackedUserStore = trackedUserStore;
+            this.customerStore = customerStore;
             this.actionStore = actionStore;
             this.dateTimeProvider = dateTimeProvider;
             this.itemsRecommendationStore = itemsRecommendationStore;
@@ -96,8 +96,8 @@ namespace SignalBox.Core.Workflows
         public async Task<Dashboard> GenerateDashboardData(string scope = null)
         {
             IEnumerable<TrackedUserAction> actions = new List<TrackedUserAction>();
-            IEnumerable<TrackedUserEvent> latestEvents = new List<TrackedUserEvent>();
-            var totalTrackedUsers = await trackedUserStore.Count();
+            IEnumerable<CustomerEvent> latestEvents = new List<CustomerEvent>();
+            var totalCustomers = await customerStore.Count();
             var recommendations = new List<RecommendationEntity>();
             var timeCutoff = dateTimeProvider.Now.AddMonths(-1);
             try
@@ -137,7 +137,7 @@ namespace SignalBox.Core.Workflows
 
 
 
-            return new Dashboard(totalTrackedUsers, latestEvents, actions, recommendations);
+            return new Dashboard(totalCustomers, latestEvents, actions, recommendations);
         }
     }
 }

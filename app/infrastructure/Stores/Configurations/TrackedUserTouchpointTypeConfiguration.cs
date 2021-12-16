@@ -10,6 +10,9 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             base.Configure(builder);
             builder.Property(_ => _.Values).HasJsonConversion();
+
+            builder.Ignore(_ => _.TrackedUser);
+            builder.HasOne(_ => _.Customer).WithMany(_ => _.TrackedUserTouchpoints).HasForeignKey(_ => _.TrackedUserId);
         }
     }
 }

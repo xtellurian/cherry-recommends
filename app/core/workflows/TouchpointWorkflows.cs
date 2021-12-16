@@ -8,12 +8,12 @@ namespace SignalBox.Core.Workflows
     {
         private readonly ITouchpointStore touchpointStore;
         private readonly ITrackedUserTouchpointStore trackedUserTouchpointStore;
-        private readonly ITrackedUserStore trackedUserStore;
+        private readonly ICustomerStore trackedUserStore;
         private readonly IStorageContext storageContext;
 
         public TouchpointWorkflows(ITouchpointStore touchpointStore,
                                    ITrackedUserTouchpointStore trackedUserTouchpointStore,
-                                   ITrackedUserStore trackedUserStore,
+                                   ICustomerStore trackedUserStore,
                                    IStorageContext storageContext)
         {
             this.touchpointStore = touchpointStore;
@@ -22,7 +22,7 @@ namespace SignalBox.Core.Workflows
             this.storageContext = storageContext;
         }
 
-        public async Task<TrackedUserTouchpoint> CreateTouchpointOnUser(TrackedUser trackedUser,
+        public async Task<TrackedUserTouchpoint> CreateTouchpointOnUser(Customer customer,
                                                                    string touchpointCommonId,
                                                                    Dictionary<string, object> values)
         {
@@ -36,9 +36,9 @@ namespace SignalBox.Core.Workflows
                 touchpoint = await touchpointStore.Create(new Touchpoint(touchpointCommonId, null));
             }
 
-            var nextVersion = 1 + await trackedUserTouchpointStore.CurrentMaximumTouchpointVersion(trackedUser, touchpoint);
+            var nextVersion = 1 + await trackedUserTouchpointStore.CurrentMaximumTouchpointVersion(customer, touchpoint);
 
-            var tp = await trackedUserTouchpointStore.Create(new TrackedUserTouchpoint(trackedUser, touchpoint, values, nextVersion));
+            var tp = await trackedUserTouchpointStore.Create(new TrackedUserTouchpoint(customer, touchpoint, values, nextVersion));
             await storageContext.SaveChanges();
             return tp;
         }
@@ -50,15 +50,15 @@ namespace SignalBox.Core.Workflows
             return touchpoint;
         }
 
-        public async Task<Paginated<TrackedUser>> GetTrackedUsers(Touchpoint touchpoint, int page)
+        public async Task<Paginated<Customer>> GetTrackedUsers(Touchpoint touchpoint, int page)
         {
             return await touchpointStore.QueryTrackedUsers(page, touchpoint.Id);
         }
 
-        public async Task<TrackedUserTouchpoint> ReadTouchpointValues(TrackedUser trackedUser, string touchpointCommonId, int? version = null)
+        public async Task<TrackedUserTouchpoint> ReadTouchpointValues(Customer customer, string touchpointCommonId, int? version = null)
         {
             var touchpoint = await touchpointStore.ReadFromCommonId(touchpointCommonId);
-            return await trackedUserTouchpointStore.ReadTouchpoint(trackedUser, touchpoint, version);
+            return await trackedUserTouchpointStore.ReadTouchpoint(customer, touchpoint, version);
         }
     }
 }

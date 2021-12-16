@@ -86,7 +86,7 @@ namespace SignalBox.Core.Workflows
             context.InvokationLog.Success = success;
             context.InvokationLog.LogMessage(message);
             context.InvokationLog.Correlator = context.Correlator;
-            context.InvokationLog.TrackedUser = context.TrackedUser;
+            context.InvokationLog.Customer = context.Customer;
             context.InvokationLog.ModelResponse = modelResponse;
             context.InvokationLog.Status = "Complete";
             if (saveOnComplete == true)
@@ -103,9 +103,9 @@ namespace SignalBox.Core.Workflows
             context.LogMessage($"Recommender has {recommender.LearningFeatures.Count} Learning Features.");
             foreach (var feature in recommender.LearningFeatures)
             {
-                if (await trackedUserFeatureStore.FeatureExists(context.TrackedUser, feature))
+                if (await trackedUserFeatureStore.FeatureExists(context.Customer, feature))
                 {
-                    featureValues.Add(await trackedUserFeatureStore.ReadFeature(context.TrackedUser, feature));
+                    featureValues.Add(await trackedUserFeatureStore.ReadFeature(context.Customer, feature));
                 }
             }
             // var features = await trackedUserFeatureStore.ReadAllLatestFeatures(context.TrackedUser);

@@ -58,12 +58,25 @@ interface ModelInput {
     commonUserId: string;
     arguments: any | undefined;
 }
-interface CommonEntity {
+interface Entity {
     id: number;
+}
+interface CommonEntity extends Entity {
     commonId: string;
     properties: any;
 }
 interface RecommendableItem extends CommonEntity {
+}
+interface CustomerEvent {
+    commonUserId?: string | undefined;
+    customerId: string;
+    eventId: string;
+    timestamp?: string | undefined;
+    recommendationCorrelatorId?: number | undefined | null;
+    sourceSystemId?: number | null | undefined;
+    kind: "Custom" | "Behaviour" | "ConsumeRecommendation";
+    eventType: string;
+    properties?: any | null | undefined;
 }
 interface Customer extends CommonEntity {
 }
@@ -118,6 +131,73 @@ declare namespace apiKeyApi_d {
   };
 }
 
+declare function fetchCustomersAsync({ token, page, searchTerm }: {
+    token: any;
+    page: any;
+    searchTerm: any;
+}): Promise<any>;
+declare function updateMergePropertiesAsync$1({ token, id, properties }: {
+    token: any;
+    id: any;
+    properties: any;
+}): Promise<any>;
+declare function fetchCustomerAsync({ token, id, useInternalId }: {
+    token: any;
+    id: any;
+    useInternalId: any;
+}): Promise<any>;
+declare function fetchUniqueCustomerActionGroupsAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function fetchLatestRecommendationsAsync$1({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function fetchCustomerActionAsync({ token, id, category, actionName, }: {
+    token: any;
+    id: any;
+    category: any;
+    actionName: any;
+}): Promise<any>;
+declare function uploadUserDataAsync$1({ token, payload }: {
+    token: any;
+    payload: any;
+}): Promise<any[] | {
+    error: any;
+} | undefined>;
+declare function createOrUpdateCustomerAsync({ token, customer, user, }: {
+    token: any;
+    customer: any;
+    user: any;
+}): Promise<any>;
+declare function fetchCustomersActionsAsync({ token, page, id, revenueOnly, }: {
+    token: any;
+    page: any;
+    id: any;
+    revenueOnly: any;
+}): Promise<any>;
+
+declare const customersApi_d_fetchCustomersAsync: typeof fetchCustomersAsync;
+declare const customersApi_d_fetchCustomerAsync: typeof fetchCustomerAsync;
+declare const customersApi_d_fetchUniqueCustomerActionGroupsAsync: typeof fetchUniqueCustomerActionGroupsAsync;
+declare const customersApi_d_fetchCustomerActionAsync: typeof fetchCustomerActionAsync;
+declare const customersApi_d_createOrUpdateCustomerAsync: typeof createOrUpdateCustomerAsync;
+declare const customersApi_d_fetchCustomersActionsAsync: typeof fetchCustomersActionsAsync;
+declare namespace customersApi_d {
+  export {
+    customersApi_d_fetchCustomersAsync as fetchCustomersAsync,
+    updateMergePropertiesAsync$1 as updateMergePropertiesAsync,
+    customersApi_d_fetchCustomerAsync as fetchCustomerAsync,
+    customersApi_d_fetchUniqueCustomerActionGroupsAsync as fetchUniqueCustomerActionGroupsAsync,
+    fetchLatestRecommendationsAsync$1 as fetchLatestRecommendationsAsync,
+    customersApi_d_fetchCustomerActionAsync as fetchCustomerActionAsync,
+    uploadUserDataAsync$1 as uploadUserDataAsync,
+    customersApi_d_createOrUpdateCustomerAsync as createOrUpdateCustomerAsync,
+    customersApi_d_fetchCustomersActionsAsync as fetchCustomersActionsAsync,
+  };
+}
+
 declare function fetchEventSummaryAsync({ token }: {
     token: any;
 }): Promise<any>;
@@ -158,36 +238,44 @@ declare namespace deploymentApi_d {
   };
 }
 
-declare function fetchEventAsync({ id, token }: {
-    id: any;
-    token: any;
-}): Promise<any>;
-declare function createEventsAsync({ apiKey, token, events }: {
-    apiKey: any;
-    token: any;
-    events: any;
-}): Promise<any>;
-declare function fetchTrackedUsersEventsAsync({ token, id, useInternalId, }: {
-    token: any;
-    id: any;
-    useInternalId: any;
-}): Promise<any>;
-declare function createRecommendationConsumedEventAsync({ token, commonUserId, correlatorId, }: {
-    token: any;
-    commonUserId: any;
-    correlatorId: any;
-}): Promise<any>;
+declare const Custom = "Custom";
+declare const Behaviour = "Behaviour";
+declare const ConsumeRecommendation = "ConsumeRecommendation";
+declare const fetchEventAsync: ({ id, token }: EntityRequest) => Promise<any>;
+interface CreateEventRequest {
+    apiKey?: string | undefined;
+    token?: string | undefined;
+    events: CustomerEvent[];
+}
+declare const createEventsAsync: ({ apiKey, token, events, }: CreateEventRequest) => Promise<any>;
+declare const fetchCustomersEventsAsync: ({ token, id, useInternalId, }: EntityRequest) => Promise<any>;
+declare const fetchTrackedUsersEventsAsync: ({ token, id, useInternalId, }: EntityRequest) => Promise<any>;
+interface CreateRecommendationConsumedRequest {
+    token: string;
+    commonUserId: string | undefined;
+    customerId: string;
+    correlatorId: number;
+}
+declare const createRecommendationConsumedEventAsync: ({ token, commonUserId, customerId, correlatorId, }: CreateRecommendationConsumedRequest) => Promise<any>;
 
-declare const index_d$1_fetchEventAsync: typeof fetchEventAsync;
-declare const index_d$1_createEventsAsync: typeof createEventsAsync;
-declare const index_d$1_fetchTrackedUsersEventsAsync: typeof fetchTrackedUsersEventsAsync;
-declare const index_d$1_createRecommendationConsumedEventAsync: typeof createRecommendationConsumedEventAsync;
-declare namespace index_d$1 {
+declare const eventsApi_d_Custom: typeof Custom;
+declare const eventsApi_d_Behaviour: typeof Behaviour;
+declare const eventsApi_d_ConsumeRecommendation: typeof ConsumeRecommendation;
+declare const eventsApi_d_fetchEventAsync: typeof fetchEventAsync;
+declare const eventsApi_d_createEventsAsync: typeof createEventsAsync;
+declare const eventsApi_d_fetchCustomersEventsAsync: typeof fetchCustomersEventsAsync;
+declare const eventsApi_d_fetchTrackedUsersEventsAsync: typeof fetchTrackedUsersEventsAsync;
+declare const eventsApi_d_createRecommendationConsumedEventAsync: typeof createRecommendationConsumedEventAsync;
+declare namespace eventsApi_d {
   export {
-    index_d$1_fetchEventAsync as fetchEventAsync,
-    index_d$1_createEventsAsync as createEventsAsync,
-    index_d$1_fetchTrackedUsersEventsAsync as fetchTrackedUsersEventsAsync,
-    index_d$1_createRecommendationConsumedEventAsync as createRecommendationConsumedEventAsync,
+    eventsApi_d_Custom as Custom,
+    eventsApi_d_Behaviour as Behaviour,
+    eventsApi_d_ConsumeRecommendation as ConsumeRecommendation,
+    eventsApi_d_fetchEventAsync as fetchEventAsync,
+    eventsApi_d_createEventsAsync as createEventsAsync,
+    eventsApi_d_fetchCustomersEventsAsync as fetchCustomersEventsAsync,
+    eventsApi_d_fetchTrackedUsersEventsAsync as fetchTrackedUsersEventsAsync,
+    eventsApi_d_createRecommendationConsumedEventAsync as createRecommendationConsumedEventAsync,
   };
 }
 
@@ -947,51 +1035,52 @@ declare namespace touchpointsApi_d {
   };
 }
 
-declare function fetchTrackedUsersAsync({ token, page, searchTerm }: {
+declare const fetchTrackedUsersAsync: ({ token, page, searchTerm }: {
     token: any;
     page: any;
     searchTerm: any;
-}): Promise<any>;
-declare function updateMergePropertiesAsync({ token, id, properties }: {
+}) => Promise<any>;
+declare const updateMergePropertiesAsync: ({ token, id, properties }: {
     token: any;
     id: any;
     properties: any;
-}): Promise<any>;
-declare function fetchTrackedUserAsync({ token, id, useInternalId }: {
+}) => Promise<any>;
+declare const fetchTrackedUserAsync: ({ token, id, useInternalId }: {
     token: any;
     id: any;
     useInternalId: any;
-}): Promise<any>;
-declare function fetchUniqueTrackedUserActionGroupsAsync({ token, id, }: {
+}) => Promise<any>;
+declare const fetchUniqueTrackedUserActionGroupsAsync: ({ token, id }: {
     token: any;
     id: any;
-}): Promise<any>;
-declare function fetchLatestRecommendationsAsync({ token, id }: {
+}) => Promise<any>;
+declare const fetchLatestRecommendationsAsync: ({ token, id }: {
     token: any;
     id: any;
-}): Promise<any>;
-declare function fetchTrackedUserActionAsync({ token, id, category, actionName, }: {
+}) => Promise<any>;
+declare const fetchTrackedUserActionAsync: ({ token, id, category, actionName, }: {
     token: any;
     id: any;
     category: any;
     actionName: any;
-}): Promise<any>;
-declare function uploadUserDataAsync({ token, payload }: {
+}) => Promise<any>;
+declare const uploadUserDataAsync: ({ token, payload }: {
     token: any;
     payload: any;
-}): Promise<any[] | {
+}) => Promise<any[] | {
     error: any;
 } | undefined>;
-declare function createOrUpdateTrackedUserAsync({ token, user }: {
+declare const createOrUpdateTrackedUserAsync: ({ token, customer, user, }: {
     token: any;
+    customer: any;
     user: any;
-}): Promise<any>;
-declare function fetchTrackedUsersActionsAsync({ token, page, id, revenueOnly, }: {
+}) => Promise<any>;
+declare const fetchTrackedUsersActionsAsync: ({ token, page, id, revenueOnly, }: {
     token: any;
     page: any;
     id: any;
     revenueOnly: any;
-}): Promise<any>;
+}) => Promise<any>;
 
 declare const trackedUsersApi_d_fetchTrackedUsersAsync: typeof fetchTrackedUsersAsync;
 declare const trackedUsersApi_d_updateMergePropertiesAsync: typeof updateMergePropertiesAsync;
@@ -1041,4 +1130,4 @@ declare namespace errorHandling_d {
   };
 }
 
-export { actionsApi_d as actions, apiKeyApi_d as apiKeys, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, index_d$1 as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };
+export { actionsApi_d as actions, apiKeyApi_d as apiKeys, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };

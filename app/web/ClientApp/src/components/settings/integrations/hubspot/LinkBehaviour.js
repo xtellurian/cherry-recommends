@@ -129,7 +129,7 @@ export const HubspotLinkBehaviour = ({ integratedSystem }) => {
         {error && <ErrorCard error={error} />}
         <SettingRow
           label="Track users automatically"
-          description="Should a tracked user be created if they don't exist already?"
+          description="Should a Customer be created if they don't exist already?"
         >
           <ToggleSwitch
             name="Create Users Automatically"

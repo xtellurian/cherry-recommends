@@ -13,18 +13,19 @@ namespace SignalBox.Web.Controllers
     [Authorize]
     [ApiController]
     [ApiVersion("0.1")]
-    [Route("api/trackedusers")]
+    [Route("api/TrackedUsers")]
+    [Route("api/Customers")]
     public class TrackedUserFeaturesController : SignalBoxControllerBase
     {
         private readonly ILogger<TrackedUserFeaturesController> _logger;
         private readonly FeatureWorkflows workflows;
         private readonly IHistoricTrackedUserFeatureStore trackedUserFeatureStore;
-        private readonly ITrackedUserStore trackedUserStore;
+        private readonly ICustomerStore trackedUserStore;
 
         public TrackedUserFeaturesController(ILogger<TrackedUserFeaturesController> logger,
                                              FeatureWorkflows workflows,
                                              IHistoricTrackedUserFeatureStore trackedUserFeatureStore,
-                                             ITrackedUserStore trackedUserStore)
+                                             ICustomerStore trackedUserStore)
         {
             _logger = logger;
             this.workflows = workflows;
@@ -36,8 +37,8 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}/features")]
         public async Task<IEnumerable<Feature>> AvailableFeatures(string id, bool? useInternalId = null)
         {
-            var trackedUser = await LoadTrackedUser(trackedUserStore, id, useInternalId);
-            return await trackedUserFeatureStore.GetFeaturesFor(trackedUser);
+            var customer = await LoadCustomer(trackedUserStore, id, useInternalId);
+            return await trackedUserFeatureStore.GetFeaturesFor(customer);
         }
 
         /// <summary>Creates a new set of feature values on a user. You probably shouldn't set this manually.</summary>
@@ -49,8 +50,8 @@ namespace SignalBox.Web.Controllers
                                          [FromQuery] bool? useInternalId = null,
                                          bool? forceIncrementVersion = null)
         {
-            var trackedUser = await LoadTrackedUser(trackedUserStore, id, useInternalId);
-            return await workflows.CreateFeatureOnUser(trackedUser, featureCommonId, dto.Value, forceIncrementVersion);
+            var customer = await LoadCustomer(trackedUserStore, id, useInternalId);
+            return await workflows.CreateFeatureOnUser(customer, featureCommonId, dto.Value, forceIncrementVersion);
         }
 
         /// <summary>Returns the value set in the feature.</summary>
@@ -60,8 +61,8 @@ namespace SignalBox.Web.Controllers
                                          [FromQuery] bool? useInternalId = null,
                                          [FromQuery] int? version = null)
         {
-            var trackedUser = await LoadTrackedUser(trackedUserStore, id, useInternalId);
-            return await workflows.ReadFeatureValues(trackedUser, featureCommonId, version);
+            var customer = await LoadCustomer(trackedUserStore, id, useInternalId);
+            return await workflows.ReadFeatureValues(customer, featureCommonId, version);
         }
     }
 }

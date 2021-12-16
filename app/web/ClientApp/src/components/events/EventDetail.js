@@ -7,29 +7,17 @@ import {
   Title,
 } from "../molecules";
 import { useEvent } from "../../api-hooks/eventApi";
-import { useTrackedUser } from "../../api-hooks/trackedUserApi";
+import { useCustomer } from "../../api-hooks/customersApi";
 import { useParams } from "react-router-dom";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { EntityField } from "../molecules/EntityField";
 import { JsonView } from "../molecules/JsonView";
 
-const ActionRow = ({ action }) => {
-  return (
-    <div className="row">
-      <div className="col">
-        <DateTimeField date={action.timestamp} label="Ocurred At" />
-      </div>
-      <div className="col">Category: {action.category}</div>
-      <div className="col">Revenue: {action.associatedRevenue || "None"}</div>
-      <div className="col-2">Value: {action.stringValue || "None"}</div>
-    </div>
-  );
-};
 export const EventDetail = () => {
   const { id } = useParams();
   const eventInfo = useEvent({ id });
-  const trackedUser = useTrackedUser({ id: eventInfo.trackedUserId });
+  const trackedUser = useCustomer({ id: eventInfo.trackedUserId });
   return (
     <React.Fragment>
       <BackButton className="float-right" to="/">
@@ -40,9 +28,9 @@ export const EventDetail = () => {
       <hr />
       <DateTimeField date={eventInfo.timestamp} label="Timestamp" />
       <EntityField
-        label="Tracked User"
+        label="Customer"
         entity={trackedUser}
-        to={`/tracked-users/detail/${eventInfo.trackedUserId}`}
+        to={`/customers/detail/${eventInfo.trackedUserId}`}
       />
       <CopyableField label="Event ID" value={eventInfo.eventId} />
       <CopyableField label="Kind" value={eventInfo.kind} />
@@ -55,14 +43,6 @@ export const EventDetail = () => {
       <ExpandableCard label="Properties">
         <JsonView data={eventInfo.properties} />
       </ExpandableCard>
-      <hr />
-      <h6>Actions</h6>
-      {eventInfo.actions && eventInfo.actions.length === 0 && (
-        <EmptyList>No Associated Action </EmptyList>
-      )}
-
-      {eventInfo.actions &&
-        eventInfo.actions.map((a) => <ActionRow key={a.id} action={a} />)}
     </React.Fragment>
   );
 };

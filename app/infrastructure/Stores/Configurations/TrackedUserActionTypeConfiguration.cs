@@ -12,10 +12,14 @@ namespace SignalBox.Infrastructure.EntityFramework
             // use these two indexes to make finding the latest action for a tracked user fast.
             builder.HasIndex(_ => _.Timestamp);
             builder.HasIndex(_ => _.ActionName);
-            builder.HasIndex(_ => _.CommonUserId);
+            builder.HasIndex(_ => _.CustomerId);
+            builder.Property(_ => _.CustomerId).IsRequired();
+            builder.Property(_ => _.CustomerId).HasColumnName("CommonUserId"); // backwards DB compat
 
             builder.Property(_ => _.ValueType).HasConversion<string>();
-            builder.Property(_ => _.CommonUserId).IsRequired();
+
+            builder.Ignore(_ => _.TrackedUser);
+            builder.HasOne(_ => _.Customer).WithMany(_ => _.Actions).HasForeignKey(_ => _.TrackedUserId);
         }
     }
 }

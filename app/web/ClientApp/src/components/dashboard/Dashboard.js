@@ -15,7 +15,7 @@ export const Dashboard = () => {
     <React.Fragment>
       <Title>Dashboard</Title>
       <hr />
-      <NoteBox className="mb-3" label="Total Tracked Customers">
+      <NoteBox className="mb-3" label="Number of Customers">
         {dashboard.loading && <Spinner />}
         <div className="display-4">{dashboard.totalTrackedUsers}</div>
       </NoteBox>

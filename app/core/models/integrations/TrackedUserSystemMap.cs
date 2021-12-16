@@ -8,11 +8,11 @@ namespace SignalBox.Core
         {
         }
 
-        public TrackedUserSystemMap(string userId, IntegratedSystem integratedSystem, TrackedUser trackedUser)
+        public TrackedUserSystemMap(string userId, IntegratedSystem integratedSystem, Customer customer)
         {
             UserId = userId;
             IntegratedSystem = integratedSystem;
-            TrackedUser = trackedUser;
+            Customer = customer;
         }
 
         public string UserId { get; set; }
@@ -22,6 +22,10 @@ namespace SignalBox.Core
         [JsonIgnore]
         public long TrackedUserId { get; protected set; }
         [JsonIgnore]
-        public TrackedUser TrackedUser { get; set; }
+        public Customer Customer { get; set; }
+
+        // this is a property for API backwards compat
+        [JsonIgnore]
+        public Customer TrackedUser => Customer;
     }
 }

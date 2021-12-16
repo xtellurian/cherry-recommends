@@ -32,7 +32,7 @@ export const FeatureDetail = () => {
       </BackButton>
       <Link to={`/admin/features/set-value/${id}`}>
         <button className="btn btn-primary float-right">
-          Set Value for Tracked User
+          Set Value for a Customer
         </button>
       </Link>
       <Title>Feature</Title>

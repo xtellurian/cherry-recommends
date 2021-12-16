@@ -23,7 +23,7 @@ namespace SignalBox.Core.Workflows
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
         private readonly IModelRegistrationStore modelRegistrationStore;
-        private readonly ITrackedUserStore trackedUserStore;
+        private readonly ICustomerStore trackedUserStore;
         private readonly IRecommenderModelClientFactory modelClientFactory;
 
         public ParameterSetRecommenderInvokationWorkflows(ILogger<ParameterSetRecommenderInvokationWorkflows> logger,
@@ -36,7 +36,7 @@ namespace SignalBox.Core.Workflows
                                     IModelRegistrationStore modelRegistrationStore,
                                     IWebhookSenderClient webhookSenderClient,
                                     IHistoricTrackedUserFeatureStore historicFeatureStore,
-                                    ITrackedUserStore trackedUserStore,
+                                    ICustomerStore trackedUserStore,
                                     IRecommenderModelClientFactory modelClientFactory)
                                      : base(storageContext, parameterSetRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider)
         {
@@ -66,16 +66,12 @@ namespace SignalBox.Core.Workflows
             try
             {
                 var model = recommender.ModelRegistration;
-                if (input.CommonUserId == null)
-                {
-                    throw new BadRequestException("CommonUserId must be provided when invoking recommender");
-                }
-                context.TrackedUser = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
+                context.Customer = await trackedUserStore.CreateIfNotExists(input.GetCustomerId(), $"Auto-created by Recommender {recommender.Name}");
 
                 // check the cache and load the context 
-                if (await recommendationCache.HasCached(recommender, context.TrackedUser))
+                if (await recommendationCache.HasCached(recommender, context.Customer))
                 {
-                    var rec = await recommendationCache.GetCached(recommender, context.TrackedUser);
+                    var rec = await recommendationCache.GetCached(recommender, context.Customer);
                     await parameterSetRecommendationStore.Load(rec, _ => _.RecommendationCorrelator);
                     context.Correlator = rec.RecommendationCorrelator;
                     await base.EndTrackInvokation(context, true, "Completed using cached recommendation");
@@ -142,14 +138,14 @@ namespace SignalBox.Core.Workflows
 
                 await base.EndTrackInvokation(context,
                                               true,
-                                              $"Invoked successfully for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId}",
+                                              $"Invoked successfully for {context.Customer?.Name ?? context.Customer?.CommonId}",
                                               saveOnComplete: true);
                 return recommendation;
             }
             catch (ModelInvokationException modelEx)
             {
                 logger.LogError("Error invoking recommender", modelEx);
-                await base.EndTrackInvokation(context, false, message: $"Invoke failed for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId ?? input.CommonUserId}", modelEx.ModelResponseContent, saveOnComplete: true);
+                await base.EndTrackInvokation(context, false, message: $"Invoke failed for {context.Customer?.Name ?? context.Customer?.CommonId ?? input.CommonUserId}", modelEx.ModelResponseContent, saveOnComplete: true);
                 if (recommender.ShouldThrowOnBadInput())
                 {
                     throw;
@@ -172,7 +168,7 @@ namespace SignalBox.Core.Workflows
             {
                 logger.LogError("Error invoking recommender", ex);
                 await base.EndTrackInvokation(context, false,
-                    message: $"Invoke failed for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId ?? input.CommonUserId}",
+                    message: $"Invoke failed for {context.Customer?.Name ?? context.Customer?.CommonId ?? context.Customer?.CustomerId ?? input.CommonUserId}",
                     saveOnComplete: true);
                 if (recommender.ShouldThrowOnBadInput())
                 {
@@ -206,7 +202,7 @@ namespace SignalBox.Core.Workflows
             {
                 await base.EndTrackInvokation(context,
                                               false,
-                                              message: $"Invoke failed for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId ?? input.CommonUserId}",
+                                              message: $"Invoke failed for {context.Customer?.Name ?? context.Customer?.CommonId ?? input.CommonUserId}",
                                               modelResponse: null,
                                               saveOnComplete: true);
             }

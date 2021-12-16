@@ -5,9 +5,9 @@ import { invokeItemsRecommenderAsync } from "../../../api/itemsRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { Title, Subtitle, AsyncButton, BackButton } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
-import { AsyncSelectTrackedUser } from "../../molecules/selectors/AsyncSelectTrackedUser";
 import { ConsumeRecommendationPopup } from "../utils/consumeRecommendationPopup";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
+import { AsyncSelectCustomer } from "../../molecules/selectors/AsyncSelectCustomer";
 
 export const TestRecommender = () => {
   const { id } = useParams();
@@ -39,7 +39,7 @@ export const TestRecommender = () => {
       <ItemRecommenderLayout>
         
 
-        <AsyncSelectTrackedUser
+        <AsyncSelectCustomer
           placeholder="Search for a user to make a recommendation for."
           onChange={(v) => setSelectedTrackedUser(v.value)}
         />

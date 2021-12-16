@@ -19,7 +19,7 @@ namespace SignalBox.Core.Adapters.Hubspot
             cardEntry ??= new Dictionary<string, object>
             {
                 { "title", customerInformationTitle},
-                { userFeaturesEntryKey, featureValue.TrackedUser.CommonUserId},
+                { userFeaturesEntryKey, featureValue.TrackedUser.CommonId},
                 { "objectId", featureValue.Id},
                 { "properties", new List<Dictionary<string,object>>() }
             };
@@ -56,7 +56,7 @@ namespace SignalBox.Core.Adapters.Hubspot
             cardEntry ??= new Dictionary<string, object>
             {
                 { "title", recommendationTitle},
-                { userFeaturesEntryKey, recommendation.TrackedUser.CommonUserId},
+                { userFeaturesEntryKey, recommendation.Customer?.CommonId},
                 { "objectId", recommendation.Id},
                 { "properties", new List<Dictionary<string,string>>() }
             };

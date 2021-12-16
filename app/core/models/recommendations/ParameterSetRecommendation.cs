@@ -12,7 +12,7 @@ namespace SignalBox.Core.Recommendations
         : base(context.Correlator, RecommenderTypes.ParameterSet, context.Trigger)
         {
             Recommender = recommender;
-            TrackedUser = context.TrackedUser;
+            Customer = context.Customer;
         }
 
 #nullable enable

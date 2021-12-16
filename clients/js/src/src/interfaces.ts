@@ -45,13 +45,26 @@ export interface ModelInput {
   arguments: any | undefined;
 }
 
-interface CommonEntity {
+interface Entity {
   id: number;
+}
+interface CommonEntity extends Entity {
   commonId: string;
   properties: any;
 }
 
 export interface RecommendableItem extends CommonEntity {}
+export interface CustomerEvent {
+  commonUserId?: string | undefined;
+  customerId: string;
+  eventId: string;
+  timestamp?: string | undefined;
+  recommendationCorrelatorId?: number | undefined | null;
+  sourceSystemId?: number | null | undefined;
+  kind: "Custom" | "Behaviour" | "ConsumeRecommendation";
+  eventType: string;
+  properties?: any | null | undefined;
+}
 interface Customer extends CommonEntity {}
 interface ScoredItem {
   itemId: number | undefined;

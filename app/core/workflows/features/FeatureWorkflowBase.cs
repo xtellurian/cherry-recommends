@@ -31,13 +31,13 @@ namespace SignalBox.Core.Workflows
             this.telemetry = telemetry;
             this.logger = logger;
         }
-        public async Task<HistoricTrackedUserFeature> CreateFeatureOnUser(TrackedUser trackedUser,
+        public async Task<HistoricTrackedUserFeature> CreateFeatureOnUser(Customer customer,
                                                                    string featureCommonId,
                                                                    object value,
                                                                    bool? forceIncrementVersion)
         {
             Feature feature;
-            logger.LogInformation($"Creating feature on tracked user {trackedUser.Id}");
+            logger.LogInformation($"Creating feature on tracked user {customer.Id}");
             if (await featureStore.ExistsFromCommonId(featureCommonId))
             {
                 feature = await featureStore.ReadFromCommonId(featureCommonId);
@@ -47,15 +47,15 @@ namespace SignalBox.Core.Workflows
                 throw new BadRequestException($"Feature {featureCommonId} does not exist");
             }
 
-            var currentVersion = await trackedUserFeatureStore.CurrentMaximumFeatureVersion(trackedUser, feature);
-            var newFeatureValue = GenerateFeatureValues(trackedUser, feature, value, currentVersion + 1);
+            var currentVersion = await trackedUserFeatureStore.CurrentMaximumFeatureVersion(customer, feature);
+            var newFeatureValue = GenerateFeatureValues(customer, feature, value, currentVersion + 1);
             if (forceIncrementVersion == true || currentVersion == 0) // first time or incrementing
             {
                 return await HandleCreateNewFeatureValue(newFeatureValue);
             }
             else // check whether the value has changed before updating.
             {
-                var currentFeatureValue = await trackedUserFeatureStore.ReadFeature(trackedUser, feature, currentVersion);
+                var currentFeatureValue = await trackedUserFeatureStore.ReadFeature(customer, feature, currentVersion);
                 if (!newFeatureValue.ValuesEqual(currentFeatureValue))
                 {
                     return await HandleCreateNewFeatureValue(newFeatureValue);
@@ -119,7 +119,7 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        private HistoricTrackedUserFeature GenerateFeatureValues(TrackedUser user, Feature feature, object value, int version)
+        private HistoricTrackedUserFeature GenerateFeatureValues(Customer user, Feature feature, object value, int version)
         {
             if (double.TryParse(value?.ToString(), out var doubleValue))
             {

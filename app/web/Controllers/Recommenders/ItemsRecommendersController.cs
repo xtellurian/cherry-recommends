@@ -109,7 +109,7 @@ namespace SignalBox.Web.Controllers
         {
             ValidateInvokationDto(input);
             var recommender = await base.GetResource(id, useInternalId);
-            var convertedInput = new ItemsModelInputDto(input.CommonUserId, input.Arguments);
+            var convertedInput = new ItemsModelInputDto(input.GetCustomerId(), input.Arguments);
             if (convertedInput.Items != null && convertedInput.Items.Any())
             {
                 throw new BadRequestException($"Items must not be set externally");

@@ -34,7 +34,7 @@ namespace SignalBox.Core.Workflows
             this.storageContext = storageContext;
         }
 
-        public async Task<IEnumerable<TrackedUserAction>> ProcessActionsFromEvents(IEnumerable<TrackedUserEvent> events, bool saveChanges = false)
+        public async Task<IEnumerable<TrackedUserAction>> ProcessActionsFromEvents(IEnumerable<CustomerEvent> events, bool saveChanges = false)
         {
             var actions = new List<TrackedUserAction>();
             foreach (var a in events.ToActions())
@@ -140,18 +140,6 @@ namespace SignalBox.Core.Workflows
         public async Task<TrackedUserAction> ReadLatestAction(string commonUserId, string category, string actionName = null)
         {
             return await actionStore.ReadLatestAction(commonUserId, category, actionName);
-        }
-
-        public async Task<Paginated<TrackedUserAction>> ReadTrackedUserActions(int page, TrackedUser trackedUser, bool revenueOnly)
-        {
-            if (revenueOnly)
-            {
-                return await actionStore.Query(page, _ => _.TrackedUserId == trackedUser.Id && _.AssociatedRevenue != null);
-            }
-            else
-            {
-                return await actionStore.Query(page, _ => _.TrackedUserId == trackedUser.Id);
-            }
         }
     }
 }

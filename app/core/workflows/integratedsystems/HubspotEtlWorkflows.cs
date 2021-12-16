@@ -18,7 +18,7 @@ namespace SignalBox.Core.Workflows
                                    IOptions<HubspotAppCredentials> hubspotCreds,
                                    IIntegratedSystemStore integratedSystemStore,
                                    ITrackedUserSystemMapStore systemMapStore,
-                                   ITrackedUserStore trackedUserStore,
+                                   ICustomerStore trackedUserStore,
                                    IDateTimeProvider dateTimeProvider)
         : base(logger, hubspotService, hubspotCreds, integratedSystemStore, trackedUserStore, dateTimeProvider)
         {
@@ -42,14 +42,14 @@ namespace SignalBox.Core.Workflows
                 var trackedUsers = await GetAndUpdateTrackedUsers(integratedSystem, null, propertyNames);
                 report.NumberOfHubspotRequests += 1;
                 report.NumberOfTrackedUsersUpdated += trackedUsers.Items.Count();
-                await trackedUserStore.Context.SaveChanges();
+                await customerStore.Context.SaveChanges();
                 var after = trackedUsers.Pagination.Next?.After;
                 // loop the above in case there are many
                 while (!string.IsNullOrEmpty(after) && trackedUsers.Items.Any())
                 {
                     trackedUsers = await GetAndUpdateTrackedUsers(integratedSystem, after, propertyNames);
                     report.NumberOfHubspotRequests += 1;
-                    await trackedUserStore.Context.SaveChanges();
+                    await customerStore.Context.SaveChanges();
                     after = trackedUsers.Pagination?.Next?.After;
                     report.NumberOfTrackedUsersUpdated += trackedUsers.Items.Count();
                 }
@@ -62,7 +62,7 @@ namespace SignalBox.Core.Workflows
             return report;
         }
 
-        private async Task<Paginated<TrackedUser>> GetAndUpdateTrackedUsers(IntegratedSystem system, string after, IList<string> properties)
+        private async Task<Paginated<Customer>> GetAndUpdateTrackedUsers(IntegratedSystem system, string after, IList<string> properties)
         {
             await base.CheckAndRefreshCredentials(system);
             var cache = system.GetCache<HubspotCache>();
@@ -78,7 +78,7 @@ namespace SignalBox.Core.Workflows
             }
 
             var hubspotContacts = await hubspotService.GetContacts(system, after, properties);
-            var trackedUsers = new List<TrackedUser>();
+            var trackedUsers = new List<Customer>();
             foreach (var contact in hubspotContacts.Items)
             {
                 var exists = await systemMapStore.ExistsInIntegratedSystem(system.Id, contact.ObjectId) == true;
@@ -95,12 +95,12 @@ namespace SignalBox.Core.Workflows
                 {
                     if (useObjectIdAsCommonId)
                     {
-                        var tu = await trackedUserStore.CreateOrUpdateFromHubspotContact(system, contact, propertyPrefix: propertyPrefix);
+                        var tu = await customerStore.CreateOrUpdateFromHubspotContact(system, contact, propertyPrefix: propertyPrefix);
                         trackedUsers.Add(tu);
                     }
                     else if (contact.Properties.ContainsKey(commonIdPropertyName) && !string.IsNullOrEmpty(contact.Properties[commonIdPropertyName]))
                     {
-                        var tu = await trackedUserStore.CreateOrUpdateFromHubspotContact(system, contact, commonIdPropertyName, propertyPrefix: propertyPrefix);
+                        var tu = await customerStore.CreateOrUpdateFromHubspotContact(system, contact, commonIdPropertyName, propertyPrefix: propertyPrefix);
                         trackedUsers.Add(tu);
                     }
                     else
@@ -119,7 +119,7 @@ namespace SignalBox.Core.Workflows
                 tu.LastUpdated = dateTimeProvider.Now;
             }
 
-            return new Paginated<TrackedUser>(trackedUsers, hubspotContacts.Pagination.Next.After);
+            return new Paginated<Customer>(trackedUsers, hubspotContacts.Pagination.Next.After);
         }
     }
 

@@ -21,34 +21,34 @@ namespace SignalBox.Infrastructure
         }
 
         private async Task<IEnumerable<TRecommendation>> GetPossibleCachedRecommendations(TRecommender recommender,
-                                                                                              TrackedUser trackedUser,
+                                                                                              Customer customer,
                                                                                               System.TimeSpan cacheTime)
         {
             var since = dateTimeProvider.Now.Subtract(cacheTime);
-            var recommendations = await recommendationStore.RecommendationsSince(recommender.Id, trackedUser, since);
+            var recommendations = await recommendationStore.RecommendationsSince(recommender.Id, customer, since);
             return recommendations;
         }
 
-        public async Task<bool> HasCached(TRecommender recommender, TrackedUser trackedUser)
+        public async Task<bool> HasCached(TRecommender recommender, Customer customer)
         {
             var cacheTime = recommender.Settings?.RecommendationCacheTime;
             if (cacheTime == null)
             {
                 return false;
             }
-            var recommendations = await GetPossibleCachedRecommendations(recommender, trackedUser, cacheTime.Value);
+            var recommendations = await GetPossibleCachedRecommendations(recommender, customer, cacheTime.Value);
 
             return recommendations.Any();
         }
 
-        public async Task<TRecommendation> GetCached(TRecommender recommender, TrackedUser trackedUser)
+        public async Task<TRecommendation> GetCached(TRecommender recommender, Customer customer)
         {
             var cacheTime = recommender.Settings?.RecommendationCacheTime;
             if (cacheTime == null)
             {
                 throw new BadRequestException("Cannot read cache for recommendations without a cache time.");
             }
-            var recommendations = await GetPossibleCachedRecommendations(recommender, trackedUser, cacheTime.Value);
+            var recommendations = await GetPossibleCachedRecommendations(recommender, customer, cacheTime.Value);
             var rec = recommendations.OrderByDescending(_ => _.Created).First();
             rec.IsFromCache = true;
             return rec;

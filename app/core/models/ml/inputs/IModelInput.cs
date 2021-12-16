@@ -6,7 +6,9 @@ namespace SignalBox.Core
 #nullable enable
     public interface IModelInput
     {
-        string? CommonUserId { get; set; }
+        string? GetCustomerId();
+        string? CommonUserId { get; }
+        string? CustomerId { get; set; }
         IDictionary<string, object>? Arguments { get; set; }
         IDictionary<string, object>? Features { get; set; }
         IEnumerable<ParameterBounds>? ParameterBounds { get; set; }

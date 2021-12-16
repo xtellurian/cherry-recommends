@@ -18,14 +18,14 @@ namespace SignalBox.Web.Controllers
     public class EventsController : SignalBoxControllerBase
     {
         private readonly ILogger<EventsController> _logger;
-        private readonly TrackedUserEventsWorkflows workflows;
+        private readonly CustomerEventsWorkflows workflows;
         private readonly IDateTimeProvider dateTimeProvider;
-        private readonly ITrackedUserEventStore eventStore;
+        private readonly ICustomerEventStore eventStore;
 
         public EventsController(ILogger<EventsController> logger,
-                                TrackedUserEventsWorkflows workflows,
+                                CustomerEventsWorkflows workflows,
                                 IDateTimeProvider dateTimeProvider,
-                                ITrackedUserEventStore eventStore)
+                                ICustomerEventStore eventStore)
         {
             _logger = logger;
             this.workflows = workflows;
@@ -40,8 +40,8 @@ namespace SignalBox.Web.Controllers
         public async Task<EventLoggingResponse> LogEvents([FromBody] List<EventDto> dto)
         {
             var enqueue = dto.Count > 100;
-            return await workflows.TrackUserEvents(dto.Select(d =>
-            new TrackedUserEventsWorkflows.TrackedUserEventInput(d.CommonUserId,
+            return await workflows.AddEvents(dto.Select(d =>
+            new CustomerEventsWorkflows.CustomerEventInput(d.GetCustomerId(),
                                                                  d.EventId,
                                                                  d.Timestamp,
                                                                  d.RecommendationCorrelatorId,
@@ -52,7 +52,7 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<TrackedUserEvent> GetEvent(string id)
+        public async Task<CustomerEvent> GetEvent(string id)
         {
             var e = await eventStore.Read(id);
             await eventStore.LoadMany(e, _ => _.Actions);

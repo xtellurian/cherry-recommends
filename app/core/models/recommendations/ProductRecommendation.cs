@@ -11,7 +11,7 @@ namespace SignalBox.Core.Recommendations
 #nullable enable
         public ProductRecommendation(
             ProductRecommender recommender,
-            TrackedUser trackedUser,
+            Customer customer,
             RecommendationCorrelator correlator,
             Product product,
             string? trigger)
@@ -19,7 +19,7 @@ namespace SignalBox.Core.Recommendations
         {
             Recommender = recommender;
             RecommenderId = recommender.Id;
-            TrackedUser = trackedUser;
+            Customer = customer;
             Product = product;
         }
 

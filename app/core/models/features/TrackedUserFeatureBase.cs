@@ -7,19 +7,19 @@ namespace SignalBox.Core
         protected TrackedUserFeatureBase()
         { }
 #nullable enable
-        private TrackedUserFeatureBase(TrackedUser trackedUser, Feature feature)
+        private TrackedUserFeatureBase(Customer customer, Feature feature)
         {
-            TrackedUser = trackedUser;
+            Customer = customer;
             Feature = feature;
         }
-        public TrackedUserFeatureBase(TrackedUser trackedUser, Feature feature, string value)
-        : this(trackedUser, feature)
+        public TrackedUserFeatureBase(Customer customer, Feature feature, string value)
+        : this(customer, feature)
         {
             StringValue = value;
         }
 
-        public TrackedUserFeatureBase(TrackedUser trackedUser, Feature feature, double value)
-        : this(trackedUser, feature)
+        public TrackedUserFeatureBase(Customer customer, Feature feature, double value)
+        : this(customer, feature)
         {
             NumericValue = value;
         }
@@ -44,7 +44,10 @@ namespace SignalBox.Core
 
 
         public long TrackedUserId { get; set; }
-        public TrackedUser TrackedUser { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public Customer TrackedUser => Customer;
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public Customer Customer { get; set; }
         public long FeatureId { get; set; }
         public Feature Feature { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

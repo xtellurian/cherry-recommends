@@ -11,6 +11,6 @@ namespace SignalBox.Core
         public Segment(string name) : base(name)
         { }
 
-        public ICollection<TrackedUser> InSegment { get; set; } = new Collection<TrackedUser>();
+        public ICollection<Customer> InSegment { get; set; } = new Collection<Customer>();
     }
 }

@@ -11,7 +11,7 @@ namespace SignalBox.Core.Workflows
         private readonly ILogger<ProductRecommenderInvokationWorkflows> logger;
         private readonly IStorageContext storageContext;
         private readonly IRecommenderModelClientFactory modelClientFactory;
-        private readonly ITrackedUserStore trackedUserStore;
+        private readonly ICustomerStore customerStore;
         private readonly IProductStore productStore;
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IProductRecommenderStore productRecommenderStore;
@@ -21,7 +21,7 @@ namespace SignalBox.Core.Workflows
                                     IStorageContext storageContext,
                                     IDateTimeProvider dateTimeProvider,
                                     IRecommenderModelClientFactory modelClientFactory,
-                                    ITrackedUserStore trackedUserStore,
+                                    ICustomerStore customerStore,
                                     ITrackedUserTouchpointStore trackedUserTouchpointStore,
                                     ITouchpointStore touchpointStore,
                                     IHistoricTrackedUserFeatureStore historicFeatureStore,
@@ -35,7 +35,7 @@ namespace SignalBox.Core.Workflows
             this.logger = logger;
             this.storageContext = storageContext;
             this.modelClientFactory = modelClientFactory;
-            this.trackedUserStore = trackedUserStore;
+            this.customerStore = customerStore;
             this.productStore = productStore;
             this.correlatorStore = correlatorStore;
             this.productRecommenderStore = productRecommenderStore;
@@ -59,13 +59,8 @@ namespace SignalBox.Core.Workflows
             context.SetLogger(logger);
             try
             {
-                if (string.IsNullOrEmpty(input.CommonUserId))
-                {
-                    throw new BadRequestException("ParameterSetRecommenderId is a required parameter.");
-                }
-
                 // enrich values from the touchpoint
-                context.TrackedUser = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
+                context.Customer = await customerStore.CreateIfNotExists(input.GetCustomerId(), $"Auto-created by Recommender {recommender.Name}");
 
                 // load the features of the tracked user
                 input.Features = await base.GetFeatures(recommender, context);
@@ -126,7 +121,7 @@ namespace SignalBox.Core.Workflows
                     await base.EndTrackInvokation(
                         context,
                         false,
-                        message: $"Invoke failed for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId}",
+                        message: $"Invoke failed for {context.Customer?.Name ?? context.Customer?.CommonId}",
                         modelResponse: modelResponseContent,
                         saveOnComplete: true);
                     throw; // rethrow the error to propagate to calling client
@@ -168,7 +163,7 @@ namespace SignalBox.Core.Workflows
         {
             // now save the result
 
-            var recommendation = new ProductRecommendation(recommender, context.TrackedUser, context.Correlator, output.Product, context.Trigger);
+            var recommendation = new ProductRecommendation(recommender, context.Customer, context.Correlator, output.Product, context.Trigger);
             output.CorrelatorId = context?.Correlator.Id;
             recommendation.SetInput(input);
             recommendation.SetOutput(output);
@@ -176,7 +171,7 @@ namespace SignalBox.Core.Workflows
             recommendation = await productRecommendationStore.Create(recommendation);
             await base.EndTrackInvokation(context,
                                           true,
-                                          $"Invoked successfully for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId}",
+                                          $"Invoked successfully for {context.Customer?.Name ?? context.Customer?.CommonId}",
                                           saveOnComplete: true);
 
             // set this after the context has been saved.

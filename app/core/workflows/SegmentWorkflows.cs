@@ -9,17 +9,17 @@ namespace SignalBox.Core.Workflows
     {
         private readonly ILogger<SegmentWorkflows> logger;
         private readonly ISegmentStore segmentStore;
-        private readonly ITrackedUserStore userStore;
+        private readonly ICustomerStore customerStore;
         private readonly IStorageContext storageContext;
 
         public SegmentWorkflows(ILogger<SegmentWorkflows> logger,
                                 ISegmentStore segmentStore,
-                                ITrackedUserStore userStore,
+                                ICustomerStore customerStore,
                                 IStorageContext storageContext)
         {
             this.logger = logger;
             this.segmentStore = segmentStore;
-            this.userStore = userStore;
+            this.customerStore = customerStore;
             this.storageContext = storageContext;
         }
         public async Task<Segment> CreateSegment(string name)
@@ -31,7 +31,7 @@ namespace SignalBox.Core.Workflows
             return segment;
         }
 
-        public Task ProcessRule(Rule rule, List<TrackedUserEvent> events)
+        public Task ProcessRule(Rule rule, List<CustomerEvent> events)
         {
             throw new System.NotImplementedException();
             // var segment = await segmentStore.Read(rule.SegmentId);
@@ -44,18 +44,22 @@ namespace SignalBox.Core.Workflows
             // }
         }
 
-        private async Task ProcessEventsForSegmentingRule(Segment segment, IEnumerable<TrackedUserEvent> events)
+        private async Task ProcessEventsForSegmentingRule(Segment segment, IEnumerable<CustomerEvent> events)
         {
             foreach (var e in events)
             {
-                var trackedUser = await userStore.ReadFromCommonId(e.CommonUserId);
-                if (trackedUser == null)
+                Customer customer;
+                if (await customerStore.ExistsFromCommonId(e.CommonUserId))
+                {
+                    customer = await customerStore.ReadFromCommonId(e.CommonUserId);
+                }
+                else
                 {
                     // means the user doesn't exist yet. create them.
-                    trackedUser = await userStore.Create(new TrackedUser(e.CommonUserId));
+                    customer = await customerStore.Create(new Customer(e.CommonUserId));
                 }
 
-                segment.InSegment.Add(trackedUser);
+                segment.InSegment.Add(customer);
             }
         }
     }

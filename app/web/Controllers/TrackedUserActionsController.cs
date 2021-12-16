@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,45 +14,39 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/TrackedUsers")]
+    [Route("api/Customers")]
     public class TrackedUserActionsController : SignalBoxControllerBase
     {
         private readonly ILogger<TrackedUserActionsController> logger;
-        private readonly TrackedUserActionWorkflows actionWorkflows;
-        private readonly ITrackedUserStore trackedUserStore;
 
-        public TrackedUserActionsController(ILogger<TrackedUserActionsController> logger,
-                                      TrackedUserActionWorkflows actionWorkflows,
-                                      ITrackedUserStore trackedUserStore)
+        public TrackedUserActionsController(ILogger<TrackedUserActionsController> logger)
         {
             this.logger = logger;
-            this.actionWorkflows = actionWorkflows;
-            this.trackedUserStore = trackedUserStore;
         }
 
         /// <summary>Gets the latest actions from a tracked user.</summary>
         [HttpGet("{id}/action-groups")]
-        public async Task<Paginated<ActionCategoryAndName>> GetActionGroups([FromQuery] PaginateRequest p, string id, bool? useInternalId = null)
+        [Obsolete]
+        public Paginated<ActionCategoryAndName> GetActionGroups([FromQuery] PaginateRequest p, string id, bool? useInternalId = null)
         {
-            var trackedUser = await trackedUserStore.GetEntity(id);
-            return await actionWorkflows.ReadTrackedUserCategoriesAndActionNames(p.Page, trackedUser.CommonId);
+            logger.LogWarning("This action is deprecated");
+            return new Paginated<ActionCategoryAndName>(Enumerable.Empty<ActionCategoryAndName>(), 0, 0, 0);
         }
 
         /// <summary>Gets the latest action from a tracked user for this category.</summary>
         [HttpGet("{id}/actions/{category}")]
-        public async Task<TrackedUserAction> GetAction(string id, string category, string actionName = null, bool? useInternalId = null)
+        public object GetAction(string id, string category, string actionName = null, bool? useInternalId = null)
         {
-            var user = await trackedUserStore.GetEntity(id, useInternalId);
-
-            return await actionWorkflows.ReadLatestAction(user.CommonId, category, actionName);
+            logger.LogWarning("This action is deprecated");
+            return new object();
         }
 
         /// <summary>Gets actions for a tracked user.</summary>
         [HttpGet("{id}/actions")]
-        public async Task<Paginated<TrackedUserAction>> GetUserActions([FromQuery] PaginateRequest p, string id, bool? revenueOnly = null, bool? useInternalId = null)
+        public Paginated<TrackedUserAction> GetUserActions([FromQuery] PaginateRequest p, string id, bool? revenueOnly = null, bool? useInternalId = null)
         {
-            var user = await trackedUserStore.GetEntity(id, useInternalId);
-
-            return await actionWorkflows.ReadTrackedUserActions(p.Page, user, revenueOnly ?? false);
+            logger.LogWarning("This action is deprecated");
+            return new Paginated<TrackedUserAction>(Enumerable.Empty<TrackedUserAction>(), 0, 0, 0);
         }
     }
 }

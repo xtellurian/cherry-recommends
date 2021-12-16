@@ -13,9 +13,9 @@ import {
   Title,
 } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
-import { AsyncSelectTrackedUser } from "../../molecules/selectors/AsyncSelectTrackedUser";
 import { ConsumeRecommendationPopup } from "../utils/consumeRecommendationPopup";
 import { ParameterSetRecommenderLayout } from "./ParameterSetRecommenderLayout";
+import { AsyncSelectCustomer } from "../../molecules/selectors/AsyncSelectCustomer";
 
 const CategoricalArgumentInput = ({ arg, value, onChange }) => {
   return (
@@ -121,8 +121,8 @@ export const TestParameterSetRecommender = () => {
     <React.Fragment>
       <ParameterSetRecommenderLayout>
         {error && <ErrorCard error={error} />}
-        <AsyncSelectTrackedUser
-          placeholder="Search for a user to make a recommendation for."
+        <AsyncSelectCustomer
+          placeholder="Search for a Customer to make a recommendation for."
           onChange={(v) => setSelectedTrackedUser(v.value)}
         />
         <div className="row mt-3">

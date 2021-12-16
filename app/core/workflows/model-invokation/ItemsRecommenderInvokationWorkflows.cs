@@ -13,7 +13,7 @@ namespace SignalBox.Core.Workflows
         private readonly IStorageContext storageContext;
         private readonly IRecommendationCache<ItemsRecommender, ItemsRecommendation> recommendationCache;
         private readonly IRecommenderModelClientFactory modelClientFactory;
-        private readonly ITrackedUserStore trackedUserStore;
+        private readonly ICustomerStore trackedUserStore;
         private readonly IRecommendableItemStore itemStore;
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IItemsRecommenderStore itemsRecommenderStore;
@@ -24,7 +24,7 @@ namespace SignalBox.Core.Workflows
                                     IDateTimeProvider dateTimeProvider,
                                     IRecommendationCache<ItemsRecommender, ItemsRecommendation> recommendationCache,
                                     IRecommenderModelClientFactory modelClientFactory,
-                                    ITrackedUserStore trackedUserStore,
+                                    ICustomerStore trackedUserStore,
                                     ITrackedUserTouchpointStore trackedUserTouchpointStore,
                                     IHistoricTrackedUserFeatureStore historicFeatureStore,
                                     IRecommendableItemStore itemStore,
@@ -54,21 +54,17 @@ namespace SignalBox.Core.Workflows
             var invokationEntry = await base.StartTrackInvokation(recommender, input);
             var context = new RecommendingContext(invokationEntry, trigger);
             context.SetLogger(logger);
-            var userName = input.CommonUserId;
+            var userName = input.GetCustomerId(); // initialise the name
             try
             {
-                if (string.IsNullOrEmpty(input.CommonUserId))
-                {
-                    throw new BadRequestException("ParameterSetRecommenderId is a required parameter.");
-                }
-
                 // enrich values from the touchpoint
-                context.TrackedUser = await trackedUserStore.CreateIfNotExists(input.CommonUserId, $"Auto-created by Recommender {recommender.Name}");
-                userName = context.TrackedUser.Name ?? context.TrackedUser.CommonId ?? userName;
+                var customerId = input.GetCustomerId() ?? throw new BadRequestException("Customer ID and CommonUserId were null");
+                context.Customer = await trackedUserStore.CreateIfNotExists(customerId, $"Auto-created by Recommender {recommender.Name}");
+                userName = context.Customer.Name ?? context.Customer.CommonId ?? userName;
                 // check the cache
-                if (await recommendationCache.HasCached(recommender, context.TrackedUser))
+                if (await recommendationCache.HasCached(recommender, context.Customer))
                 {
-                    var rec = await recommendationCache.GetCached(recommender, context.TrackedUser);
+                    var rec = await recommendationCache.GetCached(recommender, context.Customer);
                     // ensure to load the items
                     await itemsRecommendationStore.LoadMany(rec, _ => _.Items);
                     await itemsRecommendationStore.Load(rec, _ => _.RecommendationCorrelator);
@@ -238,7 +234,7 @@ namespace SignalBox.Core.Workflows
 
             await base.EndTrackInvokation(context,
                                           true,
-                                          message: $"Invoked successfully for {context.TrackedUser?.Name ?? context.TrackedUser?.CommonId}",
+                                          message: $"Invoked successfully for {context.Customer?.Name ?? context.Customer?.CommonId}",
                                           modelResponse: null,
                                           saveOnComplete: true);
 

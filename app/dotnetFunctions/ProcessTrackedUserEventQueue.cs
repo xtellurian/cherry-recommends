@@ -7,22 +7,22 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
 using SignalBox.Core.Workflows;
-using static SignalBox.Core.Workflows.TrackedUserEventsWorkflows;
+using static SignalBox.Core.Workflows.CustomerEventsWorkflows;
 
 namespace SignalBox.Functions
 {
     public class ProcessTrackedUserEventQueue
     {
-        private readonly TrackedUserEventsWorkflows eventWorkflow;
-        private readonly TrackedUserWorkflows trackedUserWorkflows;
+        private readonly CustomerEventsWorkflows eventWorkflow;
+        private readonly CustomerWorkflows customerWorkflows;
         private readonly IQueueMessagesFileStore queueMessagesFileStore;
 
-        public ProcessTrackedUserEventQueue(TrackedUserEventsWorkflows eventWorkflow,
-                                            TrackedUserWorkflows trackedUserWorkflows,
+        public ProcessTrackedUserEventQueue(CustomerEventsWorkflows eventWorkflow,
+                                            CustomerWorkflows customerWorkflows,
                                             IQueueMessagesFileStore queueMessagesFileStore)
         {
             this.eventWorkflow = eventWorkflow;
-            this.trackedUserWorkflows = trackedUserWorkflows;
+            this.customerWorkflows = customerWorkflows;
             this.queueMessagesFileStore = queueMessagesFileStore;
         }
 
@@ -38,11 +38,11 @@ namespace SignalBox.Functions
             // read the data then pass to workflow
             var content = await queueMessagesFileStore.ReadAsString(message.Path);
             logger.LogInformation($"Deserialised file body.");
-            var events = JsonSerializer.Deserialize<List<TrackedUserEventInput>>(content, eventWorkflow.SerializerOptions);
+            var events = JsonSerializer.Deserialize<List<CustomerEventInput>>(content, eventWorkflow.SerializerOptions);
 
             try
             {
-                await eventWorkflow.TrackUserEvents(events, addToQueue: false);
+                await eventWorkflow.AddEvents(events, addToQueue: false);
             }
             catch (System.Exception ex)
             {
@@ -62,7 +62,7 @@ namespace SignalBox.Functions
             logger.LogInformation($"Processing message with {message.CommonIds.Count()} commonUserIds: ");
             try
             {
-                await trackedUserWorkflows.CreateIfNotExist(message.CommonIds);
+                await customerWorkflows.CreateIfNotExist(message.CommonIds);
             }
             catch (System.Exception ex)
             {

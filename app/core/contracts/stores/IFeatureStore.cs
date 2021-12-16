@@ -4,6 +4,6 @@ namespace SignalBox.Core
 {
     public interface IFeatureStore : ICommonEntityStore<Feature>
     {
-        Task<Paginated<TrackedUser>> QueryTrackedUsers(int page, long featureId);
+        Task<Paginated<Customer>> QueryCustomers(int page, long featureId);
     }
 }

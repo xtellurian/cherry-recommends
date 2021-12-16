@@ -8,7 +8,7 @@ namespace SignalBox.Core
         where TRecommender : RecommenderEntityBase
         where TRecommendation : RecommendationEntity
     {
-        Task<bool> HasCached(TRecommender recommender, TrackedUser trackedUser);
-        Task<TRecommendation> GetCached(TRecommender recommender, TrackedUser trackedUser);
+        Task<bool> HasCached(TRecommender recommender, Customer customer);
+        Task<TRecommendation> GetCached(TRecommender recommender, Customer customer);
     }
 }

@@ -6,24 +6,24 @@ namespace SignalBox.Core.Features.Generators
 {
     public class FilterSelectAggregateContext
     {
-        private readonly ITrackedUserEventStore eventStore;
+        private readonly ICustomerEventStore eventStore;
 
-        public FilterSelectAggregateContext(TrackedUser trackedUser, Feature feature, ITrackedUserEventStore eventStore)
+        public FilterSelectAggregateContext(Customer customer, Feature feature, ICustomerEventStore eventStore)
         {
-            this.TrackedUser = trackedUser;
+            this.Customer = customer;
             Feature = feature;
             this.eventStore = eventStore;
         }
 
         public List<FilterSelectAggregateStep> Steps { get; set; }
-        public TrackedUser TrackedUser { get; set; }
+        public Customer Customer { get; set; }
         public Feature Feature { get; }
-        public List<TrackedUserEvent> Events { get; private set; }
+        public List<CustomerEvent> Events { get; private set; }
 
         public async Task LoadEventsIntoContext(FilterStep filter = null)
         {
             var isAllEvents = filter?.EventTypeMatch == null;
-            var result = await eventStore.ReadEventsForUser(TrackedUser, new EventQueryOptions
+            var result = await eventStore.ReadEventsForUser(Customer, new EventQueryOptions
             {
                 Filter = _ => isAllEvents || (_.EventType == filter.EventTypeMatch)
             });

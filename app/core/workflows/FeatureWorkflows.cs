@@ -8,7 +8,7 @@ namespace SignalBox.Core.Workflows
     public class FeatureWorkflows : FeatureWorkflowBase, IWorkflow
     {
         private readonly IIntegratedSystemStore systemStore;
-        private readonly ITrackedUserStore trackedUserStore;
+        private readonly ICustomerStore trackedUserStore;
 
 
         public FeatureWorkflows(IFeatureStore featureStore,
@@ -17,7 +17,7 @@ namespace SignalBox.Core.Workflows
                                    RecommenderTriggersWorkflows triggersWorkflows,
                                    HubspotPushWorkflows hubspotPushWorkflows,
                                    IWebhookSenderClient webhookSenderClient,
-                                   ITrackedUserStore trackedUserStore,
+                                   ICustomerStore trackedUserStore,
                                    ITelemetry telemetry,
                                    ILogger<FeatureWorkflows> logger)
                                    : base(featureStore, trackedUserFeatureStore, triggersWorkflows, hubspotPushWorkflows, webhookSenderClient, telemetry, logger)
@@ -33,15 +33,15 @@ namespace SignalBox.Core.Workflows
             return feature;
         }
 
-        public async Task<Paginated<TrackedUser>> GetTrackedUsers(Feature feature, int page)
+        public async Task<Paginated<Customer>> GetCustomers(Feature feature, int page)
         {
-            return await featureStore.QueryTrackedUsers(page, feature.Id);
+            return await featureStore.QueryCustomers(page, feature.Id);
         }
 
-        public async Task<HistoricTrackedUserFeature> ReadFeatureValues(TrackedUser trackedUser, string featureCommonId, int? version = null)
+        public async Task<HistoricTrackedUserFeature> ReadFeatureValues(Customer customer, string featureCommonId, int? version = null)
         {
             var feature = await featureStore.ReadFromCommonId(featureCommonId);
-            return await trackedUserFeatureStore.ReadFeature(trackedUser, feature, version);
+            return await trackedUserFeatureStore.ReadFeature(customer, feature, version);
         }
 
         // ------ ADD/REMOVE DESTINATIONS -----

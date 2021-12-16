@@ -17,6 +17,21 @@ namespace sqlite.SignalBox
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.12");
 
+            modelBuilder.Entity("CustomerSegment", b =>
+                {
+                    b.Property<long>("InSegmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("SegmentsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("InSegmentId", "SegmentsId");
+
+                    b.HasIndex("SegmentsId");
+
+                    b.ToTable("SegmentTrackedUser");
+                });
+
             modelBuilder.Entity("FeatureRecommenderEntityBase", b =>
                 {
                     b.Property<long>("LearningFeaturesId")
@@ -92,19 +107,125 @@ namespace sqlite.SignalBox
                     b.ToTable("ProductProductRecommender");
                 });
 
-            modelBuilder.Entity("SegmentTrackedUser", b =>
+            modelBuilder.Entity("SignalBox.Core.Customer", b =>
                 {
-                    b.Property<long>("InSegmentId")
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CommonId")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("CommonUserId");
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long?>("EnvironmentId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("SegmentsId")
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Properties")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommonId")
+                        .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
+
+                    b.ToTable("TrackedUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1L,
+                            CommonId = "anonymous",
+                            Created = 0L,
+                            LastUpdated = 0L,
+                            Name = "Anonymous Customer",
+                            Properties = "{}"
+                        });
+                });
+
+            modelBuilder.Entity("SignalBox.Core.CustomerEvent", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("CommonUserId");
+
+                    b.Property<string>("EventId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EventKind")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Kind")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Properties")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("RecommendationCorrelatorId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("InSegmentId", "SegmentsId");
+                    b.Property<long?>("SourceId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("SegmentsId");
+                    b.Property<long>("Timestamp")
+                        .HasColumnType("INTEGER");
 
-                    b.ToTable("SegmentTrackedUser");
+                    b.Property<long?>("TrackedUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId")
+                        .IsUnique();
+
+                    b.HasIndex("RecommendationCorrelatorId");
+
+                    b.HasIndex("SourceId");
+
+                    b.HasIndex("Timestamp");
+
+                    b.HasIndex("TrackedUserId");
+
+                    b.ToTable("TrackedUserEvents");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Environment", b =>
@@ -1313,60 +1434,6 @@ namespace sqlite.SignalBox
                     b.ToTable("Touchpoints");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CommonId")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("CommonUserId");
-
-                    b.Property<long>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long?>("EnvironmentId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Properties")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommonId")
-                        .IsUnique();
-
-                    b.HasIndex("EnvironmentId");
-
-                    b.ToTable("TrackedUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = -1L,
-                            CommonId = "anonymous",
-                            Created = 0L,
-                            LastUpdated = 0L,
-                            Name = "Anonymous Customer",
-                            Properties = "{}"
-                        });
-                });
-
             modelBuilder.Entity("SignalBox.Core.TrackedUserAction", b =>
                 {
                     b.Property<long>("Id")
@@ -1388,14 +1455,15 @@ namespace sqlite.SignalBox
                     b.Property<string>("Category")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CommonUserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<long>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("CommonUserId");
 
                     b.Property<string>("EventId")
                         .HasColumnType("TEXT");
@@ -1431,7 +1499,7 @@ namespace sqlite.SignalBox
 
                     b.HasIndex("ActionName");
 
-                    b.HasIndex("CommonUserId");
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("RecommendationCorrelatorId");
 
@@ -1442,72 +1510,6 @@ namespace sqlite.SignalBox
                     b.HasIndex("TrackedUserId");
 
                     b.ToTable("TrackedUserActions");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.TrackedUserEvent", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CommonUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("EventId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("EventKind")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("EventType")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Kind")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Properties")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long?>("RecommendationCorrelatorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("SourceId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("Timestamp")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("TrackedUserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId")
-                        .IsUnique();
-
-                    b.HasIndex("RecommendationCorrelatorId");
-
-                    b.HasIndex("SourceId");
-
-                    b.HasIndex("Timestamp");
-
-                    b.HasIndex("TrackedUserId");
-
-                    b.ToTable("TrackedUserEvents");
                 });
 
             modelBuilder.Entity("SignalBox.Core.TrackedUserSystemMap", b =>
@@ -1736,6 +1738,21 @@ namespace sqlite.SignalBox
                     b.HasDiscriminator().HasValue("ProductRecommender");
                 });
 
+            modelBuilder.Entity("CustomerSegment", b =>
+                {
+                    b.HasOne("SignalBox.Core.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("InSegmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.Segment", null)
+                        .WithMany()
+                        .HasForeignKey("SegmentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FeatureRecommenderEntityBase", b =>
                 {
                     b.HasOne("SignalBox.Core.Feature", null)
@@ -1811,19 +1828,35 @@ namespace sqlite.SignalBox
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SegmentTrackedUser", b =>
+            modelBuilder.Entity("SignalBox.Core.Customer", b =>
                 {
-                    b.HasOne("SignalBox.Core.TrackedUser", null)
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
                         .WithMany()
-                        .HasForeignKey("InSegmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("SignalBox.Core.Segment", null)
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.CustomerEvent", b =>
+                {
+                    b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
                         .WithMany()
-                        .HasForeignKey("SegmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RecommendationCorrelatorId");
+
+                    b.HasOne("SignalBox.Core.IntegratedSystem", "Source")
+                        .WithMany()
+                        .HasForeignKey("SourceId");
+
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("TrackedUserId");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("RecommendationCorrelator");
+
+                    b.Navigation("Source");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Feature", b =>
@@ -1874,15 +1907,15 @@ namespace sqlite.SignalBox
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
                         .WithMany("HistoricTrackedUserFeatures")
                         .HasForeignKey("TrackedUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Feature");
+                    b.Navigation("Customer");
 
-                    b.Navigation("TrackedUser");
+                    b.Navigation("Feature");
                 });
 
             modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
@@ -1944,15 +1977,15 @@ namespace sqlite.SignalBox
                         .HasForeignKey("RecommenderId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("TrackedUserId");
+
+                    b.Navigation("Customer");
 
                     b.Navigation("RecommendationCorrelator");
 
                     b.Navigation("Recommender");
-
-                    b.Navigation("TrackedUser");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ParameterSetRecommendation", b =>
@@ -1966,15 +1999,15 @@ namespace sqlite.SignalBox
                         .HasForeignKey("RecommenderId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("TrackedUserId");
+
+                    b.Navigation("Customer");
 
                     b.Navigation("RecommendationCorrelator");
 
                     b.Navigation("Recommender");
-
-                    b.Navigation("TrackedUser");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ProductRecommendation", b =>
@@ -1992,17 +2025,17 @@ namespace sqlite.SignalBox
                         .HasForeignKey("RecommenderId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("TrackedUserId");
+
+                    b.Navigation("Customer");
 
                     b.Navigation("Product");
 
                     b.Navigation("RecommendationCorrelator");
 
                     b.Navigation("Recommender");
-
-                    b.Navigation("TrackedUser");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.RecommendationCorrelator", b =>
@@ -2037,13 +2070,13 @@ namespace sqlite.SignalBox
                         .HasForeignKey("RecommenderEntityBaseId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("TrackedUserId");
 
                     b.Navigation("Correlator");
 
-                    b.Navigation("TrackedUser");
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.RecommenderEntityBase", b =>
@@ -2119,56 +2152,25 @@ namespace sqlite.SignalBox
                     b.Navigation("Environment");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
-                {
-                    b.HasOne("SignalBox.Core.Environment", "Environment")
-                        .WithMany()
-                        .HasForeignKey("EnvironmentId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Environment");
-                });
-
             modelBuilder.Entity("SignalBox.Core.TrackedUserAction", b =>
                 {
                     b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
                         .WithMany("TrackedUserActions")
                         .HasForeignKey("RecommendationCorrelatorId");
 
-                    b.HasOne("SignalBox.Core.TrackedUserEvent", "TrackedUserEvent")
+                    b.HasOne("SignalBox.Core.CustomerEvent", "TrackedUserEvent")
                         .WithMany("Actions")
                         .HasForeignKey("TrackedUserEventId");
 
-                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
                         .WithMany("Actions")
                         .HasForeignKey("TrackedUserId");
 
-                    b.Navigation("RecommendationCorrelator");
+                    b.Navigation("Customer");
 
-                    b.Navigation("TrackedUser");
+                    b.Navigation("RecommendationCorrelator");
 
                     b.Navigation("TrackedUserEvent");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.TrackedUserEvent", b =>
-                {
-                    b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
-                        .WithMany()
-                        .HasForeignKey("RecommendationCorrelatorId");
-
-                    b.HasOne("SignalBox.Core.IntegratedSystem", "Source")
-                        .WithMany()
-                        .HasForeignKey("SourceId");
-
-                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
-                        .WithMany()
-                        .HasForeignKey("TrackedUserId");
-
-                    b.Navigation("RecommendationCorrelator");
-
-                    b.Navigation("Source");
-
-                    b.Navigation("TrackedUser");
                 });
 
             modelBuilder.Entity("SignalBox.Core.TrackedUserSystemMap", b =>
@@ -2179,15 +2181,15 @@ namespace sqlite.SignalBox
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
                         .WithMany("IntegratedSystemMaps")
                         .HasForeignKey("TrackedUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("IntegratedSystem");
+                    b.Navigation("Customer");
 
-                    b.Navigation("TrackedUser");
+                    b.Navigation("IntegratedSystem");
                 });
 
             modelBuilder.Entity("SignalBox.Core.TrackedUserTouchpoint", b =>
@@ -2198,15 +2200,15 @@ namespace sqlite.SignalBox
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SignalBox.Core.TrackedUser", "TrackedUser")
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
                         .WithMany("TrackedUserTouchpoints")
                         .HasForeignKey("TrackedUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Touchpoint");
+                    b.Navigation("Customer");
 
-                    b.Navigation("TrackedUser");
+                    b.Navigation("Touchpoint");
                 });
 
             modelBuilder.Entity("SignalBox.Core.WebhookReceiver", b =>
@@ -2236,6 +2238,22 @@ namespace sqlite.SignalBox
                         .HasForeignKey("DefaultProductId");
 
                     b.Navigation("DefaultProduct");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Customer", b =>
+                {
+                    b.Navigation("Actions");
+
+                    b.Navigation("HistoricTrackedUserFeatures");
+
+                    b.Navigation("IntegratedSystemMaps");
+
+                    b.Navigation("TrackedUserTouchpoints");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.CustomerEvent", b =>
+                {
+                    b.Navigation("Actions");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Feature", b =>
@@ -2281,22 +2299,6 @@ namespace sqlite.SignalBox
             modelBuilder.Entity("SignalBox.Core.Touchpoint", b =>
                 {
                     b.Navigation("TrackedUserTouchpoints");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.TrackedUser", b =>
-                {
-                    b.Navigation("Actions");
-
-                    b.Navigation("HistoricTrackedUserFeatures");
-
-                    b.Navigation("IntegratedSystemMaps");
-
-                    b.Navigation("TrackedUserTouchpoints");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.TrackedUserEvent", b =>
-                {
-                    b.Navigation("Actions");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ItemsRecommender", b =>

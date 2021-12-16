@@ -1,27 +1,37 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using SignalBox.Core.Recommenders;
 
+#nullable enable
 namespace SignalBox.Core
 {
     public class ModelInputDto : IModelInput
     {
         public ModelInputDto()
         { }
-        public ModelInputDto(string commonUserId)
+        public ModelInputDto(string customerId)
         {
-            this.CommonUserId = commonUserId;
+            this.CustomerId = customerId;
+            this.CommonUserId = customerId;
             this.Arguments = new Dictionary<string, object>();
         }
-        public ModelInputDto(string commonUserId, IDictionary<string, object> arguments)
+        public ModelInputDto(string customerId, IDictionary<string, object> arguments)
         {
-            this.CommonUserId = commonUserId;
+            this.CustomerId = customerId;
+            this.CommonUserId = customerId;
             this.Arguments = arguments ?? new Dictionary<string, object>();
         }
-        [Required]
-        public string CommonUserId { get; set; }
-        public IDictionary<string, object> Arguments { get; set; }
-        public IDictionary<string, object> Features { get; set; }
-        public IEnumerable<ParameterBounds> ParameterBounds { get; set; }
+
+        public string? CustomerId { get; set; }
+        public string? CommonUserId { get; set; }
+        public IDictionary<string, object>? Arguments { get; set; }
+        public IDictionary<string, object>? Features { get; set; }
+        public IEnumerable<ParameterBounds>? ParameterBounds { get; set; }
+
+        public string? GetCustomerId()
+        {
+            return CustomerId ?? CommonUserId;
+        }
     }
 }

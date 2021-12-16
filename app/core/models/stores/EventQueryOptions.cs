@@ -6,7 +6,7 @@ namespace SignalBox.Core
 #nullable enable
     public class EventQueryOptions
     {
-        public Expression<Func<TrackedUserEvent, bool>>? Filter { get; set; }
+        public Expression<Func<CustomerEvent, bool>>? Filter { get; set; }
         public bool NoTracking { get; set; } = true;
     }
 }

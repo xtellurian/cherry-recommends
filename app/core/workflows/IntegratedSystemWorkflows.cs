@@ -11,21 +11,21 @@ namespace SignalBox.Core.Workflows
         private readonly ITrackedUserSystemMapStore trackedUserSystemMapStore;
         private readonly IWebhookReceiverStore webhookReceiverStore;
         private readonly IHasher hasher;
-        private readonly ITrackedUserStore trackedUserStore;
+        private readonly ICustomerStore customerStore;
 
         public IntegratedSystemWorkflows(IStorageContext storageContext,
                                          IntegratedSystemStoreCollection systemStoreCollection,
                                          ITrackedUserSystemMapStore trackedUserSystemMapStore,
                                          IWebhookReceiverStore webhookReceiverStore,
                                          IHasher hasher,
-                                         ITrackedUserStore trackedUserStore)
+                                         ICustomerStore customerStore)
         {
             this.storageContext = storageContext;
             this.systemStoreCollection = systemStoreCollection;
             this.trackedUserSystemMapStore = trackedUserSystemMapStore;
             this.webhookReceiverStore = webhookReceiverStore;
             this.hasher = hasher;
-            this.trackedUserStore = trackedUserStore;
+            this.customerStore = customerStore;
         }
 
         public async Task<IntegratedSystem> CreateIntegratedSystem(string name, string systemTypeName)
@@ -55,8 +55,8 @@ namespace SignalBox.Core.Workflows
         public async Task<TrackedUserSystemMap> LinkTrackedUserToSystem(string systemUserId, long integratedSystemId, string commonUserId)
         {
             var system = await systemStoreCollection.IntegratedSystemStore.Read(integratedSystemId);
-            var trackedUser = await trackedUserStore.ReadFromCommonId(commonUserId);
-            var link = await trackedUserSystemMapStore.Create(new TrackedUserSystemMap(systemUserId, system, trackedUser));
+            var customer = await customerStore.ReadFromCommonId(commonUserId);
+            var link = await trackedUserSystemMapStore.Create(new TrackedUserSystemMap(systemUserId, system, customer));
             await storageContext.SaveChanges();
             return link;
         }

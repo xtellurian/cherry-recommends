@@ -120,7 +120,7 @@ namespace SignalBox.Web.Controllers
                 if (trackedUsers.Any())
                 {
                     var tu = trackedUsers.First();
-                    logger.LogInformation($"Found a TrackedUser {tu.CommonId} for ticket {ticketId}");
+                    logger.LogInformation($"Found a Customer {tu.CommonId} for ticket {ticketId}");
                     return await HubspotUserFeaturesResponse(tu,
                         integratedSystem.GetCache<HubspotCache>()?.FeatureCrmCardBehaviour);
                 }
@@ -143,8 +143,8 @@ namespace SignalBox.Web.Controllers
                 var integratedSystem = await integratedSystemStore.ReadFromCommonId(portalId);
                 if (await systemMapStore.ExistsInIntegratedSystem(integratedSystem.Id, associatedObjectId))
                 {
-                    var trackedUser = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, associatedObjectId);
-                    return await HubspotUserFeaturesResponse(trackedUser,
+                    var customer = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, associatedObjectId);
+                    return await HubspotUserFeaturesResponse(customer,
                         integratedSystem.GetCache<HubspotCache>()?.FeatureCrmCardBehaviour);
                 }
                 else
@@ -164,14 +164,14 @@ namespace SignalBox.Web.Controllers
             }
         }
 
-        private async Task<HubspotCrmCardResponse> HubspotUserFeaturesResponse(TrackedUser trackedUser, FeatureCrmCardBehaviour behaviour)
+        private async Task<HubspotCrmCardResponse> HubspotUserFeaturesResponse(Customer customer, FeatureCrmCardBehaviour behaviour)
         {
             // deal with potential incoming nulls
             behaviour ??= new FeatureCrmCardBehaviour();
             behaviour.ExcludedFeatures ??= new HashSet<string>();
             behaviour.IncludedFeatures ??= new HashSet<string>();
 
-            var features = await trackedUserFeatureStore.GetFeaturesFor(trackedUser);
+            var features = await trackedUserFeatureStore.GetFeaturesFor(customer);
             // filter included by default
             if (behaviour.IncludedFeatures.Any())
             {
@@ -192,13 +192,13 @@ namespace SignalBox.Web.Controllers
                 var response = new HubspotCrmCardResponse();
                 foreach (var feature in features)
                 {
-                    var val = await trackedUserFeatureStore.ReadFeature(trackedUser, feature);
+                    var val = await trackedUserFeatureStore.ReadFeature(customer, feature);
                     response.AddFeatureValueCard(val);
                 }
 
                 if (behaviour.HasRecommender())
                 {
-                    var recommendation = await GetRecommendation(trackedUser, behaviour);
+                    var recommendation = await GetRecommendation(customer, behaviour);
                     response.AddRecommendation(baseUrl, recommendation);
                 }
 
@@ -215,18 +215,18 @@ namespace SignalBox.Web.Controllers
             }
             else
             {
-                return DefaultCardResponse($"{trackedUser.Name ?? trackedUser.CommonId} has not been classified.");
+                return DefaultCardResponse($"{customer.Name ?? customer.CommonId} has not been classified.");
             }
         }
 
-        private async Task<RecommendationEntity> GetRecommendation(TrackedUser trackedUser, FeatureCrmCardBehaviour behaviour)
+        private async Task<RecommendationEntity> GetRecommendation(Customer customer, FeatureCrmCardBehaviour behaviour)
         {
             if (behaviour.ParameterSetRecommenderId != null)
             {
                 var recommender = await parameterSetRecommenderStore.Read(behaviour.ParameterSetRecommenderId.Value);
                 var input = new ParameterSetRecommenderModelInputV1
                 {
-                    CommonUserId = trackedUser.CommonUserId
+                    CustomerId = customer.CustomerId
                 };
                 return await parameterSetRecommenderInvokation.InvokeParameterSetRecommender(recommender, input);
             }
@@ -235,7 +235,7 @@ namespace SignalBox.Web.Controllers
                 var recommender = await itemsRecommenderStore.Read(behaviour.ItemsRecommenderId.Value);
                 var input = new ItemsModelInputDto
                 {
-                    CommonUserId = trackedUser.CommonUserId
+                    CustomerId = customer.CustomerId
                 };
                 return await itemsRecommenderInvokation.InvokeItemsRecommender(recommender, input);
             }

@@ -14,6 +14,9 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .IsUnique();
 
             builder.ToTable("HistoricTrackedUserFeatures");
+
+            builder.Ignore(_ => _.TrackedUser);
+            builder.HasOne(_ => _.Customer).WithMany(_ => _.HistoricTrackedUserFeatures).HasForeignKey(_ => _.TrackedUserId);
         }
     }
 }

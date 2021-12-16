@@ -9,11 +9,11 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFFeatureStore : EFCommonEntityStoreBase<Feature>, IFeatureStore
     {
-        public EFFeatureStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentService environmentService) 
+        public EFFeatureStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentService environmentService)
         : base(contextProvider, environmentService, c => c.Features)
         { }
 
-        public async Task<Paginated<TrackedUser>> QueryTrackedUsers(int page, long featureId)
+        public async Task<Paginated<Customer>> QueryCustomers(int page, long featureId)
         {
             var itemCount = await Set
                     .Where(_ => _.Id == featureId)
@@ -21,7 +21,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                     .Distinct()
                     .CountAsync();
 
-            List<TrackedUser> results;
+            List<Customer> results;
 
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
@@ -36,10 +36,10 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
             else
             {
-                results = new List<TrackedUser>();
+                results = new List<Customer>();
             }
             var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
-            return new Paginated<TrackedUser>(results, pageCount, itemCount, page);
+            return new Paginated<Customer>(results, pageCount, itemCount, page);
         }
     }
 }

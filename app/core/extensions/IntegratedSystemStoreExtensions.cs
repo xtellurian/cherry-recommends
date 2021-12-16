@@ -8,7 +8,7 @@ namespace SignalBox.Core
         /// <summary>
         /// Looks up a tracked user using integrated system IDs.
         /// </summary>
-        public static async Task<TrackedUser> ReadFromIntegratedSystem(this ITrackedUserSystemMapStore systemMapStore, long integratedSystemId, string externalSystemUserId)
+        public static async Task<Customer> ReadFromIntegratedSystem(this ITrackedUserSystemMapStore systemMapStore, long integratedSystemId, string externalSystemUserId)
         {
             var systemMaps = await systemMapStore.Query(1,  // first page
                     _ => _.UserId == externalSystemUserId && _.IntegratedSystemId == integratedSystemId);
@@ -40,26 +40,26 @@ namespace SignalBox.Core
         /// <summary>
         /// Finds the map for a given system and tracked user
         /// </summary>
-        public static async Task<TrackedUserSystemMap> FindMap(this ITrackedUserSystemMapStore systemMapStore, TrackedUser trackedUser, IntegratedSystem system)
+        public static async Task<TrackedUserSystemMap> FindMap(this ITrackedUserSystemMapStore systemMapStore, Customer customer, IntegratedSystem system)
         {
             var systemMaps = await systemMapStore.Query(1,  // first page
-                    _ => _.TrackedUserId == trackedUser.Id && _.IntegratedSystemId == system.Id);
+                    _ => _.TrackedUserId == customer.Id && _.IntegratedSystemId == system.Id);
             if (systemMaps.Items.Any())
             {
                 return systemMaps.Items.First();
             }
             else
             {
-                throw new BadRequestException($"Tracked User {trackedUser.Id} has no system map for system {system.Id}");
+                throw new BadRequestException($"Tracked User {customer.Id} has no system map for system {system.Id}");
             }
         }
 
         /// <summary>
         /// Returns true if the map exists
         /// </summary>
-        public static async Task<bool> MapExists(this ITrackedUserSystemMapStore systemMapStore, TrackedUser trackedUser, IntegratedSystem system)
+        public static async Task<bool> MapExists(this ITrackedUserSystemMapStore systemMapStore, Customer customer, IntegratedSystem system)
         {
-            var mapCount = await systemMapStore.Count(_ => _.TrackedUserId == trackedUser.Id && _.IntegratedSystemId == system.Id);
+            var mapCount = await systemMapStore.Count(_ => _.TrackedUserId == customer.Id && _.IntegratedSystemId == system.Id);
             return mapCount > 0;
 
         }

@@ -43,6 +43,8 @@ namespace SignalBox.Core.Recommenders
         public RecommendationCorrelator? Correlator { get; set; }
         public long? TrackedUserId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public TrackedUser? TrackedUser { get; set; }
+        public Customer? Customer { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public Customer? TrackedUser => Customer;
     }
 }

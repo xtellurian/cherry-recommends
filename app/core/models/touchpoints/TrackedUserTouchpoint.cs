@@ -7,9 +7,9 @@ namespace SignalBox.Core
         protected TrackedUserTouchpoint()
         { }
 
-        public TrackedUserTouchpoint(TrackedUser trackedUser, Touchpoint touchpoint, Dictionary<string, object> values, int version)
+        public TrackedUserTouchpoint(Customer customer, Touchpoint touchpoint, Dictionary<string, object> values, int version)
         {
-            TrackedUser = trackedUser;
+            Customer = customer;
             Touchpoint = touchpoint;
             Values = values;
             Version = version;
@@ -17,7 +17,8 @@ namespace SignalBox.Core
 
         public int Version { get; set; }
         public long TrackedUserId { get; set; }
-        public TrackedUser TrackedUser { get; set; }
+        public Customer TrackedUser => Customer;
+        public Customer Customer { get; set; }
         public long TouchpointId { get; set; }
         public Touchpoint Touchpoint { get; set; }
         public Dictionary<string, object> Values { get; set; }

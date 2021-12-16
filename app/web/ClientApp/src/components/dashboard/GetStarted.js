@@ -16,7 +16,7 @@ export const GetStarted = () => {
               creating a data integration
             </Link>{" "}
             or{" "}
-            <Link to="/tracked-users/upload">
+            <Link to="/customers/upload">
               uploading a .csv file with customer information.
             </Link>
           </li>

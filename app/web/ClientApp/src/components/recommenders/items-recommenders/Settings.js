@@ -15,6 +15,7 @@ import { SettingsUtil } from "../utils/settingsUtil";
 import { ErrorCard, Spinner } from "../../molecules";
 import { LoadingPopup } from "../../molecules/popups/LoadingPopup";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
+import { SettingRow } from "../../molecules/layout/SettingRow";
 
 export const Settings = () => {
   const { id } = useParams();
@@ -72,28 +73,23 @@ export const Settings = () => {
               basePath="/recommenders/items-recommenders"
               updateSettings={handleUpdate}
             />
-            <div className="row">
-              <div className="col">
-                <h5>Baseline Item</h5>
-                Choosing a baseline (default) item helps the recommender know
-                what to do in error situations, what to do when there's no
-                information about a tracked user, and how to compare various
-                items.
-              </div>
-              <div className="col-3">
-                {defaultItem.loading ? (
-                  <Spinner />
-                ) : (
-                  <Selector
-                    isSearchable
-                    placeholder={defaultItem.name || "Choose a default item."}
-                    noOptionsMessage={(inputValue) => "No Items Available"}
-                    onChange={(so) => handleSetDefaultItem(so.value)}
-                    options={itemOptions}
-                  />
-                )}
-              </div>
-            </div>
+            <SettingRow
+              label="Baseline Item"
+              description="The baseline item should be a safe default choice. The baseline will
+              be used in reporting to compare the performance of item variations."
+            >
+              {defaultItem.loading ? (
+                <Spinner />
+              ) : (
+                <Selector
+                  isSearchable
+                  placeholder={defaultItem.name || "Choose a default item."}
+                  noOptionsMessage={(inputValue) => "No Items Available"}
+                  onChange={(so) => handleSetDefaultItem(so.value)}
+                  options={itemOptions}
+                />
+              )}
+            </SettingRow>
           </React.Fragment>
         )}
       </ItemRecommenderLayout>

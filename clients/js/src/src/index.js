@@ -12,9 +12,10 @@ if (typeof globalThis === "object") {
 }
 
 import * as apiKeys from "./api/apiKeyApi";
+import * as customers from "./api/customersApi";
 import * as dataSummary from "./api/dataSummaryApi";
 import * as deployment from "./api/deploymentApi";
-import * as events from "./api/eventsApi/index";
+import * as events from "./api/eventsApi";
 import * as environments from "./api/environmentsApi";
 import * as featureGenerators from "./api/featureGeneratorsApi";
 import * as features from "./api/featuresApi";
@@ -44,6 +45,7 @@ import * as errorHandling from "./utilities/errorHandling";
 export {
   actions,
   apiKeys,
+  customers,
   dataSummary,
   deployment,
   events,

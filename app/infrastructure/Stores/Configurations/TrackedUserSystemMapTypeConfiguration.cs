@@ -14,6 +14,8 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder
                 .HasIndex(_ => new { _.UserId, _.TrackedUserId, _.IntegratedSystemId })
                 .IsUnique();
+            builder.Ignore(_ => _.TrackedUser);
+            builder.HasOne(_ => _.Customer).WithMany(_ => _.IntegratedSystemMaps).HasForeignKey(_ => _.TrackedUserId);
         }
     }
 }

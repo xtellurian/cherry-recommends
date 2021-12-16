@@ -7,9 +7,9 @@ namespace SignalBox.Core
     {
         public ItemsModelInputDto()
         { }
-        public ItemsModelInputDto(string commonUserId) : base(commonUserId)
+        public ItemsModelInputDto(string customerId) : base(customerId)
         { }
-        public ItemsModelInputDto(string commonUserId, IDictionary<string, object> arguments) : base(commonUserId, arguments)
+        public ItemsModelInputDto(string customerId, IDictionary<string, object> arguments) : base(customerId, arguments)
         {
         }
 

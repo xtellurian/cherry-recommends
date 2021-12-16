@@ -13,13 +13,13 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, environmentService, c => c.Touchpoints)
         { }
 
-        public async Task<Paginated<TrackedUser>> QueryTrackedUsers(int page, long touchpointId)
+        public async Task<Paginated<Customer>> QueryTrackedUsers(int page, long touchpointId)
         {
             var itemCount = await Set
                     .Where(_ => _.Id == touchpointId)
                     .SelectMany(_ => _.TrackedUserTouchpoints.Select(_ => _.TrackedUser)).CountAsync();
 
-            List<TrackedUser> results;
+            List<Customer> results;
 
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
@@ -33,10 +33,10 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
             else
             {
-                results = new List<TrackedUser>();
+                results = new List<Customer>();
             }
             var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
-            return new Paginated<TrackedUser>(results, pageCount, itemCount, page);
+            return new Paginated<Customer>(results, pageCount, itemCount, page);
         }
     }
 }

@@ -41,10 +41,11 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Get's the tracked users associated with a feature.</summary>
         [HttpGet("{id}/TrackedUsers")]
-        public async Task<Paginated<TrackedUser>> GetAssociatedTrackedUsers(string id, [FromQuery] PaginateRequest p)
+        [HttpGet("{id}/Customers")]
+        public async Task<Paginated<Customer>> GetAssociatedCustomers(string id, [FromQuery] PaginateRequest p)
         {
             var feature = await base.GetResource(id);
-            return await workflows.GetTrackedUsers(feature, p.Page);
+            return await workflows.GetCustomers(feature, p.Page);
         }
 
         /// <summary>Get's the Generators associated with the Feature.</summary>
@@ -60,7 +61,7 @@ namespace SignalBox.Web.Controllers
         public async Task<Paginated<HistoricTrackedUserFeature>> GetLatestTrackedUserFeatures(string id, [FromQuery] PaginateRequest p)
         {
             var feature = await base.GetResource(id);
-            var users = await workflows.GetTrackedUsers(feature, p.Page);
+            var users = await workflows.GetCustomers(feature, p.Page);
             var featureValues = new List<HistoricTrackedUserFeature>();
             foreach (var trackedUser in users.Items)
             {

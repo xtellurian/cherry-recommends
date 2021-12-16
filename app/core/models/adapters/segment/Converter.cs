@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using static SignalBox.Core.Workflows.TrackedUserEventsWorkflows;
+using static SignalBox.Core.Workflows.CustomerEventsWorkflows;
 
 namespace SignalBox.Core.Adapters.Segment
 {
@@ -13,7 +13,7 @@ namespace SignalBox.Core.Adapters.Segment
             "RecommendationCorrelatorId",
         };
 
-        public static TrackedUserEventInput ToTrackedUserEventInput(this SegmentModel model, IntegratedSystem sys)
+        public static CustomerEventInput ToTrackedUserEventInput(this SegmentModel model, IntegratedSystem sys)
         {
             long? correlatorId = null;
             try
@@ -38,7 +38,7 @@ namespace SignalBox.Core.Adapters.Segment
                 // swallow this exception
             }
 
-            return new TrackedUserEventInput(
+            return new CustomerEventInput(
                 model.UserId, model.MessageId, model.Timestamp, correlatorId, sys.Id, MapEventKind(model), model.Event ?? "Segment|Unknown", model.Properties);
 
         }

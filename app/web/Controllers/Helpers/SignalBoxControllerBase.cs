@@ -8,25 +8,11 @@ namespace SignalBox.Web.Controllers
     [Produces("application/json")]
     public class SignalBoxControllerBase : ControllerBase
     {
-        protected async Task<TrackedUser> LoadTrackedUser(ITrackedUserStore trackedUserStore,
+        protected async Task<Customer> LoadCustomer(ICustomerStore customerStore,
                                                           string internalOrCommonId,
                                                           bool? useInternalId = null)
         {
-            TrackedUser trackedUser;
-            if ((useInternalId == null || useInternalId == true) && long.TryParse(internalOrCommonId, out var internalId))
-            {
-                trackedUser = await trackedUserStore.Read(internalId);
-            }
-            else if (useInternalId == true)
-            {
-                throw new BadRequestException("Internal Ids must be long integers");
-            }
-            else
-            {
-                trackedUser = await trackedUserStore.ReadFromCommonId(internalOrCommonId);
-            }
-
-            return trackedUser;
+            return await customerStore.GetEntity<Customer>(internalOrCommonId, useInternalId);
         }
     }
 }

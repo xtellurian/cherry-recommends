@@ -11,6 +11,9 @@ namespace SignalBox.Infrastructure.EntityFramework
             base.Configure(builder);
             builder.HasIndex(_ => _.InvokeStarted);
             builder.Property(_ => _.Messages).HasJsonConversion();
+
+            builder.Ignore(_ => _.TrackedUser);
+            builder.HasOne(_ => _.Customer).WithMany().HasForeignKey(_ => _.TrackedUserId);
         }
     }
 }

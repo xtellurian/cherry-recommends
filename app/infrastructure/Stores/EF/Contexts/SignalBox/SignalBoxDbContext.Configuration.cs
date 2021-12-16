@@ -17,8 +17,8 @@ namespace SignalBox.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TrackedUserTypeConfiguration).Assembly,
-                _ => _.Namespace.StartsWith(typeof(TrackedUserTypeConfiguration).Namespace));
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CustomerTypeConfiguration).Assembly,
+                _ => _.Namespace.StartsWith(typeof(CustomerTypeConfiguration).Namespace));
             FixSqlLite(modelBuilder);
             modelBuilder.Entity<Tenant>().Metadata.SetIsTableExcludedFromMigrations(true);
             modelBuilder.Entity<TenantMembership>().Metadata.SetIsTableExcludedFromMigrations(true);

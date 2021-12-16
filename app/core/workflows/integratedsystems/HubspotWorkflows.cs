@@ -11,8 +11,8 @@ namespace SignalBox.Core.Workflows
 {
     public class HubspotWorkflows : HubspotWorkflowBase, IWorkflow
     {
-        private readonly TrackedUserEventsWorkflows eventsWorkflows;
-        private readonly ITrackedUserEventStore eventStore;
+        private readonly CustomerEventsWorkflows eventsWorkflows;
+        private readonly ICustomerEventStore eventStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IItemsRecommenderStore itemsRecommenderStore;
@@ -20,9 +20,9 @@ namespace SignalBox.Core.Workflows
         private readonly ITelemetry telemetry;
 
         public HubspotWorkflows(IIntegratedSystemStore integratedSystemStore,
-                                TrackedUserEventsWorkflows eventsWorkflows,
-                                ITrackedUserStore trackedUserStore,
-                                ITrackedUserEventStore eventStore,
+                                CustomerEventsWorkflows eventsWorkflows,
+                                ICustomerStore trackedUserStore,
+                                ICustomerEventStore eventStore,
                                 ITrackedUserSystemMapStore systemMapStore,
                                 IParameterSetRecommenderStore parameterSetRecommenderStore,
                                 IItemsRecommenderStore itemsRecommenderStore,
@@ -127,18 +127,18 @@ namespace SignalBox.Core.Workflows
             long? userId = null;
             if (trackedUserId != null)
             {
-                if (await trackedUserStore.ExistsFromCommonId(trackedUserId))
+                if (await customerStore.ExistsFromCommonId(trackedUserId))
                 {
-                    var trackedUser = await trackedUserStore.ReadFromCommonId(trackedUserId);
-                    var map = await GetSystemMap(system, trackedUser);
+                    var customer = await customerStore.ReadFromCommonId(trackedUserId);
+                    var map = await GetSystemMap(system, customer);
                     userId = int.Parse(map.UserId);
                 }
                 else
                 {
                     if (int.TryParse(trackedUserId, out var id))
                     {
-                        var trackedUser = await trackedUserStore.Read(id);
-                        var map = await GetSystemMap(system, trackedUser);
+                        var customer = await customerStore.Read(id);
+                        var map = await GetSystemMap(system, customer);
                         userId = int.Parse(map.UserId);
                     }
                     else
@@ -151,7 +151,7 @@ namespace SignalBox.Core.Workflows
             return await hubspotService.GetContactEvents(system, dateTimeProvider.Now.AddMonths(-3).DateTime, null, userId, limit);
         }
 
-        public async Task<IEnumerable<TrackedUser>> GetAssociatedTrackedUsersFromTicket(string integratedSystemCommonId, string ticketId)
+        public async Task<IEnumerable<Customer>> GetAssociatedTrackedUsersFromTicket(string integratedSystemCommonId, string ticketId)
         {
             var system = await integratedSystemStore.ReadFromCommonId(integratedSystemCommonId);
             await CheckAndRefreshCredentials(system);
@@ -200,7 +200,7 @@ namespace SignalBox.Core.Workflows
                     throw new BadRequestException($"Couldn't find user, Hubspot Property is: {behaviour.CommonUserIdPropertyName}");
                 }
             }
-            var trackedUser = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, associatedObjectId);
+            var customer = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, associatedObjectId);
             // use the object ID
             double? outcomeFeedbackValue = null;
             if (outcome == "GOOD")
@@ -212,18 +212,18 @@ namespace SignalBox.Core.Workflows
                 outcomeFeedbackValue = -0.4;
             }
 
-            return await eventsWorkflows.TrackUserEvents(new List<TrackedUserEventsWorkflows.TrackedUserEventInput>
+            return await eventsWorkflows.AddEvents(new List<CustomerEventsWorkflows.CustomerEventInput>
                 {
-                    new TrackedUserEventsWorkflows.TrackedUserEventInput(trackedUser.CommonId,
+                    new CustomerEventsWorkflows.CustomerEventInput(customer.CommonId,
                     eventId, dateTimeProvider.Now, correlationId, integratedSystem.Id, EventKinds.ConsumeRecommendation, "Direct Feedback",
                     new Dictionary<string, object>
                     {
-                        {TrackedUserEvent.FEEDBACK, outcomeFeedbackValue},
+                        {CustomerEvent.FEEDBACK, outcomeFeedbackValue},
                     })
                 }, addToQueue: false);
 
         }
-        public async Task<TrackedUser> HandleWebhookPayload(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
+        public async Task<Customer> HandleWebhookPayload(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
         {
             switch (webhookPayload.SubscriptionType)
             {
@@ -237,7 +237,7 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        private async Task<TrackedUser> HandleContactCreated(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
+        private async Task<Customer> HandleContactCreated(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
         {
             var hubspotInfo = integratedSystem.GetCache<HubspotCache>();
             var behaviour = hubspotInfo.WebhookBehaviour ?? new HubspotTrackedUserLinkBehaviour();
@@ -246,7 +246,7 @@ namespace SignalBox.Core.Workflows
             {
                 var commonUserId = webhookPayload.ObjectId?.ToString();
                 // then use object ID
-                if (await trackedUserStore.ExistsFromCommonId(commonUserId))
+                if (await customerStore.ExistsFromCommonId(commonUserId))
                 {
                     // for now, just throw with an error here, but log it.
                     logger.LogError($"Tracked User {commonUserId} already exists");
@@ -283,28 +283,28 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        private async Task<TrackedUser> CreateNewTrackedUser(IntegratedSystem integratedSystem, string objectId, string commonUserId)
+        private async Task<Customer> CreateNewTrackedUser(IntegratedSystem integratedSystem, string objectId, string commonUserId)
         {
-            var trackedUser = await trackedUserStore.Create(new TrackedUser(commonUserId));
-            trackedUser.IntegratedSystemMaps.Add(new TrackedUserSystemMap(objectId, integratedSystem, trackedUser));
+            var customer = await customerStore.Create(new Customer(commonUserId));
+            customer.IntegratedSystemMaps.Add(new TrackedUserSystemMap(objectId, integratedSystem, customer));
             await storageContext.SaveChanges();
-            return trackedUser;
+            return customer;
         }
 
-        private async Task<TrackedUser> HandleContactPropertyChanged(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
+        private async Task<Customer> HandleContactPropertyChanged(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)
         {
             var hubspotInfo = integratedSystem.GetCache<HubspotCache>();
             var behaviour = hubspotInfo.WebhookBehaviour ?? new HubspotTrackedUserLinkBehaviour();
             var objectId = webhookPayload.ObjectId?.ToString();
 
-            TrackedUser trackedUser;
+            Customer customer;
             var exists = await systemMapStore.ExistsInIntegratedSystem(integratedSystem.Id, objectId) == true;
             if ((behaviour.CreateUserIfNotExist == true) && !exists)
             {
                 // create the tracked user.
                 if (string.IsNullOrEmpty(behaviour.CommonUserIdPropertyName))
                 {
-                    trackedUser = await CreateNewTrackedUser(integratedSystem, objectId, objectId);
+                    customer = await CreateNewTrackedUser(integratedSystem, objectId, objectId);
                 }
                 else if (webhookPayload.PropertyName == behaviour.CommonUserIdPropertyName)
                 {
@@ -329,20 +329,20 @@ namespace SignalBox.Core.Workflows
             }
             else
             {
-                trackedUser = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, objectId);
+                customer = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, objectId);
             }
 
-            if (string.IsNullOrEmpty(trackedUser.Name) && webhookPayload.PropertyName?.ToLower()?.Contains("firstname") == true)
+            if (string.IsNullOrEmpty(customer.Name) && webhookPayload.PropertyName?.ToLower()?.Contains("firstname") == true)
             {
-                trackedUser.Name = webhookPayload.PropertyValue;
+                customer.Name = webhookPayload.PropertyValue;
             }
 
-            trackedUser.Properties[$"{behaviour.PropertyPrefix}{webhookPayload.PropertyName}"] = webhookPayload.PropertyValue;
+            customer.Properties[$"{behaviour.PropertyPrefix}{webhookPayload.PropertyName}"] = webhookPayload.PropertyValue;
 
             // now create an event that tracks properties changing
-            await eventStore.AddTrackedUserEvents(new List<TrackedUserEvent>
+            await eventStore.AddRange(new List<CustomerEvent>
             {
-                new TrackedUserEvent(trackedUser,
+                new CustomerEvent(customer,
                     webhookPayload.EventId?.ToString(),
                     dateTimeProvider.Now,
                     integratedSystem,
@@ -354,7 +354,7 @@ namespace SignalBox.Core.Workflows
                     recommendationCorrelatorId: null)
                 });
             await storageContext.SaveChanges();
-            return trackedUser;
+            return customer;
         }
 
         public async Task SaveTokenFromCode(long integratedSystemId, string code, string redirectUri)

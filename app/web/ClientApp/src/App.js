@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Route } from "react-router";
+import { Redirect, Route } from "react-router";
 import { Layout } from "./components/Layout";
 import { Home } from "./components/Home";
-import { TrackedUsersComponent } from "./components/tracked-users/TrackedUsersComponent";
+import { CustomersComponent } from "./components/customers/CustomersComponent";
 import AuthorizeRoute from "./components/auth0/ProtectedRoute";
 import { SegmentsComponent } from "./components/segments/SegmentsComponent";
 import { ModelRegistrationsComponent } from "./components/models/ModelRegistrationsComponent";
@@ -11,7 +11,6 @@ import { Profile } from "./components/auth0/Profile";
 import { SettingsComponent } from "./components/settings/SettingsComponent";
 import { DataViewComponent } from "./components/data/DataViewComponent";
 import { ReportsComponent } from "./components/reports/ReportsComponent";
-import { TouchpointsComponent } from "./components/touchpoints/TouchpointsComponent";
 import { FeaturesComponent } from "./components/features/FeaturesComponent";
 import { ParametersComponent } from "./components/parameters/ParametersComponent";
 import { RecommendersComponent } from "./components/recommenders/RecommendersComponent";
@@ -32,10 +31,10 @@ export default class App extends Component {
         <Route exact path="/" component={Home} />
         <AuthorizeRoute path="/admin" component={AdminComponent} />
         <AuthorizeRoute component={Profile} path="/profile" />
-        <AuthorizeRoute
-          path="/tracked-users"
-          component={TrackedUsersComponent}
-        />
+        <Route path="/tracked-users">
+          <Redirect to="/customers" />
+        </Route>
+        <AuthorizeRoute path="/customers" component={CustomersComponent} />
         <AuthorizeRoute path="/features" component={FeaturesComponent} />
         <AuthorizeRoute path="/segments" component={SegmentsComponent} />
         <AuthorizeRoute path="/parameters" component={ParametersComponent} />
@@ -61,7 +60,6 @@ export default class App extends Component {
 
         <AuthorizeRoute path="/dataview" component={DataViewComponent} />
         <AuthorizeRoute path="/reports" component={ReportsComponent} />
-        <AuthorizeRoute path="/touchpoints" component={TouchpointsComponent} />
         <Route path="/docs/api" component={ApiDocs} />
       </Layout>
     );

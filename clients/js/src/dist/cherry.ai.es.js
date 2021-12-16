@@ -164,6 +164,130 @@ var apiKeyApi = /*#__PURE__*/Object.freeze({
     deleteApiKeyAsync: deleteApiKeyAsync
 });
 
+/**
+ * Returns an array with arrays of the given size.
+ *
+ * @param myArray {Array} array to split
+ * @param chunk_size {Integer} Size of every group
+ */
+function chunkArray(myArray, chunk_size) {
+    let index = 0;
+    const arrayLength = myArray.length;
+    const tempArray = [];
+    for (index = 0; index < arrayLength; index += chunk_size) {
+        const myChunk = myArray.slice(index, index + chunk_size);
+        // Do something if you want with the group
+        tempArray.push(myChunk);
+    }
+    return tempArray;
+}
+
+const MAX_ARRAY = 5000;
+const basePath = "api/customers";
+const fetchCustomersAsync = async ({ token, page, searchTerm }) => {
+    return await executeFetch$1({
+        path: basePath,
+        token,
+        page,
+        query: {
+            "q.term": searchTerm,
+        },
+    });
+};
+const updateMergePropertiesAsync$1 = async ({ token, id, properties }) => {
+    return await executeFetch$1({
+        token,
+        path: `${basePath}/${id}/properties`,
+        method: "post",
+        body: properties,
+    });
+};
+const fetchCustomerAsync = async ({ token, id, useInternalId }) => {
+    return await executeFetch$1({
+        path: `${basePath}/${id}`,
+        token,
+        query: {
+            useInternalId,
+        },
+    });
+};
+const fetchUniqueCustomerActionGroupsAsync = async ({ token, id }) => {
+    return await executeFetch$1({
+        token,
+        path: `${basePath}/${id}/action-groups`,
+    });
+};
+const fetchLatestRecommendationsAsync$1 = async ({ token, id }) => {
+    return await executeFetch$1({
+        token,
+        path: `${basePath}/${id}/latest-recommendations`,
+    });
+};
+const fetchCustomerActionAsync = async ({ token, id, category, actionName, }) => {
+    return await executeFetch$1({
+        path: `${basePath}/${id}/actions/${category}`,
+        token,
+        query: {
+            actionName,
+        },
+    });
+};
+const uploadUserDataAsync$1 = async ({ token, payload }) => {
+    const payloads = chunkArray(payload.users, MAX_ARRAY).map((users) => ({
+        users,
+    }));
+    const responses = [];
+    for (const p of payloads) {
+        const response = await executeFetch$1({
+            token,
+            path: basePath,
+            method: "put",
+            body: p,
+        });
+        if (response.ok) {
+            responses.push(await response.json());
+        }
+        else {
+            return await handleErrorResponse(response);
+        }
+    }
+    return responses;
+};
+const createOrUpdateCustomerAsync = async ({ token, customer, user, }) => {
+    if (user) {
+        console.log("user is a deprecated property in createOrUpdateCustomerAsync(). use 'customer'.");
+    }
+    return await executeFetch$1({
+        path: basePath,
+        method: "post",
+        body: customer || user,
+        token,
+    });
+};
+const fetchCustomersActionsAsync = async ({ token, page, id, revenueOnly, }) => {
+    return await executeFetch$1({
+        path: `${basePath}/${id}/Actions`,
+        token,
+        page,
+        query: {
+            revenueOnly: !!revenueOnly,
+        },
+    });
+};
+
+var customersApi = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    fetchCustomersAsync: fetchCustomersAsync,
+    updateMergePropertiesAsync: updateMergePropertiesAsync$1,
+    fetchCustomerAsync: fetchCustomerAsync,
+    fetchUniqueCustomerActionGroupsAsync: fetchUniqueCustomerActionGroupsAsync,
+    fetchLatestRecommendationsAsync: fetchLatestRecommendationsAsync$1,
+    fetchCustomerActionAsync: fetchCustomerActionAsync,
+    uploadUserDataAsync: uploadUserDataAsync$1,
+    createOrUpdateCustomerAsync: createOrUpdateCustomerAsync,
+    fetchCustomersActionsAsync: fetchCustomersActionsAsync
+});
+
 const fetchEventSummaryAsync = async ({ token }) => {
     return await executeFetch$1({
         path: "api/datasummary/events",
@@ -210,16 +334,17 @@ var deploymentApi = /*#__PURE__*/Object.freeze({
     fetchDeploymentConfigurationAsync: fetchDeploymentConfigurationAsync
 });
 
+const Custom = "Custom";
+const Behaviour = "Behaviour";
 const ConsumeRecommendation = "ConsumeRecommendation";
-
 const fetchEventAsync = async ({ id, token }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         token,
         path: `api/events/${id}`,
     });
 };
-const createEventsAsync = async ({ apiKey, token, events }) => {
-    return await executeFetch$1({
+const createEventsAsync = async ({ apiKey, token, events, }) => {
+    return await executeFetch({
         path: "api/events",
         method: "post",
         token,
@@ -227,19 +352,21 @@ const createEventsAsync = async ({ apiKey, token, events }) => {
         body: events,
     });
 };
-const fetchTrackedUsersEventsAsync = async ({ token, id, useInternalId, }) => {
-    return await executeFetch$1({
-        path: `api/TrackedUsers/${id}/events`,
+const fetchCustomersEventsAsync = async ({ token, id, useInternalId, }) => {
+    return await executeFetch({
+        path: `api/Customers/${id}/events`,
         token,
         query: {
             useInternalId,
         },
     });
 };
+const fetchTrackedUsersEventsAsync = fetchCustomersEventsAsync;
 // useful extension methods to create certain event kinds
-const createRecommendationConsumedEventAsync = async ({ token, commonUserId, correlatorId, }) => {
+const createRecommendationConsumedEventAsync = async ({ token, commonUserId, customerId, correlatorId, }) => {
     const payload = {
         commonUserId,
+        customerId,
         eventId: `recommendation-${correlatorId}-${new Date().getTime()}`,
         recommendationCorrelatorId: correlatorId,
         kind: ConsumeRecommendation,
@@ -248,10 +375,14 @@ const createRecommendationConsumedEventAsync = async ({ token, commonUserId, cor
     return await createEventsAsync({ token, events: [payload] });
 };
 
-var index$1 = /*#__PURE__*/Object.freeze({
+var eventsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
+    Custom: Custom,
+    Behaviour: Behaviour,
+    ConsumeRecommendation: ConsumeRecommendation,
     fetchEventAsync: fetchEventAsync,
     createEventsAsync: createEventsAsync,
+    fetchCustomersEventsAsync: fetchCustomersEventsAsync,
     fetchTrackedUsersEventsAsync: fetchTrackedUsersEventsAsync,
     createRecommendationConsumedEventAsync: createRecommendationConsumedEventAsync
 });
@@ -1379,112 +1510,16 @@ var touchpointsApi = /*#__PURE__*/Object.freeze({
     fetchTrackedUserTouchpointValuesAsync: fetchTrackedUserTouchpointValuesAsync
 });
 
-/**
- * Returns an array with arrays of the given size.
- *
- * @param myArray {Array} array to split
- * @param chunk_size {Integer} Size of every group
- */
-function chunkArray(myArray, chunk_size) {
-    let index = 0;
-    const arrayLength = myArray.length;
-    const tempArray = [];
-    for (index = 0; index < arrayLength; index += chunk_size) {
-        const myChunk = myArray.slice(index, index + chunk_size);
-        // Do something if you want with the group
-        tempArray.push(myChunk);
-    }
-    return tempArray;
-}
-
-const MAX_ARRAY = 5000;
-const fetchTrackedUsersAsync = async ({ token, page, searchTerm }) => {
-    return await executeFetch$1({
-        path: "api/trackedUsers",
-        token,
-        page,
-        query: {
-            "q.term": searchTerm,
-        },
-    });
-};
-const updateMergePropertiesAsync = async ({ token, id, properties }) => {
-    return await executeFetch$1({
-        token,
-        path: `api/trackedUsers/${id}/properties`,
-        method: "post",
-        body: properties,
-    });
-};
-const fetchTrackedUserAsync = async ({ token, id, useInternalId }) => {
-    return await executeFetch$1({
-        path: `api/trackedUsers/${id}`,
-        token,
-        query: {
-            useInternalId,
-        },
-    });
-};
-const fetchUniqueTrackedUserActionGroupsAsync = async ({ token, id, }) => {
-    return await executeFetch$1({
-        token,
-        path: `api/trackedUsers/${id}/action-groups`,
-    });
-};
-const fetchLatestRecommendationsAsync = async ({ token, id }) => {
-    return await executeFetch$1({
-        token,
-        path: `api/trackedUsers/${id}/latest-recommendations`,
-    });
-};
-const fetchTrackedUserActionAsync = async ({ token, id, category, actionName, }) => {
-    return await executeFetch$1({
-        path: `api/trackedUsers/${id}/actions/${category}`,
-        token,
-        query: {
-            actionName,
-        },
-    });
-};
-const uploadUserDataAsync = async ({ token, payload }) => {
-    const payloads = chunkArray(payload.users, MAX_ARRAY).map((users) => ({
-        users,
-    }));
-    const responses = [];
-    for (const p of payloads) {
-        const response = await executeFetch$1({
-            token,
-            path: "api/trackedUsers",
-            method: "put",
-            body: p,
-        });
-        if (response.ok) {
-            responses.push(await response.json());
-        }
-        else {
-            return await handleErrorResponse(response);
-        }
-    }
-    return responses;
-};
-const createOrUpdateTrackedUserAsync = async ({ token, user }) => {
-    return await executeFetch$1({
-        path: "api/trackedUsers",
-        method: "post",
-        body: user,
-        token
-    });
-};
-const fetchTrackedUsersActionsAsync = async ({ token, page, id, revenueOnly, }) => {
-    return await executeFetch$1({
-        path: `api/TrackedUsers/${id}/Actions`,
-        token,
-        page,
-        query: {
-            revenueOnly: !!revenueOnly,
-        },
-    });
-};
+// backwards compatible shim TrackedUser => Customer
+const fetchTrackedUsersAsync = fetchCustomersAsync;
+const updateMergePropertiesAsync = updateMergePropertiesAsync$1;
+const fetchTrackedUserAsync = fetchCustomerAsync;
+const fetchUniqueTrackedUserActionGroupsAsync = fetchUniqueCustomerActionGroupsAsync;
+const fetchLatestRecommendationsAsync = fetchLatestRecommendationsAsync$1;
+const fetchTrackedUserActionAsync = fetchCustomerActionAsync;
+const uploadUserDataAsync = uploadUserDataAsync$1;
+const createOrUpdateTrackedUserAsync = createOrUpdateCustomerAsync;
+const fetchTrackedUsersActionsAsync = fetchCustomersActionsAsync;
 
 var trackedUsersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -1579,4 +1614,4 @@ else {
     throw new Error("Unknown JavaScript environment: Not supported");
 }
 
-export { actionsApi as actions, apiKeyApi as apiKeys, dataSummaryApi as dataSummary, deploymentApi as deployment, environmentsApi as environments, errorHandling, index$1 as events, featureGeneratorsApi as featureGenerators, featuresApi as features, integratedSystemsApi as integratedSystems, itemsRecommendersApi as itemsRecommenders, modelRegistrationsApi as modelRegistrations, index as models, parameterSetRecommendersApi as parameterSetRecommenders, parametersApi as parameters, profileApi as profile, reactConfigApi as reactConfig, recommendableItemsApi as recommendableItems, reportsApi as reports, rewardSelectorsApi as rewardSelectors, segmentsApi as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId$1 as setDefaultEnvironmentId, touchpointsApi as touchpoints, trackedUsersApi as trackedUsers };
+export { actionsApi as actions, apiKeyApi as apiKeys, customersApi as customers, dataSummaryApi as dataSummary, deploymentApi as deployment, environmentsApi as environments, errorHandling, eventsApi as events, featureGeneratorsApi as featureGenerators, featuresApi as features, integratedSystemsApi as integratedSystems, itemsRecommendersApi as itemsRecommenders, modelRegistrationsApi as modelRegistrations, index as models, parameterSetRecommendersApi as parameterSetRecommenders, parametersApi as parameters, profileApi as profile, reactConfigApi as reactConfig, recommendableItemsApi as recommendableItems, reportsApi as reports, rewardSelectorsApi as rewardSelectors, segmentsApi as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId$1 as setDefaultEnvironmentId, touchpointsApi as touchpoints, trackedUsersApi as trackedUsers };

@@ -20,7 +20,7 @@ namespace SignalBox.Core.Workflows
                                    IOptions<HubspotAppCredentials> hubspotCreds,
                                    IIntegratedSystemStore integratedSystemStore,
                                    ITrackedUserSystemMapStore systemMapStore,
-                                   ITrackedUserStore trackedUserStore,
+                                   ICustomerStore trackedUserStore,
                                    IDateTimeProvider dateTimeProvider,
                                    ItemsRecommenderInvokationWorkflows itemsRecommenderWorkflows)
         : base(logger, hubspotService, hubspotCreds, integratedSystemStore, trackedUserStore, dateTimeProvider)
@@ -67,7 +67,7 @@ namespace SignalBox.Core.Workflows
             return report;
         }
 
-        private async Task<bool> SetRecommendationProperty(IntegratedSystem system, ItemsRecommender recommender, TrackedUser tu)
+        private async Task<bool> SetRecommendationProperty(IntegratedSystem system, ItemsRecommender recommender, Customer tu)
         {
             if (await systemMapStore.MapExists(tu, system))
             {

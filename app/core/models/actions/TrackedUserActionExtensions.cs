@@ -6,13 +6,13 @@ namespace SignalBox.Core
 {
     public static class TrackedUserActionExtensions
     {
-        public static ICollection<TrackedUserAction> ToActions(this TrackedUserEvent e)
+        public static ICollection<TrackedUserAction> ToActions(this CustomerEvent e)
         {
             var category = $"Event|{e.Kind}";
             var actions = new List<TrackedUserAction>();
             if (e.Properties == null || e.Properties.Count == 0)
             {
-                actions.Add(new TrackedUserAction(e.TrackedUser,
+                actions.Add(new TrackedUserAction(e.Customer,
                                                       e,
                                                       e.Timestamp,
                                                       e.RecommendationCorrelatorId,
@@ -23,7 +23,7 @@ namespace SignalBox.Core
             }
             foreach (var kvp in e.Properties)
             {
-                actions.Add(ToAction(e.TrackedUser,
+                actions.Add(ToAction(e.Customer,
                                     e,
                                     e.Timestamp,
                                     e.RecommendationCorrelatorId,
@@ -33,7 +33,7 @@ namespace SignalBox.Core
             return actions;
         }
 
-        public static ICollection<TrackedUserAction> ToActions(this IEnumerable<TrackedUserEvent> events)
+        public static ICollection<TrackedUserAction> ToActions(this IEnumerable<CustomerEvent> events)
         {
             var actions = new List<TrackedUserAction>();
             foreach (var e in events)
@@ -43,7 +43,7 @@ namespace SignalBox.Core
             return actions;
         }
 
-        public static IList<TrackedUserAction> ActionsFromChanges(this TrackedUser user,
+        public static IList<TrackedUserAction> ActionsFromChanges(this Customer user,
                                                            IDictionary<string, object> nextProperties,
                                                            DateTimeOffset now,
                                                            long? recommendationCorrelatorId,
@@ -84,8 +84,8 @@ namespace SignalBox.Core
             return result;
         }
 
-        private static TrackedUserAction ToAction(TrackedUser trackedUser,
-                                     TrackedUserEvent trackedUserEvent,
+        private static TrackedUserAction ToAction(Customer customer,
+                                     CustomerEvent trackedUserEvent,
                                      DateTimeOffset timestamp,
                                      long? recommendationCorrelatorId,
                                      long? integratedSystemId,
@@ -93,12 +93,12 @@ namespace SignalBox.Core
                                      KeyValuePair<string, object> kvp)
         {
             // handle internal
-            if (kvp.Key.StartsWith(TrackedUserEvent.FOUR2_INTERNAL_PREFIX))
+            if (kvp.Key.StartsWith(CustomerEvent.FOUR2_INTERNAL_PREFIX))
             {
                 // is internal
-                if (kvp.Key == TrackedUserEvent.FEEDBACK && kvp.Value is int n)
+                if (kvp.Key == CustomerEvent.FEEDBACK && kvp.Value is int n)
                 {
-                    var a = new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, n);
+                    var a = new TrackedUserAction(customer, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, n);
                     a.FeedbackScore = n;
                     return a;
                 }
@@ -106,35 +106,35 @@ namespace SignalBox.Core
 
             if (kvp.Value == null)
             {
-                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, (string)null);
+                return new TrackedUserAction(customer, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, (string)null);
             }
             else if (kvp.Value is double f)
             {
-                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, f);
+                return new TrackedUserAction(customer, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, f);
             }
             else if (kvp.Value is int n)
             {
-                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, n);
+                return new TrackedUserAction(customer, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, n);
             }
             else if (kvp.Value is string s)
             {
-                return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, s);
+                return new TrackedUserAction(customer, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, s);
             }
             else if (kvp.Value is System.Text.Json.JsonElement jsonElement)
             {
                 if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.String)
                 {
-                    return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, jsonElement.GetString());
+                    return new TrackedUserAction(customer, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, jsonElement.GetString());
                 }
                 if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Number)
                 {
                     if (jsonElement.TryGetInt32(out var i))
                     {
-                        return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, i);
+                        return new TrackedUserAction(customer, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, i);
                     }
                     else if (jsonElement.TryGetDouble(out var d))
                     {
-                        return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, d);
+                        return new TrackedUserAction(customer, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, d);
                     }
                     else
                     {
@@ -143,7 +143,7 @@ namespace SignalBox.Core
                 }
                 else
                 {
-                    return new TrackedUserAction(trackedUser, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, $"{kvp.Value}");
+                    return new TrackedUserAction(customer, trackedUserEvent, timestamp, trackedUserEvent.RecommendationCorrelatorId, integratedSystemId, category, kvp.Key, $"{kvp.Value}");
                 }
             }
             else

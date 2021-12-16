@@ -108,7 +108,7 @@ namespace SignalBox.Web.Controllers
             var convertedInput = new ProductRecommenderModelInputV1
             {
                 Arguments = input.Arguments,
-                CommonUserId = input.CommonUserId,
+                CustomerId = input.GetCustomerId() ?? throw new BadRequestException("Id Required"),
             };
             var recommendation = await invokationWorkflows.InvokeProductRecommender(recommender, convertedInput);
             return recommendation.GetOutput<ProductRecommenderModelOutputV1>();

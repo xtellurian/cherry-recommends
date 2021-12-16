@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 using SignalBox.Core.Recommenders;
 
@@ -17,7 +18,8 @@ namespace SignalBox.Core.Recommendations
 
         public RecommenderTypes? RecommenderType { get; set; } // nullable for backwards compat
         public long? TrackedUserId { get; set; }
-        public TrackedUser? TrackedUser { get; set; }
+        public Customer? TrackedUser => Customer;
+        public Customer? Customer { get; set; }
 
         public string? Trigger { get; set; }
 

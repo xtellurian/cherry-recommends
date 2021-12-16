@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Adapters.Segment;
-using static SignalBox.Core.Workflows.TrackedUserEventsWorkflows;
+using static SignalBox.Core.Workflows.CustomerEventsWorkflows;
 
 namespace SignalBox.Core.Workflows
 {
@@ -14,14 +14,14 @@ namespace SignalBox.Core.Workflows
     {
         private readonly ILogger<WebhookWorkflows> logger;
         private readonly IWebhookReceiverStore receiverStore;
-        private readonly ITrackedUserStore trackedUserStore;
-        private readonly TrackedUserEventsWorkflows eventsWorkflows;
+        private readonly ICustomerStore trackedUserStore;
+        private readonly CustomerEventsWorkflows eventsWorkflows;
         private readonly IStorageContext storageContext;
 
         public WebhookWorkflows(ILogger<WebhookWorkflows> logger,
                                 IWebhookReceiverStore receiverStore,
-                                ITrackedUserStore trackedUserStore,
-                                TrackedUserEventsWorkflows eventsWorkflows,
+                                ICustomerStore trackedUserStore,
+                                CustomerEventsWorkflows eventsWorkflows,
                                 IStorageContext storageContext)
         {
             this.logger = logger;
@@ -53,7 +53,7 @@ namespace SignalBox.Core.Workflows
             // first check if the receiver has a shared secret, and if yes, validate the thing
             AssertSegmentSignatureValid(receiver, webhookBody, signature);
             var trackedUserEventInput = JsonSerializer.Deserialize<SegmentModel>(webhookBody).ToTrackedUserEventInput(receiver.IntegratedSystem);
-            var res = await eventsWorkflows.TrackUserEvents(new List<TrackedUserEventInput> { trackedUserEventInput }, addToQueue: false);
+            var res = await eventsWorkflows.AddEvents(new List<CustomerEventInput> { trackedUserEventInput }, addToQueue: false);
             return res;
         }
 

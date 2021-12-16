@@ -1,9 +1,8 @@
 import React from "react";
 
 import { useParams } from "react-router-dom";
-import { setTrackedUserFeatureAsync } from "../../../api/trackedUsersApi";
-import { AsyncSelectTrackedUser } from "../../molecules/selectors/AsyncSelectTrackedUser";
-import { TrackedUserListItem } from "../../molecules/TrackedUser";
+import { setCustomerFeatureAsync } from "../../../api/customersApi";
+import { CustomerListItem } from "../../molecules/CustomerLists";
 import { useFeature } from "../../../api-hooks/featuresApi";
 import {
   Title,
@@ -15,6 +14,7 @@ import {
 } from "../../molecules";
 import { InputGroup, TextInput } from "../../molecules/TextInput";
 import { useAccessToken } from "../../../api-hooks/token";
+import { AsyncSelectCustomer } from "../../molecules/selectors/AsyncSelectCustomer";
 
 export const SetFeatureValue = () => {
   const token = useAccessToken();
@@ -28,7 +28,7 @@ export const SetFeatureValue = () => {
 
   const handleSetValue = () => {
     setLoading(true);
-    setTrackedUserFeatureAsync({
+    setCustomerFeatureAsync({
       id: trackedUser.id,
       token,
       featureId: feature.commonId,
@@ -50,11 +50,11 @@ export const SetFeatureValue = () => {
       {feature.loading && <Spinner />}
       {error && <ErrorCard error={error} />}
 
-      <AsyncSelectTrackedUser
-        placeholder="Choose a tracked user"
+      <AsyncSelectCustomer
+        placeholder="Choose a Customer"
         onChange={(v) => setTrackedUser(v.value)}
       />
-      {trackedUser && <TrackedUserListItem trackedUser={trackedUser} />}
+      {trackedUser && <CustomerListItem customer={trackedUser} />}
       <hr />
 
       {trackedUser && (

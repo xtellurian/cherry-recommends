@@ -10,6 +10,6 @@ namespace SignalBox.Core
         Task<Paginated<T>> QueryForRecommender(int page, long recommenderId);
         Task<T> GetRecommendationFromCorrelator(long correlatorId);
         Task<bool> CorrelationExists(long? correlatorId);
-        Task<IEnumerable<T>> RecommendationsSince(long recommenderId, TrackedUser trackedUser, DateTimeOffset since);
+        Task<IEnumerable<T>> RecommendationsSince(long recommenderId, Customer customer, DateTimeOffset since);
     }
 }

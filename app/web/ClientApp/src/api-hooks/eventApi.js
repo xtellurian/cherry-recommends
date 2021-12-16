@@ -1,7 +1,7 @@
 import React from "react";
 import { useAccessToken } from "./token";
 import {
-  fetchTrackedUsersEventsAsync,
+  fetchCustomersEventsAsync,
   fetchEventAsync,
 } from "../api/eventsApi";
 
@@ -20,14 +20,14 @@ export const useEvent = ({ id }) => {
 
   return result;
 };
-export const useUserEvents = ({ id }) => {
+export const useCustomerEvents = ({ id }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({
     loading: true,
   });
   React.useEffect(() => {
     if (token && id) {
-      fetchTrackedUsersEventsAsync({
+      fetchCustomersEventsAsync({
         token,
         id,
         useInternalId: true,

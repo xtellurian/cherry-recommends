@@ -34,9 +34,9 @@ namespace SignalBox.Core.Workflows
         // This method doesn't check whether the Feature Value is new
         public async Task HandleFeatureValue(HistoricTrackedUserFeature featureValue)
         {
-            if (featureValue.TrackedUser == null)
+            if (featureValue.Customer == null)
             {
-                await historicFeatureStore.Load(featureValue, _ => _.TrackedUser);
+                await historicFeatureStore.Load(featureValue, _ => _.Customer);
             }
             if (featureValue.Feature == null)
             {

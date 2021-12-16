@@ -101,7 +101,7 @@ namespace SignalBox.Web.Controllers
                 if (trackedUsers.Any())
                 {
                     var tu = trackedUsers.First();
-                    logger.LogInformation($"Found a TrackedUser {tu.CommonId} for ticket {ticketId}");
+                    logger.LogInformation($"Found a Customer {tu.CommonId} for ticket {ticketId}");
                     return await HubspotTouchpointResponse(tu);
                 }
                 else
@@ -129,8 +129,8 @@ namespace SignalBox.Web.Controllers
                 {
                     return DefaultCardResponse($"User ({associatedObjectId}) not linked");
                 }
-                var trackedUser = systemMaps.Items.First().TrackedUser;
-                return await HubspotTouchpointResponse(trackedUser);
+                var customer = systemMaps.Items.First().TrackedUser;
+                return await HubspotTouchpointResponse(customer);
             }
             catch (SignalBox.Core.StorageException ex)
             {
@@ -144,12 +144,12 @@ namespace SignalBox.Web.Controllers
             }
         }
 
-        private async Task<HubspotCrmCardResponse> HubspotTouchpointResponse(TrackedUser trackedUser)
+        private async Task<HubspotCrmCardResponse> HubspotTouchpointResponse(Customer customer)
         {
             var touchpoint = await touchpointStore.ReadFromCommonId("Hubspot");
-            if (await trackedUserTouchpointStore.TouchpointExists(trackedUser, touchpoint))
+            if (await trackedUserTouchpointStore.TouchpointExists(customer, touchpoint))
             {
-                var touchpointValues = await trackedUserTouchpointStore.ReadTouchpoint(trackedUser, touchpoint);
+                var touchpointValues = await trackedUserTouchpointStore.ReadTouchpoint(customer, touchpoint);
                 // they always need an objectId and title
                 touchpointValues.Values["title"] = "Four2 Analysis";
                 touchpointValues.Values["objectId"] = touchpointValues.Id;
@@ -163,7 +163,7 @@ namespace SignalBox.Web.Controllers
             }
             else
             {
-                return DefaultCardResponse($"{trackedUser.Name ?? trackedUser.CommonId} analysis pending.");
+                return DefaultCardResponse($"{customer.Name ?? customer.CommonId} analysis pending.");
             }
         }
 

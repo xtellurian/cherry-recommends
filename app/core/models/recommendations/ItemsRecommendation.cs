@@ -17,7 +17,7 @@ namespace SignalBox.Core.Recommendations
         {
             Recommender = recommender;
             RecommenderId = recommender.Id;
-            TrackedUser = context.TrackedUser;
+            Customer = context.Customer;
             Items = items.Select(_ => _.Item).ToList();
             Scores = items.Select(_ => new ScoreContainer(_.Item, _.Score)).ToList();
         }

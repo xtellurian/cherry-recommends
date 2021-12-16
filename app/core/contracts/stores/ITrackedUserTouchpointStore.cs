@@ -5,9 +5,9 @@ namespace SignalBox.Core
 {
     public interface ITrackedUserTouchpointStore : IEntityStore<TrackedUserTouchpoint>
     {
-        Task<TrackedUserTouchpoint> ReadTouchpoint(TrackedUser trackedUser, Touchpoint touchpoint, int? version = null);
-        Task<bool> TouchpointExists(TrackedUser trackedUser, Touchpoint touchpoint, int? version = null);
-        Task<int> CurrentMaximumTouchpointVersion(TrackedUser trackedUser, Touchpoint touchpoint);
-        Task<IEnumerable<Touchpoint>> GetTouchpointsFor(TrackedUser trackedUser);
+        Task<TrackedUserTouchpoint> ReadTouchpoint(Customer customer, Touchpoint touchpoint, int? version = null);
+        Task<bool> TouchpointExists(Customer customer, Touchpoint touchpoint, int? version = null);
+        Task<int> CurrentMaximumTouchpointVersion(Customer customer, Touchpoint touchpoint);
+        Task<IEnumerable<Touchpoint>> GetTouchpointsFor(Customer customer);
     }
 }

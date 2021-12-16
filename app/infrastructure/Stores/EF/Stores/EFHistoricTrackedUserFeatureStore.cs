@@ -13,10 +13,10 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, c => c.HistoricTrackedUserFeatures)
         { }
 
-        public async Task<int> CurrentMaximumFeatureVersion(TrackedUser trackedUser, Feature feature)
+        public async Task<int> CurrentMaximumFeatureVersion(Customer customer, Feature feature)
         {
             var latest = await context.LatestFeatureVersions
-                .Where(_ => _.FeatureId == feature.Id && _.TrackedUserId == trackedUser.Id)
+                .Where(_ => _.FeatureId == feature.Id && _.TrackedUserId == customer.Id)
                 .FirstOrDefaultAsync();
             return latest?.MaxVersion ?? 0;
 
@@ -34,10 +34,10 @@ namespace SignalBox.Infrastructure.EntityFramework
             //     .Max();
         }
 
-        public async Task<IEnumerable<Feature>> GetFeaturesFor(TrackedUser trackedUser)
+        public async Task<IEnumerable<Feature>> GetFeaturesFor(Customer customer)
         {
             var features = await context.HistoricTrackedUserFeatures
-                .Where(_ => _.TrackedUserId == trackedUser.Id)
+                .Where(_ => _.TrackedUserId == customer.Id)
                 .Include(_ => _.Feature)
                 .Select(_ => _.Feature)
                 .Distinct()
@@ -46,26 +46,26 @@ namespace SignalBox.Infrastructure.EntityFramework
             return features;
         }
 
-        public async Task<HistoricTrackedUserFeature> ReadFeature(TrackedUser trackedUser, Feature feature, int? version = null)
+        public async Task<HistoricTrackedUserFeature> ReadFeature(Customer customer, Feature feature, int? version = null)
         {
-            version ??= await CurrentMaximumFeatureVersion(trackedUser, feature);
-            trackedUser = await context.TrackedUsers
+            version ??= await CurrentMaximumFeatureVersion(customer, feature);
+            customer = await context.Customers
                 .Include(_ => _.HistoricTrackedUserFeatures)
                 .ThenInclude(_ => _.Feature)
-                .FirstAsync(_ => _.Id == trackedUser.Id);
+                .FirstAsync(_ => _.Id == customer.Id);
 
-            return trackedUser.HistoricTrackedUserFeatures.First(_ => _.FeatureId == feature.Id && _.Version == version.Value);
+            return customer.HistoricTrackedUserFeatures.First(_ => _.FeatureId == feature.Id && _.Version == version.Value);
         }
 
-        public async Task<bool> FeatureExists(TrackedUser trackedUser, Feature feature, int? version = null)
+        public async Task<bool> FeatureExists(Customer customer, Feature feature, int? version = null)
         {
-            version ??= await CurrentMaximumFeatureVersion(trackedUser, feature);
-            trackedUser = await context.TrackedUsers
+            version ??= await CurrentMaximumFeatureVersion(customer, feature);
+            customer = await context.Customers
                 .Include(_ => _.HistoricTrackedUserFeatures)
                 .ThenInclude(_ => _.Feature)
-                .FirstAsync(_ => _.Id == trackedUser.Id);
+                .FirstAsync(_ => _.Id == customer.Id);
 
-            return trackedUser.HistoricTrackedUserFeatures.Any(_ => _.FeatureId == feature.Id && _.Version == version.Value);
+            return customer.HistoricTrackedUserFeatures.Any(_ => _.FeatureId == feature.Id && _.Version == version.Value);
         }
     }
 }

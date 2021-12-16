@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useSegment } from "../../api-hooks/segmentsApi";
 import { Title, Subtitle } from "../molecules/layout";
-import { TrackedUserList } from "../molecules/TrackedUser";
+import { CustomerList } from "../molecules/CustomerLists";
 import { Spinner } from "../molecules/Spinner";
 
 export const SegmentMembers = () => {
@@ -22,7 +22,7 @@ export const SegmentMembers = () => {
       <Subtitle>{segment.name}</Subtitle>
       <hr />
       <div>
-        <TrackedUserList ids={segment.inSegment} />
+        <CustomerList ids={segment.inSegment} />
       </div>
     </div>
   );

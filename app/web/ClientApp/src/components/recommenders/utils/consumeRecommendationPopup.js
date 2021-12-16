@@ -20,7 +20,7 @@ export const ConsumeRecommendationPopup = ({
   const handleConsume = () => {
     createRecommendationConsumedEventAsync({
       token,
-      commonUserId: recommendation.commonUserId,
+      customerId: recommendation.customerId,
       correlatorId: recommendation.correlatorId,
     })
       .then(() => {

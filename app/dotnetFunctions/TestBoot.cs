@@ -13,8 +13,8 @@ namespace dotnetFunctions
     {
         // add all project dependencies to this ctor
         public TestBoot(
-              TrackedUserEventsWorkflows eventWorkflow,
-                        TrackedUserWorkflows trackedUserWorkflows,
+              CustomerEventsWorkflows eventWorkflow,
+                        CustomerWorkflows customerWorkflows,
                         HubspotPushWorkflows hubspotPushWorkflows,
                         IItemsRecommenderStore itemsRecommenderStore,
                         IQueueMessagesFileStore queueMessagesFileStore,
