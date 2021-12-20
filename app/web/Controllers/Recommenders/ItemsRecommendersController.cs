@@ -39,7 +39,7 @@ namespace SignalBox.Web.Controllers
         public override async Task<ItemsRecommender> GetResource(string id, bool? useInternalId = null)
         {
             var recommender = await base.GetEntity(id, useInternalId);
-            await store.Load(recommender, _ => _.DefaultItem);
+            await store.Load(recommender, _ => _.BaselineItem);
             await store.LoadMany(recommender, _ => _.Items);
             return recommender;
         }
@@ -56,27 +56,29 @@ namespace SignalBox.Web.Controllers
                 return await workflows.CloneItemsRecommender(c, from);
             }
             return await workflows.CreateItemsRecommender(c,
-                dto.DefaultItemId, dto.ItemIds, dto.NumberOfItemsToRecommend,
+                dto.GetBaselineItemId(), dto.ItemIds, dto.NumberOfItemsToRecommend,
                 dto.Arguments.ToCoreRepresentation(),
                 dto.Settings.ToCoreRepresentation(),
                 dto.UseAutoAi ?? false);
         }
 
-        /// <summary>Sets the default item id.</summary>
+        /// <summary>Sets the baseline item for the recommender.</summary>
         [HttpPost("{id}/DefaultItem")]
-        public async Task<RecommendableItem> SetDefaultItem(string id, [FromBody] DefaultItemDto dto, bool? useInternalId = null)
+        [HttpPost("{id}/BaselineItem")]
+        public async Task<RecommendableItem> SetBaselineItem(string id, [FromBody] BaselineItemDto dto, bool? useInternalId = null)
         {
             var recommender = await GetEntity(id, useInternalId);
-            return await workflows.SetDefaultItem(recommender, dto.ItemId);
+            return await workflows.SetBaselineItem(recommender, dto.ItemId);
         }
 
-        /// <summary>Sets the default item id.</summary>
+        /// <summary>Gets the baseline item for the recommender.</summary>
         [HttpGet("{id}/DefaultItem")]
-        public async Task<RecommendableItem> GetDefaultItem(string id, bool? useInternalId = null)
+        [HttpGet("{id}/BaselineItem")]
+        public async Task<RecommendableItem> GetBaselineItem(string id, bool? useInternalId = null)
         {
             var recommender = await GetEntity(id, useInternalId);
-            await store.Load(recommender, _ => _.DefaultItem);
-            return recommender.DefaultItem ?? throw new BadRequestException("Recommender has no default item");
+            await store.Load(recommender, _ => _.BaselineItem);
+            return recommender.BaselineItem ?? throw new BadRequestException("Recommender has no baseline item");
         }
 
         /// <summary>Set the backing model information.</summary>

@@ -3,12 +3,12 @@ import { useParams } from "react-router-dom";
 import { useItems } from "../../../api-hooks/recommendableItemsApi";
 import {
   useItemsRecommender,
-  useDefaultItem,
+  useBaselineItem,
 } from "../../../api-hooks/itemsRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import {
   setSettingsAsync,
-  setDefaultItemAsync,
+  setBaselineItemAsync,
 } from "../../../api/itemsRecommendersApi";
 import { Selector } from "../../molecules/selectors/Select";
 import { SettingsUtil } from "../utils/settingsUtil";
@@ -19,12 +19,10 @@ import { SettingRow } from "../../molecules/layout/SettingRow";
 
 export const Settings = () => {
   const { id } = useParams();
-  const [updatedSettings, setUpdatedSettings] = React.useState({});
   const [error, setError] = React.useState();
   const [saving, setSaving] = React.useState(false);
   const recommender = useItemsRecommender({
     id,
-    trigger: updatedSettings,
   });
   const token = useAccessToken();
   const items = useItems();
@@ -38,10 +36,10 @@ export const Settings = () => {
     setError(e);
   };
 
-  const [updatedDefaultItem, setUpdatedDefaultItem] = React.useState({});
-  const defaultItem = useDefaultItem({
+  const [updatedBaselineItem, setUpdatedBaselineItem] = React.useState({});
+  const baselineItem = useBaselineItem({
     id,
-    trigger: updatedDefaultItem,
+    trigger: updatedBaselineItem,
   });
   const handleUpdate = (settings) => {
     setSaving(true);
@@ -50,14 +48,14 @@ export const Settings = () => {
       token,
       settings,
     })
-      .then(setUpdatedSettings)
+      .then(setUpdatedBaselineItem)
       .catch(handleUpdateError)
       .finally(() => setSaving(false));
   };
 
-  const handleSetDefaultItem = (itemId) => {
-    setDefaultItemAsync({ token, id, itemId })
-      .then(setUpdatedDefaultItem)
+  const handleSetBaselineItem = (itemId) => {
+    setBaselineItemAsync({ token, id, itemId })
+      .then(setUpdatedBaselineItem)
       .catch(handleUpdateError);
   };
   return (
@@ -78,14 +76,14 @@ export const Settings = () => {
               description="The baseline item should be a safe default choice. The baseline will
               be used in reporting to compare the performance of item variations."
             >
-              {defaultItem.loading ? (
+              {baselineItem.loading ? (
                 <Spinner />
               ) : (
                 <Selector
                   isSearchable
-                  placeholder={defaultItem.name || "Choose a default item."}
+                  placeholder={baselineItem.name || "Choose a baseline item."}
                   noOptionsMessage={(inputValue) => "No Items Available"}
-                  onChange={(so) => handleSetDefaultItem(so.value)}
+                  onChange={(so) => handleSetBaselineItem(so.value)}
                   options={itemOptions}
                 />
               )}

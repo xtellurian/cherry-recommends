@@ -1,20 +1,22 @@
 ---
-sidebar_position: 60
-title: Common User Id
+sidebar_position: 2
+title: Customer Id
 ---
 
-## Common User Id
+:::note
+CustomerId was previously known as Common User Id
+:::
 
-The Common User Id is a special class of [Common Id](./common-id).
+The Customer Id is a special class of [Common Id](./common-id).
 
 Cherry Recommends can track unique user behaviour across multiple systems. 
 For this to work, a single *common* identifier is required to link customers on each integrated system.
 
 > Cherry Recommends enforces unique common ids.
 
-Cherry also maintains an internal id for each `Tracked User`.
+Cherry also maintains an internal id for each `Customer`.
 
-## Considerations when choosing a common user Id
+## Considerations when choosing a Customer Id
 
 When using Cherry, you must choose how to identify each of your customers.
 Examples of identifiers include:
@@ -26,11 +28,11 @@ Examples of identifiers include:
 
 ### Uniqueness
 
-Common user ids must be unique.
-When choosing a common user id, you must ensure that each customer's common id is unique.
-Any duplicate common user ids will be merged into a single `Tracked User`
+Customer Ids must be unique.
+When choosing a Customer Id, you must ensure that each customer's common id is unique.
+Any duplicate Customer Ids will be merged into a single `Customer`
 
 ### Availability
 
 The customer's id must be available across your systems. 
-When you invoke a Cherry `Recommender`, the common user id must be provided to identify the customer for whom to make a recommendation.
+When you invoke a Cherry `Recommender`, the Customer Id must be provided to identify the customer for whom to make a recommendation.

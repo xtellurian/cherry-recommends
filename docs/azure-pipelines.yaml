@@ -12,12 +12,14 @@ trigger:
       - docs/*
 
 pool:
-      vmImage: ubuntu-latest
+  vmImage: ubuntu-latest
 
 jobs:
   - job: build_docs
     displayName: Build Docs
     continueOnError: false
+    variables:
+      - group: Azure_Docs_Prod
     steps:
       - script: npm i
         workingDirectory: docs/docusaurus
@@ -32,6 +34,15 @@ jobs:
         inputs:
           targetPath: $(System.DefaultWorkingDirectory)/docs/docusaurus/build
           artifactName: "docs"
+      # run preview to check for changes upcoming
+      - task: Pulumi@1
+        condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest') )
+        displayName: Pulumi Preview (cherry/docs)
+        inputs:
+          command: preview
+          stack: cherry/docs
+          cwd: $(WORKING_DIRECTORY_PULUMI)
+          createStack: true
 
   - job: deploy_dev
     displayName: Deploy devdocs
@@ -44,10 +55,18 @@ jobs:
       startsWith(variables['Build.SourceBranch'], 'refs/heads/develop/'), 
       startsWith(variables['Build.SourceBranch'], 'refs/heads/docs/')))
     steps:
+      - script: az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(AZURE_TENANT_ID)
+        displayName: az login --service-principal
+
       - task: Pulumi@1
-        displayName: Pulumi Preview
+        displayName: Pulumi Up
+        env:
+          ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+          ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+          ARM_TENANT_ID: $(AZURE_TENANT_ID)
         inputs:
-          command: "preview"
+          command: up
+          args: --yes
           stack: $(DEV_PULUMI_STACK)
           cwd: $(WORKING_DIRECTORY_PULUMI)
           createStack: true
@@ -71,13 +90,21 @@ jobs:
     dependsOn: build_docs
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     steps:
+      - script: az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(AZURE_TENANT_ID)
+        displayName: az login --service-principal
+
       - task: Pulumi@1
-        displayName: Pulumi Preview
+        displayName: Pulumi Up
+        env:
+          ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+          ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+          ARM_TENANT_ID: $(AZURE_TENANT_ID)
         inputs:
-          command: "preview"
+          command: up
+          args: --yes
           stack: $(PROD_PULUMI_STACK)
           cwd: $(WORKING_DIRECTORY_PULUMI)
-          createStack: true
+          createStack: false
 
       - task: DownloadPipelineArtifact@2
         displayName: Download Published Build Artifacts

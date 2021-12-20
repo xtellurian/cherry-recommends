@@ -190,14 +190,14 @@ namespace SignalBox.Core.Workflows
                         saveOnComplete: true);
                     throw; // rethrow the error to propagate to calling client
                 }
-                else if (recommender.DefaultItemId != null)
+                else if (recommender.BaselineItemId != null)
                 {
-                    // case: default item and the model returned error
-                    await itemsRecommenderStore.Load(recommender, _ => _.DefaultItem);
-                    invokationEntry.LogMessage($"Model Error. Fallback to default item");
+                    // case: baseline item and the model returned error
+                    await itemsRecommenderStore.Load(recommender, _ => _.BaselineItem);
+                    invokationEntry.LogMessage($"Model Error. Fallback to baseline item");
                     var output = new ItemsRecommenderModelOutputV1
                     {
-                        ScoredItems = new List<ScoredRecommendableItem> { new ScoredRecommendableItem(recommender.DefaultItem!, 0) }
+                        ScoredItems = new List<ScoredRecommendableItem> { new ScoredRecommendableItem(recommender.BaselineItem!, 0) }
                     };
                     return await HandleRecommendation(recommender, context, input, output);
                 }

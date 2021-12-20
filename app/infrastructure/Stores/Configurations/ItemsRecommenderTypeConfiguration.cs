@@ -17,7 +17,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .WithMany(_ => _.Recommenders);
 
             builder
-                .HasOne(_ => _.DefaultItem)
+                .HasOne(_ => _.BaselineItem)
                 .WithMany()
                 .OnDelete(DeleteBehavior.SetNull);
 

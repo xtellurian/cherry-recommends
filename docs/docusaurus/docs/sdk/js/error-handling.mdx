@@ -5,12 +5,6 @@ title: Error Handling
 
 # Javascript Error Handling
 
-:::note Version
-
-This behaviour was introducted in signalbox.js 2.0.0
-
-:::
-
 The Javascript SDK allows developers to implement custom error handling logic.
 
 ## Default Behaviour
@@ -40,7 +34,7 @@ The network error fetch handler is called if the Fetch API promise rejects.
 You can replace the default network error handling with the following code:
 
 ```js
-import { errorHandling } from "signalbox.js";
+import { errorHandling } from "cherry.ai";
 
 errorHandling.setErrorFetchHandler((error) => {
   // add your network error handing code here
@@ -60,7 +54,7 @@ The error handling function is called if `!response.ok`
 :::
 
 ```js
-import { setErrorResponseHandler } from "signalbox.js";
+import { setErrorResponseHandler } from "cherry.ai";
 
 // this is actually the same as the default error handling function
 setErrorResponseHandler(async (response) => {

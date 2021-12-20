@@ -177,7 +177,7 @@ namespace SignalBox.Web
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SignalBox API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cherry Recommends API", Version = "v1" });
                 c.OperationFilter<ErrorOperationFilter>();
 
                 // Set the comments path for the Open API JSON.

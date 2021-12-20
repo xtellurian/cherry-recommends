@@ -34,10 +34,10 @@ namespace SignalBox.Core.Workflows
 
         public async Task<ItemsRecommender> CloneItemsRecommender(CreateCommonEntityModel common, ItemsRecommender from)
         {
-            await store.Load(from, _ => _.DefaultItem);
+            await store.Load(from, _ => _.BaselineItem);
             await store.LoadMany(from, _ => _.Items);
             return await CreateItemsRecommender(common,
-                                                  from.DefaultItem?.CommonId,
+                                                  from.BaselineItem?.CommonId,
                                                   from.Items?.Select(_ => _.CommonId),
                                                   from.NumberOfItemsToRecommend,
                                                   from.Arguments,
@@ -45,17 +45,17 @@ namespace SignalBox.Core.Workflows
                                                   true);
         }
         public async Task<ItemsRecommender> CreateItemsRecommender(CreateCommonEntityModel common,
-                                                                       string? defaultItemId,
+                                                                       string? baselineItemId,
                                                                        IEnumerable<string>? itemsCommonIds,
                                                                        int? numberOfItemsToRecommend,
                                                                        IEnumerable<RecommenderArgument>? arguments,
                                                                        RecommenderSettings settings,
                                                                        bool useOptimiser)
         {
-            RecommendableItem? defaultItem = null;
-            if (!string.IsNullOrEmpty(defaultItemId))
+            RecommendableItem? baselineItem = null;
+            if (!string.IsNullOrEmpty(baselineItemId))
             {
-                defaultItem = await itemStore.GetEntity(defaultItemId);
+                baselineItem = await itemStore.GetEntity(baselineItemId);
             }
 
             ItemsRecommender recommender;
@@ -68,14 +68,14 @@ namespace SignalBox.Core.Workflows
                 }
 
                 recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, items, arguments, settings)
+                    new ItemsRecommender(common.CommonId, common.Name, baselineItem, items, arguments, settings)
                     { NumberOfItemsToRecommend = numberOfItemsToRecommend });
 
             }
             else
             {
                 recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, defaultItem, null, arguments, settings)
+                    new ItemsRecommender(common.CommonId, common.Name, baselineItem, null, arguments, settings)
                     { NumberOfItemsToRecommend = numberOfItemsToRecommend });
             }
 
@@ -90,10 +90,10 @@ namespace SignalBox.Core.Workflows
             return recommender;
         }
 
-        public async Task<RecommendableItem> SetDefaultItem(ItemsRecommender recommender, string itemId)
+        public async Task<RecommendableItem> SetBaselineItem(ItemsRecommender recommender, string itemId)
         {
             var item = await itemStore.GetEntity(itemId);
-            recommender.DefaultItem = item;
+            recommender.BaselineItem = item;
             await store.Update(recommender);
             await storageContext.SaveChanges();
             return item;

@@ -1,11 +1,9 @@
 ---
 sidebar_position: 20
-title: Recommender
+title: Recommenders
 ---
 
-## Recommender
-
-A Recommender is specific service that delivers one or many items to customers.  
+A Recommender chooses the best [Item](./item) for a given [Customer](./customer).
 
 
 :::note Recommender constraints

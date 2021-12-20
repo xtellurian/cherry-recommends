@@ -1138,20 +1138,22 @@ const removeItemAsync = async ({ token, id, itemId, }) => {
         method: "post",
     });
 };
-const setDefaultItemAsync = async ({ token, id, itemId, }) => {
+const setBaselineItemAsync = async ({ token, id, itemId, }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}/DefaultItem`,
+        path: `api/recommenders/ItemsRecommenders/${id}/BaselineItem`,
         token,
         method: "post",
         body: { itemId },
     });
 };
-const getDefaultItemAsync = async ({ token, id }) => {
+const setDefaultItemAsync = setBaselineItemAsync; // backwards compat
+const getBaselineItemAsync = async ({ token, id }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}/DefaultItem`,
+        path: `api/recommenders/ItemsRecommenders/${id}/BaselineItem`,
         token,
     });
 };
+const getDefaultItemAsync = getBaselineItemAsync; // backwards compat
 const createLinkRegisteredModelAsync = async ({ token, id, modelId, }) => {
     return await createLinkedRegisteredModelAsync({
         recommenderApiName,
@@ -1281,7 +1283,9 @@ var itemsRecommendersApi = /*#__PURE__*/Object.freeze({
     fetchItemsAsync: fetchItemsAsync$1,
     addItemAsync: addItemAsync,
     removeItemAsync: removeItemAsync,
+    setBaselineItemAsync: setBaselineItemAsync,
     setDefaultItemAsync: setDefaultItemAsync,
+    getBaselineItemAsync: getBaselineItemAsync,
     getDefaultItemAsync: getDefaultItemAsync,
     createLinkRegisteredModelAsync: createLinkRegisteredModelAsync,
     fetchLinkedRegisteredModelAsync: fetchLinkedRegisteredModelAsync,

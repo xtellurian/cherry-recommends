@@ -117,11 +117,11 @@ const RecommenderDetailSection = () => {
             />
           )}
 
-          {recommender.defaultItem && (
+          {recommender.baselineItem && (
             <EntityField
-              label="Default Item"
-              entity={recommender.defaultItem}
-              to={`/recommendable-items/detail/${recommender.defaultItemId}`}
+              label="Baseline Item"
+              entity={recommender.baselineItem}
+              to={`/recommendable-items/detail/${recommender.baselineItemId}`}
             />
           )}
         </div>

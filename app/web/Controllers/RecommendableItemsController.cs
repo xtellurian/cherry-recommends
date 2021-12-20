@@ -37,10 +37,10 @@ namespace SignalBox.Web.Controllers
 
         protected override async Task<(bool, string)> CanDelete(RecommendableItem entity)
         {
-            var isDefaultItem = await workflows.IsDefaultItemForRecommender(entity);
-            if (isDefaultItem)
+            var isBaselineItem = await workflows.IsBaselineItemForRecommender(entity);
+            if (isBaselineItem)
             {
-                return (false, "Cannot delete item as it is used as a Recommender's default item");
+                return (false, "Cannot delete item as it is used as a Recommender's baseline item");
             }
             else
             {

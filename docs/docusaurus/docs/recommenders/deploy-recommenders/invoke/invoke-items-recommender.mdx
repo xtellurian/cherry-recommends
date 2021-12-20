@@ -18,14 +18,13 @@ Once a Item Recommender has been created, you can invoke it (i.e. get a recommen
 <TabItem value="js">
 
 ```js
-const signalbox = require("signalbox.js");
+const cherry = require("cherry.ai");
 
-signalbox.itemsRecommenders
+cherry.itemsRecommenders
   .invokeItemsRecommenderAsync({
     id: "recommender_id_123", // the recommender Id
     input: {
-      commonUserId: "The User Id", // the user Id to recommend for,
-      arguments: {},
+      customerId: "The Customer's Id", // the user Id to recommend for,
     },
     token: "Your access token",
   })

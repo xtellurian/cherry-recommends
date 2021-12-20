@@ -43,6 +43,6 @@ export const useItem = ({ id, trigger }) => {
   return result;
 };
 
-export const useDefaultItem = (props) => {
+export const useGlobalStartingItem = (props) => {
   return useItem({ id: -1, trigger: props?.trigger });
 };

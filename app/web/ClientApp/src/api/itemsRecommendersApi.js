@@ -36,9 +36,9 @@ export const fetchInvokationLogsAsync =
 export const updateErrorHandlingAsync =
   itemsRecommenders.updateErrorHandlingAsync;
 
-export const setDefaultItemAsync = itemsRecommenders.setDefaultItemAsync;
+export const setBaselineItemAsync = itemsRecommenders.setBaselineItemAsync;
 
-export const getDefaultItemAsync = itemsRecommenders.getDefaultItemAsync;
+export const getBaselineItemAsync = itemsRecommenders.getBaselineItemAsync;
 
 export const fetchRecommenderTrackedUserActionsAsync =
   itemsRecommenders.fetchRecommenderTrackedUserActionsAsync;

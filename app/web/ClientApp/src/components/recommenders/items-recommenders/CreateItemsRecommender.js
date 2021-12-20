@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createItemsRecommenderAsync } from "../../../api/itemsRecommendersApi";
 import {
-  useDefaultItem,
+  useGlobalStartingItem,
   useItems,
 } from "../../../api-hooks/recommendableItemsApi";
 import {
@@ -37,26 +37,26 @@ export const CreateRecommender = () => {
     ? items.items.map((p) => ({ label: p.name, value: p.commonId }))
     : [];
 
-  const defaultItem = useDefaultItem();
+  const startingItem = useGlobalStartingItem();
 
   const [selectedItems, setSelectedItems] = React.useState();
   const [recommender, setRecommender] = React.useState({
     commonId: "",
     name: "",
     itemIds: null,
-    defaultItemId: "",
+    baselineItemId: "",
     numberOfItemsToRecommend: null,
     useAutoAi: true,
   });
 
   React.useEffect(() => {
-    if (defaultItem.commonId) {
+    if (startingItem.commonId) {
       setRecommender({
         ...recommender,
-        defaultItemId: defaultItem.commonId,
+        baselineItemId: startingItem.commonId,
       });
     }
-  }, [defaultItem]);
+  }, [startingItem]);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -134,6 +134,24 @@ export const CreateRecommender = () => {
         </Row>
       </Container>
 
+      <div className="mt-2">
+        Baseline Item
+        {!startingItem.loading && (
+          <Selector
+            isSearchable
+            placeholder="Choose a baseline item."
+            noOptionsMessage={(inputValue) => "No Items Available"}
+            defaultValue={{ label: startingItem.name, value: startingItem.id }}
+            onChange={(so) => {
+              setRecommender({
+                ...recommender,
+                baselineItemId: so.value,
+              });
+            }}
+            options={itemsOptions}
+          />
+        )}
+      </div>
       <div className="mt-2 mb-2">
         <Selector
           isMulti
@@ -165,24 +183,6 @@ export const CreateRecommender = () => {
             />
           </div>
         </SettingRow>
-        <div className="mt-2">
-          Default Item
-          {!defaultItem.loading && (
-            <Selector
-              isSearchable
-              placeholder="Choose a default item."
-              noOptionsMessage={(inputValue) => "No Items Available"}
-              defaultValue={{ label: defaultItem.name, value: defaultItem.id }}
-              onChange={(so) => {
-                setRecommender({
-                  ...recommender,
-                  defaultItemId: so.value,
-                });
-              }}
-              options={itemsOptions}
-            />
-          )}
-        </div>
         <div className="mt-2">
           <IntegerRangeSelector
             min={1}

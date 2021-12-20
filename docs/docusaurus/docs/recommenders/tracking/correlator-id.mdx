@@ -6,8 +6,6 @@ title: Tracking by Correlator ID
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-
-
 Explicitly linking events to a recommendation will improve the accuracy of the recommender, and the speed at which it learns.
 
 Every recommendation comes with a `correlatorId`
@@ -29,18 +27,20 @@ Every recommendation comes with a `correlatorId`
 <TabItem value="js">
 
 ```js
-signalbox.events
+const cherry = require("cherry.ai");
+
+cherry.events
   .createEventsAsync({
     token: "Your Access Token", // one of token or apiKey is required
     apiKey: "Your API Key",
     events: [
       {
         recommendationCorrelatorId: 104346873, // optional - when referencing a recommendation
-        commonUserId: "test-common-user-id",
+        customerId: "test-common-user-id",
         eventId: "unique event Id", // required
         timestamp: new Date(), // optional - defaults to current time.
-        kind: "Purchases", // required - high level categorisation of event
-        eventType: "ItemPurchased", //required - specific categorisation of event
+        kind: "Custom", // required - high level categorisation of event. One of Custom, PropertyUpdate, Behaviour, ConsumeRecommendation
+        eventType: "ItemPurchased", //required - your categorisation
         properties: {
           value: 33.6, // optional - additional information attached to the event
         },

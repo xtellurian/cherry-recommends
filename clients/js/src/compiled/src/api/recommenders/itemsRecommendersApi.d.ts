@@ -10,7 +10,8 @@ interface CreateItemsRecommenderPayload {
     commonId: string;
     name: string;
     itemIds: number[];
-    defaultItemId: string;
+    defaultItemId?: string | undefined;
+    baselineItemId: string;
     numberOfItemsToRecommend: number | undefined;
     useAutoAi: boolean;
 }
@@ -31,10 +32,12 @@ interface RemoveItemRequest extends EntityRequest {
     itemId: string | number;
 }
 export declare const removeItemAsync: ({ token, id, itemId, }: RemoveItemRequest) => Promise<any>;
-interface SetDefaultItemRequest extends EntityRequest {
+interface SetBaselineItemRequest extends EntityRequest {
     itemId: string | number;
 }
-export declare const setDefaultItemAsync: ({ token, id, itemId, }: SetDefaultItemRequest) => Promise<any>;
+export declare const setBaselineItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
+export declare const setDefaultItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
+export declare const getBaselineItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
 export declare const getDefaultItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
 interface LinkRegisteredModelRequest extends EntityRequest {
     modelId: number;

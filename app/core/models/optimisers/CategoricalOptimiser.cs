@@ -7,7 +7,8 @@ namespace SignalBox.Core.Optimisers
         public string Id { get; set; }
         public string Name { get; set; }
         public int NItemsToRecommend { get; set; }
-        public RecommendableItem DefaultItem { get; set; }
+        public RecommendableItem BaselineItem { get; set; }
+        public RecommendableItem DefaultItem => BaselineItem;
         public IEnumerable<RecommendableItem> Items { get; set; }
 
     }

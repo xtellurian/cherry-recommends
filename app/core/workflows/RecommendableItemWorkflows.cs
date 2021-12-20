@@ -33,9 +33,9 @@ namespace SignalBox.Core.Workflows
             return item;
         }
 
-        public async Task<bool> IsDefaultItemForRecommender(RecommendableItem item)
+        public async Task<bool> IsBaselineItemForRecommender(RecommendableItem item)
         {
-            var result = await recommenderStore.Count(_ => _.DefaultItemId == item.Id);
+            var result = await recommenderStore.Count(_ => _.BaselineItemId == item.Id);
             return result > 0;
         }
 

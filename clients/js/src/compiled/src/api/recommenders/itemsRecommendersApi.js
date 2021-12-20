@@ -64,20 +64,22 @@ export const removeItemAsync = async ({ token, id, itemId, }) => {
         method: "post",
     });
 };
-export const setDefaultItemAsync = async ({ token, id, itemId, }) => {
+export const setBaselineItemAsync = async ({ token, id, itemId, }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}/DefaultItem`,
+        path: `api/recommenders/ItemsRecommenders/${id}/BaselineItem`,
         token,
         method: "post",
         body: { itemId },
     });
 };
-export const getDefaultItemAsync = async ({ token, id }) => {
+export const setDefaultItemAsync = setBaselineItemAsync; // backwards compat
+export const getBaselineItemAsync = async ({ token, id }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}/DefaultItem`,
+        path: `api/recommenders/ItemsRecommenders/${id}/BaselineItem`,
         token,
     });
 };
+export const getDefaultItemAsync = getBaselineItemAsync; // backwards compat
 export const createLinkRegisteredModelAsync = async ({ token, id, modelId, }) => {
     return await link.createLinkedRegisteredModelAsync({
         recommenderApiName,

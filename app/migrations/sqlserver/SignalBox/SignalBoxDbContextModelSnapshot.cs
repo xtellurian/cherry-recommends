@@ -1708,13 +1708,13 @@ namespace sqlserver.SignalBox
                 {
                     b.HasBaseType("SignalBox.Core.Recommenders.RecommenderEntityBase");
 
-                    b.Property<long?>("DefaultItemId")
+                    b.Property<long?>("BaselineItemId")
                         .HasColumnType("bigint");
 
                     b.Property<int?>("NumberOfItemsToRecommend")
                         .HasColumnType("int");
 
-                    b.HasIndex("DefaultItemId");
+                    b.HasIndex("BaselineItemId");
 
                     b.HasDiscriminator().HasValue("ItemsRecommender");
                 });
@@ -2232,12 +2232,12 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ItemsRecommender", b =>
                 {
-                    b.HasOne("SignalBox.Core.RecommendableItem", "DefaultItem")
+                    b.HasOne("SignalBox.Core.RecommendableItem", "BaselineItem")
                         .WithMany()
-                        .HasForeignKey("DefaultItemId")
+                        .HasForeignKey("BaselineItemId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Navigation("DefaultItem");
+                    b.Navigation("BaselineItem");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ProductRecommender", b =>

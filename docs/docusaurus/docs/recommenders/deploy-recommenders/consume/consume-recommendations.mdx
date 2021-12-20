@@ -8,7 +8,7 @@ import TabItem from "@theme/TabItem";
 
 
 By default, new recommenders are configured to track recommendations from every [invokation](/docs/recommenders/deploy-recommenders/invoke/invoke-items-recommender).
-In some situations however, you may wish to preload a recommendation, and only track the recommendation when shown to the tracked user.
+In some situations however, you may wish to preload a recommendation, and only track the recommendation when shown to the Customer.
 
 :::caution Configuration Required
 
@@ -36,7 +36,7 @@ These situations may include:
 > Helpder syntax events.createRecommendationConsumedEventAsync() was introduced in version 1.4.5
 
 ```js
-import { events } from "signalbox.js";
+import { events } from "cherry.ai";
 const ACCESS_TOKEN = "your access token";
 
 // the recommendation comes from invoking the recommender

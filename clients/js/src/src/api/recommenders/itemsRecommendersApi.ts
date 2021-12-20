@@ -72,7 +72,8 @@ interface CreateItemsRecommenderPayload {
   commonId: string;
   name: string;
   itemIds: number[];
-  defaultItemId: string;
+  defaultItemId?: string | undefined; // backwards compat
+  baselineItemId: string;
   numberOfItemsToRecommend: number | undefined;
   useAutoAi: boolean;
 }
@@ -129,28 +130,32 @@ export const removeItemAsync = async ({
   });
 };
 
-interface SetDefaultItemRequest extends EntityRequest {
+interface SetBaselineItemRequest extends EntityRequest {
   itemId: string | number;
 }
-export const setDefaultItemAsync = async ({
+export const setBaselineItemAsync = async ({
   token,
   id,
   itemId,
-}: SetDefaultItemRequest) => {
+}: SetBaselineItemRequest) => {
   return await executeFetch({
-    path: `api/recommenders/ItemsRecommenders/${id}/DefaultItem`,
+    path: `api/recommenders/ItemsRecommenders/${id}/BaselineItem`,
     token,
     method: "post",
     body: { itemId },
   });
 };
 
-export const getDefaultItemAsync = async ({ token, id }: EntityRequest) => {
+export const setDefaultItemAsync = setBaselineItemAsync; // backwards compat
+
+export const getBaselineItemAsync = async ({ token, id }: EntityRequest) => {
   return await executeFetch({
-    path: `api/recommenders/ItemsRecommenders/${id}/DefaultItem`,
+    path: `api/recommenders/ItemsRecommenders/${id}/BaselineItem`,
     token,
   });
 };
+
+export const getDefaultItemAsync = getBaselineItemAsync; // backwards compat
 
 interface LinkRegisteredModelRequest extends EntityRequest {
   modelId: number;

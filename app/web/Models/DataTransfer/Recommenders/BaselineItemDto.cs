@@ -1,6 +1,6 @@
 namespace SignalBox.Web.Dto
 {
-    public class DefaultItemDto
+    public class BaselineItemDto
     {
         public string ItemId { get; set; }
     }

@@ -43,7 +43,7 @@ async function onRequest(request, settings) {
   Segment.track({
     event: "Recommendation Produced",
     // assumes the commonUserId is the same userId as Segment userId
-    userId: body.trackedUser.commonId,
+    userId: body.customer.commonId,
     properties: {
       recommendedItem: body.scoredItems[0].itemCommonId,
     },

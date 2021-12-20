@@ -13,15 +13,15 @@ namespace SignalBox.Core.Recommenders
 #nullable enable
         public ItemsRecommender(string commonId,
                                 string? name,
-                                RecommendableItem? defaultItem,
+                                RecommendableItem? baselineItem,
                                 ICollection<RecommendableItem>? items,
                                 IEnumerable<RecommenderArgument>? arguments,
                                 RecommenderSettings? settings,
                                 int numberOfItemsToRecommend = 1) : base(commonId, name, arguments, settings)
         {
             Items = items ?? new List<RecommendableItem>();
-            DefaultItem = defaultItem;
-            DefaultItemId = defaultItem?.Id;
+            BaselineItem = baselineItem;
+            BaselineItemId = baselineItem?.Id;
             NumberOfItemsToRecommend = numberOfItemsToRecommend;
 
             if (numberOfItemsToRecommend > 9)
@@ -34,8 +34,9 @@ namespace SignalBox.Core.Recommenders
             }
         }
 
-        public long? DefaultItemId { get; set; }
-        public RecommendableItem? DefaultItem { get; set; }
+        public long? BaselineItemId { get; set; }
+        public RecommendableItem? BaselineItem { get; set; }
+        public RecommendableItem? DefaultItem => BaselineItem;
         public int? NumberOfItemsToRecommend { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

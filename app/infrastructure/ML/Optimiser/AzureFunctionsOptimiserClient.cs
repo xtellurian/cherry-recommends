@@ -43,7 +43,7 @@ namespace SignalBox.Infrastructure.ML
             var optimiser = new CategoricalOptimiser
             {
                 Id = System.Guid.NewGuid().ToString(),
-                DefaultItem = itemsRecommender.DefaultItem,
+                BaselineItem = itemsRecommender.BaselineItem,
                 Items = itemsRecommender.Items,
                 Name = itemsRecommender.ModelRegistration.Name,
                 NItemsToRecommend = itemsRecommender.NumberOfItemsToRecommend ?? 1

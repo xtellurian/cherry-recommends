@@ -9,7 +9,7 @@ import {
   fetchItemsAsync,
   fetchRecommenderTrackedUserActionsAsync,
   fetchDestinationsAsync,
-  getDefaultItemAsync,
+  getBaselineItemAsync,
   fetchTriggerAsync,
   fetchLearningFeaturesAsync,
 } from "../api/itemsRecommendersApi";
@@ -36,13 +36,13 @@ export const useItemsRecommenders = () => {
   return result;
 };
 
-export const useDefaultItem = ({ id, trigger }) => {
+export const useBaselineItem = ({ id, trigger }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      getDefaultItemAsync({
+      getBaselineItemAsync({
         token,
         id,
       })

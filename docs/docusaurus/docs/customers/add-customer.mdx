@@ -1,16 +1,16 @@
 ---
 sidebar_position: 10
-title: Tracking recommendations by user
+title: Add a Customer
 ---
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
 
-All Tracked Users require a Common Id (i.e. CommonUserId).
+All Customers require a Customer Id (a.k.a Common User Id or Common Id).
 This should be a unique identifier, for example their email address, user Id, hashed email etc.
 
-To add a new Tracked User
+To add a new Customer
 
 <Tabs
   defaultValue="js"
@@ -22,18 +22,18 @@ To add a new Tracked User
 <TabItem value="js">
 
 ```js
-const signalbox = require("signalbox.js");
+const cherry = require("cherry.ai");
 
-signalbox.trackedUsers
-  .createOrUpdateTrackedUserAsync({
+cherry.customers
+  .createOrUpdateCustomerAsync({
     token: "Your access token",
-    user: {
-      commonUserId: "test-user@testing1234.org",
+    customer: {
+      customerId: "test-user@testing1234.org",
       name: "Jonny Goldfish",
     },
   })
   .then((u) => {
-    console.log("created a tracked user");
+    console.log("created a Customer in Cherry");
     console.log(u);
   })
   .catch((e) => {

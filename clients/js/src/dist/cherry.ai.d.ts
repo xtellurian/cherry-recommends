@@ -479,7 +479,8 @@ interface CreateItemsRecommenderPayload {
     commonId: string;
     name: string;
     itemIds: number[];
-    defaultItemId: string;
+    defaultItemId?: string | undefined;
+    baselineItemId: string;
     numberOfItemsToRecommend: number | undefined;
     useAutoAi: boolean;
 }
@@ -500,10 +501,12 @@ interface RemoveItemRequest extends EntityRequest {
     itemId: string | number;
 }
 declare const removeItemAsync: ({ token, id, itemId, }: RemoveItemRequest) => Promise<any>;
-interface SetDefaultItemRequest extends EntityRequest {
+interface SetBaselineItemRequest extends EntityRequest {
     itemId: string | number;
 }
-declare const setDefaultItemAsync: ({ token, id, itemId, }: SetDefaultItemRequest) => Promise<any>;
+declare const setBaselineItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
+declare const setDefaultItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
+declare const getBaselineItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
 declare const getDefaultItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
 interface LinkRegisteredModelRequest extends EntityRequest {
     modelId: number;
@@ -574,7 +577,9 @@ declare const itemsRecommendersApi_d_deleteItemsRecommenderAsync: typeof deleteI
 declare const itemsRecommendersApi_d_createItemsRecommenderAsync: typeof createItemsRecommenderAsync;
 declare const itemsRecommendersApi_d_addItemAsync: typeof addItemAsync;
 declare const itemsRecommendersApi_d_removeItemAsync: typeof removeItemAsync;
+declare const itemsRecommendersApi_d_setBaselineItemAsync: typeof setBaselineItemAsync;
 declare const itemsRecommendersApi_d_setDefaultItemAsync: typeof setDefaultItemAsync;
+declare const itemsRecommendersApi_d_getBaselineItemAsync: typeof getBaselineItemAsync;
 declare const itemsRecommendersApi_d_getDefaultItemAsync: typeof getDefaultItemAsync;
 declare const itemsRecommendersApi_d_invokeItemsRecommenderAsync: typeof invokeItemsRecommenderAsync;
 declare namespace itemsRecommendersApi_d {
@@ -587,7 +592,9 @@ declare namespace itemsRecommendersApi_d {
     fetchItemsAsync$1 as fetchItemsAsync,
     itemsRecommendersApi_d_addItemAsync as addItemAsync,
     itemsRecommendersApi_d_removeItemAsync as removeItemAsync,
+    itemsRecommendersApi_d_setBaselineItemAsync as setBaselineItemAsync,
     itemsRecommendersApi_d_setDefaultItemAsync as setDefaultItemAsync,
+    itemsRecommendersApi_d_getBaselineItemAsync as getBaselineItemAsync,
     itemsRecommendersApi_d_getDefaultItemAsync as getDefaultItemAsync,
     createLinkRegisteredModelAsync$1 as createLinkRegisteredModelAsync,
     fetchLinkedRegisteredModelAsync$1 as fetchLinkedRegisteredModelAsync,
