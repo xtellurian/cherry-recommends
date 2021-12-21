@@ -6,34 +6,31 @@ title: Create Recommendable items
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-
-Your Recommender needs Items to send to given customers. 
-
-## In Web application
-
-First, go to `Library` in the header and select `Items`.
-
-You now should see a catalogue of all recommendable items. Click `Create Recommendable Item` in the top-right.
-
-Now fill out the details of the item. The `Item Identifier` should be a name that works in your stack can could be a `Discount Code`, `SKU Id`, or `Plan Id`.
-
-Add in the `Price` and your `Cost` of the `Item`. 
-
-Press `Create` and you're done!
-
-![Create Item](/img/screenshots/recommend/create_item.png)
-
-## Through API
-You can create an item programatically with our API.
-
-You need to submit the payload 
+Your Recommender needs Items to send to given customers.
 
 <Tabs
-  defaultValue="js"
+  defaultValue="web"
   values={[
+    { label: 'Cherry Web', value: 'web', },
     { label: 'JavaScript', value: 'js', }
   ]
 }>
+
+<TabItem value="web">
+
+First, go to `Library` in the header and select `Items`.
+You now should see a catalogue of all recommendable items. 
+
+Click `Create Recommendable Item` in the top-right.
+Now fill out the details of the item.
+The `Item Identifier` should be a name that works in your stack can could be a `Discount Code`, `SKU Id`, or `Plan Id`.
+Add in the `Price` and your `Cost` of the `Item`.
+
+Finally, hit Create and you're done!
+
+![Create Item](/img/screenshots/recommend/create_item.png)
+
+</TabItem>
 
 <TabItem value="js">
 
@@ -41,25 +38,17 @@ You need to submit the payload
 import { events } from "cherry.ai";
 const ACCESS_TOKEN = "your access token";
 
-// the recommendation comes from invoking the recommender
-events
-  .createItemAsync({
-    "commonId": "string",
-    "name": "string",
-    "listPrice": 0,
-    "directCost": 0,
-    "description": "string",
-    "properties": 
-    {
-        "property1": null,
-        "property2": null
-    }
-    })
-
+events.createItemAsync({
+  commonId: "string", // immutable
+  name: "string", // the human-readable name of the item
+  description: "Describe the item for humans",
+  properties: {
+    // arbitrary key value pairs
+    name: "a string value",
+    quantity: 5, // a numeric value
+  },
+});
 ```
 
 </TabItem>
 </Tabs>
-
-
-
