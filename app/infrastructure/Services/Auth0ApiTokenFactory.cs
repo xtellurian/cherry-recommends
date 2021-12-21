@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
+using SignalBox.Core.OAuth;
 
 namespace SignalBox.Infrastructure.Services
 {
@@ -22,7 +23,7 @@ namespace SignalBox.Infrastructure.Services
             this.httpClient = httpClient;
         }
 
-        public async Task<string> GetM2MToken(string scope = null)
+        public async Task<TokenResponse> GetM2MToken(string scope = null)
         {
             var request = new Auth0TokenRequest()
             {
@@ -35,7 +36,7 @@ namespace SignalBox.Infrastructure.Services
             return await GetToken(m2mOptions.Value.Endpoint, request);
         }
 
-        public async Task<string> GetManagementToken(string scope = null)
+        public async Task<TokenResponse> GetManagementToken(string scope = null)
         {
             var request = new Auth0TokenRequest()
             {
@@ -49,7 +50,7 @@ namespace SignalBox.Infrastructure.Services
             return await GetToken(managementOptions.Value.Endpoint, request);
         }
 
-        private async Task<string> GetToken(string endpoint, Auth0TokenRequest request)
+        private async Task<TokenResponse> GetToken(string endpoint, Auth0TokenRequest request)
         {
             var response = await httpClient.PostAsJsonAsync(endpoint, request);
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -57,7 +58,7 @@ namespace SignalBox.Infrastructure.Services
             response.EnsureSuccessStatusCode();
 
             var tokenResponse = JsonSerializer.Deserialize<Auth0TokenResponse>(responseContent);
-            return tokenResponse.AccessToken;
+            return tokenResponse;
         }
 
     }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core.OAuth;
 
 namespace SignalBox.Core.Workflows
 {
@@ -13,6 +14,7 @@ namespace SignalBox.Core.Workflows
         private readonly IHashedApiKeyStore keyStore;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ILogger<ApiKeyWorkflows> logger;
+        private readonly IM2MTokenCache tokenCache;
         private readonly IHasher hasher;
 
         public ApiKeyWorkflows(IStorageContext storageContext,
@@ -20,6 +22,7 @@ namespace SignalBox.Core.Workflows
                                IHashedApiKeyStore keyStore,
                                IDateTimeProvider dateTimeProvider,
                                ILogger<ApiKeyWorkflows> logger,
+                               IM2MTokenCache tokenCache,
                                IHasher hasher)
         {
             this.storageContext = storageContext;
@@ -27,6 +30,7 @@ namespace SignalBox.Core.Workflows
             this.keyStore = keyStore;
             this.dateTimeProvider = dateTimeProvider;
             this.logger = logger;
+            this.tokenCache = tokenCache;
             this.hasher = hasher;
         }
 
@@ -66,7 +70,7 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        public async Task<string> ExchangeApiKeyForToken(string apiKey)
+        public async Task<TokenResponse> ExchangeApiKeyForToken(string apiKey)
         {
             // check the key
             if (await IsValidApiKey(apiKey))
@@ -77,7 +81,9 @@ namespace SignalBox.Core.Workflows
                 key.LastExchanged = dateTimeProvider.Now;
                 key.TotalExchanges++;
                 await storageContext.SaveChanges();
-                return await tokenFactory.GetM2MToken(key.Scope);
+                var token = await tokenCache.Get(apiKey, () => tokenFactory.GetM2MToken(key.Scope));
+                // var token = await tokenFactory.GetM2MToken(key.Scope);
+                return token;
 
             }
             else

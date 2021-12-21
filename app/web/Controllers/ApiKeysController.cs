@@ -29,7 +29,7 @@ namespace SignalBox.Web.Controllers
         public async Task<ApiKeyExchangeResponseDto> ExchangeApiKeyForToken(ApiKeyExchangeRequestDto dto)
         {
             var token = await workflows.ExchangeApiKeyForToken(dto.ApiKey);
-            return new ApiKeyExchangeResponseDto(token);
+            return new ApiKeyExchangeResponseDto(token.AccessToken);
         }
 
         /// <summary>Creates an API key.</summary>

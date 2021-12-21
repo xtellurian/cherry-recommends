@@ -24,6 +24,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IRecommendationCache<ItemsRecommender, ItemsRecommendation>, SimpleItemsRecommendationCache>();
             services.AddScoped<IRecommendationCache<ParameterSetRecommender, ParameterSetRecommendation>, SimpleParameterSetRecommendationCache>();
             services.AddScoped<ICategoricalOptimiserClient, AzureFunctionsOptimiserClient>();
+            services.AddSingleton<IM2MTokenCache, Caches.TokenMemoryCache>();
             services.AddHttpClient();
             return services;
         }

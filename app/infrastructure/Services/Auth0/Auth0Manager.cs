@@ -46,7 +46,7 @@ namespace SignalBox.Infrastructure.Services
         private async Task Initialize()
         {
             var token = await tokenFactory.GetManagementToken();
-            this.SetApiClient(new ManagementApiClient(token, credentials.Domain));
+            this.SetApiClient(new ManagementApiClient(token.AccessToken, credentials.Domain));
         }
 
         public async Task<UserInfo> SetMetadata(string userId, UserMetadata metadata)
