@@ -7,6 +7,7 @@ namespace SignalBox.Core
     {
         private const string anonymousCommonId = "anonymous";
         private const long anonymousId = -1;
+        public static string AnonymousCommonId => anonymousCommonId;
         public static Customer Anonymous => new Customer(anonymousCommonId, "Anonymous Customer")
         {
             Id = anonymousId // need to include the primary key for EF Core reasons

@@ -26,5 +26,7 @@ namespace SignalBox.Core.Adapters.Segment
 
         [JsonPropertyName("userId")]
         public string UserId { get; set; }
+        [JsonPropertyName("anonymousId")]
+        public string AnonymousId { get; set; }
     }
 }

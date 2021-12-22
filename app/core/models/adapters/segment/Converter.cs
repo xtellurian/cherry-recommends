@@ -37,9 +37,13 @@ namespace SignalBox.Core.Adapters.Segment
             {
                 // swallow this exception
             }
+            if(string.IsNullOrEmpty(model.UserId))
+            {
+                model.Properties.TryAdd("anonymousId", model.AnonymousId);
+            }
 
             return new CustomerEventInput(
-                model.UserId, model.MessageId, model.Timestamp, correlatorId, sys.Id, MapEventKind(model), model.Event ?? "Segment|Unknown", model.Properties);
+                model.UserId ?? Customer.AnonymousCommonId, model.MessageId, model.Timestamp, correlatorId, sys.Id, MapEventKind(model), model.Event ?? "Segment|Unknown", model.Properties);
 
         }
 
