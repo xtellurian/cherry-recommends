@@ -3468,6 +3468,53 @@
         }
       }
     },
+    "/api/recommenders/ItemsRecommenders/{id}/Statistics": {
+      "get": {
+        "tags": [
+          "ItemsRecommenders"
+        ],
+        "summary": "Get summary statistics about the recommender.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommenderStatistics"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/recommenders/ItemsRecommenders/{id}/invoke": {
       "post": {
         "tags": [
@@ -5494,6 +5541,53 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ModelRegistration"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommenders/ParameterSetRecommenders/{id}/Statistics": {
+      "get": {
+        "tags": [
+          "ParameterSetRecommenders"
+        ],
+        "summary": "Get summary statistics about the recommender.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommenderStatistics"
                 }
               }
             }
@@ -14164,6 +14258,20 @@
           },
           "recommendationCacheTime": {
             "$ref": "#/components/schemas/TimeSpan"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RecommenderStatistics": {
+        "type": "object",
+        "properties": {
+          "numberCustomersRecommended": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "numberInvokations": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "additionalProperties": false

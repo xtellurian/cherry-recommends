@@ -100,6 +100,14 @@ namespace SignalBox.Web.Controllers
 
         }
 
+        /// <summary>Get summary statistics about the recommender.</summary>
+        [HttpGet("{id}/Statistics")]
+        public async Task<RecommenderStatistics> GetStatistics(string id, bool? useInternalId = null)
+        {
+            var recommender = await base.GetEntity(id, useInternalId);
+            return await workflows.CalculateStatistics(recommender);
+        }
+
         /// <summary>Invoke a model with some input. Id is the recommender Id.</summary>
         [HttpPost("{id}/invoke")]
         [AllowApiKey]
@@ -123,9 +131,9 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Get the latest recommendations made by a recommender.</summary>
         [HttpGet("{id}/Recommendations")]
-        public async Task<Paginated<ItemsRecommendation>> GetRecommendations(string id, [FromQuery] PaginateRequest p)
+        public async Task<Paginated<ItemsRecommendation>> GetRecommendations(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
         {
-            return await workflows.QueryRecommendations(id, p.Page);
+            return await workflows.QueryRecommendations(id, p.Page, p.PageSize, useInternalId);
         }
 
         /// <summary>Get the items associated with a recommender.</summary>

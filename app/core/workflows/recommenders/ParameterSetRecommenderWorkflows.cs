@@ -34,6 +34,14 @@ namespace SignalBox.Core.Workflows
             await store.LoadMany(from, _ => _.Parameters);
             return await this.CreateParameterSetRecommender(common, from.Parameters.Select(_ => _.CommonId), from.ParameterBounds, from.Arguments, from.Settings ?? new RecommenderSettings());
         }
+
+        public async Task<RecommenderStatistics> CalculateStatistics(ParameterSetRecommender recommender)
+        {
+            var stats = new RecommenderStatistics();
+            stats.NumberCustomersRecommended = await recommendationStore.CountUniqueCustomers(recommender.Id);
+            stats.NumberInvokations = await recommendationStore.CountRecommendations(recommender.Id);
+            return stats;
+        }
         public async Task<ParameterSetRecommender> CreateParameterSetRecommender(CreateCommonEntityModel common,
                                                                                  IEnumerable<string> parameterCommonIds,
                                                                                  IEnumerable<ParameterBounds> bounds,
@@ -63,9 +71,9 @@ namespace SignalBox.Core.Workflows
             return recommender;
         }
 
-        public async Task<Paginated<ParameterSetRecommendation>> QueryRecommendations(long recommenderId, int page)
+        public async Task<Paginated<ParameterSetRecommendation>> QueryRecommendations(long recommenderId, int page, int? pageSize)
         {
-            return await recommendationStore.QueryForRecommender(page, recommenderId);
+            return await recommendationStore.QueryForRecommender(page, pageSize, recommenderId);
         }
 
         public async Task<ModelRegistration> LinkRegisteredModel(ParameterSetRecommender recommender, long modelId)

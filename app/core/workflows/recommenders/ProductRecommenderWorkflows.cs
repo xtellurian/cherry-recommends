@@ -84,9 +84,9 @@ namespace SignalBox.Core.Workflows
             return product;
         }
 
-        public async Task<Paginated<ProductRecommendation>> QueryRecommendations(long recommenderId, int page)
+        public async Task<Paginated<ProductRecommendation>> QueryRecommendations(long recommenderId, int page, int? pageSize)
         {
-            return await recommendationStore.QueryForRecommender(page, recommenderId);
+            return await recommendationStore.QueryForRecommender(page, pageSize, recommenderId);
         }
 
         public async Task<ModelRegistration> LinkRegisteredModel(ProductRecommender recommender, long modelId)

@@ -5,9 +5,8 @@ import { ParameterSetRecommendersSummary } from "./ParameterSetRecommendersSumma
 import { CreateParameterSetRecommender } from "./CreateParameterSetRecommender";
 import { ParameterSetRecommenderDetail } from "./ParameterSetRecommenderDetail";
 import { TestParameterSetRecommender } from "./TestParameterSetRecommender";
-import { RecommendationList } from "./RecommendationList";
 import { LinkToModel } from "./LinkToModel";
-import { TargetVariableValues } from "./TargetVariableValues";
+import { Overview } from "./Overview";
 import { Settings } from "./Settings";
 import { InvokationLogs } from "./InvokationLogs";
 import { MonitorParameterSetRecommender } from "./MonitorParameterSetRecommender";
@@ -36,20 +35,16 @@ export const ParameterSetRecommendersComponent = () => {
           component={ParameterSetRecommenderDetail}
         />
         <AuthorizeRoute
+          path={`${path}/overview/:id`}
+          component={Overview}
+        />
+        <AuthorizeRoute
           path={`${path}/test/:id`}
           component={TestParameterSetRecommender}
         />
         <AuthorizeRoute
           path={`${path}/link-to-model/:id`}
           component={LinkToModel}
-        />
-        <AuthorizeRoute
-          path={`${path}/recommendations/:id`}
-          component={RecommendationList}
-        />
-        <AuthorizeRoute
-          path={`${path}/target-variable/:id`}
-          component={TargetVariableValues}
         />
         <AuthorizeRoute
           path={`${path}/invokation-logs/:id`}

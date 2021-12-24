@@ -23,7 +23,12 @@ export interface EntityRequest extends AuthenticatedRequest {
   useInternalId: boolean | undefined;
 }
 
-export interface EntitySearchRequest extends PaginatedRequest {
+export interface PaginatedEntityRequest extends EntityRequest {
+  page?: number | undefined;
+  pageSize?: number | undefined;
+}
+
+export interface EntitySearchRequest extends PaginatedEntityRequest {
   searchTerm: string | undefined;
 }
 

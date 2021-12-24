@@ -6,6 +6,7 @@
   --cherry-dark-teal: #00b6bf;
   --cherry-white: #ffffff;
 
+  --cherry-purple-alpha: rgba(40, 9, 56, 0.1);
   --cherry-pink-alpha: rgba(229, 0, 138, 0.1);
 }
 
@@ -88,6 +89,13 @@ a {
 }
 a:hover {
   color: var(--cherry-pink);
+}
+
+.card-section {
+  border: 1px solid var(--cherry-purple-alpha);
+  border-radius: 5px;
+  box-shadow: 0px 5px 10px var(--cherry-purple-alpha);
+  padding: 8px;
 }
 
 /* archive */

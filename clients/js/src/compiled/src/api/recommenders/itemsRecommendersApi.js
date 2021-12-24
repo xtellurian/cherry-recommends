@@ -21,11 +21,12 @@ export const fetchItemsRecommenderAsync = async ({ token, id, }) => {
         token,
     });
 };
-export const fetchItemsRecommendationsAsync = async ({ token, page, id, }) => {
+export const fetchItemsRecommendationsAsync = async ({ token, page, pageSize, id, }) => {
     return await executeFetch({
         token,
         path: `api/recommenders/ItemsRecommenders/${id}/Recommendations`,
         page,
+        pageSize,
     });
 };
 export const deleteItemsRecommenderAsync = async ({ token, id, }) => {
@@ -196,5 +197,11 @@ export const setLearningFeaturesAsync = async ({ id, token, featureIds, useInter
         token,
         useInternalId,
         featureIds,
+    });
+};
+export const fetchStatisticsAsync = async ({ id, token, }) => {
+    return await executeFetch({
+        path: `api/recommenders/ItemsRecommenders/${id}/Statistics`,
+        token,
     });
 };

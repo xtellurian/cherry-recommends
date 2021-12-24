@@ -67,6 +67,14 @@ namespace SignalBox.Web.Controllers
 
         }
 
+        /// <summary>Get summary statistics about the recommender.</summary>
+        [HttpGet("{id}/Statistics")]
+        public async Task<RecommenderStatistics> GetStatistics(string id, bool? useInternalId = null)
+        {
+            var recommender = await base.GetEntity(id, useInternalId);
+            return await workflows.CalculateStatistics(recommender);
+        }
+
         /// <summary>Invoke a model with some payload. Id is the recommender Id.</summary>
         [HttpPost("{id}/invoke")]
         [AllowApiKey]
@@ -90,7 +98,7 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}/recommendations")]
         public async Task<Paginated<ParameterSetRecommendation>> GetRecommendations(long id, [FromQuery] PaginateRequest p)
         {
-            return await workflows.QueryRecommendations(id, p.Page);
+            return await workflows.QueryRecommendations(id, p.Page, p.PageSize);
         }
 
         protected override Task<(bool, string)> CanDelete(ParameterSetRecommender entity)

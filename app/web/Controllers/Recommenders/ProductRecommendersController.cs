@@ -118,7 +118,7 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}/recommendations")]
         public async Task<Paginated<ProductRecommendation>> GetRecommendations(long id, [FromQuery] PaginateRequest p)
         {
-            return await workflows.QueryRecommendations(id, p.Page);
+            return await workflows.QueryRecommendations(id, p.Page, p.PageSize);
         }
 
         protected override Task<(bool, string)> CanDelete(ProductRecommender entity)

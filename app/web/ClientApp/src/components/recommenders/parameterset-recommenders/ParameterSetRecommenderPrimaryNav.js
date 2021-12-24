@@ -7,6 +7,9 @@ import {
 export const ParameterSetRecommenderPrimaryNav = ({ id }) => {
   return (
     <PrimaryNavigationMenu>
+      {/* <NavListItem to={`/recommenders/parameter-set-recommenders/overview/${id}`}>
+        Overview
+      </NavListItem> */}
       <NavListItem to={`/recommenders/parameter-set-recommenders/detail/${id}`}>
         Detail
       </NavListItem>
@@ -14,6 +17,9 @@ export const ParameterSetRecommenderPrimaryNav = ({ id }) => {
         to={`/recommenders/parameter-set-recommenders/monitor/${id}`}
       >
         Monitor
+      </NavListItem>
+      <NavListItem to={`/recommenders/parameter-set-recommenders/test/${id}`}>
+        Invoke
       </NavListItem>
       <NavListItem
         to={`/recommenders/parameter-set-recommenders/triggers/${id}`}
@@ -30,9 +36,7 @@ export const ParameterSetRecommenderPrimaryNav = ({ id }) => {
       >
         Learning Features
       </NavListItem>
-      <NavListItem to={`/recommenders/parameter-set-recommenders/test/${id}`}>
-        Test
-      </NavListItem>
+
       <NavListItem
         to={`/recommenders/parameter-set-recommenders/arguments/${id}`}
       >

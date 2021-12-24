@@ -31,8 +31,9 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await QuerySet.AnyAsync(_ => _.RecommendationCorrelatorId == correlatorId);
         }
 
-        public async Task<Paginated<ParameterSetRecommendation>> QueryForRecommender(int page, long recommenderId)
+        public async Task<Paginated<ParameterSetRecommendation>> QueryForRecommender(int page, int? pageSize, long recommenderId)
         {
+            int actualPageSize = pageSize ?? PageSize;
             var itemCount = await QuerySet.CountAsync(_ => _.RecommenderId == recommenderId);
             List<ParameterSetRecommendation> results;
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
@@ -42,14 +43,14 @@ namespace SignalBox.Infrastructure.EntityFramework
                     .Include(_ => _.Customer)
                     .OrderByDescending(_ => _.Created)
                     .OrderByDescending(_ => _.LastUpdated)
-                    .Skip((page - 1) * PageSize).Take(PageSize)
+                    .Skip((page - 1) * actualPageSize).Take(actualPageSize)
                     .ToListAsync();
             }
             else
             {
                 results = new List<ParameterSetRecommendation>();
             }
-            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
+            var pageCount = (int)Math.Ceiling((double)itemCount / actualPageSize);
             return new Paginated<ParameterSetRecommendation>(results, pageCount, itemCount, page);
         }
 
@@ -63,6 +64,35 @@ namespace SignalBox.Infrastructure.EntityFramework
                     _.Created > since)
                 .ToListAsync();
 
+        }
+
+        public async Task<long> CountUniqueCustomers(long recommenderId)
+        {
+            if (await QuerySet.AnyAsync(_ => _.RecommenderId == recommenderId))
+            {
+                return await QuerySet
+                    .Where(_ => _.RecommenderId == recommenderId)
+                    .Select(_ => _.TrackedUserId)
+                    .Distinct()
+                    .CountAsync();
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public async Task<long> CountRecommendations(long recommenderId)
+        {
+            if (await QuerySet.AnyAsync(_ => _.RecommenderId == recommenderId))
+            {
+                return await QuerySet
+                    .CountAsync(_ => _.RecommenderId == recommenderId);
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

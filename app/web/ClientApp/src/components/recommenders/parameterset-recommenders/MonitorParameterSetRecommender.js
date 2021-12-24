@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
-import { RecommendationList } from "./RecommendationList";
+import { ParameterRecommendationList } from "./RecommendationList";
 import { InvokationLogs } from "./InvokationLogs";
 import { ParameterSetRecommenderLayout } from "./ParameterSetRecommenderLayout";
 
@@ -24,7 +24,7 @@ export const MonitorParameterSetRecommender = () => {
         <Tabs tabs={tabs} />
 
         <TabActivator tabId="recommendations" defaultTabId={defaultTabId}>
-          <RecommendationList />
+          <ParameterRecommendationList />
         </TabActivator>
         <TabActivator tabId="invokations" defaultTabId={defaultTabId}>
           <InvokationLogs />

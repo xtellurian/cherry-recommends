@@ -1,10 +1,11 @@
 import { executeFetch } from "../client/apiClientTs";
 import * as link from "./common/linkRegisteredModels";
 
+import { components } from "../../model/api";
+
 import * as ar from "./common/args";
 import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
-import * as eh from "./common/errorHandling";
 import * as st from "./common/settings";
 import * as ds from "./common/destinations";
 import * as trig from "./common/trigger";
@@ -16,6 +17,7 @@ import {
   AuthenticatedRequest,
   ModelInput,
   ItemsRecommendation,
+  PaginatedEntityRequest,
 } from "../../interfaces";
 
 const recommenderApiName = "ItemsRecommenders";
@@ -41,19 +43,21 @@ export const fetchItemsRecommenderAsync = async ({
   });
 };
 
-interface ItemsRecommendationsRequest extends EntityRequest {
+interface ItemsRecommendationsRequest extends PaginatedEntityRequest {
   page: number;
 }
 
 export const fetchItemsRecommendationsAsync = async ({
   token,
   page,
+  pageSize,
   id,
 }: ItemsRecommendationsRequest) => {
   return await executeFetch({
     token,
     path: `api/recommenders/ItemsRecommenders/${id}/Recommendations`,
     page,
+    pageSize,
   });
 };
 
@@ -157,9 +161,8 @@ export const getBaselineItemAsync = async ({ token, id }: EntityRequest) => {
 
 export const getDefaultItemAsync = getBaselineItemAsync; // backwards compat
 
-interface LinkRegisteredModelRequest extends EntityRequest {
-  modelId: number;
-}
+type LinkRegisteredModelRequest = EntityRequest &
+  components["schemas"]["LinkModel"];
 export const createLinkRegisteredModelAsync = async ({
   token,
   id,
@@ -385,5 +388,16 @@ export const setLearningFeaturesAsync = async ({
     token,
     useInternalId,
     featureIds,
+  });
+};
+
+type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
+export const fetchStatisticsAsync = async ({
+  id,
+  token,
+}: EntityRequest): Promise<RecommenderStatistics> => {
+  return await executeFetch({
+    path: `api/recommenders/ItemsRecommenders/${id}/Statistics`,
+    token,
   });
 };

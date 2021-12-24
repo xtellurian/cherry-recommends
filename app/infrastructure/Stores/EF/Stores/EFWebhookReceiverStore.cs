@@ -21,6 +21,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<WebhookReceiver> ReadFromEndpointId(string endpointId)
         {
+            // todo: make this a better error when not exist, rather than 500
             return await Set.Include(_ => _.IntegratedSystem).FirstAsync(_ => _.EndpointId == endpointId);
         }
     }

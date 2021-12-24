@@ -203,6 +203,470 @@ export interface paths {
             };
         };
     };
+    "/api/TrackedUsers/{id}": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["Customer"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete: {
+            parameters: {
+                path: {
+                    id: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["DeleteResponse"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Customers/{id}": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["Customer"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete: {
+            parameters: {
+                path: {
+                    id: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["DeleteResponse"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/TrackedUsers/{id}/events": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    useInternalId?: boolean;
+                };
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["CustomerEventPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Customers/{id}/events": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    useInternalId?: boolean;
+                };
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["CustomerEventPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/TrackedUsers/{id}/properties": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                    "text/json": {
+                        [key: string]: unknown;
+                    };
+                    "application/*+json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    "/api/Customers/{id}/properties": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                    "text/json": {
+                        [key: string]: unknown;
+                    };
+                    "application/*+json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    "/api/TrackedUsers": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    term?: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["CustomerPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put: {
+            responses: {
+                /** Success */
+                200: unknown;
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["BatchCreateOrUpdateCustomersDto"];
+                    "text/json": components["schemas"]["BatchCreateOrUpdateCustomersDto"];
+                    "application/*+json": components["schemas"]["BatchCreateOrUpdateCustomersDto"];
+                };
+            };
+        };
+        post: {
+            responses: {
+                /** Success */
+                200: unknown;
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateOrUpdateCustomerDto"];
+                    "text/json": components["schemas"]["CreateOrUpdateCustomerDto"];
+                    "application/*+json": components["schemas"]["CreateOrUpdateCustomerDto"];
+                };
+            };
+        };
+    };
+    "/api/Customers": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    term?: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["CustomerPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put: {
+            responses: {
+                /** Success */
+                200: unknown;
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["BatchCreateOrUpdateCustomersDto"];
+                    "text/json": components["schemas"]["BatchCreateOrUpdateCustomersDto"];
+                    "application/*+json": components["schemas"]["BatchCreateOrUpdateCustomersDto"];
+                };
+            };
+        };
+        post: {
+            responses: {
+                /** Success */
+                200: unknown;
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateOrUpdateCustomerDto"];
+                    "text/json": components["schemas"]["CreateOrUpdateCustomerDto"];
+                    "application/*+json": components["schemas"]["CreateOrUpdateCustomerDto"];
+                };
+            };
+        };
+    };
+    "/api/TrackedUsers/{id}/name": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    name?: string;
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["Customer"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Customers/{id}/name": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    name?: string;
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["Customer"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/TrackedUsers/{id}/Properties": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Customers/{id}/Properties": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
     "/api/DataSummary/events": {
         get: {
             responses: {
@@ -389,7 +853,7 @@ export interface paths {
                 /** Success */
                 200: {
                     content: {
-                        "application/json": components["schemas"]["TrackedUserEvent"];
+                        "application/json": components["schemas"]["CustomerEvent"];
                     };
                 };
                 /** Bad Request */
@@ -575,7 +1039,33 @@ export interface paths {
                 /** Success */
                 200: {
                     content: {
-                        "application/json": components["schemas"]["TrackedUserPaginated"];
+                        "application/json": components["schemas"]["CustomerPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Features/{id}/Customers": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    page?: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["CustomerPaginated"];
                     };
                 };
                 /** Bad Request */
@@ -1262,9 +1752,66 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["DefaultItemDto"];
-                    "text/json": components["schemas"]["DefaultItemDto"];
-                    "application/*+json": components["schemas"]["DefaultItemDto"];
+                    "application/json": components["schemas"]["BaselineItemDto"];
+                    "text/json": components["schemas"]["BaselineItemDto"];
+                    "application/*+json": components["schemas"]["BaselineItemDto"];
+                };
+            };
+        };
+    };
+    "/api/recommenders/ItemsRecommenders/{id}/BaselineItem": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["RecommendableItem"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["RecommendableItem"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["BaselineItemDto"];
+                    "text/json": components["schemas"]["BaselineItemDto"];
+                    "application/*+json": components["schemas"]["BaselineItemDto"];
                 };
             };
         };
@@ -1281,6 +1828,32 @@ export interface paths {
                 200: {
                     content: {
                         "application/json": components["schemas"]["ModelRegistration"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/recommenders/ItemsRecommenders/{id}/Statistics": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["RecommenderStatistics"];
                     };
                 };
                 /** Bad Request */
@@ -2342,6 +2915,32 @@ export interface paths {
                     "application/json": components["schemas"]["LinkModel"];
                     "text/json": components["schemas"]["LinkModel"];
                     "application/*+json": components["schemas"]["LinkModel"];
+                };
+            };
+        };
+    };
+    "/api/recommenders/ParameterSetRecommenders/{id}/Statistics": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["RecommenderStatistics"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
                 };
             };
         };
@@ -3946,6 +4545,51 @@ export interface paths {
             };
         };
     };
+    "/api/Profile/metadata": {
+        get: {
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "text/plain": components["schemas"]["UserMetadata"];
+                        "application/json": components["schemas"]["UserMetadata"];
+                        "text/json": components["schemas"]["UserMetadata"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "text/plain": components["schemas"]["UserMetadata"];
+                        "application/json": components["schemas"]["UserMetadata"];
+                        "text/json": components["schemas"]["UserMetadata"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UserMetadata"];
+                    "text/json": components["schemas"]["UserMetadata"];
+                    "application/*+json": components["schemas"]["UserMetadata"];
+                };
+            };
+        };
+    };
     "/api/RecommendableItems": {
         get: {
             parameters: {
@@ -4533,221 +5177,34 @@ export interface paths {
             };
         };
     };
-    "/api/Touchpoints": {
-        get: {
-            parameters: {
-                query: {
-                    page?: number;
-                    term?: string;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["TouchpointPaginated"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-        post: {
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["Touchpoint"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["CreateTouchpointMetadata"];
-                    "text/json": components["schemas"]["CreateTouchpointMetadata"];
-                    "application/*+json": components["schemas"]["CreateTouchpointMetadata"];
-                };
-            };
-        };
-    };
-    "/api/Touchpoints/{id}/TrackedUsers": {
-        get: {
-            parameters: {
-                path: {
-                    id: string;
-                };
-                query: {
-                    page?: number;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["TrackedUserPaginated"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-    };
-    "/api/Touchpoints/{id}": {
-        get: {
-            parameters: {
-                path: {
-                    id: string;
-                };
-                query: {
-                    useInternalId?: boolean;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["Touchpoint"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-        delete: {
-            parameters: {
-                path: {
-                    id: number;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["DeleteResponse"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-    };
-    "/api/Touchpoints/{id}/name": {
-        post: {
-            parameters: {
-                path: {
-                    id: string;
-                };
-                query: {
-                    name?: string;
-                    useInternalId?: boolean;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["Touchpoint"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-    };
-    "/api/Touchpoints/{id}/Properties": {
-        get: {
-            parameters: {
-                path: {
-                    id: string;
-                };
-                query: {
-                    useInternalId?: boolean;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-        post: {
-            parameters: {
-                path: {
-                    id: string;
-                };
-                query: {
-                    useInternalId?: boolean;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                    "text/json": {
-                        [key: string]: unknown;
-                    };
-                    "application/*+json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-        };
-    };
     "/api/TrackedUsers/{id}/action-groups": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    useInternalId?: boolean;
+                };
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ActionCategoryAndNamePaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Customers/{id}/action-groups": {
         get: {
             parameters: {
                 query: {
@@ -4788,11 +5245,31 @@ export interface paths {
             };
             responses: {
                 /** Success */
-                200: {
+                200: unknown;
+                /** Bad Request */
+                400: {
                     content: {
-                        "application/json": components["schemas"]["TrackedUserAction"];
+                        "application/json": components["schemas"]["ProblemDetails"];
                     };
                 };
+            };
+        };
+    };
+    "/api/Customers/{id}/actions/{category}": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                    category: string;
+                };
+                query: {
+                    actionName?: string;
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: unknown;
                 /** Bad Request */
                 400: {
                     content: {
@@ -4830,7 +5307,35 @@ export interface paths {
             };
         };
     };
-    "/api/trackedusers/{id}/features": {
+    "/api/Customers/{id}/actions": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    revenueOnly?: boolean;
+                    useInternalId?: boolean;
+                };
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["TrackedUserActionPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/TrackedUsers/{id}/features": {
         get: {
             parameters: {
                 path: {
@@ -4856,7 +5361,94 @@ export interface paths {
             };
         };
     };
-    "/api/trackedusers/{id}/features/{featureCommonId}": {
+    "/api/Customers/{id}/features": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["Feature"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/TrackedUsers/{id}/features/{featureCommonId}": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                    featureCommonId: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                    version?: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["HistoricTrackedUserFeature"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                    featureCommonId: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                    forceIncrementVersion?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["HistoricTrackedUserFeature"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateTrackedUserFeature"];
+                    "text/json": components["schemas"]["CreateTrackedUserFeature"];
+                    "application/*+json": components["schemas"]["CreateTrackedUserFeature"];
+                };
+            };
+        };
+    };
+    "/api/Customers/{id}/features/{featureCommonId}": {
         get: {
             parameters: {
                 path: {
@@ -4944,54 +5536,7 @@ export interface paths {
             };
         };
     };
-    "/api/TrackedUsers/{id}": {
-        get: {
-            parameters: {
-                path: {
-                    id: string;
-                };
-                query: {
-                    useInternalId?: boolean;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["TrackedUser"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-        delete: {
-            parameters: {
-                path: {
-                    id: number;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["DeleteResponse"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-    };
-    "/api/TrackedUsers/{id}/events": {
+    "/api/Customers/{id}/latest-recommendations": {
         get: {
             parameters: {
                 query: {
@@ -5006,7 +5551,7 @@ export interface paths {
                 /** Success */
                 200: {
                     content: {
-                        "application/json": components["schemas"]["TrackedUserEventPaginated"];
+                        "application/json": components["schemas"]["ObjectPaginated"];
                     };
                 };
                 /** Bad Request */
@@ -5014,250 +5559,6 @@ export interface paths {
                     content: {
                         "application/json": components["schemas"]["ProblemDetails"];
                     };
-                };
-            };
-        };
-    };
-    "/api/TrackedUsers/{id}/properties": {
-        post: {
-            parameters: {
-                path: {
-                    id: string;
-                };
-                query: {
-                    useInternalId?: boolean;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                    "text/json": {
-                        [key: string]: unknown;
-                    };
-                    "application/*+json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-        };
-    };
-    "/api/TrackedUsers": {
-        get: {
-            parameters: {
-                query: {
-                    page?: number;
-                    term?: string;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["TrackedUserPaginated"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-        put: {
-            responses: {
-                /** Success */
-                200: unknown;
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["BatchCreateOrUpdateUsersDto"];
-                    "text/json": components["schemas"]["BatchCreateOrUpdateUsersDto"];
-                    "application/*+json": components["schemas"]["BatchCreateOrUpdateUsersDto"];
-                };
-            };
-        };
-        post: {
-            responses: {
-                /** Success */
-                200: unknown;
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["CreateOrUpdateTrackedUserDto"];
-                    "text/json": components["schemas"]["CreateOrUpdateTrackedUserDto"];
-                    "application/*+json": components["schemas"]["CreateOrUpdateTrackedUserDto"];
-                };
-            };
-        };
-    };
-    "/api/TrackedUsers/{id}/name": {
-        post: {
-            parameters: {
-                path: {
-                    id: string;
-                };
-                query: {
-                    name?: string;
-                    useInternalId?: boolean;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["TrackedUser"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-    };
-    "/api/TrackedUsers/{id}/Properties": {
-        get: {
-            parameters: {
-                path: {
-                    id: string;
-                };
-                query: {
-                    useInternalId?: boolean;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-    };
-    "/api/trackedusers/{id}/touchpoints": {
-        get: {
-            parameters: {
-                path: {
-                    id: string;
-                };
-                query: {
-                    useInternalId?: boolean;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["Touchpoint"][];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-    };
-    "/api/trackedusers/{id}/touchpoints/{touchpointCommonId}": {
-        get: {
-            parameters: {
-                path: {
-                    id: string;
-                    touchpointCommonId: string;
-                };
-                query: {
-                    useInternalId?: boolean;
-                    version?: number;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["TrackedUserTouchpoint"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-        post: {
-            parameters: {
-                path: {
-                    id: string;
-                    touchpointCommonId: string;
-                };
-                query: {
-                    useInternalId?: boolean;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["TrackedUserTouchpoint"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["CreateTrackedUserTouchpoint"];
-                    "text/json": components["schemas"]["CreateTrackedUserTouchpoint"];
-                    "application/*+json": components["schemas"]["CreateTrackedUserTouchpoint"];
                 };
             };
         };
@@ -5328,6 +5629,7 @@ export interface components {
             data?: {
                 [key: string]: unknown;
             }[] | null;
+            customerId?: string | null;
             commonUserId?: string | null;
             arguments?: {
                 [key: string]: unknown;
@@ -5337,8 +5639,12 @@ export interface components {
             } | null;
             parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
         };
-        BatchCreateOrUpdateUsersDto: {
-            users: components["schemas"]["CreateOrUpdateTrackedUserDto"][];
+        BaselineItemDto: {
+            itemId?: string | null;
+        };
+        BatchCreateOrUpdateCustomersDto: {
+            users?: components["schemas"]["CreateOrUpdateCustomerDto"][] | null;
+            customers?: components["schemas"]["CreateOrUpdateCustomerDto"][] | null;
         };
         Bearer: {
             name?: string | null;
@@ -5349,6 +5655,17 @@ export interface components {
         };
         CategoricalParameterBounds: {
             categories?: string[] | null;
+        };
+        CheckistItem: {
+            complete?: boolean | null;
+            current?: boolean | null;
+            next?: boolean | null;
+            order?: number | null;
+            label?: string | null;
+            description?: string | null;
+            actionTo?: string | null;
+            actionLabel?: string | null;
+            docsLink?: string | null;
         };
         CreateApiKeyDto: {
             name: string;
@@ -5392,23 +5709,25 @@ export interface components {
             settings?: components["schemas"]["RecommenderSettingsDto"];
             arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
             itemIds?: string[] | null;
-            defaultItemId: string;
+            defaultItemId?: string | null;
+            baselineItemId?: string | null;
             numberOfItemsToRecommend?: number | null;
             useAutoAi?: boolean | null;
+        };
+        CreateOrUpdateCustomerDto: {
+            commonUserId?: string | null;
+            customerId?: string | null;
+            name?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            integratedSystemReference?: components["schemas"]["IntegratedSystemReference"];
         };
         CreateOrUpdateRecommenderArgument: {
             commonId: string;
             argumentType?: components["schemas"]["ArgumentTypes"];
             defaultValue?: string | null;
             isRequired?: boolean;
-        };
-        CreateOrUpdateTrackedUserDto: {
-            commonUserId: string;
-            name?: string | null;
-            properties?: {
-                [key: string]: unknown;
-            } | null;
-            integratedSystemReference?: components["schemas"]["IntegratedSystemReference"];
         };
         CreateParameter: {
             commonId: string;
@@ -5481,19 +5800,53 @@ export interface components {
         CreateTenantMembershipDto: {
             email: string;
         };
-        CreateTouchpointMetadata: {
-            /** Set a unique Id for the touchpoint. */
-            commonId: string;
-            /** Optional friendly name of the touchpoint. */
-            name?: string | null;
-        };
         CreateTrackedUserFeature: {
             value: unknown;
         };
-        CreateTrackedUserTouchpoint: {
-            values: {
+        Customer: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            commonId?: string | null;
+            properties?: {
                 [key: string]: unknown;
-            };
+            } | null;
+            commonUserId?: string | null;
+            customerId?: string | null;
+            integratedSystemMaps?: components["schemas"]["TrackedUserSystemMap"][] | null;
+        };
+        CustomerEvent: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            commonUserId?: string | null;
+            customerId?: string | null;
+            eventId?: string | null;
+            timestamp?: string;
+            recommendationCorrelatorId?: number | null;
+            recommendationCorrelator?: components["schemas"]["RecommendationCorrelator"];
+            source?: components["schemas"]["IntegratedSystem"];
+            eventKind?: components["schemas"]["EventKinds"];
+            kind?: string | null;
+            eventType?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            trackedUserId?: number | null;
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
+            actions?: components["schemas"]["TrackedUserAction"][] | null;
+        };
+        CustomerEventPaginated: {
+            items?: components["schemas"]["CustomerEvent"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        CustomerPaginated: {
+            items?: components["schemas"]["Customer"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
         };
         Data: {
             type?: string | null;
@@ -5511,9 +5864,6 @@ export interface components {
         DefaultArgumentContainer: {
             argumentType?: components["schemas"]["ArgumentTypes"];
             value?: unknown | null;
-        };
-        DefaultItemDto: {
-            itemId?: string | null;
         };
         DefaultParameterValue: {
             parameterType?: components["schemas"]["ParameterTypes"];
@@ -5564,7 +5914,8 @@ export interface components {
             }[] | null;
         };
         EventDto: {
-            commonUserId: string;
+            commonUserId?: string | null;
+            customerId?: string | null;
             eventId: string;
             timestamp?: string | null;
             recommendationCorrelatorId?: number | null;
@@ -5590,6 +5941,7 @@ export interface components {
         };
         EventStats: {
             instances?: number;
+            customers?: number;
             trackedUsers?: number;
             fractionOfKind?: number;
         };
@@ -5678,12 +6030,19 @@ export interface components {
             "200"?: components["schemas"]["The200"];
             default?: components["schemas"]["Default"];
         };
+        GettingStartedChecklist: {
+            steps?: {
+                [key: string]: components["schemas"]["CheckistItem"];
+            } | null;
+            allComplete?: boolean | null;
+        };
         HistoricTrackedUserFeature: {
             id?: number;
             created?: string;
             lastUpdated?: string;
             trackedUserId?: number;
-            trackedUser?: components["schemas"]["TrackedUser"];
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
             featureId?: number;
             feature?: components["schemas"]["Feature"];
             numericValue?: number | null;
@@ -5751,7 +6110,8 @@ export interface components {
             correlatorId?: number | null;
             correlator?: components["schemas"]["RecommendationCorrelator"];
             trackedUserId?: number | null;
-            trackedUser?: components["schemas"]["TrackedUser"];
+            customer?: components["schemas"]["Customer"];
+            trackedUser?: components["schemas"]["Customer"];
         };
         InvokationLogEntryPaginated: {
             items?: components["schemas"]["InvokationLogEntry"][] | null;
@@ -5768,7 +6128,8 @@ export interface components {
             lastUpdated?: string;
             recommenderType?: components["schemas"]["RecommenderTypes"];
             trackedUserId?: number | null;
-            trackedUser?: components["schemas"]["TrackedUser"];
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
             trigger?: string | null;
             recommendationCorrelatorId?: number | null;
             modelInput?: string | null;
@@ -5784,8 +6145,9 @@ export interface components {
             created?: string;
             correlatorId?: number | null;
             commonUserId?: string | null;
+            customerId?: string | null;
             scoredItems?: components["schemas"]["ScoredRecommendableItem"][] | null;
-            customer?: components["schemas"]["TrackedUser"];
+            customer?: components["schemas"]["Customer"];
             trigger?: string | null;
         };
         ItemsRecommendationPaginated: {
@@ -5809,7 +6171,8 @@ export interface components {
             triggerCollection?: components["schemas"]["TriggerCollection"];
             modelRegistrationId?: number | null;
             modelRegistration?: components["schemas"]["ModelRegistration"];
-            defaultItemId?: number | null;
+            baselineItemId?: number | null;
+            baselineItem?: components["schemas"]["RecommendableItem"];
             defaultItem?: components["schemas"]["RecommendableItem"];
             numberOfItemsToRecommend?: number | null;
             items?: components["schemas"]["RecommendableItem"][] | null;
@@ -5825,7 +6188,8 @@ export interface components {
             type?: string | null;
         };
         ModelInputDto: {
-            commonUserId: string;
+            customerId?: string | null;
+            commonUserId?: string | null;
             arguments?: {
                 [key: string]: unknown;
             } | null;
@@ -5914,7 +6278,8 @@ export interface components {
             lastUpdated?: string;
             recommenderType?: components["schemas"]["RecommenderTypes"];
             trackedUserId?: number | null;
-            trackedUser?: components["schemas"]["TrackedUser"];
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
             trigger?: string | null;
             recommendationCorrelatorId?: number | null;
             modelInput?: string | null;
@@ -5932,7 +6297,8 @@ export interface components {
                 [key: string]: unknown;
             } | null;
             commonUserId?: string | null;
-            customer?: components["schemas"]["TrackedUser"];
+            customerId?: string | null;
+            customer?: components["schemas"]["Customer"];
             trigger?: string | null;
         };
         ParameterSetRecommendationPaginated: {
@@ -6013,7 +6379,8 @@ export interface components {
             lastUpdated?: string;
             recommenderType?: components["schemas"]["RecommenderTypes"];
             trackedUserId?: number | null;
-            trackedUser?: components["schemas"]["TrackedUser"];
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
             trigger?: string | null;
             recommendationCorrelatorId?: number | null;
             modelInput?: string | null;
@@ -6051,7 +6418,8 @@ export interface components {
             products?: components["schemas"]["Product"][] | null;
         };
         ProductRecommenderInput: {
-            commonUserId: string;
+            commonUserId?: string | null;
+            customerId?: string | null;
             arguments?: {
                 [key: string]: unknown;
             } | null;
@@ -6149,6 +6517,10 @@ export interface components {
             requireConsumptionEvent?: boolean | null;
             recommendationCacheTime?: components["schemas"]["TimeSpan"];
         };
+        RecommenderStatistics: {
+            numberCustomersRecommended?: number;
+            numberInvokations?: number;
+        };
         RecommenderTargetVariableValue: {
             id?: number;
             created?: string;
@@ -6204,7 +6576,7 @@ export interface components {
             name?: string | null;
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
-            inSegment?: components["schemas"]["TrackedUser"][] | null;
+            inSegment?: components["schemas"]["Customer"][] | null;
         };
         SegmentPaginated: {
             items?: components["schemas"]["Segment"][] | null;
@@ -6281,43 +6653,15 @@ export interface components {
             totalMinutes?: number;
             totalSeconds?: number;
         };
-        Touchpoint: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            name?: string | null;
-            environmentId?: number | null;
-            environment?: components["schemas"]["Environment"];
-            commonId?: string | null;
-            properties?: {
-                [key: string]: unknown;
-            } | null;
-        };
-        TouchpointPaginated: {
-            items?: components["schemas"]["Touchpoint"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
-        };
-        TrackedUser: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            name?: string | null;
-            environmentId?: number | null;
-            environment?: components["schemas"]["Environment"];
-            commonId?: string | null;
-            properties?: {
-                [key: string]: unknown;
-            } | null;
-            commonUserId?: string | null;
-            integratedSystemMaps?: components["schemas"]["TrackedUserSystemMap"][] | null;
-        };
         TrackedUserAction: {
             id?: number;
             created?: string;
             lastUpdated?: string;
             trackedUserId?: number | null;
-            trackedUser?: components["schemas"]["TrackedUser"];
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
             commonUserId?: string | null;
+            customerId?: string | null;
             eventId?: string | null;
             timestamp?: string;
             recommendationCorrelatorId?: number | null;
@@ -6336,39 +6680,11 @@ export interface components {
             pagination?: components["schemas"]["PaginationInfo"];
         };
         TrackedUserActionValueType: "string" | "float" | "int";
-        TrackedUserEvent: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            commonUserId?: string | null;
-            eventId?: string | null;
-            timestamp?: string;
-            recommendationCorrelatorId?: number | null;
-            recommendationCorrelator?: components["schemas"]["RecommendationCorrelator"];
-            source?: components["schemas"]["IntegratedSystem"];
-            eventKind?: components["schemas"]["EventKinds"];
-            kind?: string | null;
-            eventType?: string | null;
-            properties?: {
-                [key: string]: unknown;
-            } | null;
-            trackedUserId?: number | null;
-            trackedUser?: components["schemas"]["TrackedUser"];
-            actions?: components["schemas"]["TrackedUserAction"][] | null;
-        };
-        TrackedUserEventPaginated: {
-            items?: components["schemas"]["TrackedUserEvent"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
-        };
         TrackedUserEventSummary: {
             keys?: string[] | null;
             kinds?: {
                 [key: string]: components["schemas"]["EventKindSummary"];
             } | null;
-        };
-        TrackedUserPaginated: {
-            items?: components["schemas"]["TrackedUser"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
         };
         TrackedUserSystemMap: {
             id?: number;
@@ -6376,19 +6692,6 @@ export interface components {
             lastUpdated?: string;
             userId?: string | null;
             integratedSystemId?: number;
-        };
-        TrackedUserTouchpoint: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            version?: number;
-            trackedUserId?: number;
-            trackedUser?: components["schemas"]["TrackedUser"];
-            touchpointId?: number;
-            touchpoint?: components["schemas"]["Touchpoint"];
-            values?: {
-                [key: string]: unknown;
-            } | null;
         };
         TriggerCollection: {
             featuresChanged?: components["schemas"]["FeaturesChangedTrigger"];
@@ -6411,6 +6714,9 @@ export interface components {
         UserInfoPaginated: {
             items?: components["schemas"]["UserInfo"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
+        };
+        UserMetadata: {
+            gettingStartedChecklist?: components["schemas"]["GettingStartedChecklist"];
         };
         WebhookReceiver: {
             id?: number;

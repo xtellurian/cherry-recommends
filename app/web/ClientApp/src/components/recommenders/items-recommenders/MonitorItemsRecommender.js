@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
-import { RecommendationList } from "./RecommendationList";
+import { ItemsRecommendationList } from "./RecommendationList";
 import { InvokationLogs } from "./InvokationLogs";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 
@@ -23,7 +23,7 @@ export const MonitorRecommender = () => {
       <ItemRecommenderLayout>
         <Tabs tabs={tabs} />
         <TabActivator tabId="recommendations" defaultTabId={defaultTabId}>
-          <RecommendationList />
+          <ItemsRecommendationList size="lg" />
         </TabActivator>
         <TabActivator tabId="invokations" defaultTabId={defaultTabId}>
           <InvokationLogs />

@@ -1,15 +1,15 @@
 {
   "name": "cherry.ai",
-  "version": "1.0.4-dev1",
+  "version": "1.0.5",
   "description": "API Client for Cherry Recommends ",
   "main": "dist/cherry.ai.umd.js",
   "module": "dist/cherry.ai.es.js",
   "types": "dist/cherry.ai.d.ts",
   "scripts": {
-    "api": "openapi-typescript spec.json --output src/model/api.ts",
     "compile": "tsc",
     "rollup": "rollup -c",
-    "build": "rimraf compiled && rimraf dist && tsc && rollup -c rollup.config.js"
+    "build": "rimraf compiled && rimraf dist && tsc && rollup -c rollup.config.js",
+    "spec": "./generate_spec.sh && openapi-typescript spec.json --output src/model/api.ts"
   },
   "keywords": [
     "Four2",

@@ -7,7 +7,7 @@ import {
   fetchItemsRecommendationsAsync,
   fetchTargetVariablesAsync,
   fetchItemsAsync,
-  fetchRecommenderTrackedUserActionsAsync,
+  fetchStatisticsAsync,
   fetchDestinationsAsync,
   getBaselineItemAsync,
   fetchTriggerAsync,
@@ -72,7 +72,7 @@ export const useItemsRecommender = ({ id, trigger }) => {
   return result;
 };
 
-export const useItemsRecommendations = ({ id }) => {
+export const useItemsRecommendations = ({ id, pageSize }) => {
   const token = useAccessToken();
   const page = usePagination();
   const [result, setState] = React.useState({ loading: true });
@@ -83,11 +83,12 @@ export const useItemsRecommendations = ({ id }) => {
         token,
         id,
         page,
+        pageSize
       })
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, id, page]);
+  }, [token, id, page, pageSize]);
 
   return result;
 };
@@ -211,6 +212,24 @@ export const useLearningFeatures = ({ id, trigger }) => {
     setState({ loading: true });
     if (token) {
       fetchLearningFeaturesAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useStatistics = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchStatisticsAsync({
         token,
         id,
       })

@@ -11,6 +11,7 @@ export const executeFetch = async ({
   apiKey,
   path,
   page,
+  pageSize,
   body,
   method,
   query,
@@ -24,6 +25,9 @@ export const executeFetch = async ({
   }
   if (page) {
     q.append("p.page", `${page}`);
+  }
+  if (pageSize) {
+    q.append("p.pageSize", `${pageSize}`);
   }
   if (apiKey) {
     q.append("apiKey", `${apiKey}`);

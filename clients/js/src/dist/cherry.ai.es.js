@@ -82,7 +82,7 @@ var logger = {
     error,
 };
 
-const executeFetch$1 = async ({ token, apiKey, path, page, body, method, query, }) => {
+const executeFetch$1 = async ({ token, apiKey, path, page, pageSize, body, method, query, }) => {
     const url = getUrl(path);
     const q = new URLSearchParams();
     for (const [key, value] of Object.entries(query || {})) {
@@ -92,6 +92,9 @@ const executeFetch$1 = async ({ token, apiKey, path, page, body, method, query, 
     }
     if (page) {
         q.append("p.page", `${page}`);
+    }
+    if (pageSize) {
+        q.append("p.pageSize", `${pageSize}`);
     }
     if (apiKey) {
         q.append("apiKey", `${apiKey}`);
@@ -741,26 +744,6 @@ const createLinkedRegisteredModelAsync = async ({ recommenderApiName, token, id,
     });
 };
 
-const fetchRecommenderTrackedUserActionsAsync$1 = async ({ recommenderApiName, revenueOnly, token, id, page, }) => {
-    return await executeFetch$1({
-        path: `api/recommenders/${recommenderApiName}/${id}/TrackedUserActions`,
-        token,
-        page,
-        query: {
-            revenueOnly,
-        },
-    });
-};
-
-const updateErrorHandlingAsync$1 = async ({ recommenderApiName, token, id, errorHandling, }) => {
-    return await executeFetch$1({
-        path: `api/recommenders/${recommenderApiName}/${id}/ErrorHandling`,
-        token,
-        method: "post",
-        body: errorHandling,
-    });
-};
-
 const fetchRecommenderTargetVariableValuesAsync = async ({ recommenderApiName, name, token, id, }) => {
     return await executeFetch$1({
         path: `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues`,
@@ -860,15 +843,15 @@ const setLearningFeaturesAsync$2 = async ({ recommenderApiName, token, id, useIn
 };
 
 const recommenderApiName$1 = "ParameterSetRecommenders";
-const fetchParameterSetRecommendersAsync = async ({ token, page }) => {
-    return await executeFetch$1({
+const fetchParameterSetRecommendersAsync = async ({ token, page, }) => {
+    return await executeFetch({
         path: "api/recommenders/ParameterSetRecommenders",
         token,
         page,
     });
 };
 const fetchParameterSetRecommenderAsync = async ({ token, id, searchTerm, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/ParameterSetRecommenders/${id}`,
         token,
         query: {
@@ -877,25 +860,26 @@ const fetchParameterSetRecommenderAsync = async ({ token, id, searchTerm, }) => 
     });
 };
 const createParameterSetRecommenderAsync = async ({ token, payload, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/recommenders/ParameterSetRecommenders",
         token,
         method: "post",
         body: payload,
     });
 };
-const deleteParameterSetRecommenderAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+const deleteParameterSetRecommenderAsync = async ({ token, id, }) => {
+    return await executeFetch({
         path: `api/recommenders/ParameterSetRecommenders/${id}`,
         token,
         method: "delete",
     });
 };
-const fetchParameterSetRecommendationsAsync = async ({ token, page, id, }) => {
-    return await executeFetch$1({
+const fetchParameterSetRecommendationsAsync = async ({ token, page, pageSize, id, }) => {
+    return await executeFetch({
         path: `api/recommenders/ParameterSetRecommenders/${id}/recommendations`,
         token,
         page,
+        pageSize
     });
 };
 const createLinkRegisteredModelAsync$1 = async ({ token, id, modelId, }) => {
@@ -906,7 +890,7 @@ const createLinkRegisteredModelAsync$1 = async ({ token, id, modelId, }) => {
         token,
     });
 };
-const fetchLinkedRegisteredModelAsync$1 = async ({ token, id }) => {
+const fetchLinkedRegisteredModelAsync$1 = async ({ token, id, }) => {
     return await fetchLinkedRegisteredModelAsync$2({
         recommenderApiName: recommenderApiName$1,
         id,
@@ -914,14 +898,14 @@ const fetchLinkedRegisteredModelAsync$1 = async ({ token, id }) => {
     });
 };
 const invokeParameterSetRecommenderAsync = async ({ token, id, input, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/ParameterSetRecommenders/${id}/invoke`,
         token,
         method: "post",
         body: input,
     });
 };
-const fetchInvokationLogsAsync$1 = async ({ id, token, page }) => {
+const fetchInvokationLogsAsync$1 = async ({ id, token, page, }) => {
     return await fetchRecommenderInvokationLogsAsync({
         recommenderApiName: recommenderApiName$1,
         id,
@@ -945,15 +929,7 @@ const createTargetVariableAsync$1 = async ({ id, token, targetVariableValue, }) 
         targetVariableValue,
     });
 };
-const updateErrorHandlingAsync = async ({ id, token, errorHandling, }) => {
-    return await updateErrorHandlingAsync$1({
-        recommenderApiName: recommenderApiName$1,
-        id,
-        token,
-        errorHandling,
-    });
-};
-const setSettingsAsync$1 = async ({ id, token, settings }) => {
+const setSettingsAsync$1 = async ({ id, token, settings, }) => {
     return await setSettingsAsync$2({
         recommenderApiName: recommenderApiName$1,
         id,
@@ -961,16 +937,7 @@ const setSettingsAsync$1 = async ({ id, token, settings }) => {
         settings,
     });
 };
-const fetchRecommenderTrackedUserActionsAsync = async ({ id, token, page, revenueOnly, }) => {
-    return await fetchRecommenderTrackedUserActionsAsync$1({
-        recommenderApiName: recommenderApiName$1,
-        id,
-        token,
-        page,
-        revenueOnly,
-    });
-};
-const setArgumentsAsync$1 = async ({ id, token, args }) => {
+const setArgumentsAsync$1 = async ({ id, token, args, }) => {
     return await setArgumentsAsync$2({
         recommenderApiName: recommenderApiName$1,
         id,
@@ -985,7 +952,7 @@ const fetchDestinationsAsync$1 = async ({ id, token }) => {
         token,
     });
 };
-const createDestinationAsync$1 = async ({ id, token, destination }) => {
+const createDestinationAsync$1 = async ({ id, token, destination, }) => {
     return await createDestinationAsync$2({
         recommenderApiName: recommenderApiName$1,
         id,
@@ -993,7 +960,7 @@ const createDestinationAsync$1 = async ({ id, token, destination }) => {
         destination,
     });
 };
-const removeDestinationAsync$1 = async ({ id, token, destinationId }) => {
+const removeDestinationAsync$1 = async ({ id, token, destinationId, }) => {
     return await removeDestinationAsync$2({
         recommenderApiName: recommenderApiName$1,
         id,
@@ -1008,7 +975,7 @@ const fetchTriggerAsync$1 = async ({ id, token }) => {
         token,
     });
 };
-const setTriggerAsync$1 = async ({ id, token, trigger }) => {
+const setTriggerAsync$1 = async ({ id, token, trigger, }) => {
     return await setTriggerAsync$2({
         recommenderApiName: recommenderApiName$1,
         id,
@@ -1033,6 +1000,12 @@ const setLearningFeaturesAsync$1 = async ({ id, token, featureIds, useInternalId
         featureIds,
     });
 };
+const fetchStatisticsAsync$1 = async ({ id, token, }) => {
+    return await executeFetch({
+        path: `api/recommenders/ParameterSetRecommenders/${id}/Statistics`,
+        token,
+    });
+};
 
 var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -1047,9 +1020,7 @@ var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     fetchInvokationLogsAsync: fetchInvokationLogsAsync$1,
     fetchTargetVariablesAsync: fetchTargetVariablesAsync$1,
     createTargetVariableAsync: createTargetVariableAsync$1,
-    updateErrorHandlingAsync: updateErrorHandlingAsync,
     setSettingsAsync: setSettingsAsync$1,
-    fetchRecommenderTrackedUserActionsAsync: fetchRecommenderTrackedUserActionsAsync,
     setArgumentsAsync: setArgumentsAsync$1,
     fetchDestinationsAsync: fetchDestinationsAsync$1,
     createDestinationAsync: createDestinationAsync$1,
@@ -1057,7 +1028,8 @@ var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     fetchTriggerAsync: fetchTriggerAsync$1,
     setTriggerAsync: setTriggerAsync$1,
     fetchLearningFeaturesAsync: fetchLearningFeaturesAsync$1,
-    setLearningFeaturesAsync: setLearningFeaturesAsync$1
+    setLearningFeaturesAsync: setLearningFeaturesAsync$1,
+    fetchStatisticsAsync: fetchStatisticsAsync$1
 });
 
 const setMetadataAsync = async ({ token, metadata }) => {
@@ -1095,11 +1067,12 @@ const fetchItemsRecommenderAsync = async ({ token, id, }) => {
         token,
     });
 };
-const fetchItemsRecommendationsAsync = async ({ token, page, id, }) => {
+const fetchItemsRecommendationsAsync = async ({ token, page, pageSize, id, }) => {
     return await executeFetch({
         token,
         path: `api/recommenders/ItemsRecommenders/${id}/Recommendations`,
         page,
+        pageSize,
     });
 };
 const deleteItemsRecommenderAsync = async ({ token, id, }) => {
@@ -1272,6 +1245,12 @@ const setLearningFeaturesAsync = async ({ id, token, featureIds, useInternalId, 
         featureIds,
     });
 };
+const fetchStatisticsAsync = async ({ id, token, }) => {
+    return await executeFetch({
+        path: `api/recommenders/ItemsRecommenders/${id}/Statistics`,
+        token,
+    });
+};
 
 var itemsRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -1301,7 +1280,8 @@ var itemsRecommendersApi = /*#__PURE__*/Object.freeze({
     fetchTriggerAsync: fetchTriggerAsync,
     setTriggerAsync: setTriggerAsync,
     fetchLearningFeaturesAsync: fetchLearningFeaturesAsync,
-    setLearningFeaturesAsync: setLearningFeaturesAsync
+    setLearningFeaturesAsync: setLearningFeaturesAsync,
+    fetchStatisticsAsync: fetchStatisticsAsync
 });
 
 const defaultHeaders = { "Content-Type": "application/json" };

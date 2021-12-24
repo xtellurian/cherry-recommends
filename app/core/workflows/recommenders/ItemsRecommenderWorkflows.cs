@@ -44,6 +44,15 @@ namespace SignalBox.Core.Workflows
                                                   from.ErrorHandling ?? new RecommenderSettings(),
                                                   true);
         }
+
+        public async Task<RecommenderStatistics> CalculateStatistics(ItemsRecommender recommender)
+        {
+            var stats = new RecommenderStatistics();
+            stats.NumberCustomersRecommended = await recommendationStore.CountUniqueCustomers(recommender.Id);
+            stats.NumberInvokations = await recommendationStore.CountRecommendations(recommender.Id);
+            return stats;
+        }
+
         public async Task<ItemsRecommender> CreateItemsRecommender(CreateCommonEntityModel common,
                                                                        string? baselineItemId,
                                                                        IEnumerable<string>? itemsCommonIds,
@@ -143,10 +152,10 @@ namespace SignalBox.Core.Workflows
             return await itemStore.QueryForRecommender(recommender.Id, page);
         }
 
-        public async Task<Paginated<ItemsRecommendation>> QueryRecommendations(string recommenderId, int page, bool? useInternalId = null)
+        public async Task<Paginated<ItemsRecommendation>> QueryRecommendations(string recommenderId, int page, int? pageSize, bool? useInternalId = null)
         {
             var recommender = await store.GetEntity(recommenderId, useInternalId);
-            return await recommendationStore.QueryForRecommender(page, recommender.Id);
+            return await recommendationStore.QueryForRecommender(page, pageSize, recommender.Id);
         }
 
         public async Task<ModelRegistration> LinkRegisteredModel(ItemsRecommender recommender, long modelId)

@@ -5,7 +5,6 @@ import { ItemsRecommendersSummary } from "./ItemsRecommendersSummary";
 import { CreateRecommender } from "./CreateItemsRecommender";
 import { RecommenderDetail } from "./ItemsRecommenderDetail";
 import { TestRecommender } from "./TestItemsRecommender";
-import { RecommendationList } from "./RecommendationList";
 import { LinkToModel } from "./LinkToModel";
 import { TargetVariableValues } from "./TargetVariableValues";
 import { InvokationLogs } from "./InvokationLogs";
@@ -16,6 +15,7 @@ import { Destinations } from "./Destinations";
 import { Triggers } from "./Triggers";
 import { LearningFeatures } from "./LearningFeatures";
 import { Arguments } from "./Arguments";
+import { Overview } from "./Overview";
 
 export const ItemsRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -34,6 +34,11 @@ export const ItemsRecommendersComponent = () => {
         />
         <AuthorizeRoute
           exact
+          path={`${path}/overview/:id`}
+          component={Overview}
+        />
+        <AuthorizeRoute
+          exact
           path={`${path}/detail/:id`}
           component={RecommenderDetail}
         />
@@ -42,10 +47,6 @@ export const ItemsRecommendersComponent = () => {
           component={LinkToModel}
         />
         <AuthorizeRoute path={`${path}/test/:id`} component={TestRecommender} />
-        <AuthorizeRoute
-          path={`${path}/recommendations/:id`}
-          component={RecommendationList}
-        />
         <AuthorizeRoute
           path={`${path}/target-variable/:id`}
           component={TargetVariableValues}

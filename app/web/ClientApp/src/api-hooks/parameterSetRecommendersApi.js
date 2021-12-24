@@ -10,6 +10,7 @@ import {
   fetchDestinationsAsync,
   fetchTriggerAsync,
   fetchLearningFeaturesAsync,
+  fetchStatisticsAsync,
 } from "../api/parameterSetRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -53,7 +54,7 @@ export const useParameterSetRecommender = ({ id, trigger }) => {
   return result;
 };
 
-export const useParameterSetRecommendations = ({ id }) => {
+export const useParameterSetRecommendations = ({ id, pageSize }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
@@ -62,6 +63,7 @@ export const useParameterSetRecommendations = ({ id }) => {
       fetchParameterSetRecommendationsAsync({
         token,
         id,
+        pageSize
       })
         .then(setState)
         .catch((error) => setState({ error }));
@@ -171,6 +173,24 @@ export const useLearningFeatures = ({ id, trigger }) => {
     setState({ loading: true });
     if (token) {
       fetchLearningFeaturesAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useStatistics = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchStatisticsAsync({
         token,
         id,
       })

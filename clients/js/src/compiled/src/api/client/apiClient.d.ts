@@ -1,8 +1,9 @@
-export function executeFetch({ token, apiKey, path, page, body, method, query, }: {
+export function executeFetch({ token, apiKey, path, page, pageSize, body, method, query, }: {
     token: any;
     apiKey: any;
     path: any;
     page: any;
+    pageSize: any;
     body: any;
     method: any;
     query: any;

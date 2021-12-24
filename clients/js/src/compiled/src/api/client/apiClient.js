@@ -2,7 +2,7 @@ import { getUrl } from "./baseUrl";
 import { headers } from "./headers";
 import { handleErrorResponse, handleErrorFetch, } from "../../utilities/errorHandling";
 import logger from "../logging/logger";
-export const executeFetch = async ({ token, apiKey, path, page, body, method, query, }) => {
+export const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, }) => {
     const url = getUrl(path);
     const q = new URLSearchParams();
     for (const [key, value] of Object.entries(query || {})) {
@@ -12,6 +12,9 @@ export const executeFetch = async ({ token, apiKey, path, page, body, method, qu
     }
     if (page) {
         q.append("p.page", `${page}`);
+    }
+    if (pageSize) {
+        q.append("p.pageSize", `${pageSize}`);
     }
     if (apiKey) {
         q.append("apiKey", `${apiKey}`);

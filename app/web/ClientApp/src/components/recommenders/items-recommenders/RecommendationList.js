@@ -14,41 +14,63 @@ import {
   useItemsRecommendations,
   useItemsRecommender,
 } from "../../../api-hooks/itemsRecommendersApi";
+import { BigPopup } from "../../molecules/popups/BigPopup";
+import { EntityRow } from "../../molecules/layout/EntityRow";
+import { Col } from "../../molecules/layout/Grid";
 
-const RecommendationRow = ({ recommendation }) => {
+const RecommendationRow = ({ recommendation, size }) => {
   const dataSubset = {
     recommendationCorrelatorId: recommendation.recommendationCorrelatorId,
     scoredItems: recommendation.scoredItems,
-    trackedUser: recommendation.trackedUser,
+    customer: recommendation.customer,
+    recommender: recommendation.recommender,
   };
-  let label = `Correlator: ${recommendation.recommendationCorrelatorId}`;
-  if (recommendation.trackedUser && recommendation.product) {
-    label = `${recommendation.product.name} for ${
-      recommendation.trackedUser.name ||
-      recommendation.trackedUser.commonId ||
-      "user"
-    }`;
-  }
-  return (
-    <ExpandableCard label={label}>
-      {recommendation.trackedUser && (
-        <Link to={`/customers/detail/${recommendation.trackedUser.id}`}>
-          <button className="btn btn-primary float-right">
-            View Customer <Link45deg />
-          </button>
-        </Link>
-      )}
-      <DateTimeField label="Created" date={recommendation.created} />
-      <JsonView data={dataSubset}></JsonView>
-    </ExpandableCard>
-  );
-};
-export const RecommendationList = () => {
-  const { id } = useParams();
-  const recommender = useItemsRecommender({ id });
-  const recommendations = useItemsRecommendations({ id });
+  const nItems = recommendation.scoredItems?.length || 0;
+  const label = `Recommended ${nItems} item(s) for ${
+    recommendation.customer.name || recommendation.customer.customerId
+  }`;
+
+  const [isOpen, setIsOpen] = React.useState(false);
   return (
     <React.Fragment>
+      <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
+        {recommendation.customer && (
+          <Link to={`/customers/detail/${recommendation.customer.id}`}>
+            <button className="btn btn-primary float-right">
+              View Customer <Link45deg />
+            </button>
+          </Link>
+        )}
+        <DateTimeField label="Created On" date={recommendation.created} />
+        {label}
+        <ExpandableCard label="Data">
+          <JsonView data={dataSubset} />
+        </ExpandableCard>
+      </BigPopup>
+      {(!size || size === "lg") && (
+        <EntityRow>
+          <Col columnClass="col-lg">{label}</Col>
+          <Col columnClass="col-lg-4">
+            <button
+              className="btn btn-outline-primary btn-block"
+              onClick={() => setIsOpen(true)}
+            >
+              Detail
+            </button>
+          </Col>
+        </EntityRow>
+      )}
+      {size === "sm" && <EntityRow size="sm" tooltip={label}>{label}</EntityRow>}
+    </React.Fragment>
+  );
+};
+export const ItemsRecommendationList = ({ size }) => {
+  const { id } = useParams();
+  const recommender = useItemsRecommender({ id });
+  const recommendations = useItemsRecommendations({ id, pageSize: 5 });
+
+  return (
+    <div className="container">
       {recommendations.loading && <Spinner />}
       {recommendations.error && <ErrorCard error={recommendations.error} />}
       {recommendations.items && recommendations.items.length === 0 && (
@@ -56,11 +78,11 @@ export const RecommendationList = () => {
       )}
       {recommendations.items &&
         recommendations.items.map((r) => (
-          <RecommendationRow recommendation={r} key={r.id} />
+          <RecommendationRow size={size} recommendation={r} key={r.id} />
         ))}
-      {recommendations.pagination && (
+      {recommendations.pagination && size !== "sm" && (
         <Paginator {...recommendations.pagination} />
       )}
-    </React.Fragment>
+    </div>
   );
 };

@@ -7,8 +7,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { DateTimeField } from "../molecules/DateTimeField";
-import { JsonView } from "./JsonView";
+import { DateTimeField } from "../DateTimeField";
+import { JsonView } from "../JsonView";
 
 var groupBy = function (xs, key) {
   return xs.reduce(function (rv, x) {

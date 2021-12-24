@@ -7,6 +7,9 @@ import {
 export const ItemsRecommenderPrimaryNav = ({ id }) => {
   return (
     <PrimaryNavigationMenu>
+      {/* <NavListItem to={`/recommenders/items-recommenders/overview/${id}`}>
+        Overview
+      </NavListItem> */}
       <NavListItem to={`/recommenders/items-recommenders/detail/${id}`}>
         Details
       </NavListItem>

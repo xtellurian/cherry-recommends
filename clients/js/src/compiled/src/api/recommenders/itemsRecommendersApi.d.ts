@@ -1,10 +1,11 @@
-import { PaginatedRequest, EntityRequest, DeleteRequest, AuthenticatedRequest, ModelInput, ItemsRecommendation } from "../../interfaces";
+import { components } from "../../model/api";
+import { PaginatedRequest, EntityRequest, DeleteRequest, AuthenticatedRequest, ModelInput, ItemsRecommendation, PaginatedEntityRequest } from "../../interfaces";
 export declare const fetchItemsRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
 export declare const fetchItemsRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-interface ItemsRecommendationsRequest extends EntityRequest {
+interface ItemsRecommendationsRequest extends PaginatedEntityRequest {
     page: number;
 }
-export declare const fetchItemsRecommendationsAsync: ({ token, page, id, }: ItemsRecommendationsRequest) => Promise<any>;
+export declare const fetchItemsRecommendationsAsync: ({ token, page, pageSize, id, }: ItemsRecommendationsRequest) => Promise<any>;
 export declare const deleteItemsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
 interface CreateItemsRecommenderPayload {
     commonId: string;
@@ -39,9 +40,7 @@ export declare const setBaselineItemAsync: ({ token, id, itemId, }: SetBaselineI
 export declare const setDefaultItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
 export declare const getBaselineItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
 export declare const getDefaultItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
-interface LinkRegisteredModelRequest extends EntityRequest {
-    modelId: number;
-}
+declare type LinkRegisteredModelRequest = EntityRequest & components["schemas"]["LinkModel"];
 export declare const createLinkRegisteredModelAsync: ({ token, id, modelId, }: LinkRegisteredModelRequest) => Promise<any>;
 export declare const fetchLinkedRegisteredModelAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 interface InvokeItemRecommenderRequest extends EntityRequest {
@@ -100,4 +99,6 @@ interface SetLearningFeaturesRequest extends EntityRequest {
     featureIds: string[];
 }
 export declare const setLearningFeaturesAsync: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest) => Promise<any>;
+declare type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
+export declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
 export {};

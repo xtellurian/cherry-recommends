@@ -40,7 +40,11 @@ interface EntityRequest extends AuthenticatedRequest {
     id: number | string;
     useInternalId: boolean | undefined;
 }
-interface EntitySearchRequest extends PaginatedRequest {
+interface PaginatedEntityRequest extends EntityRequest {
+    page?: number | undefined;
+    pageSize?: number | undefined;
+}
+interface EntitySearchRequest extends PaginatedEntityRequest {
     searchTerm: string | undefined;
 }
 interface DeleteRequest extends AuthenticatedRequest {
@@ -468,12 +472,1157 @@ declare namespace integratedSystemsApi_d {
   };
 }
 
+interface components {
+    schemas: {
+        ActionCategoryAndName: {
+            category?: string | null;
+            actionName?: string | null;
+        };
+        ActionCategoryAndNamePaginated: {
+            items?: components["schemas"]["ActionCategoryAndName"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        AddItemDto: {
+            id?: number | null;
+            commonId?: string | null;
+        };
+        AggregateStep: {
+            aggregationType?: components["schemas"]["AggregationTypes"];
+        };
+        AggregationTypes: "sum" | "mean";
+        ApiKeyDto: {
+            id?: number;
+            name?: string | null;
+            lastExchanged?: string | null;
+            totalExchanges?: number;
+            apiKeyType?: components["schemas"]["ApiKeyTypes"];
+        };
+        ApiKeyDtoPaginated: {
+            items?: components["schemas"]["ApiKeyDto"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ApiKeyExchangeRequestDto: {
+            apiKey: string;
+        };
+        ApiKeyExchangeResponseDto: {
+            access_token?: string | null;
+        };
+        ApiKeyTypes: "server" | "web";
+        ArgumentTypes: "numerical" | "categorical";
+        AzureMLClassifierOutput: {
+            result?: string | null;
+            correlatorId?: number | null;
+        };
+        AzureMLModelInput: {
+            version?: string | null;
+            data?: {
+                [key: string]: unknown;
+            }[] | null;
+            customerId?: string | null;
+            commonUserId?: string | null;
+            arguments?: {
+                [key: string]: unknown;
+            } | null;
+            features?: {
+                [key: string]: unknown;
+            } | null;
+            parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
+        };
+        BaselineItemDto: {
+            itemId?: string | null;
+        };
+        BatchCreateOrUpdateCustomersDto: {
+            users?: components["schemas"]["CreateOrUpdateCustomerDto"][] | null;
+            customers?: components["schemas"]["CreateOrUpdateCustomerDto"][] | null;
+        };
+        Bearer: {
+            name?: string | null;
+            in?: string | null;
+            description?: string | null;
+            schema?: components["schemas"]["Schema"];
+            type?: string | null;
+        };
+        CategoricalParameterBounds: {
+            categories?: string[] | null;
+        };
+        CheckistItem: {
+            complete?: boolean | null;
+            current?: boolean | null;
+            next?: boolean | null;
+            order?: number | null;
+            label?: string | null;
+            description?: string | null;
+            actionTo?: string | null;
+            actionLabel?: string | null;
+            docsLink?: string | null;
+        };
+        CreateApiKeyDto: {
+            name: string;
+            apiKeyType: string;
+            scope?: string | null;
+        };
+        CreateApiKeyResponseDto: {
+            name?: string | null;
+            apiKey?: string | null;
+        };
+        CreateDestinationDto: {
+            destinationType: string;
+            integratedSystemId: number;
+            endpoint?: string | null;
+            propertyName?: string | null;
+        };
+        CreateEnvironment: {
+            name: string;
+        };
+        CreateFeatureGenerator: {
+            featureCommonId: string;
+            generatorType?: string | null;
+            steps?: components["schemas"]["FilterSelectAggregateStepDto"][] | null;
+        };
+        CreateFeatureMetadata: {
+            commonId: string;
+            name?: string | null;
+        };
+        CreateIntegratedSystemDto: {
+            name: string;
+            systemType: string;
+        };
+        CreateItemsRecommender: {
+            commonId: string;
+            name: string;
+            cloneFromId?: number | null;
+            /** @deprecated */
+            throwOnBadInput?: boolean | null;
+            /** @deprecated */
+            requireConsumptionEvent?: boolean | null;
+            settings?: components["schemas"]["RecommenderSettingsDto"];
+            arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
+            itemIds?: string[] | null;
+            defaultItemId?: string | null;
+            baselineItemId?: string | null;
+            numberOfItemsToRecommend?: number | null;
+            useAutoAi?: boolean | null;
+        };
+        CreateOrUpdateCustomerDto: {
+            commonUserId?: string | null;
+            customerId?: string | null;
+            name?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            integratedSystemReference?: components["schemas"]["IntegratedSystemReference"];
+        };
+        CreateOrUpdateRecommenderArgument: {
+            commonId: string;
+            argumentType?: components["schemas"]["ArgumentTypes"];
+            defaultValue?: string | null;
+            isRequired?: boolean;
+        };
+        CreateParameter: {
+            commonId: string;
+            name?: string | null;
+            /** One of Categorical or Numeric */
+            parameterType?: string | null;
+            description?: string | null;
+            defaultValue?: unknown | null;
+        };
+        CreateParameterSetRecommender: {
+            commonId: string;
+            name: string;
+            cloneFromId?: number | null;
+            /** @deprecated */
+            throwOnBadInput?: boolean | null;
+            /** @deprecated */
+            requireConsumptionEvent?: boolean | null;
+            settings?: components["schemas"]["RecommenderSettingsDto"];
+            arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
+            parameters?: string[] | null;
+            bounds?: components["schemas"]["ParameterBounds"][] | null;
+        };
+        CreateProductDto: {
+            commonId: string;
+            name?: string | null;
+            listPrice: number;
+            directCost?: number | null;
+            description?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        CreateProductRecommender: {
+            commonId: string;
+            name: string;
+            cloneFromId?: number | null;
+            /** @deprecated */
+            throwOnBadInput?: boolean | null;
+            /** @deprecated */
+            requireConsumptionEvent?: boolean | null;
+            settings?: components["schemas"]["RecommenderSettingsDto"];
+            arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
+            productIds?: string[] | null;
+            defaultProductId?: string | null;
+        };
+        CreateRecommendableItemDto: {
+            commonId: string;
+            name?: string | null;
+            listPrice: number;
+            directCost?: number | null;
+            description?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        CreateRewardSelectorDto: {
+            category?: string | null;
+            actionName: string;
+            selectorType: string;
+        };
+        CreateSegmentDto: {
+            name?: string | null;
+        };
+        CreateTargetVariableValue: {
+            start: string;
+            end: string;
+            name: string;
+            value: number;
+        };
+        CreateTenantMembershipDto: {
+            email: string;
+        };
+        CreateTrackedUserFeature: {
+            value: unknown;
+        };
+        Customer: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            commonUserId?: string | null;
+            customerId?: string | null;
+            integratedSystemMaps?: components["schemas"]["TrackedUserSystemMap"][] | null;
+        };
+        CustomerEvent: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            commonUserId?: string | null;
+            customerId?: string | null;
+            eventId?: string | null;
+            timestamp?: string;
+            recommendationCorrelatorId?: number | null;
+            recommendationCorrelator?: components["schemas"]["RecommendationCorrelator"];
+            source?: components["schemas"]["IntegratedSystem"];
+            eventKind?: components["schemas"]["EventKinds"];
+            kind?: string | null;
+            eventType?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            trackedUserId?: number | null;
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
+            actions?: components["schemas"]["TrackedUserAction"][] | null;
+        };
+        CustomerEventPaginated: {
+            items?: components["schemas"]["CustomerEvent"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        CustomerPaginated: {
+            items?: components["schemas"]["Customer"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        Data: {
+            type?: string | null;
+            items?: components["schemas"]["DataItems"];
+        };
+        DataItems: {
+            type?: string | null;
+            required?: string[] | null;
+            properties?: components["schemas"]["ItemsProperties"];
+        };
+        Default: {
+            description?: string | null;
+            schema?: components["schemas"]["Schema"];
+        };
+        DefaultArgumentContainer: {
+            argumentType?: components["schemas"]["ArgumentTypes"];
+            value?: unknown | null;
+        };
+        DefaultParameterValue: {
+            parameterType?: components["schemas"]["ParameterTypes"];
+            value?: unknown | null;
+        };
+        DefaultProductDto: {
+            productId?: string | null;
+        };
+        Definitions: {
+            ServiceInput?: components["schemas"]["ServiceInput"];
+            ServiceOutput?: components["schemas"]["ServiceOutput"];
+            ErrorResponse?: components["schemas"]["ErrorResponse"];
+        };
+        DeleteResponse: {
+            id?: number;
+            resouceUrl?: string | null;
+            success?: boolean;
+        };
+        DestinationTrigger: {
+            [key: string]: unknown;
+        };
+        Empty: {
+            get?: components["schemas"]["Get"];
+        };
+        Environment: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+        };
+        EnvironmentPaginated: {
+            items?: components["schemas"]["Environment"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ErrorResponse: {
+            type?: string | null;
+            properties?: components["schemas"]["ErrorResponseProperties"];
+        };
+        ErrorResponseProperties: {
+            status_code?: components["schemas"]["StatusCodeClass"];
+            message?: components["schemas"]["Message"];
+        };
+        EventCountTimeline: {
+            categories?: string[] | null;
+            moments?: components["schemas"]["MomentCount"][] | null;
+            categoricalMoments?: {
+                [key: string]: unknown;
+            }[] | null;
+        };
+        EventDto: {
+            commonUserId?: string | null;
+            customerId?: string | null;
+            eventId: string;
+            timestamp?: string | null;
+            recommendationCorrelatorId?: number | null;
+            sourceSystemId?: number | null;
+            kind?: string | null;
+            eventType: string;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "consumeRecommendation";
+        EventKindSummary: {
+            keys?: string[] | null;
+            instanceCount?: number;
+            eventTypes?: {
+                [key: string]: components["schemas"]["EventStats"];
+            } | null;
+        };
+        EventLoggingResponse: {
+            eventsProcessed?: number;
+            actionsProcessed?: number;
+            eventsEnqueued?: number;
+        };
+        EventStats: {
+            instances?: number;
+            customers?: number;
+            trackedUsers?: number;
+            fractionOfKind?: number;
+        };
+        Examples: {
+            "application/json"?: string | null;
+        };
+        Feature: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        FeatureDestinationBase: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            properties?: {
+                [key: string]: string;
+            } | null;
+            destinationType?: string | null;
+            feature?: components["schemas"]["Feature"];
+            connectedSystemId?: number;
+            connectedSystem?: components["schemas"]["IntegratedSystem"];
+            discriminator?: string | null;
+        };
+        FeatureGenerator: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            lastEnqueued?: string | null;
+            lastCompleted?: string | null;
+            featureId?: number;
+            feature?: components["schemas"]["Feature"];
+            generatorType?: components["schemas"]["FeatureGeneratorTypes"];
+            filterSelectAggregateSteps?: components["schemas"]["FilterSelectAggregateStep"][] | null;
+        };
+        FeatureGeneratorPaginated: {
+            items?: components["schemas"]["FeatureGenerator"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        FeatureGeneratorRunSummary: {
+            enqueued?: boolean | null;
+            totalWrites?: number | null;
+            maxSubsetSize?: number | null;
+        };
+        FeatureGeneratorTypes: "monthsSinceEarliestEvent" | "filterSelectAggregate";
+        FeaturePaginated: {
+            items?: components["schemas"]["Feature"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        FeaturesChangedTrigger: {
+            name: string;
+            featureCommonIds?: string[] | null;
+        };
+        FileInformation: {
+            name?: string | null;
+        };
+        FilterSelectAggregateStep: {
+            order?: number;
+            filter?: components["schemas"]["FilterStep"];
+            select?: components["schemas"]["SelectStep"];
+            aggregate?: components["schemas"]["AggregateStep"];
+        };
+        FilterSelectAggregateStepDto: {
+            type: string;
+            order: number;
+            eventTypeMatch?: string | null;
+            propertyNameMatch?: string | null;
+            aggregationType?: string | null;
+        };
+        FilterStep: {
+            eventTypeMatch?: string | null;
+        };
+        Get: {
+            operationId?: string | null;
+            description?: string | null;
+            responses?: components["schemas"]["GetResponses"];
+        };
+        GetResponses: {
+            "200"?: components["schemas"]["The200"];
+            default?: components["schemas"]["Default"];
+        };
+        GettingStartedChecklist: {
+            steps?: {
+                [key: string]: components["schemas"]["CheckistItem"];
+            } | null;
+            allComplete?: boolean | null;
+        };
+        HistoricTrackedUserFeature: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            trackedUserId?: number;
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
+            featureId?: number;
+            feature?: components["schemas"]["Feature"];
+            numericValue?: number | null;
+            stringValue?: string | null;
+            value?: unknown | null;
+            version?: number;
+        };
+        HistoricTrackedUserFeaturePaginated: {
+            items?: components["schemas"]["HistoricTrackedUserFeature"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        Hosting: {
+            multitenant?: boolean;
+            canonicalRootDomain?: string | null;
+        };
+        HostingTypes: "azureMLContainerInstance" | "azurePersonalizer" | "azureFunctions";
+        Info: {
+            title?: string | null;
+            description?: string | null;
+            version?: string | null;
+        };
+        IntegratedSystem: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            systemType?: components["schemas"]["IntegratedSystemTypes"];
+            integrationStatus?: components["schemas"]["IntegrationStatuses"];
+            tokenResponseUpdated?: string | null;
+            discriminator?: string | null;
+        };
+        IntegratedSystemPaginated: {
+            items?: components["schemas"]["IntegratedSystem"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        /** Links a user to an existing Integrated System resource. */
+        IntegratedSystemReference: {
+            /** The SignalBox Identifier of the integrated system. */
+            integratedSystemId: number;
+            /** The unqiue User Id in the external system, e.g. Hubspot Contact Id. */
+            userId: string;
+        };
+        IntegratedSystemTypes: "segment" | "hubspot" | "custom";
+        IntegrationStatuses: "notConfigured" | "ok";
+        InvokationLogEntry: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            status?: string | null;
+            recommenderType?: string | null;
+            recommenderId?: number;
+            success?: boolean | null;
+            modelResponse?: string | null;
+            /** @deprecated */
+            message?: string | null;
+            messages?: string[] | null;
+            invokeStarted?: string;
+            invokeEnded?: string | null;
+            correlatorId?: number | null;
+            correlator?: components["schemas"]["RecommendationCorrelator"];
+            trackedUserId?: number | null;
+            customer?: components["schemas"]["Customer"];
+            trackedUser?: components["schemas"]["Customer"];
+        };
+        InvokationLogEntryPaginated: {
+            items?: components["schemas"]["InvokationLogEntry"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ItemsProperties: {
+            Column2?: components["schemas"]["Message"];
+            A?: components["schemas"]["StatusCodeClass"];
+            B?: components["schemas"]["StatusCodeClass"];
+        };
+        ItemsRecommendation: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            recommenderType?: components["schemas"]["RecommenderTypes"];
+            trackedUserId?: number | null;
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
+            trigger?: string | null;
+            recommendationCorrelatorId?: number | null;
+            modelInput?: string | null;
+            modelInputType?: string | null;
+            modelOutput?: string | null;
+            modelOutputType?: string | null;
+            isFromCache?: boolean;
+            recommenderId?: number | null;
+            recommender?: components["schemas"]["ItemsRecommender"];
+            scoredItems?: components["schemas"]["ScoredRecommendableItem"][] | null;
+        };
+        ItemsRecommendationDto: {
+            created?: string;
+            correlatorId?: number | null;
+            commonUserId?: string | null;
+            customerId?: string | null;
+            scoredItems?: components["schemas"]["ScoredRecommendableItem"][] | null;
+            customer?: components["schemas"]["Customer"];
+            trigger?: string | null;
+        };
+        ItemsRecommendationPaginated: {
+            items?: components["schemas"]["ItemsRecommendation"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ItemsRecommender: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            errorHandling?: components["schemas"]["RecommenderErrorHandling"];
+            settings?: components["schemas"]["RecommenderSettings"];
+            arguments?: components["schemas"]["RecommenderArgument"][] | null;
+            triggerCollection?: components["schemas"]["TriggerCollection"];
+            modelRegistrationId?: number | null;
+            modelRegistration?: components["schemas"]["ModelRegistration"];
+            baselineItemId?: number | null;
+            baselineItem?: components["schemas"]["RecommendableItem"];
+            defaultItem?: components["schemas"]["RecommendableItem"];
+            numberOfItemsToRecommend?: number | null;
+            items?: components["schemas"]["RecommendableItem"][] | null;
+        };
+        ItemsRecommenderPaginated: {
+            items?: components["schemas"]["ItemsRecommender"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        LinkModel: {
+            modelId?: number;
+        };
+        Message: {
+            type?: string | null;
+        };
+        ModelInputDto: {
+            customerId?: string | null;
+            commonUserId?: string | null;
+            arguments?: {
+                [key: string]: unknown;
+            } | null;
+            features?: {
+                [key: string]: unknown;
+            } | null;
+            parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
+        };
+        ModelRegistration: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            modelType?: components["schemas"]["ModelTypes"];
+            hostingType?: components["schemas"]["HostingTypes"];
+            scoringUrl?: string | null;
+            swagger?: components["schemas"]["SwaggerDefinition"];
+        };
+        ModelRegistrationPaginated: {
+            items?: components["schemas"]["ModelRegistration"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ModelTypes: "singleClassClassifier" | "parameterSetRecommenderV1" | "productRecommenderV1" | "itemsRecommenderV1";
+        MomentCount: {
+            category?: string | null;
+            timestamp?: string;
+            unixTime?: number;
+            count?: number;
+        };
+        NewTenantDto: {
+            name: string;
+            termsOfServiceVersion: string;
+        };
+        NextPageInfo: {
+            after?: string | null;
+        };
+        NumericalParameterBounds: {
+            min?: number;
+            max?: number;
+        };
+        ObjectPaginated: {
+            items?: unknown[] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        OpenApiSecurity: {
+            Bearer?: unknown[] | null;
+        };
+        PaginationInfo: {
+            pageCount?: number;
+            totalItemCount?: number;
+            pageNumber?: number;
+            hasPreviousPage?: boolean;
+            hasNextPage?: boolean;
+            isFirstPage?: boolean;
+            isLastPage?: boolean;
+            next?: components["schemas"]["NextPageInfo"];
+        };
+        Parameter: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            parameterType?: components["schemas"]["ParameterTypes"];
+            defaultValue?: components["schemas"]["DefaultParameterValue"];
+            default?: unknown | null;
+            description?: string | null;
+        };
+        ParameterBounds: {
+            commonId?: string | null;
+            numericBounds?: components["schemas"]["NumericalParameterBounds"];
+            categoricalBounds?: components["schemas"]["CategoricalParameterBounds"];
+        };
+        ParameterPaginated: {
+            items?: components["schemas"]["Parameter"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ParameterSetRecommendation: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            recommenderType?: components["schemas"]["RecommenderTypes"];
+            trackedUserId?: number | null;
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
+            trigger?: string | null;
+            recommendationCorrelatorId?: number | null;
+            modelInput?: string | null;
+            modelInputType?: string | null;
+            modelOutput?: string | null;
+            modelOutputType?: string | null;
+            isFromCache?: boolean;
+            recommenderId?: number | null;
+            recommender?: components["schemas"]["ParameterSetRecommender"];
+        };
+        ParameterSetRecommendationDto: {
+            created?: string;
+            correlatorId?: number | null;
+            recommendedParameters?: {
+                [key: string]: unknown;
+            } | null;
+            commonUserId?: string | null;
+            customerId?: string | null;
+            customer?: components["schemas"]["Customer"];
+            trigger?: string | null;
+        };
+        ParameterSetRecommendationPaginated: {
+            items?: components["schemas"]["ParameterSetRecommendation"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ParameterSetRecommender: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            errorHandling?: components["schemas"]["RecommenderErrorHandling"];
+            settings?: components["schemas"]["RecommenderSettings"];
+            arguments?: components["schemas"]["RecommenderArgument"][] | null;
+            triggerCollection?: components["schemas"]["TriggerCollection"];
+            modelRegistrationId?: number | null;
+            modelRegistration?: components["schemas"]["ModelRegistration"];
+            parameters?: components["schemas"]["Parameter"][] | null;
+            parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
+        };
+        ParameterSetRecommenderPaginated: {
+            items?: components["schemas"]["ParameterSetRecommender"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ParameterTypes: "numerical" | "categorical";
+        Paths: {
+            "/"?: components["schemas"]["Empty"];
+            "/score"?: components["schemas"]["Score"];
+        };
+        Post: {
+            operationId?: string | null;
+            description?: string | null;
+            security?: components["schemas"]["OpenApiSecurity"][] | null;
+            parameters?: components["schemas"]["Bearer"][] | null;
+            responses?: components["schemas"]["PostResponses"];
+        };
+        PostResponses: {
+            "200"?: components["schemas"]["Default"];
+            default?: components["schemas"]["Default"];
+        };
+        ProblemDetails: {
+            type?: string | null;
+            title?: string | null;
+            status?: number | null;
+            detail?: string | null;
+            instance?: string | null;
+        } & {
+            [key: string]: unknown;
+        };
+        Product: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            listPrice?: number | null;
+            directCost?: number | null;
+            description?: string | null;
+        };
+        ProductPaginated: {
+            items?: components["schemas"]["Product"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ProductRecommendation: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            recommenderType?: components["schemas"]["RecommenderTypes"];
+            trackedUserId?: number | null;
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
+            trigger?: string | null;
+            recommendationCorrelatorId?: number | null;
+            modelInput?: string | null;
+            modelInputType?: string | null;
+            modelOutput?: string | null;
+            modelOutputType?: string | null;
+            isFromCache?: boolean;
+            recommenderId?: number | null;
+            recommender?: components["schemas"]["ProductRecommender"];
+            product?: components["schemas"]["Product"];
+        };
+        ProductRecommendationPaginated: {
+            items?: components["schemas"]["ProductRecommendation"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ProductRecommender: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            errorHandling?: components["schemas"]["RecommenderErrorHandling"];
+            settings?: components["schemas"]["RecommenderSettings"];
+            arguments?: components["schemas"]["RecommenderArgument"][] | null;
+            triggerCollection?: components["schemas"]["TriggerCollection"];
+            modelRegistrationId?: number | null;
+            modelRegistration?: components["schemas"]["ModelRegistration"];
+            defaultProductId?: number | null;
+            defaultProduct?: components["schemas"]["Product"];
+            products?: components["schemas"]["Product"][] | null;
+        };
+        ProductRecommenderInput: {
+            commonUserId?: string | null;
+            customerId?: string | null;
+            arguments?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        ProductRecommenderModelOutputV1: {
+            productId?: number | null;
+            productCommonId?: string | null;
+            product?: components["schemas"]["Product"];
+            correlatorId?: number | null;
+        };
+        ProductRecommenderPaginated: {
+            items?: components["schemas"]["ProductRecommender"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        RecommendableItem: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            listPrice?: number | null;
+            directCost?: number | null;
+            description?: string | null;
+        };
+        RecommendableItemPaginated: {
+            items?: components["schemas"]["RecommendableItem"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        RecommendationCorrelator: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            recommenderId?: number | null;
+            recommender?: components["schemas"]["RecommenderEntityBase"];
+            trackedUserActions?: components["schemas"]["TrackedUserAction"][] | null;
+            modelRegistrationId?: number | null;
+            modelRegistration?: components["schemas"]["ModelRegistration"];
+        };
+        RecommendationDestinationBase: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            properties?: {
+                [key: string]: string;
+            } | null;
+            destinationType?: string | null;
+            recommender?: components["schemas"]["RecommenderEntityBase"];
+            trigger?: components["schemas"]["DestinationTrigger"];
+            connectedSystemId?: number;
+            connectedSystem?: components["schemas"]["IntegratedSystem"];
+            discriminator?: string | null;
+        };
+        RecommenderArgument: {
+            commonId?: string | null;
+            argumentType?: components["schemas"]["ArgumentTypes"];
+            defaultValue?: components["schemas"]["DefaultArgumentContainer"];
+            defaultArgumentValue?: unknown | null;
+            isRequired?: boolean;
+        };
+        RecommenderEntityBase: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            errorHandling?: components["schemas"]["RecommenderErrorHandling"];
+            settings?: components["schemas"]["RecommenderSettings"];
+            arguments?: components["schemas"]["RecommenderArgument"][] | null;
+            triggerCollection?: components["schemas"]["TriggerCollection"];
+            modelRegistrationId?: number | null;
+            modelRegistration?: components["schemas"]["ModelRegistration"];
+        };
+        RecommenderErrorHandling: {
+            throwOnBadInput?: boolean | null;
+            requireConsumptionEvent?: boolean | null;
+            recommendationCacheTime?: components["schemas"]["TimeSpan"];
+        };
+        RecommenderSettings: {
+            throwOnBadInput?: boolean | null;
+            requireConsumptionEvent?: boolean | null;
+            recommendationCacheTime?: components["schemas"]["TimeSpan"];
+        };
+        RecommenderSettingsDto: {
+            throwOnBadInput?: boolean | null;
+            requireConsumptionEvent?: boolean | null;
+            recommendationCacheTime?: components["schemas"]["TimeSpan"];
+        };
+        RecommenderStatistics: {
+            numberCustomersRecommended?: number;
+            numberInvokations?: number;
+        };
+        RecommenderTargetVariableValue: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            recommenderId?: number;
+            version?: number;
+            start?: string;
+            end?: string;
+            name?: string | null;
+            value?: number;
+        };
+        RecommenderTypes: "product" | "parameterSet" | "items" | "offer";
+        RegisterNewModelDto: {
+            name: string;
+            scoringUrl: string;
+            key: string;
+            swaggerUrl?: string | null;
+            modelType: string;
+            hostingType: string;
+        };
+        RewardSelector: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            category?: string | null;
+            actionName?: string | null;
+            selectorType?: components["schemas"]["SelectorTypes"];
+        };
+        RewardSelectorPaginated: {
+            items?: components["schemas"]["RewardSelector"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        Schema: {
+            $ref?: string | null;
+        };
+        Score: {
+            post?: components["schemas"]["Post"];
+        };
+        ScoredRecommendableItem: {
+            itemId?: number | null;
+            itemCommonId?: string | null;
+            commonId?: string | null;
+            item?: components["schemas"]["RecommendableItem"];
+            score?: number | null;
+        };
+        SecurityDefinitions: {
+            Bearer?: components["schemas"]["Bearer"];
+        };
+        Segment: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            inSegment?: components["schemas"]["Customer"][] | null;
+        };
+        SegmentPaginated: {
+            items?: components["schemas"]["Segment"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        SelectorTypes: "revenue";
+        SelectStep: {
+            propertyNameMatch?: string | null;
+        };
+        ServiceInput: {
+            type?: string | null;
+            properties?: components["schemas"]["ServiceInputProperties"];
+            example?: components["schemas"]["AzureMLModelInput"];
+        };
+        ServiceInputProperties: {
+            data?: components["schemas"]["Data"];
+        };
+        ServiceOutput: {
+            type?: string | null;
+            items?: components["schemas"]["StatusCodeClass"];
+            example?: number[] | null;
+        };
+        SetLearningFeatures: {
+            useInternalId?: boolean | null;
+            featureIds?: string[] | null;
+        };
+        SetTriggersDto: {
+            featuresChanged?: components["schemas"]["FeaturesChangedTrigger"];
+        };
+        StatusCodeClass: {
+            type?: string | null;
+            format?: string | null;
+        };
+        StatusDto: {
+            status?: string | null;
+        };
+        StringPaginated: {
+            items?: string[] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        SwaggerDefinition: {
+            swagger?: string | null;
+            info?: components["schemas"]["Info"];
+            schemes?: string[] | null;
+            consumes?: string[] | null;
+            produces?: string[] | null;
+            securityDefinitions?: components["schemas"]["SecurityDefinitions"];
+            paths?: components["schemas"]["Paths"];
+            definitions?: components["schemas"]["Definitions"];
+        };
+        Tenant: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            name?: string | null;
+            databaseName?: string | null;
+            status?: string | null;
+        };
+        The200: {
+            description?: string | null;
+            schema?: components["schemas"]["Message"];
+            examples?: components["schemas"]["Examples"];
+        };
+        TimeSpan: {
+            ticks?: number;
+            days?: number;
+            hours?: number;
+            milliseconds?: number;
+            minutes?: number;
+            seconds?: number;
+            totalDays?: number;
+            totalHours?: number;
+            totalMilliseconds?: number;
+            totalMinutes?: number;
+            totalSeconds?: number;
+        };
+        TrackedUserAction: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            trackedUserId?: number | null;
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
+            commonUserId?: string | null;
+            customerId?: string | null;
+            eventId?: string | null;
+            timestamp?: string;
+            recommendationCorrelatorId?: number | null;
+            recommendationCorrelator?: components["schemas"]["RecommendationCorrelator"];
+            integratedSystemId?: number | null;
+            category?: string | null;
+            actionName?: string | null;
+            actionValue?: string | null;
+            valueType?: components["schemas"]["TrackedUserActionValueType"];
+            trackedUserEventId?: number | null;
+            feedbackScore?: number | null;
+            associatedRevenue?: number | null;
+        };
+        TrackedUserActionPaginated: {
+            items?: components["schemas"]["TrackedUserAction"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        TrackedUserActionValueType: "string" | "float" | "int";
+        TrackedUserEventSummary: {
+            keys?: string[] | null;
+            kinds?: {
+                [key: string]: components["schemas"]["EventKindSummary"];
+            } | null;
+        };
+        TrackedUserSystemMap: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            userId?: string | null;
+            integratedSystemId?: number;
+        };
+        TriggerCollection: {
+            featuresChanged?: components["schemas"]["FeaturesChangedTrigger"];
+        };
+        UpdateRecommendableItem: {
+            name: string;
+            listPrice: number;
+            directCost?: number | null;
+            description?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        UserInfo: {
+            email?: string | null;
+            emailVerified?: boolean | null;
+            userId?: string | null;
+            invitationUrl?: string | null;
+        };
+        UserInfoPaginated: {
+            items?: components["schemas"]["UserInfo"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        UserMetadata: {
+            gettingStartedChecklist?: components["schemas"]["GettingStartedChecklist"];
+        };
+        WebhookReceiver: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            endpointId?: string | null;
+            sharedSecret?: string | null;
+        };
+    };
+}
+
 declare const fetchItemsRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
 declare const fetchItemsRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-interface ItemsRecommendationsRequest extends EntityRequest {
+interface ItemsRecommendationsRequest extends PaginatedEntityRequest {
     page: number;
 }
-declare const fetchItemsRecommendationsAsync: ({ token, page, id, }: ItemsRecommendationsRequest) => Promise<any>;
+declare const fetchItemsRecommendationsAsync: ({ token, page, pageSize, id, }: ItemsRecommendationsRequest) => Promise<any>;
 declare const deleteItemsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
 interface CreateItemsRecommenderPayload {
     commonId: string;
@@ -508,10 +1657,8 @@ declare const setBaselineItemAsync: ({ token, id, itemId, }: SetBaselineItemRequ
 declare const setDefaultItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
 declare const getBaselineItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
 declare const getDefaultItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
-interface LinkRegisteredModelRequest extends EntityRequest {
-    modelId: number;
-}
-declare const createLinkRegisteredModelAsync$1: ({ token, id, modelId, }: LinkRegisteredModelRequest) => Promise<any>;
+declare type LinkRegisteredModelRequest$1 = EntityRequest & components["schemas"]["LinkModel"];
+declare const createLinkRegisteredModelAsync$1: ({ token, id, modelId, }: LinkRegisteredModelRequest$1) => Promise<any>;
 declare const fetchLinkedRegisteredModelAsync$1: ({ token, id, }: EntityRequest) => Promise<any>;
 interface InvokeItemRecommenderRequest extends EntityRequest {
     input: ModelInput;
@@ -528,47 +1675,49 @@ interface RecommenderSettings {
     throwOnBadInput: boolean;
     recommendationCacheTime: string;
 }
-interface SetSettingsRequest extends EntityRequest {
+interface SetSettingsRequest$1 extends EntityRequest {
     settings: RecommenderSettings;
 }
-declare const setSettingsAsync$1: ({ id, token, settings, }: SetSettingsRequest) => Promise<any>;
+declare const setSettingsAsync$1: ({ id, token, settings, }: SetSettingsRequest$1) => Promise<any>;
 interface Argument {
     commonId: string;
     argumentType: "Numerical" | "Categorical";
     defaultValue: string | number;
     isRequired: boolean;
 }
-interface SetArgumentsRequest extends EntityRequest {
+interface SetArgumentsRequest$1 extends EntityRequest {
     args: Argument[];
 }
-declare const setArgumentsAsync$1: ({ id, token, args, }: SetArgumentsRequest) => Promise<any>;
+declare const setArgumentsAsync$1: ({ id, token, args, }: SetArgumentsRequest$1) => Promise<any>;
 declare const fetchDestinationsAsync$1: ({ id, token }: EntityRequest) => Promise<any>;
 interface Destination {
     destinationType: "Webhook" | "SegmentSourceFunction" | "HubspotContactProperty";
     endpoint: string;
     integratedSystemId: number;
 }
-interface CreateDestinationRequest extends EntityRequest {
+interface CreateDestinationRequest$1 extends EntityRequest {
     destination: Destination;
 }
-declare const createDestinationAsync$1: ({ id, token, destination, }: CreateDestinationRequest) => Promise<any>;
-interface RemoveDestinationRequest extends EntityRequest {
+declare const createDestinationAsync$1: ({ id, token, destination, }: CreateDestinationRequest$1) => Promise<any>;
+interface RemoveDestinationRequest$1 extends EntityRequest {
     destinationId: number;
 }
-declare const removeDestinationAsync$1: ({ id, token, destinationId, }: RemoveDestinationRequest) => Promise<any>;
+declare const removeDestinationAsync$1: ({ id, token, destinationId, }: RemoveDestinationRequest$1) => Promise<any>;
 declare const fetchTriggerAsync$1: ({ id, token }: EntityRequest) => Promise<any>;
 interface Trigger {
     featuresChanged: any;
 }
-interface SetTriggerRequest extends EntityRequest {
+interface SetTriggerRequest$1 extends EntityRequest {
     trigger: Trigger;
 }
-declare const setTriggerAsync$1: ({ id, token, trigger, }: SetTriggerRequest) => Promise<any>;
+declare const setTriggerAsync$1: ({ id, token, trigger, }: SetTriggerRequest$1) => Promise<any>;
 declare const fetchLearningFeaturesAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
-interface SetLearningFeaturesRequest extends EntityRequest {
+interface SetLearningFeaturesRequest$1 extends EntityRequest {
     featureIds: string[];
 }
-declare const setLearningFeaturesAsync$1: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest) => Promise<any>;
+declare const setLearningFeaturesAsync$1: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest$1) => Promise<any>;
+declare type RecommenderStatistics$1 = components["schemas"]["RecommenderStatistics"];
+declare const fetchStatisticsAsync$1: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics$1>;
 
 declare const itemsRecommendersApi_d_fetchItemsRecommendersAsync: typeof fetchItemsRecommendersAsync;
 declare const itemsRecommendersApi_d_fetchItemsRecommenderAsync: typeof fetchItemsRecommenderAsync;
@@ -611,6 +1760,7 @@ declare namespace itemsRecommendersApi_d {
     setTriggerAsync$1 as setTriggerAsync,
     fetchLearningFeaturesAsync$1 as fetchLearningFeaturesAsync,
     setLearningFeaturesAsync$1 as setLearningFeaturesAsync,
+    fetchStatisticsAsync$1 as fetchStatisticsAsync,
   };
 }
 
@@ -694,112 +1844,60 @@ declare namespace parametersApi_d {
   };
 }
 
-declare function fetchParameterSetRecommendersAsync({ token, page }: {
-    token: any;
-    page: any;
-}): Promise<any>;
-declare function fetchParameterSetRecommenderAsync({ token, id, searchTerm, }: {
-    token: any;
-    id: any;
-    searchTerm: any;
-}): Promise<any>;
-declare function createParameterSetRecommenderAsync({ token, payload, }: {
-    token: any;
-    payload: any;
-}): Promise<any>;
-declare function deleteParameterSetRecommenderAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function fetchParameterSetRecommendationsAsync({ token, page, id, }: {
-    token: any;
-    page: any;
-    id: any;
-}): Promise<any>;
-declare function createLinkRegisteredModelAsync({ token, id, modelId, }: {
-    token: any;
-    id: any;
-    modelId: any;
-}): Promise<any>;
-declare function fetchLinkedRegisteredModelAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function invokeParameterSetRecommenderAsync({ token, id, input, }: {
-    token: any;
-    id: any;
-    input: any;
-}): Promise<any>;
-declare function fetchInvokationLogsAsync({ id, token, page }: {
-    id: any;
-    token: any;
-    page: any;
-}): Promise<any>;
-declare function fetchTargetVariablesAsync({ id, token, name }: {
-    id: any;
-    token: any;
-    name: any;
-}): Promise<any>;
-declare function createTargetVariableAsync({ id, token, targetVariableValue, }: {
-    id: any;
-    token: any;
-    targetVariableValue: any;
-}): Promise<any>;
-declare function updateErrorHandlingAsync({ id, token, errorHandling, }: {
-    id: any;
-    token: any;
-    errorHandling: any;
-}): Promise<any>;
-declare function setSettingsAsync({ id, token, settings }: {
-    id: any;
-    token: any;
-    settings: any;
-}): Promise<any>;
-declare function fetchRecommenderTrackedUserActionsAsync({ id, token, page, revenueOnly, }: {
-    id: any;
-    token: any;
-    page: any;
-    revenueOnly: any;
-}): Promise<any>;
-declare function setArgumentsAsync({ id, token, args }: {
-    id: any;
-    token: any;
-    args: any;
-}): Promise<any>;
-declare function fetchDestinationsAsync({ id, token }: {
-    id: any;
-    token: any;
-}): Promise<any>;
-declare function createDestinationAsync({ id, token, destination }: {
-    id: any;
-    token: any;
-    destination: any;
-}): Promise<any>;
-declare function removeDestinationAsync({ id, token, destinationId }: {
-    id: any;
-    token: any;
-    destinationId: any;
-}): Promise<any>;
-declare function fetchTriggerAsync({ id, token }: {
-    id: any;
-    token: any;
-}): Promise<any>;
-declare function setTriggerAsync({ id, token, trigger }: {
-    id: any;
-    token: any;
-    trigger: any;
-}): Promise<any>;
-declare function fetchLearningFeaturesAsync({ id, token, useInternalId, }: {
-    id: any;
-    token: any;
-    useInternalId: any;
-}): Promise<any>;
-declare function setLearningFeaturesAsync({ id, token, featureIds, useInternalId, }: {
-    id: any;
-    token: any;
-    featureIds: any;
-    useInternalId: any;
-}): Promise<any>;
+declare const fetchParameterSetRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
+declare const fetchParameterSetRecommenderAsync: ({ token, id, searchTerm, }: EntitySearchRequest) => Promise<any>;
+interface CreateParameterSetRecommenderRequest extends AuthenticatedRequest {
+    payload: {
+        name: string;
+        commonId: string;
+        settings: components["schemas"]["RecommenderSettingsDto"];
+        parameters: string[];
+        bounds: components["schemas"]["ParameterBounds"][];
+        arguments: components["schemas"]["CreateOrUpdateRecommenderArgument"][];
+    };
+}
+declare const createParameterSetRecommenderAsync: ({ token, payload, }: CreateParameterSetRecommenderRequest) => Promise<any>;
+declare const deleteParameterSetRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+declare const fetchParameterSetRecommendationsAsync: ({ token, page, pageSize, id, }: PaginatedEntityRequest) => Promise<any>;
+declare type LinkRegisteredModelRequest = EntityRequest & components["schemas"]["LinkModel"];
+declare const createLinkRegisteredModelAsync: ({ token, id, modelId, }: LinkRegisteredModelRequest) => Promise<any>;
+declare const fetchLinkedRegisteredModelAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+interface InvokeParameterSetRecommenderRequest extends EntityRequest {
+    input: components["schemas"]["ModelInputDto"];
+}
+declare const invokeParameterSetRecommenderAsync: ({ token, id, input, }: InvokeParameterSetRecommenderRequest) => Promise<any>;
+declare const fetchInvokationLogsAsync: ({ id, token, page, }: PaginatedEntityRequest) => Promise<any>;
+declare const fetchTargetVariablesAsync: ({ id, token, name }: any) => Promise<any>;
+declare const createTargetVariableAsync: ({ id, token, targetVariableValue, }: any) => Promise<any>;
+interface SetSettingsRequest extends EntityRequest {
+    settings: components["schemas"]["RecommenderSettingsDto"];
+}
+declare const setSettingsAsync: ({ id, token, settings, }: SetSettingsRequest) => Promise<any>;
+interface SetArgumentsRequest extends EntityRequest {
+    args: components["schemas"]["CreateOrUpdateRecommenderArgument"][];
+}
+declare const setArgumentsAsync: ({ id, token, args, }: SetArgumentsRequest) => Promise<any>;
+declare const fetchDestinationsAsync: ({ id, token }: EntityRequest) => Promise<any>;
+interface CreateDestinationRequest extends EntityRequest {
+    destination: components["schemas"]["CreateDestinationDto"];
+}
+declare const createDestinationAsync: ({ id, token, destination, }: CreateDestinationRequest) => Promise<any>;
+interface RemoveDestinationRequest extends EntityRequest {
+    destinationId: string | number;
+}
+declare const removeDestinationAsync: ({ id, token, destinationId, }: RemoveDestinationRequest) => Promise<any>;
+declare const fetchTriggerAsync: ({ id, token }: EntityRequest) => Promise<any>;
+interface SetTriggerRequest extends EntityRequest {
+    trigger: components["schemas"]["SetTriggersDto"];
+}
+declare const setTriggerAsync: ({ id, token, trigger, }: SetTriggerRequest) => Promise<any>;
+declare const fetchLearningFeaturesAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+interface SetLearningFeaturesRequest extends EntityRequest {
+    featureIds: string[] | number[];
+}
+declare const setLearningFeaturesAsync: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest) => Promise<any>;
+declare type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
+declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
 
 declare const parameterSetRecommendersApi_d_fetchParameterSetRecommendersAsync: typeof fetchParameterSetRecommendersAsync;
 declare const parameterSetRecommendersApi_d_fetchParameterSetRecommenderAsync: typeof fetchParameterSetRecommenderAsync;
@@ -812,9 +1910,7 @@ declare const parameterSetRecommendersApi_d_invokeParameterSetRecommenderAsync: 
 declare const parameterSetRecommendersApi_d_fetchInvokationLogsAsync: typeof fetchInvokationLogsAsync;
 declare const parameterSetRecommendersApi_d_fetchTargetVariablesAsync: typeof fetchTargetVariablesAsync;
 declare const parameterSetRecommendersApi_d_createTargetVariableAsync: typeof createTargetVariableAsync;
-declare const parameterSetRecommendersApi_d_updateErrorHandlingAsync: typeof updateErrorHandlingAsync;
 declare const parameterSetRecommendersApi_d_setSettingsAsync: typeof setSettingsAsync;
-declare const parameterSetRecommendersApi_d_fetchRecommenderTrackedUserActionsAsync: typeof fetchRecommenderTrackedUserActionsAsync;
 declare const parameterSetRecommendersApi_d_setArgumentsAsync: typeof setArgumentsAsync;
 declare const parameterSetRecommendersApi_d_fetchDestinationsAsync: typeof fetchDestinationsAsync;
 declare const parameterSetRecommendersApi_d_createDestinationAsync: typeof createDestinationAsync;
@@ -823,6 +1919,7 @@ declare const parameterSetRecommendersApi_d_fetchTriggerAsync: typeof fetchTrigg
 declare const parameterSetRecommendersApi_d_setTriggerAsync: typeof setTriggerAsync;
 declare const parameterSetRecommendersApi_d_fetchLearningFeaturesAsync: typeof fetchLearningFeaturesAsync;
 declare const parameterSetRecommendersApi_d_setLearningFeaturesAsync: typeof setLearningFeaturesAsync;
+declare const parameterSetRecommendersApi_d_fetchStatisticsAsync: typeof fetchStatisticsAsync;
 declare namespace parameterSetRecommendersApi_d {
   export {
     parameterSetRecommendersApi_d_fetchParameterSetRecommendersAsync as fetchParameterSetRecommendersAsync,
@@ -836,9 +1933,7 @@ declare namespace parameterSetRecommendersApi_d {
     parameterSetRecommendersApi_d_fetchInvokationLogsAsync as fetchInvokationLogsAsync,
     parameterSetRecommendersApi_d_fetchTargetVariablesAsync as fetchTargetVariablesAsync,
     parameterSetRecommendersApi_d_createTargetVariableAsync as createTargetVariableAsync,
-    parameterSetRecommendersApi_d_updateErrorHandlingAsync as updateErrorHandlingAsync,
     parameterSetRecommendersApi_d_setSettingsAsync as setSettingsAsync,
-    parameterSetRecommendersApi_d_fetchRecommenderTrackedUserActionsAsync as fetchRecommenderTrackedUserActionsAsync,
     parameterSetRecommendersApi_d_setArgumentsAsync as setArgumentsAsync,
     parameterSetRecommendersApi_d_fetchDestinationsAsync as fetchDestinationsAsync,
     parameterSetRecommendersApi_d_createDestinationAsync as createDestinationAsync,
@@ -847,6 +1942,7 @@ declare namespace parameterSetRecommendersApi_d {
     parameterSetRecommendersApi_d_setTriggerAsync as setTriggerAsync,
     parameterSetRecommendersApi_d_fetchLearningFeaturesAsync as fetchLearningFeaturesAsync,
     parameterSetRecommendersApi_d_setLearningFeaturesAsync as setLearningFeaturesAsync,
+    parameterSetRecommendersApi_d_fetchStatisticsAsync as fetchStatisticsAsync,
   };
 }
 
