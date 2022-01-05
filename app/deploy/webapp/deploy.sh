@@ -22,7 +22,7 @@ echo "Deploying Web App to ${WEBAPPNAME}"
 
 dotnet publish -c Release
 cd "./bin/Release/net5.0/publish/" # cross platform
-rm deploy.zip # remove existing
+rm -f deploy.zip # remove if exists
 zip -r deploy.zip .
 az webapp deployment source config-zip -g $RG -n $WEBAPPNAME --src deploy.zip
 

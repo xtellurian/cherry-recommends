@@ -1,32 +1,143 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Dotnet Solution Build, Publish and Deploy
 
-name: Dotnet Solution Build
+name: Dotnet Solution Build, Publish and Deploy
 
 trigger:
+  batch: true
   branches:
     include:
       - main
-      - develop/*
+  tags:
+    include:
+    - deploy/*
   paths:
+    include:
+      - app/*
     exclude:
       - docs/*
-
+      
 pool:
   vmImage: ubuntu-latest
 
-steps:
-  - task: UseDotNet@2
-    displayName: "Use .NET 6 sdk"
-    inputs:
-      version: 6.0.x
+stages:
+- stage: build_artifacts
+  displayName: Build artifacts
+  jobs:
+    - job: build_artifacts_app
+      displayName: Build dotnet solution and publish to web
+      continueOnError: false
+      steps:
+        - task: UseDotNet@2
+          displayName: "Use .NET 6 sdk"
+          inputs:
+            version: 6.0.x
 
-  - script: dotnet build
-    displayName: Dotnet build solution
-    workingDirectory: app
+        - script: dotnet build
+          displayName: Dotnet build solution
+          workingDirectory: app
 
-  - script: dotnet publish
-    displayName: Dotnet publish web
-    workingDirectory: app/web
+        - script: dotnet publish
+          displayName: Dotnet publish web
+          workingDirectory: app/web
+
+- stage: deploy_single_multi_dev
+  displayName: Deploy single and multi dev environment
+  dependsOn: build_artifacts
+  condition: |
+    and(succeeded(),
+    startsWith(variables['Build.SourceBranch'], 'refs/tags/deploy/'))
+  jobs:
+  - job: deploy_dev_env
+    displayName: Deploy single and multi dev app
+    variables:
+      - group: Azure_Docs_Dev
+    continueOnError: false
+    steps:
+      - task: Pulumi@1
+        displayName: Pulumi Preview for single-dev
+        inputs:
+          command: "preview"
+          stack: $(SINGLE_DEV_PULUMI_STACK)
+          cwd: $(WORKING_DIRECTORY_PULUMI)
+          createStack: true
+
+      - template: templates/deploy-environment-setup.yaml
+
+      - script: |
+          sh ./full-single-deploy.sh
+        env:
+          ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+          ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+          ARM_TENANT_ID: $(ARM_TENANT_ID)
+        workingDirectory: app/deploy
+        displayName: Deploy app to Azure single-dev
+
+      - task: Pulumi@1
+        displayName: Pulumi Up for multi-dev
+        inputs:
+          command: "preview"
+          stack: $(MULTI_DEV_PULUMI_STACK)
+          cwd: $(WORKING_DIRECTORY_PULUMI)
+          createStack: true
+
+      - template: templates/deploy-multi-script.yaml
+
+
+
+- stage: release_canary
+  displayName: Release canary environment
+  dependsOn: build_artifacts
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - deployment: release_canary_env
+    displayName: Canary Job Release
+    environment: canary-app
+    variables:
+      - group: Azure_Docs_Prod
+    continueOnError: false
+    strategy:                  
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          
+          - task: Pulumi@1
+            displayName: Pulumi Up for canary
+            inputs:
+              command: "preview"
+              stack: $(CANARY_PULUMI_STACK)
+              cwd: $(WORKING_DIRECTORY_PULUMI)
+              createStack: true
+
+          - template: templates/deploy-environment-setup.yaml
+
+          - template: templates/deploy-multi-script.yaml
+
+- stage: release_prod
+  displayName: Release prod environment
+  dependsOn: release_canary
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - deployment: release_prod_env
+    displayName: Production Job Release
+    environment: prod-app
+    variables:
+      - group: Azure_Docs_Prod
+    continueOnError: false
+    strategy:                  
+      runOnce:
+        deploy:
+          steps:
+            - checkout: self
+
+            - task: Pulumi@1
+              displayName: Pulumi Up for production
+              inputs:
+                command: "preview"
+                stack: $(PROD_PULUMI_STACK)
+                cwd: $(WORKING_DIRECTORY_PULUMI)
+                createStack: true
+
+            - template: templates/deploy-environment-setup.yaml
+
+            - template: templates/deploy-multi-script.yaml

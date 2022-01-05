@@ -1,0 +1,23 @@
+steps:
+- task: UseDotNet@2
+  displayName: "Use .NET 3.1 sdk"
+  inputs:
+    version: 3.1.x
+
+- task: UseDotNet@2
+  displayName: "Use .NET 5 sdk"
+  inputs:
+    version: 5.0.x
+
+- task: UseDotNet@2
+  displayName: "Use .NET 6 sdk"
+  inputs:
+    version: 6.0.x
+- script: |
+    sudo apt-get update
+    sudo apt-get install azure-functions-core-tools-4
+    az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
+    conda env create -f ../pythonFunctions/conda_env.yml
+    dotnet tool install --global dotnet-ef
+  workingDirectory: app/deploy
+  displayName: Install dependencies and login to azure

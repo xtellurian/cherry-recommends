@@ -25,7 +25,7 @@ cd $APP_PATH/pythonFunctions
 echo "Activating conda env"
 conda activate pythonFunctions
 echo "Publishing python functions to $FUNCTIONAPPNAME"
-func azure functionapp publish $FUNCTIONAPPNAME
+func azure functionapp publish $FUNCTIONAPPNAME --python
 conda deactivate
 echo "Conda env deactivated"
 echo "Deployed functions $FUNCTIONAPPNAME in stack $STACK"

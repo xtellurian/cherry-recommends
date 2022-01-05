@@ -2,8 +2,9 @@ set -e
 cd ..
 APP_PATH=$(pwd)
 
-cd azure
+cd $APP_PATH/azure
 pulumi up -y
+
 cd $APP_PATH/deploy
 
 cd azure-scripts/functions/

@@ -9,6 +9,7 @@ using Pulumi.AzureNative.Synapse.Inputs;
 using Pulumi.Random;
 using ResourceIdentityType = Pulumi.AzureNative.Synapse.ResourceIdentityType;
 using SkuArgs = Pulumi.AzureNative.Storage.Inputs.SkuArgs;
+using System.Collections.Generic;
 
 namespace SignalBox.Azure
 {
@@ -107,15 +108,19 @@ namespace SignalBox.Azure
                     PrincipalType = "ServicePrincipal",
                     RoleDefinitionId = roleDefinitionId
                 });
-                var clientConfig = Output.Create(GetClientConfig.InvokeAsync());
-                var userAccess = new RoleAssignment("synapseUserAccess", new RoleAssignmentArgs
+
+                var roles = new List<RoleAssignment>();
+                foreach (var user in AzureUsers.AzureUserList)
                 {
-                    RoleAssignmentName = new RandomUuid("userRoleName").Result,
-                    Scope = storageAccount.Id,
-                    PrincipalId = clientConfig.Apply(v => v.ObjectId),
-                    PrincipalType = "User",
-                    RoleDefinitionId = roleDefinitionId
-                });
+                    roles.Add(new RoleAssignment("synapseUserAccess-" + user.Key, new RoleAssignmentArgs
+                    {
+                        RoleAssignmentName = new RandomUuid("userRoleName-" + user.Key).Result,
+                        Scope = storageAccount.Id,
+                        PrincipalId = user.Value,
+                        PrincipalType = "User",
+                        RoleDefinitionId = roleDefinitionId
+                    }));
+                }
 
                 var sparkPool = new BigDataPool("synapseSpark", new BigDataPoolArgs
                 {
