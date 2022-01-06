@@ -71,6 +71,11 @@ export const NavMenu = () => {
     collapsed: true,
   });
 
+  const returnTo = `https://${window.location.host}`;
+  const handleLogout = () => {
+    logout({ returnTo });
+  };
+
   var scopes = useTokenScopes();
 
   const toggleNavbar = () => {
@@ -182,7 +187,10 @@ export const NavMenu = () => {
                       ))}
                       <DropdownItem>
                         <NavItem>
-                          <div className="text-dark nav-link" onClick={logout}>
+                          <div
+                            className="text-dark nav-link"
+                            onClick={handleLogout}
+                          >
                             Logout
                           </div>
                         </NavItem>

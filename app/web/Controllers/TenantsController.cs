@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
 using SignalBox.Core.Internal;
@@ -25,6 +26,7 @@ namespace SignalBox.Web.Controllers
         private readonly ITenantAuthorizationStrategy tenantAuthorizationStrategy;
         private readonly ITenantMembershipStore membershipStore;
         private readonly IAuth0Service auth0Service;
+        private readonly ILogger<TenantsController> logger;
         private readonly IOptionsMonitor<Hosting> hostingOptions;
 
         public TenantsController(ITenantProvider tenantProvider,
@@ -34,6 +36,7 @@ namespace SignalBox.Web.Controllers
                                  ITenantMembershipStore membershipStore,
                                  INewTenantMembershipQueueStore newTenantMembersQueue,
                                  IAuth0Service auth0Service,
+                                 ILogger<TenantsController> logger,
                                  IOptionsMonitor<Hosting> hostingOptions)
         {
             this.tenantProvider = tenantProvider;
@@ -43,6 +46,7 @@ namespace SignalBox.Web.Controllers
             this.membershipStore = membershipStore;
             this.newTenantMembersQueue = newTenantMembersQueue;
             this.auth0Service = auth0Service;
+            this.logger = logger;
             this.hostingOptions = hostingOptions;
         }
 
@@ -123,9 +127,24 @@ namespace SignalBox.Web.Controllers
             var dtos = new List<UserInfo>();
             foreach (var m in memberships)
             {
-                var info = await auth0Service.GetUserInfo(m.UserId);
-                dtos.Add(info);
+                try
+                {
+                    var info = await auth0Service.GetUserInfo(m.UserId);
+                    dtos.Add(info);
+                }
+                catch (DependencyException dex)
+                {
+                    // in case Auth0 doesn't recognise the membership
+                    logger.LogWarning(dex.Message);
+                    dtos.Add(new UserInfo
+                    {
+                        Email = "Unknown Member",
+                        EmailVerified = false,
+                        UserId = m.UserId
+                    });
+                }
             }
+
             return new Paginated<UserInfo>(dtos, 1, memberships.Count(), 1);
         }
 

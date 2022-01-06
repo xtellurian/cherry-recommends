@@ -92,9 +92,16 @@ namespace SignalBox.Infrastructure.Services
         public async Task<UserInfo> GetUserInfo(string userId)
         {
             await Initialize();
-
-            var userInfo = await ApiClient.Users.GetAsync(userId);
-            return userInfo.ToCoreRepresentation();
+            try
+            {
+                var userInfo = await ApiClient.Users.GetAsync(userId);
+                return userInfo.ToCoreRepresentation();
+            }
+            catch (System.Exception ex)
+            {
+                logger.LogError(ex.Message);
+                throw new DependencyException(ex.Message);
+            }
         }
 
         public async Task CreateRoleForTenant(Tenant tenant)
