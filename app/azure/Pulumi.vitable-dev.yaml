@@ -18,5 +18,6 @@ config:
   azure-synapse:sqlPassword:
     secure: AAABAMw5Y6E2Ng1bQRYJ+wOVAsTGdsscaZmJuacN0K1law59SN6IkLhF
   signalbox:environment: Development
+  signalbox:login-domain: canary.login.cherry.ai
   signalbox:sqlPassword:
     secure: AAABAJ+PwRLYysOyHwYZbgUDC8y8RT+c7OZ9Vib/5vXy5kNCpujmre5R

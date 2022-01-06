@@ -54,7 +54,7 @@ stages:
     continueOnError: false
     steps:
       - task: Pulumi@1
-        displayName: Pulumi Preview for single-dev
+        displayName: single-dev Pulumi preview
         inputs:
           command: "preview"
           stack: $(SINGLE_DEV_PULUMI_STACK)
@@ -73,7 +73,7 @@ stages:
         displayName: Deploy app to Azure single-dev
 
       - task: Pulumi@1
-        displayName: Pulumi Up for multi-dev
+        displayName: multi-dev Pulumi preview 
         inputs:
           command: "preview"
           stack: $(MULTI_DEV_PULUMI_STACK)
@@ -102,7 +102,7 @@ stages:
           - checkout: self
           
           - task: Pulumi@1
-            displayName: Pulumi Up for canary
+            displayName: canary Pulumi preview
             inputs:
               command: "preview"
               stack: $(CANARY_PULUMI_STACK)
@@ -131,7 +131,7 @@ stages:
             - checkout: self
 
             - task: Pulumi@1
-              displayName: Pulumi Up for production
+              displayName: production Pulumi preview
               inputs:
                 command: "preview"
                 stack: $(PROD_PULUMI_STACK)

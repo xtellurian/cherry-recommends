@@ -124,18 +124,21 @@ namespace SignalBox.Azure
                     {"Deployment__Environment", environment},
                     {"ApplicationInsights__InstrumentationKey", insights.InstrumentationKey},
                     {"WEBSITE_HTTPLOGGING_RETENTION_DAYS", "1"},
+
+                    // auth0
                     {"Auth0__Authority", auth0.Authority},
                     {"Auth0__Audience", auth0.Audience},
+
                     {"Auth0__ReactApp__Domain", auth0.ReactDomain},
                     {"Auth0__ReactApp__ClientId", auth0.ReactClientId},
                     {"Auth0__ReactApp__Audience", auth0.Audience},
                     {"Auth0__ReactApp__ManagementAudience", auth0.ReactManagementAudience},
+
                     {"Auth0__M2M__Audience", auth0.Audience},
                     {"Auth0__M2M__ClientId", auth0.M2MClientId},
                     {"Auth0__M2M__ClientSecret", auth0.M2MClientSecret},
                     {"Auth0__M2M__Endpoint", auth0.M2MEndpoint},
 
-                      // auth0
                     {"Auth0__Management__DefaultAudience", auth0.DefaultAudience},
                     {"Auth0__Management__ClientId", auth0Config.Require("clientId")},
                     {"Auth0__Management__ClientSecret", auth0Config.Require("clientSecret")},

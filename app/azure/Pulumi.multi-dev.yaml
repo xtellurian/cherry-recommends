@@ -22,5 +22,6 @@ config:
     secure: AAABAGh8zwPTkHWrlgGw0H1mgvEm7soykdfBChUT9iQsyfnd85azSzFgUApjwsEd1/JdKZ0/26Dn8aANnmYldIKEs7U=
   network:cherrySubdomain: dev
   signalbox:environment: Development
+  signalbox:login-domain: dev.login.cherry.ai
   signalbox:sqlPassword:
     secure: AAABANfzkAy6nNmVK/eYVMtNfDhFNrkCpmq7tDbmEIo7YxEQSLSNogU8

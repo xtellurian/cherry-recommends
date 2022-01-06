@@ -10,6 +10,7 @@ namespace SignalBox.Azure
         {
             var stackName = Deployment.Instance.StackName;
             var auth0Config = new Pulumi.Config("auth0");
+            var rootConfig = new Pulumi.Config();
             var canonicalRootDomain = new Pulumi.Config("appsvc").Get("canonical-root-domain");
 
             var apiResource = new ResourceServer("apiResource", new ResourceServerArgs
@@ -87,7 +88,7 @@ namespace SignalBox.Azure
             var clientApp = new Client("reactApp", new ClientArgs
             {
                 Name = "Cherry Recommends",
-                Description = "The Cherry Recommends web application.",
+                Description = $"The Cherry Recommends web application. ({stackName})",
                 AppType = "spa",
                 IsFirstParty = true,
                 TokenEndpointAuthMethod = "none",
@@ -145,16 +146,16 @@ namespace SignalBox.Azure
                 },
             });
 
-            this.Authority = $"https://{Pulumi.Auth0.Config.Domain}";
+            this.Authority = $"https://{rootConfig.Require("login-domain")}";
             this.Audience = apiResource.Identifier!;
             this.DefaultAudience = apiResource.Identifier!;
-            this.ReactDomain = Pulumi.Auth0.Config.Domain!;
+            this.ReactDomain = rootConfig.Require("login-domain")!;
             this.ReactClientId = clientApp.ClientId;
-            this.ReactManagementAudience = $"https://{Pulumi.Auth0.Config.Domain}/api/v2";
+            this.ReactManagementAudience = $"https://{Pulumi.Auth0.Config.Domain}/api/v2/";
 
             this.M2MClientId = m2mApp.ClientId;
             this.M2MClientSecret = m2mApp.ClientSecret;
-            this.M2MEndpoint = $"https://{Pulumi.Auth0.Config.Domain}/oauth/token";
+            this.M2MEndpoint = $"https://{rootConfig.Require("login-domain")}/oauth/token";
 
         }
 

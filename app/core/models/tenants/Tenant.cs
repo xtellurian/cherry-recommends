@@ -69,6 +69,11 @@ namespace SignalBox.Core
             return $"tenant:{Name}";
         }
 
+        public string MemberRoleName()
+        {
+            return $"tenant:{Name}";
+        }
+
         public string Name { get; set; }
         public string DatabaseName { get; set; }
         public string? Status { get; set; }

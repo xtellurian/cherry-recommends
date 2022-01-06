@@ -19,5 +19,6 @@ config:
   hubspot:clientSecret:
     secure: AAABAGD3TI4d1YORA+8kXkLZbWQCtF7Ik1uX56iEUcs=
   signalbox:environment: Development
+  signalbox:login-domain: dev.login.cherry.ai
   signalbox:sqlPassword:
     secure: AAABAEfEBd3Tcv1LYFXVO/uiSxTYrkecwGkAk69k7KpCKVyNqOstbkhr9g==

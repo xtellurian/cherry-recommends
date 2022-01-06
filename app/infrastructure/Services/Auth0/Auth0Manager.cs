@@ -97,6 +97,60 @@ namespace SignalBox.Infrastructure.Services
             return userInfo.ToCoreRepresentation();
         }
 
+        public async Task CreateRoleForTenant(Tenant tenant)
+        {
+            await Initialize();
+
+            var role = await GetOrCreateMemberRole(tenant);
+        }
+
+        public async Task<string> GetTenantRoleId(Tenant tenant)
+        {
+            await Initialize();
+
+            var role = await GetOrCreateMemberRole(tenant);
+            return role.Id;
+        }
+
+        private async Task<Role> GetOrCreateMemberRole(Tenant tenant)
+        {
+            await EnsureTenantScopeExists(tenant);
+
+            var roles = await ApiClient.Roles.GetAllAsync(new GetRolesRequest
+            {
+                NameFilter = tenant.MemberRoleName()
+            });
+            Role role;
+            if (roles.Any())
+            {
+                logger.LogInformation("Using existing role");
+                role = roles.First();
+            }
+            else
+            {
+                logger.LogInformation($"Creating role for tenant {tenant.Id}");
+                role = await ApiClient.Roles.CreateAsync(new RoleCreateRequest
+                {
+                    Name = tenant.MemberRoleName(),
+                    Description = $"Gives access to tenant (Id = {tenant.Name})"
+                });
+            }
+
+            await ApiClient.Roles.AssignPermissionsAsync(role.Id, new AssignPermissionsRequest
+            {
+                Permissions = new List<PermissionIdentity>
+                {
+                    new PermissionIdentity
+                    {
+                        Name = tenant.AccessScope(),
+                        Identifier = credentials.DefaultAudience // resource identifier
+                    }
+                }
+            });
+
+            return role;
+        }
+
         public async Task<UserInfo> AddUser(InviteRequest invite)
         {
             logger.LogInformation($"Inviting {invite.Email}");
@@ -147,10 +201,22 @@ namespace SignalBox.Infrastructure.Services
         {
             await Initialize();
 
+            var role = await GetOrCreateMemberRole(tenant);
+
+            await ApiClient.Users.AssignRolesAsync(creatorId, new AssignRolesRequest
+            {
+                Roles = new List<string> { role.Id }.ToArray()
+            });
+        }
+
+        private async Task EnsureTenantScopeExists(Tenant tenant)
+        {
+            logger.LogInformation($"Ensuring tenant scope exists for tenant {tenant.Name}");
             var current = await ApiClient.ResourceServers.GetAsync(credentials.DefaultAudience);
             var scopes = current.Scopes.ToList();
             if (!scopes.Any(_ => _.Value == tenant.AccessScope()))
             {
+                logger.LogWarning($"Creating tenant scope for tenant {tenant.Name} with Id = {tenant.Id}");
                 scopes.Add(new ResourceServerScope
                 {
                     Value = tenant.AccessScope(),
@@ -162,19 +228,10 @@ namespace SignalBox.Infrastructure.Services
                     Scopes = scopes
                 });
             }
-
-            // var creatorId = principal.FindFirst(ClaimTypes.NameIdentifier).Value;
-            await ApiClient.Users.AssignPermissionsAsync(creatorId, new AssignPermissionsRequest
+            else
             {
-                Permissions = new List<PermissionIdentity>
-                {
-                    new PermissionIdentity
-                    {
-                        Name =tenant.AccessScope(),
-                        Identifier = credentials.DefaultAudience // resource identifier
-                    }
-                }
-            });
+                logger.LogInformation("Tenant scope exists.");
+            }
         }
     }
 }

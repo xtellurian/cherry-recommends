@@ -34,7 +34,6 @@ export const useAuth0AccessToken = () => {
   const [accessToken, setAccessToken] = React.useState();
 
   React.useEffect(() => {
-    console.log(config);
     if (isAuthenticated && config && config.managementAudience) {
       getAccessTokenSilently({
         audience: config.managementAudience,
@@ -42,6 +41,8 @@ export const useAuth0AccessToken = () => {
       })
         .then(setAccessToken)
         .catch(console.log);
+    } else {
+      console.log(config);
     }
   }, [isAuthenticated, config, getAccessTokenSilently]);
 

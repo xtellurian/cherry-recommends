@@ -2,16 +2,20 @@ import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { AsyncButton } from "../molecules";
 import { useQuery } from "../../utility/utility";
+import { useLocation } from "react-router-dom";
 
 const LoginButton = () => {
   const query = useQuery();
   const autoSignIn = query.get("autoSignIn");
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
   const [aboutToLogin, setAboutToLogin] = React.useState(autoSignIn);
-
+  const { pathname } = useLocation();
+  const loginWrapper = () => {
+    return loginWithRedirect({ appState: { returnTo: pathname } });
+  };
   const signIn = () => {
     console.log("Attempting signin...");
-    loginWithRedirect()
+    loginWrapper()
       .then(() => {
         console.log("Automatically signed in...");
       })
@@ -25,7 +29,7 @@ const LoginButton = () => {
     <AsyncButton
       loading={isLoading || aboutToLogin}
       className="btn btn-primary btn-block"
-      onClick={() => loginWithRedirect()}
+      onClick={() => loginWrapper()}
     >
       Log In
     </AsyncButton>

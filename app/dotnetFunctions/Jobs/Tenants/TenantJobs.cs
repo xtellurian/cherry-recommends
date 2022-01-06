@@ -12,7 +12,7 @@ using SignalBox.Infrastructure.Models.Databases;
 
 namespace SignalBox.Functions
 {
-    public class CreateNewSqlDatabase
+    public class TenantJobs
     {
         JsonSerializerOptions serializerOptions = new JsonSerializerOptions
         {
@@ -24,7 +24,7 @@ namespace SignalBox.Functions
         private readonly ITenantMembershipStore membershipStore;
         private readonly IAuth0Service auth0Service;
 
-        public CreateNewSqlDatabase(IDatabaseManager dbManager,
+        public TenantJobs(IDatabaseManager dbManager,
                                     IOptions<Hosting> hostingOptions,
                                     ITenantStore tenantStore,
                                     ITenantMembershipStore membershipStore,
@@ -121,6 +121,30 @@ namespace SignalBox.Functions
             {
                 throw new BadRequestException("Cannot list memberships in a non-multitenant environment");
             }
+        }
+
+        [Function("GetRoleIds")]
+        public async Task<IEnumerable<string>> GetTenantRoleId([HttpTrigger(AuthorizationLevel.Function, "get",
+            Route = "Tenants/{tenantName}/RoleId")]
+            HttpRequestData req, FunctionContext executionContext, string tenantName)
+        {
+            var result = new List<string>();
+            if (tenantName == "*")
+            {
+                foreach (var tenant in await tenantStore.List())
+                {
+                    var id = await auth0Service.GetTenantRoleId(tenant);
+                    result.Add(id);
+                }
+            }
+            else
+            {
+                var tenant = await tenantStore.ReadFromName(tenantName);
+                var id = await auth0Service.GetTenantRoleId(tenant);
+                result.Add(id);
+            }
+
+            return result;
         }
 
 
@@ -255,10 +279,18 @@ namespace SignalBox.Functions
             await dbManager.CreateDatabase(tenant, _ => _.FixSqliteConnectionString());
             tenant.Status = Tenant.Status_Database_Created;
             await tenantStore.SaveChanges();
+            // create role for accessing tenant
+            await CreateRoleForTenant(tenant);
+
             await AddUserToTenant(info.CreatorId, tenant, logger);
             tenant.Status = Tenant.Status_Created;
             await tenantStore.SaveChanges();
             return tenant;
+        }
+
+        private async Task CreateRoleForTenant(Tenant tenant)
+        {
+            await auth0Service.CreateRoleForTenant(tenant);
         }
 
         private async Task AddUserToTenant(string userId, Tenant tenant, ILogger logger)

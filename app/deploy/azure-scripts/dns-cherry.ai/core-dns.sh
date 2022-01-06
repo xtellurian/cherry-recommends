@@ -1,6 +1,16 @@
 ## this file contains the CORE DNS records for Cherry.AI.
 
+SUB_ID=$(az account show --query id --out tsv)
 echo Current Subscription is $(az account show --query name --out tsv)
+
+CORE_SUB_ID="1faa2acc-3425-461a-8eef-0d0a4648c66c"
+
+if [ "$CORE_SUB_ID" == "$SUB_ID" ]; then
+    echo "Using azure subscription id = $SUB_ID"
+else
+    echo "Error. Use Cherry.Core subscription."
+    exit 1
+fi
 
 ZONE="cherry.ai"
 RG="dns"
@@ -46,5 +56,11 @@ az network dns record-set cname set-record -g $RG -z $ZONE -n "axhxhqlvoj45nzxr6
 ## ------- Google Postmaster ------------
 echo "Google DNS Verification"
 az network dns record-set txt add-record -g $RG -z $ZONE -n @ -v "google-site-verification=khcyAISyeAvaQhoyfG5tiIKkcWPR_1spxCfFjcZoZpg"
+
+## ------- Auth0 ------------
+echo "Auth0 DNS Verification"
+az network dns record-set cname set-record -g $RG -z $ZONE -n "login" -c "cherry-cd-olztepl4ihgfrcwi.edge.tenants.au.auth0.com"
+az network dns record-set cname set-record -g $RG -z $ZONE -n "dev.login" -c "signalbox-dev-cd-vh3bkdx3gkylvptk.edge.tenants.us.auth0.com"
+az network dns record-set cname set-record -g $RG -z $ZONE -n "canary.login" -c "signalbox-cd-1b7eqgjmvibxcdru.edge.tenants.us.auth0.com"
 
 echo "Done."

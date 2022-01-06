@@ -19,5 +19,6 @@ config:
   hubspot:clientId: ""
   network:cherrySubdomain: canary
   signalbox:environment: Production
+  signalbox:login-domain: canary.login.cherry.ai
   signalbox:sqlPassword:
     secure: AAABAH1u7gCAZNFR+abvbDeDvZEoNSe0qEtiDZYKQ/B2zAMfSAAyKldv
