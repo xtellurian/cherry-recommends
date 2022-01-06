@@ -55,7 +55,7 @@ jobs:
       startsWith(variables['Build.SourceBranch'], 'refs/heads/develop/'), 
       startsWith(variables['Build.SourceBranch'], 'refs/heads/docs/')))
     steps:
-      - script: az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(AZURE_TENANT_ID)
+      - script: az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
         displayName: az login --service-principal
 
       - task: Pulumi@1
@@ -63,7 +63,7 @@ jobs:
         env:
           ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
           ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-          ARM_TENANT_ID: $(AZURE_TENANT_ID)
+          ARM_TENANT_ID: $(ARM_TENANT_ID)
         inputs:
           command: up
           args: --yes
@@ -90,7 +90,7 @@ jobs:
     dependsOn: build_docs
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     steps:
-      - script: az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(AZURE_TENANT_ID)
+      - script: az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
         displayName: az login --service-principal
 
       - task: Pulumi@1
@@ -98,7 +98,7 @@ jobs:
         env:
           ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
           ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-          ARM_TENANT_ID: $(AZURE_TENANT_ID)
+          ARM_TENANT_ID: $(ARM_TENANT_ID)
         inputs:
           command: up
           args: --yes
