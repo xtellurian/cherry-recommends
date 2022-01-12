@@ -10,8 +10,8 @@ namespace SignalBox.Infrastructure.EntityFramework
     public class EFCustomerStore : EFCommonEntityStoreBase<Customer>, ICustomerStore
     {
         protected override bool IsEnvironmentScoped => true;
-        public EFCustomerStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentService environmentService)
-        : base(contextProvider, environmentService, (c) => c.Customers)
+        public EFCustomerStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)
+        : base(contextProvider, environmentProvider, (c) => c.Customers)
         { }
 
         public async IAsyncEnumerable<Customer> Iterate()

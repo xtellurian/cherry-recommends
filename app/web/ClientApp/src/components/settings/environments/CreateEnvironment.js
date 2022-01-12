@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router";
+import { useEnvironmentReducer } from "../../../api-hooks/environmentsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createEnvironmentAsync } from "../../../api/environmentsApi";
 import { Title, AsyncButton, BackButton } from "../../molecules";
@@ -17,6 +18,7 @@ export const CreateEnvironment = () => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState();
   const [name, setName] = React.useState("");
+  const [currentEnviroment, setEnvironment] = useEnvironmentReducer();
   const handleCreate = () => {
     setLoading(true);
     createEnvironmentAsync({
@@ -25,10 +27,17 @@ export const CreateEnvironment = () => {
         name,
       },
     })
-      .then(() => {
+      .then((newEnvironment) => {
+        console.log(newEnvironment);
+        console.log(
+          `Switching environments away from ${currentEnviroment?.id}`
+        );
+        setEnvironment(newEnvironment);
         history.push("/settings/environments");
-        return setTimeout(() => window.location.reload(), 50);
       })
+      // .then(() => {
+      //   // return setTimeout(() => window.location.reload(), 50);
+      // })
       .catch(setError);
   };
   return (

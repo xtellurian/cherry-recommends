@@ -95,7 +95,6 @@ namespace SignalBox.Core.Workflows
 
         public async Task<Dashboard> GenerateDashboardData(string scope = null)
         {
-            IEnumerable<TrackedUserAction> actions = new List<TrackedUserAction>();
             IEnumerable<CustomerEvent> latestEvents = new List<CustomerEvent>();
             var totalCustomers = await customerStore.Count();
             var recommendations = new List<RecommendationEntity>();
@@ -137,7 +136,7 @@ namespace SignalBox.Core.Workflows
 
 
 
-            return new Dashboard(totalCustomers, latestEvents, actions, recommendations);
+            return new Dashboard(totalCustomers, latestEvents, recommendations);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace SignalBox.Core.Workflows
     {
         private readonly CustomerEventsWorkflows eventsWorkflows;
         private readonly ICustomerEventStore eventStore;
+        private readonly IEnvironmentProvider environmentProvider;
         private readonly ITrackedUserSystemMapStore systemMapStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IItemsRecommenderStore itemsRecommenderStore;
@@ -23,6 +24,7 @@ namespace SignalBox.Core.Workflows
                                 CustomerEventsWorkflows eventsWorkflows,
                                 ICustomerStore trackedUserStore,
                                 ICustomerEventStore eventStore,
+                                IEnvironmentProvider environmentProvider,
                                 ITrackedUserSystemMapStore systemMapStore,
                                 IParameterSetRecommenderStore parameterSetRecommenderStore,
                                 IItemsRecommenderStore itemsRecommenderStore,
@@ -36,6 +38,7 @@ namespace SignalBox.Core.Workflows
         {
             this.eventsWorkflows = eventsWorkflows;
             this.eventStore = eventStore;
+            this.environmentProvider = environmentProvider;
             this.systemMapStore = systemMapStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
             this.itemsRecommenderStore = itemsRecommenderStore;
@@ -200,7 +203,7 @@ namespace SignalBox.Core.Workflows
                     throw new BadRequestException($"Couldn't find user, Hubspot Property is: {behaviour.CommonUserIdPropertyName}");
                 }
             }
-            var customer = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, associatedObjectId);
+            var customer = await systemMapStore.ReadFromIntegratedSystem(integratedSystem.Id, externalId); // might fix phoria issue
             // use the object ID
             double? outcomeFeedbackValue = null;
             if (outcome == "GOOD")
@@ -214,8 +217,15 @@ namespace SignalBox.Core.Workflows
 
             return await eventsWorkflows.AddEvents(new List<CustomerEventsWorkflows.CustomerEventInput>
                 {
-                    new CustomerEventsWorkflows.CustomerEventInput(customer.CommonId,
-                    eventId, dateTimeProvider.Now, correlationId, integratedSystem.Id, EventKinds.ConsumeRecommendation, "Direct Feedback",
+                    new CustomerEventsWorkflows.CustomerEventInput(
+                        customer.CustomerId,
+                        eventId,
+                        timestamp: dateTimeProvider.Now,
+                        environmentId: customer.EnvironmentId,
+                        recommendationCorrelatorId: correlationId,
+                        sourceSystemId: integratedSystem.Id,
+                        EventKinds.ConsumeRecommendation,
+                        "Direct Feedback",
                     new Dictionary<string, object>
                     {
                         {CustomerEvent.FEEDBACK, outcomeFeedbackValue},
@@ -254,19 +264,19 @@ namespace SignalBox.Core.Workflows
                 }
                 else
                 {
-                    return await CreateNewTrackedUser(integratedSystem, objectId, commonUserId);
+                    return await CreateNewCustomer(integratedSystem, objectId, commonUserId);
                 }
             }
             else if (webhookPayload.PropertyName == behaviour.CommonUserIdPropertyName)
             {
-                return await CreateNewTrackedUser(integratedSystem, objectId, webhookPayload.PropertyValue);
+                return await CreateNewCustomer(integratedSystem, objectId, webhookPayload.PropertyValue);
             }
             else
             {
                 var contact = await hubspotService.GetContact(integratedSystem, objectId, new List<string> { behaviour.CommonUserIdPropertyName });
                 if (contact.Properties.ContainsKey(behaviour.CommonUserIdPropertyName) && !string.IsNullOrEmpty(contact.Properties[behaviour.CommonUserIdPropertyName]))
                 {
-                    return await CreateNewTrackedUser(integratedSystem, objectId, contact.Properties[behaviour.CommonUserIdPropertyName]);
+                    return await CreateNewCustomer(integratedSystem, objectId, contact.Properties[behaviour.CommonUserIdPropertyName]);
                 }
                 else
                 {
@@ -283,9 +293,13 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        private async Task<Customer> CreateNewTrackedUser(IntegratedSystem integratedSystem, string objectId, string commonUserId)
+        private async Task<Customer> CreateNewCustomer(IntegratedSystem integratedSystem, string objectId, string commonUserId)
         {
-            var customer = await customerStore.Create(new Customer(commonUserId));
+            if (integratedSystem.EnvironmentId != null)
+            {
+                await environmentProvider.SetOverride(integratedSystem.EnvironmentId.Value);
+            }
+            var customer = await customerStore.Create(new Customer(commonUserId, objectId));
             customer.IntegratedSystemMaps.Add(new TrackedUserSystemMap(objectId, integratedSystem, customer));
             await storageContext.SaveChanges();
             return customer;
@@ -301,21 +315,21 @@ namespace SignalBox.Core.Workflows
             var exists = await systemMapStore.ExistsInIntegratedSystem(integratedSystem.Id, objectId) == true;
             if ((behaviour.CreateUserIfNotExist == true) && !exists)
             {
-                // create the tracked user.
+                // create the customer.
                 if (string.IsNullOrEmpty(behaviour.CommonUserIdPropertyName))
                 {
-                    customer = await CreateNewTrackedUser(integratedSystem, objectId, objectId);
+                    customer = await CreateNewCustomer(integratedSystem, objectId, objectId);
                 }
                 else if (webhookPayload.PropertyName == behaviour.CommonUserIdPropertyName)
                 {
-                    return await CreateNewTrackedUser(integratedSystem, objectId, webhookPayload.PropertyValue);
+                    return await CreateNewCustomer(integratedSystem, objectId, webhookPayload.PropertyValue);
                 }
                 else
                 {
                     var contact = await hubspotService.GetContact(integratedSystem, objectId, new List<string> { behaviour.CommonUserIdPropertyName });
                     if (contact.Properties.ContainsKey(behaviour.CommonUserIdPropertyName) && !string.IsNullOrEmpty(contact.Properties[behaviour.CommonUserIdPropertyName]))
                     {
-                        return await CreateNewTrackedUser(integratedSystem, objectId, contact.Properties[behaviour.CommonUserIdPropertyName]);
+                        return await CreateNewCustomer(integratedSystem, objectId, contact.Properties[behaviour.CommonUserIdPropertyName]);
                     }
                     else
                     {

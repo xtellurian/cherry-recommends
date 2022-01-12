@@ -9,7 +9,8 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFFeatureStore : EFCommonEntityStoreBase<Feature>, IFeatureStore
     {
-        public EFFeatureStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentService environmentService)
+        protected override bool IsEnvironmentScoped => true;
+        public EFFeatureStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentService)
         : base(contextProvider, environmentService, c => c.Features)
         { }
 

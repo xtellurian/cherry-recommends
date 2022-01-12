@@ -8,12 +8,14 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFTrackedUserEventStore : EFEntityStoreBase<CustomerEvent>, ICustomerEventStore
+    public class EFCustomerEventStore : EFEnvironmentScopedEntityBase<CustomerEvent>, ICustomerEventStore
     {
         protected override Expression<Func<CustomerEvent, DateTimeOffset>> defaultOrderBy => _ => _.Timestamp;
-        public EFTrackedUserEventStore(IDbContextProvider<SignalBoxDbContext> contextProvider)
-        : base(contextProvider, (c) => c.CustomerEvents)
+        public EFCustomerEventStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)
+        : base(contextProvider, environmentProvider, (c) => c.CustomerEvents)
         { }
+
+        protected override bool IsEnvironmentScoped => true;
 
         public async Task<CustomerEvent> Read(string eventId)
         {
@@ -39,6 +41,11 @@ namespace SignalBox.Infrastructure.EntityFramework
         }
         public async Task<IEnumerable<CustomerEvent>> AddRange(IEnumerable<CustomerEvent> events)
         {
+            foreach (var e in events)
+            {
+                e.EnvironmentId = environmentProvider.CurrentEnvironmentId;
+            }
+
             // need to chunk this query, because too many ids in a single Contains() breaks the db connection.
             foreach (var chunks in events.ToChunks(255))
             {

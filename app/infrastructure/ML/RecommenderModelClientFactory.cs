@@ -11,22 +11,16 @@ namespace SignalBox.Infrastructure.ML
         private readonly HttpClient httpClient;
         private readonly ITelemetry telemetry;
         private readonly ITenantProvider tenantProvider;
-        private readonly IProductRecommenderStore productRecommenderStore;
-        private readonly IProductStore productStore;
         private readonly IRecommendableItemStore itemStore;
 
         public RecommenderModelClientFactory(HttpClient httpClient,
                                              ITelemetry telemetry,
                                              ITenantProvider tenantProvider,
-                                             IProductRecommenderStore productRecommenderStore,
-                                             IProductStore productStore,
                                              IRecommendableItemStore itemStore)
         {
             this.httpClient = httpClient;
             this.telemetry = telemetry;
             this.tenantProvider = tenantProvider;
-            this.productRecommenderStore = productRecommenderStore;
-            this.productStore = productStore;
             this.itemStore = itemStore;
         }
 
@@ -53,16 +47,6 @@ namespace SignalBox.Infrastructure.ML
                 return Task.FromResult((IRecommenderModelClient<TOutput>)
                     new AzureMLItemsRecommenderClient(httpClient));
             }
-            else if (model.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ProductRecommenderV1)
-            {
-                return Task.FromResult((IRecommenderModelClient<TOutput>)
-                    new AzureMLPProductRecommenderClient(httpClient));
-            }
-            else if (model.HostingType == HostingTypes.AzurePersonalizer && model.ModelType == ModelTypes.ProductRecommenderV1)
-            {
-                return Task.FromResult((IRecommenderModelClient<TOutput>)
-                    new AzurePersonalizerRecommenderClient(httpClient, productRecommenderStore, productStore, telemetry));
-            }
             else
             {
                 throw new NotImplementedException("That Hosting Type and Model Type is not supported.");
@@ -71,24 +55,13 @@ namespace SignalBox.Infrastructure.ML
 
         public Task<IRecommenderModelRewardClient> GetRewardClient(IRecommender recommender)
         {
-            if (recommender.ModelRegistration != null && recommender.ModelRegistration.HostingType == HostingTypes.AzurePersonalizer)
-            {
-                return Task.FromResult((IRecommenderModelRewardClient)new AzurePersonalizerRecommenderClient(httpClient, productRecommenderStore, productStore, telemetry));
-            }
-            else
-            {
-                return Task.FromResult((IRecommenderModelRewardClient)new DefaultRewardClient());
-            }
+            return Task.FromResult((IRecommenderModelRewardClient)new DefaultRewardClient());
         }
 
         public Task<IRecommenderModelClient<TOutput>> GetUnregisteredClient<TOutput>(IRecommender recommender)
             where TOutput : IModelOutput
         {
-            if (typeof(TOutput) == typeof(ProductRecommenderModelOutputV1))
-            {
-                return Task.FromResult((IRecommenderModelClient<TOutput>)new RandomProductRecommender(productStore));
-            }
-            else if (typeof(TOutput) == typeof(ParameterSetRecommenderModelOutputV1))
+            if (typeof(TOutput) == typeof(ParameterSetRecommenderModelOutputV1))
             {
                 return Task.FromResult((IRecommenderModelClient<TOutput>)new RandomParameterSetRecommender());
             }

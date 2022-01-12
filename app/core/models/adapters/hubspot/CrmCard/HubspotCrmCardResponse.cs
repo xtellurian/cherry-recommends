@@ -78,14 +78,7 @@ namespace SignalBox.Core.Adapters.Hubspot
             }
             else if (recommendation.RecommenderType == Recommenders.RecommenderTypes.Product)
             {
-                var productRecommendation = (ProductRecommendation)recommendation;
-
-                properties.Add(new Dictionary<string, string>
-                {
-                    { "label", $"{productRecommendation.Recommender.Name}" },
-                    { "dataType", "STRING" },
-                    { "value", productRecommendation.Product.Name }
-                });
+                throw new NotImplementedException("Product Recommenders are no longer supported");
             }
 
             // add actions to track good/bad recommendaion

@@ -13,11 +13,8 @@ namespace SignalBox.Infrastructure
     {
         // core stuff
         public DbSet<Core.Environment> Environments { get; set; }
-        public DbSet<Rule> Rules { get; set; }
         public DbSet<RecommendableItem> RecommendableItems { get; set; }
-        public DbSet<Product> Products { get; set; }
         public DbSet<Segment> Segments { get; set; }
-        // public DbSet<Customer> TrackedUsers { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<CustomerEvent> CustomerEvents { get; set; }
         public DbSet<TrackedUserAction> TrackedUserActions { get; set; }
@@ -34,7 +31,6 @@ namespace SignalBox.Infrastructure
 
         // recommenders
         public DbSet<RecommenderEntityBase> Recommenders { get; set; }
-        public DbSet<ProductRecommender> ProductRecommenders { get; set; }
         public DbSet<ParameterSetRecommender> ParameterSetRecommenders { get; set; }
         public DbSet<ItemsRecommender> ItemsRecommenders { get; set; }
 
@@ -53,7 +49,6 @@ namespace SignalBox.Infrastructure
         public DbSet<RecommendationCorrelator> RecommendationCorrelators { get; set; }
         public DbSet<ParameterSetRecommendation> ParameterSetRecommendations { get; set; }
         public DbSet<ItemsRecommendation> ItemsRecommendations { get; set; }
-        public DbSet<ProductRecommendation> ProductRecommendations { get; set; }
 
         // integrated systems
         public DbSet<IntegratedSystem> IntegratedSystems { get; set; }

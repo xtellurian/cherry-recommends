@@ -94,21 +94,6 @@ namespace sqlserver.SignalBox
                     b.ToTable("ParameterParameterSetRecommender");
                 });
 
-            modelBuilder.Entity("ProductProductRecommender", b =>
-                {
-                    b.Property<long>("ProductRecommendersId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ProductsId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("ProductRecommendersId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("ProductProductRecommender");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Customer", b =>
                 {
                     b.Property<long>("Id")
@@ -144,10 +129,12 @@ namespace sqlserver.SignalBox
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommonId")
-                        .IsUnique();
+                    b.HasIndex("CommonId");
 
                     b.HasIndex("EnvironmentId");
+
+                    b.HasIndex("CommonId", "EnvironmentId")
+                        .IsUnique();
 
                     b.ToTable("TrackedUsers");
 
@@ -180,6 +167,9 @@ namespace sqlserver.SignalBox
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("CommonUserId");
+
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("EventId")
                         .HasColumnType("nvarchar(450)");
@@ -216,9 +206,7 @@ namespace sqlserver.SignalBox
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EventId")
-                        .IsUnique()
-                        .HasFilter("[EventId] IS NOT NULL");
+                    b.HasIndex("EnvironmentId");
 
                     b.HasIndex("RecommendationCorrelatorId");
 
@@ -227,6 +215,10 @@ namespace sqlserver.SignalBox
                     b.HasIndex("Timestamp");
 
                     b.HasIndex("TrackedUserId");
+
+                    b.HasIndex("EventId", "EnvironmentId")
+                        .IsUnique()
+                        .HasFilter("[EventId] IS NOT NULL AND [EnvironmentId] IS NOT NULL");
 
                     b.ToTable("TrackedUserEvents");
                 });
@@ -294,10 +286,12 @@ namespace sqlserver.SignalBox
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommonId")
-                        .IsUnique();
+                    b.HasIndex("CommonId");
 
                     b.HasIndex("EnvironmentId");
+
+                    b.HasIndex("CommonId", "EnvironmentId")
+                        .IsUnique();
 
                     b.ToTable("Features");
                 });
@@ -646,10 +640,12 @@ namespace sqlserver.SignalBox
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommonId")
-                        .IsUnique();
+                    b.HasIndex("CommonId");
 
                     b.HasIndex("EnvironmentId");
+
+                    b.HasIndex("CommonId", "EnvironmentId")
+                        .IsUnique();
 
                     b.ToTable("Parameters");
                 });
@@ -679,7 +675,6 @@ namespace sqlserver.SignalBox
                         .HasColumnType("float");
 
                     b.Property<string>("Discriminator")
-                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("Product");
@@ -703,14 +698,14 @@ namespace sqlserver.SignalBox
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommonId")
-                        .IsUnique();
+                    b.HasIndex("CommonId");
 
                     b.HasIndex("EnvironmentId");
 
-                    b.ToTable("RecommendableItems");
+                    b.HasIndex("CommonId", "EnvironmentId")
+                        .IsUnique();
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("RecommendableItem");
+                    b.ToTable("RecommendableItems");
 
                     b.HasData(
                         new
@@ -719,6 +714,7 @@ namespace sqlserver.SignalBox
                             CommonId = "default",
                             Created = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Description = "The default recommendable item. When this item is recommended, no action should be taken.",
+                            Discriminator = "RecommendableItem",
                             LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Default Item",
                             Properties = "{}"
@@ -782,6 +778,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -820,6 +819,8 @@ namespace sqlserver.SignalBox
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EnvironmentId");
+
                     b.HasIndex("RecommendationCorrelatorId");
 
                     b.HasIndex("RecommenderId");
@@ -843,6 +844,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -876,6 +880,8 @@ namespace sqlserver.SignalBox
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EnvironmentId");
 
                     b.HasIndex("RecommendationCorrelatorId");
 
@@ -884,68 +890,6 @@ namespace sqlserver.SignalBox
                     b.HasIndex("TrackedUserId");
 
                     b.ToTable("ParameterSetRecommendations");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Recommendations.ProductRecommendation", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("ModelInput")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ModelInputType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ModelOutput")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ModelOutputType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("ProductId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("RecommendationCorrelatorId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("RecommenderId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("RecommenderType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("TrackedUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Trigger")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("RecommendationCorrelatorId");
-
-                    b.HasIndex("RecommenderId");
-
-                    b.HasIndex("TrackedUserId");
-
-                    b.ToTable("ProductRecommendations");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.RecommendationCorrelator", b =>
@@ -1109,12 +1053,14 @@ namespace sqlserver.SignalBox
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommonId")
-                        .IsUnique();
+                    b.HasIndex("CommonId");
 
                     b.HasIndex("EnvironmentId");
 
                     b.HasIndex("ModelRegistrationId");
+
+                    b.HasIndex("CommonId", "EnvironmentId")
+                        .IsUnique();
 
                     b.ToTable("Recommenders");
 
@@ -1146,9 +1092,6 @@ namespace sqlserver.SignalBox
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<long?>("RecommenderEntityBaseId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("RecommenderId")
                         .HasColumnType("bigint");
 
@@ -1162,8 +1105,6 @@ namespace sqlserver.SignalBox
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RecommenderEntityBaseId");
 
                     b.HasIndex("RecommenderId", "Name", "Version")
                         .IsUnique()
@@ -1208,47 +1149,6 @@ namespace sqlserver.SignalBox
                         .HasFilter("[ActionName] IS NOT NULL");
 
                     b.ToTable("RewardSelectors");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Rule", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long?>("EnvironmentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("EventKey")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EventLogicalValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("SegmentId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnvironmentId");
-
-                    b.ToTable("Rules");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Segment", b =>
@@ -1434,10 +1334,12 @@ namespace sqlserver.SignalBox
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommonId")
-                        .IsUnique();
+                    b.HasIndex("CommonId");
 
                     b.HasIndex("EnvironmentId");
+
+                    b.HasIndex("CommonId", "EnvironmentId")
+                        .IsUnique();
 
                     b.ToTable("Touchpoints");
                 });
@@ -1675,13 +1577,6 @@ namespace sqlserver.SignalBox
                     b.HasDiscriminator().HasValue("CustomIntegratedSystem");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Product", b =>
-                {
-                    b.HasBaseType("SignalBox.Core.RecommendableItem");
-
-                    b.HasDiscriminator().HasValue("Product");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.SegmentSourceFunctionDestination", b =>
                 {
                     b.HasBaseType("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase");
@@ -1733,18 +1628,6 @@ namespace sqlserver.SignalBox
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("ParameterSetRecommender");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Recommenders.ProductRecommender", b =>
-                {
-                    b.HasBaseType("SignalBox.Core.Recommenders.RecommenderEntityBase");
-
-                    b.Property<long?>("DefaultProductId")
-                        .HasColumnType("bigint");
-
-                    b.HasIndex("DefaultProductId");
-
-                    b.HasDiscriminator().HasValue("ProductRecommender");
                 });
 
             modelBuilder.Entity("CustomerSegment", b =>
@@ -1822,21 +1705,6 @@ namespace sqlserver.SignalBox
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProductProductRecommender", b =>
-                {
-                    b.HasOne("SignalBox.Core.Recommenders.ProductRecommender", null)
-                        .WithMany()
-                        .HasForeignKey("ProductRecommendersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignalBox.Core.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("SignalBox.Core.Customer", b =>
                 {
                     b.HasOne("SignalBox.Core.Environment", "Environment")
@@ -1849,6 +1717,11 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.CustomerEvent", b =>
                 {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
                         .WithMany()
                         .HasForeignKey("RecommendationCorrelatorId");
@@ -1863,6 +1736,8 @@ namespace sqlserver.SignalBox
 
                     b.Navigation("Customer");
 
+                    b.Navigation("Environment");
+
                     b.Navigation("RecommendationCorrelator");
 
                     b.Navigation("Source");
@@ -1873,7 +1748,7 @@ namespace sqlserver.SignalBox
                     b.HasOne("SignalBox.Core.Environment", "Environment")
                         .WithMany()
                         .HasForeignKey("EnvironmentId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Environment");
                 });
@@ -1941,7 +1816,7 @@ namespace sqlserver.SignalBox
                     b.HasOne("SignalBox.Core.Environment", "Environment")
                         .WithMany()
                         .HasForeignKey("EnvironmentId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Environment");
                 });
@@ -1977,6 +1852,11 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ItemsRecommendation", b =>
                 {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
                         .WithMany()
                         .HasForeignKey("RecommendationCorrelatorId");
@@ -1992,6 +1872,8 @@ namespace sqlserver.SignalBox
 
                     b.Navigation("Customer");
 
+                    b.Navigation("Environment");
+
                     b.Navigation("RecommendationCorrelator");
 
                     b.Navigation("Recommender");
@@ -1999,6 +1881,11 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ParameterSetRecommendation", b =>
                 {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
                         .WithMany()
                         .HasForeignKey("RecommendationCorrelatorId");
@@ -2014,33 +1901,7 @@ namespace sqlserver.SignalBox
 
                     b.Navigation("Customer");
 
-                    b.Navigation("RecommendationCorrelator");
-
-                    b.Navigation("Recommender");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Recommendations.ProductRecommendation", b =>
-                {
-                    b.HasOne("SignalBox.Core.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
-                        .WithMany()
-                        .HasForeignKey("RecommendationCorrelatorId");
-
-                    b.HasOne("SignalBox.Core.Recommenders.ProductRecommender", "Recommender")
-                        .WithMany("ProductRecommendations")
-                        .HasForeignKey("RecommenderId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("SignalBox.Core.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("TrackedUserId");
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Product");
+                    b.Navigation("Environment");
 
                     b.Navigation("RecommendationCorrelator");
 
@@ -2105,23 +1966,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("ModelRegistration");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Recommenders.RecommenderTargetVariableValue", b =>
-                {
-                    b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", null)
-                        .WithMany("TargetVariableValues")
-                        .HasForeignKey("RecommenderEntityBaseId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Rule", b =>
-                {
-                    b.HasOne("SignalBox.Core.Environment", "Environment")
-                        .WithMany()
-                        .HasForeignKey("EnvironmentId");
-
-                    b.Navigation("Environment");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Segment", b =>
                 {
                     b.HasOne("SignalBox.Core.Environment", "Environment")
@@ -2156,7 +2000,7 @@ namespace sqlserver.SignalBox
                     b.HasOne("SignalBox.Core.Environment", "Environment")
                         .WithMany()
                         .HasForeignKey("EnvironmentId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Environment");
                 });
@@ -2164,7 +2008,7 @@ namespace sqlserver.SignalBox
             modelBuilder.Entity("SignalBox.Core.TrackedUserAction", b =>
                 {
                     b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "RecommendationCorrelator")
-                        .WithMany("TrackedUserActions")
+                        .WithMany()
                         .HasForeignKey("RecommendationCorrelatorId");
 
                     b.HasOne("SignalBox.Core.CustomerEvent", "TrackedUserEvent")
@@ -2240,15 +2084,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("BaselineItem");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Recommenders.ProductRecommender", b =>
-                {
-                    b.HasOne("SignalBox.Core.Product", "DefaultProduct")
-                        .WithMany()
-                        .HasForeignKey("DefaultProductId");
-
-                    b.Navigation("DefaultProduct");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Customer", b =>
                 {
                     b.Navigation("Actions");
@@ -2284,11 +2119,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("Recommenders");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Recommendations.RecommendationCorrelator", b =>
-                {
-                    b.Navigation("TrackedUserActions");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Recommenders.RecommenderEntityBase", b =>
                 {
                     b.Navigation("RecommendationCorrelators");
@@ -2296,8 +2126,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("RecommendationDestinations");
 
                     b.Navigation("RecommenderInvokationLogs");
-
-                    b.Navigation("TargetVariableValues");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Tenant", b =>
@@ -2318,11 +2146,6 @@ namespace sqlserver.SignalBox
             modelBuilder.Entity("SignalBox.Core.Recommenders.ParameterSetRecommender", b =>
                 {
                     b.Navigation("Recommendations");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Recommenders.ProductRecommender", b =>
-                {
-                    b.Navigation("ProductRecommendations");
                 });
 #pragma warning restore 612, 618
         }

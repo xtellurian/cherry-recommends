@@ -8,13 +8,6 @@ namespace SignalBox.Core.Recommendations
     {
         protected RecommendationCorrelator()
         { }
-        // public RecommendationCorrelator(ParameterSetRecommender recommender)
-        // {
-        //     this.ParameterSetRecommenderId = recommender.Id;
-        //     this.ParameterSetRecommender = recommender;
-        //     this.ModelRegistrationId = recommender.ModelRegistrationId;
-        //     this.ModelRegistration = recommender.ModelRegistration;
-        // }
         public RecommendationCorrelator(RecommenderEntityBase recommender)
         {
             this.RecommenderId = recommender.Id;
@@ -25,11 +18,6 @@ namespace SignalBox.Core.Recommendations
 
         public long? RecommenderId { get; set; }
         public RecommenderEntityBase? Recommender { get; set; }
-        // public long? ParameterSetRecommenderId { get; set; }
-        // public ParameterSetRecommender? ParameterSetRecommender { get; set; }
-        // public long? ProductRecommenderId { get; set; }
-        // public ProductRecommender? ProductRecommender { get; set; }
-        public ICollection<TrackedUserAction> TrackedUserActions { get; set; } = null!;
         public long? ModelRegistrationId { get; set; }
         public ModelRegistration? ModelRegistration { get; set; }
     }

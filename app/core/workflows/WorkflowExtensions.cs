@@ -11,13 +11,10 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ModelRegistrationWorkflows>();
             services.AddScoped<FeatureGeneratorWorkflows>();
             services.AddScoped<FeatureWorkflows>();
-            services.AddScoped<ProductWorkflows>();
             services.AddScoped<RecommendableItemWorkflows>();
-            services.AddScoped<RuleWorkflows>();
             services.AddScoped<SegmentWorkflows>();
             services.AddScoped<CustomerWorkflows>();
             services.AddScoped<CustomerEventsWorkflows>();
-            services.AddScoped<TrackedUserActionWorkflows>();
             services.AddScoped<DataSummaryWorkflows>();
             services.AddScoped<ReportWorkflows>();
             services.AddScoped<TouchpointWorkflows>();
@@ -28,14 +25,12 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<HubspotPushWorkflows>();
             services.AddScoped<ParameterWorkflows>();
             services.AddScoped<ParameterSetRecommenderWorkflows>();
-            services.AddScoped<ProductRecommenderWorkflows>();
             services.AddScoped<ItemsRecommenderWorkflows>();
 
             // model invokation
             services.AddScoped<GenericModelWorkflows>();
             services.AddScoped<ClassifierModelWorkflows>();
             services.AddScoped<ItemsRecommenderInvokationWorkflows>();
-            services.AddScoped<ProductRecommenderInvokationWorkflows>();
             services.AddScoped<ParameterSetRecommenderInvokationWorkflows>();
 
             services.AddScoped<RecommenderTriggersWorkflows>();

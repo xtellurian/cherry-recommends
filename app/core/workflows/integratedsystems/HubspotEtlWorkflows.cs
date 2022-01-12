@@ -11,17 +11,20 @@ namespace SignalBox.Core.Workflows
 {
     public class HubspotEtlWorkflows : HubspotWorkflowBase, IWorkflow
     {
+        private readonly IEnvironmentProvider environmentProvider;
         private readonly ITrackedUserSystemMapStore systemMapStore;
 
         public HubspotEtlWorkflows(ILogger<HubspotEtlWorkflows> logger,
                                    IHubspotService hubspotService,
                                    IOptions<HubspotAppCredentials> hubspotCreds,
+                                   IEnvironmentProvider environmentProvider,
                                    IIntegratedSystemStore integratedSystemStore,
                                    ITrackedUserSystemMapStore systemMapStore,
                                    ICustomerStore trackedUserStore,
                                    IDateTimeProvider dateTimeProvider)
         : base(logger, hubspotService, hubspotCreds, integratedSystemStore, trackedUserStore, dateTimeProvider)
         {
+            this.environmentProvider = environmentProvider;
             this.systemMapStore = systemMapStore;
         }
 
@@ -95,12 +98,12 @@ namespace SignalBox.Core.Workflows
                 {
                     if (useObjectIdAsCommonId)
                     {
-                        var tu = await customerStore.CreateOrUpdateFromHubspotContact(system, contact, propertyPrefix: propertyPrefix);
+                        var tu = await customerStore.CreateOrUpdateFromHubspotContact(environmentProvider, system, contact, propertyPrefix: propertyPrefix);
                         trackedUsers.Add(tu);
                     }
                     else if (contact.Properties.ContainsKey(commonIdPropertyName) && !string.IsNullOrEmpty(contact.Properties[commonIdPropertyName]))
                     {
-                        var tu = await customerStore.CreateOrUpdateFromHubspotContact(system, contact, commonIdPropertyName, propertyPrefix: propertyPrefix);
+                        var tu = await customerStore.CreateOrUpdateFromHubspotContact(environmentProvider, system, contact, commonIdPropertyName, propertyPrefix: propertyPrefix);
                         trackedUsers.Add(tu);
                     }
                     else

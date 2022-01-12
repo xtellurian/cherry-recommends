@@ -8,6 +8,7 @@ export const ConfirmDeletePopup = ({
   setOpen,
   error,
   handleDelete,
+  extraErrorText,
 }) => {
   return (
     <ConfirmationPopup
@@ -16,7 +17,7 @@ export const ConfirmDeletePopup = ({
       label="Do you really want to delete this?"
     >
       <div className="m-2">{entity.name || entity.commonId}</div>
-      {error && <ErrorCard error={error} />}
+
       <div
         className="btn-group"
         role="group"
@@ -29,6 +30,8 @@ export const ConfirmDeletePopup = ({
           Delete
         </button>
       </div>
+      {error && extraErrorText && <div className="p-2">{extraErrorText}</div>}
+      {error && <ErrorCard error={error} />}
     </ConfirmationPopup>
   );
 };

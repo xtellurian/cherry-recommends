@@ -4,12 +4,12 @@ import { usePagination } from "../utility/utility";
 import { fetchEnvironmentsAsync } from "../api/environmentsApi";
 import { Context } from "../contexts/EnvironmentStore";
 
-export const useEnvironment = () => {
+export const useEnvironmentReducer = () => {
   const [state, dispatch] = React.useContext(Context);
   const setEnvironment = (environment) => {
     if (environment && environment.id !== state?.environment?.id) {
       dispatch({ type: "SET_ENVIRONMENT", environment });
-    } else if (environment === null) {
+    } else if (!environment) {
       dispatch({ type: "RESET_ENVIRONMENT" });
     }
   };
@@ -19,8 +19,11 @@ export const useEnvironment = () => {
 
 const addCurrentBool = (result, currentId) => {
   if (result && result.items) {
-    for (const element of result.items) {
-      element.current = element.id === currentId;
+    for (const env of result.items) {
+      env.current = env.id === currentId;
+      if (!env.id && !currentId) {
+        env.current = true; // the default environment
+      }
     }
   }
   return result;
@@ -35,12 +38,12 @@ const addDefault = (state) => {
   return state;
 };
 
-export const useEnvironments = () => {
+export const useEnvironments = (props) => {
   const token = useAccessToken();
   const page = usePagination();
   const [result, setState] = React.useState({ loading: true });
 
-  const [environment, _] = useEnvironment();
+  const [environment] = useEnvironmentReducer();
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
@@ -53,7 +56,7 @@ export const useEnvironments = () => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, page, environment]);
+  }, [token, page, environment, props?.trigger]);
 
   return result;
 };

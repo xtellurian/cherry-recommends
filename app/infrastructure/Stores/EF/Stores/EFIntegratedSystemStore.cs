@@ -5,7 +5,8 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFIntegratedSystemStore : EFCommonEntityStoreBase<IntegratedSystem>, IIntegratedSystemStore
     {
-        public EFIntegratedSystemStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentService environmentService)
+        protected override bool IsEnvironmentScoped => true;
+        public EFIntegratedSystemStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentService)
         : base(contextProvider, environmentService, c => c.IntegratedSystems)
         { }
 

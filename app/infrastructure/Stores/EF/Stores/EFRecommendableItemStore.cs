@@ -10,7 +10,7 @@ namespace SignalBox.Infrastructure.EntityFramework
     public class EFRecommendableItemStore : EFCommonEntityStoreBase<RecommendableItem>, IRecommendableItemStore
     {
         protected override bool IsEnvironmentScoped => true;
-        public EFRecommendableItemStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentService environmentService)
+        public EFRecommendableItemStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentService)
         : base(contextProvider, environmentService, (c) => c.RecommendableItems)
         { }
 

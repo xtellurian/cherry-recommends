@@ -17,19 +17,16 @@ namespace SignalBox.Web.Controllers
     [Route("api/[controller]")]
     public class EventsController : SignalBoxControllerBase
     {
-        private readonly ILogger<EventsController> _logger;
+        private readonly IEnvironmentProvider environmentProvider;
         private readonly CustomerEventsWorkflows workflows;
-        private readonly IDateTimeProvider dateTimeProvider;
         private readonly ICustomerEventStore eventStore;
 
-        public EventsController(ILogger<EventsController> logger,
+        public EventsController(IEnvironmentProvider environmentProvider,
                                 CustomerEventsWorkflows workflows,
-                                IDateTimeProvider dateTimeProvider,
                                 ICustomerEventStore eventStore)
         {
-            _logger = logger;
+            this.environmentProvider = environmentProvider;
             this.workflows = workflows;
-            this.dateTimeProvider = dateTimeProvider;
             this.eventStore = eventStore;
         }
 
@@ -44,6 +41,7 @@ namespace SignalBox.Web.Controllers
             new CustomerEventsWorkflows.CustomerEventInput(d.GetCustomerId(),
                                                                  d.EventId,
                                                                  d.Timestamp,
+                                                                 environmentProvider.CurrentEnvironmentId,
                                                                  d.RecommendationCorrelatorId,
                                                                  d.SourceSystemId,
                                                                  d.Kind.ToEventKind(),

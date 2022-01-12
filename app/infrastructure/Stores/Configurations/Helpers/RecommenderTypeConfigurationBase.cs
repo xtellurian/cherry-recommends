@@ -7,13 +7,11 @@ namespace SignalBox.Infrastructure.EntityFramework
     internal abstract class RecommenderEntityBaseTypeConfigurationBase<T>
        : CommonEntityTypeConfigurationBase<T>, IEntityTypeConfiguration<T> where T : RecommenderEntityBase
     {
+        protected override DeleteBehavior OnEnvironmentDelete => DeleteBehavior.SetNull;
         public override void Configure(EntityTypeBuilder<T> builder)
         {
             base.Configure(builder);
-            builder
-                .HasMany(_ => _.TargetVariableValues)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
+
             builder
                 .HasMany(_ => _.RecommenderInvokationLogs)
                 .WithOne()
@@ -21,7 +19,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder
                 .HasMany(_ => _.RecommendationCorrelators)
                 .WithOne()
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(_ => _.Arguments).IsRequired(false).HasJsonConversion();
             builder.Property(_ => _.ErrorHandling).HasJsonConversion();

@@ -8,24 +8,24 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public abstract class EFEnvironmentScopedEntityBase<T> : EFEntityStoreBase<T> where T : EnvironmentScopedEntity
     {
-        private readonly IEnvironmentService environmentService;
+        protected readonly IEnvironmentProvider environmentProvider;
 
-        protected EFEnvironmentScopedEntityBase(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentService environmentService, Func<SignalBoxDbContext, DbSet<T>> selector)
+        protected EFEnvironmentScopedEntityBase(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider, Func<SignalBoxDbContext, DbSet<T>> selector)
         : base(contextProvider, selector)
         {
-            this.environmentService = environmentService;
+            this.environmentProvider = environmentProvider;
         }
 
-        protected IEnvironmentStore environmentStore => new EFEnvironmentStore(contextProvider);
+        protected IEnvironmentStore EnvironmentStore => new EFEnvironmentStore(contextProvider);
         protected override IQueryable<T> QuerySet => GetScopedQuery();
 
         public override async Task<T> Create(T entity)
         {
-            if (this.IsEnvironmentScoped)
+            if (IsEnvironmentScoped && entity.EnvironmentId == null) // allow override environment ID
             {
-                var environment = await environmentService.ReadCurrent(environmentStore);
-                entity.Environment = environment;
-                entity.EnvironmentId = environment?.Id;
+                var environment = await environmentProvider.ReadCurrent(EnvironmentStore);
+                entity.EnvironmentId ??= environment?.Id;
+                entity.Environment ??= environment;
             }
 
             return await base.Create(entity);
@@ -34,7 +34,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         private IQueryable<T> GetScopedQuery()
         {
             return IsEnvironmentScoped
-            ? base.QuerySet.Where(_ => _.EnvironmentId == environmentService.CurrentEnvironmentId)
+            ? base.QuerySet.Where(_ => _.EnvironmentId == environmentProvider.CurrentEnvironmentId)
             : base.QuerySet;
         }
     }

@@ -7,7 +7,15 @@ namespace SignalBox.Web.Dto
 #nullable enable
     public class CreateItemsRecommender : CreateRecommenderDtoBase
     {
-        public string GetBaselineItemId() => BaselineItemId ?? DefaultItemId ?? throw new BadRequestException("BaselineItemId is required");
+        public string GetBaselineItemId()
+        {
+            var id = BaselineItemId ?? DefaultItemId;
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new BadRequestException("BaselineItemId is required");
+            }
+            return id;
+        }
         public IEnumerable<string>? ItemIds { get; set; }
         public string? DefaultItemId { get; set; } // backwards compat only
         public string? BaselineItemId { get; set; }

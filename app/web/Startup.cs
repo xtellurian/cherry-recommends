@@ -123,7 +123,7 @@ namespace SignalBox.Web
             }
 
             services.AddHttpContextAccessor();
-            services.AddScoped<IEnvironmentService, EFCoreHttpHeaderEnvironmentService>();
+            services.AddScoped<IEnvironmentProvider, EFCoreHttpHeaderEnvironmentProvider>();
 
             // configure storage queues
             services.Configure<AzureQueueConfig>(Configuration.GetSection("Queues"));

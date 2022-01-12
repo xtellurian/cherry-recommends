@@ -15,12 +15,12 @@ import {
 } from "../api/itemsRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
-import { useEnvironment } from "./environmentsApi";
+import { useEnvironmentReducer } from "./environmentsApi";
 
 export const useItemsRecommenders = () => {
   const token = useAccessToken();
   const page = usePagination();
-  const [environment, setEnvironment] = useEnvironment();
+  const [environment] = useEnvironmentReducer();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });

@@ -13,6 +13,7 @@ namespace SignalBox.Core
         {
             Id = defaultRecommendableItemId,
             Description = "The default recommendable item. When this item is recommended, no action should be taken.",
+            Discriminator = "RecommendableItem"
         };
         protected RecommendableItem()
         { }
@@ -38,5 +39,6 @@ namespace SignalBox.Core
         public double? ListPrice { get; set; }
         public double? DirectCost { get; set; }
         public string? Description { get; set; }
+        public string? Discriminator { get; set; }
     }
 }

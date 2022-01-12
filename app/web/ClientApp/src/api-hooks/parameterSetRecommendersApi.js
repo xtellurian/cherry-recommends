@@ -5,7 +5,6 @@ import {
   fetchParameterSetRecommendationsAsync,
   fetchLinkedRegisteredModelAsync,
   fetchInvokationLogsAsync,
-  fetchRecommenderTrackedUserActionsAsync,
   fetchTargetVariablesAsync,
   fetchDestinationsAsync,
   fetchTriggerAsync,
@@ -14,12 +13,12 @@ import {
 } from "../api/parameterSetRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
-import { useEnvironment } from "./environmentsApi";
+import { useEnvironmentReducer } from "./environmentsApi";
 
 export const useParameterSetRecommenders = () => {
   const token = useAccessToken();
   const page = usePagination();
-  const environment = useEnvironment()[0]; // fix setEnvironmnet is not used warning
+  const [environment] = useEnvironmentReducer();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
@@ -63,7 +62,7 @@ export const useParameterSetRecommendations = ({ id, pageSize }) => {
       fetchParameterSetRecommendationsAsync({
         token,
         id,
-        pageSize
+        pageSize,
       })
         .then(setState)
         .catch((error) => setState({ error }));

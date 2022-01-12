@@ -93,7 +93,7 @@ namespace SignalBox.Infrastructure
                    options.UseSqlite(connectionString, b => b.MigrationsAssembly(migrationAssembly));
                    if (enableEnvironments)
                    {
-                       options.AddInterceptors(provider.GetRequiredService<IEnvironmentService>());
+                       options.AddInterceptors(provider.GetRequiredService<IEnvironmentInterceptor>());
                    }
                });
             return services;
@@ -117,30 +117,26 @@ namespace SignalBox.Infrastructure
         }
         public static IServiceCollection AddEFStores(this IServiceCollection services)
         {
-            services.AddScoped<ICustomerEventStore, EFTrackedUserEventStore>();
+            services.AddScoped<ICustomerEventStore, EFCustomerEventStore>();
             services.AddScoped<ITrackedUserActionStore, EFTrackedUserActionStore>();
             services.AddScoped<IRewardSelectorStore, EFRewardSelectorStore>();
             services.AddScoped<ICustomerStore, EFCustomerStore>();
 
             services.AddScoped<ISegmentStore, EFSegmentStore>();
-            services.AddScoped<IRuleStore, EFRuleStore>();
 
             services.AddScoped<IRecommendableItemStore, EFRecommendableItemStore>();
-            services.AddScoped<IProductStore, EFProductStore>();
             services.AddScoped<IParameterStore, EFParameterStore>();
 
             // environment
             services.AddScoped<IEnvironmentStore, EFEnvironmentStore>();
 
             // recommenders
-            services.AddScoped<IProductRecommenderStore, EFProductRecommenderStore>();
             services.AddScoped<IItemsRecommenderStore, EFItemsRecommenderStore>();
             services.AddScoped<IParameterSetRecommenderStore, EFParameterSetRecommenderStore>();
 
             // recommendations
             services.AddScoped<IRecommendationCorrelatorStore, EFRecommendationCorrelatorStore>();
             services.AddScoped<IParameterSetRecommendationStore, EFParameterSetRecommendationStore>();
-            services.AddScoped<IProductRecommendationStore, EFProductRecommendationStore>();
             services.AddScoped<IItemsRecommendationStore, EFItemsRecommendationStore>();
 
             services.AddScoped<IFeatureStore, EFFeatureStore>();

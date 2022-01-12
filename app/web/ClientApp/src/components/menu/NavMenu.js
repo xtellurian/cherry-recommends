@@ -19,7 +19,7 @@ import { getAuthenticatedIA, settingsItems } from "./MenuIA";
 import { useTokenScopes } from "../../api-hooks/token";
 import { LoadingPopup } from "../molecules/popups/LoadingPopup";
 import {
-  useEnvironment,
+  useEnvironmentReducer,
   useEnvironments,
 } from "../../api-hooks/environmentsApi";
 import { ActiveIndicator } from "../molecules/ActiveIndicator";
@@ -85,7 +85,7 @@ export const NavMenu = () => {
   };
 
   const environments = useEnvironments();
-  const [currentEnvironment, setEnvironment] = useEnvironment();
+  const [currentEnvironment, setEnvironment] = useEnvironmentReducer();
   const [changingEnvironment, setChangingEnvironment] = React.useState(false);
   const handleSetEnvironment = (e) => {
     setChangingEnvironment(true);

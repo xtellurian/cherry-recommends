@@ -1,5 +1,4 @@
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +12,6 @@ namespace SignalBox.Core.Workflows
         private readonly IStorageContext storageContext;
         private readonly ILogger<CustomerWorkflows> logger;
         private readonly ICustomerStore customerStore;
-        private readonly ICustomerEventStore eventStore;
         private readonly ITrackedUserSystemMapStore trackedUserSystemMapStore;
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ITrackedUserActionStore trackedUserActionStore;
@@ -22,7 +20,6 @@ namespace SignalBox.Core.Workflows
         public CustomerWorkflows(IStorageContext storageContext,
             ILogger<CustomerWorkflows> logger,
             ICustomerStore customerStore,
-            ICustomerEventStore eventStore,
             ITrackedUserSystemMapStore trackedUserSystemMapStore,
             IIntegratedSystemStore integratedSystemStore,
             ITrackedUserActionStore trackedUserActionStore,
@@ -31,7 +28,6 @@ namespace SignalBox.Core.Workflows
             this.storageContext = storageContext;
             this.logger = logger;
             this.customerStore = customerStore;
-            this.eventStore = eventStore;
             this.trackedUserSystemMapStore = trackedUserSystemMapStore;
             this.integratedSystemStore = integratedSystemStore;
             this.trackedUserActionStore = trackedUserActionStore;
@@ -70,15 +66,14 @@ namespace SignalBox.Core.Workflows
         }
 
         public async Task<Customer> CreateOrUpdate(string commonUserId,
-                                                         string? name = null,
-                                                         Dictionary<string, object>? properties = null,
-                                                         long? integratedSystemId = null,
-                                                         string? integratedSystemUserId = null,
-                                                         bool saveOnComplete = true)
+                                                    string? name,
+                                                    Dictionary<string, object>? properties,
+                                                    long? integratedSystemId,
+                                                    string? integratedSystemUserId,
+                                                    bool saveOnComplete = true)
         {
             Customer customer;
             var actions = new List<TrackedUserAction>();
-
             if (await customerStore.ExistsFromCommonId(commonUserId))
             {
                 customer = await customerStore.ReadFromCommonId(commonUserId, _ => _.IntegratedSystemMaps);
@@ -130,7 +125,7 @@ namespace SignalBox.Core.Workflows
             var users = new List<Customer>();
             foreach (var u in newUsers)
             {
-                var user = await this.CreateOrUpdate(u.CustomerId, u.Name, u.Properties, u.IntegratedSystemId, u.IntegratedSystemUserId, false);
+                var user = await CreateOrUpdate(u.CustomerId, u.Name, u.Properties, u.IntegratedSystemId, u.IntegratedSystemUserId, false);
             }
 
             await storageContext.SaveChanges();

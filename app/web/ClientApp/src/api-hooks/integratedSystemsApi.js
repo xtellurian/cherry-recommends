@@ -6,10 +6,12 @@ import {
   fetchIntegratedSystemAsync,
   fetchWebhookReceiversAsync,
 } from "../api/integratedSystemsApi";
+import { useEnvironmentReducer } from "./environmentsApi";
 
 export const useIntegratedSystems = () => {
   const token = useAccessToken();
   const page = usePagination();
+  const [environment] = useEnvironmentReducer();
   const [result, setState] = React.useState({
     loading: true,
   });
@@ -24,7 +26,7 @@ export const useIntegratedSystems = () => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, page]);
+  }, [token, page, environment]);
 
   return result;
 };

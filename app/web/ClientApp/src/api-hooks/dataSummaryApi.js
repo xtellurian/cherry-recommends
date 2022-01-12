@@ -6,6 +6,7 @@ import {
   fetchDashboardAsync,
   fetchLatestActionsAsync,
 } from "../api/dataSummaryApi";
+import { useEnvironmentReducer } from "./environmentsApi";
 
 export const useEventDataSummary = () => {
   const token = useAccessToken();
@@ -67,6 +68,7 @@ export const useEventTimeline = ({ kind, eventType }) => {
 
 export const useDashboard = ({ scope }) => {
   const token = useAccessToken();
+  const [environment] = useEnvironmentReducer();
   const [result, setState] = React.useState({
     loading: true,
   });
@@ -80,7 +82,7 @@ export const useDashboard = ({ scope }) => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, scope]);
+  }, [token, scope, environment]);
 
   return result;
 };

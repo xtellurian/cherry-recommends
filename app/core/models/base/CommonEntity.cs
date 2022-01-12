@@ -6,10 +6,11 @@ namespace SignalBox.Core
         protected CommonEntity()
         { }
 #nullable enable
-        protected CommonEntity(string commonId, string? name) : base(name)
+        protected CommonEntity(string commonId, string? name)
         {
             Validate(commonId);
             CommonId = commonId;
+            Name = name;
         }
 
         protected CommonEntity(string commonId, string? name, DynamicPropertyDictionary? properties) : this(commonId, name)
@@ -34,6 +35,7 @@ namespace SignalBox.Core
             }
         }
 
+        public string? Name { get; set; }
         public string CommonId { get; set; }
         public DynamicPropertyDictionary? Properties { get; set; } = new DynamicPropertyDictionary(); // not empty
     }

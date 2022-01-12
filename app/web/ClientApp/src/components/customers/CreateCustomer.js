@@ -10,7 +10,8 @@ import { AsyncButton, ExpandableCard } from "../molecules";
 import {
   InputGroup,
   TextInput,
-  commonIdValidator,
+  createLengthValidator,
+  commonIdFormatValidator,
   createRequiredByServerValidator,
   joinValidators,
 } from "../molecules/TextInput";
@@ -69,7 +70,8 @@ export const CreateCustomer = () => {
         <InputGroup>
           <TextInput
             validator={joinValidators([
-              commonIdValidator,
+              createLengthValidator(3),
+              commonIdFormatValidator,
               createRequiredByServerValidator(error),
             ])}
             label="Customer ID"

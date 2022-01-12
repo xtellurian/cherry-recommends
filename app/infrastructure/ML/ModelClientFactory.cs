@@ -9,12 +9,10 @@ namespace SignalBox.Infrastructure.ML
     public class ModelClientFactory : IModelClientFactory
     {
         private readonly HttpClient httpClient;
-        private readonly IProductStore productStore;
 
-        public ModelClientFactory(HttpClient httpClient, IProductStore productStore)
+        public ModelClientFactory(HttpClient httpClient)
         {
             this.httpClient = httpClient;
-            this.productStore = productStore;
         }
 
         public Task<IModelClient<TInput, TOutput>> GetClient<TInput, TOutput>(ModelRegistration model)

@@ -8,10 +8,11 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFItemsRecommendationStore : EFEntityStoreBase<ItemsRecommendation>, IItemsRecommendationStore
+    public class EFItemsRecommendationStore : EFEnvironmentScopedEntityBase<ItemsRecommendation>, IItemsRecommendationStore
     {
-        public EFItemsRecommendationStore(IDbContextProvider<SignalBoxDbContext> contextProvider)
-        : base(contextProvider, (c) => c.ItemsRecommendations)
+        protected override bool IsEnvironmentScoped => true;
+        public EFItemsRecommendationStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)
+        : base(contextProvider, environmentProvider, (c) => c.ItemsRecommendations)
         { }
 
         public async Task<ItemsRecommendation> GetRecommendationFromCorrelator(long correlatorId)

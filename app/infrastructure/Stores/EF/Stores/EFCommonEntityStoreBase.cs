@@ -10,13 +10,14 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public abstract class EFCommonEntityStoreBase<T> : EFEnvironmentScopedEntityBase<T>, ICommonEntityStore<T> where T : CommonEntity
     {
-        public EFCommonEntityStoreBase(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentService environmentService, Func<SignalBoxDbContext, DbSet<T>> selector)
+        public EFCommonEntityStoreBase(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentService, Func<SignalBoxDbContext, DbSet<T>> selector)
         : base(contextProvider, environmentService, selector)
         { }
 
         public override async Task<T> Create(T entity)
         {
-            if (await Set.AnyAsync(_ => _.CommonId == entity.CommonId))
+            // use QuerySet to allow duplicate common ID in different environments.
+            if (await QuerySet.AnyAsync(_ => _.CommonId == entity.CommonId))
             {
                 throw new StorageException($"CommonId {entity.CommonId} of type {typeof(T).Name} already exists in the database.");
             }

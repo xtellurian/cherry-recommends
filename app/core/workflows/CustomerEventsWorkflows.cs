@@ -14,6 +14,7 @@ namespace SignalBox.Core.Workflows
         private readonly ILogger<CustomerEventsWorkflows> logger;
         private readonly ICustomerStore userStore;
         private readonly IQueueMessagesFileStore fileStore;
+        private readonly IEnvironmentProvider environmentProvider;
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ICustomerEventStore trackedUserEventStore;
         private readonly ITrackedUserEventQueueStore eventQueueStore;
@@ -25,6 +26,7 @@ namespace SignalBox.Core.Workflows
                                           ILogger<CustomerEventsWorkflows> logger,
                                           ICustomerStore userStore,
                                           IQueueMessagesFileStore fileStore,
+                                          IEnvironmentProvider environmentProvider,
                                           IIntegratedSystemStore integratedSystemStore,
                                           ICustomerEventStore trackedUserEventStore,
                                           ITrackedUserEventQueueStore eventQueueStore,
@@ -35,6 +37,7 @@ namespace SignalBox.Core.Workflows
             this.logger = logger;
             this.userStore = userStore;
             this.fileStore = fileStore;
+            this.environmentProvider = environmentProvider;
             this.integratedSystemStore = integratedSystemStore;
             this.trackedUserEventStore = trackedUserEventStore;
             this.eventQueueStore = eventQueueStore;
@@ -82,6 +85,12 @@ namespace SignalBox.Core.Workflows
                     {
                         sourceSystem = await integratedSystemStore.Read(d.SourceSystemId.Value);
                     }
+
+                    if (d.EnvironmentId != null)
+                    {
+                        await environmentProvider.SetOverride(d.EnvironmentId.Value);
+                    }
+
                     var customer = customers.First(_ => _.CommonId == d.CustomerId);
                     customer.LastUpdated = dateTimeProvider.Now; // user has been updated.
                     events.Add(new CustomerEvent(customer,
@@ -108,6 +117,7 @@ namespace SignalBox.Core.Workflows
             public CustomerEventInput(string customerId,
                                          string eventId,
                                          DateTimeOffset? timestamp,
+                                         long? environmentId,
                                          long? recommendationCorrelatorId,
                                          long? sourceSystemId,
                                          EventKinds kind,
@@ -117,6 +127,7 @@ namespace SignalBox.Core.Workflows
                 CustomerId = customerId;
                 EventId = eventId;
                 Timestamp = timestamp;
+                EnvironmentId = environmentId; // because events aren't using the same EFStoreBase hierarchy
                 RecommendationCorrelatorId = recommendationCorrelatorId;
                 SourceSystemId = sourceSystemId;
                 Kind = kind;
@@ -127,6 +138,7 @@ namespace SignalBox.Core.Workflows
             public string CustomerId { get; set; }
             public string EventId { get; set; }
             public DateTimeOffset? Timestamp { get; set; }
+            public long? EnvironmentId { get; set; }
             public long? RecommendationCorrelatorId { get; set; }
             public long? SourceSystemId { get; set; }
             public EventKinds Kind { get; set; }

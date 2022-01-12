@@ -8,11 +8,6 @@ namespace SignalBox.Core
         protected EnvironmentScopedEntity()
         { }
 
-        protected EnvironmentScopedEntity(string? name)
-        {
-            Name = name;
-        }
-        public string? Name { get; set; } // settable by the creator
         public long? EnvironmentId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Environment? Environment { get; set; }

@@ -9,7 +9,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     public class EFTouchpointStore : EFCommonEntityStoreBase<Touchpoint>, ITouchpointStore
     {
-        public EFTouchpointStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentService environmentService)
+        public EFTouchpointStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentService)
         : base(contextProvider, environmentService, c => c.Touchpoints)
         { }
 

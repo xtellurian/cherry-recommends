@@ -11,7 +11,7 @@ namespace SignalBox.Infrastructure.EntityFramework
     public abstract class EFRecommenderStoreBase<T> : EFCommonEntityStoreBase<T>, IRecommenderStore<T> where T : RecommenderEntityBase
     {
         protected override bool IsEnvironmentScoped => true;
-        protected EFRecommenderStoreBase(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentService environmentService, Func<SignalBoxDbContext, DbSet<T>> selector)
+        protected EFRecommenderStoreBase(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentService, Func<SignalBoxDbContext, DbSet<T>> selector)
         : base(contextProvider, environmentService, selector)
         { }
 
@@ -39,7 +39,5 @@ namespace SignalBox.Infrastructure.EntityFramework
             var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
             return new Paginated<InvokationLogEntry>(results, pageCount, itemCount, page);
         }
-
-        public abstract Task<Paginated<TrackedUserAction>> QueryAssociatedActions(T recommender, int page, bool revenueOnly);
     }
 }

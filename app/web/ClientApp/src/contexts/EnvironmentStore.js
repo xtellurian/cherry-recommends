@@ -23,8 +23,10 @@ if (environment && environment.id) {
 }
 
 const Reducer = (state, action) => {
+  console.log({ state, action });
   switch (action.type) {
     case "SET_ENVIRONMENT":
+      console.log(`Setting environment id to ${action.environment?.id}`);
       setDefaultEnvironmentId(action.environment.id);
       // Save data to sessionStorage
       sessionStorage.setItem(

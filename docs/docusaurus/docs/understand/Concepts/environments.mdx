@@ -16,6 +16,7 @@ A common use of environments is to create a development and production environme
 :::note Deleting environments
 
 When you delete an environment, by default, all resources in that environment are transferred to the default environment.
+ID conflicts may prevent deletion.
 
 :::
 
@@ -45,8 +46,13 @@ cherry.environments.setDefaultEnvironmentId(1);
 </TabItem>
 </Tabs>
 
-## Limitations
+## Limitations and known issues
 
 ### Maximum number of environments
 
-We currently restrict each tenant to have a maximum of 3 environments.
+We currently restrict each tenant to have a maximum of 3 environments, plus the default.
+
+### Deleting Environments
+
+Deleting environments may fail due to conflicts between environments. If this occurs, reach out for help.
+

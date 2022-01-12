@@ -138,7 +138,7 @@ namespace SignalBox.Functions
 
 
                     services.AddScoped<IQueueMessagesFileStore, AzureBlobQueueMessagesFileStore>();
-                    services.AddScoped<IEnvironmentService, AzFunctionEnvironmentService>();
+                    services.AddScoped<IEnvironmentProvider, AzFunctionEnvironmentProvider>();
 
                     ConfigureAppSettings(services, configuration, sqliteConfig);
 

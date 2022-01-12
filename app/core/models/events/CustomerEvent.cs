@@ -5,7 +5,7 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core
 {
-    public class CustomerEvent : Entity
+    public class CustomerEvent : EnvironmentScopedEntity
     {
         public const string FOUR2_INTERNAL_PREFIX = "_f2_internal_use_";
         public static string FEEDBACK = $"{FOUR2_INTERNAL_PREFIX}_feedback";
@@ -13,7 +13,6 @@ namespace SignalBox.Core
 
         protected CustomerEvent()
         { }
-
         public CustomerEvent(Customer customer,
                                 string eventId,
                                 DateTimeOffset timestamp,
@@ -23,11 +22,7 @@ namespace SignalBox.Core
                                 IDictionary<string, object> properties,
                                 long? recommendationCorrelatorId = null)
         {
-            if (customer == null)
-            {
-                throw new NullReferenceException("Cannot create an event with a null tracked user");
-            }
-            Customer = customer;
+            Customer = customer ?? throw new NullReferenceException("Cannot create an event with a null tracked user");
             CustomerId = customer.CommonId;
             EventId = eventId;
             Timestamp = timestamp;

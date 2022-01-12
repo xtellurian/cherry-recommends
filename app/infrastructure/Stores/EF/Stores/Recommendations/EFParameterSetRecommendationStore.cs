@@ -8,10 +8,11 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFParameterSetRecommendationStore : EFEntityStoreBase<ParameterSetRecommendation>, IParameterSetRecommendationStore
+    public class EFParameterSetRecommendationStore : EFEnvironmentScopedEntityBase<ParameterSetRecommendation>, IParameterSetRecommendationStore
     {
-        public EFParameterSetRecommendationStore(IDbContextProvider<SignalBoxDbContext> contextProvider)
-        : base(contextProvider, (c) => c.ParameterSetRecommendations)
+        protected override bool IsEnvironmentScoped => true;
+        public EFParameterSetRecommendationStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)
+        : base(contextProvider, environmentProvider, (c) => c.ParameterSetRecommendations)
         { }
 
         public async Task<ParameterSetRecommendation> GetRecommendationFromCorrelator(long correlatorId)

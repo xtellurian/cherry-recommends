@@ -4,7 +4,7 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core.Recommendations
 {
-    public abstract class RecommendationEntity : Entity
+    public abstract class RecommendationEntity : EnvironmentScopedEntity
     {
         protected RecommendationEntity()
         { }
