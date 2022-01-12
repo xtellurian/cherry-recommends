@@ -16,7 +16,6 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<CustomerWorkflows>();
             services.AddScoped<CustomerEventsWorkflows>();
             services.AddScoped<DataSummaryWorkflows>();
-            services.AddScoped<ReportWorkflows>();
             services.AddScoped<TouchpointWorkflows>();
             services.AddScoped<WebhookWorkflows>();
             services.AddScoped<IntegratedSystemWorkflows>();
@@ -26,6 +25,9 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ParameterWorkflows>();
             services.AddScoped<ParameterSetRecommenderWorkflows>();
             services.AddScoped<ItemsRecommenderWorkflows>();
+            // images and blob reports
+            services.AddScoped<ReportWorkflows>();
+            services.AddScoped<RecommenderReportImageWorkflows>();
 
             // model invokation
             services.AddScoped<GenericModelWorkflows>();

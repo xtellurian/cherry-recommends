@@ -149,6 +149,29 @@ namespace SignalBox.Web.Controllers
             recommender = await workflows.SetLearningFeatures(recommender, dto.FeatureIds, dto.UseInternalId);
             return recommender.LearningFeatures;
         }
+
+        [HttpGet("{id}/ReportImage")]
+        public async Task<FileResult> GetReportImage(string id, bool? useInternalId = null)
+        {
+            try
+            {
+                var recommender = await base.GetEntity(id, useInternalId);
+                var fileBytes = await workflows.DownloadReportImage(recommender);
+                return File(fileBytes, "image/png", "report.png");
+            }
+            catch (Azure.RequestFailedException requestFailedEx)
+            {
+                System.Console.WriteLine(requestFailedEx.Message);
+                if (requestFailedEx.ErrorCode == "BlobNotFound")
+                {
+                    throw new ResourceNotFoundException();
+                }
+                else
+                {
+                    throw new WorkflowException("Error downloading report image");
+                }
+            }
+        }
     }
 
 }

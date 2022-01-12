@@ -146,6 +146,22 @@ namespace SignalBox.Web
                 throw new NotImplementedException($"File Source {fileSource} is unknown");
             }
 
+            // Configure recommender reporting file storage type
+            var recommenderFileSource = Configuration.GetSection("RecommenderImageFileHosting").GetValue<string>("Source");
+            if (recommenderFileSource == "local")
+            {
+                throw new NotImplementedException("No local storage for recommender report images");
+            }
+            else if (recommenderFileSource == "blob")
+            {
+                services.Configure<RecommenderImageFileHosting>(Configuration.GetSection("RecommenderImageFileHosting"));
+                services.AddScoped<IRecommenderImageFileStore, AzureBlobRecommenderImageFileStore>();
+            }
+            else
+            {
+                throw new NotImplementedException($"File Source {recommenderFileSource} is unknown");
+            }
+
             services.Configure<DeploymentInformation>(Configuration.GetSection("Deployment"));
 
             services.AddApplicationInsightsTelemetry();

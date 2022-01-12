@@ -42,6 +42,17 @@ namespace SignalBox.Azure
                 }
             });
 
+            // this is for temporary image base reporting
+            var recommendersContainer = new BlobContainer("recomenderContainer", new BlobContainerArgs
+            {
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name,
+                ContainerName = "recommenders",
+                Metadata = {
+                    {"facing", "client"}
+                }
+            });
+
             this.PrimaryStorageKey = Output.Tuple(rg.Name, storageAccount.Name).Apply(names =>
                 Output.CreateSecret(GetStorageAccountPrimaryKey(names.Item1, names.Item2)));
 

@@ -1718,6 +1718,7 @@ interface SetLearningFeaturesRequest$1 extends EntityRequest {
 declare const setLearningFeaturesAsync$1: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest$1) => Promise<any>;
 declare type RecommenderStatistics$1 = components["schemas"]["RecommenderStatistics"];
 declare const fetchStatisticsAsync$1: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics$1>;
+declare const fetchReportImageBlobUrlAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<RecommenderStatistics$1>;
 
 declare const itemsRecommendersApi_d_fetchItemsRecommendersAsync: typeof fetchItemsRecommendersAsync;
 declare const itemsRecommendersApi_d_fetchItemsRecommenderAsync: typeof fetchItemsRecommenderAsync;
@@ -1761,6 +1762,7 @@ declare namespace itemsRecommendersApi_d {
     fetchLearningFeaturesAsync$1 as fetchLearningFeaturesAsync,
     setLearningFeaturesAsync$1 as setLearningFeaturesAsync,
     fetchStatisticsAsync$1 as fetchStatisticsAsync,
+    fetchReportImageBlobUrlAsync$1 as fetchReportImageBlobUrlAsync,
   };
 }
 
@@ -1898,6 +1900,7 @@ interface SetLearningFeaturesRequest extends EntityRequest {
 declare const setLearningFeaturesAsync: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest) => Promise<any>;
 declare type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
 declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
+declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<RecommenderStatistics>;
 
 declare const parameterSetRecommendersApi_d_fetchParameterSetRecommendersAsync: typeof fetchParameterSetRecommendersAsync;
 declare const parameterSetRecommendersApi_d_fetchParameterSetRecommenderAsync: typeof fetchParameterSetRecommenderAsync;
@@ -1920,6 +1923,7 @@ declare const parameterSetRecommendersApi_d_setTriggerAsync: typeof setTriggerAs
 declare const parameterSetRecommendersApi_d_fetchLearningFeaturesAsync: typeof fetchLearningFeaturesAsync;
 declare const parameterSetRecommendersApi_d_setLearningFeaturesAsync: typeof setLearningFeaturesAsync;
 declare const parameterSetRecommendersApi_d_fetchStatisticsAsync: typeof fetchStatisticsAsync;
+declare const parameterSetRecommendersApi_d_fetchReportImageBlobUrlAsync: typeof fetchReportImageBlobUrlAsync;
 declare namespace parameterSetRecommendersApi_d {
   export {
     parameterSetRecommendersApi_d_fetchParameterSetRecommendersAsync as fetchParameterSetRecommendersAsync,
@@ -1943,6 +1947,7 @@ declare namespace parameterSetRecommendersApi_d {
     parameterSetRecommendersApi_d_fetchLearningFeaturesAsync as fetchLearningFeaturesAsync,
     parameterSetRecommendersApi_d_setLearningFeaturesAsync as setLearningFeaturesAsync,
     parameterSetRecommendersApi_d_fetchStatisticsAsync as fetchStatisticsAsync,
+    parameterSetRecommendersApi_d_fetchReportImageBlobUrlAsync as fetchReportImageBlobUrlAsync,
   };
 }
 

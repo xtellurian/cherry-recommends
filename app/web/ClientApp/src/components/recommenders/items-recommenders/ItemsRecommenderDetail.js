@@ -1,6 +1,9 @@
 import React from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { useItemsRecommender } from "../../../api-hooks/itemsRecommendersApi";
+import {
+  useItemsRecommender,
+  useReportImageBlobUrl,
+} from "../../../api-hooks/itemsRecommendersApi";
 import {
   deleteItemsRecommenderAsync,
   createItemsRecommenderAsync,
@@ -14,6 +17,7 @@ import { EntityField } from "../../molecules/EntityField";
 import { CloneRecommender } from "../utils/CloneRecommender";
 import { GettingStartedSection } from "./GettingStartedSection";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
+import { ViewReportImagePopup } from "../utils/ViewImagePopup";
 
 const tabs = [
   { id: "detail", label: "Detail" },
@@ -32,6 +36,7 @@ const RecommenderDetailSection = () => {
   const { id } = useParams();
   const token = useAccessToken();
   const history = useHistory();
+  const [reportOpen, setReportOpen] = React.useState(false);
   const [trigger, setTrigger] = React.useState();
   const recommender = useItemsRecommender({ id, trigger });
   const [cloneOpen, setCloneOpen] = React.useState(false);
@@ -127,41 +132,53 @@ const RecommenderDetailSection = () => {
         </div>
       </div>
 
-      <div className="row justify-content-end">
-        <div className="col-6 text-right">
-          {!recommender.loading && !recommender.error && (
-            <React.Fragment>
-              <button
-                className="btn btn-outline-primary"
-                onClick={() => setCloneOpen(true)}
-              >
-                Clone
-              </button>
-              <button
-                className="btn btn-link"
-                onClick={() => setDeleteOpen(true)}
-              >
-                Delete
-              </button>
-              <ConfirmationPopup
-                isOpen={cloneOpen}
-                setIsOpen={setCloneOpen}
-                label="Clone this recommender?"
-              >
-                <CloneRecommender
-                  recommender={recommender}
-                  cloneAsync={cloneAsync}
-                  onCloned={(r) =>
-                    history.push(
-                      `/recommenders/items-recommenders/detail/${r.id}`
-                    )
-                  }
-                />
-              </ConfirmationPopup>
-            </React.Fragment>
-          )}
-        </div>
+      <div className="d-flex flex-row-reverse">
+        {!recommender.loading && !recommender.error && (
+          <React.Fragment>
+            <button
+              className="btn btn-primary mr-1"
+              onClick={() => setReportOpen(true)}
+            >
+              Show Latest Report
+            </button>
+            <button
+              className="btn btn-outline-primary mr-1"
+              onClick={() => setCloneOpen(true)}
+            >
+              Clone
+            </button>
+            <button
+              className="btn btn-link mr-1"
+              onClick={() => setDeleteOpen(true)}
+            >
+              Delete
+            </button>
+            <ConfirmationPopup
+              isOpen={cloneOpen}
+              setIsOpen={setCloneOpen}
+              label="Clone this recommender?"
+            >
+              <CloneRecommender
+                recommender={recommender}
+                cloneAsync={cloneAsync}
+                onCloned={(r) =>
+                  history.push(
+                    `/recommenders/items-recommenders/detail/${r.id}`
+                  )
+                }
+              />
+            </ConfirmationPopup>
+
+            <ViewReportImagePopup
+              isOpen={reportOpen}
+              setIsOpen={setReportOpen}
+              id={id}
+              useReportImageBlobUrl={useReportImageBlobUrl}
+            />
+          </React.Fragment>
+        )}
       </div>
+
       <hr />
 
       <div className="mt-5">

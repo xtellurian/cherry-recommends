@@ -9,6 +9,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -33,6 +34,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -107,6 +109,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -303,6 +306,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           useInternalId?: boolean;
         };
         path: {
@@ -330,6 +334,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           useInternalId?: boolean;
         };
         path: {
@@ -423,6 +428,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -485,6 +491,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -713,6 +720,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -851,6 +859,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -964,6 +973,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -1014,6 +1024,7 @@ export interface paths {
         };
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -1040,6 +1051,7 @@ export interface paths {
         };
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -1066,6 +1078,7 @@ export interface paths {
         };
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -1092,6 +1105,7 @@ export interface paths {
         };
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -1344,6 +1358,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -1616,6 +1631,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -1867,6 +1883,8 @@ export interface paths {
         };
         query: {
           page?: number;
+          pageSize?: number;
+          useInternalId?: boolean;
         };
       };
       responses: {
@@ -1893,6 +1911,7 @@ export interface paths {
         };
         query: {
           page?: number;
+          pageSize?: number;
           useInternalId?: boolean;
         };
       };
@@ -1978,6 +1997,7 @@ export interface paths {
         };
         query: {
           page?: number;
+          pageSize?: number;
           useInternalId?: boolean;
         };
       };
@@ -2060,6 +2080,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           revenueOnly?: boolean;
           useInternalId?: boolean;
         };
@@ -2410,6 +2431,28 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ItemsRecommenders/{id}/ReportImage": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/name": {
     post: {
       parameters: {
@@ -2499,6 +2542,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -2589,6 +2633,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -2767,6 +2812,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -2927,6 +2973,7 @@ export interface paths {
         };
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -2953,6 +3000,7 @@ export interface paths {
         };
         query: {
           page?: number;
+          pageSize?: number;
           useInternalId?: boolean;
         };
       };
@@ -3035,6 +3083,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           revenueOnly?: boolean;
           useInternalId?: boolean;
         };
@@ -3385,6 +3434,28 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ParameterSetRecommenders/{id}/ReportImage": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ParameterSetRecommenders/{id}": {
     get: {
       parameters: {
@@ -3568,6 +3639,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -3736,6 +3808,7 @@ export interface paths {
         };
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -3762,6 +3835,7 @@ export interface paths {
         };
         query: {
           page?: number;
+          pageSize?: number;
           useInternalId?: boolean;
         };
       };
@@ -3844,6 +3918,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           revenueOnly?: boolean;
           useInternalId?: boolean;
         };
@@ -4194,6 +4269,28 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ProductRecommenders/{id}/ReportImage": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ProductRecommenders/{id}/name": {
     post: {
       parameters: {
@@ -4283,6 +4380,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -4506,6 +4604,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           term?: string;
         };
       };
@@ -4749,6 +4848,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -4839,6 +4939,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
         };
       };
       responses: {
@@ -5083,6 +5184,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           useInternalId?: boolean;
         };
         path: {
@@ -5110,6 +5212,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           useInternalId?: boolean;
         };
         path: {
@@ -5185,6 +5288,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           revenueOnly?: boolean;
           useInternalId?: boolean;
         };
@@ -5213,6 +5317,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           revenueOnly?: boolean;
           useInternalId?: boolean;
         };
@@ -5415,6 +5520,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           useInternalId?: boolean;
         };
         path: {
@@ -5442,6 +5548,7 @@ export interface paths {
       parameters: {
         query: {
           page?: number;
+          pageSize?: number;
           useInternalId?: boolean;
         };
         path: {

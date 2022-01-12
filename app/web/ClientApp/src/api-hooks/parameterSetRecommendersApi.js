@@ -10,6 +10,7 @@ import {
   fetchTriggerAsync,
   fetchLearningFeaturesAsync,
   fetchStatisticsAsync,
+  fetchReportImageBlobUrlAsync,
 } from "../api/parameterSetRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -197,6 +198,24 @@ export const useStatistics = ({ id, trigger }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useReportImageBlobUrl = ({ id }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchReportImageBlobUrlAsync({
+        token,
+        id,
+      })
+        .then((url) => setState({ url }))
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id]);
 
   return state;
 };

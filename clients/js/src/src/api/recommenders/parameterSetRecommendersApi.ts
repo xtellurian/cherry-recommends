@@ -8,6 +8,7 @@ import * as st from "./common/settings";
 import * as ds from "./common/destinations";
 import * as trig from "./common/trigger";
 import * as lf from "./common/learningFeatures";
+import * as ri from "./common/reportImages";
 
 import {
   AuthenticatedRequest,
@@ -87,7 +88,7 @@ export const fetchParameterSetRecommendationsAsync = async ({
     path: `api/recommenders/ParameterSetRecommenders/${id}/recommendations`,
     token,
     page,
-    pageSize
+    pageSize,
   });
 };
 
@@ -303,5 +304,18 @@ export const fetchStatisticsAsync = async ({
   return await executeFetch({
     path: `api/recommenders/ParameterSetRecommenders/${id}/Statistics`,
     token,
+  });
+};
+
+export const fetchReportImageBlobUrlAsync = async ({
+  id,
+  token,
+  useInternalId,
+}: EntityRequest): Promise<RecommenderStatistics> => {
+  return await ri.fetchReportImageBlobUrlAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
   });
 };

@@ -1,30 +1,23 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
+import {
+  useParameterSetRecommender,
+  useReportImageBlobUrl,
+} from "../../../api-hooks/parameterSetRecommendersApi";
 import {
   deleteParameterSetRecommenderAsync,
   createParameterSetRecommenderAsync,
 } from "../../../api/parameterSetRecommendersApi";
-import { ActionsButtonUtil } from "../utils/actionsButtonUtil";
-import {
-  Title,
-  Subtitle,
-  ErrorCard,
-  Spinner,
-  BackButton,
-  ExpandableCard,
-} from "../../molecules";
+import { ErrorCard, Spinner, ExpandableCard } from "../../molecules";
 import { ConfirmationPopup } from "../../molecules/popups/ConfirmationPopup";
 import { JsonView } from "../../molecules/JsonView";
 
 import { CopyableField } from "../../molecules/fields/CopyableField";
-import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
 import { useAccessToken } from "../../../api-hooks/token";
 import { CloneRecommender } from "../utils/CloneRecommender";
-import { ArgumentsSection } from "./Arguments";
 import { ParameterRow } from "../../parameters/ParameterRow";
-import { LearningFeatures } from "./LearningFeatures";
 import { ParameterSetRecommenderLayout } from "./ParameterSetRecommenderLayout";
+import { ViewReportImagePopup } from "../utils/ViewImagePopup";
 
 const tabs = [
   { id: "detail", label: "Detail" },
@@ -35,6 +28,7 @@ export const ParameterSetRecommenderDetail = () => {
   const { id } = useParams();
   const token = useAccessToken();
   const history = useHistory();
+  const [reportOpen, setReportOpen] = React.useState(false);
   const [trigger, setTrigger] = React.useState();
   const recommender = useParameterSetRecommender({ id, trigger });
   const [deleteOpen, setDeleteOpen] = React.useState(false);
@@ -123,40 +117,51 @@ export const ParameterSetRecommenderDetail = () => {
           </div>
         </div>
 
-        <div className="row justify-content-end">
-          <div className="col text-right">
-            {!recommender.loading && !recommender.error && (
-              <React.Fragment>
-                <button
-                  className="btn btn-outline-primary"
-                  onClick={() => setCloneOpen(true)}
-                >
-                  Clone this Recommender
-                </button>
-                <button
-                  className="btn btn-link"
-                  onClick={() => setDeleteOpen(true)}
-                >
-                  Delete
-                </button>
-                <ConfirmationPopup
-                  isOpen={cloneOpen}
-                  setIsOpen={setCloneOpen}
-                  label="Clone this recommender?"
-                >
-                  <CloneRecommender
-                    recommender={recommender}
-                    cloneAsync={cloneAsync}
-                    onCloned={(r) =>
-                      history.push(
-                        `/recommenders/parameter-set-recommenders/detail/${r.id}`
-                      )
-                    }
-                  />
-                </ConfirmationPopup>
-              </React.Fragment>
-            )}
-          </div>
+        <div className="d-flex flex-row-reverse">
+          {!recommender.loading && !recommender.error && (
+            <React.Fragment>
+              <button
+                className="btn btn-primary mr-1"
+                onClick={() => setReportOpen(true)}
+              >
+                Show Latest Report
+              </button>
+              <button
+                className="btn btn-outline-primary mr-1"
+                onClick={() => setCloneOpen(true)}
+              >
+                Clone this Recommender
+              </button>
+              <button
+                className="btn btn-link"
+                onClick={() => setDeleteOpen(true)}
+              >
+                Delete
+              </button>
+              <ConfirmationPopup
+                isOpen={cloneOpen}
+                setIsOpen={setCloneOpen}
+                label="Clone this recommender?"
+              >
+                <CloneRecommender
+                  recommender={recommender}
+                  cloneAsync={cloneAsync}
+                  onCloned={(r) =>
+                    history.push(
+                      `/recommenders/parameter-set-recommenders/detail/${r.id}`
+                    )
+                  }
+                />
+              </ConfirmationPopup>
+
+              <ViewReportImagePopup
+                isOpen={reportOpen}
+                setIsOpen={setReportOpen}
+                id={id}
+                useReportImageBlobUrl={useReportImageBlobUrl}
+              />
+            </React.Fragment>
+          )}
         </div>
 
         <div className="mt-3">
@@ -166,13 +171,6 @@ export const ParameterSetRecommenderDetail = () => {
             </ExpandableCard>
           )}
         </div>
-
-        {/* <TabActivator defaultTabId={"detail"} tabId="arguments">
-          <ArgumentsSection recommender={recommender} setTrigger={setTrigger} />
-        </TabActivator>
-        <TabActivator defaultTabId="detail" tabId="features">
-          <LearningFeatures />
-        </TabActivator> */}
       </ParameterSetRecommenderLayout>
     </React.Fragment>
   );

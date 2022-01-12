@@ -11,12 +11,17 @@ namespace SignalBox.Core.Workflows
         protected readonly IRecommenderStore<TRecommender> store;
         protected readonly IIntegratedSystemStore systemStore;
         protected readonly IFeatureStore featureStore;
+        private readonly RecommenderReportImageWorkflows imageWorkflows;
 
-        protected RecommenderWorkflowBase(IRecommenderStore<TRecommender> store, IIntegratedSystemStore systemStore, IFeatureStore featureStore)
+        protected RecommenderWorkflowBase(IRecommenderStore<TRecommender> store,
+                                          IIntegratedSystemStore systemStore,
+                                          IFeatureStore featureStore,
+                                          RecommenderReportImageWorkflows imageWorkflows)
         {
             this.store = store;
             this.systemStore = systemStore;
             this.featureStore = featureStore;
+            this.imageWorkflows = imageWorkflows;
         }
 
         // ------ ADD/REMOVE DESTINATIONS -----
@@ -95,6 +100,11 @@ namespace SignalBox.Core.Workflows
 
             await store.Context.SaveChanges();
             return recommender;
+        }
+
+        public async Task<byte[]> DownloadReportImage(RecommenderEntityBase recommender)
+        {
+            return await imageWorkflows.DownloadImage(recommender);
         }
     }
 }

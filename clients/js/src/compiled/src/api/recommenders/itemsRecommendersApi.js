@@ -7,6 +7,7 @@ import * as st from "./common/settings";
 import * as ds from "./common/destinations";
 import * as trig from "./common/trigger";
 import * as lf from "./common/learningFeatures";
+import * as ri from "./common/reportImages";
 const recommenderApiName = "ItemsRecommenders";
 export const fetchItemsRecommendersAsync = async ({ token, page, }) => {
     return await executeFetch({
@@ -203,5 +204,13 @@ export const fetchStatisticsAsync = async ({ id, token, }) => {
     return await executeFetch({
         path: `api/recommenders/ItemsRecommenders/${id}/Statistics`,
         token,
+    });
+};
+export const fetchReportImageBlobUrlAsync = async ({ id, token, useInternalId, }) => {
+    return await ri.fetchReportImageBlobUrlAsync({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
     });
 };

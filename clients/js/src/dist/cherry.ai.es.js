@@ -842,6 +842,28 @@ const setLearningFeaturesAsync$2 = async ({ recommenderApiName, token, id, useIn
     });
 };
 
+const fetchReportImageBlobUrlAsync$2 = async ({ recommenderApiName, token, id, useInternalId, }) => {
+    console.log("fetching image for recommender");
+    console.log(`api/recommenders/${recommenderApiName}/${id}/ReportImage`);
+    let response;
+    try {
+        response = await fetch(`api/recommenders/${recommenderApiName}/${id}/ReportImage`, {
+            headers: headers(token),
+            method: "get",
+        });
+    }
+    catch (ex) {
+        return handleErrorFetch(ex);
+    }
+    if (response.ok) {
+        const blob = await response.blob();
+        return URL.createObjectURL(blob);
+    }
+    else {
+        handleErrorResponse(response);
+    }
+};
+
 const recommenderApiName$1 = "ParameterSetRecommenders";
 const fetchParameterSetRecommendersAsync = async ({ token, page, }) => {
     return await executeFetch({
@@ -879,7 +901,7 @@ const fetchParameterSetRecommendationsAsync = async ({ token, page, pageSize, id
         path: `api/recommenders/ParameterSetRecommenders/${id}/recommendations`,
         token,
         page,
-        pageSize
+        pageSize,
     });
 };
 const createLinkRegisteredModelAsync$1 = async ({ token, id, modelId, }) => {
@@ -1006,6 +1028,14 @@ const fetchStatisticsAsync$1 = async ({ id, token, }) => {
         token,
     });
 };
+const fetchReportImageBlobUrlAsync$1 = async ({ id, token, useInternalId, }) => {
+    return await fetchReportImageBlobUrlAsync$2({
+        recommenderApiName: recommenderApiName$1,
+        id,
+        token,
+        useInternalId,
+    });
+};
 
 var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -1029,7 +1059,8 @@ var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
     setTriggerAsync: setTriggerAsync$1,
     fetchLearningFeaturesAsync: fetchLearningFeaturesAsync$1,
     setLearningFeaturesAsync: setLearningFeaturesAsync$1,
-    fetchStatisticsAsync: fetchStatisticsAsync$1
+    fetchStatisticsAsync: fetchStatisticsAsync$1,
+    fetchReportImageBlobUrlAsync: fetchReportImageBlobUrlAsync$1
 });
 
 const setMetadataAsync = async ({ token, metadata }) => {
@@ -1251,6 +1282,14 @@ const fetchStatisticsAsync = async ({ id, token, }) => {
         token,
     });
 };
+const fetchReportImageBlobUrlAsync = async ({ id, token, useInternalId, }) => {
+    return await fetchReportImageBlobUrlAsync$2({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
+    });
+};
 
 var itemsRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -1281,7 +1320,8 @@ var itemsRecommendersApi = /*#__PURE__*/Object.freeze({
     setTriggerAsync: setTriggerAsync,
     fetchLearningFeaturesAsync: fetchLearningFeaturesAsync,
     setLearningFeaturesAsync: setLearningFeaturesAsync,
-    fetchStatisticsAsync: fetchStatisticsAsync
+    fetchStatisticsAsync: fetchStatisticsAsync,
+    fetchReportImageBlobUrlAsync: fetchReportImageBlobUrlAsync
 });
 
 const defaultHeaders = { "Content-Type": "application/json" };

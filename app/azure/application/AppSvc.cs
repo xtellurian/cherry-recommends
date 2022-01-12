@@ -148,6 +148,12 @@ namespace SignalBox.Azure
                     {"ReportFileHosting__ConnectionString", ml.PrimaryStorageConnectionString},
                     {"ReportFileHosting__ContainerName", "reports"},
                     {"ReportFileHosting__Source", "blob"},
+                   
+                    {"RecommenderImageFileHosting__ConnectionString", ml.PrimaryStorageConnectionString},
+                    {"RecommenderImageFileHosting__ContainerName", "recommenders"},
+                    {"RecommenderImageFileHosting__SubPath", "reports"},
+                    {"RecommenderImageFileHosting__Source", "blob"},
+
                     {"Queues__ConnectionString", storage.PrimaryConnectionString},
                     {"Queues__ContainerName", "queue-messages"},
                     {"Queues__EnableWriteQueue", true.ToString()},

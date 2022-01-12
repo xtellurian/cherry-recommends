@@ -12,6 +12,7 @@ import {
   getBaselineItemAsync,
   fetchTriggerAsync,
   fetchLearningFeaturesAsync,
+  fetchReportImageBlobUrlAsync,
 } from "../api/itemsRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -83,7 +84,7 @@ export const useItemsRecommendations = ({ id, pageSize }) => {
         token,
         id,
         page,
-        pageSize
+        pageSize,
       })
         .then(setState)
         .catch((error) => setState({ error }));
@@ -234,6 +235,24 @@ export const useStatistics = ({ id, trigger }) => {
         id,
       })
         .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useReportImageBlobUrl = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchReportImageBlobUrlAsync({
+        token,
+        id,
+      })
+        .then((url) => setState({ url }))
         .catch((error) => setState({ error }));
     }
   }, [token, id, trigger]);
