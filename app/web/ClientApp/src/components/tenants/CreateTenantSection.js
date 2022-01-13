@@ -20,7 +20,7 @@ import {
 
 const nameRequirements = [
   "At least 4 characters",
-  "Letters and numbers only",
+  "Lowercase letters and numbers only",
   "No special characters, except underscore or hyphen",
   "Must start with a letter",
 ];
