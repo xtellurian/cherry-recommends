@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.ApplicationInsights;
 using SignalBox.Core;
 
@@ -27,6 +28,21 @@ namespace SignalBox.Web.Services
         public void TrackEvent(string name, IDictionary<string, string> properties = null)
         {
             client.TrackEvent(name, properties);
+        }
+
+        public Stopwatch NewStopwatch(bool? start = null)
+        {
+            var stopwatch = new Stopwatch();
+            if (start == true)
+            {
+                stopwatch.Start();
+            }
+            return stopwatch;
+        }
+
+        public void TrackDependency(string dependencyTypeName, string dependencyName, string data, DateTimeOffset startTime, TimeSpan duration, bool success)
+        {
+            client.TrackDependency(dependencyTypeName, dependencyName, data, startTime, duration, success);
         }
     }
 }

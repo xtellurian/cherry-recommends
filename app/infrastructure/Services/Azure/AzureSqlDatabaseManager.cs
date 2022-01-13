@@ -22,17 +22,26 @@ namespace SignalBox.Infrastructure.Azure
         private const string migrationAssembly = "sqlserver";
         private readonly SignalBoxAzureEnvironment azureEnv;
         private readonly IAzure azure;
+        private readonly ITelemetry telemetry;
+        private readonly IDateTimeProvider dtProvider;
         private readonly ILogger<AzureSqlDatabaseManager> logger;
 
-        public AzureSqlDatabaseManager(IOptions<SignalBoxAzureEnvironment> azureEnv, ILogger<AzureSqlDatabaseManager> logger)
+        public AzureSqlDatabaseManager(IOptions<SignalBoxAzureEnvironment> azureEnv,
+                                       ITelemetry telemetry,
+                                       IDateTimeProvider dtProvider,
+                                       ILogger<AzureSqlDatabaseManager> logger)
         {
             this.azureEnv = azureEnv.Value;
+            this.telemetry = telemetry;
+            this.dtProvider = dtProvider;
             this.logger = logger;
             this.azure = Connect();
         }
 
         private IAzure Connect()
         {
+            var stopwatch = telemetry.NewStopwatch(true);
+            var startTime = dtProvider.Now;
             try
             {
                 // var creds = AzureCliCredentials.Create();
@@ -43,10 +52,13 @@ namespace SignalBox.Infrastructure.Azure
                 var azureCredentials = new AzureCredentials(defaultTokenCredentials, defaultTokenCredentials, null, AzureEnvironment.AzureGlobalCloud);
                 var azure = Microsoft.Azure.Management.Fluent.Azure.Configure().Authenticate(azureCredentials).WithSubscription(azureEnv.SubscriptionId);
                 logger.LogInformation("Created an Azure client");
+                stopwatch.Stop();
+                telemetry.TrackDependency("Azure", azure.SubscriptionId, "Connect", startTime, stopwatch.Elapsed, true);
                 return azure;
             }
             catch (Exception ex)
             {
+                telemetry.TrackDependency("Azure", azure.SubscriptionId, "Connect", startTime, stopwatch.Elapsed, false);
                 logger.LogCritical("Failed to initialize IAzure");
                 logger.LogCritical(ex.Message);
                 throw;
@@ -55,10 +67,12 @@ namespace SignalBox.Infrastructure.Azure
 
         public async Task<MigrationResult> CreateDatabase(Tenant tenant, Func<string, string> manipulateConnectionString = null)
         {
+            var stopwatch = telemetry.NewStopwatch(true);
+            var startTime = dtProvider.Now;
             var result = new MigrationResult(tenant);
             if (string.IsNullOrEmpty(tenant.DatabaseName))
             {
-                throw new System.NullReferenceException("Database name cannot be null or empty");
+                throw new NullReferenceException("Database name cannot be null or empty");
             }
 
             logger.LogInformation($"Creating SQL Database {tenant.DatabaseName} for tenant {tenant.Name}");
@@ -77,13 +91,18 @@ namespace SignalBox.Infrastructure.Azure
                             .CreateAsync();
 
             await MigrateDatabase(server, database, result, manipulateConnectionString);
+            stopwatch.Stop();
             logger.LogInformation("Completed Create Database operation");
+
+            telemetry.TrackDependency("Azure", "CreateDatabase", azure.SubscriptionId, startTime, stopwatch.Elapsed, true);
             return result;
         }
 
         // private method called during create and during migrate
         private async Task MigrateDatabase(ISqlServer server, ISqlDatabase database, MigrationResult result, Func<string, string> manipulateConnectionString)
         {
+            var stopwatch = telemetry.NewStopwatch(true);
+            var startTime = dtProvider.Now;
             var options = CreateDbContextOptions(server, database, manipulateConnectionString);
             using (var context = new SignalBoxDbContext(options.Options))
             {
@@ -97,6 +116,9 @@ namespace SignalBox.Infrastructure.Azure
                 await context.Database.MigrateAsync();
             }
             logger.LogInformation($"Migrated database {database.Name}");
+
+            stopwatch.Stop();
+            telemetry.TrackDependency("AzureSql", "MigrateDatabase", "SignalBoxDbContext, db=" + database.Name, startTime, stopwatch.Elapsed, true);
         }
 
         private DbContextOptionsBuilder<SignalBoxDbContext> CreateDbContextOptions(ISqlServer server, ISqlDatabase database, Func<string, string> manipulateConnectionString)
@@ -133,7 +155,7 @@ namespace SignalBox.Infrastructure.Azure
             {
                 throw new NullReferenceException($"Database {tenant.DatabaseName} not found in server {server.Name}");
             }
-            await this.MigrateDatabase(server, database, result, manipulateConnectionString);
+            await MigrateDatabase(server, database, result, manipulateConnectionString);
             return result;
         }
 

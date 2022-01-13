@@ -15,6 +15,8 @@ namespace SignalBox.Infrastructure.Services
     public class Auth0Manager : IAuth0Service
     {
         private readonly ILogger<Auth0Manager> logger;
+        private readonly ITelemetry telemetry;
+        private readonly IDateTimeProvider dateTimeProvider;
         private readonly IApiTokenFactory tokenFactory;
         private readonly Auth0ManagementCredentials credentials;
         private readonly Auth0ReactConfig auth0ReactConfig;
@@ -31,9 +33,13 @@ namespace SignalBox.Infrastructure.Services
         public Auth0Manager(IOptions<Auth0ManagementCredentials> options,
                             IOptions<Auth0ReactConfig> auth0ReactConfigOptions,
                             ILogger<Auth0Manager> logger,
+                            ITelemetry telemetry,
+                            IDateTimeProvider dateTimeProvider,
                             IApiTokenFactory tokenFactory)
         {
             this.logger = logger;
+            this.telemetry = telemetry;
+            this.dateTimeProvider = dateTimeProvider;
             this.tokenFactory = tokenFactory;
             this.credentials = options.Value;
             this.auth0ReactConfig = auth0ReactConfigOptions.Value;
@@ -45,8 +51,12 @@ namespace SignalBox.Infrastructure.Services
 
         private async Task Initialize()
         {
+            var stopwatch = telemetry.NewStopwatch(true);
+            var startTime = dateTimeProvider.Now;
             var token = await tokenFactory.GetManagementToken();
             this.SetApiClient(new ManagementApiClient(token.AccessToken, credentials.Domain));
+            stopwatch.Stop();
+            telemetry.TrackDependency("Auth0", "Initialize", credentials.Domain, startTime, stopwatch.Elapsed, true);
         }
 
         public async Task<UserInfo> SetMetadata(string userId, UserMetadata metadata)
@@ -108,7 +118,7 @@ namespace SignalBox.Infrastructure.Services
         {
             await Initialize();
 
-            var role = await GetOrCreateMemberRole(tenant);
+            await GetOrCreateMemberRole(tenant);
         }
 
         public async Task<string> GetTenantRoleId(Tenant tenant)
@@ -121,6 +131,8 @@ namespace SignalBox.Infrastructure.Services
 
         private async Task<Role> GetOrCreateMemberRole(Tenant tenant)
         {
+            var stopwatch = telemetry.NewStopwatch(true);
+            var startTime = dateTimeProvider.Now;
             await EnsureTenantScopeExists(tenant);
 
             var roles = await ApiClient.Roles.GetAllAsync(new GetRolesRequest
@@ -154,6 +166,9 @@ namespace SignalBox.Infrastructure.Services
                     }
                 }
             });
+
+            stopwatch.Stop();
+            telemetry.TrackDependency("Auth0", "GetOrCreateMemberRole", credentials.Domain, startTime, stopwatch.Elapsed, true);
 
             return role;
         }

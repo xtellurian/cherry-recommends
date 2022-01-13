@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
@@ -14,23 +15,26 @@ namespace SignalBox.Functions
 {
     public class TenantJobs
     {
-        JsonSerializerOptions serializerOptions = new JsonSerializerOptions
+        readonly JsonSerializerOptions serializerOptions = new()
         {
             PropertyNameCaseInsensitive = true
         };
         private readonly IDatabaseManager dbManager;
+        private readonly ITelemetry telemetry;
         private readonly IOptions<Hosting> hostingOptions;
         private readonly ITenantStore tenantStore;
         private readonly ITenantMembershipStore membershipStore;
         private readonly IAuth0Service auth0Service;
 
         public TenantJobs(IDatabaseManager dbManager,
-                                    IOptions<Hosting> hostingOptions,
-                                    ITenantStore tenantStore,
-                                    ITenantMembershipStore membershipStore,
-                                    IAuth0Service auth0Service)
+                          ITelemetry telemetry,
+                          IOptions<Hosting> hostingOptions,
+                          ITenantStore tenantStore,
+                          ITenantMembershipStore membershipStore,
+                          IAuth0Service auth0Service)
         {
             this.dbManager = dbManager;
+            this.telemetry = telemetry;
             this.hostingOptions = hostingOptions;
             this.tenantStore = tenantStore;
             this.membershipStore = membershipStore;
@@ -39,7 +43,7 @@ namespace SignalBox.Functions
 
         [Function("CreateTenant_FromQueue")]
         public async Task TriggerCreateTenant_FromQueue(
-            [QueueTrigger(SignalBox.Core.Constants.AzureQueueNames.NewTenants)] NewTenantQueueMessage message,
+            [QueueTrigger(Core.Constants.AzureQueueNames.NewTenants)] NewTenantQueueMessage message,
             FunctionContext executionContext)
         {
             var logger = executionContext.GetLogger("CreateTenant_QueueTrigger");
@@ -266,6 +270,8 @@ namespace SignalBox.Functions
 
         private async Task<Tenant> CreateTenant(CreateTenantModel info, ILogger logger)
         {
+            var tenantCreateStopwatch = telemetry.NewStopwatch(true);
+
             info.Validate();
             if (await tenantStore.TenantExists(info.Name))
             {
@@ -276,6 +282,7 @@ namespace SignalBox.Functions
             tenant = await tenantStore.Create(tenant);
             var terms = new TenantTermsOfServiceAcceptance(tenant, info.TermsOfServiceVersion, info.CreatorId);
             await tenantStore.SaveChanges();
+
             await dbManager.CreateDatabase(tenant, _ => _.FixSqliteConnectionString());
             tenant.Status = Tenant.Status_Database_Created;
             await tenantStore.SaveChanges();
@@ -285,6 +292,9 @@ namespace SignalBox.Functions
             await AddUserToTenant(info.CreatorId, tenant, logger);
             tenant.Status = Tenant.Status_Created;
             await tenantStore.SaveChanges();
+
+            tenantCreateStopwatch.Stop();
+            telemetry.TrackMetric("CreateTenant.TimeElapsed.Seconds", tenantCreateStopwatch.Elapsed.TotalSeconds);
             return tenant;
         }
 
@@ -304,6 +314,7 @@ namespace SignalBox.Functions
             {
                 logger.LogInformation($"Adding {userId} to tenant {tenant.Name}");
                 var membership = await membershipStore.Create(new TenantMembership(tenant, userId));
+                logger.LogInformation($"Created Membership {membership.Id}");
             }
         }
     }
