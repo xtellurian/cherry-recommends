@@ -186,7 +186,8 @@ export const CreateRecommender = () => {
         <div className="mt-2">
           <IntegerRangeSelector
             min={1}
-            max={selectedItems?.length || 1}
+            // max={selectedItems?.length || 1}
+            max={1} // this should no default to 1
             defaultValue={1}
             placeholder="Select number of items recommended"
             onSelected={(numberOfItemsToRecommend) =>
