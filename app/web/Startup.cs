@@ -46,6 +46,7 @@ namespace SignalBox.Web
         {
             var provider = Configuration.GetValue("Provider", "sqlserver");
             System.Console.WriteLine($"Database Provider: {provider}");
+            provider.ValidateDbProvider();
 
             var useMulti = Configuration.GetSection("Hosting").GetValue<bool>("Multitenant");
             System.Console.WriteLine($"Multitenant: {useMulti}");

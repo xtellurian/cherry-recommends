@@ -9,7 +9,8 @@ namespace SignalBox.Functions.Services
     {
         private long? _override;
 
-        public long? CurrentEnvironmentId => _override;
+        public bool isOveridden = false;
+        public long? CurrentEnvironmentId => isOveridden ? _override : null;
 
         public async Task<Environment?> ReadCurrent(IEnvironmentStore store)
         {
@@ -23,10 +24,10 @@ namespace SignalBox.Functions.Services
             }
         }
 
-        public Task SetOverride(long environmentId)
+        public void SetOverride(long? environmentId)
         {
-            this._override = environmentId;
-            return Task.CompletedTask;
+            isOveridden = true;
+            _override = environmentId;
         }
     }
 }

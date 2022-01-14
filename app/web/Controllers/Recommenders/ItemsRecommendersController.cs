@@ -59,7 +59,8 @@ namespace SignalBox.Web.Controllers
                 dto.GetBaselineItemId(), dto.ItemIds, dto.NumberOfItemsToRecommend,
                 dto.Arguments.ToCoreRepresentation(),
                 dto.Settings.ToCoreRepresentation(),
-                dto.UseAutoAi ?? false);
+                dto.UseAutoAi ?? false,
+                useInternalId: useInternalId);
         }
 
         /// <summary>Sets the baseline item for the recommender.</summary>

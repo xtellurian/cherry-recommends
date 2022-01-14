@@ -8,7 +8,7 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFParameterSetRecommendationStore : EFEnvironmentScopedEntityBase<ParameterSetRecommendation>, IParameterSetRecommendationStore
+    public class EFParameterSetRecommendationStore : EFEnvironmentScopedEntityStoreBase<ParameterSetRecommendation>, IParameterSetRecommendationStore
     {
         protected override bool IsEnvironmentScoped => true;
         public EFParameterSetRecommendationStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)

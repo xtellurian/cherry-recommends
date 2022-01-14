@@ -8,6 +8,6 @@ namespace SignalBox.Core
     {
         long? CurrentEnvironmentId { get; }
         Task<Environment?> ReadCurrent(IEnvironmentStore store);
-        Task SetOverride(long environmentId);
+        void SetOverride(long? environmentId);
     }
 }

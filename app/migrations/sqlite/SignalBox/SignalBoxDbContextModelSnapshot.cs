@@ -738,6 +738,9 @@ namespace sqlite.SignalBox
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
@@ -752,6 +755,8 @@ namespace sqlite.SignalBox
                     b.HasKey("Id");
 
                     b.HasIndex("ConnectedSystemId");
+
+                    b.HasIndex("EnvironmentId");
 
                     b.HasIndex("RecommenderId");
 
@@ -1512,6 +1517,9 @@ namespace sqlite.SignalBox
                     b.Property<string>("EndpointId")
                         .HasColumnType("TEXT");
 
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long?>("IntegratedSystemId")
                         .HasColumnType("INTEGER");
 
@@ -1527,6 +1535,8 @@ namespace sqlite.SignalBox
 
                     b.HasIndex("EndpointId")
                         .IsUnique();
+
+                    b.HasIndex("EnvironmentId");
 
                     b.HasIndex("IntegratedSystemId");
 
@@ -1830,6 +1840,10 @@ namespace sqlite.SignalBox
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId");
+
                     b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", "Recommender")
                         .WithMany("RecommendationDestinations")
                         .HasForeignKey("RecommenderId")
@@ -1837,6 +1851,8 @@ namespace sqlite.SignalBox
                         .IsRequired();
 
                     b.Navigation("ConnectedSystem");
+
+                    b.Navigation("Environment");
 
                     b.Navigation("Recommender");
                 });
@@ -2057,10 +2073,17 @@ namespace sqlite.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.WebhookReceiver", b =>
                 {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("SignalBox.Core.IntegratedSystem", "IntegratedSystem")
                         .WithMany("WebhookReceivers")
                         .HasForeignKey("IntegratedSystemId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Environment");
 
                     b.Navigation("IntegratedSystem");
                 });

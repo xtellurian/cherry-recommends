@@ -46,6 +46,7 @@ namespace SignalBox.Core.Workflows
 
         public async Task<EventLoggingResponse> AddEvents(IEnumerable<CustomerEventInput> input, bool addToQueue = false)
         {
+
             if (await eventQueueStore.IsWriteEnabled() && addToQueue)
             {
                 var json = JsonSerializer.Serialize(input, SerializerOptions);
@@ -56,10 +57,10 @@ namespace SignalBox.Core.Workflows
 
                 await eventQueueStore.Enqueue(new TrackedUserEventsQueueMessage(fileName));
                 // check the amount of users per message isn't too big (azure throws at messages > 64kB)
-                var uniqueUserIds = input.Select(_ => _.CustomerId).Distinct();
-                foreach (var uIds in uniqueUserIds.Batch(512))
+                var newCustomers = input.Select(_ => new PendingCustomer(_.CustomerId, _.EnvironmentId)).Distinct();
+                foreach (var uIds in newCustomers.Batch(512))
                 {
-                    await newTrackedUserQueue.Enqueue(new NewTrackedUserEventQueueMessage(uIds));
+                    await newTrackedUserQueue.Enqueue(new NewCustomerEventQueueMessage(newCustomers));
                 }
                 return new EventLoggingResponse { EventsEnqueued = input.Count() };
             }
@@ -68,7 +69,7 @@ namespace SignalBox.Core.Workflows
                 logger.LogWarning("Not enqueuing. Prcessing events directly.");
                 var events = new List<CustomerEvent>();
                 var lastUpdated = dateTimeProvider.Now;
-                var customers = await userStore.CreateIfNotExists(input.Select(_ => _.CustomerId).Distinct());
+                var customers = await userStore.CreateIfNotExists(input.Select(_ => new PendingCustomer(_.CustomerId, _.EnvironmentId)).Distinct());
                 if (customers.Any())
                 {
                     foreach (var u in customers)
@@ -77,18 +78,18 @@ namespace SignalBox.Core.Workflows
                     }
                 }
 
-
                 foreach (var d in input)
                 {
+                    // make sure you set this before loading the integrated system.
+                    if (d.EnvironmentId != null)
+                    {
+                        environmentProvider.SetOverride(d.EnvironmentId.Value);
+                    }
+
                     IntegratedSystem sourceSystem = null;
                     if (d.SourceSystemId != null)
                     {
                         sourceSystem = await integratedSystemStore.Read(d.SourceSystemId.Value);
-                    }
-
-                    if (d.EnvironmentId != null)
-                    {
-                        await environmentProvider.SetOverride(d.EnvironmentId.Value);
                     }
 
                     var customer = customers.First(_ => _.CommonId == d.CustomerId);

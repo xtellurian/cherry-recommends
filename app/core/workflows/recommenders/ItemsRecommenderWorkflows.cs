@@ -43,7 +43,8 @@ namespace SignalBox.Core.Workflows
                                                   from.NumberOfItemsToRecommend,
                                                   from.Arguments,
                                                   from.ErrorHandling ?? new RecommenderSettings(),
-                                                  true);
+                                                  true,
+                                                  useInternalId: true);
         }
 
         public async Task<RecommenderStatistics> CalculateStatistics(ItemsRecommender recommender)
@@ -56,25 +57,26 @@ namespace SignalBox.Core.Workflows
 
         public async Task<ItemsRecommender> CreateItemsRecommender(CreateCommonEntityModel common,
                                                                        string? baselineItemId,
-                                                                       IEnumerable<string>? itemsCommonIds,
+                                                                       IEnumerable<string>? itemIds,
                                                                        int? numberOfItemsToRecommend,
                                                                        IEnumerable<RecommenderArgument>? arguments,
                                                                        RecommenderSettings settings,
-                                                                       bool useOptimiser)
+                                                                       bool useOptimiser,
+                                                                       bool? useInternalId)
         {
             RecommendableItem? baselineItem = null;
             if (!string.IsNullOrEmpty(baselineItemId))
             {
-                baselineItem = await itemStore.GetEntity(baselineItemId);
+                baselineItem = await itemStore.GetEntity(baselineItemId, useInternalId: useInternalId);
             }
 
             ItemsRecommender recommender;
-            if (itemsCommonIds != null && itemsCommonIds.Any())
+            if (itemIds != null && itemIds.Any())
             {
                 var items = new List<RecommendableItem>();
-                foreach (var id in itemsCommonIds)
+                foreach (var id in itemIds)
                 {
-                    items.Add(await itemStore.ReadFromCommonId(id));
+                    items.Add(await itemStore.GetEntity(id, useInternalId));
                 }
 
                 recommender = await store.Create(

@@ -1,5 +1,6 @@
 export interface AuthenticatedRequest {
   token: string;
+  useInternalId?: boolean | undefined;
 }
 
 export interface PaginatedRequest extends AuthenticatedRequest {

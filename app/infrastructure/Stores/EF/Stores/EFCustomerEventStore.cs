@@ -8,7 +8,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFCustomerEventStore : EFEnvironmentScopedEntityBase<CustomerEvent>, ICustomerEventStore
+    public class EFCustomerEventStore : EFEnvironmentScopedEntityStoreBase<CustomerEvent>, ICustomerEventStore
     {
         protected override Expression<Func<CustomerEvent, DateTimeOffset>> defaultOrderBy => _ => _.Timestamp;
         public EFCustomerEventStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)

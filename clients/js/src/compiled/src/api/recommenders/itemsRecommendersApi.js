@@ -37,12 +37,13 @@ export const deleteItemsRecommenderAsync = async ({ token, id, }) => {
         method: "delete",
     });
 };
-export const createItemsRecommenderAsync = async ({ token, payload, }) => {
+export const createItemsRecommenderAsync = async ({ token, payload, useInternalId, }) => {
     return await executeFetch({
         path: "api/recommenders/ItemsRecommenders",
         token,
         method: "post",
         body: payload,
+        query: { useInternalId },
     });
 };
 export const fetchItemsAsync = async ({ token, id }) => {

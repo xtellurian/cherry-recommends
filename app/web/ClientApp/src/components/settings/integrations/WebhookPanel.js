@@ -51,13 +51,12 @@ export const WebhookPanel = ({ integratedSystemId, className }) => {
         <EmptyList>No Webhook Receivers</EmptyList>
       )}
 
-     
-        {webhookReceivers.error && <ErrorCard error={webhookReceivers.error} />}
-        {!webhookReceivers.loading &&
-          webhookReceivers.map((wr) => (
-            <WebhookReceiverRow key={wr.id} wr={wr} />
-          ))}
- 
+      {webhookReceivers.error && <ErrorCard error={webhookReceivers.error} />}
+      {!webhookReceivers.loading &&
+        !webhookReceivers.error &&
+        webhookReceivers.map((wr) => (
+          <WebhookReceiverRow key={wr.id} wr={wr} />
+        ))}
     </div>
   );
 };

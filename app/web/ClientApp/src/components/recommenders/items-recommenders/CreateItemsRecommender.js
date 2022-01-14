@@ -34,7 +34,7 @@ export const CreateRecommender = () => {
   const [error, setError] = React.useState();
   const items = useItems();
   const itemsOptions = items.items
-    ? items.items.map((p) => ({ label: p.name, value: p.commonId }))
+    ? items.items.map((p) => ({ label: p.name, value: `${p.id}` }))
     : [];
 
   const startingItem = useGlobalStartingItem();
@@ -53,7 +53,7 @@ export const CreateRecommender = () => {
     if (startingItem.commonId) {
       setRecommender({
         ...recommender,
-        baselineItemId: startingItem.commonId,
+        baselineItemId: `${startingItem.id}`,
       });
     }
   }, [startingItem]);
@@ -65,6 +65,7 @@ export const CreateRecommender = () => {
     createItemsRecommenderAsync({
       token,
       payload: recommender,
+      useInternalId: true,
     })
       .then((r) =>
         history.push(`/recommenders/items-recommenders/detail/${r.id}`)

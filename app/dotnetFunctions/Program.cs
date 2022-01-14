@@ -35,7 +35,7 @@ namespace SignalBox.Functions
                 {
                     var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
                     var provider = configuration.GetValue("Provider", "sqlserver");
-
+                    provider.ValidateDbProvider();
                     System.Console.WriteLine($"Database Provider: {provider}");
 
                     var useMulti = configuration.GetSection("Hosting").GetValue<bool>("Multitenant", false);

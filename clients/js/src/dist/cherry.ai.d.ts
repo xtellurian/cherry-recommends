@@ -20,6 +20,7 @@ declare namespace actionsApi_d {
 
 interface AuthenticatedRequest {
     token: string;
+    useInternalId?: boolean | undefined;
 }
 interface PaginatedRequest extends AuthenticatedRequest {
     page: number;
@@ -1636,7 +1637,7 @@ interface CreateItemsRecommenderPayload {
 interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
     payload: CreateItemsRecommenderPayload;
 }
-declare const createItemsRecommenderAsync: ({ token, payload, }: CreateItemsRecommenderRequest) => Promise<any>;
+declare const createItemsRecommenderAsync: ({ token, payload, useInternalId, }: CreateItemsRecommenderRequest) => Promise<any>;
 declare const fetchItemsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
 interface AddItemPayload {
     id: number | undefined;

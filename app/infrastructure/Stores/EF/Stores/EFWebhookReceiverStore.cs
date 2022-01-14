@@ -5,10 +5,10 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFSWebhookReceiverStore : EFEntityStoreBase<WebhookReceiver>, IWebhookReceiverStore
+    public class EFSWebhookReceiverStore : EFEnvironmentScopedEntityStoreBase<WebhookReceiver>, IWebhookReceiverStore
     {
-        public EFSWebhookReceiverStore(IDbContextProvider<SignalBoxDbContext> contextProvider)
-        : base(contextProvider, (c) => c.WebhookReceivers)
+        public EFSWebhookReceiverStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)
+        : base(contextProvider, environmentProvider, (c) => c.WebhookReceivers)
         { }
 
         public async Task<IEnumerable<WebhookReceiver>> GetReceiversForIntegratedSystem(long integratedSystemId)
@@ -22,7 +22,13 @@ namespace SignalBox.Infrastructure.EntityFramework
         public async Task<WebhookReceiver> ReadFromEndpointId(string endpointId)
         {
             // todo: make this a better error when not exist, rather than 500
-            return await Set.Include(_ => _.IntegratedSystem).FirstAsync(_ => _.EndpointId == endpointId);
+            // use Set not QuerySet because we don't know the environment yet.
+            var endpoint = await Set.Include(_ => _.IntegratedSystem).FirstAsync(_ => _.EndpointId == endpointId);
+            if (endpoint.EnvironmentId.HasValue)
+            {
+                environmentProvider.SetOverride(endpoint.EnvironmentId.Value);
+            }
+            return endpoint;
         }
     }
 }

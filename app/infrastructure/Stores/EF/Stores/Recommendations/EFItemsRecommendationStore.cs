@@ -8,7 +8,7 @@ using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFItemsRecommendationStore : EFEnvironmentScopedEntityBase<ItemsRecommendation>, IItemsRecommendationStore
+    public class EFItemsRecommendationStore : EFEnvironmentScopedEntityStoreBase<ItemsRecommendation>, IItemsRecommendationStore
     {
         protected override bool IsEnvironmentScoped => true;
         public EFItemsRecommendationStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)

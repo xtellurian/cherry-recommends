@@ -89,12 +89,14 @@ interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
 export const createItemsRecommenderAsync = async ({
   token,
   payload,
+  useInternalId,
 }: CreateItemsRecommenderRequest) => {
   return await executeFetch({
     path: "api/recommenders/ItemsRecommenders",
     token,
     method: "post",
     body: payload,
+    query: { useInternalId },
   });
 };
 

@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using SignalBox.Core.Integrations.Custom;
 using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core.Recommendations.Destinations
 {
 #nullable enable
-    public abstract class RecommendationDestinationBase : Entity, IHierarchyBase
+    public abstract class RecommendationDestinationBase : EnvironmentScopedEntity, IHierarchyBase
     {
         public const string WebhookDestinationType = "Webhook";
         public const string SegmentSourceFunctionDestinationType = "SegmentSourceFunction";

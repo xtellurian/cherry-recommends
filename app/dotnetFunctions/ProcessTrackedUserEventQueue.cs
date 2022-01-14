@@ -54,20 +54,20 @@ namespace SignalBox.Functions
 
         [Function("ProcessNewTrackedUsersEventQueue")]
         public async Task ProcessNewTrackedUsersEvents(
-            [QueueTrigger(SignalBox.Core.Constants.AzureQueueNames.NewTrackedUsers)] NewTrackedUserEventQueueMessage message,
+            [QueueTrigger(SignalBox.Core.Constants.AzureQueueNames.NewTrackedUsers)] NewCustomerEventQueueMessage queueMessage,
             FunctionContext context)
         {
             var logger = context.GetLogger(nameof(ProcessNewTrackedUsersEvents));
 
-            logger.LogInformation($"Processing message with {message.CommonIds.Count()} commonUserIds: ");
+            logger.LogInformation($"Processing message with {queueMessage.PendingCustomers.Count()} create customer messages: ");
             try
             {
-                await customerWorkflows.CreateIfNotExist(message.CommonIds);
+                await customerWorkflows.CreateIfNotExist(queueMessage.PendingCustomers);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex.Message, ex);
-                throw new System.Exception(ex.Message, ex);
+                throw new Exception(ex.Message, ex);
             }
         }
     }

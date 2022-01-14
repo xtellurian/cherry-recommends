@@ -34,16 +34,17 @@ namespace SignalBox.Core.Workflows
             this.dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<IEnumerable<Customer>> CreateIfNotExist(IEnumerable<string> commonUserIds)
+        public async Task<IEnumerable<Customer>> CreateIfNotExist(IEnumerable<PendingCustomer> pendingCustomers)
         {
-            var newUsers = await customerStore.CreateIfNotExists(commonUserIds);
-            foreach (var u in newUsers)
+            var newCustomers = await customerStore.CreateIfNotExists(pendingCustomers);
+
+            foreach (var u in newCustomers)
             {
                 u.LastUpdated = dateTimeProvider.Now;
             }
 
             await storageContext.SaveChanges();
-            return newUsers;
+            return newCustomers;
         }
         public async Task<Customer> MergeUpdateProperties(Customer customer, IDictionary<string, object> properties, long? integratedSystemId = null, bool? saveOnComplete = true)
         {

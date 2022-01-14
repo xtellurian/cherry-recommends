@@ -34,7 +34,7 @@ namespace SignalBox.Infrastructure.Webhooks
             this.logger = logger;
         }
 
-        private HttpClient ConfigureHttpClient(HttpClient httpClient)
+        private static HttpClient ConfigureHttpClient(HttpClient httpClient)
         {
             httpClient.Timeout = new System.TimeSpan(0, 0, 5); // 5 seconds
 
@@ -50,6 +50,7 @@ namespace SignalBox.Infrastructure.Webhooks
         where TRecommendation : RecommendationEntity
         {
             var connectedSystem = destination.ConnectedSystem;
+
             if (connectedSystem == null)
             {
                 connectedSystem = await systemStore.Read(destination.ConnectedSystemId);

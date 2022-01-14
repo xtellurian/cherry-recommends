@@ -1,5 +1,5 @@
 namespace SignalBox.Core
 {
-    public interface INewTrackedUserEventQueueStore : IQueueStore<NewTrackedUserEventQueueMessage>
+    public interface INewTrackedUserEventQueueStore : IQueueStore<NewCustomerEventQueueMessage>
     { }
 }

@@ -1119,12 +1119,13 @@
             method: "delete",
         });
     };
-    const createItemsRecommenderAsync = async ({ token, payload, }) => {
+    const createItemsRecommenderAsync = async ({ token, payload, useInternalId, }) => {
         return await executeFetch({
             path: "api/recommenders/ItemsRecommenders",
             token,
             method: "post",
             body: payload,
+            query: { useInternalId },
         });
     };
     const fetchItemsAsync$1 = async ({ token, id }) => {

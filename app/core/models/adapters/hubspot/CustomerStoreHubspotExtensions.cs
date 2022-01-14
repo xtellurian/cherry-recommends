@@ -17,7 +17,7 @@ namespace SignalBox.Core.Adapters.Hubspot
             {
                 // set the environment to the hubspot environment.
                 // this causes any customer created to be in this env.
-                await environmentProvider.SetOverride(system.EnvironmentId.Value);
+                environmentProvider.SetOverride(system.EnvironmentId.Value);
             }
 
             var commonId = string.Empty;

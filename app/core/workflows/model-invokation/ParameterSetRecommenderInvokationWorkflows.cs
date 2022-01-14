@@ -11,7 +11,7 @@ namespace SignalBox.Core.Workflows
 {
     public class ParameterSetRecommenderInvokationWorkflows : RecommenderInvokationWorkflowBase<ParameterSetRecommender>, IWorkflow
     {
-        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions
+        private readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         };
@@ -23,7 +23,7 @@ namespace SignalBox.Core.Workflows
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
         private readonly IModelRegistrationStore modelRegistrationStore;
-        private readonly ICustomerStore trackedUserStore;
+        private readonly ICustomerStore customerStore;
         private readonly IRecommenderModelClientFactory modelClientFactory;
 
         public ParameterSetRecommenderInvokationWorkflows(ILogger<ParameterSetRecommenderInvokationWorkflows> logger,
@@ -36,7 +36,7 @@ namespace SignalBox.Core.Workflows
                                     IModelRegistrationStore modelRegistrationStore,
                                     IWebhookSenderClient webhookSenderClient,
                                     IHistoricTrackedUserFeatureStore historicFeatureStore,
-                                    ICustomerStore trackedUserStore,
+                                    ICustomerStore customerStore,
                                     IRecommenderModelClientFactory modelClientFactory)
                                      : base(storageContext, parameterSetRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider)
         {
@@ -47,7 +47,7 @@ namespace SignalBox.Core.Workflows
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
             this.parameterSetRecommendationStore = parameterSetRecommendationStore;
             this.modelRegistrationStore = modelRegistrationStore;
-            this.trackedUserStore = trackedUserStore;
+            this.customerStore = customerStore;
             this.modelClientFactory = modelClientFactory;
         }
 
@@ -66,7 +66,7 @@ namespace SignalBox.Core.Workflows
             try
             {
                 var model = recommender.ModelRegistration;
-                context.Customer = await trackedUserStore.CreateIfNotExists(input.GetCustomerId(), $"Auto-created by Recommender {recommender.Name}");
+                context.Customer = await customerStore.CreateIfNotExists(new PendingCustomer(input.GetCustomerId(), recommender.EnvironmentId, $"Auto-created by Recommender {recommender.Name}"));
 
                 // check the cache and load the context 
                 if (await recommendationCache.HasCached(recommender, context.Customer))

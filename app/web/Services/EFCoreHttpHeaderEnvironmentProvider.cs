@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
-using SignalBox.Infrastructure;
 
 namespace SignalBox.Web.Services
 {
@@ -23,11 +22,11 @@ namespace SignalBox.Web.Services
             this.httpContextAccessor = httpContextAccessor;
             this.logger = logger;
         }
-
+        private bool isOveridden = false;
         private long? _overrideEnvironmentId;
         private long? EnvironmentId()
         {
-            if(_overrideEnvironmentId != null)
+            if (isOveridden)
             {
                 return _overrideEnvironmentId;
             }
@@ -64,10 +63,10 @@ namespace SignalBox.Web.Services
             }
         }
 
-        public Task SetOverride(long environmentId)
+        public void SetOverride(long? environmentId)
         {
+            isOveridden = true;
             _overrideEnvironmentId = environmentId;
-            return Task.CompletedTask;
         }
     }
 }

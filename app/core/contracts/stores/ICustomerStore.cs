@@ -7,8 +7,8 @@ namespace SignalBox.Core
     public interface ICustomerStore : ICommonEntityStore<Customer>
     {
         Task<long> GetInternalId(string customerId);
-        Task<IEnumerable<Customer>> CreateIfNotExists(IEnumerable<string> customerId);
-        Task<Customer> CreateIfNotExists(string commonId, string? name = null);
+        Task<IEnumerable<Customer>> CreateIfNotExists(IEnumerable<PendingCustomer> pendingCustomers);
+        Task<Customer> CreateIfNotExists(PendingCustomer pending);
         IAsyncEnumerable<Customer> Iterate();
     }
 }

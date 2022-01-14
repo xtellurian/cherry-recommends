@@ -8,7 +8,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public abstract class EFCommonEntityStoreBase<T> : EFEnvironmentScopedEntityBase<T>, ICommonEntityStore<T> where T : CommonEntity
+    public abstract class EFCommonEntityStoreBase<T> : EFEnvironmentScopedEntityStoreBase<T>, ICommonEntityStore<T> where T : CommonEntity
     {
         public EFCommonEntityStoreBase(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentService, Func<SignalBoxDbContext, DbSet<T>> selector)
         : base(contextProvider, environmentService, selector)

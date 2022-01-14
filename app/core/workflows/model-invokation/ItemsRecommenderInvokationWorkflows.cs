@@ -13,7 +13,7 @@ namespace SignalBox.Core.Workflows
         private readonly IStorageContext storageContext;
         private readonly IRecommendationCache<ItemsRecommender, ItemsRecommendation> recommendationCache;
         private readonly IRecommenderModelClientFactory modelClientFactory;
-        private readonly ICustomerStore trackedUserStore;
+        private readonly ICustomerStore customerStore;
         private readonly IRecommendableItemStore itemStore;
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IItemsRecommenderStore itemsRecommenderStore;
@@ -24,8 +24,7 @@ namespace SignalBox.Core.Workflows
                                     IDateTimeProvider dateTimeProvider,
                                     IRecommendationCache<ItemsRecommender, ItemsRecommendation> recommendationCache,
                                     IRecommenderModelClientFactory modelClientFactory,
-                                    ICustomerStore trackedUserStore,
-                                    ITrackedUserTouchpointStore trackedUserTouchpointStore,
+                                    ICustomerStore customerStore,
                                     IHistoricTrackedUserFeatureStore historicFeatureStore,
                                     IRecommendableItemStore itemStore,
                                     IWebhookSenderClient webhookSenderClient,
@@ -38,7 +37,7 @@ namespace SignalBox.Core.Workflows
             this.storageContext = storageContext;
             this.recommendationCache = recommendationCache;
             this.modelClientFactory = modelClientFactory;
-            this.trackedUserStore = trackedUserStore;
+            this.customerStore = customerStore;
             this.itemStore = itemStore;
             this.correlatorStore = correlatorStore;
             this.itemsRecommenderStore = itemsRecommenderStore;
@@ -59,7 +58,7 @@ namespace SignalBox.Core.Workflows
             {
                 // enrich values from the touchpoint
                 var customerId = input.GetCustomerId() ?? throw new BadRequestException("Customer ID and CommonUserId were null");
-                context.Customer = await trackedUserStore.CreateIfNotExists(customerId, $"Auto-created by Recommender {recommender.Name}");
+                context.Customer = await customerStore.CreateIfNotExists(new PendingCustomer(customerId, recommender.EnvironmentId, $"Auto-created by Recommender {recommender.Name}"));
                 userName = context.Customer.Name ?? context.Customer.CommonId ?? userName;
                 // check the cache
                 if (await recommendationCache.HasCached(recommender, context.Customer))

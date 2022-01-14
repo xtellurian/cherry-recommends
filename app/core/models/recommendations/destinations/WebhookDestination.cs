@@ -23,6 +23,7 @@ namespace SignalBox.Core.Recommendations.Destinations
             {
                 throw new BadRequestException($"Endpoint {endpoint} is badly formatted");
             }
+            this.EnvironmentId = connectedSystem.EnvironmentId;
         }
 
         public string? ApplicationSecret => (this.ConnectedSystem as CustomIntegratedSystem)?.ApplicationSecret;

@@ -18,6 +18,7 @@ import {
 } from "../../molecules/TextInput";
 import { NoteBox } from "../../molecules/NoteBox";
 import { CopyableField } from "../../molecules/fields/CopyableField";
+import { Link } from "react-router-dom";
 
 const CreateDestinationButton = ({ className, setCreatePopupOpen }) => {
   const actualClassName = `${className || ""} btn btn-primary`;
@@ -35,9 +36,18 @@ const DestinationRow = ({ destination, remove }) => {
   return (
     <div className="p-3 mb-1 shadow bg-body rounded">
       <div className="p-2">
-        <button className="btn btn-outline-danger float-right" onClick={remove}>
-          Remove
-        </button>
+        <div className="d-flex flex-row-reverse">
+          <button className="btn btn-outline-danger mr-1" onClick={remove}>
+            Remove
+          </button>
+          <Link
+            to={`/settings/integrations/detail/${destination.connectedSystemId}`}
+          >
+            <button className="btn btn-outline-primary mr-1" onClick={remove}>
+              View Integration
+            </button>
+          </Link>
+        </div>
         <h4>{destination.destinationType}</h4>
         <div className="mt-3">
           <CopyableField

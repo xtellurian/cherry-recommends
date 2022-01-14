@@ -50,30 +50,31 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
         }
 
-        public async Task<IEnumerable<Customer>> CreateIfNotExists(IEnumerable<string> commonIds)
+        public async Task<IEnumerable<Customer>> CreateIfNotExists(IEnumerable<PendingCustomer> pendingCustomers)
         {
             var users = new List<Customer>();
-            foreach (var commonId in commonIds)
+            foreach (var pending in pendingCustomers)
             {
                 // Current behaviour is to not update the name.
                 // this is because the name is auto-generated when recommenders are called
                 // on a user that does not exist yet. 
                 // Updating the name here would overwrite existing names that might be valid.
-                users.Add(await this.CreateIfNotExists(commonId));
+                users.Add(await this.CreateIfNotExists(pending));
             }
 
             return users;
         }
 
-        public async Task<Customer> CreateIfNotExists(string commonId, string name = null)
+        public async Task<Customer> CreateIfNotExists(PendingCustomer pendingCustomer)
         {
-            if (!await this.QuerySet.AnyAsync(_ => _.CommonId == commonId))
+            environmentProvider.SetOverride(pendingCustomer.EnvironmentId);
+            if (!await this.QuerySet.AnyAsync(_ => _.CommonId == pendingCustomer.CommonId))
             {
-                return await this.Create(new Customer(commonId, name));
+                return await this.Create(new Customer(pendingCustomer.CommonId, pendingCustomer.Name));
             }
             else
             {
-                return await this.ReadFromCommonId(commonId);
+                return await this.ReadFromCommonId(pendingCustomer.CommonId);
             }
         }
 

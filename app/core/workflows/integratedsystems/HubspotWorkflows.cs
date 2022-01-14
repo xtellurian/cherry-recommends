@@ -297,7 +297,7 @@ namespace SignalBox.Core.Workflows
         {
             if (integratedSystem.EnvironmentId != null)
             {
-                await environmentProvider.SetOverride(integratedSystem.EnvironmentId.Value);
+                environmentProvider.SetOverride(integratedSystem.EnvironmentId.Value);
             }
             var customer = await customerStore.Create(new Customer(commonUserId, objectId));
             customer.IntegratedSystemMaps.Add(new TrackedUserSystemMap(objectId, integratedSystem, customer));

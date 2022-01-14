@@ -4,7 +4,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal class WebhookReceiverTypeConfiguration : EntityTypeConfigurationBase<WebhookReceiver>, IEntityTypeConfiguration<WebhookReceiver>
+    internal class WebhookReceiverTypeConfiguration : EnvironmentScopedEntityTypeConfigurationBase<WebhookReceiver>, IEntityTypeConfiguration<WebhookReceiver>
     {
         public override void Configure(EntityTypeBuilder<WebhookReceiver> builder)
         {

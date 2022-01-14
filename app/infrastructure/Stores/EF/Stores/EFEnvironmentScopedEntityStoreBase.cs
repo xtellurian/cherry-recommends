@@ -6,11 +6,11 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public abstract class EFEnvironmentScopedEntityBase<T> : EFEntityStoreBase<T> where T : EnvironmentScopedEntity
+    public abstract class EFEnvironmentScopedEntityStoreBase<T> : EFEntityStoreBase<T> where T : EnvironmentScopedEntity
     {
         protected readonly IEnvironmentProvider environmentProvider;
 
-        protected EFEnvironmentScopedEntityBase(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider, Func<SignalBoxDbContext, DbSet<T>> selector)
+        protected EFEnvironmentScopedEntityStoreBase(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider, Func<SignalBoxDbContext, DbSet<T>> selector)
         : base(contextProvider, selector)
         {
             this.environmentProvider = environmentProvider;

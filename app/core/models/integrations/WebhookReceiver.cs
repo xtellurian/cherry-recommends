@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace SignalBox.Core
 {
-    public class WebhookReceiver : Entity
+    public class WebhookReceiver : EnvironmentScopedEntity
     {
         public WebhookReceiver()
         { }

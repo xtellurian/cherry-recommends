@@ -19,7 +19,7 @@ interface CreateItemsRecommenderPayload {
 interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
     payload: CreateItemsRecommenderPayload;
 }
-export declare const createItemsRecommenderAsync: ({ token, payload, }: CreateItemsRecommenderRequest) => Promise<any>;
+export declare const createItemsRecommenderAsync: ({ token, payload, useInternalId, }: CreateItemsRecommenderRequest) => Promise<any>;
 export declare const fetchItemsAsync: ({ token, id }: EntityRequest) => Promise<any>;
 interface AddItemPayload {
     id: number | undefined;
