@@ -35,6 +35,11 @@ stages:
         - script: dotnet build
           displayName: Dotnet build solution
           workingDirectory: app
+        
+        - script: npx prettier --check .
+          displayName: Prettier - /ClientApp
+          workingDirectory: app/web/ClientApp/
+          continueOnError: true # for now, continue on error, until linting is complete.
 
         - script: dotnet publish
           displayName: Dotnet publish web
