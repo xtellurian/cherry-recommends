@@ -11,7 +11,7 @@ cd ../web
 echo "Deploying Web App to ${WEBAPPNAME}"
 
 dotnet publish -c Release
-cd "./bin/Release/net5.0/publish/" # cross platform
+cd "./bin/Release/net6.0/publish/" # cross platform
 
 echo "Compressing to deploy.zip"
 wsl rm deploy.zip # remove existing

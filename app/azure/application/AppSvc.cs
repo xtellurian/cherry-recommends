@@ -75,7 +75,7 @@ namespace SignalBox.Azure
                             Value = "1",
                         },
                     },
-                    LinuxFxVersion = "DOTNETCORE|5.0",
+                    LinuxFxVersion = "DOTNETCORE|6.0",
                     ConnectionStrings = {
                         new ConnStringInfoArgs
                         {
