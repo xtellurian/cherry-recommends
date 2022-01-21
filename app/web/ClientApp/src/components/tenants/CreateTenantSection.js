@@ -18,6 +18,9 @@ import {
   createServerNameUnavailableValidator,
 } from "../molecules/TextInput";
 
+import { PersonalizationCarousel } from "./PersonalizationCarousel";
+import { Progress } from "../molecules/Progress";
+
 const nameRequirements = [
   "At least 4 characters",
   "Lowercase letters and numbers only",
@@ -26,6 +29,23 @@ const nameRequirements = [
 ];
 
 const termsVersion = "v1";
+
+const toFriendlyStatus = (status) => {
+  if (status === "Not Exist") {
+    return "Preparing Seedlings";
+  } else if (status === "Submitted") {
+    return "Sewing Seeds";
+  } else if (status === "Creating") {
+    return "Fertilising Soils";
+  } else if (status === "DatabaseCreated") {
+    return "Growing Branches";
+  } else if (status === "Created") {
+    return "Maturing Trees";
+  } else {
+    console.log(`Unknown status: ${status}`);
+    return "Lost Leaves";
+  }
+};
 
 export const CreateTenantSection = () => {
   const [status, setStatus] = React.useState();
@@ -105,6 +125,25 @@ export const CreateTenantSection = () => {
     }
   }, [status]);
 
+  if (status) {
+    return (
+      <div className="container">
+        <div className="text-center mt-5">
+          <Title>Create a new Tenant</Title>
+        </div>
+        <div className="w-50 mx-auto mt-4">
+          <div className="card">
+            <PersonalizationCarousel />
+          </div>
+          <div className="mt-5 text-muted text-center">
+            <div className="mb-1">Please wait a moment</div>
+            <Progress seconds={80}>{toFriendlyStatus(status)}</Progress>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       <BigPopup isOpen={termsPopupOpen} setIsOpen={setTermsPopupOpen}>
@@ -152,7 +191,7 @@ export const CreateTenantSection = () => {
           {status && (
             <div>
               <NoteBox label="Creation Status">
-                <Spinner>{status}</Spinner>
+                <Spinner>{toFriendlyStatus(status)}</Spinner>
               </NoteBox>
             </div>
           )}

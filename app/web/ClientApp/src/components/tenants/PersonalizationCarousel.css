@@ -1,0 +1,10 @@
+.carousel-indicators .circle {
+  width: 10px;
+  height: 10px;
+  border-top: 0px;
+  border-bottom: 0px;
+  border-radius: 10px;
+  margin-right: 5px;
+  margin-left: 5px;
+  background-clip: border-box;
+}
