@@ -9,140 +9,142 @@ trigger:
       - main
   tags:
     include:
-    - deploy/*
+      - deploy/*
+      - build/*
   paths:
     include:
       - app/*
     exclude:
       - docs/*
-      
+
 pool:
-  vmImage: ubuntu-latest
+  vmImage: ubuntu-18.04 # the standard OS
 
 stages:
-- stage: build_artifacts
-  displayName: Build artifacts
-  jobs:
-    - job: build_artifacts_app
-      displayName: Build dotnet solution and publish to web
-      continueOnError: false
-      steps:
-        - task: UseDotNet@2
-          displayName: "Use .NET 6 sdk"
-          inputs:
-            version: 6.0.x
+  - stage: build_artifacts
+    displayName: Build artifacts
+    jobs:
+      - job: build_artifacts_app
+        displayName: dotnet sln build and publish
+        continueOnError: false
+        steps:
+          - template: templates/build-publish-web.yaml
 
-        - script: dotnet build
-          displayName: Dotnet build solution
-          workingDirectory: app
-        
-        - script: npx prettier --check .
-          displayName: Prettier - /ClientApp
-          workingDirectory: app/web/ClientApp/
-          continueOnError: true # for now, continue on error, until linting is complete.
+      # On a Pull Request, build the app on latest multiple operating systems.
+      - job: build_artifacts_os
+        condition: eq(variables['Build.Reason'], 'PullRequest')
+        strategy:
+          matrix:
+            linux:
+              imageName: ubuntu-latest
+            mac:
+              imageName: macOS-latest
+            windows:
+              imageName: windows-latest
 
-        - script: dotnet publish
-          displayName: Dotnet publish web
-          workingDirectory: app/web
+        displayName: dotnet sln build and publish (multi OS)
+        continueOnError: false
+        pool:
+          vmImage: $(imageName)
+        steps:
+          - template: templates/build-publish-web.yaml
 
-- stage: deploy_single_multi_dev
-  displayName: Deploy single and multi dev environment
-  dependsOn: build_artifacts
-  condition: |
-    and(succeeded(),
-    startsWith(variables['Build.SourceBranch'], 'refs/tags/deploy/'))
-  jobs:
-  - job: deploy_dev_env
-    displayName: Deploy single and multi dev app
-    variables:
-      - group: Azure_Docs_Dev
-    continueOnError: false
-    steps:
-      - task: Pulumi@1
-        displayName: single-dev Pulumi preview
-        inputs:
-          command: "preview"
-          stack: $(SINGLE_DEV_PULUMI_STACK)
-          cwd: $(WORKING_DIRECTORY_PULUMI)
-          createStack: true
-
-      - template: templates/deploy-environment-setup.yaml
-
-      - script: |
-          sh ./full-single-deploy.sh
-        env:
-          ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-          ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-          ARM_TENANT_ID: $(ARM_TENANT_ID)
-        workingDirectory: app/deploy
-        displayName: Deploy app to Azure single-dev
-
-      - task: Pulumi@1
-        displayName: multi-dev Pulumi preview 
-        inputs:
-          command: "preview"
-          stack: $(MULTI_DEV_PULUMI_STACK)
-          cwd: $(WORKING_DIRECTORY_PULUMI)
-          createStack: true
-
-      - template: templates/deploy-multi-script.yaml
-
-
-
-- stage: release_canary
-  displayName: Release canary environment
-  dependsOn: build_artifacts
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-  jobs:
-  - deployment: release_canary_env
-    displayName: Canary Job Release
-    environment: canary-app
-    variables:
-      - group: Azure_Docs_Prod
-    continueOnError: false
-    strategy:                  
-      runOnce:
-        deploy:
-          steps:
-          - checkout: self
-          
+  - stage: deploy_single_multi_dev
+    displayName: Deploy single and multi dev environment
+    dependsOn: build_artifacts
+    condition: |
+      and(succeeded(),
+      startsWith(variables['Build.SourceBranch'], 'refs/tags/deploy/'))
+    jobs:
+      - job: deploy_dev_env
+        displayName: Deploy single and multi dev app
+        variables:
+          - group: Azure_Docs_Dev
+        continueOnError: false
+        steps:
           - task: Pulumi@1
-            displayName: canary Pulumi preview
+            displayName: single-dev Pulumi preview
             inputs:
               command: "preview"
-              stack: $(CANARY_PULUMI_STACK)
+              stack: $(SINGLE_DEV_PULUMI_STACK)
               cwd: $(WORKING_DIRECTORY_PULUMI)
               createStack: true
 
           - template: templates/deploy-environment-setup.yaml
 
+          - script: |
+              sh ./full-single-deploy.sh
+            env:
+              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+              ARM_TENANT_ID: $(ARM_TENANT_ID)
+            workingDirectory: app/deploy
+            displayName: Deploy app to Azure single-dev
+
+          - task: Pulumi@1
+            displayName: multi-dev Pulumi preview
+            inputs:
+              command: "preview"
+              stack: $(MULTI_DEV_PULUMI_STACK)
+              cwd: $(WORKING_DIRECTORY_PULUMI)
+              createStack: true
+
           - template: templates/deploy-multi-script.yaml
 
-- stage: release_prod
-  displayName: Release prod environment
-  dependsOn: release_canary
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-  jobs:
-  - deployment: release_prod_env
-    displayName: Production Job Release
-    environment: prod-app
-    variables:
-      - group: Azure_Docs_Prod
-    continueOnError: false
-    strategy:                  
-      runOnce:
-        deploy:
-          steps:
-            - checkout: self
+  - stage: release_canary
+    displayName: Release canary environment
+    dependsOn: build_artifacts
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: release_canary_env
+        displayName: Canary Job Release
+        environment: canary-app
+        variables:
+          - group: Azure_Docs_Prod
+        continueOnError: false
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
 
-            - task: Pulumi@1
-              displayName: production Pulumi preview
-              inputs:
-                command: "preview"
-                stack: $(PROD_PULUMI_STACK)
-                cwd: $(WORKING_DIRECTORY_PULUMI)
-                createStack: true
+                - task: Pulumi@1
+                  displayName: canary Pulumi preview
+                  inputs:
+                    command: "preview"
+                    stack: $(CANARY_PULUMI_STACK)
+                    cwd: $(WORKING_DIRECTORY_PULUMI)
+                    createStack: true
 
-            - template: templates/deploy-environment-setup.yaml
+                - template: templates/deploy-environment-setup.yaml
 
-            - template: templates/deploy-multi-script.yaml
+                - template: templates/deploy-multi-script.yaml
+
+  - stage: release_prod
+    displayName: Release prod environment
+    dependsOn: release_canary
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: release_prod_env
+        displayName: Production Job Release
+        environment: prod-app
+        variables:
+          - group: Azure_Docs_Prod
+        continueOnError: false
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+
+                - task: Pulumi@1
+                  displayName: production Pulumi preview
+                  inputs:
+                    command: "preview"
+                    stack: $(PROD_PULUMI_STACK)
+                    cwd: $(WORKING_DIRECTORY_PULUMI)
+                    createStack: true
+
+                - template: templates/deploy-environment-setup.yaml
+
+                - template: templates/deploy-multi-script.yaml
