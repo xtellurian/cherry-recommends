@@ -1,0 +1,14 @@
+{
+  "name": "databases",
+  "version": "1.0.0",
+  "description": "Just a simple package for running sqleton",
+  "main": "index.js",
+  "scripts": {
+    "viz": "sqleton -o db.svg signalbox.db"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "sqleton": "^2.0.0"
+  }
+}
