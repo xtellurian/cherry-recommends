@@ -10,6 +10,7 @@ namespace SignalBox.Core.Workflows
     public class ApiKeyWorkflows : IWorkflow
     {
         private readonly IStorageContext storageContext;
+        private readonly ITenantProvider tenantProvider;
         private readonly IApiTokenFactory tokenFactory;
         private readonly IHashedApiKeyStore keyStore;
         private readonly IDateTimeProvider dateTimeProvider;
@@ -18,6 +19,7 @@ namespace SignalBox.Core.Workflows
         private readonly IHasher hasher;
 
         public ApiKeyWorkflows(IStorageContext storageContext,
+                               ITenantProvider tenantProvider,
                                IApiTokenFactory tokenFactory,
                                IHashedApiKeyStore keyStore,
                                IDateTimeProvider dateTimeProvider,
@@ -26,6 +28,7 @@ namespace SignalBox.Core.Workflows
                                IHasher hasher)
         {
             this.storageContext = storageContext;
+            this.tenantProvider = tenantProvider;
             this.tokenFactory = tokenFactory;
             this.keyStore = keyStore;
             this.dateTimeProvider = dateTimeProvider;
@@ -131,7 +134,17 @@ namespace SignalBox.Core.Workflows
                         scope = scope.Replace(o, "");
                     }
                 }
+
                 scope = scope.Trim();
+
+                var tenant = tenantProvider.Current();
+                if (tenant != null)
+                {
+                    logger.LogInformation("Adding tenant scope to API Key");
+                    // remove any other tenant that might be sneakily in the user's token
+                    var scopeList = scope.Split(' ').Where(s => !s.Contains("tenant:")).Append(tenant.AccessScope());
+                    scope = string.Join(' ', scopeList);
+                }
 
                 // generate a new key
                 var apiKey = System.Guid.NewGuid().ToBase64Encoded();

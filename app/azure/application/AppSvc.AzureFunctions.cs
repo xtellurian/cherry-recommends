@@ -105,6 +105,11 @@ namespace SignalBox.Azure
                             Name = "Auth0__Management__Endpoint",
                             Value = $"https://{auth0Config.Require("domain")}/oauth/token"
                         },
+                        new NameValuePairArgs{ // for giving client access to tenant scopes
+                            Name = "Auth0__M2M__ClientId",
+                            Value = auth0.M2MClientId
+                        },
+
                         // azure envuroment
                         new NameValuePairArgs{
                             Name = "AzureEnvironment__SubscriptionId",

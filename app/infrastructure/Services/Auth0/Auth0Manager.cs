@@ -231,6 +231,45 @@ namespace SignalBox.Infrastructure.Services
             });
         }
 
+        public async Task AddPermissionToClientGrant(string clientId, Tenant tenant)
+        {
+            await Initialize();
+
+            var client = await ApiClient.Clients.GetAsync(clientId);
+            logger.LogInformation("Got reference to client {clientId}", client.ClientId);
+            var grants = await ApiClient.ClientGrants.GetAllAsync(new GetClientGrantsRequest
+            {
+                Audience = credentials.DefaultAudience,
+                ClientId = clientId
+            }, new Auth0.ManagementApi.Paging.PaginationInfo());
+
+            if (grants.Any(_ => _.Scope?.Contains(tenant.AccessScope()) == true))
+            {
+                // scope exists
+                logger.LogInformation("Client Grant exists for client {client} to audience {audience} with scope {scope}",
+                    client.ClientId, credentials.DefaultAudience, tenant.AccessScope());
+            }
+            else if (grants.Any())
+            {
+                // grant exists, so update it.
+                var grant = grants.First();
+                grant.Scope.Add(tenant.AccessScope());
+                await ApiClient.ClientGrants.UpdateAsync(grant.Id, new ClientGrantUpdateRequest
+                {
+                    Scope = grant.Scope
+                });
+            }
+            else
+            {
+                await ApiClient.ClientGrants.CreateAsync(new ClientGrantCreateRequest
+                {
+                    Audience = credentials.DefaultAudience,
+                    ClientId = clientId,
+                    Scope = new List<string> { tenant.AccessScope() }
+                });
+            }
+        } 
+
         private async Task EnsureTenantScopeExists(Tenant tenant)
         {
             logger.LogInformation($"Ensuring tenant scope exists for tenant {tenant.Name}");

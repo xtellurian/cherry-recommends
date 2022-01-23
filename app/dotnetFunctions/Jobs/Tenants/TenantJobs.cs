@@ -22,6 +22,7 @@ namespace SignalBox.Functions
         private readonly IDatabaseManager dbManager;
         private readonly ITelemetry telemetry;
         private readonly IOptions<Hosting> hostingOptions;
+        private readonly IOptions<Auth0M2MClient> m2MClientOptions;
         private readonly ITenantStore tenantStore;
         private readonly ITenantMembershipStore membershipStore;
         private readonly IAuth0Service auth0Service;
@@ -29,6 +30,7 @@ namespace SignalBox.Functions
         public TenantJobs(IDatabaseManager dbManager,
                           ITelemetry telemetry,
                           IOptions<Hosting> hostingOptions,
+                          IOptions<Auth0M2MClient> m2mClientOptions,
                           ITenantStore tenantStore,
                           ITenantMembershipStore membershipStore,
                           IAuth0Service auth0Service)
@@ -36,6 +38,7 @@ namespace SignalBox.Functions
             this.dbManager = dbManager;
             this.telemetry = telemetry;
             this.hostingOptions = hostingOptions;
+            m2MClientOptions = m2mClientOptions;
             this.tenantStore = tenantStore;
             this.membershipStore = membershipStore;
             this.auth0Service = auth0Service;
@@ -292,6 +295,9 @@ namespace SignalBox.Functions
             await AddUserToTenant(info.CreatorId, tenant, logger);
             tenant.Status = Tenant.Status_Created;
             await tenantStore.SaveChanges();
+
+            // give the M2M account access to the tenant
+            await auth0Service.AddPermissionToClientGrant(m2MClientOptions.Value.ClientId, tenant);
 
             tenantCreateStopwatch.Stop();
             telemetry.TrackMetric("CreateTenant.TimeElapsed.Seconds", tenantCreateStopwatch.Elapsed.TotalSeconds);

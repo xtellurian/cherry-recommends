@@ -5,6 +5,7 @@ namespace SignalBox.Core
 {
     public interface IAuth0Service
     {
+        Task AddPermissionToClientGrant(string clientId, Tenant tenant);
         Task AddTenantPermission(string creatorId, Tenant tenant);
         Task<UserInfo> AddUser(InviteRequest invite);
         Task CreateRoleForTenant(Tenant tenant);

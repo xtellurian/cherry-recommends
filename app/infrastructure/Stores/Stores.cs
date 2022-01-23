@@ -85,16 +85,16 @@ namespace SignalBox.Infrastructure
         }
         public static IServiceCollection UseSqlite<T>(this IServiceCollection services,
                                                     string connectionString,
-                                                    bool enableEnvironments = true,
+                                                    // bool enableEnvironments = true,
                                                     string migrationAssembly = "sqlite") where T : DbContextBase
         {
             services.AddDbContext<T>((provider, options) =>
                {
                    options.UseSqlite(connectionString, b => b.MigrationsAssembly(migrationAssembly));
-                   if (enableEnvironments)
-                   {
-                       options.AddInterceptors(provider.GetRequiredService<IEnvironmentInterceptor>());
-                   }
+                //    if (enableEnvironments)
+                //    {
+                //        options.AddInterceptors(provider.GetRequiredService<IEnvironmentInterceptor>());
+                //    }
                });
             return services;
         }

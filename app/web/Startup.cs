@@ -79,7 +79,7 @@ namespace SignalBox.Web
                 }
                 else if (provider == "sqlite")
                 {
-                    services.UseSqlite<MultiTenantDbContext>(Configuration.GetConnectionString("Tenants"), enableEnvironments: false);
+                    services.UseSqlite<MultiTenantDbContext>(Configuration.GetConnectionString("Tenants"));
                     services.UseMultitenantSqlite("databases");
                 }
                 else

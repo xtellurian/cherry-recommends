@@ -179,6 +179,7 @@ namespace SignalBox.Functions
 
             services.Configure<HubspotAppCredentials>(configuration.GetSection("HubSpot").GetSection("AppCredentials"));
             services.Configure<Auth0ManagementCredentials>(configuration.GetSection("Auth0").GetSection("Management"));
+            services.Configure<Auth0M2MClient>(configuration.GetSection("Auth0").GetSection("M2M"));
             services.Configure<Hosting>(configuration.GetSection("Hosting"));
         }
 
