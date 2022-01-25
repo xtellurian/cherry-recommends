@@ -3,8 +3,6 @@ import { useAuth } from "../utility/useAuth";
 import { Spinner } from "./molecules";
 import { Dashboard } from "./dashboard/Dashboard";
 
-
-
 export const Home = () => {
   const { isAuthenticated, isLoading } = useAuth();
   if (isLoading) {
@@ -22,8 +20,6 @@ export const Home = () => {
       </React.Fragment>
     );
   } else {
-    return <div>
-      Howd we get here...
-    </div>
+    return <div>Howd we get here...</div>;
   }
 };

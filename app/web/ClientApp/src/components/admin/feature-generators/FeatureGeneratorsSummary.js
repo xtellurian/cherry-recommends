@@ -50,7 +50,10 @@ export const FeatureGeneratorsSummary = () => {
   const generators = useFeatureGenerators({ trigger });
   return (
     <React.Fragment>
-      <CreateButtonClassic className="float-right" to="feature-generators/create">
+      <CreateButtonClassic
+        className="float-right"
+        to="feature-generators/create"
+      >
         Create Feature Generator
       </CreateButtonClassic>
       <Title>Feature Generators</Title>

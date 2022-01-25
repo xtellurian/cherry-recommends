@@ -17,13 +17,17 @@ export const ToggleSwitch = ({
   optionLabels,
   small,
   disabled,
-  className
+  className,
 }) => {
   if (!optionLabels) {
     optionLabels = defaultOptionLabels;
   }
   return (
-    <div className={`toggle-switch ${className || ""} ${small ? " small-switch" : ""}`}>
+    <div
+      className={`toggle-switch ${className || ""} ${
+        small ? " small-switch" : ""
+      }`}
+    >
       <input
         type="checkbox"
         name={name}

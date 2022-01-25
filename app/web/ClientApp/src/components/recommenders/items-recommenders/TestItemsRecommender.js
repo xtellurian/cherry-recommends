@@ -37,8 +37,6 @@ export const TestRecommender = () => {
   return (
     <React.Fragment>
       <ItemRecommenderLayout>
-        
-
         <AsyncSelectCustomer
           placeholder="Search for a user to make a recommendation for."
           onChange={(v) => setSelectedTrackedUser(v.value)}

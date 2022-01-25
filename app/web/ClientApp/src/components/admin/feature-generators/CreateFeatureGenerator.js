@@ -2,12 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createFeatureGeneratorAsync } from "../../../api/featureGeneratorsApi";
-import {
-  Title,
-  Subtitle,
-  ErrorCard,
-  BackButton,
-} from "../../molecules";
+import { Title, Subtitle, ErrorCard, BackButton } from "../../molecules";
 import { AsyncButton } from "../../molecules/AsyncButton";
 import { AsyncSelectFeature } from "../../molecules/selectors/AsyncSelectFeature";
 export const CreateFeatureGenerator = () => {

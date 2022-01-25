@@ -44,7 +44,7 @@ export const AsyncSelectItem = ({
       searchTerm: inputValue,
     })
       .then((r) => {
-          console.log(r)
+        console.log(r);
         const selectable = r.items.map((x) => ({
           value: x,
           label: x.name || x.commonId,

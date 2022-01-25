@@ -19,7 +19,7 @@ export const SearchBox = ({ onSearch }) => {
           Search:
         </span>
       </div>
-      
+
       <input
         type="text"
         placeholder="Press Enter to search"

@@ -23,5 +23,12 @@ const ashes = {
 };
 
 export const JsonView = ({ data, shouldExpandNode }) => {
-  return <JSONTree data={data} theme={ashes} hideRoot={true} shouldExpandNode={shouldExpandNode} />;
+  return (
+    <JSONTree
+      data={data}
+      theme={ashes}
+      hideRoot={true}
+      shouldExpandNode={shouldExpandNode}
+    />
+  );
 };

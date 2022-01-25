@@ -12,9 +12,7 @@ export const CustomerListItem = ({ customer }) => {
       </div>
       <div className="col-3">
         <Link to={`/customers/detail/${customer.id}`}>
-          <button className="btn btn-outline-primary btn-block">
-            Details
-          </button>
+          <button className="btn btn-outline-primary btn-block">Details</button>
         </Link>
       </div>
     </EntityRow>

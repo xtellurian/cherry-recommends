@@ -2,8 +2,8 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { TabActivator, Tabs } from "../../../molecules/layout/Tabs";
 import { useIntegratedSystem } from "../../../../api-hooks/integratedSystemsApi";
-import {  Spinner } from "../../../molecules";
-import {CustomIntegrationSummary} from "./CustomIntegrationSummary"
+import { Spinner } from "../../../molecules";
+import { CustomIntegrationSummary } from "./CustomIntegrationSummary";
 
 const tabs = [
   {
@@ -25,7 +25,6 @@ export const CustomIntegrationComponent = () => {
       <TabActivator tabId={tabs[0].id} defaultTabId={tabs[0].id}>
         <CustomIntegrationSummary integratedSystem={integratedSystem} />
       </TabActivator>
-      
     </React.Fragment>
   );
 };

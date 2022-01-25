@@ -60,7 +60,11 @@ const RecommendationRow = ({ recommendation, size }) => {
           </Col>
         </EntityRow>
       )}
-      {size === "sm" && <EntityRow size="sm" tooltip={label}>{label}</EntityRow>}
+      {size === "sm" && (
+        <EntityRow size="sm" tooltip={label}>
+          {label}
+        </EntityRow>
+      )}
     </React.Fragment>
   );
 };

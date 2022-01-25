@@ -34,10 +34,7 @@ export const ParameterSetRecommendersComponent = () => {
           path={`${path}/detail/:id`}
           component={ParameterSetRecommenderDetail}
         />
-        <AuthorizeRoute
-          path={`${path}/overview/:id`}
-          component={Overview}
-        />
+        <AuthorizeRoute path={`${path}/overview/:id`} component={Overview} />
         <AuthorizeRoute
           path={`${path}/test/:id`}
           component={TestParameterSetRecommender}

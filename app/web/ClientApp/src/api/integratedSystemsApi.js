@@ -12,8 +12,10 @@ export const createIntegratedSystemAsync =
 export const deleteIntegratedSystemAsync =
   integratedSystems.deleteIntegratedSystemAsync;
 
-export const fetchWebhookReceiversAsync = integratedSystems.fetchWebhookReceiversAsync;
+export const fetchWebhookReceiversAsync =
+  integratedSystems.fetchWebhookReceiversAsync;
 
-export const createWebhookReceiverAsync = integratedSystems.createWebhookReceiverAsync;
+export const createWebhookReceiverAsync =
+  integratedSystems.createWebhookReceiverAsync;
 
 export const renameAsync = integratedSystems.renameAsync;

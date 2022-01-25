@@ -1,5 +1,5 @@
 import React from "react";
-import {  Switch, useRouteMatch } from "react-router-dom";
+import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { CreateModelRegistration } from "./CreateModelRegistration";
 import { ModelRegistrationsSummary } from "./ModelRegistrationsSummary";
@@ -10,18 +10,17 @@ export const ModelRegistrationsComponent = () => {
   return (
     <React.Fragment>
       <Switch>
-        <AuthorizeRoute exact path={`${path}`} component={ModelRegistrationsSummary} />
+        <AuthorizeRoute
+          exact
+          path={`${path}`}
+          component={ModelRegistrationsSummary}
+        />
         <AuthorizeRoute
           exact
           path={`${path}/create`}
           component={CreateModelRegistration}
         />
-        <AuthorizeRoute
-          exact
-          path={`${path}/test/:id`}
-          component={TestModel}
-        />
-
+        <AuthorizeRoute exact path={`${path}/test/:id`} component={TestModel} />
       </Switch>
     </React.Fragment>
   );

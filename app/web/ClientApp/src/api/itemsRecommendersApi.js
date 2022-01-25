@@ -65,4 +65,5 @@ export const fetchLearningFeaturesAsync =
 export const setLearningFeaturesAsync =
   itemsRecommenders.setLearningFeaturesAsync;
 
-export const fetchReportImageBlobUrlAsync = itemsRecommenders.fetchReportImageBlobUrlAsync;
+export const fetchReportImageBlobUrlAsync =
+  itemsRecommenders.fetchReportImageBlobUrlAsync;

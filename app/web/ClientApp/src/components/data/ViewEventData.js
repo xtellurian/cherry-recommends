@@ -122,7 +122,7 @@ export const ViewEventData = () => {
           )}
         </Col>
       </Row>
-      <hr/>
+      <hr />
       <EventHistoryBarChart kind={state.kind} eventType={state.eventType} />
     </React.Fragment>
   );

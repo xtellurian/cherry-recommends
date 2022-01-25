@@ -9,7 +9,11 @@ export const EnvironmentsComponent = () => {
   return (
     <React.Fragment>
       <Switch>
-        <AuthorizeRoute exact path={`${path}`} component={EnvironmentsSummary} />
+        <AuthorizeRoute
+          exact
+          path={`${path}`}
+          component={EnvironmentsSummary}
+        />
         <AuthorizeRoute
           exact
           path={`${path}/create`}

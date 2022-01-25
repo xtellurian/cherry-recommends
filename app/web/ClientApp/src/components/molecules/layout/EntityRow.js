@@ -8,7 +8,10 @@ const EntityRowToolip = ({ children }) => {
 export const EntityRow = ({ children, size, tooltip }) => {
   if (size === "sm") {
     return (
-      <Tippy duration={[null, 0]} content={<EntityRowToolip>{`${tooltip}`}</EntityRowToolip>}>
+      <Tippy
+        duration={[null, 0]}
+        content={<EntityRowToolip>{`${tooltip}`}</EntityRowToolip>}
+      >
         <div className="border-bottom p-1 text-truncate">{children}</div>
       </Tippy>
     );

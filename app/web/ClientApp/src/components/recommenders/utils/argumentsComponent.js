@@ -36,7 +36,11 @@ export const ArgumentsComponentUtil = ({ recommender, setArgumentsAsync }) => {
         )}
       </div>
       {!args && <Spinner />}
-      <AsyncButton className="btn btn-primary w-25" loading={saving} onClick={setArgs}>
+      <AsyncButton
+        className="btn btn-primary w-25"
+        loading={saving}
+        onClick={setArgs}
+      >
         Save
       </AsyncButton>
     </React.Fragment>

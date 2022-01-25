@@ -55,7 +55,9 @@ export const FeatureGeneratorsSummary = () => {
   const generators = useFeatureGenerators({ trigger });
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/features">Back to Features</BackButton>
+      <BackButton className="float-right" to="/features">
+        Back to Features
+      </BackButton>
       <Title>Feature Generators</Title>
 
       <hr />

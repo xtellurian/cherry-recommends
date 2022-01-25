@@ -8,7 +8,7 @@ import {
   BackButton,
   AsyncButton,
   ErrorCard,
-  Spinner
+  Spinner,
 } from "../molecules";
 import { PropertiesEditor } from "../molecules/PropertiesEditor";
 import { useAccessToken } from "../../api-hooks/token";

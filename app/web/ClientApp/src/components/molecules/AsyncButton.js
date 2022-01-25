@@ -1,6 +1,12 @@
 import React from "react";
 
-export const AsyncButton = ({ className, onClick, children, loading, disabled }) => {
+export const AsyncButton = ({
+  className,
+  onClick,
+  children,
+  loading,
+  disabled,
+}) => {
   return (
     <button
       onClick={onClick}

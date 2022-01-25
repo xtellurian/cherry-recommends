@@ -9,7 +9,10 @@ export const RecommendableItemsSummary = () => {
   const items = useItems();
   return (
     <React.Fragment>
-      <CreateButtonClassic className="float-right" to="/recommendable-items/create">
+      <CreateButtonClassic
+        className="float-right"
+        to="/recommendable-items/create"
+      >
         Create Recommendable Item
       </CreateButtonClassic>
       <Title>Item Catalogue</Title>

@@ -6,6 +6,6 @@ export const useAuth = () => {
     user,
     isLoading,
     isAuthenticated,
-    logout
+    logout,
   };
 };

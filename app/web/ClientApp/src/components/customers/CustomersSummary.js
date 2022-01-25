@@ -41,10 +41,7 @@ export const CustomersSummary = () => {
       <div className="mt-3">
         {trackedUsers.items &&
           trackedUsers.items.map((u) => (
-            <CustomerListItem
-              key={u.id}
-              customer={u}
-            />
+            <CustomerListItem key={u.id} customer={u} />
           ))}
       </div>
       <Paginator {...trackedUsers.pagination} />

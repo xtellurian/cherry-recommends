@@ -1,9 +1,6 @@
 import React from "react";
 import { useAccessToken } from "./token";
-import {
-  fetchCustomersEventsAsync,
-  fetchEventAsync,
-} from "../api/eventsApi";
+import { fetchCustomersEventsAsync, fetchEventAsync } from "../api/eventsApi";
 
 export const useEvent = ({ id }) => {
   const token = useAccessToken();

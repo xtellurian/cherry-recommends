@@ -9,13 +9,16 @@ export const FeatureGeneratorsComponent = () => {
   return (
     <React.Fragment>
       <Switch>
-        <AuthorizeRoute exact path={`${path}`} component={FeatureGeneratorsSummary} />
+        <AuthorizeRoute
+          exact
+          path={`${path}`}
+          component={FeatureGeneratorsSummary}
+        />
         <AuthorizeRoute
           exact
           path={`${path}/create`}
           component={CreateFeatureGenerator}
         />
-       
       </Switch>
     </React.Fragment>
   );

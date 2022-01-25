@@ -8,7 +8,7 @@ import { Spinner } from "../molecules/Spinner";
 export const SegmentMembers = () => {
   let { id } = useParams();
 
-  const { segment } = useSegment({id});
+  const { segment } = useSegment({ id });
 
   if (!segment) {
     return <Spinner />;

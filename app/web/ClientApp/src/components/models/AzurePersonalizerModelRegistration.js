@@ -9,7 +9,6 @@ export const AzurePersonalizerModelRegistration = ({
   hostingType,
   modelType,
 }) => {
-
   const history = useHistory();
   const token = useAccessToken();
   const [error, setError] = React.useState();

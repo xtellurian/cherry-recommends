@@ -24,10 +24,10 @@ export const ConsumeRecommendationPopup = ({
       correlatorId: recommendation.correlatorId,
     })
       .then(() => {
-          setIsOpen(false);
-          if (onConsumed) {
-            onConsumed();
-          }
+        setIsOpen(false);
+        if (onConsumed) {
+          onConsumed();
+        }
       })
       .catch((error) => setError(error));
   };

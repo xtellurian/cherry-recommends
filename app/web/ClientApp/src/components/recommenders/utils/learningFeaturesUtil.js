@@ -77,7 +77,10 @@ export const LearningFeaturesUtil = ({
       )}
 
       <div className="mt-4">
-        <button className="btn btn-primary float-right" onClick={() => setIsOpen(true)}>
+        <button
+          className="btn btn-primary float-right"
+          onClick={() => setIsOpen(true)}
+        >
           Add Learning Feature
         </button>
       </div>

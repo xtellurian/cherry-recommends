@@ -8,7 +8,7 @@
 
 .primary-nav-link.active {
   color: var(--cherry-purple);
-  border-bottom: 2px solid var(--cherry-purple) ;
+  border-bottom: 2px solid var(--cherry-purple);
 }
 
 .list-group-item {
