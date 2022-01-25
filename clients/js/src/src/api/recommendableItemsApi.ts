@@ -9,6 +9,7 @@ import {
   SetpropertiesRequest,
 } from "../interfaces";
 import { executeFetch } from "./client/apiClientTs";
+import { components } from "../model/api";
 
 import * as pr from "./commonEntity/propertiesApiUtil";
 
@@ -35,14 +36,7 @@ export const fetchItemAsync = async ({ token, id }: EntityRequest) => {
 };
 
 interface CreateItemRequest extends AuthenticatedRequest {
-  item: {
-    commonId: string;
-    name: string;
-    listPrice: number;
-    firectCost: number;
-    description: number;
-    properties: any;
-  };
+  item: components["schemas"]["CreateRecommendableItemDto"];
 }
 export const createItemAsync = async ({
   token,

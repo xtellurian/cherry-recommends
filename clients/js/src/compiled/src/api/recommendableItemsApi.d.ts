@@ -1,15 +1,9 @@
 import { AuthenticatedRequest, DeleteRequest, DeleteResponse, EntityRequest, EntitySearchRequest, PaginateResponse, RecommendableItem, SetpropertiesRequest } from "../interfaces";
+import { components } from "../model/api";
 export declare const fetchItemsAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<RecommendableItem>>;
 export declare const fetchItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
 interface CreateItemRequest extends AuthenticatedRequest {
-    item: {
-        commonId: string;
-        name: string;
-        listPrice: number;
-        firectCost: number;
-        description: number;
-        properties: any;
-    };
+    item: components["schemas"]["CreateRecommendableItemDto"];
 }
 export declare const createItemAsync: ({ token, item, }: CreateItemRequest) => Promise<RecommendableItem>;
 interface UpdateItemRequest extends EntityRequest {

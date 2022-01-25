@@ -7,17 +7,8 @@ interface ItemsRecommendationsRequest extends PaginatedEntityRequest {
 }
 export declare const fetchItemsRecommendationsAsync: ({ token, page, pageSize, id, }: ItemsRecommendationsRequest) => Promise<any>;
 export declare const deleteItemsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
-interface CreateItemsRecommenderPayload {
-    commonId: string;
-    name: string;
-    itemIds: number[];
-    defaultItemId?: string | undefined;
-    baselineItemId: string;
-    numberOfItemsToRecommend: number | undefined;
-    useAutoAi: boolean;
-}
 interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
-    payload: CreateItemsRecommenderPayload;
+    payload: components["schemas"]["CreateItemsRecommender"];
 }
 export declare const createItemsRecommenderAsync: ({ token, payload, useInternalId, }: CreateItemsRecommenderRequest) => Promise<any>;
 export declare const fetchItemsAsync: ({ token, id }: EntityRequest) => Promise<any>;

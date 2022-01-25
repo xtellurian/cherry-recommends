@@ -1,6 +1,6 @@
 {
   "name": "cherry.ai",
-  "version": "1.0.7-dev1",
+  "version": "1.0.8",
   "description": "API Client for Cherry Recommends ",
   "main": "dist/cherry.ai.umd.js",
   "module": "dist/cherry.ai.es.js",

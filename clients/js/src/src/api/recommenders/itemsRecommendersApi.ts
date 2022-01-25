@@ -74,17 +74,8 @@ export const deleteItemsRecommenderAsync = async ({
   });
 };
 
-interface CreateItemsRecommenderPayload {
-  commonId: string;
-  name: string;
-  itemIds: number[];
-  defaultItemId?: string | undefined; // backwards compat
-  baselineItemId: string;
-  numberOfItemsToRecommend: number | undefined;
-  useAutoAi: boolean;
-}
 interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
-  payload: CreateItemsRecommenderPayload;
+  payload: components["schemas"]["CreateItemsRecommender"];
 }
 export const createItemsRecommenderAsync = async ({
   token,

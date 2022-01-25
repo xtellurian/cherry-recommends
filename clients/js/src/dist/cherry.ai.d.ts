@@ -1625,17 +1625,8 @@ interface ItemsRecommendationsRequest extends PaginatedEntityRequest {
 }
 declare const fetchItemsRecommendationsAsync: ({ token, page, pageSize, id, }: ItemsRecommendationsRequest) => Promise<any>;
 declare const deleteItemsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
-interface CreateItemsRecommenderPayload {
-    commonId: string;
-    name: string;
-    itemIds: number[];
-    defaultItemId?: string | undefined;
-    baselineItemId: string;
-    numberOfItemsToRecommend: number | undefined;
-    useAutoAi: boolean;
-}
 interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
-    payload: CreateItemsRecommenderPayload;
+    payload: components["schemas"]["CreateItemsRecommender"];
 }
 declare const createItemsRecommenderAsync: ({ token, payload, useInternalId, }: CreateItemsRecommenderRequest) => Promise<any>;
 declare const fetchItemsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
@@ -1981,14 +1972,7 @@ declare namespace reactConfigApi_d {
 declare const fetchItemsAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<RecommendableItem>>;
 declare const fetchItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
 interface CreateItemRequest extends AuthenticatedRequest {
-    item: {
-        commonId: string;
-        name: string;
-        listPrice: number;
-        firectCost: number;
-        description: number;
-        properties: any;
-    };
+    item: components["schemas"]["CreateRecommendableItemDto"];
 }
 declare const createItemAsync: ({ token, item, }: CreateItemRequest) => Promise<RecommendableItem>;
 interface UpdateItemRequest extends EntityRequest {
