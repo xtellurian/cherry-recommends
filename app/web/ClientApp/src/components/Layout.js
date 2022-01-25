@@ -8,8 +8,9 @@ export const Layout = ({ children }) => {
   return (
     <AnonymousSwitcher>
       <TenantChecker>
-        <NavMenu />
-        <Container>{children}</Container>
+        <NavMenu>
+          <Container>{children}</Container>
+        </NavMenu>
       </TenantChecker>
     </AnonymousSwitcher>
   );

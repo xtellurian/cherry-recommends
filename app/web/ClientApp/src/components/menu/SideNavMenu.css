@@ -1,0 +1,52 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  width: 15rem;
+  height: 100vh;
+  overflow-x: hidden;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar a:hover {
+  text-decoration: none;
+}
+
+.sidebar .menu-item {
+  border-right: 4px solid transparent;
+}
+
+.sidebar .menu-item.active {
+  border-right: 4px solid var(--cherry-pink);
+}
+
+.sidebar .icon-wrapper {
+  min-width: 1em;
+}
+
+.sidebar .icon {
+  width: 1em;
+}
+
+.sidebar .menu-subitem.active {
+  color: var(--cherry-pink);
+  font-weight: bold;
+}
+
+.selectable {
+  cursor: pointer;
+}
+
+/* disable UI hightlighting */
+.disable-select {
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}

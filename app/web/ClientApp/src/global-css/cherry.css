@@ -8,6 +8,15 @@
 
   --cherry-purple-alpha: rgba(40, 9, 56, 0.1);
   --cherry-pink-alpha: rgba(229, 0, 138, 0.1);
+
+  --navbar-height: 67px; /* 768 and up */
+  --sidebar-width: 15rem; /* 768 and up */
+}
+
+@media screen and (max-width: 767px) {
+  :root {
+    --navbar-height: 58.7667px; /* 767px and below */
+  }
 }
 
 @font-face {

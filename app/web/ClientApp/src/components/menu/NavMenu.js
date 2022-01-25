@@ -12,10 +12,9 @@ import {
   DropdownToggle,
   UncontrolledDropdown,
 } from "reactstrap";
-import { GearFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../utility/useAuth";
-import { getAuthenticatedIA, settingsItems } from "./MenuIA";
+import { settingsItems } from "./MenuIA";
 import { useTokenScopes } from "../../api-hooks/token";
 import { LoadingPopup } from "../molecules/popups/LoadingPopup";
 import {
@@ -25,6 +24,7 @@ import {
 import { ActiveIndicator } from "../molecules/ActiveIndicator";
 import { ToggleGettingStartedChecklistButton } from "../onboarding/GettingStartedChecklist";
 
+import { SideNavMenu } from "./SideNavMenu";
 import "./NavMenu.css";
 
 const DropdownMenuItem = ({ section }) => {
@@ -65,7 +65,8 @@ const SmartMenuItem = ({ section }) => {
     return <SingleMenuItem item={section} />;
   }
 };
-export const NavMenu = () => {
+
+export const NavMenu = ({ children }) => {
   const { isAuthenticated, logout } = useAuth();
   const [state, setState] = React.useState({
     collapsed: true,
@@ -92,11 +93,12 @@ export const NavMenu = () => {
     setEnvironment(e);
     setTimeout(() => setChangingEnvironment(false), 700);
   };
+
   return (
     <React.Fragment>
-      <header>
-        <Navbar className="navbar-expand-md navbar-toggleable-md text-white ng-white border-bottom box-shadow mb-3">
-          <Container>
+      <header className="fixed-top">
+        <Navbar className="navbar-expand-md navbar-toggleable-md text-white ng-white border-bottom box-shadow">
+          <Container fluid>
             <NavbarBrand tag={Link} to="/">
               <img
                 className="img-fluid nav-logo"
@@ -114,67 +116,9 @@ export const NavMenu = () => {
               navbar
             >
               <ul className="navbar-nav flex-grow">
-                {isAuthenticated &&
-                  getAuthenticatedIA(scopes).map((section, index) => (
-                    <SmartMenuItem key={index} section={section} />
-                  ))}
-
-                {isAuthenticated && (
-                  <React.Fragment>
-                    <UncontrolledDropdown nav inNavbar>
-                      <DropdownToggle nav caret>
-                        {currentEnvironment?.name ?? "Default"}
-                      </DropdownToggle>
-                      <DropdownMenu right>
-                        <DropdownItem header>Environments</DropdownItem>
-                        {environments.items &&
-                          environments.items.map((i) => (
-                            <DropdownItem key={i.name}>
-                              <NavItem>
-                                <div
-                                  className="text-dark nav-link"
-                                  onClick={() => handleSetEnvironment(i)}
-                                >
-                                  <ActiveIndicator isActive={i.current}>
-                                    {i.name}
-                                  </ActiveIndicator>
-                                </div>
-                              </NavItem>
-                            </DropdownItem>
-                          ))}
-                        <DropdownItem divider />
-                        <DropdownItem>
-                          <NavItem>
-                            <NavLink
-                              tag={Link}
-                              className="text-dark"
-                              to="/settings/environments"
-                            >
-                              Manage Environments
-                            </NavLink>
-                          </NavItem>
-                        </DropdownItem>
-                        <DropdownItem>
-                          <NavItem>
-                            <NavLink
-                              tag={Link}
-                              className="text-dark"
-                              to="/settings/environments/create"
-                            >
-                              Create an Environment
-                            </NavLink>
-                          </NavItem>
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
-                  </React.Fragment>
-                )}
-
                 {isAuthenticated && (
                   <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle nav caret>
-                      <GearFill className="mr-1" />
-                    </DropdownToggle>
+                    <DropdownToggle nav>Settings</DropdownToggle>
                     <DropdownMenu right>
                       {settingsItems.map((i) => (
                         <DropdownItem key={i.name}>
@@ -199,12 +143,70 @@ export const NavMenu = () => {
                   </UncontrolledDropdown>
                 )}
 
-                <ToggleGettingStartedChecklistButton />
+                {isAuthenticated && (
+                  <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle nav className="ml-4">
+                      {currentEnvironment?.name ?? "Environments"}
+                    </DropdownToggle>
+                    <DropdownMenu right>
+                      <DropdownItem header>Environments</DropdownItem>
+                      {environments.items &&
+                        environments.items.map((i) => (
+                          <DropdownItem key={i.name}>
+                            <NavItem>
+                              <div
+                                className="text-dark nav-link"
+                                onClick={() => handleSetEnvironment(i)}
+                              >
+                                <ActiveIndicator isActive={i.current}>
+                                  {i.name}
+                                </ActiveIndicator>
+                              </div>
+                            </NavItem>
+                          </DropdownItem>
+                        ))}
+                      <DropdownItem divider />
+                      <DropdownItem>
+                        <NavItem>
+                          <NavLink
+                            tag={Link}
+                            className="text-dark"
+                            to="/settings/environments"
+                          >
+                            Manage Environments
+                          </NavLink>
+                        </NavItem>
+                      </DropdownItem>
+                      <DropdownItem>
+                        <NavItem>
+                          <NavLink
+                            tag={Link}
+                            className="text-dark"
+                            to="/settings/environments/create"
+                          >
+                            Create an Environment
+                          </NavLink>
+                        </NavItem>
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                )}
+
+                <div className="ml-4">
+                  <ToggleGettingStartedChecklistButton />
+                </div>
               </ul>
             </Collapse>
           </Container>
         </Navbar>
       </header>
+
+      <aside>
+        <SideNavMenu />
+      </aside>
+
+      <section className="content py-4">{children}</section>
+
       <LoadingPopup
         label="Switching Environment"
         loading={changingEnvironment}

@@ -1,11 +1,39 @@
 const AuthenticatedIA = [
   {
-    name: "Customers",
+    name: "Items",
+    icon: "/icons/items.svg",
+    to: { pathname: "/", hash: "#items" },
     items: [
       {
-        name: "Customers",
-        to: "/customers",
+        name: "Library",
+        to: "/recommendable-items",
       },
+      {
+        name: "Recommenders",
+        to: "/recommenders/items-recommenders",
+      },
+    ],
+  },
+  {
+    name: "Parameters",
+    icon: "/icons/parameters.svg",
+    to: { pathname: "/", hash: "#parameters" },
+    items: [
+      {
+        name: "Library",
+        to: "/parameters",
+      },
+      {
+        name: "Recommenders",
+        to: "/recommenders/parameter-set-recommenders",
+      },
+    ],
+  },
+  {
+    name: "Customers",
+    icon: "/icons/customer.svg",
+    to: { pathname: "/customers", hash: "#customers" },
+    items: [
       {
         name: "Add a Customer",
         to: "/customers/create",
@@ -21,30 +49,10 @@ const AuthenticatedIA = [
     ],
   },
   {
-    name: "Library",
-    items: [
-      {
-        name: "Items",
-        to: "/recommendable-items",
-      },
-      {
-        name: "Parameters",
-        to: "/parameters",
-      },
-    ],
-  },
-  {
-    name: "Recommenders",
-    items: [
-      {
-        name: "Items",
-        to: "/recommenders/items-recommenders",
-      },
-      {
-        name: "Parameters",
-        to: "/recommenders/parameter-set-recommenders",
-      },
-    ],
+    name: "Integrations",
+    icon: "/icons/integrations.svg",
+    to: { pathname: "/settings/integrations", hash: "#integrations" },
+    items: [],
   },
 ];
 
@@ -55,8 +63,10 @@ export const getAuthenticatedIA = (scopes) => {
     return ia;
   }
   if (scopes.includes("write:features")) {
-    ia.splice(1, 0, {
+    ia.splice(0, 0, {
       name: "Admin",
+      icon: "/icons/metric.svg",
+      to: { pathname: "/", hash: "#admin" },
       items: [
         {
           name: "Features",
@@ -84,10 +94,6 @@ export const settingsItems = [
   {
     name: "API Keys",
     to: "/settings/api-keys",
-  },
-  {
-    name: "Integrations",
-    to: "/settings/integrations",
   },
   {
     name: "Tenant Settings",
