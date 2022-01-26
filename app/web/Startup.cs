@@ -182,6 +182,7 @@ namespace SignalBox.Web
             services.Configure<HubspotAppCredentials>(Configuration.GetSection("HubSpot").GetSection("AppCredentials"));
             services.Configure<Hosting>(Configuration.GetSection("Hosting"));
             services.Configure<PythonAzureFunctionsConnectionOptions>(Configuration.GetSection("PythonFunctions"));
+            services.Configure<DotnetAzureFunctionsConnectionOptions>(Configuration.GetSection("DotnetFunctions"));
 
 
             services.AddScoped<ITenantAuthorizationStrategy, TokenClaimTenantAuthorizor>();

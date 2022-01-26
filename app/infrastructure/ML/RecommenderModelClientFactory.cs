@@ -35,7 +35,7 @@ namespace SignalBox.Infrastructure.ML
             if (recommender.ModelRegistration.HostingType == HostingTypes.AzureFunctions && model.ModelType == ModelTypes.ItemsRecommenderV1)
             {
                 return Task.FromResult((IRecommenderModelClient<TOutput>)
-                    new PythonFunctionsOptimiserRecommenderClient(httpClient, tenantProvider));
+                    new DotnetFunctionsOptimiserRecommenderClient(httpClient, tenantProvider));
             }
             if (recommender.ModelRegistration.HostingType == HostingTypes.AzureMLContainerInstance && model.ModelType == ModelTypes.ParameterSetRecommenderV1)
             {

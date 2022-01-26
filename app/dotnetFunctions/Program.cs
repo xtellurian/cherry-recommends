@@ -13,6 +13,8 @@ using SignalBox.Core.Integrations;
 using SignalBox.Infrastructure.Azure;
 using SignalBox.Infrastructure.Sqlite;
 using SignalBox.Infrastructure.Models;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SignalBox.Functions
 {
@@ -136,6 +138,11 @@ namespace SignalBox.Functions
                         throw new ConfigurationException("No valid provider");
                     }
 
+                    services.Configure<JsonSerializerOptions>(options => 
+                    {
+                        options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                        options.Converters.Add(new JsonStringEnumConverter());
+                    });
 
                     services.AddScoped<IQueueMessagesFileStore, AzureBlobQueueMessagesFileStore>();
                     services.AddScoped<IEnvironmentProvider, AzFunctionEnvironmentProvider>();

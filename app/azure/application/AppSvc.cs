@@ -163,6 +163,10 @@ namespace SignalBox.Azure
                     {"PythonFunctions__Url",  Output.Format($"https://{pythonFuncs.DefaultHostName}/")},
                     {"PythonFunctions__Key",  Output.Format($"{this.PythonFunctionAppDefaultKey}")},
 
+                    // dotnet functions connection
+                    {"DotnetFunctions__Url",  Output.Format($"https://{dotnetFunctionApp.DefaultHostName}/")},
+                    {"DotnetFunctions__Key",  Output.Format($"{this.DotnetFunctionAppDefaultKey}")},
+
                     // hubspot connection
                     {"HubSpot__AppCredentials__AppId", hubspotConfig.Get("appId") ?? ""},
                     {"HubSpot__AppCredentials__ClientId", hubspotConfig.Get("clientId") ?? ""},

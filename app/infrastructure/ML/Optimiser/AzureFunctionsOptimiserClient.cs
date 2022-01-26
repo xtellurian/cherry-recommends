@@ -14,7 +14,7 @@ namespace SignalBox.Infrastructure.ML
     {
         private readonly ITenantProvider tenantProvider;
 
-        public PythonAzureFunctionsConnectionOptions connectionOptions { get; }
+        public DotnetAzureFunctionsConnectionOptions connectionOptions { get; }
 
         private JsonSerializerOptions serializerOptions => new JsonSerializerOptions
         {
@@ -22,7 +22,7 @@ namespace SignalBox.Infrastructure.ML
         };
 
         public AzureFunctionsOptimiserClient(
-            IOptions<PythonAzureFunctionsConnectionOptions> options,
+            IOptions<DotnetAzureFunctionsConnectionOptions> options,
             HttpClient httpClient,
             ITenantProvider tenantProvider)
         {

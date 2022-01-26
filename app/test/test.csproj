@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\web\web.csproj" />
     <ProjectReference Include="..\infrastructure\infrastructure.csproj" />
+    <ProjectReference Include="..\dotnetFunctions\dotnetFunctions.csproj" />
   </ItemGroup>
 
 </Project>

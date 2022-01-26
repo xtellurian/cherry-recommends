@@ -7,11 +7,11 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.ML.Azure
 {
-    public class PythonFunctionsOptimiserRecommenderClient : MLModelClient, IRecommenderModelClient<ItemsRecommenderModelOutputV1>
+    public class DotnetFunctionsOptimiserRecommenderClient : MLModelClient, IRecommenderModelClient<ItemsRecommenderModelOutputV1>
     {
         private readonly ITenantProvider tenantProvider;
 
-        public PythonFunctionsOptimiserRecommenderClient(
+        public DotnetFunctionsOptimiserRecommenderClient(
             HttpClient httpClient,
             ITenantProvider tenantProvider)
         {
