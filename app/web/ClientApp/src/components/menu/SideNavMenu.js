@@ -74,7 +74,9 @@ export const SideNavMenu = () => {
       {isAuthenticated &&
         authenticatedIA.map((item) => (
           <div key={item.name} className="border-bottom">
-            <Link to={item.to}>
+            <Link
+              to={location.hash === item.to.hash ? item.to.pathname : item.to}
+            >
               <MenuItem
                 active={location.hash === item.to.hash}
                 label={item.name}
