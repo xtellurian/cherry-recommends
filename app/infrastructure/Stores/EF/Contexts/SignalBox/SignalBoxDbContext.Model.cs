@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
-using SignalBox.Core.Features.Destinations;
+using SignalBox.Core.Metrics.Destinations;
 using SignalBox.Core.Integrations.Custom;
 using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommendations.Destinations;
@@ -23,11 +23,11 @@ namespace SignalBox.Infrastructure
         public DbSet<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
         public DbSet<Parameter> Parameters { get; set; }
 
-        // features
-        public DbSet<Feature> Features { get; set; }
-        public DbSet<FeatureGenerator> FeatureGenerators { get; set; }
-        public DbSet<HistoricTrackedUserFeature> HistoricTrackedUserFeatures { get; set; }
-        public DbSet<LatestFeatureVersion> LatestFeatureVersions { get; set; } // SQL view
+        // metrics
+        public DbSet<Metric> Metrics { get; set; }
+        public DbSet<MetricGenerator> MetricGenerators { get; set; }
+        public DbSet<HistoricCustomerMetric> HistoricCustomerMetrics { get; set; }
+        public DbSet<LatestMetricVersion> LatestFeatureVersions { get; set; } // SQL view
 
         // recommenders
         public DbSet<RecommenderEntityBase> Recommenders { get; set; }
@@ -41,9 +41,9 @@ namespace SignalBox.Infrastructure
         public DbSet<SegmentSourceFunctionDestination> SegmentSourceFunctionDestinations { get; set; }
 
         // feature destinations
-        public DbSet<FeatureDestinationBase> FeatureDestinations { get; set; }
-        public DbSet<WebhookFeatureDestination> WebhookFeatureDestinations { get; set; }
-        public DbSet<HubspotContactPropertyFeatureDestination> HubspotContactPropertyFeatureDestinations { get; set; }
+        public DbSet<MetricDestinationBase> FeatureDestinations { get; set; }
+        public DbSet<WebhookMetricDestination> WebhookFeatureDestinations { get; set; }
+        public DbSet<HubspotContactPropertyMetricDestination> HubspotContactPropertyFeatureDestinations { get; set; }
 
         // recommendations
         public DbSet<RecommendationCorrelator> RecommendationCorrelators { get; set; }

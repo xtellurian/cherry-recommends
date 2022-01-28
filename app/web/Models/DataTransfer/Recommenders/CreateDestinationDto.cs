@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using SignalBox.Core;
-using SignalBox.Core.Features.Destinations;
+using SignalBox.Core.Metrics.Destinations;
 
 namespace SignalBox.Web.Dto
 {
@@ -23,11 +23,11 @@ namespace SignalBox.Web.Dto
             {
                 throw new BadRequestException("Only one of endpoint and propertyName must be set.");
             }
-            if (DestinationType == FeatureDestinationBase.WebhookDestinationType && string.IsNullOrEmpty(Endpoint))
+            if (DestinationType == MetricDestinationBase.WebhookDestinationType && string.IsNullOrEmpty(Endpoint))
             {
                 throw new BadRequestException("Webhooks require an endpoint");
             }
-            if (DestinationType == FeatureDestinationBase.HubspotContactPropertyDestinationType && string.IsNullOrEmpty(PropertyName))
+            if (DestinationType == MetricDestinationBase.HubspotContactPropertyDestinationType && string.IsNullOrEmpty(PropertyName))
             {
                 throw new BadRequestException("Hubspot Property Name require an property name");
             }

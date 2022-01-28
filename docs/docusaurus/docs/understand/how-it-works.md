@@ -21,7 +21,7 @@ Unlike other products, Cherry doesn't require lots of data integration and confi
 
 ## Personalise
 
-Cherry personalises offers on a set of features that you identify or automatically does it with our AI.
+Cherry personalises offers on a set of Metrics that you identify or automatically does it with our AI.
 Essentially Cherry chooses the best offer from a list for each customer to achieve some business outcome (e.g. convert, retain).
 This personalisation doesn't require end-to-end bespoke reimagining of customer journeys.
 

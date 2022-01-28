@@ -16,7 +16,7 @@ namespace sqlserver.SignalBox
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.12")
+                .HasAnnotation("ProductVersion", "5.0.13")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("CustomerSegment", b =>
@@ -32,21 +32,6 @@ namespace sqlserver.SignalBox
                     b.HasIndex("SegmentsId");
 
                     b.ToTable("SegmentTrackedUser");
-                });
-
-            modelBuilder.Entity("FeatureRecommenderEntityBase", b =>
-                {
-                    b.Property<long>("LearningFeaturesId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("RecommendersId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("LearningFeaturesId", "RecommendersId");
-
-                    b.HasIndex("RecommendersId");
-
-                    b.ToTable("FeatureRecommenderEntityBase");
                 });
 
             modelBuilder.Entity("ItemsRecommendationRecommendableItem", b =>
@@ -77,6 +62,21 @@ namespace sqlserver.SignalBox
                     b.HasIndex("RecommendersId");
 
                     b.ToTable("ItemsRecommenderRecommendableItem");
+                });
+
+            modelBuilder.Entity("MetricRecommenderEntityBase", b =>
+                {
+                    b.Property<long>("LearningFeaturesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RecommendersId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("LearningFeaturesId", "RecommendersId");
+
+                    b.HasIndex("RecommendersId");
+
+                    b.ToTable("FeatureRecommenderEntityBase");
                 });
 
             modelBuilder.Entity("ParameterParameterSetRecommender", b =>
@@ -252,126 +252,6 @@ namespace sqlserver.SignalBox
                     b.ToTable("Environments");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Feature", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CommonId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long?>("EnvironmentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Properties")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommonId");
-
-                    b.HasIndex("EnvironmentId");
-
-                    b.HasIndex("CommonId", "EnvironmentId")
-                        .IsUnique();
-
-                    b.ToTable("Features");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.FeatureGenerator", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long>("FeatureId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("FilterSelectAggregateSteps")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GeneratorType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("LastCompleted")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("LastEnqueued")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FeatureId");
-
-                    b.ToTable("FeatureGenerators");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Features.Destinations.FeatureDestinationBase", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ConnectedSystemId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("FeatureId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConnectedSystemId");
-
-                    b.HasIndex("FeatureId");
-
-                    b.ToTable("FeatureDestinations");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("FeatureDestinationBase");
-                });
-
             modelBuilder.Entity("SignalBox.Core.HashedApiKey", b =>
                 {
                     b.Property<long>("Id")
@@ -418,7 +298,7 @@ namespace sqlserver.SignalBox
                     b.ToTable("ApiKeys");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.HistoricTrackedUserFeature", b =>
+            modelBuilder.Entity("SignalBox.Core.HistoricCustomerMetric", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -432,13 +312,13 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<long>("FeatureId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("MetricId")
+                        .HasColumnType("bigint");
 
                     b.Property<double?>("NumericValue")
                         .HasColumnType("float");
@@ -456,7 +336,7 @@ namespace sqlserver.SignalBox
 
                     b.HasIndex("TrackedUserId");
 
-                    b.HasIndex("FeatureId", "TrackedUserId", "Version")
+                    b.HasIndex("MetricId", "TrackedUserId", "Version")
                         .IsUnique();
 
                     b.ToTable("HistoricTrackedUserFeatures");
@@ -535,21 +415,141 @@ namespace sqlserver.SignalBox
                     b.HasDiscriminator<string>("Discriminator").HasValue("IntegratedSystem");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.LatestFeatureVersion", b =>
+            modelBuilder.Entity("SignalBox.Core.LatestMetricVersion", b =>
                 {
-                    b.Property<long>("FeatureId")
+                    b.Property<long>("CustomerId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("HistoricTrackedUserFeatureId")
+                    b.Property<long>("HistoricCustomerMetricId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("MaxVersion")
                         .HasColumnType("int");
 
-                    b.Property<long>("TrackedUserId")
+                    b.Property<long>("MetricId")
                         .HasColumnType("bigint");
 
-                    b.ToView("View_MaxHistoricTrackedUserFeatureVersion");
+                    b.ToView("View_MaxHistoricCustomerMetricVersion");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Metric", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CommonId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long?>("EnvironmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Properties")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommonId");
+
+                    b.HasIndex("EnvironmentId");
+
+                    b.HasIndex("CommonId", "EnvironmentId")
+                        .IsUnique();
+
+                    b.ToTable("Features");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.MetricGenerator", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("FilterSelectAggregateSteps")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GeneratorType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastCompleted")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("LastEnqueued")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("MetricId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MetricId");
+
+                    b.ToTable("FeatureGenerators");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Metrics.Destinations.MetricDestinationBase", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ConnectedSystemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("MetricId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConnectedSystemId");
+
+                    b.HasIndex("MetricId");
+
+                    b.ToTable("FeatureDestinations");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("MetricDestinationBase");
                 });
 
             modelBuilder.Entity("SignalBox.Core.ModelRegistration", b =>
@@ -1552,28 +1552,6 @@ namespace sqlserver.SignalBox
                     b.ToTable("WebhookReceivers");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Features.Destinations.HubspotContactPropertyFeatureDestination", b =>
-                {
-                    b.HasBaseType("SignalBox.Core.Features.Destinations.FeatureDestinationBase");
-
-                    b.Property<string>("HubspotPropertyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("HubspotContactPropertyFeatureDestination");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Features.Destinations.WebhookFeatureDestination", b =>
-                {
-                    b.HasBaseType("SignalBox.Core.Features.Destinations.FeatureDestinationBase");
-
-                    b.Property<string>("Endpoint")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("WebhookFeatureDestination");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Integrations.Custom.CustomIntegratedSystem", b =>
                 {
                     b.HasBaseType("SignalBox.Core.IntegratedSystem");
@@ -1585,6 +1563,28 @@ namespace sqlserver.SignalBox
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("CustomIntegratedSystem");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Metrics.Destinations.HubspotContactPropertyMetricDestination", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.Metrics.Destinations.MetricDestinationBase");
+
+                    b.Property<string>("HubspotPropertyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("HubspotContactPropertyMetricDestination");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Metrics.Destinations.WebhookMetricDestination", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.Metrics.Destinations.MetricDestinationBase");
+
+                    b.Property<string>("Endpoint")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("WebhookMetricDestination");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.SegmentSourceFunctionDestination", b =>
@@ -1655,21 +1655,6 @@ namespace sqlserver.SignalBox
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FeatureRecommenderEntityBase", b =>
-                {
-                    b.HasOne("SignalBox.Core.Feature", null)
-                        .WithMany()
-                        .HasForeignKey("LearningFeaturesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", null)
-                        .WithMany()
-                        .HasForeignKey("RecommendersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ItemsRecommendationRecommendableItem", b =>
                 {
                     b.HasOne("SignalBox.Core.RecommendableItem", null)
@@ -1694,6 +1679,21 @@ namespace sqlserver.SignalBox
                         .IsRequired();
 
                     b.HasOne("SignalBox.Core.Recommenders.ItemsRecommender", null)
+                        .WithMany()
+                        .HasForeignKey("RecommendersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MetricRecommenderEntityBase", b =>
+                {
+                    b.HasOne("SignalBox.Core.Metric", null)
+                        .WithMany()
+                        .HasForeignKey("LearningFeaturesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", null)
                         .WithMany()
                         .HasForeignKey("RecommendersId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1753,63 +1753,23 @@ namespace sqlserver.SignalBox
                     b.Navigation("Source");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Feature", b =>
+            modelBuilder.Entity("SignalBox.Core.HistoricCustomerMetric", b =>
                 {
-                    b.HasOne("SignalBox.Core.Environment", "Environment")
-                        .WithMany()
-                        .HasForeignKey("EnvironmentId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Environment");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.FeatureGenerator", b =>
-                {
-                    b.HasOne("SignalBox.Core.Feature", "Feature")
-                        .WithMany()
-                        .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Feature");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Features.Destinations.FeatureDestinationBase", b =>
-                {
-                    b.HasOne("SignalBox.Core.IntegratedSystem", "ConnectedSystem")
-                        .WithMany()
-                        .HasForeignKey("ConnectedSystemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignalBox.Core.Feature", "Feature")
-                        .WithMany("Destinations")
-                        .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ConnectedSystem");
-
-                    b.Navigation("Feature");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.HistoricTrackedUserFeature", b =>
-                {
-                    b.HasOne("SignalBox.Core.Feature", "Feature")
+                    b.HasOne("SignalBox.Core.Metric", "Metric")
                         .WithMany("HistoricTrackedUserFeatures")
-                        .HasForeignKey("FeatureId")
+                        .HasForeignKey("MetricId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SignalBox.Core.Customer", "Customer")
-                        .WithMany("HistoricTrackedUserFeatures")
+                        .WithMany("HistoricCustomerMetrics")
                         .HasForeignKey("TrackedUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
 
-                    b.Navigation("Feature");
+                    b.Navigation("Metric");
                 });
 
             modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
@@ -1819,6 +1779,46 @@ namespace sqlserver.SignalBox
                         .HasForeignKey("EnvironmentId");
 
                     b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Metric", b =>
+                {
+                    b.HasOne("SignalBox.Core.Environment", "Environment")
+                        .WithMany()
+                        .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Environment");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.MetricGenerator", b =>
+                {
+                    b.HasOne("SignalBox.Core.Metric", "Metric")
+                        .WithMany()
+                        .HasForeignKey("MetricId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Metric");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Metrics.Destinations.MetricDestinationBase", b =>
+                {
+                    b.HasOne("SignalBox.Core.IntegratedSystem", "ConnectedSystem")
+                        .WithMany()
+                        .HasForeignKey("ConnectedSystemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.Metric", "Metric")
+                        .WithMany("Destinations")
+                        .HasForeignKey("MetricId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ConnectedSystem");
+
+                    b.Navigation("Metric");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Parameter", b =>
@@ -2111,7 +2111,7 @@ namespace sqlserver.SignalBox
                 {
                     b.Navigation("Actions");
 
-                    b.Navigation("HistoricTrackedUserFeatures");
+                    b.Navigation("HistoricCustomerMetrics");
 
                     b.Navigation("IntegratedSystemMaps");
 
@@ -2123,16 +2123,16 @@ namespace sqlserver.SignalBox
                     b.Navigation("Actions");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Feature", b =>
+            modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
+                {
+                    b.Navigation("WebhookReceivers");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Metric", b =>
                 {
                     b.Navigation("Destinations");
 
                     b.Navigation("HistoricTrackedUserFeatures");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
-                {
-                    b.Navigation("WebhookReceivers");
                 });
 
             modelBuilder.Entity("SignalBox.Core.ModelRegistration", b =>

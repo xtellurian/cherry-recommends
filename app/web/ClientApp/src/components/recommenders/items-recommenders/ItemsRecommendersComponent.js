@@ -13,7 +13,7 @@ import { MonitorRecommender } from "./MonitorItemsRecommender";
 import { ManageItems } from "./ManageItems";
 import { Destinations } from "./Destinations";
 import { Triggers } from "./Triggers";
-import { LearningFeatures } from "./LearningFeatures";
+import { LearningMetrics } from "./LearningMetrics";
 import { Arguments } from "./Arguments";
 import { Overview } from "./Overview";
 
@@ -70,8 +70,8 @@ export const ItemsRecommendersComponent = () => {
         <AuthorizeRoute path={`${path}/triggers/:id`} component={Triggers} />
         <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
         <AuthorizeRoute
-          path={`${path}/learning-features/:id`}
-          component={LearningFeatures}
+          path={`${path}/learning-metrics/:id`}
+          component={LearningMetrics}
         />
         <AuthorizeRoute path={`${path}/arguments/:id`} component={Arguments} />
       </Switch>

@@ -8,7 +8,7 @@ import {
   fetchTargetVariablesAsync,
   fetchDestinationsAsync,
   fetchTriggerAsync,
-  fetchLearningFeaturesAsync,
+  fetchLearningMetricsAsync,
   fetchStatisticsAsync,
   fetchReportImageBlobUrlAsync,
 } from "../api/parameterSetRecommendersApi";
@@ -166,13 +166,13 @@ export const useTrigger = ({ id, trigger }) => {
   return state;
 };
 
-export const useLearningFeatures = ({ id, trigger }) => {
+export const useLearningMetrics = ({ id, trigger }) => {
   const token = useAccessToken();
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchLearningFeaturesAsync({
+      fetchLearningMetricsAsync({
         token,
         id,
       })

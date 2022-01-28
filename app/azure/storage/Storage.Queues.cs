@@ -36,16 +36,16 @@ namespace SignalBox.Azure
                 ResourceGroupName = rg.Name
             });
 
-            var runFeatureGeneratorsQueue = new Queue("runAllFeatGensQ", new QueueArgs
+            var runMetricGeneratorsQueue = new Queue("runAllFeatGensQ", new QueueArgs
             {
-                QueueName = SignalBox.Core.Constants.AzureQueueNames.RunAllFeatureGenerators,
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.RunAllMetricGenerators,
                 AccountName = storageAccount.Name,
                 ResourceGroupName = rg.Name
             });
 
-            var runSingleFeatureGeneratorQueue = new Queue("runFeatGenQ", new QueueArgs
+            var runSingleMetricGeneratorQueue = new Queue("runFeatGenQ", new QueueArgs
             {
-                QueueName = SignalBox.Core.Constants.AzureQueueNames.RunFeatureGenerator,
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.RunMetricGenerator,
                 AccountName = storageAccount.Name,
                 ResourceGroupName = rg.Name
             });

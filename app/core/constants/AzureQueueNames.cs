@@ -6,7 +6,7 @@ namespace SignalBox.Core.Constants
         public const string NewTenantMemberships = "new-tenant-memberships";
         public const string TrackedUserEvents = "tracked-user-events";
         public const string NewTrackedUsers = "new-tracked-users";
-        public const string RunAllFeatureGenerators = "run-all-feature-generators";
-        public const string RunFeatureGenerator = "run-feature-generator";
+        public const string RunAllMetricGenerators = "run-all-metric-generators";
+        public const string RunMetricGenerator = "run-metric-generator";
     }
 }

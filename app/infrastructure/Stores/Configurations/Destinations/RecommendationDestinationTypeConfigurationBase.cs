@@ -19,7 +19,6 @@ namespace SignalBox.Infrastructure.EntityFramework
 
             builder.HasDiscriminator(_ => _.Discriminator);
 
-
             builder
                 .HasOne(_ => _.ConnectedSystem)
                 .WithMany()

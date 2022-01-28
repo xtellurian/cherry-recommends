@@ -28,13 +28,13 @@ namespace SignalBox.Azure
                     },
                     new ResourceServerScopeArgs
                     {
-                        Description = "Can read Tracked User features",
-                        Value = Core.Security.Scopes.Features.Read
+                        Description = "Can read Customer metrics",
+                        Value = Core.Security.Scopes.Metrics.Read
                     },
                     new ResourceServerScopeArgs
                     {
-                        Description = "Can create and write to Tracked User Features",
-                        Value = Core.Security.Scopes.Features.Write
+                        Description = "Can create and write to Customer Metrics",
+                        Value = Core.Security.Scopes.Metrics.Write
                     }
                 }
             });
@@ -67,8 +67,8 @@ namespace SignalBox.Azure
                 Audience = apiResource.Identifier!,
                 Scopes = {
                     "webAPI",
-                    Core.Security.Scopes.Features.Read,
-                    Core.Security.Scopes.Features.Write,
+                    Core.Security.Scopes.Metrics.Read,
+                    Core.Security.Scopes.Metrics.Write,
                 }
             });
 
@@ -117,18 +117,18 @@ namespace SignalBox.Azure
             var adminRole = new Role("adminRole", new RoleArgs
             {
                 Name = $"{stackName}-admin",
-                Description = "Can work with behind the scenes admin resources, like Features and Models",
+                Description = "Can work with behind the scenes admin resources, like Metrics and Models",
                 Permissions = {
                     new RolePermissionArgs{
                         Name = "webAPI",
                         ResourceServerIdentifier = apiResource.Identifier!
                     },
                     new RolePermissionArgs{
-                        Name = Core.Security.Scopes.Features.Read,
+                        Name = Core.Security.Scopes.Metrics.Read,
                         ResourceServerIdentifier = apiResource.Identifier!
                     },
                     new RolePermissionArgs{
-                        Name = Core.Security.Scopes.Features.Write,
+                        Name = Core.Security.Scopes.Metrics.Write,
                         ResourceServerIdentifier = apiResource.Identifier!
                     }
                 }

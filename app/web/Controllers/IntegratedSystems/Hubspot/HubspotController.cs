@@ -111,25 +111,25 @@ namespace SignalBox.Web.Controllers
 
         [HttpGet("CrmCardBehaviour")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<FeatureCrmCardBehaviour> GetCrmCardBehaviour(string id)
+        public async Task<MetricCrmCardBehaviour> GetCrmCardBehaviour(string id)
         {
             var system = await store.GetEntity(id);
             var cache = system.GetCache<HubspotCache>();
-            if (cache?.FeatureCrmCardBehaviour == null)
+            if (cache?.MetricCrmCardBehaviour == null)
             {
                 cache ??= new HubspotCache();
-                cache.FeatureCrmCardBehaviour ??= new FeatureCrmCardBehaviour();
+                cache.MetricCrmCardBehaviour ??= new MetricCrmCardBehaviour();
                 system.SetCache(cache);
                 await store.Context.SaveChanges();
                 logger.LogInformation("Updated cache since it was null");
             }
 
-            return cache.FeatureCrmCardBehaviour;
+            return cache.MetricCrmCardBehaviour;
         }
 
         [HttpPost("CrmCardBehaviour")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<FeatureCrmCardBehaviour> SetCrmCardBehaviour(string id, FeatureCrmCardBehaviour dto)
+        public async Task<MetricCrmCardBehaviour> SetCrmCardBehaviour(string id, MetricCrmCardBehaviour dto)
         {
             var system = await store.GetEntity(id);
             var cache = await hubspotWorkflows.UpdateCrmCardBehaviour(system, dto);

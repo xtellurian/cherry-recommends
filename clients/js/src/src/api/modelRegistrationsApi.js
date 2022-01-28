@@ -32,11 +32,11 @@ export const createModelRegistrationAsync = async ({ token, payload }) => {
   });
 };
 
-export const invokeModelAsync = async ({ token, modelId, features }) => {
+export const invokeModelAsync = async ({ token, modelId, metrics }) => {
   return await executeFetch({
     path: `api/ModelRegistrations/${modelId}/invoke`,
     token,
     method: "post",
-    body: features,
+    body: metrics,
   });
 };

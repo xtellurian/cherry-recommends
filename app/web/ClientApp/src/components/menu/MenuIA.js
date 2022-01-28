@@ -39,8 +39,8 @@ const AuthenticatedIA = [
         to: "/customers/create",
       },
       {
-        name: "Features",
-        to: "/features/",
+        name: "Metrics",
+        to: "/metrics/",
       },
       {
         name: "Events Overview",
@@ -62,20 +62,12 @@ export const getAuthenticatedIA = (scopes) => {
     // already in there
     return ia;
   }
-  if (scopes.includes("write:features")) {
+  if (scopes.includes("write:metrics")) {
     ia.splice(0, 0, {
       name: "Admin",
       icon: "/icons/metric.svg",
       to: { pathname: "/", hash: "#admin" },
       items: [
-        {
-          name: "Features",
-          to: "/admin/features",
-        },
-        {
-          name: "Feature Generators",
-          to: "/admin/feature-generators",
-        },
         {
           name: "Models",
           to: "/models",

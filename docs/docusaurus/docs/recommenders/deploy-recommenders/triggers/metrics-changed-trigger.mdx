@@ -1,0 +1,29 @@
+---
+sidebar_position: 10
+title: Metric Change
+---
+
+## This will only invoke a recommender when a customer Metric changes
+
+Recommenders can be automatically invoked based on various triggers.
+The `Metrics Changed trigger` will invoke the recommender when the chosen Metric(s) value changes for a specific customer.
+
+### Example
+
+Let's assume we have crated a Total Revenue Metric. i.e. we're calculating the total revenue for each Customer,
+and storing that value in a Metric.
+
+To calculate the total revenue for each Customer, we've created a Metric Generator job that runs every week.
+Now, every time the Metric generator runs (weekly), Customers with new payments will have increased their total revenue.
+When the new Total Revenue Metric value is calculated for a Customer, 
+the linked Recommender will be invoked, and the recommendation will be sent to any connected destinations.
+
+The following scenario describes a common setup:
+
+1. Alice is a GetCoffee Customer.
+1. GetCoffee has created an Item Recommender to find the best loyalty reward for Customers.
+1. GetCoffee sets up a `Metrics Changed` trigger based on the `Total Revenue` Metric.
+1. Alice buys 2 coffees this week.
+1. At the end of the week, because Alice's total revenue has increased, and her Metric value is updated.
+1. The loyalty reward recommender is triggered, producing a new loyalty reward recommendation for Alice.
+1. GetCoffee has a [webhook destination](../../../integrations/destinations/webhooks) that automatically receives the new recommendation.

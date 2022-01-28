@@ -14,8 +14,8 @@ export function createModelRegistrationAsync({ token, payload }: {
     token: any;
     payload: any;
 }): Promise<any>;
-export function invokeModelAsync({ token, modelId, features }: {
+export function invokeModelAsync({ token, modelId, metrics }: {
     token: any;
     modelId: any;
-    features: any;
+    metrics: any;
 }): Promise<any>;

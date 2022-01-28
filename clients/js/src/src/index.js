@@ -19,6 +19,8 @@ import * as events from "./api/eventsApi";
 import * as environments from "./api/environmentsApi";
 import * as featureGenerators from "./api/featureGeneratorsApi";
 import * as features from "./api/featuresApi";
+import * as metrics from "./api/metricsApi";
+import * as metricGenerators from "./api/metricGeneratorsApi";
 import * as integratedSystems from "./api/integratedSystemsApi";
 import * as modelRegistrations from "./api/modelRegistrationsApi";
 import * as models from "./api/models/index";
@@ -54,6 +56,8 @@ export {
   features,
   integratedSystems,
   itemsRecommenders,
+  metrics,
+  metricGenerators,
   modelRegistrations,
   models,
   parameters,

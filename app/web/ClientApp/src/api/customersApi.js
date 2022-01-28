@@ -18,13 +18,13 @@ const headers = (token) =>
     ? defaultHeaders
     : { ...defaultHeaders, Authorization: `Bearer ${token}` };
 
-export const setCustomerFeatureAsync = async ({
+export const setCustomerMetricAsync = async ({
   id,
-  featureId,
+  metricId,
   value,
   token,
 }) => {
-  const url = `api/customers/${id}/features/${featureId}`;
+  const url = `api/Customers/${id}/Metrics/${metricId}`;
   const response = await fetch(url, {
     headers: headers(token),
     method: "post",

@@ -428,6 +428,7 @@
         setDefaultEnvironmentId: setDefaultEnvironmentId
     });
 
+    console.log("Deprecation Notice: Features are replaced by Metrics.");
     const fetchFeatureGeneratorsAsync = async ({ page, token }) => {
         return await executeFetch$1({
             path: "api/FeatureGenerators",
@@ -467,6 +468,7 @@
         manualTriggerFeatureGeneratorsAsync: manualTriggerFeatureGeneratorsAsync
     });
 
+    console.log("Deprecation Notice: Feature Generators are replaced by Metric Generators.");
     const fetchFeaturesAsync = async ({ token, page, searchTerm }) => {
         return await executeFetch$1({
             path: "api/Features",
@@ -527,13 +529,13 @@
             },
         });
     };
-    const fetchDestinationsAsync$3 = async ({ token, id }) => {
+    const fetchDestinationsAsync$4 = async ({ token, id }) => {
         return await executeFetch$1({
             path: `api/features/${id}/Destinations`,
             token,
         });
     };
-    const createDestinationAsync$3 = async ({ token, id, destination }) => {
+    const createDestinationAsync$4 = async ({ token, id, destination }) => {
         return await executeFetch$1({
             path: `api/features/${id}/Destinations`,
             token,
@@ -541,14 +543,14 @@
             body: destination,
         });
     };
-    const deleteDestinationAsync = async ({ token, id, destinationId }) => {
+    const deleteDestinationAsync$1 = async ({ token, id, destinationId }) => {
         return await executeFetch$1({
             path: `api/features/${id}/Destinations/${destinationId}`,
             token,
             method: "delete",
         });
     };
-    const fetchGeneratorsAsync = async ({ token, id }) => {
+    const fetchGeneratorsAsync$1 = async ({ token, id }) => {
         return await executeFetch$1({
             path: `api/features/${id}/Generators`,
             token,
@@ -565,10 +567,153 @@
         deleteFeatureAsync: deleteFeatureAsync,
         fetchTrackedUserFeaturesAsync: fetchTrackedUserFeaturesAsync,
         fetchTrackedUserFeatureValuesAsync: fetchTrackedUserFeatureValuesAsync,
+        fetchDestinationsAsync: fetchDestinationsAsync$4,
+        createDestinationAsync: createDestinationAsync$4,
+        deleteDestinationAsync: deleteDestinationAsync$1,
+        fetchGeneratorsAsync: fetchGeneratorsAsync$1
+    });
+
+    const fetchMetricsAsync = async ({ token, page, searchTerm }) => {
+        return await executeFetch({
+            path: "api/Metrics",
+            token,
+            page,
+            query: {
+                "q.term": searchTerm,
+            },
+        });
+    };
+    const fetchMetricAsync = async ({ token, id }) => {
+        return await executeFetch({
+            path: `api/Metrics/${id}`,
+            token,
+        });
+    };
+    const fetchMetricCustomersAsync = async ({ token, page, id }) => {
+        return await executeFetch({
+            path: `api/Metrics/${id}/Customers`,
+            token,
+            page,
+        });
+    };
+    const fetchMetricCustomerMetricsAsync = async ({ token, page, id, }) => {
+        return await executeFetch({
+            path: `api/Metrics/${id}/CustomerMetrics`,
+            token,
+            page,
+        });
+    };
+    const createMetricAsync = async ({ token, metric }) => {
+        return await executeFetch({
+            path: "api/Metrics",
+            token,
+            method: "post",
+            body: metric,
+        });
+    };
+    const deleteMetricAsync = async ({ token, id }) => {
+        return await executeFetch({
+            path: `api/Metrics/${id}`,
+            token,
+            method: "delete",
+        });
+    };
+    const fetchCustomersMetricsAsync = async ({ token, id }) => {
+        return await executeFetch({
+            path: `api/Customers/${id}/Metrics`,
+            token,
+        });
+    };
+    const fetchCustomersMetricAsync = async ({ token, id, metricId, version, }) => {
+        return await executeFetch({
+            path: `api/Customers/${id}/Metrics/${metricId}`,
+            token,
+            query: {
+                version,
+            },
+        });
+    };
+    const fetchDestinationsAsync$3 = async ({ token, id }) => {
+        return await executeFetch({
+            path: `api/Metrics/${id}/Destinations`,
+            token,
+        });
+    };
+    const createDestinationAsync$3 = async ({ token, id, destination }) => {
+        return await executeFetch({
+            path: `api/Metrics/${id}/Destinations`,
+            token,
+            method: "post",
+            body: destination,
+        });
+    };
+    const deleteDestinationAsync = async ({ token, id, destinationId }) => {
+        return await executeFetch({
+            path: `api/Metrics/${id}/Destinations/${destinationId}`,
+            token,
+            method: "delete",
+        });
+    };
+    const fetchGeneratorsAsync = async ({ token, id }) => {
+        return await executeFetch({
+            path: `api/Metrics/${id}/Generators`,
+            token,
+        });
+    };
+
+    var metricsApi = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        fetchMetricsAsync: fetchMetricsAsync,
+        fetchMetricAsync: fetchMetricAsync,
+        fetchMetricCustomersAsync: fetchMetricCustomersAsync,
+        fetchMetricCustomerMetricsAsync: fetchMetricCustomerMetricsAsync,
+        createMetricAsync: createMetricAsync,
+        deleteMetricAsync: deleteMetricAsync,
+        fetchCustomersMetricsAsync: fetchCustomersMetricsAsync,
+        fetchCustomersMetricAsync: fetchCustomersMetricAsync,
         fetchDestinationsAsync: fetchDestinationsAsync$3,
         createDestinationAsync: createDestinationAsync$3,
         deleteDestinationAsync: deleteDestinationAsync,
         fetchGeneratorsAsync: fetchGeneratorsAsync
+    });
+
+    const fetchMetricGeneratorsAsync = async ({ page, token, }) => {
+        return await executeFetch({
+            path: "api/MetricGenerators",
+            token,
+            page,
+        });
+    };
+    const createMetricGeneratorAsync = async ({ token, generator, }) => {
+        return await executeFetch({
+            path: "api/MetricGenerators",
+            token,
+            method: "post",
+            body: generator,
+        });
+    };
+    const deleteMetricGeneratorAsync = async ({ token, id, }) => {
+        return await executeFetch({
+            path: `api/MetricGenerators/${id}`,
+            token,
+            method: "delete",
+        });
+    };
+    const manualTriggerMetricGeneratorsAsync = async ({ token, id, }) => {
+        return await executeFetch({
+            token,
+            path: `api/MetricGenerators/${id}/Trigger`,
+            method: "post",
+            body: {},
+        });
+    };
+
+    var metricGeneratorsApi = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        fetchMetricGeneratorsAsync: fetchMetricGeneratorsAsync,
+        createMetricGeneratorAsync: createMetricGeneratorAsync,
+        deleteMetricGeneratorAsync: deleteMetricGeneratorAsync,
+        manualTriggerMetricGeneratorsAsync: manualTriggerMetricGeneratorsAsync
     });
 
     const fetchIntegratedSystemsAsync = async ({ token, page }) => {
@@ -666,12 +811,12 @@
             body: payload,
         });
     };
-    const invokeModelAsync = async ({ token, modelId, features }) => {
+    const invokeModelAsync = async ({ token, modelId, metrics }) => {
         return await executeFetch$1({
             path: `api/ModelRegistrations/${modelId}/invoke`,
             token,
             method: "post",
-            body: features,
+            body: metrics,
         });
     };
 
@@ -845,6 +990,23 @@
             method: "post",
             query: { useInternalId },
             body: { featureIds, useInternalId },
+        });
+    };
+
+    const fetchLearningMetricsAsync$2 = async ({ recommenderApiName, token, id, useInternalId, }) => {
+        return await executeFetch({
+            token,
+            query: { useInternalId },
+            path: `api/recommenders/${recommenderApiName}/${id}/LearningFeatures`,
+        });
+    };
+    const setLearningMetricsAsync$2 = async ({ recommenderApiName, token, id, useInternalId, metricIds, }) => {
+        return await executeFetch({
+            path: `api/recommenders/${recommenderApiName}/${id}/LearningFeatures`,
+            token,
+            method: "post",
+            query: { useInternalId },
+            body: { metricIds, useInternalId },
         });
     };
 
@@ -1028,6 +1190,23 @@
             featureIds,
         });
     };
+    const fetchLearningMetricsAsync$1 = async ({ id, token, useInternalId, }) => {
+        return await fetchLearningMetricsAsync$2({
+            recommenderApiName: recommenderApiName$1,
+            id,
+            token,
+            useInternalId,
+        });
+    };
+    const setLearningMetricsAsync$1 = async ({ id, token, metricIds, useInternalId, }) => {
+        return await setLearningMetricsAsync$2({
+            recommenderApiName: recommenderApiName$1,
+            id,
+            token,
+            useInternalId,
+            metricIds,
+        });
+    };
     const fetchStatisticsAsync$1 = async ({ id, token, }) => {
         return await executeFetch({
             path: `api/recommenders/ParameterSetRecommenders/${id}/Statistics`,
@@ -1065,6 +1244,8 @@
         setTriggerAsync: setTriggerAsync$1,
         fetchLearningFeaturesAsync: fetchLearningFeaturesAsync$1,
         setLearningFeaturesAsync: setLearningFeaturesAsync$1,
+        fetchLearningMetricsAsync: fetchLearningMetricsAsync$1,
+        setLearningMetricsAsync: setLearningMetricsAsync$1,
         fetchStatisticsAsync: fetchStatisticsAsync$1,
         fetchReportImageBlobUrlAsync: fetchReportImageBlobUrlAsync$1
     });
@@ -1283,6 +1464,23 @@
             featureIds,
         });
     };
+    const fetchLearningMetricsAsync = async ({ id, token, useInternalId, }) => {
+        return await fetchLearningMetricsAsync$2({
+            recommenderApiName,
+            id,
+            token,
+            useInternalId,
+        });
+    };
+    const setLearningMetricsAsync = async ({ id, token, metricIds, useInternalId, }) => {
+        return await setLearningMetricsAsync$2({
+            recommenderApiName,
+            id,
+            token,
+            useInternalId,
+            metricIds,
+        });
+    };
     const fetchStatisticsAsync = async ({ id, token, }) => {
         return await executeFetch({
             path: `api/recommenders/ItemsRecommenders/${id}/Statistics`,
@@ -1327,6 +1525,8 @@
         setTriggerAsync: setTriggerAsync,
         fetchLearningFeaturesAsync: fetchLearningFeaturesAsync,
         setLearningFeaturesAsync: setLearningFeaturesAsync,
+        fetchLearningMetricsAsync: fetchLearningMetricsAsync,
+        setLearningMetricsAsync: setLearningMetricsAsync,
         fetchStatisticsAsync: fetchStatisticsAsync,
         fetchReportImageBlobUrlAsync: fetchReportImageBlobUrlAsync
     });
@@ -1657,6 +1857,8 @@
     exports.features = featuresApi;
     exports.integratedSystems = integratedSystemsApi;
     exports.itemsRecommenders = itemsRecommendersApi;
+    exports.metricGenerators = metricGeneratorsApi;
+    exports.metrics = metricsApi;
     exports.modelRegistrations = modelRegistrationsApi;
     exports.models = index;
     exports.parameterSetRecommenders = parameterSetRecommendersApi;

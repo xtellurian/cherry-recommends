@@ -1,0 +1,39 @@
+---
+sidebar_position: 30
+title: Metrics
+---
+
+Features enable the AI to understand customer behaviour and personalize the offers for them.
+
+## What is a Metric
+
+A `Metric` is a named, derived property of a Customer.
+Metrics are calculated from the stream of events in Cherry.
+Commonly used Metrics include:
+* Lifetime Revenue
+* Account Status
+
+## Creating a Metric
+
+Navigate to `https://[yourtenant].cherry.ai/metrics` and click `Create Metric` in the top-right of the screen. 
+
+You should see a screen like this.
+![Create Metric](/img/screenshots/understand/create_feature.png)
+Add in the name and the id for the Metric and your done. 
+
+:::note Restrictions
+
+Metrics are created globally within an environment. 
+Metric values are calculated *per customer*. (i.e. a Customer Metric)
+
+:::
+
+Metrics are currently automatically computed from your Segment event stream and discussions with you.
+For example, when you create a Lifetime Revenue Metric, the value is calculated for each customer.
+
+## Feature Generators 
+Feature generators are used to trigger a property that will provide you with an aggregate or 
+sum of the feature count against each target user. 
+
+For a step-by-step guide on how to set up a generator follow the docs on setting up [total revenue metric](/docs/understand/guide/total_revenue_metric)
+

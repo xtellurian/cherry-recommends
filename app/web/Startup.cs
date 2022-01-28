@@ -230,7 +230,7 @@ namespace SignalBox.Web
                     policy.RequireClaim("scope");
                     policy.RequireAssertion(_ =>
                     {
-                        return _.User.FindFirst("scope").Value.Contains(Scopes.Features.Write);
+                        return _.User.FindFirst("scope").Value.Contains(Scopes.Metrics.Write);
                     });
                 });
 

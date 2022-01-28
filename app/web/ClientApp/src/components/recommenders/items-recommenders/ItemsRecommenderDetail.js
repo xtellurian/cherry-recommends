@@ -22,7 +22,7 @@ import { ViewReportImagePopup } from "../utils/ViewImagePopup";
 const tabs = [
   { id: "detail", label: "Detail" },
   { id: "arguments", label: "Arguments" },
-  { id: "features", label: "Learning Features" },
+  { id: "metrics", label: "Learning Metrics" },
 ];
 
 export const RecommenderDetail = () => {

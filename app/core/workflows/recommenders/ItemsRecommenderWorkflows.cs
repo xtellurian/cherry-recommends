@@ -19,12 +19,12 @@ namespace SignalBox.Core.Workflows
             IStorageContext storageContext,
             IItemsRecommenderStore store,
             IItemsRecommendationStore recommendationStore,
-            IFeatureStore featureStore,
+            IMetricStore metricStore,
             IIntegratedSystemStore systemStore,
             ICategoricalOptimiserClient optimiserClient,
             IModelRegistrationStore modelRegistrationStore,
             RecommenderReportImageWorkflows reportImageWorkflows,
-            IRecommendableItemStore itemStore) : base(store, systemStore, featureStore, reportImageWorkflows)
+            IRecommendableItemStore itemStore) : base(store, systemStore, metricStore, reportImageWorkflows)
         {
             this.storageContext = storageContext;
             this.recommendationStore = recommendationStore;

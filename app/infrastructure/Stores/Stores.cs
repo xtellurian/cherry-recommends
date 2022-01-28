@@ -111,8 +111,8 @@ namespace SignalBox.Infrastructure
             services.AddScoped<INewTrackedUserEventQueueStore, NewTrackedUserEventQueueStore>();
             services.AddScoped<INewTenantQueueStore, NewTenantQueueStore>();
             services.AddScoped<INewTenantMembershipQueueStore, NewTenantMembershipQueueStore>();
-            services.AddScoped<IRunFeatureGeneratorQueueStore, RunFeatureGeneratorQueueStore>();
-            services.AddScoped<IRunAllFeatureGeneratorsQueueStore, RunAllFeatureGeneratorsQueueStore>();
+            services.AddScoped<IRunMetricGeneratorQueueStore, RunMetricGeneratorQueueStore>();
+            services.AddScoped<IRunAllMetricGeneratorsQueueStore, RunAllMetricGeneratorsQueueStore>();
             return services;
         }
         public static IServiceCollection AddEFStores(this IServiceCollection services)
@@ -139,9 +139,9 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IParameterSetRecommendationStore, EFParameterSetRecommendationStore>();
             services.AddScoped<IItemsRecommendationStore, EFItemsRecommendationStore>();
 
-            services.AddScoped<IFeatureStore, EFFeatureStore>();
-            services.AddScoped<IFeatureGeneratorStore, EFFeatureGeneratorStore>();
-            services.AddScoped<IHistoricTrackedUserFeatureStore, EFHistoricTrackedUserFeatureStore>();
+            services.AddScoped<IMetricStore, EFMetricStore>();
+            services.AddScoped<IMetricGeneratorStore, EFMetricGeneratorStore>();
+            services.AddScoped<IHistoricCustomerMetricStore, EFHistoricCustomerMetricStore>();
 
             services.AddScoped<ITouchpointStore, EFTouchpointStore>();
             services.AddScoped<ITrackedUserTouchpointStore, EFTrackedUserTouchpointStore>();

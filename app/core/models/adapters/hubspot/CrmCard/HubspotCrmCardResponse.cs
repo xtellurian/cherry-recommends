@@ -12,35 +12,35 @@ namespace SignalBox.Core.Adapters.Hubspot
         private const string userFeaturesEntryKey = "commonUserId";
         private const string customerInformationTitle = "Customer Information";
         private const string recommendationTitle = "Recommendation";
-        public void AddFeatureValueCard(TrackedUserFeatureBase featureValue)
+        public void AddMetricValueCard(CustomerMetricBase metricValue)
         {
             this.Results ??= new List<Dictionary<string, object>>();
             var cardEntry = Results.FirstOrDefault(_ => _.GetValueOrDefault("title") as string == customerInformationTitle);
             cardEntry ??= new Dictionary<string, object>
             {
                 { "title", customerInformationTitle},
-                { userFeaturesEntryKey, featureValue.TrackedUser.CommonId},
-                { "objectId", featureValue.Id},
+                { userFeaturesEntryKey, metricValue.Customer.CommonId},
+                { "objectId", metricValue.Id},
                 { "properties", new List<Dictionary<string,object>>() }
             };
 
             var properties = cardEntry["properties"] as List<Dictionary<string, object>>;
-            if (featureValue.IsNumeric())
+            if (metricValue.IsNumeric())
             {
                 properties.Add(new Dictionary<string, object>
                 {
-                    { "label", featureValue.Feature.Name },
+                    { "label", metricValue.Metric.Name },
                     { "dataType", "NUMERIC" },
-                    { "value", featureValue.NumericValue }
+                    { "value", metricValue.NumericValue }
                 });
             }
             else
             {
                 properties.Add(new Dictionary<string, object>
                 {
-                    { "label", featureValue.Feature.Name },
+                    { "label", metricValue.Metric.Name },
                     { "dataType", "STRING" },
-                    { "value", featureValue.StringValue }
+                    { "value", metricValue.StringValue }
                 });
             }
 

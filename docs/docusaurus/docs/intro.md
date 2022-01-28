@@ -26,7 +26,7 @@ You need to do three things to start with Cherry
 
 1. Login: Go to ```https://[your_tenant_name].cherry.ai``` and click ```Sign in```.
 2. Connect data: [Segment](/docs/integrations/sources/segment) takes less than a minute to connect.
-3. Create a recommender: [Super easy to do](/docs/recommenders/create/create-item-recommender) in our web application
+3. Create a recommender: [Super easy to do](/docs/recommenders/creating/create-item-recommender) in our web application
 
 
 ## How should I use these docs?

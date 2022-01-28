@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using SignalBox.Core.Features;
+using SignalBox.Core.Metrics;
 using SignalBox.Core.Recommenders;
 using SignalBox.Web.Dto;
 
@@ -24,7 +24,7 @@ namespace SignalBox.Web
         {
             return new TriggerCollection
             {
-                FeaturesChanged = triggersDto.FeaturesChanged
+                MetricsChanged = triggersDto.MetricsChanged
             };
         }
 

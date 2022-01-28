@@ -2,22 +2,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SignalBox.Core.Features.Generators
+namespace SignalBox.Core.Metrics.Generators
 {
     public class FilterSelectAggregateContext
     {
         private readonly ICustomerEventStore eventStore;
 
-        public FilterSelectAggregateContext(Customer customer, Feature feature, ICustomerEventStore eventStore)
+        public FilterSelectAggregateContext(Customer customer, Metric metric, ICustomerEventStore eventStore)
         {
-            this.Customer = customer;
-            Feature = feature;
+            Customer = customer;
+            Metric = metric;
             this.eventStore = eventStore;
         }
 
         public List<FilterSelectAggregateStep> Steps { get; set; }
         public Customer Customer { get; set; }
-        public Feature Feature { get; }
+        public Metric Feature => Metric;
+        public Metric Metric { get; }
         public List<CustomerEvent> Events { get; private set; }
 
         public async Task LoadEventsIntoContext(FilterStep filter = null)

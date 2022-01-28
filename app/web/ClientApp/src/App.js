@@ -11,7 +11,7 @@ import { Profile } from "./components/auth0/Profile";
 import { SettingsComponent } from "./components/settings/SettingsComponent";
 import { DataViewComponent } from "./components/data/DataViewComponent";
 import { ReportsComponent } from "./components/reports/ReportsComponent";
-import { FeaturesComponent } from "./components/features/FeaturesComponent";
+import MetricsComponent from "./components/metrics/MetricsComponent";
 import { ParametersComponent } from "./components/parameters/ParametersComponent";
 import { RecommendersComponent } from "./components/recommenders/RecommendersComponent";
 import { RecommendableItemsComponent } from "./components/items/RecommendableItemsComponent";
@@ -35,7 +35,7 @@ export default class App extends Component {
           <Redirect to="/customers" />
         </Route>
         <AuthorizeRoute path="/customers" component={CustomersComponent} />
-        <AuthorizeRoute path="/features" component={FeaturesComponent} />
+        <AuthorizeRoute path="/metrics" component={MetricsComponent} />
         <AuthorizeRoute path="/segments" component={SegmentsComponent} />
         <AuthorizeRoute path="/parameters" component={ParametersComponent} />
         <AuthorizeRoute

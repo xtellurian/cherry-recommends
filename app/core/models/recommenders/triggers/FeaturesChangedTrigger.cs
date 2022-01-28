@@ -3,17 +3,28 @@ using System.Collections.Generic;
 #nullable enable
 namespace SignalBox.Core.Recommenders
 {
-    public class FeaturesChangedTrigger : TriggerBase
+    public class MetricsChangedTrigger : TriggerBase
     {
-        public FeaturesChangedTrigger()
+        public MetricsChangedTrigger()
         { }
 
-        public FeaturesChangedTrigger(string name, IEnumerable<string> featureCommonIds) : base(name)
+        public MetricsChangedTrigger(string name, IEnumerable<string> metricCommonIds) : base(name)
         {
-            this.FeatureCommonIds = new HashSet<string>(featureCommonIds);
+            this.MetricCommonIds = new HashSet<string>(metricCommonIds);
         }
 
         // todo: 
-        public HashSet<string>? FeatureCommonIds { get; set; }
+        public HashSet<string>? FeatureCommonIds
+        {
+            get => MetricCommonIds; set
+            {
+                if (value != null)
+                {
+
+                    MetricCommonIds = value;
+                }
+            }
+        }
+        public HashSet<string>? MetricCommonIds { get; set; }
     }
 }

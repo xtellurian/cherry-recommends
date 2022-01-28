@@ -377,21 +377,21 @@ declare function fetchTrackedUserFeatureValuesAsync({ token, id, feature, versio
     feature: any;
     version: any;
 }): Promise<any>;
-declare function fetchDestinationsAsync$2({ token, id }: {
+declare function fetchDestinationsAsync$3({ token, id }: {
     token: any;
     id: any;
 }): Promise<any>;
-declare function createDestinationAsync$2({ token, id, destination }: {
+declare function createDestinationAsync$3({ token, id, destination }: {
     token: any;
     id: any;
     destination: any;
 }): Promise<any>;
-declare function deleteDestinationAsync({ token, id, destinationId }: {
+declare function deleteDestinationAsync$1({ token, id, destinationId }: {
     token: any;
     id: any;
     destinationId: any;
 }): Promise<any>;
-declare function fetchGeneratorsAsync({ token, id }: {
+declare function fetchGeneratorsAsync$1({ token, id }: {
     token: any;
     id: any;
 }): Promise<any>;
@@ -404,8 +404,6 @@ declare const featuresApi_d_createFeatureAsync: typeof createFeatureAsync;
 declare const featuresApi_d_deleteFeatureAsync: typeof deleteFeatureAsync;
 declare const featuresApi_d_fetchTrackedUserFeaturesAsync: typeof fetchTrackedUserFeaturesAsync;
 declare const featuresApi_d_fetchTrackedUserFeatureValuesAsync: typeof fetchTrackedUserFeatureValuesAsync;
-declare const featuresApi_d_deleteDestinationAsync: typeof deleteDestinationAsync;
-declare const featuresApi_d_fetchGeneratorsAsync: typeof fetchGeneratorsAsync;
 declare namespace featuresApi_d {
   export {
     featuresApi_d_fetchFeaturesAsync as fetchFeaturesAsync,
@@ -416,10 +414,10 @@ declare namespace featuresApi_d {
     featuresApi_d_deleteFeatureAsync as deleteFeatureAsync,
     featuresApi_d_fetchTrackedUserFeaturesAsync as fetchTrackedUserFeaturesAsync,
     featuresApi_d_fetchTrackedUserFeatureValuesAsync as fetchTrackedUserFeatureValuesAsync,
-    fetchDestinationsAsync$2 as fetchDestinationsAsync,
-    createDestinationAsync$2 as createDestinationAsync,
-    featuresApi_d_deleteDestinationAsync as deleteDestinationAsync,
-    featuresApi_d_fetchGeneratorsAsync as fetchGeneratorsAsync,
+    fetchDestinationsAsync$3 as fetchDestinationsAsync,
+    createDestinationAsync$3 as createDestinationAsync,
+    deleteDestinationAsync$1 as deleteDestinationAsync,
+    fetchGeneratorsAsync$1 as fetchGeneratorsAsync,
   };
 }
 
@@ -524,7 +522,7 @@ interface components {
             arguments?: {
                 [key: string]: unknown;
             } | null;
-            features?: {
+            metrics?: {
                 [key: string]: unknown;
             } | null;
             parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
@@ -566,6 +564,9 @@ interface components {
             name?: string | null;
             apiKey?: string | null;
         };
+        CreateCustomerMetric: {
+            value: unknown;
+        };
         CreateDestinationDto: {
             destinationType: string;
             integratedSystemId: number;
@@ -574,15 +575,6 @@ interface components {
         };
         CreateEnvironment: {
             name: string;
-        };
-        CreateFeatureGenerator: {
-            featureCommonId: string;
-            generatorType?: string | null;
-            steps?: components["schemas"]["FilterSelectAggregateStepDto"][] | null;
-        };
-        CreateFeatureMetadata: {
-            commonId: string;
-            name?: string | null;
         };
         CreateIntegratedSystemDto: {
             name: string;
@@ -603,6 +595,15 @@ interface components {
             baselineItemId?: string | null;
             numberOfItemsToRecommend?: number | null;
             useAutoAi?: boolean | null;
+        };
+        CreateMetric: {
+            commonId: string;
+            name?: string | null;
+        };
+        CreateMetricGenerator: {
+            featureCommonId: string;
+            generatorType?: string | null;
+            steps?: components["schemas"]["FilterSelectAggregateStepDto"][] | null;
         };
         CreateOrUpdateCustomerDto: {
             commonUserId?: string | null;
@@ -640,29 +641,6 @@ interface components {
             parameters?: string[] | null;
             bounds?: components["schemas"]["ParameterBounds"][] | null;
         };
-        CreateProductDto: {
-            commonId: string;
-            name?: string | null;
-            listPrice: number;
-            directCost?: number | null;
-            description?: string | null;
-            properties?: {
-                [key: string]: unknown;
-            } | null;
-        };
-        CreateProductRecommender: {
-            commonId: string;
-            name: string;
-            cloneFromId?: number | null;
-            /** @deprecated */
-            throwOnBadInput?: boolean | null;
-            /** @deprecated */
-            requireConsumptionEvent?: boolean | null;
-            settings?: components["schemas"]["RecommenderSettingsDto"];
-            arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
-            productIds?: string[] | null;
-            defaultProductId?: string | null;
-        };
         CreateRecommendableItemDto: {
             commonId: string;
             name?: string | null;
@@ -681,25 +659,16 @@ interface components {
         CreateSegmentDto: {
             name?: string | null;
         };
-        CreateTargetVariableValue: {
-            start: string;
-            end: string;
-            name: string;
-            value: number;
-        };
         CreateTenantMembershipDto: {
             email: string;
-        };
-        CreateTrackedUserFeature: {
-            value: unknown;
         };
         Customer: {
             id?: number;
             created?: string;
             lastUpdated?: string;
-            name?: string | null;
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
+            name?: string | null;
             commonId?: string | null;
             properties?: {
                 [key: string]: unknown;
@@ -712,6 +681,8 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
             commonUserId?: string | null;
             customerId?: string | null;
             eventId?: string | null;
@@ -758,9 +729,6 @@ interface components {
         DefaultParameterValue: {
             parameterType?: components["schemas"]["ParameterTypes"];
             value?: unknown | null;
-        };
-        DefaultProductDto: {
-            productId?: string | null;
         };
         Definitions: {
             ServiceInput?: components["schemas"]["ServiceInput"];
@@ -838,60 +806,6 @@ interface components {
         Examples: {
             "application/json"?: string | null;
         };
-        Feature: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            name?: string | null;
-            environmentId?: number | null;
-            environment?: components["schemas"]["Environment"];
-            commonId?: string | null;
-            properties?: {
-                [key: string]: unknown;
-            } | null;
-        };
-        FeatureDestinationBase: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            properties?: {
-                [key: string]: string;
-            } | null;
-            destinationType?: string | null;
-            feature?: components["schemas"]["Feature"];
-            connectedSystemId?: number;
-            connectedSystem?: components["schemas"]["IntegratedSystem"];
-            discriminator?: string | null;
-        };
-        FeatureGenerator: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            lastEnqueued?: string | null;
-            lastCompleted?: string | null;
-            featureId?: number;
-            feature?: components["schemas"]["Feature"];
-            generatorType?: components["schemas"]["FeatureGeneratorTypes"];
-            filterSelectAggregateSteps?: components["schemas"]["FilterSelectAggregateStep"][] | null;
-        };
-        FeatureGeneratorPaginated: {
-            items?: components["schemas"]["FeatureGenerator"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
-        };
-        FeatureGeneratorRunSummary: {
-            enqueued?: boolean | null;
-            totalWrites?: number | null;
-            maxSubsetSize?: number | null;
-        };
-        FeatureGeneratorTypes: "monthsSinceEarliestEvent" | "filterSelectAggregate";
-        FeaturePaginated: {
-            items?: components["schemas"]["Feature"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
-        };
-        FeaturesChangedTrigger: {
-            name: string;
-            featureCommonIds?: string[] | null;
-        };
         FileInformation: {
             name?: string | null;
         };
@@ -926,22 +840,23 @@ interface components {
             } | null;
             allComplete?: boolean | null;
         };
-        HistoricTrackedUserFeature: {
+        HistoricCustomerMetric: {
             id?: number;
             created?: string;
             lastUpdated?: string;
             trackedUserId?: number;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
-            featureId?: number;
-            feature?: components["schemas"]["Feature"];
+            metricId?: number;
+            feature?: components["schemas"]["Metric"];
+            metric?: components["schemas"]["Metric"];
             numericValue?: number | null;
             stringValue?: string | null;
             value?: unknown | null;
             version?: number;
         };
-        HistoricTrackedUserFeaturePaginated: {
-            items?: components["schemas"]["HistoricTrackedUserFeature"][] | null;
+        HistoricCustomerMetricPaginated: {
+            items?: components["schemas"]["HistoricCustomerMetric"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
         };
         Hosting: {
@@ -958,9 +873,9 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
-            name?: string | null;
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
+            name?: string | null;
             commonId?: string | null;
             properties?: {
                 [key: string]: unknown;
@@ -1016,6 +931,8 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
             recommenderType?: components["schemas"]["RecommenderTypes"];
             trackedUserId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
@@ -1048,9 +965,9 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
-            name?: string | null;
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
+            name?: string | null;
             commonId?: string | null;
             properties?: {
                 [key: string]: unknown;
@@ -1077,13 +994,69 @@ interface components {
         Message: {
             type?: string | null;
         };
+        Metric: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            name?: string | null;
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        MetricDestinationBase: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            properties?: {
+                [key: string]: string;
+            } | null;
+            destinationType?: string | null;
+            metric?: components["schemas"]["Metric"];
+            feature?: components["schemas"]["Metric"];
+            connectedSystemId?: number;
+            connectedSystem?: components["schemas"]["IntegratedSystem"];
+            discriminator?: string | null;
+        };
+        MetricGenerator: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            lastEnqueued?: string | null;
+            lastCompleted?: string | null;
+            metricId?: number;
+            metric?: components["schemas"]["Metric"];
+            feature?: components["schemas"]["Metric"];
+            generatorType?: components["schemas"]["MetricGeneratorTypes"];
+            filterSelectAggregateSteps?: components["schemas"]["FilterSelectAggregateStep"][] | null;
+        };
+        MetricGeneratorPaginated: {
+            items?: components["schemas"]["MetricGenerator"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        MetricGeneratorRunSummary: {
+            enqueued?: boolean | null;
+            totalWrites?: number | null;
+            maxSubsetSize?: number | null;
+        };
+        MetricGeneratorTypes: "monthsSinceEarliestEvent" | "filterSelectAggregate";
+        MetricPaginated: {
+            items?: components["schemas"]["Metric"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        MetricsChangedTrigger: {
+            name: string;
+            featureCommonIds?: string[] | null;
+        };
         ModelInputDto: {
             customerId?: string | null;
             commonUserId?: string | null;
             arguments?: {
                 [key: string]: unknown;
             } | null;
-            features?: {
+            metrics?: {
                 [key: string]: unknown;
             } | null;
             parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
@@ -1141,9 +1114,9 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
-            name?: string | null;
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
+            name?: string | null;
             commonId?: string | null;
             properties?: {
                 [key: string]: unknown;
@@ -1166,6 +1139,8 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
             recommenderType?: components["schemas"]["RecommenderTypes"];
             trackedUserId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
@@ -1199,9 +1174,9 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
-            name?: string | null;
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
+            name?: string | null;
             commonId?: string | null;
             properties?: {
                 [key: string]: unknown;
@@ -1244,93 +1219,13 @@ interface components {
         } & {
             [key: string]: unknown;
         };
-        Product: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            name?: string | null;
-            environmentId?: number | null;
-            environment?: components["schemas"]["Environment"];
-            commonId?: string | null;
-            properties?: {
-                [key: string]: unknown;
-            } | null;
-            listPrice?: number | null;
-            directCost?: number | null;
-            description?: string | null;
-        };
-        ProductPaginated: {
-            items?: components["schemas"]["Product"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
-        };
-        ProductRecommendation: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            recommenderType?: components["schemas"]["RecommenderTypes"];
-            trackedUserId?: number | null;
-            trackedUser?: components["schemas"]["Customer"];
-            customer?: components["schemas"]["Customer"];
-            trigger?: string | null;
-            recommendationCorrelatorId?: number | null;
-            modelInput?: string | null;
-            modelInputType?: string | null;
-            modelOutput?: string | null;
-            modelOutputType?: string | null;
-            isFromCache?: boolean;
-            recommenderId?: number | null;
-            recommender?: components["schemas"]["ProductRecommender"];
-            product?: components["schemas"]["Product"];
-        };
-        ProductRecommendationPaginated: {
-            items?: components["schemas"]["ProductRecommendation"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
-        };
-        ProductRecommender: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            name?: string | null;
-            environmentId?: number | null;
-            environment?: components["schemas"]["Environment"];
-            commonId?: string | null;
-            properties?: {
-                [key: string]: unknown;
-            } | null;
-            errorHandling?: components["schemas"]["RecommenderErrorHandling"];
-            settings?: components["schemas"]["RecommenderSettings"];
-            arguments?: components["schemas"]["RecommenderArgument"][] | null;
-            triggerCollection?: components["schemas"]["TriggerCollection"];
-            modelRegistrationId?: number | null;
-            modelRegistration?: components["schemas"]["ModelRegistration"];
-            defaultProductId?: number | null;
-            defaultProduct?: components["schemas"]["Product"];
-            products?: components["schemas"]["Product"][] | null;
-        };
-        ProductRecommenderInput: {
-            commonUserId?: string | null;
-            customerId?: string | null;
-            arguments?: {
-                [key: string]: unknown;
-            } | null;
-        };
-        ProductRecommenderModelOutputV1: {
-            productId?: number | null;
-            productCommonId?: string | null;
-            product?: components["schemas"]["Product"];
-            correlatorId?: number | null;
-        };
-        ProductRecommenderPaginated: {
-            items?: components["schemas"]["ProductRecommender"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
-        };
         RecommendableItem: {
             id?: number;
             created?: string;
             lastUpdated?: string;
-            name?: string | null;
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
+            name?: string | null;
             commonId?: string | null;
             properties?: {
                 [key: string]: unknown;
@@ -1338,6 +1233,7 @@ interface components {
             listPrice?: number | null;
             directCost?: number | null;
             description?: string | null;
+            discriminator?: string | null;
         };
         RecommendableItemPaginated: {
             items?: components["schemas"]["RecommendableItem"][] | null;
@@ -1349,7 +1245,6 @@ interface components {
             lastUpdated?: string;
             recommenderId?: number | null;
             recommender?: components["schemas"]["RecommenderEntityBase"];
-            trackedUserActions?: components["schemas"]["TrackedUserAction"][] | null;
             modelRegistrationId?: number | null;
             modelRegistration?: components["schemas"]["ModelRegistration"];
         };
@@ -1357,6 +1252,8 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
             properties?: {
                 [key: string]: string;
             } | null;
@@ -1378,9 +1275,9 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
-            name?: string | null;
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
+            name?: string | null;
             commonId?: string | null;
             properties?: {
                 [key: string]: unknown;
@@ -1410,17 +1307,6 @@ interface components {
         RecommenderStatistics: {
             numberCustomersRecommended?: number;
             numberInvokations?: number;
-        };
-        RecommenderTargetVariableValue: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            recommenderId?: number;
-            version?: number;
-            start?: string;
-            end?: string;
-            name?: string | null;
-            value?: number;
         };
         RecommenderTypes: "product" | "parameterSet" | "items" | "offer";
         RegisterNewModelDto: {
@@ -1463,10 +1349,10 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
-            name?: string | null;
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
             inSegment?: components["schemas"]["Customer"][] | null;
+            name?: string | null;
         };
         SegmentPaginated: {
             items?: components["schemas"]["Segment"][] | null;
@@ -1489,12 +1375,13 @@ interface components {
             items?: components["schemas"]["StatusCodeClass"];
             example?: number[] | null;
         };
-        SetLearningFeatures: {
+        SetLearningMetrics: {
             useInternalId?: boolean | null;
             featureIds?: string[] | null;
+            metricIds?: string[] | null;
         };
         SetTriggersDto: {
-            featuresChanged?: components["schemas"]["FeaturesChangedTrigger"];
+            featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
         StatusCodeClass: {
             type?: string | null;
@@ -1584,7 +1471,7 @@ interface components {
             integratedSystemId?: number;
         };
         TriggerCollection: {
-            featuresChanged?: components["schemas"]["FeaturesChangedTrigger"];
+            featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
         UpdateRecommendableItem: {
             name: string;
@@ -1612,6 +1499,8 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
             endpointId?: string | null;
             sharedSecret?: string | null;
         };
@@ -1681,7 +1570,7 @@ interface SetArgumentsRequest$1 extends EntityRequest {
     args: Argument[];
 }
 declare const setArgumentsAsync$1: ({ id, token, args, }: SetArgumentsRequest$1) => Promise<any>;
-declare const fetchDestinationsAsync$1: ({ id, token }: EntityRequest) => Promise<any>;
+declare const fetchDestinationsAsync$2: ({ id, token }: EntityRequest) => Promise<any>;
 interface Destination {
     destinationType: "Webhook" | "SegmentSourceFunction" | "HubspotContactProperty";
     endpoint: string;
@@ -1690,7 +1579,7 @@ interface Destination {
 interface CreateDestinationRequest$1 extends EntityRequest {
     destination: Destination;
 }
-declare const createDestinationAsync$1: ({ id, token, destination, }: CreateDestinationRequest$1) => Promise<any>;
+declare const createDestinationAsync$2: ({ id, token, destination, }: CreateDestinationRequest$1) => Promise<any>;
 interface RemoveDestinationRequest$1 extends EntityRequest {
     destinationId: number;
 }
@@ -1708,6 +1597,11 @@ interface SetLearningFeaturesRequest$1 extends EntityRequest {
     featureIds: string[];
 }
 declare const setLearningFeaturesAsync$1: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest$1) => Promise<any>;
+declare const fetchLearningMetricsAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+interface SetLearningMetricsRequest$1 extends EntityRequest {
+    metricIds: string[];
+}
+declare const setLearningMetricsAsync$1: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest$1) => Promise<any>;
 declare type RecommenderStatistics$1 = components["schemas"]["RecommenderStatistics"];
 declare const fetchStatisticsAsync$1: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics$1>;
 declare const fetchReportImageBlobUrlAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<RecommenderStatistics$1>;
@@ -1746,15 +1640,91 @@ declare namespace itemsRecommendersApi_d {
     createTargetVariableAsync$1 as createTargetVariableAsync,
     setSettingsAsync$1 as setSettingsAsync,
     setArgumentsAsync$1 as setArgumentsAsync,
-    fetchDestinationsAsync$1 as fetchDestinationsAsync,
-    createDestinationAsync$1 as createDestinationAsync,
+    fetchDestinationsAsync$2 as fetchDestinationsAsync,
+    createDestinationAsync$2 as createDestinationAsync,
     removeDestinationAsync$1 as removeDestinationAsync,
     fetchTriggerAsync$1 as fetchTriggerAsync,
     setTriggerAsync$1 as setTriggerAsync,
     fetchLearningFeaturesAsync$1 as fetchLearningFeaturesAsync,
     setLearningFeaturesAsync$1 as setLearningFeaturesAsync,
+    fetchLearningMetricsAsync$1 as fetchLearningMetricsAsync,
+    setLearningMetricsAsync$1 as setLearningMetricsAsync,
     fetchStatisticsAsync$1 as fetchStatisticsAsync,
     fetchReportImageBlobUrlAsync$1 as fetchReportImageBlobUrlAsync,
+  };
+}
+
+declare const fetchMetricsAsync: ({ token, page, searchTerm }: EntitySearchRequest) => Promise<any>;
+declare const fetchMetricAsync: ({ token, id }: EntityRequest) => Promise<any>;
+declare const fetchMetricCustomersAsync: ({ token, page, id }: PaginatedEntityRequest) => Promise<any>;
+declare const fetchMetricCustomerMetricsAsync: ({ token, page, id, }: PaginatedEntityRequest) => Promise<any>;
+interface CreateMetricRequest extends AuthenticatedRequest {
+    metric: components["schemas"]["CreateMetric"];
+}
+declare const createMetricAsync: ({ token, metric }: CreateMetricRequest) => Promise<any>;
+declare const deleteMetricAsync: ({ token, id }: DeleteRequest) => Promise<any>;
+declare const fetchCustomersMetricsAsync: ({ token, id }: EntityRequest) => Promise<any>;
+interface CustomersMetricRequest extends EntityRequest {
+    metricId: string | number;
+    version?: number | undefined;
+}
+declare const fetchCustomersMetricAsync: ({ token, id, metricId, version, }: CustomersMetricRequest) => Promise<any>;
+declare const fetchDestinationsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
+interface CreateMetricDestinationRequest extends EntityRequest {
+    destination: components["schemas"]["CreateDestinationDto"];
+}
+declare const createDestinationAsync$1: ({ token, id, destination }: CreateMetricDestinationRequest) => Promise<any>;
+interface DeleteDestinationRequest extends DeleteRequest {
+    destinationId: number;
+}
+declare const deleteDestinationAsync: ({ token, id, destinationId }: DeleteDestinationRequest) => Promise<any>;
+declare const fetchGeneratorsAsync: ({ token, id }: EntityRequest) => Promise<any>;
+
+declare const metricsApi_d_fetchMetricsAsync: typeof fetchMetricsAsync;
+declare const metricsApi_d_fetchMetricAsync: typeof fetchMetricAsync;
+declare const metricsApi_d_fetchMetricCustomersAsync: typeof fetchMetricCustomersAsync;
+declare const metricsApi_d_fetchMetricCustomerMetricsAsync: typeof fetchMetricCustomerMetricsAsync;
+declare const metricsApi_d_createMetricAsync: typeof createMetricAsync;
+declare const metricsApi_d_deleteMetricAsync: typeof deleteMetricAsync;
+declare const metricsApi_d_fetchCustomersMetricsAsync: typeof fetchCustomersMetricsAsync;
+declare const metricsApi_d_fetchCustomersMetricAsync: typeof fetchCustomersMetricAsync;
+declare const metricsApi_d_deleteDestinationAsync: typeof deleteDestinationAsync;
+declare const metricsApi_d_fetchGeneratorsAsync: typeof fetchGeneratorsAsync;
+declare namespace metricsApi_d {
+  export {
+    metricsApi_d_fetchMetricsAsync as fetchMetricsAsync,
+    metricsApi_d_fetchMetricAsync as fetchMetricAsync,
+    metricsApi_d_fetchMetricCustomersAsync as fetchMetricCustomersAsync,
+    metricsApi_d_fetchMetricCustomerMetricsAsync as fetchMetricCustomerMetricsAsync,
+    metricsApi_d_createMetricAsync as createMetricAsync,
+    metricsApi_d_deleteMetricAsync as deleteMetricAsync,
+    metricsApi_d_fetchCustomersMetricsAsync as fetchCustomersMetricsAsync,
+    metricsApi_d_fetchCustomersMetricAsync as fetchCustomersMetricAsync,
+    fetchDestinationsAsync$1 as fetchDestinationsAsync,
+    createDestinationAsync$1 as createDestinationAsync,
+    metricsApi_d_deleteDestinationAsync as deleteDestinationAsync,
+    metricsApi_d_fetchGeneratorsAsync as fetchGeneratorsAsync,
+  };
+}
+
+declare const fetchMetricGeneratorsAsync: ({ page, token, }: PaginatedRequest) => Promise<any>;
+interface CreateMetricGeneratorRequest extends AuthenticatedRequest {
+    generator: components["schemas"]["CreateMetricGenerator"];
+}
+declare const createMetricGeneratorAsync: ({ token, generator, }: CreateMetricGeneratorRequest) => Promise<any>;
+declare const deleteMetricGeneratorAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
+declare const manualTriggerMetricGeneratorsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+
+declare const metricGeneratorsApi_d_fetchMetricGeneratorsAsync: typeof fetchMetricGeneratorsAsync;
+declare const metricGeneratorsApi_d_createMetricGeneratorAsync: typeof createMetricGeneratorAsync;
+declare const metricGeneratorsApi_d_deleteMetricGeneratorAsync: typeof deleteMetricGeneratorAsync;
+declare const metricGeneratorsApi_d_manualTriggerMetricGeneratorsAsync: typeof manualTriggerMetricGeneratorsAsync;
+declare namespace metricGeneratorsApi_d {
+  export {
+    metricGeneratorsApi_d_fetchMetricGeneratorsAsync as fetchMetricGeneratorsAsync,
+    metricGeneratorsApi_d_createMetricGeneratorAsync as createMetricGeneratorAsync,
+    metricGeneratorsApi_d_deleteMetricGeneratorAsync as deleteMetricGeneratorAsync,
+    metricGeneratorsApi_d_manualTriggerMetricGeneratorsAsync as manualTriggerMetricGeneratorsAsync,
   };
 }
 
@@ -1774,10 +1744,10 @@ declare function createModelRegistrationAsync({ token, payload }: {
     token: any;
     payload: any;
 }): Promise<any>;
-declare function invokeModelAsync({ token, modelId, features }: {
+declare function invokeModelAsync({ token, modelId, metrics }: {
     token: any;
     modelId: any;
-    features: any;
+    metrics: any;
 }): Promise<any>;
 
 declare const modelRegistrationsApi_d_fetchModelRegistrationsAsync: typeof fetchModelRegistrationsAsync;
@@ -1890,6 +1860,11 @@ interface SetLearningFeaturesRequest extends EntityRequest {
     featureIds: string[] | number[];
 }
 declare const setLearningFeaturesAsync: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest) => Promise<any>;
+declare const fetchLearningMetricsAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+interface SetLearningMetricsRequest extends EntityRequest {
+    metricIds: string[];
+}
+declare const setLearningMetricsAsync: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest) => Promise<any>;
 declare type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
 declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
 declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<RecommenderStatistics>;
@@ -1914,6 +1889,8 @@ declare const parameterSetRecommendersApi_d_fetchTriggerAsync: typeof fetchTrigg
 declare const parameterSetRecommendersApi_d_setTriggerAsync: typeof setTriggerAsync;
 declare const parameterSetRecommendersApi_d_fetchLearningFeaturesAsync: typeof fetchLearningFeaturesAsync;
 declare const parameterSetRecommendersApi_d_setLearningFeaturesAsync: typeof setLearningFeaturesAsync;
+declare const parameterSetRecommendersApi_d_fetchLearningMetricsAsync: typeof fetchLearningMetricsAsync;
+declare const parameterSetRecommendersApi_d_setLearningMetricsAsync: typeof setLearningMetricsAsync;
 declare const parameterSetRecommendersApi_d_fetchStatisticsAsync: typeof fetchStatisticsAsync;
 declare const parameterSetRecommendersApi_d_fetchReportImageBlobUrlAsync: typeof fetchReportImageBlobUrlAsync;
 declare namespace parameterSetRecommendersApi_d {
@@ -1938,6 +1915,8 @@ declare namespace parameterSetRecommendersApi_d {
     parameterSetRecommendersApi_d_setTriggerAsync as setTriggerAsync,
     parameterSetRecommendersApi_d_fetchLearningFeaturesAsync as fetchLearningFeaturesAsync,
     parameterSetRecommendersApi_d_setLearningFeaturesAsync as setLearningFeaturesAsync,
+    parameterSetRecommendersApi_d_fetchLearningMetricsAsync as fetchLearningMetricsAsync,
+    parameterSetRecommendersApi_d_setLearningMetricsAsync as setLearningMetricsAsync,
     parameterSetRecommendersApi_d_fetchStatisticsAsync as fetchStatisticsAsync,
     parameterSetRecommendersApi_d_fetchReportImageBlobUrlAsync as fetchReportImageBlobUrlAsync,
   };
@@ -2223,4 +2202,4 @@ declare namespace errorHandling_d {
   };
 }
 
-export { actionsApi_d as actions, apiKeyApi_d as apiKeys, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };
+export { actionsApi_d as actions, apiKeyApi_d as apiKeys, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, metricGeneratorsApi_d as metricGenerators, metricsApi_d as metrics, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };

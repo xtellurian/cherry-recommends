@@ -1,8 +1,6 @@
 import React from "react";
 import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
-import { TrackedUserFeaturesAdminComponent } from "./tracked-user-features/TrackedUserFeaturesAdminComponent";
-import { FeatureGeneratorsComponent } from "./feature-generators/FeatureGeneratorsComponent";
 
 export const AdminComponent = () => {
   const { path } = useRouteMatch();
@@ -12,14 +10,6 @@ export const AdminComponent = () => {
         Admin Zone
       </div>
       <Switch>
-        <AuthorizeRoute
-          path={`${path}/features`}
-          component={TrackedUserFeaturesAdminComponent}
-        />
-        <AuthorizeRoute
-          path={`${path}/feature-generators`}
-          component={FeatureGeneratorsComponent}
-        />
       </Switch>
     </React.Fragment>
   );

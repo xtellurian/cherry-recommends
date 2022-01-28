@@ -5,7 +5,7 @@ import { Row, Col } from "../../molecules/layout/Grid";
 import { ParameterRecommendationList } from "./RecommendationList";
 import { useStatistics } from "../../../api-hooks/parameterSetRecommendersApi";
 import { useParams } from "react-router-dom";
-import { TargetFeatureChartLoader } from "../../molecules/charts/TargetFeatureChartLoader";
+import { TargetMetricChartLoader } from "../../molecules/charts/TargetMetricChartLoader";
 
 const LatestRecommendations = ({ id }) => {
   return (
@@ -20,7 +20,7 @@ const ResultsChart = ({ id }) => {
   return (
     <CardSection>
       <Label>Average Metric per Recommendation</Label>
-      <TargetFeatureChartLoader />
+      <TargetMetricChartLoader />
     </CardSection>
   );
 };

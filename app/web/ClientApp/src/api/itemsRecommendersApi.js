@@ -60,10 +60,10 @@ export const setTriggerAsync = itemsRecommenders.setTriggerAsync;
 
 export const fetchStatisticsAsync = itemsRecommenders.fetchStatisticsAsync;
 
-export const fetchLearningFeaturesAsync =
-  itemsRecommenders.fetchLearningFeaturesAsync;
-export const setLearningFeaturesAsync =
-  itemsRecommenders.setLearningFeaturesAsync;
+export const fetchLearningMetricsAsync =
+  itemsRecommenders.fetchLearningMetricsAsync;
+export const setLearningMetricsAsync =
+  itemsRecommenders.setLearningMetricsAsync;
 
 export const fetchReportImageBlobUrlAsync =
   itemsRecommenders.fetchReportImageBlobUrlAsync;

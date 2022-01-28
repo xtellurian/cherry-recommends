@@ -4,6 +4,16 @@ namespace SignalBox.Core.Recommenders
     public class TriggerCollection
     {
         public TriggerCollection() { }
-        public FeaturesChangedTrigger? FeaturesChanged { get; set; }
+        public MetricsChangedTrigger? FeaturesChanged
+        {
+            get => MetricsChanged; set
+            {
+                if (value != null)
+                {
+                    MetricsChanged = value;
+                }
+            }
+        }
+        public MetricsChangedTrigger? MetricsChanged { get; set; }
     }
 }

@@ -26,6 +26,8 @@ then
       exit 1
 fi
 
+cd "$APP_PATH/azure"
+
 CONTEXT="SignalBoxDbContext"
 
 STACK=$(pulumi stack --show-name)

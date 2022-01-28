@@ -105,7 +105,7 @@ namespace SignalBox.Core.Workflows
 
         public async Task<string> GenerateAndStoreApiKey(string name, string type, ClaimsPrincipal principal, string scope = null)
         {
-            // scope: "openid profile email webAPI write:features"
+            // scope: "openid profile email webAPI write:metrics"
             if (System.Enum.TryParse<ApiKeyTypes>(type, out var t))
             {
                 var scopeClaim = principal.Claims.FirstOrDefault(_ => _.Type == "scope");

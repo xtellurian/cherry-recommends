@@ -25,13 +25,13 @@ namespace SignalBox.Core.Workflows
                                     IRecommendationCache<ItemsRecommender, ItemsRecommendation> recommendationCache,
                                     IRecommenderModelClientFactory modelClientFactory,
                                     ICustomerStore customerStore,
-                                    IHistoricTrackedUserFeatureStore historicFeatureStore,
+                                    IHistoricCustomerMetricStore historicMetricStore,
                                     IRecommendableItemStore itemStore,
                                     IWebhookSenderClient webhookSenderClient,
                                     IRecommendationCorrelatorStore correlatorStore,
                                     IItemsRecommenderStore itemsRecommenderStore,
                                     IItemsRecommendationStore itemsRecommendationStore)
-                                     : base(storageContext, itemsRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider)
+                                     : base(storageContext, itemsRecommenderStore, historicMetricStore, webhookSenderClient, dateTimeProvider)
         {
             this.logger = logger;
             this.storageContext = storageContext;
@@ -80,7 +80,7 @@ namespace SignalBox.Core.Workflows
 
 
                 // load the features of the tracked user
-                input.Features = await base.GetFeatures(recommender, context);
+                input.Metrics = await base.GetMetrics(recommender, context);
 
                 // load the items that a model can choose from
                 await itemsRecommenderStore.LoadMany(recommender, _ => _.Items);

@@ -68,16 +68,16 @@
 //             var rankableActions = ToRankableActions(products);
 
 //             var currentContext = new List<object>();
-//             // add features to the context
-//             if (input.Features != null && input.Features.Any())
+//             // add metrics to the context
+//             if (input.metrics != null && input.metrics.Any())
 //             {
-//                 foreach (var f in input.Features)
+//                 foreach (var f in input.metrics)
 //                 {
 //                     currentContext.Add(f);
 //                 }
 //             }
 
-//             // add incoming arguments to the context (arguments overwrite features)
+//             // add incoming arguments to the context (arguments overwrite metrics)
 //             if (input.Arguments != null && input.Arguments.Any())
 //             {
 //                 foreach (var a in input.Arguments)
@@ -109,7 +109,7 @@
 //             return products.Select(p => new RankableAction
 //             {
 //                 Id = p.CommonId,
-//                 Features =
+//                 metrics =
 //                 new List<object>() { new { name = p.Name, listPrice = p.ListPrice, directCost = p.DirectCost, description = p.Description } }
 //             }).ToList();
 //         }

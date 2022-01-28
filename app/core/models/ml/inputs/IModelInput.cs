@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core
@@ -11,6 +12,7 @@ namespace SignalBox.Core
         string? CustomerId { get; set; }
         IDictionary<string, object>? Arguments { get; set; }
         IDictionary<string, object>? Features { get; set; }
+        IDictionary<string, object>? Metrics { get; set; }
         IEnumerable<ParameterBounds>? ParameterBounds { get; set; }
     }
 }

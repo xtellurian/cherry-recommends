@@ -57,7 +57,7 @@ namespace SignalBox.Core.Workflows
             return system.GetCache<HubspotCache>();
         }
 
-        public async Task<HubspotCache> UpdateCrmCardBehaviour(IntegratedSystem system, FeatureCrmCardBehaviour behaviour)
+        public async Task<HubspotCache> UpdateCrmCardBehaviour(IntegratedSystem system, MetricCrmCardBehaviour behaviour)
         {
             if (behaviour.ExcludedFeatures != null && behaviour.ExcludedFeatures.Any(_ => _ == null))
             {
@@ -73,7 +73,7 @@ namespace SignalBox.Core.Workflows
             if (behaviour.HasRecommender())
             {
                 if (behaviour.ParameterSetRecommenderId.HasValue &&
-                    behaviour.ParameterSetRecommenderId != cache.FeatureCrmCardBehaviour.ParameterSetRecommenderId)
+                    behaviour.ParameterSetRecommenderId != cache.MetricCrmCardBehaviour.ParameterSetRecommenderId)
                 {
                     // recommender needs updating
                     if (!await parameterSetRecommenderStore.Exists(behaviour.ParameterSetRecommenderId.Value))
@@ -92,7 +92,7 @@ namespace SignalBox.Core.Workflows
                     }
                 }
 
-                else if (behaviour.ItemsRecommenderId.HasValue && behaviour.ItemsRecommenderId != cache.FeatureCrmCardBehaviour.ItemsRecommenderId)
+                else if (behaviour.ItemsRecommenderId.HasValue && behaviour.ItemsRecommenderId != cache.MetricCrmCardBehaviour.ItemsRecommenderId)
                 {
                     if (!await itemsRecommenderStore.Exists(behaviour.ItemsRecommenderId.Value))
                     {
@@ -102,7 +102,7 @@ namespace SignalBox.Core.Workflows
                 }
             }
 
-            cache.FeatureCrmCardBehaviour = behaviour;
+            cache.MetricCrmCardBehaviour = behaviour;
             system.SetCache(cache);
             await storageContext.SaveChanges();
 

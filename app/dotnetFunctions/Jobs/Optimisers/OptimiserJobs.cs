@@ -150,7 +150,7 @@ namespace SignalBox.Functions
 
             var items = payloadInfo.Payload.Items;
 
-            // # Get the population id given specific personalisation features
+            // # Get the population id given specific personalisation Metrics
             var populationId = collection.CalculatePopulationId(payloadInfo);
 
             var relevantPopulation = collection.GetPopulation(populationId);

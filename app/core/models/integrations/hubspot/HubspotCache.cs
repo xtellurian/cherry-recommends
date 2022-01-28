@@ -25,7 +25,17 @@ namespace SignalBox.Core.Integrations.Hubspot
                 connectedContactProperties = value;
             }
         }
-        public FeatureCrmCardBehaviour? FeatureCrmCardBehaviour { get; set; }
+        public MetricCrmCardBehaviour? FeatureCrmCardBehaviour
+        {
+            get => MetricCrmCardBehaviour; set
+            {
+                if (value != null)
+                {
+                    MetricCrmCardBehaviour = value;
+                }
+            }
+        }
+        public MetricCrmCardBehaviour? MetricCrmCardBehaviour { get; set; }
         public PushBehaviour? PushBehaviour { get; set; }
     }
 }

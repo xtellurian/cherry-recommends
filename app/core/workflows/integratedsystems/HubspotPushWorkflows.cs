@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SignalBox.Core.Adapters.Hubspot;
-using SignalBox.Core.Features.Destinations;
+using SignalBox.Core.Metrics.Destinations;
 using SignalBox.Core.Integrations;
 using SignalBox.Core.Recommenders;
 
@@ -84,18 +84,18 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        public async Task SetFeatureValueOnContact(HubspotContactPropertyFeatureDestination destination, HistoricTrackedUserFeature featureValue)
+        public async Task SetMetricValueOnContact(HubspotContactPropertyMetricDestination destination, HistoricCustomerMetric metricValue)
         {
             var system = await integratedSystemStore.Read(destination.ConnectedSystemId);
             await CheckAndRefreshCredentials(system);
-            if (await systemMapStore.MapExists(featureValue.TrackedUser, system))
+            if (await systemMapStore.MapExists(metricValue.Customer, system))
             {
-                var map = await systemMapStore.FindMap(featureValue.TrackedUser, system);
-                await hubspotService.SetPropertyValue(system, new HubspotContactPropertyValue(map.UserId, destination.HubspotPropertyName, featureValue.Value.ToString()));
+                var map = await systemMapStore.FindMap(metricValue.Customer, system);
+                await hubspotService.SetPropertyValue(system, new HubspotContactPropertyValue(map.UserId, destination.HubspotPropertyName, metricValue.Value.ToString()));
             }
             else
             {
-                logger.LogWarning($"Missing System Map for user {featureValue.TrackedUserId}");
+                logger.LogWarning($"Missing System Map for Customer: {metricValue.Customer.CustomerId}");
             }
         }
     }

@@ -14,40 +14,40 @@ namespace SignalBox.Core.Workflows
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly ItemsRecommenderInvokationWorkflows itemsRecommenderInvokationWorkflows;
         private readonly ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokationWorkflows;
-        private readonly IHistoricTrackedUserFeatureStore historicFeatureStore;
+        private readonly IHistoricCustomerMetricStore historicMetricStore;
 
         public RecommenderTriggersWorkflows(ILogger<RecommenderTriggersWorkflows> logger,
                                             IItemsRecommenderStore itemsRecommenderStore,
                                             IParameterSetRecommenderStore parameterSetRecommenderStore,
                                             ItemsRecommenderInvokationWorkflows itemsRecommenderInvokationWorkflows,
                                             ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokationWorkflows,
-                                            IHistoricTrackedUserFeatureStore historicFeatureStore)
+                                            IHistoricCustomerMetricStore historicMetricStore)
         {
             this.logger = logger;
             this.itemsRecommenderStore = itemsRecommenderStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
             this.itemsRecommenderInvokationWorkflows = itemsRecommenderInvokationWorkflows;
             this.parameterSetRecommenderInvokationWorkflows = parameterSetRecommenderInvokationWorkflows;
-            this.historicFeatureStore = historicFeatureStore;
+            this.historicMetricStore = historicMetricStore;
         }
 
-        // This method doesn't check whether the Feature Value is new
-        public async Task HandleFeatureValue(HistoricTrackedUserFeature featureValue)
+        // This method doesn't check whether the Metric Value is new
+        public async Task HandleMetricValue(HistoricCustomerMetric metricValue)
         {
-            if (featureValue.Customer == null)
+            if (metricValue.Customer == null)
             {
-                await historicFeatureStore.Load(featureValue, _ => _.Customer);
+                await historicMetricStore.Load(metricValue, _ => _.Customer);
             }
-            if (featureValue.Feature == null)
+            if (metricValue.Metric == null)
             {
-                await historicFeatureStore.Load(featureValue, _ => _.Feature);
+                await historicMetricStore.Load(metricValue, _ => _.Metric);
             }
 
-            await HandleNewFeatureValueItemsRecommenders(featureValue);
-            await HandleNewFeatureValueParameterSetRecommenders(featureValue);
+            await HandleNewMetricValueItemsRecommenders(metricValue);
+            await HandleNewMetricValueParameterSetRecommenders(metricValue);
         }
 
-        private async Task<IEnumerable<ItemsRecommendation>> HandleNewFeatureValueItemsRecommenders(TrackedUserFeatureBase featureValue)
+        private async Task<IEnumerable<ItemsRecommendation>> HandleNewMetricValueItemsRecommenders(CustomerMetricBase metricValue)
         {
             var recommendations = new List<ItemsRecommendation>();
             var recommenders = await itemsRecommenderStore.Query(1, _ => _.TriggerCollection != null);
@@ -61,7 +61,7 @@ namespace SignalBox.Core.Workflows
             {
                 try
                 {
-                    await InvokeItemsRecommenderFeaturesChangedTrigger(recommender, featureValue, recommendations);
+                    await InvokeItemsRecommenderMetricsChangedTrigger(recommender, metricValue, recommendations);
                 }
                 catch (Exception ex)
                 {
@@ -71,22 +71,22 @@ namespace SignalBox.Core.Workflows
             return recommendations;
         }
 
-        private async Task InvokeItemsRecommenderFeaturesChangedTrigger(ItemsRecommender recommender, TrackedUserFeatureBase featureValue, List<ItemsRecommendation> recommendations)
+        private async Task InvokeItemsRecommenderMetricsChangedTrigger(ItemsRecommender recommender, CustomerMetricBase metricValue, List<ItemsRecommendation> recommendations)
         {
             if (recommender?.TriggerCollection?.FeaturesChanged != null) // check the features changed trigger exists
             {
-                if (recommender.TriggerCollection.FeaturesChanged.FeatureCommonIds?.Contains(featureValue.Feature.CommonId) == true)
+                if (recommender.TriggerCollection.FeaturesChanged.FeatureCommonIds?.Contains(metricValue.Metric.CommonId) == true)
                 {
                     var triggerName = recommender.TriggerCollection.FeaturesChanged.Name;
                     logger.LogInformation($"Triggering an invokation for items recommender Id={recommender.Id}");
                     var recommendation = await itemsRecommenderInvokationWorkflows.InvokeItemsRecommender(
-                        recommender, new ItemsModelInputDto(featureValue.TrackedUser.CommonId), triggerName);
+                        recommender, new ItemsModelInputDto(metricValue.TrackedUser.CommonId), triggerName);
                     recommendations.Add(recommendation);
                 }
             }
         }
 
-        private async Task<IEnumerable<ParameterSetRecommendation>> HandleNewFeatureValueParameterSetRecommenders(TrackedUserFeatureBase featureValue)
+        private async Task<IEnumerable<ParameterSetRecommendation>> HandleNewMetricValueParameterSetRecommenders(CustomerMetricBase metricValue)
         {
             var recommendations = new List<ParameterSetRecommendation>();
             var recommenders = await parameterSetRecommenderStore.Query(1, _ => _.TriggerCollection != null);
@@ -100,7 +100,7 @@ namespace SignalBox.Core.Workflows
             {
                 try
                 {
-                    await InvokeParameterSetRecommenderFeaturesChangedTrigger(recommender, featureValue, recommendations);
+                    await InvokeParameterSetRecommenderMetricsChangedTrigger(recommender, metricValue, recommendations);
                 }
                 catch (Exception ex)
                 {
@@ -110,16 +110,16 @@ namespace SignalBox.Core.Workflows
             return recommendations;
         }
 
-        private async Task InvokeParameterSetRecommenderFeaturesChangedTrigger(ParameterSetRecommender recommender, TrackedUserFeatureBase featureValue, List<ParameterSetRecommendation> recommendations)
+        private async Task InvokeParameterSetRecommenderMetricsChangedTrigger(ParameterSetRecommender recommender, CustomerMetricBase metricValue, List<ParameterSetRecommendation> recommendations)
         {
-            if (recommender?.TriggerCollection?.FeaturesChanged != null) // check the features changed trigger exists
+            if (recommender?.TriggerCollection?.FeaturesChanged != null) // check the metrics aka features changed trigger exists
             {
-                if (recommender.TriggerCollection.FeaturesChanged.FeatureCommonIds?.Contains(featureValue.Feature.CommonId) == true)
+                if (recommender.TriggerCollection.FeaturesChanged.FeatureCommonIds?.Contains(metricValue.Metric.CommonId) == true)
                 {
                     var triggerName = recommender.TriggerCollection.FeaturesChanged.Name;
                     logger.LogInformation($"Triggering an invokation for parameterset recommender Id={recommender.Id}");
                     var recommendation = await parameterSetRecommenderInvokationWorkflows.InvokeParameterSetRecommender(
-                        recommender, new ParameterSetRecommenderModelInputV1(featureValue.TrackedUser.CommonId), triggerName);
+                        recommender, new ParameterSetRecommenderModelInputV1(metricValue.TrackedUser.CommonId), triggerName);
                     recommendations.Add(recommendation);
                 }
             }

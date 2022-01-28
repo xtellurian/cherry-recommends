@@ -12,7 +12,7 @@ import { InvokationLogs } from "./InvokationLogs";
 import { MonitorParameterSetRecommender } from "./MonitorParameterSetRecommender";
 import { Destinations } from "./Destinations";
 import { Triggers } from "./Triggers";
-import { LearningFeatures } from "./LearningFeatures";
+import { LearningMetrics } from "./LearningMetrics";
 import { Arguments } from "./Arguments";
 
 export const ParameterSetRecommendersComponent = () => {
@@ -56,14 +56,10 @@ export const ParameterSetRecommendersComponent = () => {
           component={Destinations}
         />
         <AuthorizeRoute
-          path={`${path}/learning-features/:id`}
-          component={LearningFeatures}
+          path={`${path}/learning-metrics/:id`}
+          component={LearningMetrics}
         />
         <AuthorizeRoute path={`${path}/arguments/:id`} component={Arguments} />
-        <AuthorizeRoute
-          path={`${path}/learning-features/:id`}
-          component={LearningFeatures}
-        />
         <AuthorizeRoute path={`${path}/triggers/:id`} component={Triggers} />
         <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
       </Switch>

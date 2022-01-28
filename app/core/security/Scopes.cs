@@ -20,9 +20,9 @@ namespace SignalBox.Core.Security
 
         public static string AllScopes(string scope, Tenant tenant)
         {
-            return scope.TryAddScope(Features.Read).TryAddScope(Features.Write).TryAddScope(tenant?.AccessScope());
+            return scope.TryAddScope(Metrics.Read).TryAddScope(Metrics.Write).TryAddScope(tenant?.AccessScope());
         }
-        public static ReadWriteScope Features => new ReadWriteScope("features");
+        public static ReadWriteScope Metrics => new ReadWriteScope("metrics"); 
     }
 
     public class ReadWriteScope

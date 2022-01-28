@@ -9,7 +9,7 @@ import {
 } from "../../molecules";
 
 import { SettingRow } from "../../molecules/layout/SettingRow";
-import { AsyncSelectFeature } from "../../molecules/selectors/AsyncSelectFeature";
+import AsyncSelectMetric from "../../molecules/selectors/AsyncSelectMetric";
 import { useAccessToken } from "../../../api-hooks/token";
 import {
   InputGroup,
@@ -26,42 +26,42 @@ export const TriggersUtil = ({
 }) => {
   const token = useAccessToken();
   const [saving, setSaving] = React.useState(false);
-  const [featuresChangedTriggerName, setFeaturesChangedTriggerName] =
-    React.useState(triggerCollection?.featuresChanged?.name || "");
-  const [featureOptions, setFeaturesOptions] = React.useState();
-  const [featureCommonIds, setFeatureCommonIds] = React.useState();
+  const [metricsChangedTriggerName, setMetricsChangedTriggerName] =
+    React.useState(triggerCollection?.metricsChanged?.name || "");
+  const [metricOptions, setMetricOptions] = React.useState();
+  const [metricCommonIds, setMetricCommonIds] = React.useState();
   React.useEffect(() => {
-    if (featureOptions) {
-      setFeatureCommonIds(featureOptions.map((o) => o.value.commonId));
+    if (metricOptions) {
+      setMetricCommonIds(metricOptions.map((o) => o.value.commonId));
     } else {
-      setFeatureCommonIds(
-        triggerCollection.featuresChanged?.featureCommonIds || []
+      setMetricCommonIds(
+        triggerCollection.metricsChanged?.metricCommonIds || []
       );
     }
-  }, [featureOptions]);
+  }, [metricOptions]);
 
-  const isFeaturesChangesTriggerActive =
-    triggerCollection.featuresChanged?.featureCommonIds &&
-    triggerCollection.featuresChanged.featureCommonIds.length > 0;
+  const isMetricsChangesTriggerActive =
+    triggerCollection.metricsChanged?.metricCommonIds &&
+    triggerCollection.metricsChanged.metricCommonIds.length > 0;
 
   const handleSave = () => {
     setSaving(true);
-    let featuresChanged = {
-      name: featuresChangedTriggerName,
-      featureCommonIds,
+    let metricsChanged = {
+      name: metricsChangedTriggerName,
+      metricCommonIds,
     };
     // check if null and empty, just shoot up null
     if (
-      !featuresChanged.name &&
-      featuresChanged.featureCommonIds.length === 0
+      !metricsChanged.name &&
+      metricsChanged.metricCommonIds.length === 0
     ) {
-      featuresChanged = null;
+      metricsChanged = null;
     }
     setTriggerAsync({
       token,
       id: recommender.id,
       trigger: {
-        featuresChanged,
+        metricsChanged,
       },
     }).finally(() => setSaving(false));
   };
@@ -73,32 +73,32 @@ export const TriggersUtil = ({
       {!triggerCollection.loading && (
         <div>
           <SettingRow
-            label="Features Changed Trigger"
-            description="Trigger an invokation when these Features change."
+            label="Metrics Changed Trigger"
+            description="Trigger an invokation when these Metrics change value."
           >
             <InputGroup>
               <TextInput
                 validator={createRequiredByServerValidator(error)}
                 placeholder="Label the trigger."
                 label="Trigger Name"
-                value={featuresChangedTriggerName}
-                onChange={(e) => setFeaturesChangedTriggerName(e.target.value)}
+                value={metricsChangedTriggerName}
+                onChange={(e) => setMetricsChangedTriggerName(e.target.value)}
               />
             </InputGroup>
-            <AsyncSelectFeature
+            <AsyncSelectMetric
               isMulti={true}
-              placeholder="Select Features"
-              onChange={setFeaturesOptions}
+              placeholder="Select Metrics"
+              onChange={setMetricOptions}
               defaultCommonIds={
-                triggerCollection?.featuresChanged?.featureCommonIds
+                triggerCollection?.metricsChanged?.metricCommonIds
               }
             />
             <div
               className={`text-right ${
-                isFeaturesChangesTriggerActive && "text-success"
+                isMetricsChangesTriggerActive && "text-success"
               }`}
             >
-              {isFeaturesChangesTriggerActive ? "Active" : "Inactive"}
+              {isMetricsChangesTriggerActive ? "Active" : "Inactive"}
             </div>
           </SettingRow>
         </div>

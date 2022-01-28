@@ -33,7 +33,7 @@ namespace SignalBox.Core.Recommenders
         public ModelRegistration? ModelRegistration { get; set; }
 
         [JsonIgnore]
-        public ICollection<Feature> LearningFeatures { get; set; } = null!;
+        public ICollection<Metric> LearningFeatures { get; set; } = null!; // TODO: - change this to LearningMetrics
 
         [JsonIgnore]
         public ICollection<InvokationLogEntry> RecommenderInvokationLogs { get; set; } = null!;

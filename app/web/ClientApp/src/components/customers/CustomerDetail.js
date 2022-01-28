@@ -41,8 +41,8 @@ export const CustomerDetail = () => {
     <React.Fragment>
       <ActionsButton
         className="ml-1 float-right"
-        to={`/customers/features/${id}`}
-        label="Features"
+        to={`/customers/metrics/${id}`}
+        label="Metrics"
       >
         <ActionItemsGroup label="Actions">
           <ActionLink to={`/customers/edit-properties/${id}`}>

@@ -11,19 +11,19 @@ namespace SignalBox.Core.Workflows
     {
         private readonly IStorageContext storageContext;
         private readonly IRecommenderStore<T> store;
-        private readonly IHistoricTrackedUserFeatureStore trackedUserFeatureStore;
+        private readonly IHistoricCustomerMetricStore customerMetricStore;
         private readonly IWebhookSenderClient webhookSender;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public RecommenderInvokationWorkflowBase(IStorageContext storageContext,
                                                  IRecommenderStore<T> store,
-                                                 IHistoricTrackedUserFeatureStore trackedUserFeatureStore,
+                                                 IHistoricCustomerMetricStore customerMetricStore,
                                                  IWebhookSenderClient webhookSender,
                                                  IDateTimeProvider dateTimeProvider)
         {
             this.storageContext = storageContext;
             this.store = store;
-            this.trackedUserFeatureStore = trackedUserFeatureStore;
+            this.customerMetricStore = customerMetricStore;
             this.webhookSender = webhookSender;
             this.dateTimeProvider = dateTimeProvider;
         }
@@ -96,24 +96,24 @@ namespace SignalBox.Core.Workflows
             return context;
         }
 
-        protected async Task<IDictionary<string, object>> GetFeatures(T recommender, RecommendingContext context)
+        protected async Task<IDictionary<string, object>> GetMetrics(T recommender, RecommendingContext context)
         {
             await store.LoadMany(recommender, _ => _.LearningFeatures);
-            var featureValues = new List<TrackedUserFeatureBase>();
-            context.LogMessage($"Recommender has {recommender.LearningFeatures.Count} Learning Features.");
-            foreach (var feature in recommender.LearningFeatures)
+            var metricValues = new List<CustomerMetricBase>();
+            context.LogMessage($"Recommender has {recommender.LearningFeatures.Count} Learning Metrics.");
+            foreach (var metric in recommender.LearningFeatures)
             {
-                if (await trackedUserFeatureStore.FeatureExists(context.Customer, feature))
+                if (await customerMetricStore.MetricExists(context.Customer, metric))
                 {
-                    featureValues.Add(await trackedUserFeatureStore.ReadFeature(context.Customer, feature));
+                    metricValues.Add(await customerMetricStore.ReadCustomerMetric(context.Customer, metric));
                 }
             }
-            // var features = await trackedUserFeatureStore.ReadAllLatestFeatures(context.TrackedUser);
-            var result = featureValues
-                .Where(_ => _.Value != null)
-                .ToDictionary(_ => _.Feature.CommonId, _ => _.Value ?? "");
 
-            context.LogMessage($"Discovered {result.Count} Feature values.");
+            var result = metricValues
+                .Where(_ => _.Value != null)
+                .ToDictionary(_ => _.Metric.CommonId, _ => _.Value ?? "");
+
+            context.LogMessage($"Discovered {result.Count} Metric values.");
             return result;
         }
 

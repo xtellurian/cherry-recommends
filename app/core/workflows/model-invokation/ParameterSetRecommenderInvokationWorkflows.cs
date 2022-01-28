@@ -22,7 +22,6 @@ namespace SignalBox.Core.Workflows
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
-        private readonly IModelRegistrationStore modelRegistrationStore;
         private readonly ICustomerStore customerStore;
         private readonly IRecommenderModelClientFactory modelClientFactory;
 
@@ -33,9 +32,8 @@ namespace SignalBox.Core.Workflows
                                     IRecommendationCorrelatorStore correlatorStore,
                                     IParameterSetRecommenderStore parameterSetRecommenderStore,
                                     IParameterSetRecommendationStore parameterSetRecommendationStore,
-                                    IModelRegistrationStore modelRegistrationStore,
                                     IWebhookSenderClient webhookSenderClient,
-                                    IHistoricTrackedUserFeatureStore historicFeatureStore,
+                                    IHistoricCustomerMetricStore historicFeatureStore,
                                     ICustomerStore customerStore,
                                     IRecommenderModelClientFactory modelClientFactory)
                                      : base(storageContext, parameterSetRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider)
@@ -46,7 +44,6 @@ namespace SignalBox.Core.Workflows
             this.correlatorStore = correlatorStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
             this.parameterSetRecommendationStore = parameterSetRecommendationStore;
-            this.modelRegistrationStore = modelRegistrationStore;
             this.customerStore = customerStore;
             this.modelClientFactory = modelClientFactory;
         }
@@ -83,8 +80,8 @@ namespace SignalBox.Core.Workflows
                     await storageContext.SaveChanges();
                 }
 
-                // load the features from the user
-                input.Features = await base.GetFeatures(recommender, context);
+                // load the metrics from the customer
+                input.Metrics = await GetMetrics(recommender, context);
 
                 IRecommenderModelClient<ParameterSetRecommenderModelOutputV1> client;
                 if (model == null)

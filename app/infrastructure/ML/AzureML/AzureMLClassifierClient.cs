@@ -34,10 +34,10 @@ namespace SignalBox.Infrastructure.ML.Azure
             return new AzureMLClassifierOutput(r.Result.FirstOrDefault());
         }
 
-        private async Task<string> RequestScore(ModelRegistration model, params IDictionary<string, string>[] features)
+        private async Task<string> RequestScore(ModelRegistration model, params IDictionary<string, string>[] metrics)
         {
             var scoringPayload = new Dictionary<string, List<IDictionary<string, string>>>();
-            scoringPayload["data"] = features.ToList();
+            scoringPayload["data"] = metrics.ToList();
             SetKeyAsBearerToken(httpClient, model);
             var response = await httpClient.PostAsJsonAsync(model.ScoringUrl, scoringPayload);
             // response.EnsureSuccessStatusCode();

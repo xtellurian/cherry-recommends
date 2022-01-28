@@ -8,6 +8,7 @@ import * as st from "./common/settings";
 import * as ds from "./common/destinations";
 import * as trig from "./common/trigger";
 import * as lf from "./common/learningFeatures";
+import * as lm from "./common/learningMetrics";
 import * as ri from "./common/reportImages";
 
 import {
@@ -293,6 +294,37 @@ export const setLearningFeaturesAsync = async ({
     token,
     useInternalId,
     featureIds,
+  });
+};
+
+export const fetchLearningMetricsAsync = async ({
+  id,
+  token,
+  useInternalId,
+}: EntityRequest) => {
+  return await lm.fetchLearningMetricsAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
+  });
+};
+
+interface SetLearningMetricsRequest extends EntityRequest {
+  metricIds: string[];
+}
+export const setLearningMetricsAsync = async ({
+  id,
+  token,
+  metricIds,
+  useInternalId,
+}: SetLearningMetricsRequest) => {
+  return await lm.setLearningMetricsAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
+    metricIds,
   });
 };
 

@@ -5,6 +5,16 @@ namespace SignalBox.Web.Dto
 {
     public class SetTriggersDto : DtoBase
     {
-        public FeaturesChangedTrigger? FeaturesChanged { get; set; }
+        public MetricsChangedTrigger? FeaturesChanged
+        {
+            get => MetricsChanged; set
+            {
+                if (value != null)
+                {
+                    MetricsChanged = value;
+                }
+            }
+        }
+        public MetricsChangedTrigger? MetricsChanged { get; set; }
     }
 }

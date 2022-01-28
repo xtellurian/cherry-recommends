@@ -17,6 +17,7 @@ then
       exit 1
 fi
 
+cd "$APP_PATH/azure"
 STACK=$(pulumi stack --show-name)
 echo "Using Pulumi Stack $STACK"
 

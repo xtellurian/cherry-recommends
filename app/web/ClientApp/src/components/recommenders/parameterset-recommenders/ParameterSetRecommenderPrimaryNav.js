@@ -32,9 +32,9 @@ export const ParameterSetRecommenderPrimaryNav = ({ id }) => {
         Destinations
       </NavListItem>
       <NavListItem
-        to={`/recommenders/parameter-set-recommenders/learning-features/${id}`}
+        to={`/recommenders/parameter-set-recommenders/learning-metrics/${id}`}
       >
-        Learning Features
+        Learning Metrics
       </NavListItem>
 
       <NavListItem

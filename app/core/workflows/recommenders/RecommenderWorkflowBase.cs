@@ -10,12 +10,12 @@ namespace SignalBox.Core.Workflows
     {
         protected readonly IRecommenderStore<TRecommender> store;
         protected readonly IIntegratedSystemStore systemStore;
-        protected readonly IFeatureStore featureStore;
+        protected readonly IMetricStore featureStore;
         private readonly RecommenderReportImageWorkflows imageWorkflows;
 
         protected RecommenderWorkflowBase(IRecommenderStore<TRecommender> store,
                                           IIntegratedSystemStore systemStore,
-                                          IFeatureStore featureStore,
+                                          IMetricStore featureStore,
                                           RecommenderReportImageWorkflows imageWorkflows)
         {
             this.store = store;
@@ -86,17 +86,17 @@ namespace SignalBox.Core.Workflows
 
         // ------ SET LEARNING FEATURES -----
 
-        public async Task<TRecommender> SetLearningFeatures(TRecommender recommender, IEnumerable<string> featureIds, bool? useInternalId = null)
+        public async Task<TRecommender> SetLearningMetrics(TRecommender recommender, IEnumerable<string> metricIds, bool? useInternalId = null)
         {
-            var features = new List<Feature>();
-            foreach (var featureId in featureIds)
+            var metrics = new List<Metric>();
+            foreach (var metricId in metricIds)
             {
-                features.Add(await featureStore.GetEntity(featureId, useInternalId));
+                metrics.Add(await featureStore.GetEntity(metricId, useInternalId));
             }
 
             await store.LoadMany(recommender, _ => _.LearningFeatures);
 
-            recommender.LearningFeatures = features;
+            recommender.LearningFeatures = metrics;
 
             await store.Context.SaveChanges();
             return recommender;

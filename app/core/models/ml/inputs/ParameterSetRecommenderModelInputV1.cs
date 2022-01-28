@@ -20,7 +20,17 @@ namespace SignalBox.Core
         public string? CommonUserId { get; set; }
         [Required]
         public IDictionary<string, object>? Arguments { get; set; } = null!;
-        public IDictionary<string, object>? Features { get; set; }
+        public IDictionary<string, object>? Metrics { get; set; }
+        public IDictionary<string, object>? Features
+        {
+            get => Metrics; set
+            {
+                if (value != null)
+                {
+                    Metrics = value;
+                }
+            }
+        }
         public IEnumerable<ParameterBounds>? ParameterBounds { get; set; }
 
         public string GetCustomerId()

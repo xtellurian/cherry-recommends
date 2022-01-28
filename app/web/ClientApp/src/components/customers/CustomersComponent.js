@@ -8,7 +8,7 @@ import { CreateCustomer } from "./CreateCustomer";
 import { LinkToIntegratedSystem } from "./LinkToIntegratedSystem";
 import { EditProperties } from "./EditProperties";
 import { CreateEvent } from "./CreateEvent";
-import { Features } from "./Features";
+import Metrics from "./Metrics";
 
 export const CustomersComponent = (props) => {
   let { path } = useRouteMatch();
@@ -39,8 +39,8 @@ export const CustomersComponent = (props) => {
           />
           <AuthorizeRoute
             exact
-            path={`${path}/features/:id`}
-            component={Features}
+            path={`${path}/metrics/:id`}
+            component={Metrics}
           />
           <AuthorizeRoute
             exact

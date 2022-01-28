@@ -25,6 +25,7 @@ def main(req: func.HttpRequest, inputblob: str, record: str) -> func.HttpRespons
         req_body)
 
     if not is_valid:
+        logging.error(json.dumps(req_body))
         return responses.bad_request(reason)
 
     payload = req_body['payload']

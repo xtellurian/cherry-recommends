@@ -9,8 +9,8 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ApiKeyWorkflows>();
             services.AddScoped<IntegratedSystemWorkflows>();
             services.AddScoped<ModelRegistrationWorkflows>();
-            services.AddScoped<FeatureGeneratorWorkflows>();
-            services.AddScoped<FeatureWorkflows>();
+            services.AddScoped<MetricGeneratorWorkflows>();
+            services.AddScoped<MetricWorkflows>();
             services.AddScoped<RecommendableItemWorkflows>();
             services.AddScoped<SegmentWorkflows>();
             services.AddScoped<CustomerWorkflows>();

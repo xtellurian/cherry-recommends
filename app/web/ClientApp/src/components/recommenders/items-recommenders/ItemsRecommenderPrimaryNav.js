@@ -26,9 +26,9 @@ export const ItemsRecommenderPrimaryNav = ({ id }) => {
         Destinations
       </NavListItem>
       <NavListItem
-        to={`/recommenders/items-recommenders/learning-features/${id}`}
+        to={`/recommenders/items-recommenders/learning-metrics/${id}`}
       >
-        Learning Features
+        Learning Metrics
       </NavListItem>
       <NavListItem to={`/recommenders/items-recommenders/arguments/${id}`}>
         Arguments

@@ -1,7 +1,7 @@
 import React from "react";
 import { useHubspotCrmCardBehaviour } from "../../../../api-hooks/hubspotApi";
 import { setHubspotCrmCardBehaviourAsync } from "../../../../api/hubspotApi";
-import { useFeatures } from "../../../../api-hooks/featuresApi";
+import { useMetrics } from "../../../../api-hooks/metricsApi";
 import {
   BackButton,
   Title,
@@ -72,73 +72,73 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
   }, [behaviour]);
 
   const [newRecommender, setRecommender] = React.useState();
-  const [featureOptions, setFeatureOptions] = React.useState([]);
+  const [metricOptions, setMetricOptions] = React.useState([]);
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [include, setInclude] = React.useState(true);
 
-  const features = useFeatures();
+  const metrics = useMetrics();
 
   React.useEffect(() => {
-    if (features.items) {
-      setFeatureOptions(
-        features.items.map((f) => ({ label: f.name, value: f }))
+    if (metrics.items) {
+       setMetricOptions(
+        metrics.items.map((f) => ({ label: f.name, value: f }))
       );
     }
-  }, [features]);
+  }, [metrics]);
 
   React.useEffect(() => {
     if (behaviour.items) {
-      setFeatureOptions(
-        features.items.map((f) => ({ label: f.name, value: f }))
+       setMetricOptions(
+        metrics.items.map((f) => ({ label: f.name, value: f }))
       );
     }
-  }, [behaviour, features]);
+  }, [behaviour, metrics]);
 
-  const [selectedFeatures, setSelectedFeatures] = React.useState([]);
+  const [selectedMetrics,  setSelectedMetrics] = React.useState([]);
 
   React.useEffect(() => {
-    if (behaviour.includedFeatures && behaviour.includedFeatures.length) {
-      setSelectedFeatures(behaviour.includedFeatures || []);
+    if (behaviour.includedMetrics && behaviour.includedMetrics.length) {
+       setSelectedMetrics(behaviour.includedMetrics || []);
     } else if (
-      behaviour.excludedFeatures &&
-      behaviour.excludedFeatures.length
+      behaviour.excludedMetrics &&
+      behaviour.excludedMetrics.length
     ) {
-      setSelectedFeatures(behaviour.excludedFeatures || []);
+       setSelectedMetrics(behaviour.excludedMetrics || []);
     } else {
-      setSelectedFeatures([]);
+       setSelectedMetrics([]);
     }
   }, [behaviour]);
 
-  const [excludedFeatureOptions, setExcludedFeatureOptions] = React.useState(
+  const [excludedMetricOptions, setExcludedMetricOptions] = React.useState(
     []
   );
 
   React.useEffect(() => {
-    if (behaviour && behaviour.includedFeatures) {
+    if (behaviour && behaviour.includedMetrics) {
       setInclude(true);
-      setExcludedFeatureOptions(
-        featureOptions.filter((_) =>
-          behaviour.includedFeatures.includes(_.value.commonId)
+      setExcludedMetricOptions(
+        metricOptions.filter((_) =>
+          behaviour.includedMetrics.includes(_.value.commonId)
         )
       );
-    } else if (behaviour && behaviour.excludedFeatures) {
+    } else if (behaviour && behaviour.excludedMetrics) {
       setInclude(false);
-      setExcludedFeatureOptions(
-        featureOptions.filter((_) =>
-          behaviour.excludedFeatures.includes(_.value.commonId)
+      setExcludedMetricOptions(
+        metricOptions.filter((_) =>
+          behaviour.excludedMetrics.includes(_.value.commonId)
         )
       );
     }
-  }, [behaviour, featureOptions]);
+  }, [behaviour, metricOptions]);
 
   const handleSave = () => {
     setLoading(true);
     const payload = {};
     if (include) {
-      payload.includedFeatures = selectedFeatures;
+      payload.includedMetrics = selectedMetrics;
     } else {
-      payload.excludedFeatures = selectedFeatures;
+      payload.excludedMetrics = selectedMetrics;
     }
     if (
       newRecommender &&
@@ -199,38 +199,38 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
       </SettingRow>
 
       <SettingRow
-        label="Include or Exclude Features"
-        description="Would you like to include or exclude the features selected below?"
+        label="Include or Exclude Metrics"
+        description="Would you like to include or exclude the metrics selected below?"
       >
         <ToggleSwitch
           id="include-exclude-toggle"
           onChange={setInclude}
           checked={include}
-          name="Include Features"
+          name="Include Metrics"
         />
         <div className="mt-3">
-          The Features selected below will be{" "}
+          The Metrics selected below will be{" "}
           <strong>{include ? "included " : "excluded "}</strong>
           from your Hubspot CRM Card.
         </div>
       </SettingRow>
 
       <div className="mb-2">
-        <h6>{include ? "Included" : "Excluded"} Features</h6>
+        <h6>{include ? "Included" : "Excluded"} Metrics</h6>
         <Selector
           isMulti
           isSearchable
-          placeholder="Select features to exclude from CRM Cards"
+          placeholder="Select Metrics to exclude from CRM Cards"
           noOptionsMessage={({ inputValue }) =>
-            `No Feature matches ${inputValue}`
+            `No Metric matches ${inputValue}`
           }
-          defaultValue={excludedFeatureOptions}
-          value={excludedFeatureOptions}
+          defaultValue={excludedMetricOptions}
+          value={excludedMetricOptions}
           onChange={(so) => {
-            setExcludedFeatureOptions(so);
-            setSelectedFeatures([...so.map((_) => _.value.commonId)]);
+            setExcludedMetricOptions(so);
+             setSelectedMetrics([...so.map((_) => _.value.commonId)]);
           }}
-          options={featureOptions}
+          options={metricOptions}
         />
       </div>
       <div className="mt-3">
