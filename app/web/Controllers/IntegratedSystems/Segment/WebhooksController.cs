@@ -10,6 +10,7 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
+    [SkipSegmentAnalytics]
     public class WebhooksController : SignalBoxControllerBase
     {
         private readonly ILogger<WebhooksController> logger;

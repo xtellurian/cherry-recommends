@@ -34,6 +34,7 @@ namespace SignalBox.Azure
             this.multitenant = appSvcConfig.RequireBoolean("multitenant");
 
             var hubspotConfig = new Pulumi.Config("hubspot");
+            var segmentConfig = new Pulumi.Config("segment");
             System.Console.WriteLine($"Canonical Root Domain is {canonicalRootDomain ?? "null"}");
 
             var plan = new AppServicePlan("asp", new AppServicePlanArgs
@@ -183,7 +184,10 @@ namespace SignalBox.Azure
                     // azure
                     {"AzureEnvironment__SqlServerName", multiDb.ServerName},
                     {"AzureEnvironment__SqlServerUserName", multiDb.UserName},
-                    {"AzureEnvironment__SqlServerPassword", multiDb.Password}
+                    {"AzureEnvironment__SqlServerPassword", multiDb.Password},
+
+                    // segment
+                    {"Segment__WriteKey", segmentConfig.Get("writeKey") ?? ""}
                 }
             }, new CustomResourceOptions
             {

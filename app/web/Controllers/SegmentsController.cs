@@ -13,7 +13,7 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    public class SegmentsController : EntityControllerBase<Segment>
+    public class SegmentsController : EntityControllerBase<SignalBox.Core.Segment>
     {
         private readonly ILogger<SegmentsController> logger;
         private readonly SegmentWorkflows workflow;
@@ -26,7 +26,7 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Creates a new segment.</summary>
         [HttpPost]
-        public async Task<Segment> CreateSegment([FromBody] CreateSegmentDto dto)
+        public async Task<SignalBox.Core.Segment> CreateSegment([FromBody] CreateSegmentDto dto)
         {
             return await workflow.CreateSegment(dto.Name);
         }
