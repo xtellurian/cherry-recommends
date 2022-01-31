@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
@@ -173,6 +173,52 @@ namespace SignalBox.Functions
             var logger = executionContext.GetLogger("AddMember");
             var addMember = await JsonSerializer.DeserializeAsync<AddMember>(req.Body, serializerOptions);
             return await AddTenantMember(addMember, tenantName, logger);
+        }
+
+        [Function("AssignRoles")]
+        public async Task<IEnumerable<TenantMembership>> AssignRoles([HttpTrigger(AuthorizationLevel.Function, "post",
+            Route = "Tenants/{tenantName}/Members/{userId}")] HttpRequestData req, string tenantName, string userId,
+            FunctionContext executionContext)
+        {
+            var logger = executionContext.GetLogger("AssignRoles");
+            var memberships = new List<TenantMembership>();
+            if (tenantName == "*")
+            {
+                foreach (var tenant in await tenantStore.List())
+                {
+                    memberships.AddRange(await AssignMemberTenantRole(tenant, userId));
+                }
+            }
+            else
+            {
+                var tenant = await tenantStore.ReadFromName(tenantName);
+                memberships.AddRange(await AssignMemberTenantRole(tenant, userId));
+            }
+            logger.LogInformation("Updated {n} membership roles", memberships.Count);
+            return memberships;
+        }
+
+        private async Task<IEnumerable<TenantMembership>> AssignMemberTenantRole(Tenant tenant, string userId)
+        {
+            var memberships = new List<TenantMembership>();
+            if (userId == "*")
+            {
+                // the get all users
+                foreach (var member in await membershipStore.ReadMemberships(tenant))
+                {
+                    await auth0Service.AddTenantPermission(member.UserId, tenant);
+                    memberships.Add(member);
+                }
+            }
+            else
+            {
+                var membershipsForUser = await membershipStore.ReadMemberships(userId);
+                var membership = membershipsForUser.First(_ => _.TenantId == tenant.Id);
+                memberships.Add(membership);
+                await auth0Service.AddTenantPermission(userId, tenant);
+                memberships.Add(membership);
+            }
+            return memberships;
         }
 
         private async Task<Tenant> AddTenantMember(AddMember addMember, string tenantName, ILogger logger)
