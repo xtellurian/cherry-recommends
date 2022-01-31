@@ -15,7 +15,6 @@ namespace SignalBox.Infrastructure.ML
         private readonly ITenantProvider tenantProvider;
 
         public DotnetAzureFunctionsConnectionOptions connectionOptions { get; }
-
         private JsonSerializerOptions serializerOptions => new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -46,6 +45,7 @@ namespace SignalBox.Infrastructure.ML
                 BaselineItem = itemsRecommender.BaselineItem,
                 Items = itemsRecommender.Items,
                 Name = itemsRecommender.ModelRegistration.Name,
+                TargetMetric = itemsRecommender.TargetMetric,
                 NItemsToRecommend = itemsRecommender.NumberOfItemsToRecommend ?? 1
             };
 

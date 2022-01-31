@@ -17,11 +17,14 @@ namespace SignalBox.Core.Recommenders
                                 ICollection<RecommendableItem>? items,
                                 IEnumerable<RecommenderArgument>? arguments,
                                 RecommenderSettings? settings,
+                                Metric? targetMetric,
                                 int numberOfItemsToRecommend = 1) : base(commonId, name, arguments, settings)
         {
             Items = items ?? new List<RecommendableItem>();
             BaselineItem = baselineItem;
             BaselineItemId = baselineItem?.Id;
+            TargetMetric = targetMetric;
+            TargetMetricId = targetMetric?.Id;
             NumberOfItemsToRecommend = numberOfItemsToRecommend;
 
             if (numberOfItemsToRecommend > 9)
@@ -43,6 +46,7 @@ namespace SignalBox.Core.Recommenders
         public ICollection<RecommendableItem> Items { get; set; }
         [JsonIgnore]
         public ICollection<ItemsRecommendation> Recommendations { get; set; } = null!;
-
+        public long? TargetMetricId { get; set; }
+        public Metric? TargetMetric { get; set; }
     }
 }

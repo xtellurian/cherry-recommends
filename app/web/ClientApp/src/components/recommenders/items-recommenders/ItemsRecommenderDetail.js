@@ -129,6 +129,15 @@ const RecommenderDetailSection = () => {
               to={`/recommendable-items/detail/${recommender.baselineItemId}`}
             />
           )}
+
+          {recommender.targetMetric && (
+            <EntityField
+              label="Target Metric"
+              entity={recommender.targetMetric}
+              to={`/metrics/detail/${recommender.targetMetric.id}`}
+            />
+          )}
+
         </div>
       </div>
 

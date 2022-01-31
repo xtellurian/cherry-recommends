@@ -816,6 +816,9 @@ namespace sqlserver.SignalBox
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("TargetMetricId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("TrackedUserId")
                         .HasColumnType("bigint");
 
@@ -829,6 +832,8 @@ namespace sqlserver.SignalBox
                     b.HasIndex("RecommendationCorrelatorId");
 
                     b.HasIndex("RecommenderId");
+
+                    b.HasIndex("TargetMetricId");
 
                     b.HasIndex("TrackedUserId");
 
@@ -878,6 +883,9 @@ namespace sqlserver.SignalBox
                     b.Property<string>("RecommenderType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("TargetMetricId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("TrackedUserId")
                         .HasColumnType("bigint");
 
@@ -891,6 +899,8 @@ namespace sqlserver.SignalBox
                     b.HasIndex("RecommendationCorrelatorId");
 
                     b.HasIndex("RecommenderId");
+
+                    b.HasIndex("TargetMetricId");
 
                     b.HasIndex("TrackedUserId");
 
@@ -1619,7 +1629,12 @@ namespace sqlserver.SignalBox
                     b.Property<int?>("NumberOfItemsToRecommend")
                         .HasColumnType("int");
 
+                    b.Property<long?>("TargetMetricId")
+                        .HasColumnType("bigint");
+
                     b.HasIndex("BaselineItemId");
+
+                    b.HasIndex("TargetMetricId");
 
                     b.HasDiscriminator().HasValue("ItemsRecommender");
                 });
@@ -1882,6 +1897,10 @@ namespace sqlserver.SignalBox
                         .HasForeignKey("RecommenderId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("SignalBox.Core.Metric", "TargetMetric")
+                        .WithMany()
+                        .HasForeignKey("TargetMetricId");
+
                     b.HasOne("SignalBox.Core.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("TrackedUserId");
@@ -1893,6 +1912,8 @@ namespace sqlserver.SignalBox
                     b.Navigation("RecommendationCorrelator");
 
                     b.Navigation("Recommender");
+
+                    b.Navigation("TargetMetric");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ParameterSetRecommendation", b =>
@@ -1911,6 +1932,10 @@ namespace sqlserver.SignalBox
                         .HasForeignKey("RecommenderId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("SignalBox.Core.Metric", "TargetMetric")
+                        .WithMany()
+                        .HasForeignKey("TargetMetricId");
+
                     b.HasOne("SignalBox.Core.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("TrackedUserId");
@@ -1922,6 +1947,8 @@ namespace sqlserver.SignalBox
                     b.Navigation("RecommendationCorrelator");
 
                     b.Navigation("Recommender");
+
+                    b.Navigation("TargetMetric");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.RecommendationCorrelator", b =>
@@ -2104,7 +2131,13 @@ namespace sqlserver.SignalBox
                         .HasForeignKey("BaselineItemId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("SignalBox.Core.Metric", "TargetMetric")
+                        .WithMany()
+                        .HasForeignKey("TargetMetricId");
+
                     b.Navigation("BaselineItem");
+
+                    b.Navigation("TargetMetric");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Customer", b =>

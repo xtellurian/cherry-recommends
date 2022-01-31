@@ -6,6 +6,7 @@ import {
   useGlobalStartingItem,
   useItems,
 } from "../../../api-hooks/recommendableItemsApi";
+import { useMetrics } from "../../../api-hooks/metricsApi";
 import {
   Title,
   PrimaryBackButton,
@@ -39,6 +40,12 @@ export const CreateRecommender = () => {
 
   const startingItem = useGlobalStartingItem();
 
+  const metrics = useMetrics();  
+  const metricsOptions = metrics.items
+    ? metrics.items.map((p) => ({ label: p.name, value: `${p.id}` }))
+    : [];
+  const [defaultMetric, setDefaultMetric] = React.useState({ label: "", value: "" });
+
   const [selectedItems, setSelectedItems] = React.useState();
   const [recommender, setRecommender] = React.useState({
     commonId: "",
@@ -47,8 +54,9 @@ export const CreateRecommender = () => {
     baselineItemId: "",
     numberOfItemsToRecommend: null,
     useAutoAi: true,
+    targetMetricId: "",
   });
-
+  
   React.useEffect(() => {
     if (startingItem.commonId) {
       setRecommender({
@@ -57,6 +65,17 @@ export const CreateRecommender = () => {
       });
     }
   }, [startingItem]);
+
+  React.useEffect(() => {
+    if (metrics?.items?.length > 0) {      
+      setDefaultMetric({ label: metrics.items[0].name, value: `${metrics.items[0].id}` });
+      setRecommender({
+        ...recommender,
+        targetMetricId: `${metrics.items[0].id}`,
+      });
+    }
+  }, [metrics]);
+
 
   const [loading, setLoading] = React.useState(false);
 
@@ -195,6 +214,24 @@ export const CreateRecommender = () => {
               setRecommender({ ...recommender, numberOfItemsToRecommend })
             }
           />
+        </div>
+        <div className="mt-2 mb-2">
+          Target Metric
+          {!metrics.loading && (
+            <Selector
+              isSearchable
+              placeholder="Choose a target metric."
+              noOptionsMessage={(inputValue) => "No Metrics Available"}
+              defaultValue={{ label: defaultMetric.label, value: defaultMetric.value }}
+              onChange={(so) => {
+                setRecommender({
+                  ...recommender,
+                  targetMetricId: so.value,
+                });
+              }}
+              options={metricsOptions}
+            />
+          )}
         </div>
       </AdvancedOptionsPanel>
     </React.Fragment>

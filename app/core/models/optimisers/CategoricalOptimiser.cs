@@ -10,6 +10,6 @@ namespace SignalBox.Core.Optimisers
         public RecommendableItem BaselineItem { get; set; }
         public RecommendableItem DefaultItem => BaselineItem;
         public IEnumerable<RecommendableItem> Items { get; set; }
-
+        public Metric TargetMetric { get; set; }
     }
 }

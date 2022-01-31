@@ -40,6 +40,7 @@ namespace SignalBox.Web.Controllers
         {
             var recommender = await base.GetEntity(id, useInternalId);
             await store.Load(recommender, _ => _.BaselineItem);
+            await store.Load(recommender, _ => _.TargetMetric);
             await store.LoadMany(recommender, _ => _.Items);
             return recommender;
         }
@@ -60,6 +61,7 @@ namespace SignalBox.Web.Controllers
                 dto.Arguments.ToCoreRepresentation(),
                 dto.Settings.ToCoreRepresentation(),
                 dto.UseAutoAi ?? false,
+                dto.TargetMetricId,
                 useInternalId: useInternalId);
         }
 

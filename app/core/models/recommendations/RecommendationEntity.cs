@@ -20,6 +20,8 @@ namespace SignalBox.Core.Recommendations
         public long? TrackedUserId { get; set; }
         public Customer? TrackedUser => Customer;
         public Customer? Customer { get; set; }
+        public long? TargetMetricId { get; set; }
+        public Metric? TargetMetric { get; set; }
 
         public string? Trigger { get; set; }
 

@@ -11,6 +11,7 @@ namespace SignalBox.Core.Workflows
     {
         private readonly IStorageContext storageContext;
         private readonly IItemsRecommendationStore recommendationStore;
+        private readonly IMetricStore metricStore;
         private readonly ICategoricalOptimiserClient optimiserClient;
         private readonly IModelRegistrationStore modelRegistrationStore;
         private readonly IRecommendableItemStore itemStore;
@@ -28,6 +29,7 @@ namespace SignalBox.Core.Workflows
         {
             this.storageContext = storageContext;
             this.recommendationStore = recommendationStore;
+            this.metricStore = metricStore;
             this.optimiserClient = optimiserClient;
             this.modelRegistrationStore = modelRegistrationStore;
             this.itemStore = itemStore;
@@ -44,6 +46,7 @@ namespace SignalBox.Core.Workflows
                                                   from.Arguments,
                                                   from.ErrorHandling ?? new RecommenderSettings(),
                                                   true,
+                                                  from.TargetMetric?.CommonId,
                                                   useInternalId: true);
         }
 
@@ -62,12 +65,19 @@ namespace SignalBox.Core.Workflows
                                                                        IEnumerable<RecommenderArgument>? arguments,
                                                                        RecommenderSettings settings,
                                                                        bool useOptimiser,
+                                                                       string? targetMetricId,
                                                                        bool? useInternalId)
         {
             RecommendableItem? baselineItem = null;
             if (!string.IsNullOrEmpty(baselineItemId))
             {
                 baselineItem = await itemStore.GetEntity(baselineItemId, useInternalId: useInternalId);
+            }
+
+            Metric? targetMetric = null;
+            if (!string.IsNullOrEmpty(targetMetricId))
+            {
+                targetMetric = await metricStore.GetEntity(targetMetricId);
             }
 
             ItemsRecommender recommender;
@@ -80,14 +90,14 @@ namespace SignalBox.Core.Workflows
                 }
 
                 recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, baselineItem, items, arguments, settings)
+                    new ItemsRecommender(common.CommonId, common.Name, baselineItem, items, arguments, settings, targetMetric)
                     { NumberOfItemsToRecommend = numberOfItemsToRecommend });
 
             }
             else
             {
                 recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, baselineItem, null, arguments, settings)
+                    new ItemsRecommender(common.CommonId, common.Name, baselineItem, null, arguments, settings, targetMetric)
                     { NumberOfItemsToRecommend = numberOfItemsToRecommend });
             }
 
