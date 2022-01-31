@@ -20,6 +20,8 @@ config:
   hubspot:appId: todo
   hubspot:clientId: todo
   network:cherrySubdomain: app
+  segment:writeKey:
+    secure: AAABABXraw8QiY789EJ85SfK33gTwd+l+sAeQ3NJUswsJTaBvCkV2D2P90iH2JRKpmoekebIEm3fNMFO+6LWHA==
   signalbox:environment: Production
   signalbox:login-domain: login.cherry.ai
   signalbox:sqlPassword:
