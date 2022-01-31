@@ -22,6 +22,8 @@ namespace SignalBox.Core.Security
         {
             return scope.TryAddScope(Metrics.Read).TryAddScope(Metrics.Write).TryAddScope(tenant?.AccessScope());
         }
+        // warning - DO NOT CHANGE THESE.
+        // see azure/Auth0.cs
         public static ReadWriteScope Metrics => new ReadWriteScope("metrics"); 
     }
 

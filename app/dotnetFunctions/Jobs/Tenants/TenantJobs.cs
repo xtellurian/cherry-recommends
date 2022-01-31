@@ -216,13 +216,16 @@ namespace SignalBox.Functions
                     {
                         try
                         {
+                            // get the tenant role ID - should refresh the scopes and roles
                             logger.LogInformation($"Migrating tenant {t.Name} with database {t.DatabaseName}");
                             var result = await dbManager.MigrateDatabase(t, _ => _.FixSqliteConnectionString());
+
+                            result.Auth0RoleId = await auth0Service.GetTenantRoleId(t);
                             results.Add(result);
                         }
                         catch (System.Exception ex)
                         {
-                            logger.LogCritical($"Error migrating tenant {t.Name} with database {t.DatabaseName}");
+                            logger.LogCritical("Error migrating tenant {Name} with database {DatabaseName}", t.Name, t.DatabaseName);
                             logger.LogError(ex.Message);
                         }
                     }

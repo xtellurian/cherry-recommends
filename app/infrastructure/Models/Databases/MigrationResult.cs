@@ -8,6 +8,7 @@ namespace SignalBox.Infrastructure.Models.Databases
     {
         public Tenant Tenant { get; set; }
         public List<MigrationInfo> Migrations { get; set; }
+        public string Auth0RoleId { get; set; }
 
         protected MigrationResult() { }
         public MigrationResult(Tenant tenant)

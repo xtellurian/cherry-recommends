@@ -9,7 +9,6 @@ namespace SignalBox.Azure
         public Auth0(Pulumi.AzureNative.Web.WebApp webApp)
         {
             var stackName = Deployment.Instance.StackName;
-            var auth0Config = new Pulumi.Config("auth0");
             var rootConfig = new Pulumi.Config();
             var canonicalRootDomain = new Pulumi.Config("appsvc").Get("canonical-root-domain");
 
@@ -22,6 +21,10 @@ namespace SignalBox.Azure
                 TokenLifetimeForWeb = 60 * 60 * 12, // 1/2 day for tokens via browser
                 EnforcePolicies = true, // enables RBAC for this API
                 Scopes = {
+                    // WARNING - DO NOT CHANGE THESE!
+                    // When pulumi updates these scopes, any other scopes are deleted
+                    // this is BAD because the tenant:TENANT_NAME scopes are all deleted
+                    // meaning nobody has access to their tenants any more
                     new ResourceServerScopeArgs
                     {
                         Value = "webAPI"
