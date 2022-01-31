@@ -77,7 +77,7 @@ namespace SignalBox.Functions
         }
 
     
-        public List<ScoredRecommendableItem> ChooseItems(ICollection<RecommendableItem> items, int nitems)
+        public List<ScoredItem> ChooseItems(ICollection<RecommendableItem> items, int nitems)
         {
             if (items.Count <= 0)
             {
@@ -116,9 +116,9 @@ namespace SignalBox.Functions
             return SelectItems(items, choices, nitems);
         }
 
-        public List<ScoredRecommendableItem> SelectItems(ICollection<RecommendableItem> items, SortedDictionary<string, double> probabilities, int nSelectedItems)
+        public List<ScoredItem> SelectItems(ICollection<RecommendableItem> items, SortedDictionary<string, double> probabilities, int nSelectedItems)
         {
-            List<ScoredRecommendableItem> selectedItems = new List<ScoredRecommendableItem>();
+            List<ScoredItem> selectedItems = new List<ScoredItem>();
             var cumulativeWeight = new List<double>();
             double last = 0;            
             foreach (var cur in probabilities)
@@ -135,8 +135,7 @@ namespace SignalBox.Functions
                 if (choice < cumulativeWeight[i])
                 {
                     var item = GetItem(items, cur.Key);
-                    var newItem = new RecommendableItem(item.CommonId, item.Name, item.ListPrice, item.DirectCost, item.Properties);
-                    selectedItems.Add(new ScoredRecommendableItem(newItem, cur.Value));
+                    selectedItems.Add(new ScoredItem(item.CommonId, cur.Value));
                 }
                 i++;
                 if (selectedItems.Count == nSelectedItems)

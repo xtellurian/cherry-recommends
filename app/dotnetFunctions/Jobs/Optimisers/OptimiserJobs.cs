@@ -125,7 +125,7 @@ namespace SignalBox.Functions
                 throw new BadRequestException("Body of request must be JSON");
             }
 
-            List<ScoredRecommendableItem> chosenItems = InvokeCategoricalOptimiser(collection, payloadInfo);
+            List<ScoredItem> chosenItems = InvokeCategoricalOptimiser(collection, payloadInfo);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
             InvokeCategoricalOptimiserResponse invokeResponse = new InvokeCategoricalOptimiserResponse()
@@ -137,7 +137,7 @@ namespace SignalBox.Functions
             return response;
         }
 
-        public List<ScoredRecommendableItem> InvokeCategoricalOptimiser(PopulationDistributionCollection collection, InvokeCategoricalOptimiserModel payloadInfo)
+        public List<ScoredItem> InvokeCategoricalOptimiser(PopulationDistributionCollection collection, InvokeCategoricalOptimiserModel payloadInfo)
         {
             try
             {
@@ -160,7 +160,7 @@ namespace SignalBox.Functions
             }
 
             // # Draw the items to recommend with their scores
-            List<ScoredRecommendableItem> chosenItems = relevantPopulation.ChooseItems(items, collection.NItemsToRecommend);
+            List<ScoredItem> chosenItems = relevantPopulation.ChooseItems(items, collection.NItemsToRecommend);
             return chosenItems;
         }
     }
