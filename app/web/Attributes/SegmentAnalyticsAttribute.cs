@@ -40,17 +40,28 @@ namespace SignalBox.Web
                 }
 
                 string writeKey = Configuration.GetValue<string>("Segment:WriteKey");
-                string userId = context.HttpContext.User.Auth0Id();
-                string httpMethod = context.HttpContext.Request.Method;
-                string eventName = $"[{httpMethod}]{context.ActionDescriptor.DisplayName}";
-                var properties = new Dictionary<string, object>();
-                
-                string tenant = TenantProvider.Current()?.Name;
-
-                properties.Add("tenant", tenant);
-
                 if (!string.IsNullOrEmpty(writeKey))
-                    Segment.Analytics.Client.Track(userId, eventName, properties);
+                {
+                    string httpMethod = context.HttpContext.Request.Method;
+                    string eventName = $"[{httpMethod}]{context.ActionDescriptor.DisplayName}";
+                    string tenant = TenantProvider.Current()?.Name;
+                    var properties = new Dictionary<string, object>
+                    {
+                        { "tenant", tenant }
+                    };
+
+                    if (context.HttpContext.User.Identity.IsAuthenticated)
+                    {
+                        string userId = context.HttpContext.User.Auth0Id();
+                        Segment.Analytics.Client.Track(null, eventName, properties);
+                    }
+                    else
+                    {
+                        Segment.Analytics.Client.Track(null, eventName, properties,
+                            new Segment.Model.Options().SetAnonymousId(context.HttpContext.Session?.Id ?? System.Guid.NewGuid().ToString()));
+
+                    }
+                }
             }
         }
     }
