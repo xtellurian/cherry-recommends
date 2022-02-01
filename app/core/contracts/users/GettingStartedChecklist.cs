@@ -5,14 +5,14 @@ namespace SignalBox.Core.Internal
 {
     public class GettingStartedChecklist
     {
-        private static Dictionary<int, CheckistItem> _initialChecklist => new Dictionary<int, CheckistItem>
+        private static Dictionary<int, CheckistItem> InitialChecklist => new Dictionary<int, CheckistItem>
         {
             {
                 10,
                 new CheckistItem
                 {
-                    label= "Connect your data",
-                    description= "Add a Segment integration to automatically populate Cherry with customer data.",
+                    label= "Connect Cherry",
+                    description= "Integrate Cherry to your application.",
                     actionTo= "/settings/integrations/create",
                     actionLabel= "Connect",
                     docsLink="/docs/integrations/sources/segment",
@@ -23,10 +23,10 @@ namespace SignalBox.Core.Internal
                 20,
                 new CheckistItem
                 {
-                    label= "Add a recommendable item",
-                    description= "Add a promotion or product as a recommendable item.",
+                    label= "Create an item",
+                    description= "Add any promotions, offers, features, or content you want to show to your customers.",
                     actionTo= "/recommendable-items/create",
-                    actionLabel= "Add an Item",
+                    actionLabel= "Create",
                     docsLink="/docs/recommenders/choose-what-to-recommend/create_items",
                     complete = false,
                 }
@@ -36,9 +36,9 @@ namespace SignalBox.Core.Internal
                 new CheckistItem
                 {
                     label= "Setup a Recommender",
-                    description= "Create an item recommender to start finding the best items for different customers.",
+                    description= "A Recommender provides the best item for each of your customers.",
                     actionTo= "/recommenders/items-recommenders/create",
-                    actionLabel= "Setup a Recommender",
+                    actionLabel= "Setup",
                     docsLink="/docs/recommenders/Create/create-item-recommender",
                     complete = false,
                 }
@@ -58,10 +58,10 @@ namespace SignalBox.Core.Internal
                 50,
                 new CheckistItem
                 {
-                    label= "Consume the Recommendations",
-                    description= "Your recommendations need to go somewhere. Use the JavaScript SDK to consume them in your web application.",
+                    label= "Consume Recommendations",
+                    description= "Ensure the recommendations are delivered to your customers and the results tracked.",
                     actionTo= "/recommenders/items-recommenders/destinations/{recommenderId}?tab=js",
-                    actionLabel= "Consume Recommendations",
+                    actionLabel= "Consume",
                     docsLink="/docs/recommenders/deploy-recommenders/consume/consume-recommendations",
                     complete = false
                 }
@@ -70,11 +70,11 @@ namespace SignalBox.Core.Internal
 
         public void EnsureInitialised()
         {
-            steps ??= _initialChecklist;
+            steps ??= InitialChecklist;
 
             foreach (var key in steps.Keys.ToList())
             {
-                if (!_initialChecklist.ContainsKey(key))
+                if (!InitialChecklist.ContainsKey(key))
                 {
                     // remove any keys not in _initialChecklist
                     steps.Remove(key);
@@ -93,7 +93,7 @@ namespace SignalBox.Core.Internal
 
         }
 
-        public Dictionary<int, CheckistItem> steps { get; set; } = _initialChecklist;
+        public Dictionary<int, CheckistItem> steps { get; set; } = InitialChecklist;
         public bool? allComplete => !steps?.Values.Any(_ => (_.complete == false) || (_.complete == null));
     }
 }
