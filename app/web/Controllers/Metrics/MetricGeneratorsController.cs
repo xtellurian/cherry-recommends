@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
 using SignalBox.Core.Metrics.Generators;
-using SignalBox.Core.Workflows;
 using SignalBox.Web.Dto;
 
 namespace SignalBox.Web.Controllers
@@ -13,15 +12,16 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    public class FeatureGeneratorsController : EntityControllerBase<MetricGenerator>
+    [Route("api/FeatureGenerators")]
+    public class MetricGeneratorsController : EntityControllerBase<MetricGenerator>
     {
-        private readonly ILogger<FeatureGeneratorsController> logger;
+        private readonly ILogger<MetricGeneratorsController> logger;
         private readonly IMetricStore featureStore;
         private readonly IRunMetricGeneratorQueueStore generatorQueue;
         private readonly ITenantProvider tenantProvider;
         private readonly IDateTimeProvider dateTimeProvider;
 
-        public FeatureGeneratorsController(ILogger<FeatureGeneratorsController> logger,
+        public MetricGeneratorsController(ILogger<MetricGeneratorsController> logger,
                                            IMetricStore featureStore,
                                            IRunMetricGeneratorQueueStore generatorQueue,
                                            ITenantProvider tenantProvider,
