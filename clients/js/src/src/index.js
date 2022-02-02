@@ -36,6 +36,7 @@ import * as touchpoints from "./api/touchpointsApi";
 import * as trackedUsers from "./api/trackedUsersApi";
 import * as rewardSelectors from "./api/rewardSelectorsApi";
 import * as actions from "./api/actionsApi";
+import { components } from "./model/api";
 
 import { setBaseUrl } from "./api/client/baseUrl";
 import {
@@ -74,4 +75,5 @@ export {
   setDefaultEnvironmentId,
   setDefaultApiKey,
   errorHandling,
+  components
 };

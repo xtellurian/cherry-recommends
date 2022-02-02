@@ -441,3 +441,22 @@ export const fetchReportImageBlobUrlAsync = async ({
     useInternalId,
   });
 };
+
+type PerformanceResponse =
+  components["schemas"]["ItemsRecommenderPerformanceReport"];
+
+interface PerformanceRequest extends EntityRequest {
+  reportId?: string | number | undefined;
+}
+export const fetchPerformanceAsync = async ({
+  token,
+  id,
+  reportId,
+}: PerformanceRequest): Promise<PerformanceResponse> => {
+  return await executeFetch({
+    token,
+    path: `api/recommenders/ItemsRecommenders/${id}/Performance/${
+      reportId ?? "latest"
+    }`,
+  });
+};

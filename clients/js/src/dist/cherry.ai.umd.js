@@ -1495,6 +1495,12 @@
             useInternalId,
         });
     };
+    const fetchPerformanceAsync = async ({ token, id, reportId, }) => {
+        return await executeFetch({
+            token,
+            path: `api/recommenders/ItemsRecommenders/${id}/Performance/${reportId !== null && reportId !== void 0 ? reportId : "latest"}`,
+        });
+    };
 
     var itemsRecommendersApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -1528,7 +1534,8 @@
         fetchLearningMetricsAsync: fetchLearningMetricsAsync,
         setLearningMetricsAsync: setLearningMetricsAsync,
         fetchStatisticsAsync: fetchStatisticsAsync,
-        fetchReportImageBlobUrlAsync: fetchReportImageBlobUrlAsync
+        fetchReportImageBlobUrlAsync: fetchReportImageBlobUrlAsync,
+        fetchPerformanceAsync: fetchPerformanceAsync
     });
 
     const defaultHeaders = { "Content-Type": "application/json" };

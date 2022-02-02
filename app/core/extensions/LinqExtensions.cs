@@ -45,5 +45,20 @@ namespace SignalBox.Core
                 list[n] = value;
             }
         }
+
+        public static Dictionary<T, int> ValueCounts<T>(this IEnumerable<T> list)
+        {
+            var result = new Dictionary<T, int>();
+            foreach (var item in list)
+            {
+                if (!result.ContainsKey(item))
+                {
+                    result[item] = 0;
+                }
+
+                result[item] += 1;
+            }
+            return result;
+        }
     }
 }

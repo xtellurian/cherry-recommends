@@ -22,15 +22,17 @@ namespace SignalBox.Web.Controllers
     {
         private readonly ILogger<ItemsRecommendersController> logger;
         private readonly ItemsRecommenderInvokationWorkflows invokationWorkflows;
+        private readonly ItemsRecommenderPerformanceWorkflows performanceWorkflows;
         private readonly ItemsRecommenderWorkflows workflows;
 
         public ItemsRecommendersController(ILogger<ItemsRecommendersController> logger,
                                                  IItemsRecommenderStore store,
                                                  ItemsRecommenderInvokationWorkflows invokationWorkflows,
-                                                 ItemsRecommenderWorkflows workflows) : base(store, workflows, invokationWorkflows)
+                                                 ItemsRecommenderPerformanceWorkflows performanceWorkflows,                                                 ItemsRecommenderWorkflows workflows) : base(store, workflows, invokationWorkflows)
         {
             this.logger = logger;
             this.invokationWorkflows = invokationWorkflows;
+            this.performanceWorkflows = performanceWorkflows;
             this.workflows = workflows;
         }
 
@@ -162,6 +164,33 @@ namespace SignalBox.Web.Controllers
             else
             {
                 return await workflows.AddItem(recommender, dto.CommonId, useInternalId);
+            }
+        }
+
+        /// <summary>Get the performance report of a recommender.</summary>
+        [HttpGet("{id}/Performance/{reportId}")]
+        public async Task<ItemsRecommenderPerformanceReport> GetPerformanceReport(string id, string reportId, bool? useInternalId = null)
+        {
+            var recommender = await GetEntity(id, useInternalId);
+            if (reportId == "latest")
+            {
+                return await performanceWorkflows.GetOrCalculateLatestPerfomance(id, useInternalId);
+            }
+            else if (long.TryParse(reportId, out var reportInternalId))
+            {
+                var report = await performanceWorkflows.PerformanceReportStore.Read(reportInternalId);
+                if (report.RecommenderId != recommender.Id)
+                {
+                    throw new EntityNotFoundException(typeof(ItemsRecommenderPerformanceReport), reportId, "Report is not for selected recommender");
+                }
+                else
+                {
+                    return report;
+                }
+            }
+            else
+            {
+                return await performanceWorkflows.GetOrCalculateLatestPerfomance(id, useInternalId);
             }
         }
 

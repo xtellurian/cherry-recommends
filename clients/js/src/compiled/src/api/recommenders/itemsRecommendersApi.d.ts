@@ -98,4 +98,9 @@ export declare const setLearningMetricsAsync: ({ id, token, metricIds, useIntern
 declare type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
 export declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
 export declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<RecommenderStatistics>;
+declare type PerformanceResponse = components["schemas"]["ItemsRecommenderPerformanceReport"];
+interface PerformanceRequest extends EntityRequest {
+    reportId?: string | number | undefined;
+}
+export declare const fetchPerformanceAsync: ({ token, id, reportId, }: PerformanceRequest) => Promise<PerformanceResponse>;
 export {};

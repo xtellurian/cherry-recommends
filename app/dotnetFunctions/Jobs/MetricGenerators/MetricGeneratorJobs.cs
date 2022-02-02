@@ -15,14 +15,17 @@ namespace SignalBox.Functions
     public class MetricGeneratorJobs
     {
         private readonly MetricGeneratorWorkflows workflows;
+        private readonly IEnvironmentProvider environmentProvider;
         private readonly IMetricGeneratorStore metricGeneratorStore;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public MetricGeneratorJobs(MetricGeneratorWorkflows workflows,
-                                          IMetricGeneratorStore metricGeneratorStore,
-                                          IDateTimeProvider dateTimeProvider)
+                                   IEnvironmentProvider environmentProvider,
+                                   IMetricGeneratorStore metricGeneratorStore,
+                                   IDateTimeProvider dateTimeProvider)
         {
             this.workflows = workflows;
+            this.environmentProvider = environmentProvider;
             this.metricGeneratorStore = metricGeneratorStore;
             this.dateTimeProvider = dateTimeProvider;
         }
@@ -48,9 +51,10 @@ namespace SignalBox.Functions
             {
                 g.LastEnqueued = dateTimeProvider.Now;
                 await metricGeneratorStore.Update(g);
+                await metricGeneratorStore.Load(g, _ => _.Metric);
             }
             await metricGeneratorStore.Context.SaveChanges();
-            return generators.Items.Select(_ => new RunMetricGeneratorQueueMessage(message.TenantName, _.Id));
+            return generators.Items.Select(_ => new RunMetricGeneratorQueueMessage(message.TenantName, _.Id, _.Metric.EnvironmentId));
         }
 
         [Function("Run_QueuedSingleMetricGeneratorForTenant")]
@@ -60,6 +64,7 @@ namespace SignalBox.Functions
             var logger = context.GetLogger(nameof(RunOneGeneratorFromQueue));
 
             logger.LogInformation($"Starting to run one metric generator with id = {message.MetricGeneratorId}.");
+            environmentProvider.SetOverride(message.EnvironmentId);
             var generator = await metricGeneratorStore.Read(message.MetricGeneratorId);
             var summary = await workflows.RunMetricGeneration(generator);
 

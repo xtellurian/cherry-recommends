@@ -2473,221 +2473,6 @@
         }
       }
     },
-    "/api/FeatureGenerators": {
-      "get": {
-        "tags": [
-          "FeatureGenerators"
-        ],
-        "summary": "Returned a paginated list of items for this resource.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MetricGeneratorPaginated"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "FeatureGenerators"
-        ],
-        "summary": "Creates a new generic Feature that can used on any tracked user.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateMetricGenerator"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateMetricGenerator"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateMetricGenerator"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MetricGenerator"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FeatureGenerators/{id}/Trigger": {
-      "post": {
-        "tags": [
-          "FeatureGenerators"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MetricGeneratorRunSummary"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FeatureGenerators/{id}": {
-      "get": {
-        "tags": [
-          "FeatureGenerators"
-        ],
-        "summary": "Returns the resource with this Id.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MetricGenerator"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "FeatureGenerators"
-        ],
-        "summary": "Deletes the resource with this Id.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/models/generic/{id}/invoke": {
       "post": {
         "tags": [
@@ -3939,6 +3724,61 @@
         }
       }
     },
+    "/api/recommenders/ItemsRecommenders/{id}/Performance/{reportId}": {
+      "get": {
+        "tags": [
+          "ItemsRecommenders"
+        ],
+        "summary": "Get the performance report of a recommender.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "reportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemsRecommenderPerformanceReport"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/recommenders/ItemsRecommenders/{id}/Items/{itemId}": {
       "delete": {
         "tags": [
@@ -5010,6 +4850,436 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": { }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MetricGenerators": {
+      "get": {
+        "tags": [
+          "MetricGenerators"
+        ],
+        "summary": "Returned a paginated list of items for this resource.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricGeneratorPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MetricGenerators"
+        ],
+        "summary": "Creates a new generic Feature that can used on any tracked user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMetricGenerator"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMetricGenerator"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMetricGenerator"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricGenerator"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/FeatureGenerators": {
+      "get": {
+        "tags": [
+          "MetricGenerators"
+        ],
+        "summary": "Returned a paginated list of items for this resource.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricGeneratorPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MetricGenerators"
+        ],
+        "summary": "Creates a new generic Feature that can used on any tracked user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMetricGenerator"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMetricGenerator"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMetricGenerator"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricGenerator"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MetricGenerators/{id}/Trigger": {
+      "post": {
+        "tags": [
+          "MetricGenerators"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricGeneratorRunSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/FeatureGenerators/{id}/Trigger": {
+      "post": {
+        "tags": [
+          "MetricGenerators"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricGeneratorRunSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MetricGenerators/{id}": {
+      "get": {
+        "tags": [
+          "MetricGenerators"
+        ],
+        "summary": "Returns the resource with this Id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricGenerator"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "MetricGenerators"
+        ],
+        "summary": "Deletes the resource with this Id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/FeatureGenerators/{id}": {
+      "get": {
+        "tags": [
+          "MetricGenerators"
+        ],
+        "summary": "Returns the resource with this Id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricGenerator"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "MetricGenerators"
+        ],
+        "summary": "Deletes the resource with this Id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponse"
                 }
               }
             }
@@ -10539,6 +10809,11 @@
             "additionalProperties": { },
             "nullable": true
           },
+          "features": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          },
           "parameterBounds": {
             "type": "array",
             "items": {
@@ -10803,6 +11078,10 @@
             },
             "nullable": true
           },
+          "targetMetricId": {
+            "type": "string",
+            "nullable": true
+          },
           "itemIds": {
             "type": "array",
             "items": {
@@ -10850,13 +11129,15 @@
         "additionalProperties": false
       },
       "CreateMetricGenerator": {
-        "required": [
-          "featureCommonId"
-        ],
         "type": "object",
         "properties": {
           "featureCommonId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
+          },
+          "metricCommonId": {
+            "type": "string",
+            "nullable": true
           },
           "generatorType": {
             "pattern": "MonthsSinceEarliestEvent|FilterSelectAggregate",
@@ -10994,6 +11275,10 @@
             "items": {
               "$ref": "#/components/schemas/CreateOrUpdateRecommenderArgument"
             },
+            "nullable": true
+          },
+          "targetMetricId": {
+            "type": "string",
             "nullable": true
           },
           "parameters": {
@@ -12096,6 +12381,14 @@
           "customer": {
             "$ref": "#/components/schemas/Customer"
           },
+          "targetMetricId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "targetMetric": {
+            "$ref": "#/components/schemas/Metric"
+          },
           "trigger": {
             "type": "string",
             "nullable": true
@@ -12131,6 +12424,12 @@
           },
           "recommender": {
             "$ref": "#/components/schemas/ItemsRecommender"
+          },
+          "maxScoreItemId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true,
+            "readOnly": true
           },
           "scoredItems": {
             "type": "array",
@@ -12281,6 +12580,14 @@
               "$ref": "#/components/schemas/RecommendableItem"
             },
             "nullable": true
+          },
+          "targetMetricId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "targetMetric": {
+            "$ref": "#/components/schemas/Metric"
           }
         },
         "additionalProperties": false
@@ -12298,6 +12605,73 @@
           },
           "pagination": {
             "$ref": "#/components/schemas/PaginationInfo"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemsRecommenderPerformanceReport": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "environmentId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "environment": {
+            "$ref": "#/components/schemas/Environment"
+          },
+          "recommenderId": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true
+          },
+          "recommender": {
+            "$ref": "#/components/schemas/RecommenderEntityBase"
+          },
+          "discriminator": {
+            "type": "string",
+            "nullable": true
+          },
+          "itemsById": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RecommendableItem"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "itemsByCommonId": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RecommendableItem"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "itemsRecommender": {
+            "$ref": "#/components/schemas/ItemsRecommender"
+          },
+          "targetMetric": {
+            "$ref": "#/components/schemas/Metric"
+          },
+          "performanceByItem": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PerformanceByItem"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -12534,6 +12908,14 @@
               "type": "string"
             },
             "nullable": true
+          },
+          "metricCommonIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -12555,6 +12937,11 @@
             "nullable": true
           },
           "metrics": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          },
+          "features": {
             "type": "object",
             "additionalProperties": { },
             "nullable": true
@@ -12884,6 +13271,14 @@
           "customer": {
             "$ref": "#/components/schemas/Customer"
           },
+          "targetMetricId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "targetMetric": {
+            "$ref": "#/components/schemas/Metric"
+          },
           "trigger": {
             "type": "string",
             "nullable": true
@@ -13086,6 +13481,32 @@
           },
           "/score": {
             "$ref": "#/components/schemas/Score"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PerformanceByItem": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "weekIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "targetMetricSum": {
+            "type": "number",
+            "format": "double"
+          },
+          "customerCount": {
+            "type": "number",
+            "format": "double"
+          },
+          "recommendationCount": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -13763,6 +14184,9 @@
         "properties": {
           "featuresChanged": {
             "$ref": "#/components/schemas/MetricsChangedTrigger"
+          },
+          "metricsChanged": {
+            "$ref": "#/components/schemas/MetricsChangedTrigger"
           }
         },
         "additionalProperties": false
@@ -14124,6 +14548,9 @@
         "type": "object",
         "properties": {
           "featuresChanged": {
+            "$ref": "#/components/schemas/MetricsChangedTrigger"
+          },
+          "metricsChanged": {
             "$ref": "#/components/schemas/MetricsChangedTrigger"
           }
         },

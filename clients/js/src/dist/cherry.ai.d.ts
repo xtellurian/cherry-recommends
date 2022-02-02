@@ -525,6 +525,9 @@ interface components {
             metrics?: {
                 [key: string]: unknown;
             } | null;
+            features?: {
+                [key: string]: unknown;
+            } | null;
             parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
         };
         BaselineItemDto: {
@@ -590,6 +593,7 @@ interface components {
             requireConsumptionEvent?: boolean | null;
             settings?: components["schemas"]["RecommenderSettingsDto"];
             arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
+            targetMetricId?: string | null;
             itemIds?: string[] | null;
             defaultItemId?: string | null;
             baselineItemId?: string | null;
@@ -601,7 +605,8 @@ interface components {
             name?: string | null;
         };
         CreateMetricGenerator: {
-            featureCommonId: string;
+            featureCommonId?: string | null;
+            metricCommonId?: string | null;
             generatorType?: string | null;
             steps?: components["schemas"]["FilterSelectAggregateStepDto"][] | null;
         };
@@ -638,6 +643,7 @@ interface components {
             requireConsumptionEvent?: boolean | null;
             settings?: components["schemas"]["RecommenderSettingsDto"];
             arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
+            targetMetricId?: string | null;
             parameters?: string[] | null;
             bounds?: components["schemas"]["ParameterBounds"][] | null;
         };
@@ -937,6 +943,8 @@ interface components {
             trackedUserId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
+            targetMetricId?: number | null;
+            targetMetric?: components["schemas"]["Metric"];
             trigger?: string | null;
             recommendationCorrelatorId?: number | null;
             modelInput?: string | null;
@@ -946,6 +954,7 @@ interface components {
             isFromCache?: boolean;
             recommenderId?: number | null;
             recommender?: components["schemas"]["ItemsRecommender"];
+            maxScoreItemId?: number | null;
             scoredItems?: components["schemas"]["ScoredRecommendableItem"][] | null;
         };
         ItemsRecommendationDto: {
@@ -983,10 +992,31 @@ interface components {
             defaultItem?: components["schemas"]["RecommendableItem"];
             numberOfItemsToRecommend?: number | null;
             items?: components["schemas"]["RecommendableItem"][] | null;
+            targetMetricId?: number | null;
+            targetMetric?: components["schemas"]["Metric"];
         };
         ItemsRecommenderPaginated: {
             items?: components["schemas"]["ItemsRecommender"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ItemsRecommenderPerformanceReport: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            recommenderId?: number;
+            recommender?: components["schemas"]["RecommenderEntityBase"];
+            discriminator?: string | null;
+            itemsById?: {
+                [key: string]: components["schemas"]["RecommendableItem"];
+            } | null;
+            itemsByCommonId?: {
+                [key: string]: components["schemas"]["RecommendableItem"];
+            } | null;
+            itemsRecommender?: components["schemas"]["ItemsRecommender"];
+            targetMetric?: components["schemas"]["Metric"];
+            performanceByItem?: components["schemas"]["PerformanceByItem"][] | null;
         };
         LinkModel: {
             modelId?: number;
@@ -1049,6 +1079,7 @@ interface components {
         MetricsChangedTrigger: {
             name: string;
             featureCommonIds?: string[] | null;
+            metricCommonIds?: string[] | null;
         };
         ModelInputDto: {
             customerId?: string | null;
@@ -1057,6 +1088,9 @@ interface components {
                 [key: string]: unknown;
             } | null;
             metrics?: {
+                [key: string]: unknown;
+            } | null;
+            features?: {
                 [key: string]: unknown;
             } | null;
             parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
@@ -1145,6 +1179,8 @@ interface components {
             trackedUserId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
+            targetMetricId?: number | null;
+            targetMetric?: components["schemas"]["Metric"];
             trigger?: string | null;
             recommendationCorrelatorId?: number | null;
             modelInput?: string | null;
@@ -1198,6 +1234,13 @@ interface components {
         Paths: {
             "/"?: components["schemas"]["Empty"];
             "/score"?: components["schemas"]["Score"];
+        };
+        PerformanceByItem: {
+            itemId?: number;
+            weekIndex?: number;
+            targetMetricSum?: number;
+            customerCount?: number;
+            recommendationCount?: number;
         };
         Post: {
             operationId?: string | null;
@@ -1382,6 +1425,7 @@ interface components {
         };
         SetTriggersDto: {
             featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
+            metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
         StatusCodeClass: {
             type?: string | null;
@@ -1472,6 +1516,7 @@ interface components {
         };
         TriggerCollection: {
             featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
+            metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
         UpdateRecommendableItem: {
             name: string;
@@ -1605,6 +1650,11 @@ declare const setLearningMetricsAsync$1: ({ id, token, metricIds, useInternalId,
 declare type RecommenderStatistics$1 = components["schemas"]["RecommenderStatistics"];
 declare const fetchStatisticsAsync$1: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics$1>;
 declare const fetchReportImageBlobUrlAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<RecommenderStatistics$1>;
+declare type PerformanceResponse = components["schemas"]["ItemsRecommenderPerformanceReport"];
+interface PerformanceRequest extends EntityRequest {
+    reportId?: string | number | undefined;
+}
+declare const fetchPerformanceAsync: ({ token, id, reportId, }: PerformanceRequest) => Promise<PerformanceResponse>;
 
 declare const itemsRecommendersApi_d_fetchItemsRecommendersAsync: typeof fetchItemsRecommendersAsync;
 declare const itemsRecommendersApi_d_fetchItemsRecommenderAsync: typeof fetchItemsRecommenderAsync;
@@ -1618,6 +1668,7 @@ declare const itemsRecommendersApi_d_setDefaultItemAsync: typeof setDefaultItemA
 declare const itemsRecommendersApi_d_getBaselineItemAsync: typeof getBaselineItemAsync;
 declare const itemsRecommendersApi_d_getDefaultItemAsync: typeof getDefaultItemAsync;
 declare const itemsRecommendersApi_d_invokeItemsRecommenderAsync: typeof invokeItemsRecommenderAsync;
+declare const itemsRecommendersApi_d_fetchPerformanceAsync: typeof fetchPerformanceAsync;
 declare namespace itemsRecommendersApi_d {
   export {
     itemsRecommendersApi_d_fetchItemsRecommendersAsync as fetchItemsRecommendersAsync,
@@ -1651,6 +1702,7 @@ declare namespace itemsRecommendersApi_d {
     setLearningMetricsAsync$1 as setLearningMetricsAsync,
     fetchStatisticsAsync$1 as fetchStatisticsAsync,
     fetchReportImageBlobUrlAsync$1 as fetchReportImageBlobUrlAsync,
+    itemsRecommendersApi_d_fetchPerformanceAsync as fetchPerformanceAsync,
   };
 }
 
@@ -2202,4 +2254,4 @@ declare namespace errorHandling_d {
   };
 }
 
-export { actionsApi_d as actions, apiKeyApi_d as apiKeys, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, metricGeneratorsApi_d as metricGenerators, metricsApi_d as metrics, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };
+export { actionsApi_d as actions, apiKeyApi_d as apiKeys, components, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, metricGeneratorsApi_d as metricGenerators, metricsApi_d as metrics, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };

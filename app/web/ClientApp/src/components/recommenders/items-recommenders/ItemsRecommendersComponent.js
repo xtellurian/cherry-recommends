@@ -16,6 +16,7 @@ import { Triggers } from "./Triggers";
 import { LearningMetrics } from "./LearningMetrics";
 import { Arguments } from "./Arguments";
 import { Overview } from "./Overview";
+import Performance from "./ItemRecommenderPerformance";
 
 export const ItemsRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -74,6 +75,7 @@ export const ItemsRecommendersComponent = () => {
           component={LearningMetrics}
         />
         <AuthorizeRoute path={`${path}/arguments/:id`} component={Arguments} />
+        <AuthorizeRoute path={`${path}/performance/:id`} component={Performance} />
       </Switch>
     </React.Fragment>
   );

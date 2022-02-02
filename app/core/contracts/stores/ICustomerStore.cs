@@ -9,6 +9,5 @@ namespace SignalBox.Core
         Task<long> GetInternalId(string customerId);
         Task<IEnumerable<Customer>> CreateIfNotExists(IEnumerable<PendingCustomer> pendingCustomers);
         Task<Customer> CreateIfNotExists(PendingCustomer pending);
-        IAsyncEnumerable<Customer> Iterate();
     }
 }

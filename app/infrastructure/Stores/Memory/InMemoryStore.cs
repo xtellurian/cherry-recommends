@@ -30,6 +30,11 @@ namespace SignalBox.Core
             return Task.FromResult(store.ContainsKey(id));
         }
 
+        public IAsyncEnumerable<T> Iterate(Expression<Func<T, bool>> predicate = null, IterateOrderBy orderBy = IterateOrderBy.AscendingId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<T>> List(int n = 100)
         {
             return Task.FromResult(store.Values.ToList() as IEnumerable<T>);

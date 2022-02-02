@@ -16,6 +16,9 @@ export const ItemsRecommenderPrimaryNav = ({ id }) => {
       <NavListItem to={`/recommenders/items-recommenders/monitor/${id}`}>
         Monitor
       </NavListItem>
+      <NavListItem to={`/recommenders/items-recommenders/performance/${id}`}>
+        Performance
+      </NavListItem>
       <NavListItem to={`/recommenders/items-recommenders/test/${id}`}>
         Test
       </NavListItem>

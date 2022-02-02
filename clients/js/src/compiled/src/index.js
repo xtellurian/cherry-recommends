@@ -40,4 +40,4 @@ import * as actions from "./api/actionsApi";
 import { setBaseUrl } from "./api/client/baseUrl";
 import { setDefaultEnvironmentId, setDefaultApiKey, } from "./api/client/headers";
 import * as errorHandling from "./utilities/errorHandling";
-export { actions, apiKeys, customers, dataSummary, deployment, events, environments, featureGenerators, features, integratedSystems, itemsRecommenders, metrics, metricGenerators, modelRegistrations, models, parameters, parameterSetRecommenders, profile, reactConfig, recommendableItems, reports, rewardSelectors, segments, touchpoints, trackedUsers, setBaseUrl, setDefaultEnvironmentId, setDefaultApiKey, errorHandling, };
+export { actions, apiKeys, customers, dataSummary, deployment, events, environments, featureGenerators, features, integratedSystems, itemsRecommenders, metrics, metricGenerators, modelRegistrations, models, parameters, parameterSetRecommenders, profile, reactConfig, recommendableItems, reports, rewardSelectors, segments, touchpoints, trackedUsers, setBaseUrl, setDefaultEnvironmentId, setDefaultApiKey, errorHandling };

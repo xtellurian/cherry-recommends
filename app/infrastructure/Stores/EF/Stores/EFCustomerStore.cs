@@ -14,42 +14,6 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, environmentProvider, (c) => c.Customers)
         { }
 
-        public async IAsyncEnumerable<Customer> Iterate()
-        {
-            bool hasMoreItems = await QuerySet.AnyAsync();
-            if (!hasMoreItems)
-            {
-                yield break;
-            }
-            var maxId = await QuerySet.MaxAsync(_ => _.Id);
-            var currentId = maxId + 1; // we query for ids less than this.
-            while (hasMoreItems)
-            {
-                var results = await QuerySet
-                    .Where(_ => _.Id < currentId)
-                    .OrderByDescending(_ => _.Id)
-                    .Take(PageSize)
-                    .ToListAsync();
-
-                if (results.Any())
-                {
-                    currentId = results.Min(_ => _.Id); // get the smallest in the result
-
-                    foreach (var item in results)
-                    {
-                        yield return item;
-                    }
-
-                    hasMoreItems = await QuerySet.AnyAsync(_ => _.Id < currentId);
-                }
-                else
-                {
-                    // break out of the iteration. no more results.
-                    hasMoreItems = false;
-                }
-            }
-        }
-
         public async Task<IEnumerable<Customer>> CreateIfNotExists(IEnumerable<PendingCustomer> pendingCustomers)
         {
             var users = new List<Customer>();

@@ -32,6 +32,7 @@ namespace SignalBox.Core.Recommendations
         public ICollection<RecommendableItem> Items { get; set; }
         [JsonIgnore]
         public List<ScoreContainer> Scores { get; set; }
+        public long? MaxScoreItemId => Scores.FirstOrDefault(_ => _.Score == Scores.Max(_ => _.Score)).ItemId;
 
         private double? GetScore(RecommendableItem item) => Scores.FirstOrDefault(_ => _.ItemId == item.Id || _.ItemCommonId == item.CommonId).Score;
 

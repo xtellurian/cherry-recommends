@@ -33,9 +33,6 @@ export const createTargetVariableAsync =
 export const fetchInvokationLogsAsync =
   itemsRecommenders.fetchInvokationLogsAsync;
 
-export const updateErrorHandlingAsync =
-  itemsRecommenders.updateErrorHandlingAsync;
-
 export const setBaselineItemAsync = itemsRecommenders.setBaselineItemAsync;
 
 export const getBaselineItemAsync = itemsRecommenders.getBaselineItemAsync;
@@ -67,3 +64,5 @@ export const setLearningMetricsAsync =
 
 export const fetchReportImageBlobUrlAsync =
   itemsRecommenders.fetchReportImageBlobUrlAsync;
+
+export const fetchPerformanceAsync = itemsRecommenders.fetchPerformanceAsync;

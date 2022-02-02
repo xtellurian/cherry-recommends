@@ -1,7 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using SignalBox.Core;
 using SignalBox.Infrastructure.EntityFramework;
 using SignalBox.Infrastructure.Queues;
@@ -91,10 +90,10 @@ namespace SignalBox.Infrastructure
             services.AddDbContext<T>((provider, options) =>
                {
                    options.UseSqlite(connectionString, b => b.MigrationsAssembly(migrationAssembly));
-                //    if (enableEnvironments)
-                //    {
-                //        options.AddInterceptors(provider.GetRequiredService<IEnvironmentInterceptor>());
-                //    }
+                   //    if (enableEnvironments)
+                   //    {
+                   //        options.AddInterceptors(provider.GetRequiredService<IEnvironmentInterceptor>());
+                   //    }
                });
             return services;
         }
@@ -138,6 +137,9 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IRecommendationCorrelatorStore, EFRecommendationCorrelatorStore>();
             services.AddScoped<IParameterSetRecommendationStore, EFParameterSetRecommendationStore>();
             services.AddScoped<IItemsRecommendationStore, EFItemsRecommendationStore>();
+
+            // performance
+            services.AddScoped<IItemsRecommenderPerformanceReportStore, EFItemsRecommenderPerformanceReportStore>();
 
             services.AddScoped<IMetricStore, EFMetricStore>();
             services.AddScoped<IMetricGeneratorStore, EFMetricGeneratorStore>();

@@ -180,5 +180,59 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .Reference(propertyExpression)
                 .LoadAsync();
         }
+
+        public virtual async IAsyncEnumerable<T> Iterate(Expression<Func<T, bool>> predicate = null, IterateOrderBy orderBy = IterateOrderBy.DescendingId)
+        {
+            predicate ??= _ => true;
+            bool hasMoreItems = await QuerySet.AnyAsync(predicate);
+            if (!hasMoreItems)
+            {
+                yield break;
+            }
+            var maxId = await QuerySet.MaxAsync(_ => _.Id);
+            var currentId = maxId + 1; // we query for ids less than this.
+            while (hasMoreItems)
+            {
+                List<T> results = await RunQueryWithOrderby(predicate, currentId, orderBy);
+
+                if (results.Any())
+                {
+                    currentId = results.Min(_ => _.Id); // get the smallest in the result
+
+                    foreach (var item in results)
+                    {
+                        yield return item;
+                    }
+
+                    hasMoreItems = await QuerySet.AnyAsync(_ => _.Id < currentId);
+                }
+                else
+                {
+                    // break out of the iteration. no more results.
+                    hasMoreItems = false;
+                }
+            }
+        }
+
+        private async Task<List<T>> RunQueryWithOrderby(Expression<Func<T, bool>> predicate, long currentId, IterateOrderBy orderBy)
+        {
+            return orderBy switch
+            {
+                IterateOrderBy.AscendingId =>
+                    await QuerySet
+                        .Where(predicate)
+                        .Where(_ => _.Id < currentId)
+                        .OrderBy(_ => _.Id) // ascending here
+                        .Take(PageSize)
+                        .ToListAsync(),
+                _ =>
+                    await QuerySet
+                        .Where(predicate)
+                        .Where(_ => _.Id < currentId)
+                        .OrderByDescending(_ => _.Id) // descending here
+                        .Take(PageSize)
+                        .ToListAsync(),
+            };
+        }
     }
 }

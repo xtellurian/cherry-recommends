@@ -16,5 +16,6 @@ namespace SignalBox.Web.Dto
         public bool? RequireConsumptionEvent { get; set; }
         public RecommenderSettingsDto? Settings { get; set; }
         public IEnumerable<CreateOrUpdateRecommenderArgument>? Arguments { get; set; }
+        public string? TargetMetricId { get; set; }
     }
 }

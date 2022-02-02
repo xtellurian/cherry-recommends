@@ -21,6 +21,5 @@ namespace SignalBox.Web.Dto
         public string? BaselineItemId { get; set; }
         public int? NumberOfItemsToRecommend { get; set; }
         public bool? UseAutoAi { get; set; }
-        public string? TargetMetricId { get; set; }
     }
 }

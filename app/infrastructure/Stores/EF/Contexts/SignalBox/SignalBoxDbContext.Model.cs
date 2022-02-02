@@ -50,6 +50,11 @@ namespace SignalBox.Infrastructure
         public DbSet<ParameterSetRecommendation> ParameterSetRecommendations { get; set; }
         public DbSet<ItemsRecommendation> ItemsRecommendations { get; set; }
 
+        // recommender performance reports
+        // hierarchy
+        public DbSet<PerformanceReportBase> RecommenderPerformanceReports { get; set; }
+        public DbSet<ItemsRecommenderPerformanceReport> ItemsRecommenderPerformanceReports { get; set; }
+
         // integrated systems
         public DbSet<IntegratedSystem> IntegratedSystems { get; set; }
         public DbSet<CustomIntegratedSystem> CustomIntegratedSystems { get; set; }

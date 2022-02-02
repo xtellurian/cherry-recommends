@@ -6,7 +6,7 @@ namespace SignalBox.Core
         { }
         public RunAllMetricGeneratorsQueueMessage(string tenantName)
         {
-            this.TenantName = tenantName;
+            TenantName = tenantName;
         }
 
         public string TenantName { get; set; }

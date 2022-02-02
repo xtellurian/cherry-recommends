@@ -70,9 +70,10 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpPost("{id}/Trigger")]
-        public async Task<MetricGeneratorRunSummary> TriggerFeatureGenerator(long id)
+        public async Task<MetricGeneratorRunSummary> TriggerMetricGenerator(long id)
         {
             var generator = await store.Read(id);
+            await store.Load(generator, _ => _.Metric);
 
             if (generator.LastEnqueued > dateTimeProvider.Now.AddMinutes(-5))
             {
@@ -82,7 +83,7 @@ namespace SignalBox.Web.Controllers
             var tenant = tenantProvider.Current();
             generator.LastEnqueued = dateTimeProvider.Now;
 
-            await generatorQueue.Enqueue(new RunMetricGeneratorQueueMessage(tenant?.Name ?? "_single", generator.Id));
+            await generatorQueue.Enqueue(new RunMetricGeneratorQueueMessage(tenant?.Name ?? "_single", generator.Id, generator.Metric.EnvironmentId));
             await store.Update(generator);
             await store.Context.SaveChanges();
 

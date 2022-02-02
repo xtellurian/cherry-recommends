@@ -1221,120 +1221,6 @@ export interface paths {
             };
         };
     };
-    "/api/FeatureGenerators": {
-        get: {
-            parameters: {
-                query: {
-                    page?: number;
-                    pageSize?: number;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["MetricGeneratorPaginated"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-        post: {
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["MetricGenerator"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["CreateMetricGenerator"];
-                    "text/json": components["schemas"]["CreateMetricGenerator"];
-                    "application/*+json": components["schemas"]["CreateMetricGenerator"];
-                };
-            };
-        };
-    };
-    "/api/FeatureGenerators/{id}/Trigger": {
-        post: {
-            parameters: {
-                path: {
-                    id: number;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["MetricGeneratorRunSummary"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-    };
-    "/api/FeatureGenerators/{id}": {
-        get: {
-            parameters: {
-                path: {
-                    id: number;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["MetricGenerator"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-        delete: {
-            parameters: {
-                path: {
-                    id: number;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["DeleteResponse"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-    };
     "/api/models/generic/{id}/invoke": {
         post: {
             parameters: {
@@ -1977,6 +1863,33 @@ export interface paths {
             };
         };
     };
+    "/api/recommenders/ItemsRecommenders/{id}/Performance/{reportId}": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                    reportId: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ItemsRecommenderPerformanceReport"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
     "/api/recommenders/ItemsRecommenders/{id}/Items/{itemId}": {
         delete: {
             parameters: {
@@ -2527,6 +2440,234 @@ export interface paths {
                     };
                     "application/*+json": {
                         [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    "/api/MetricGenerators": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    pageSize?: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricGeneratorPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricGenerator"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateMetricGenerator"];
+                    "text/json": components["schemas"]["CreateMetricGenerator"];
+                    "application/*+json": components["schemas"]["CreateMetricGenerator"];
+                };
+            };
+        };
+    };
+    "/api/FeatureGenerators": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    pageSize?: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricGeneratorPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricGenerator"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateMetricGenerator"];
+                    "text/json": components["schemas"]["CreateMetricGenerator"];
+                    "application/*+json": components["schemas"]["CreateMetricGenerator"];
+                };
+            };
+        };
+    };
+    "/api/MetricGenerators/{id}/Trigger": {
+        post: {
+            parameters: {
+                path: {
+                    id: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricGeneratorRunSummary"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/FeatureGenerators/{id}/Trigger": {
+        post: {
+            parameters: {
+                path: {
+                    id: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricGeneratorRunSummary"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/MetricGenerators/{id}": {
+        get: {
+            parameters: {
+                path: {
+                    id: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricGenerator"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete: {
+            parameters: {
+                path: {
+                    id: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["DeleteResponse"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/FeatureGenerators/{id}": {
+        get: {
+            parameters: {
+                path: {
+                    id: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricGenerator"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete: {
+            parameters: {
+                path: {
+                    id: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["DeleteResponse"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
                     };
                 };
             };
@@ -5297,6 +5438,9 @@ export interface components {
             metrics?: {
                 [key: string]: unknown;
             } | null;
+            features?: {
+                [key: string]: unknown;
+            } | null;
             parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
         };
         BaselineItemDto: {
@@ -5362,6 +5506,7 @@ export interface components {
             requireConsumptionEvent?: boolean | null;
             settings?: components["schemas"]["RecommenderSettingsDto"];
             arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
+            targetMetricId?: string | null;
             itemIds?: string[] | null;
             defaultItemId?: string | null;
             baselineItemId?: string | null;
@@ -5373,7 +5518,8 @@ export interface components {
             name?: string | null;
         };
         CreateMetricGenerator: {
-            featureCommonId: string;
+            featureCommonId?: string | null;
+            metricCommonId?: string | null;
             generatorType?: string | null;
             steps?: components["schemas"]["FilterSelectAggregateStepDto"][] | null;
         };
@@ -5410,6 +5556,7 @@ export interface components {
             requireConsumptionEvent?: boolean | null;
             settings?: components["schemas"]["RecommenderSettingsDto"];
             arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
+            targetMetricId?: string | null;
             parameters?: string[] | null;
             bounds?: components["schemas"]["ParameterBounds"][] | null;
         };
@@ -5709,6 +5856,8 @@ export interface components {
             trackedUserId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
+            targetMetricId?: number | null;
+            targetMetric?: components["schemas"]["Metric"];
             trigger?: string | null;
             recommendationCorrelatorId?: number | null;
             modelInput?: string | null;
@@ -5718,6 +5867,7 @@ export interface components {
             isFromCache?: boolean;
             recommenderId?: number | null;
             recommender?: components["schemas"]["ItemsRecommender"];
+            maxScoreItemId?: number | null;
             scoredItems?: components["schemas"]["ScoredRecommendableItem"][] | null;
         };
         ItemsRecommendationDto: {
@@ -5755,10 +5905,31 @@ export interface components {
             defaultItem?: components["schemas"]["RecommendableItem"];
             numberOfItemsToRecommend?: number | null;
             items?: components["schemas"]["RecommendableItem"][] | null;
+            targetMetricId?: number | null;
+            targetMetric?: components["schemas"]["Metric"];
         };
         ItemsRecommenderPaginated: {
             items?: components["schemas"]["ItemsRecommender"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
+        };
+        ItemsRecommenderPerformanceReport: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            recommenderId?: number;
+            recommender?: components["schemas"]["RecommenderEntityBase"];
+            discriminator?: string | null;
+            itemsById?: {
+                [key: string]: components["schemas"]["RecommendableItem"];
+            } | null;
+            itemsByCommonId?: {
+                [key: string]: components["schemas"]["RecommendableItem"];
+            } | null;
+            itemsRecommender?: components["schemas"]["ItemsRecommender"];
+            targetMetric?: components["schemas"]["Metric"];
+            performanceByItem?: components["schemas"]["PerformanceByItem"][] | null;
         };
         LinkModel: {
             modelId?: number;
@@ -5821,6 +5992,7 @@ export interface components {
         MetricsChangedTrigger: {
             name: string;
             featureCommonIds?: string[] | null;
+            metricCommonIds?: string[] | null;
         };
         ModelInputDto: {
             customerId?: string | null;
@@ -5829,6 +6001,9 @@ export interface components {
                 [key: string]: unknown;
             } | null;
             metrics?: {
+                [key: string]: unknown;
+            } | null;
+            features?: {
                 [key: string]: unknown;
             } | null;
             parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
@@ -5917,6 +6092,8 @@ export interface components {
             trackedUserId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
+            targetMetricId?: number | null;
+            targetMetric?: components["schemas"]["Metric"];
             trigger?: string | null;
             recommendationCorrelatorId?: number | null;
             modelInput?: string | null;
@@ -5970,6 +6147,13 @@ export interface components {
         Paths: {
             "/"?: components["schemas"]["Empty"];
             "/score"?: components["schemas"]["Score"];
+        };
+        PerformanceByItem: {
+            itemId?: number;
+            weekIndex?: number;
+            targetMetricSum?: number;
+            customerCount?: number;
+            recommendationCount?: number;
         };
         Post: {
             operationId?: string | null;
@@ -6154,6 +6338,7 @@ export interface components {
         };
         SetTriggersDto: {
             featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
+            metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
         StatusCodeClass: {
             type?: string | null;
@@ -6244,6 +6429,7 @@ export interface components {
         };
         TriggerCollection: {
             featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
+            metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
         UpdateRecommendableItem: {
             name: string;

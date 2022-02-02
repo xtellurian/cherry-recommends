@@ -233,3 +233,9 @@ export const fetchReportImageBlobUrlAsync = async ({ id, token, useInternalId, }
         useInternalId,
     });
 };
+export const fetchPerformanceAsync = async ({ token, id, reportId, }) => {
+    return await executeFetch({
+        token,
+        path: `api/recommenders/ItemsRecommenders/${id}/Performance/${reportId !== null && reportId !== void 0 ? reportId : "latest"}`,
+    });
+};
