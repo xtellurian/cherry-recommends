@@ -7,6 +7,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
+    [Obsolete("This entity or table is obsolete.")]
     public class EFTouchpointStore : EFCommonEntityStoreBase<Touchpoint>, ITouchpointStore
     {
         public EFTouchpointStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentService)

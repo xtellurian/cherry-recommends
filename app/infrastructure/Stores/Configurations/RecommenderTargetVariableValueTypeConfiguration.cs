@@ -1,9 +1,11 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
+    [Obsolete("This entity or table is obsolete.")]
     internal class RecommenderTargetVariableValueTypeConfiguration
     : EntityTypeConfigurationBase<RecommenderTargetVariableValue>, IEntityTypeConfiguration<RecommenderTargetVariableValue>
     {

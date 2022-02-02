@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
+    [Obsolete("This entity or table is obsolete.")]
     public class EFRewardSelectorStore : EFEntityStoreBase<RewardSelector>, IRewardSelectorStore
     {
         public EFRewardSelectorStore(IDbContextProvider<SignalBoxDbContext> contextProvider)

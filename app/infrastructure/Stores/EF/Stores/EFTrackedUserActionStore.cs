@@ -8,6 +8,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
+    [Obsolete("This entity or table is obsolete.")]
     public class EFTrackedUserActionStore : EFEntityStoreBase<TrackedUserAction>, ITrackedUserActionStore
     {
         protected override Expression<Func<TrackedUserAction, DateTimeOffset>> defaultOrderBy => _ => _.Timestamp;
