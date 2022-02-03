@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using SignalBox.Core;
 using SignalBox.Infrastructure;
 
@@ -18,10 +19,15 @@ namespace SignalBox.Web
 
         private class SegmentAnalyticsActionFilter : IActionFilter
         {
-            public SegmentAnalyticsActionFilter(IConfiguration configuration, ITenantProvider tenantProvider)
+            private readonly ILogger<SegmentAnalyticsActionFilter> logger;
+
+            public SegmentAnalyticsActionFilter(IConfiguration configuration,
+                                                ITenantProvider tenantProvider,
+                                                ILogger<SegmentAnalyticsActionFilter> logger)
             {
                 Configuration = configuration;
                 TenantProvider = tenantProvider;
+                this.logger = logger;
             }
 
             public IConfiguration Configuration { get; }
@@ -50,16 +56,23 @@ namespace SignalBox.Web
                         { "tenant", tenant }
                     };
 
-                    if (context.HttpContext.User.Identity.IsAuthenticated)
+                    try
                     {
-                        string userId = context.HttpContext.User.Auth0Id();
-                        Segment.Analytics.Client.Track(null, eventName, properties);
+                        if (context.HttpContext.User.Identity.IsAuthenticated)
+                        {
+                            string userId = context.HttpContext.User.Auth0Id();
+                            Segment.Analytics.Client.Track(userId, eventName, properties);
+                        }
+                        else
+                        {
+                            Segment.Analytics.Client.Track(null, eventName, properties,
+                                new Segment.Model.Options()
+                                    .SetAnonymousId(context.HttpContext.Session?.Id ?? System.Guid.NewGuid().ToString()));
+                        }
                     }
-                    else
+                    catch (System.Exception ex)
                     {
-                        Segment.Analytics.Client.Track(null, eventName, properties,
-                            new Segment.Model.Options().SetAnonymousId(context.HttpContext.Session?.Id ?? System.Guid.NewGuid().ToString()));
-
+                        logger.LogError("Segment tracking failed. {message}", ex.Message);
                     }
                 }
             }

@@ -108,6 +108,10 @@ namespace SignalBox.Web.Controllers
                 {
                     return Ok(current);
                 }
+                else if (HttpContext.Request.Host.Host.StartsWith("manage."))
+                {
+                    return BadRequest("manage is not a tenant");
+                }
                 else
                 {
                     throw new TenantNotFoundException(tenantProvider.RequestedTenantName);
