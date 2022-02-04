@@ -29,6 +29,13 @@
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:pickProcess}"
-         }
+        },
+        {
+            "name": "Attach to Chrome",
+            "type": "pwa-chrome",
+            "request": "launch",
+            "url": "https://localhost:5001",
+            "webRoot": "${workspaceFolder}"
+        }
     ]
 }
