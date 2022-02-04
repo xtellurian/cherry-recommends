@@ -98,7 +98,7 @@ namespace SignalBox.Azure
                 });
 
                 var subscriptionId = rg.Id.Apply(id => id.Split('/')[2]);
-                var roleDefinitionId = $"/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe";
+                var roleDefinitionId = Output.Format($"/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe");
 
                 var storageAccess = new RoleAssignment("synapseStorageAccess", new RoleAssignmentArgs
                 {
