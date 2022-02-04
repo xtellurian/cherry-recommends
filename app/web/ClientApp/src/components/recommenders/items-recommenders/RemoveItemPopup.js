@@ -4,6 +4,7 @@ import { ErrorCard } from "../../molecules/ErrorCard";
 import { removeItemAsync } from "../../../api/itemsRecommendersApi";
 import { AsyncButton } from "../../molecules";
 import { useAccessToken } from "../../../api-hooks/token";
+import { useAnalytics } from "../../../analytics/analyticsHooks";
 
 export const RemoveItemPopup = ({
   item,
@@ -15,13 +16,18 @@ export const RemoveItemPopup = ({
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const token = useAccessToken();
+  const { analytics } = useAnalytics();
   const handleRemove = () => {
     removeItemAsync({ token, id: recommender.id, itemId: item.id })
       .then((r) => {
+        analytics.track("site:itemsRecommender_removeItem_success");
         onRemoved(r);
         setOpen(false);
       })
-      .catch(setError)
+      .catch((e) => {
+        analytics.track("site:itemsRecommender_removeItem_failure");
+        setError(e);
+      })
       .finally(() => setLoading(false));
   };
 

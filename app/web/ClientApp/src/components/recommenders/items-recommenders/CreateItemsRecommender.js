@@ -6,9 +6,9 @@ import {
   useGlobalStartingItem,
   useItems,
 } from "../../../api-hooks/recommendableItemsApi";
-import { 
-  useGlobalStartingMetric, 
-  useMetrics 
+import {
+  useGlobalStartingMetric,
+  useMetrics,
 } from "../../../api-hooks/metricsApi";
 import {
   Title,
@@ -31,6 +31,7 @@ import { IntegerRangeSelector } from "../../molecules/selectors/IntegerRangeSele
 import { SettingRow } from "../../molecules/layout/SettingRow";
 import { Container, Row } from "../../molecules/layout";
 import { AdvancedOptionsPanel } from "../../molecules/layout/AdvancedOptionsPanel";
+import { useAnalytics } from "../../../analytics/analyticsHooks";
 
 export const CreateRecommender = () => {
   const token = useAccessToken();
@@ -48,6 +49,7 @@ export const CreateRecommender = () => {
     ? metrics.items.map((p) => ({ label: p.name, value: `${p.id}` }))
     : [];
   const startingMetric = useGlobalStartingMetric();
+  const { analytics } = useAnalytics();
 
   const [selectedItems, setSelectedItems] = React.useState();
   const [recommender, setRecommender] = React.useState({
@@ -70,7 +72,7 @@ export const CreateRecommender = () => {
   }, [startingItem]);
 
   React.useEffect(() => {
-    if (startingMetric.commonId) {      
+    if (startingMetric.commonId) {
       setRecommender({
         ...recommender,
         targetMetricId: `${startingMetric.id}`,
@@ -87,10 +89,14 @@ export const CreateRecommender = () => {
       payload: recommender,
       useInternalId: true,
     })
-      .then((r) =>
-        history.push(`/recommenders/items-recommenders/detail/${r.id}`)
-      )
-      .catch(setError)
+      .then((r) => {
+        analytics.track("site:itemsRecommender_create_success");
+        history.push(`/recommenders/items-recommenders/detail/${r.id}`);
+      })
+      .catch((e) => {
+        analytics.track("site:itemsRecommender_create_failure");
+        setError(e);
+      })
       .finally(() => setLoading(false));
   };
 
@@ -223,7 +229,10 @@ export const CreateRecommender = () => {
               isSearchable
               placeholder="Choose a target metric."
               noOptionsMessage={(inputValue) => "No Metrics Available"}
-              defaultValue={{ label: startingMetric.name, value: startingMetric.id }}
+              defaultValue={{
+                label: startingMetric.name,
+                value: startingMetric.id,
+              }}
               onChange={(so) => {
                 setRecommender({
                   ...recommender,

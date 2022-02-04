@@ -21,13 +21,13 @@ export const AddItemPopup = ({ isOpen, setIsOpen, recommender, onAdded }) => {
       item: selectedItem,
     })
       .then((r) => {
-        analytics.track("site:itemsRecommender_create_success");
+        analytics.track("site:itemsRecommender_addItem_success");
         onAdded(r);
         setSelectedItem(null);
         setIsOpen(false);
       })
       .catch((e) => {
-        analytics.track("site:itemsRecommender_create_failure");
+        analytics.track("site:itemsRecommender_addItem_failure");
         setError(e);
       })
       .finally(() => setLoading(false));
