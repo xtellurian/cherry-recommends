@@ -211,7 +211,7 @@ export const CreateOrEditFilterSelectAggregateGenerator = ({
     setLoading(true);
     createMetricGeneratorAsync({
       token,
-      payload: {
+      generator: {
         metricCommonId: metric.commonId,
         generatorType: "FilterSelectAggregate",
         steps: [

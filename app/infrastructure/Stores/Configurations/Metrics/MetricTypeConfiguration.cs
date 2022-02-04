@@ -20,6 +20,8 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder
                 .HasMany(_ => _.Destinations)
                 .WithOne(_ => _.Metric);
+
+            builder.HasData(Metric.Revenue, Metric.TotalEvents);
         }
     }
 }

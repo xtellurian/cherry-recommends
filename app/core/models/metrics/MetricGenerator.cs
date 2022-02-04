@@ -11,6 +11,17 @@ namespace SignalBox.Core
 
     public class MetricGenerator : Entity
     {
+        private const long totalEventsGeneratorId = 100;
+        private static List<FilterSelectAggregateStep> TotalEventsGeneratorSteps => new List<FilterSelectAggregateStep>
+        {
+            new FilterSelectAggregateStep(1, new SelectStep(null)),
+            new FilterSelectAggregateStep(2, new AggregateStep(){ AggregationType = AggregationTypes.Sum } )
+        };
+        public static MetricGenerator TotalEventsGenerator => new MetricGenerator(Metric.TotalEvents.Id, MetricGeneratorTypes.FilterSelectAggregate, TotalEventsGeneratorSteps)
+        {
+            Id = totalEventsGeneratorId, 
+        };
+
         protected MetricGenerator()
         { }
         protected MetricGenerator(Metric metric, MetricGeneratorTypes generatorType)
@@ -18,6 +29,12 @@ namespace SignalBox.Core
             this.Metric = metric;
             this.MetricId = metric.Id;
             this.GeneratorType = generatorType;
+        }
+        protected MetricGenerator(long metricId, MetricGeneratorTypes generatorType, IEnumerable<FilterSelectAggregateStep> steps) // added for seed data
+        {
+            this.MetricId = metricId;
+            this.GeneratorType = generatorType;
+            this.FilterSelectAggregateSteps = new List<FilterSelectAggregateStep>(steps);
         }
         public MetricGenerator(Metric metric, MetricGeneratorTypes generatorType, IEnumerable<FilterSelectAggregateStep> steps)
         : this(metric, generatorType)

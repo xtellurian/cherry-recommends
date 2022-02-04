@@ -474,6 +474,26 @@ namespace sqlserver.SignalBox
                         .IsUnique();
 
                     b.ToTable("Features");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 100L,
+                            CommonId = "revenue",
+                            Created = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Revenue",
+                            Properties = "{}"
+                        },
+                        new
+                        {
+                            Id = 101L,
+                            CommonId = "total_events",
+                            Created = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Total Events",
+                            Properties = "{}"
+                        });
                 });
 
             modelBuilder.Entity("SignalBox.Core.MetricGenerator", b =>
@@ -516,6 +536,17 @@ namespace sqlserver.SignalBox
                     b.HasIndex("MetricId");
 
                     b.ToTable("FeatureGenerators");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 100L,
+                            Created = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            FilterSelectAggregateSteps = "[{\"Order\":1,\"Filter\":null,\"Select\":{\"PropertyNameMatch\":null},\"Aggregate\":null},{\"Order\":2,\"Filter\":null,\"Select\":null,\"Aggregate\":{\"AggregationType\":0}}]",
+                            GeneratorType = "FilterSelectAggregate",
+                            LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            MetricId = 101L
+                        });
                 });
 
             modelBuilder.Entity("SignalBox.Core.Metrics.Destinations.MetricDestinationBase", b =>

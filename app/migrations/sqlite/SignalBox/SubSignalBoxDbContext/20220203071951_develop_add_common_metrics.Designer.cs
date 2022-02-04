@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlite.SignalBox
+namespace sqlite.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220203071951_develop_add_common_metrics")]
+    partial class develop_add_common_metrics
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1042,46 +1044,6 @@ namespace sqlite.SignalBox
                     b.ToTable("InvokationLogEntry");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Recommenders.PerformanceReportBase", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<long?>("EnvironmentId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long>("RecommenderId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnvironmentId");
-
-                    b.HasIndex("RecommenderId");
-
-                    b.ToTable("RecommenderPerformanceReports");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("PerformanceReportBase");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Recommenders.RecommenderEntityBase", b =>
                 {
                     b.Property<long>("Id")
@@ -1681,16 +1643,6 @@ namespace sqlite.SignalBox
                     b.HasDiscriminator().HasValue("WebhookDestination");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Recommenders.ItemsRecommenderPerformanceReport", b =>
-                {
-                    b.HasBaseType("SignalBox.Core.Recommenders.PerformanceReportBase");
-
-                    b.Property<string>("PerformanceByItem")
-                        .HasColumnType("TEXT");
-
-                    b.HasDiscriminator().HasValue("ItemsRecommenderPerformanceReport");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Recommenders.ItemsRecommender", b =>
                 {
                     b.HasBaseType("SignalBox.Core.Recommenders.RecommenderEntityBase");
@@ -2062,24 +2014,6 @@ namespace sqlite.SignalBox
                     b.Navigation("Correlator");
 
                     b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Recommenders.PerformanceReportBase", b =>
-                {
-                    b.HasOne("SignalBox.Core.Environment", "Environment")
-                        .WithMany()
-                        .HasForeignKey("EnvironmentId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", "Recommender")
-                        .WithMany()
-                        .HasForeignKey("RecommenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Environment");
-
-                    b.Navigation("Recommender");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.RecommenderEntityBase", b =>

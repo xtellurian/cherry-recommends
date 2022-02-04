@@ -127,3 +127,7 @@ export const useDestinations = ({ id, trigger }) => {
 
   return state;
 };
+
+export const useGlobalStartingMetric = () => {
+  return useMetric({ id: 100});
+};

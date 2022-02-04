@@ -15,6 +15,8 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder.Ignore(_ => _.Feature);
 
             builder.ToTable("FeatureGenerators");
+
+            builder.HasData(MetricGenerator.TotalEventsGenerator);
         }
     }
 }

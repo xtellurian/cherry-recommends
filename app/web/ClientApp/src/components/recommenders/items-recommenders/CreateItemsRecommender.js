@@ -6,7 +6,10 @@ import {
   useGlobalStartingItem,
   useItems,
 } from "../../../api-hooks/recommendableItemsApi";
-import { useMetrics } from "../../../api-hooks/metricsApi";
+import { 
+  useGlobalStartingMetric, 
+  useMetrics 
+} from "../../../api-hooks/metricsApi";
 import {
   Title,
   PrimaryBackButton,
@@ -44,7 +47,7 @@ export const CreateRecommender = () => {
   const metricsOptions = metrics.items
     ? metrics.items.map((p) => ({ label: p.name, value: `${p.id}` }))
     : [];
-  const [defaultMetric, setDefaultMetric] = React.useState({ label: "", value: "" });
+  const startingMetric = useGlobalStartingMetric();
 
   const [selectedItems, setSelectedItems] = React.useState();
   const [recommender, setRecommender] = React.useState({
@@ -67,15 +70,13 @@ export const CreateRecommender = () => {
   }, [startingItem]);
 
   React.useEffect(() => {
-    if (metrics?.items?.length > 0) {      
-      setDefaultMetric({ label: metrics.items[0].name, value: `${metrics.items[0].id}` });
+    if (startingMetric.commonId) {      
       setRecommender({
         ...recommender,
-        targetMetricId: `${metrics.items[0].id}`,
+        targetMetricId: `${startingMetric.id}`,
       });
     }
-  }, [metrics]);
-
+  }, [startingMetric]);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -215,14 +216,14 @@ export const CreateRecommender = () => {
             }
           />
         </div>
-        <div className="mt-2 mb-2">
+        <div className="mt-2">
           Target Metric
-          {!metrics.loading && (
+          {!startingMetric.loading && (
             <Selector
               isSearchable
               placeholder="Choose a target metric."
               noOptionsMessage={(inputValue) => "No Metrics Available"}
-              defaultValue={{ label: defaultMetric.label, value: defaultMetric.value }}
+              defaultValue={{ label: startingMetric.name, value: startingMetric.id }}
               onChange={(so) => {
                 setRecommender({
                   ...recommender,
