@@ -75,7 +75,10 @@ export const ItemsRecommendersComponent = () => {
           component={LearningMetrics}
         />
         <AuthorizeRoute path={`${path}/arguments/:id`} component={Arguments} />
-        <AuthorizeRoute path={`${path}/performance/:id`} component={Performance} />
+        <AuthorizeRoute
+          path={`${path}/performance/:id`}
+          component={Performance}
+        />
       </Switch>
     </React.Fragment>
   );

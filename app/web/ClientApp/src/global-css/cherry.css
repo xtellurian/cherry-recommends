@@ -57,7 +57,8 @@ header a {
   color: var(--cherry-dark-pink);
   border-color: var(--cherry-dark-pink);
 }
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-primary:hover div {
   color: var(--cherry-white);
   background-color: var(--cherry-pink);
   border-color: var(--cherry-dark-pink);
@@ -69,7 +70,8 @@ header a {
   background-color: var(--cherry-pink);
   border-color: var(--cherry-dark-teal);
 }
-.btn-outline-primary:hover {
+.btn-outline-primary:hover,
+.btn-outline-primary:hover div {
   color: var(--cherry-white);
   background-color: var(--cherry-pink);
   border-color: var(--cherry-dark-pink);

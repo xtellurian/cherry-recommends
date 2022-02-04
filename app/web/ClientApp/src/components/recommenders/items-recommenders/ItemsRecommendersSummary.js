@@ -10,19 +10,44 @@ import {
 } from "../../molecules";
 import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { useItemsRecommenders } from "../../../api-hooks/itemsRecommendersApi";
-import { JsonView } from "../../molecules/JsonView";
-import { EntityRow } from "../../molecules/layout/EntityRow";
+import EntityRow from "../../molecules/layout/EntityFlexRow";
+import { ButtonGroup } from "../../molecules/buttons/ButtonGroup";
 
 const ItemsRecommenderRow = ({ recommender }) => {
   return (
     <EntityRow>
-      <div className="col">
-        <h5>{recommender.name}</h5>
-      </div>
-      <div className="col-3">
-        <Link to={`/recommenders/items-recommenders/detail/${recommender.id}`}>
-          <button className="btn btn-outline-primary btn-block">View</button>
-        </Link>
+      <div className="ml-2 align-middle">{recommender.name}</div>
+      <div>
+        <ButtonGroup>
+          <div className="btn btn-outline-primary">
+            <Link
+              to={`/recommenders/items-recommenders/detail/${recommender.id}`}
+            >
+              <div>Details</div>
+            </Link>
+          </div>
+          <div className="btn btn-outline-primary">
+            <Link
+              to={`/recommenders/items-recommenders/monitor/${recommender.id}`}
+            >
+              <div>Monitor</div>
+            </Link>
+          </div>
+          <div className="btn btn-outline-primary">
+            <Link
+              to={`/recommenders/items-recommenders/performance/${recommender.id}`}
+            >
+              <div>Performance</div>
+            </Link>
+          </div>
+          <div className="btn btn-outline-primary">
+            <Link
+              to={`/recommenders/items-recommenders/test/${recommender.id}`}
+            >
+              <div>Test</div>
+            </Link>
+          </div>
+        </ButtonGroup>
       </div>
     </EntityRow>
   );

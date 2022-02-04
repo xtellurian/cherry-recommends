@@ -43,7 +43,7 @@ export const CreateRecommender = () => {
 
   const startingItem = useGlobalStartingItem();
 
-  const metrics = useMetrics();  
+  const metrics = useMetrics();
   const metricsOptions = metrics.items
     ? metrics.items.map((p) => ({ label: p.name, value: `${p.id}` }))
     : [];
@@ -59,7 +59,7 @@ export const CreateRecommender = () => {
     useAutoAi: true,
     targetMetricId: "",
   });
-  
+
   React.useEffect(() => {
     if (startingItem.commonId) {
       setRecommender({

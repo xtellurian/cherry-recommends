@@ -137,7 +137,6 @@ const RecommenderDetailSection = () => {
               to={`/metrics/detail/${recommender.targetMetric.id}`}
             />
           )}
-
         </div>
       </div>
 
