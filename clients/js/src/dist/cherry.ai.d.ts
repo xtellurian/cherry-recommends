@@ -1992,11 +1992,14 @@ declare namespace profileApi_d {
 }
 
 declare function fetchAuth0ConfigurationAsync(): Promise<any>;
+declare function fetchConfigurationAsync(): Promise<any>;
 
 declare const reactConfigApi_d_fetchAuth0ConfigurationAsync: typeof fetchAuth0ConfigurationAsync;
+declare const reactConfigApi_d_fetchConfigurationAsync: typeof fetchConfigurationAsync;
 declare namespace reactConfigApi_d {
   export {
     reactConfigApi_d_fetchAuth0ConfigurationAsync as fetchAuth0ConfigurationAsync,
+    reactConfigApi_d_fetchConfigurationAsync as fetchConfigurationAsync,
   };
 }
 

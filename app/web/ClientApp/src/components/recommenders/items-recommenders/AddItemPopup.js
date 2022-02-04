@@ -1,4 +1,5 @@
 import React from "react";
+import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { addItemAsync } from "../../../api/itemsRecommendersApi";
 import { AsyncButton, ErrorCard, Subtitle, Title } from "../../molecules";
 import { BigPopup } from "../../molecules/popups/BigPopup";
@@ -7,6 +8,7 @@ import { ItemRow } from "../../items/ItemRow";
 import { useAccessToken } from "../../../api-hooks/token";
 export const AddItemPopup = ({ isOpen, setIsOpen, recommender, onAdded }) => {
   const token = useAccessToken();
+  const { analytics } = useAnalytics();
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState();
@@ -19,11 +21,15 @@ export const AddItemPopup = ({ isOpen, setIsOpen, recommender, onAdded }) => {
       item: selectedItem,
     })
       .then((r) => {
+        analytics.track("site:itemsRecommender_create_success");
         onAdded(r);
         setSelectedItem(null);
         setIsOpen(false);
       })
-      .catch(setError)
+      .catch((e) => {
+        analytics.track("site:itemsRecommender_create_failure");
+        setError(e);
+      })
       .finally(() => setLoading(false));
   };
   return (

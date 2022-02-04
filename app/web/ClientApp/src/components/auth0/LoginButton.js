@@ -3,6 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { AsyncButton } from "../molecules";
 import { useQuery } from "../../utility/utility";
 import { useLocation } from "react-router-dom";
+import { useAnalytics } from "../../analytics/analyticsHooks";
 
 const LoginButton = () => {
   const query = useQuery();
@@ -10,7 +11,9 @@ const LoginButton = () => {
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
   const [aboutToLogin, setAboutToLogin] = React.useState(autoSignIn);
   const { pathname } = useLocation();
+  const { analytics } = useAnalytics();
   const loginWrapper = () => {
+    analytics.track("site:auth0_loginButton_clicked");
     return loginWithRedirect({ appState: { returnTo: pathname } });
   };
   const signIn = () => {

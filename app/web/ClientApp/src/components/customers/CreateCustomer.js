@@ -15,6 +15,7 @@ import {
   createRequiredByServerValidator,
   joinValidators,
 } from "../molecules/TextInput";
+import { useAnalytics } from "../../analytics/analyticsHooks";
 
 export const CreateCustomer = () => {
   const [newUser, setNewUser] = React.useState({
@@ -35,6 +36,7 @@ export const CreateCustomer = () => {
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const integratedSystems = useIntegratedSystems();
+  const { analytics } = useAnalytics();
   const handleCreate = () => {
     setLoading(true);
     if (integratedSystemReference.integratedSystemId > 0) {
@@ -44,8 +46,14 @@ export const CreateCustomer = () => {
       user: newUser,
       token,
     })
-      .then((u) => history.push(`/customers/detail/${u.id}`))
-      .catch(setError)
+      .then((u) => {
+        analytics.track("site:customer_create_success");
+        history.push(`/customers/detail/${u.id}`);
+      })
+      .catch((e) => {
+        analytics.track("site:customer_create_failure");
+        setError(e);
+      })
       .finally(() => setLoading(false));
   };
   return (

@@ -16,6 +16,7 @@ import { JsonView } from "../../molecules/JsonView";
 import { ConsumeRecommendationPopup } from "../utils/consumeRecommendationPopup";
 import { ParameterSetRecommenderLayout } from "./ParameterSetRecommenderLayout";
 import { AsyncSelectCustomer } from "../../molecules/selectors/AsyncSelectCustomer";
+import { useAnalytics } from "../../../analytics/analyticsHooks";
 
 const CategoricalArgumentInput = ({ arg, value, onChange }) => {
   return (
@@ -78,6 +79,7 @@ export const TestParameterSetRecommender = () => {
   const { id } = useParams();
   const parameterSetRecommender = useParameterSetRecommender({ id });
   const token = useAccessToken();
+  const { analytics } = useAnalytics();
   const [argValues, setArgValues] = React.useState({});
   const [selectedTrackedUser, setSelectedTrackedUser] = React.useState();
 
@@ -112,8 +114,14 @@ export const TestParameterSetRecommender = () => {
         arguments: argValues,
       },
     })
-      .then(setResponse)
-      .catch(setError)
+      .then((r) => {
+        analytics.track("site:testParameterSetRecommender_invoke_success");
+        setResponse(r);
+      })
+      .catch((e) => {
+        analytics.track("site:testParameterSetRecommender_invoke_failure");
+        setError(e);
+      })
       .finally(() => setLoading(false));
   };
 

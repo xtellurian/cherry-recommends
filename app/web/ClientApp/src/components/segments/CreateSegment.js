@@ -1,4 +1,5 @@
 import React from "react";
+import { useAnalytics } from "../../analytics/analyticsHooks";
 import { Link } from "react-router-dom";
 import { Title } from "../molecules/layout";
 import { useAccessToken } from "../../api-hooks/token";
@@ -6,6 +7,7 @@ import { createSegmentAsync } from "../../api/segmentsApi";
 
 export const CreateSegment = () => {
   const token = useAccessToken();
+  const { analytics } = useAnalytics();
   const [name, setName] = React.useState("");
   const [segment, setSegment] = React.useState();
   const submit = () => {
@@ -15,8 +17,14 @@ export const CreateSegment = () => {
       },
       token,
     })
-      .then(setSegment)
-      .error(() => alert("error"));
+      .then((r) => {
+        analytics.track("site:segment_create_success");
+        setSegment(r);
+      })
+      .catch((e) => {
+        analytics.track("site:segment_create_failure");
+        alert("error");
+      });
   };
 
   return (

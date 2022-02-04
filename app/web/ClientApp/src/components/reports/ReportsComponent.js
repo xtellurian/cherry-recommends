@@ -1,4 +1,5 @@
 import React from "react";
+import { useAnalytics } from "../../analytics/analyticsHooks";
 import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { useAccessToken } from "../../api-hooks/token";
@@ -22,19 +23,28 @@ const saveBlob = ({ blob, name }) => {
 
 const ReportRow = ({ reportInfo }) => {
   const token = useAccessToken();
+  const { analytics } = useAnalytics();
   return (
     <div className="card">
       <div className="card-body text-center">
         <button
           className="btn btn-primary float-right"
-          onClick={() =>
+          onClick={() => {
             downloadReportAsync({
               token,
               reportName: reportInfo.name,
             })
-              .then((blob) => saveBlob({ blob, name: reportInfo.name }))
-              .catch((e) => alert(JSON.stringify(e)))
-          }
+              .then((blob) => {
+                analytics.track("site:report_download_success", {
+                  name: reportInfo.name
+                });
+                saveBlob({ blob, name: reportInfo.name });
+              })
+              .catch((e) => {
+                analytics.track("site:report_download_failure");
+                alert(JSON.stringify(e));
+              });
+          }}
         >
           Download
         </button>

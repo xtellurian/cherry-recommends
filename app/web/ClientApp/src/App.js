@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Redirect, Route } from "react-router";
 import { Layout } from "./components/Layout";
 import { Home } from "./components/Home";
@@ -19,15 +19,14 @@ import { EventsComponent } from "./components/events/EventsComponent";
 import { AdminComponent } from "./components/admin/AdminComponent";
 import { TenantSettingsComponent } from "./components/tenant-settings/TenantSettingsComponent";
 import { configure } from "./api/customisation";
+import Analytics from "./analytics/Analytics";
 import "./global-css/cherry.css";
 
 configure();
-export default class App extends Component {
-  static displayName = App.name;
-
-  render() {
-    return (
-      <Layout>
+const App = () => {
+  return (
+    <Layout>
+      <Analytics>
         <Route exact path="/" component={Home} />
         <AuthorizeRoute path="/admin" component={AdminComponent} />
         <AuthorizeRoute component={Profile} path="/profile" />
@@ -61,7 +60,9 @@ export default class App extends Component {
         <AuthorizeRoute path="/dataview" component={DataViewComponent} />
         <AuthorizeRoute path="/reports" component={ReportsComponent} />
         <Route path="/docs/api" component={ApiDocs} />
-      </Layout>
-    );
-  }
-}
+      </Analytics>
+    </Layout>
+  );
+};
+
+export default App;

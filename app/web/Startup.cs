@@ -51,8 +51,9 @@ namespace SignalBox.Web
             var useMulti = Configuration.GetSection("Hosting").GetValue<bool>("Multitenant");
             System.Console.WriteLine($"Multitenant: {useMulti}");
 
-            var segmentWriteKey = Configuration.GetValue<string>("Segment:WriteKey");
-            services.UseSegmentAnalytics(segmentWriteKey);
+            var segment = Configuration.GetSection("Segment");
+            services.Configure<SegmentConfig>(segment);
+            services.UseSegmentAnalytics(segment.GetValue<string>("WriteKey"));
 
             services.AddHttpContextAccessor();
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createItemAsync } from "../../api/recommendableItemsApi";
 import { ErrorCard, Title, BackButton } from "../molecules";
@@ -15,6 +16,7 @@ import {
 export const CreateItem = () => {
   const token = useAccessToken();
   const history = useHistory();
+  const { analytics } = useAnalytics();
   const [error, setError] = React.useState();
   const [item, setItem] = React.useState({
     name: "",
@@ -28,8 +30,14 @@ export const CreateItem = () => {
       token,
       item,
     })
-      .then((p) => history.push(`/recommendable-items/detail/${p.id}`))
-      .catch(setError);
+      .then((p) => {
+        analytics.track("site:item_create_success");
+        history.push(`/recommendable-items/detail/${p.id}`);
+      })
+      .catch((e) => {
+        analytics.track("site:item_create_failure");
+        setError(e);
+      });
   };
   return (
     <React.Fragment>

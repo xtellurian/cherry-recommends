@@ -9,10 +9,12 @@ import {
   joinValidators,
   InputGroup,
 } from "../molecules/TextInput";
+import { useAnalytics } from "../../analytics/analyticsHooks";
 
 const parameterTypes = ["Numerical", "Categorical"];
 export const CreateParameterPanel = ({ onCreated }) => {
   const token = useAccessToken();
+  const { analytics } = useAnalytics();
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [parameter, setParameter] = React.useState({
@@ -31,6 +33,7 @@ export const CreateParameterPanel = ({ onCreated }) => {
       token,
     })
       .then((r) => {
+        analytics.track("site:parameter_create_success");
         setParameter({
           name: "",
           commonId: "",
@@ -42,7 +45,10 @@ export const CreateParameterPanel = ({ onCreated }) => {
           onCreated(r);
         }
       })
-      .catch(setError)
+      .catch((e) => {
+        analytics.track("site:parameter_create_failure");
+        setError(e);
+      })
       .finally(() => setLoading(false));
   };
 

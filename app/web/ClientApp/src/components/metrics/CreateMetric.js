@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createMetricAsync } from "../../api/metricsApi";
 import { BackButton, ErrorCard, Title } from "../molecules";
@@ -13,6 +14,7 @@ import {
 const CreateMetric = () => {
   const token = useAccessToken();
   const history = useHistory();
+  const { analytics } = useAnalytics();
   const [error, setError] = React.useState();
   const [metric, setMetric] = React.useState({
     commonId: "",
@@ -25,8 +27,14 @@ const CreateMetric = () => {
       metric,
       token,
     })
-      .then((r) => history.push(`/metrics/detail/${r.id}`))
-      .catch((e) => setError(e));
+      .then((r) => {
+        analytics.track("site:metric_create_success");
+        history.push(`/metrics/detail/${r.id}`);
+      })
+      .catch((e) => {
+        analytics.track("site:metric_create_failure");
+        setError(e);
+      });
   };
   return (
     <React.Fragment>

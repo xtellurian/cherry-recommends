@@ -11,6 +11,7 @@ import { FunError } from "./components/molecules/fullscreen/FunError";
 import EnvironmentStore from "./contexts/EnvironmentStore";
 import { Auth0ProviderWrapper } from "./components/auth0/Auth0ProviderWrapper";
 import App from "./App";
+import { AnalyticsProvider } from "./analytics/analyticsHooks";
 
 //import registerServiceWorker from './registerServiceWorker';
 Modal.setAppElement("#root");
@@ -30,11 +31,13 @@ if (window.location.host.startsWith("hidden-cherry-secret.local.zone")) {
       ReactDOM.render(
         <>
           <BrowserRouter basename={baseUrl}>
-            <Auth0ProviderWrapper auth0Config={auth0Config}>
-              <EnvironmentStore>
-                <App />
-              </EnvironmentStore>
-            </Auth0ProviderWrapper>
+            <AnalyticsProvider>
+              <Auth0ProviderWrapper auth0Config={auth0Config}>
+                <EnvironmentStore>
+                  <App />
+                </EnvironmentStore>
+              </Auth0ProviderWrapper>
+            </AnalyticsProvider>
           </BrowserRouter>
         </>,
         rootElement

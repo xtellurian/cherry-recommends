@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createIntegratedSystemAsync } from "../../../api/integratedSystemsApi";
 import { BackButton } from "../../molecules/BackButton";
@@ -15,6 +16,7 @@ const systemTypes = ["Hubspot", "Segment", "Custom"];
 export const CreateIntegration = () => {
   const history = useHistory();
   const token = useAccessToken();
+  const { analytics } = useAnalytics();
   const [integratedSystem, setIntegratedSystem] = React.useState({
     name: "",
     systemType: "",
@@ -29,9 +31,13 @@ export const CreateIntegration = () => {
       token,
     })
       .then((s) => {
+        analytics.track("site:settings_integration_create_success");
         history.push(`/settings/integrations/detail/${s.id}`);
       })
-      .catch(setError)
+      .catch((e) => {
+        analytics.track("site:settings_integration_create_failure");
+        setError(e);
+      })
       .finally(() => setCreating(false));
   };
   return (

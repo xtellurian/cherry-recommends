@@ -4,6 +4,7 @@ import { useAccessToken } from "../../../api-hooks/token";
 import { Title, Spinner, ErrorCard } from "../../molecules";
 import { Selector } from "../../molecules/selectors/Select";
 import { InputGroup, TextInput } from "../../molecules/TextInput";
+import { useAnalytics } from "../../../analytics/analyticsHooks";
 
 const options = [
   {
@@ -16,6 +17,7 @@ const options = [
   },
 ];
 export const CreateApiKey = () => {
+  const { analytics } = useAnalytics();
   const [name, setName] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(false);
@@ -33,8 +35,14 @@ export const CreateApiKey = () => {
         apiKeyType: selectedOption.value,
       },
     })
-      .then(setKeyResponse)
-      .catch(setError)
+      .then((r) => {
+        analytics.track("site:settings_apiKey_create_success");
+        setKeyResponse(r);
+      })
+      .catch((e) => {
+        analytics.track("site:settings_apiKey_create_failure");
+        setError(e);
+      })
       .finally(() => setLoading(false));
   };
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createTenantMembershipAsync } from "../../api/tenantsApi";
 import { AsyncButton, ErrorCard } from "../molecules";
@@ -20,11 +21,20 @@ export const InviteMemberSection = ({ onNewMemberAdded }) => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState();
   const token = useAccessToken();
+  const { analytics } = useAnalytics();
   const handleInvite = () => {
     setLoading(true);
     createTenantMembershipAsync({ token, email })
-      .then(onNewMemberAdded)
-      .catch(setError)
+      .then((r) => {
+        analytics.track("site:tenantSettings_inviteMember_success", {
+          email: email,
+        });
+        onNewMemberAdded(r);
+      })
+      .catch((e) => {
+        analytics.track("site:tenantSettings_inviteMember_failure");
+        setError(e);
+      })
       .finally(() => setLoading(false));
   };
   return (

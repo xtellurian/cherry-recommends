@@ -18,6 +18,7 @@ import {
 import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 import { ArgumentsEditor } from "../../molecules/ArgumentsEditor";
 import { useHistory } from "react-router-dom";
+import { useAnalytics } from "../../../analytics/analyticsHooks";
 
 const BoundRow = ({ bound, onChange }) => {
   if (bound.categoricalBounds) {
@@ -94,6 +95,7 @@ export const CreateParameterSetRecommender = () => {
   const [args, setArgs] = React.useState({});
   const [error, setError] = React.useState();
   const parameters = useParameters();
+  const { analytics } = useAnalytics();
   React.useEffect(() => {
     if (parameters.items && parameters.items.length > 0) {
       setAvailableParameters(
@@ -160,10 +162,14 @@ export const CreateParameterSetRecommender = () => {
       token,
       payload: recommender,
     })
-      .then((r) =>
-        history.push(`/recommenders/parameter-set-recommenders/detail/${r.id}`)
-      )
-      .catch(setError);
+      .then((r) => {
+        analytics.track("site:parameterSetRecommender_create_success");
+        history.push(`/recommenders/parameter-set-recommenders/detail/${r.id}`);
+      })
+      .catch((e) => {
+        analytics.track("site:parameterSetRecommender_create_failure");
+        setError(e);
+      });
   };
   return (
     <React.Fragment>

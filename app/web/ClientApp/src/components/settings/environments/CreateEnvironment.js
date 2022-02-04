@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router";
+import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useEnvironmentReducer } from "../../../api-hooks/environmentsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createEnvironmentAsync } from "../../../api/environmentsApi";
@@ -15,6 +16,7 @@ import {
 export const CreateEnvironment = () => {
   const history = useHistory();
   const token = useAccessToken();
+  const { analytics } = useAnalytics();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState();
   const [name, setName] = React.useState("");
@@ -32,13 +34,17 @@ export const CreateEnvironment = () => {
         console.log(
           `Switching environments away from ${currentEnviroment?.id}`
         );
+        analytics.track("site:settings_environment_create_success");
         setEnvironment(newEnvironment);
         history.push("/settings/environments");
       })
       // .then(() => {
       //   // return setTimeout(() => window.location.reload(), 50);
       // })
-      .catch(setError);
+      .catch((e) => {
+        analytics.track("site:settings_environment_create_failure");
+        setError(e);
+      });
   };
   return (
     <React.Fragment>

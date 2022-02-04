@@ -1539,11 +1539,23 @@
     });
 
     const defaultHeaders = { "Content-Type": "application/json" };
-    let config = null; // caches this because it rarely change
+    let authConfig = null; // caches this because it rarely change
     const fetchAuth0ConfigurationAsync = async () => {
-        if (!config) {
+        if (!authConfig) {
             console.log("fetching auth0 from server...");
             const result = await fetch(getUrl("api/reactConfig/auth0"), {
+                headers: defaultHeaders,
+            });
+            authConfig = await result.json();
+            console.log(authConfig);
+        }
+        return authConfig;
+    };
+    let config = null;
+    const fetchConfigurationAsync = async () => {
+        if (!config) {
+            console.log("fetching configuration from server...");
+            const result = await fetch(getUrl("api/reactConfig"), {
                 headers: defaultHeaders,
             });
             config = await result.json();
@@ -1554,7 +1566,8 @@
 
     var reactConfigApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        fetchAuth0ConfigurationAsync: fetchAuth0ConfigurationAsync
+        fetchAuth0ConfigurationAsync: fetchAuth0ConfigurationAsync,
+        fetchConfigurationAsync: fetchConfigurationAsync
     });
 
     const getPropertiesAsync$1 = async ({ api, token, id }) => {

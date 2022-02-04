@@ -13,20 +13,34 @@ namespace SignalBox.Web.Controllers
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ReactConfigController : ControllerBase
     {
-        private readonly IOptionsMonitor<Auth0ReactConfig> options;
+        private readonly IOptionsMonitor<SegmentConfig> segmentOptions;
+        private readonly IOptionsMonitor<Auth0ReactConfig> auth0Options;
         private readonly ITenantProvider tenantProvider;
 
-        public ReactConfigController(IOptionsMonitor<Auth0ReactConfig> options, ITenantProvider tenantProvider)
+        public ReactConfigController(IOptionsMonitor<Auth0ReactConfig> auth0Options, IOptionsMonitor<SegmentConfig> segmentOptions, ITenantProvider tenantProvider)
         {
-            this.options = options;
+            this.auth0Options = auth0Options;
+            this.segmentOptions = segmentOptions;
             this.tenantProvider = tenantProvider;
         }
 
         [HttpGet("auth0")]
-        public Auth0ReactConfig GetConfiguration()
+        public Auth0ReactConfig GetAuth0Configuration()
         {
-            var config = options.CurrentValue;
+            var config = auth0Options.CurrentValue;
             config.Scope = Core.Security.Scopes.AllScopes(config.Scope, tenantProvider.Current());
+            return config;
+        }
+
+        [HttpGet]
+        public ReactConfig GetReactConfig()
+        {
+            var segment = segmentOptions.CurrentValue;
+            var config = new ReactConfig
+            {
+                Segment = segment
+            };
+
             return config;
         }
     }

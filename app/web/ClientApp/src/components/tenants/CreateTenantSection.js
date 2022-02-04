@@ -1,4 +1,5 @@
 import React from "react";
+import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createTenantAsync, fetchStatusAsync } from "../../api/tenantsApi";
 import { useInterval } from "../../utility/useInterval";
@@ -57,6 +58,7 @@ export const CreateTenantSection = () => {
   const [termsOfService, setTermsOfService] = React.useState();
   const [serverDryRun, setServerDryRun] = React.useState();
   const hosting = useHosting();
+  const { analytics } = useAnalytics();
 
   const [tenant, setTenant] = React.useState({
     name: "",
@@ -96,8 +98,14 @@ export const CreateTenantSection = () => {
       setTermsPopupOpen(false);
       createTenantAsync({ token, ...tenant, termsOfServiceVersion })
         .then((r) => setStatus(r.status))
-        .then(() => setNameCreated(tenant.name))
-        .catch(setError)
+        .then(() => {
+          analytics.track("site:tenant_create_success");
+          setNameCreated(tenant.name);
+        })
+        .catch((e) => {
+          analytics.track("site:tenant_create_failure");
+          setError(e);
+        })
         .finally(() => setCreating(false));
     } else {
       setTermsPopupOpen(true);

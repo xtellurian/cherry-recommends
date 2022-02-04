@@ -8,12 +8,13 @@ import { JsonView } from "../../molecules/JsonView";
 import { ConsumeRecommendationPopup } from "../utils/consumeRecommendationPopup";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import { AsyncSelectCustomer } from "../../molecules/selectors/AsyncSelectCustomer";
+import { useAnalytics } from "../../../analytics/analyticsHooks";
 
 export const TestRecommender = () => {
   const { id } = useParams();
   const token = useAccessToken();
   const recommender = useItemsRecommender({ id });
-
+  const { analytics } = useAnalytics();
   const [consumePopupOpen, setConsumePopupOpen] = React.useState(false);
 
   const [selectedTrackedUser, setSelectedTrackedUser] = React.useState();
@@ -29,8 +30,14 @@ export const TestRecommender = () => {
         arguments: {},
       },
     })
-      .then(setModelResponse)
-      .catch((error) => setModelResponse({ error }))
+      .then((r) => {
+        analytics.track("site:testItemsRecommender_invoke_success");
+        setModelResponse(r);
+      })
+      .catch((error) => {
+        analytics.track("site:testItemsRecommender_invoke_failure");
+        setModelResponse({ error });
+      })
       .finally(() => setInvoking(false));
   };
 

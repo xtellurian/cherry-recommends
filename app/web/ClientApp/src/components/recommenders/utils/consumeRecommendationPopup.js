@@ -1,5 +1,6 @@
 import React from "react";
 import Modal from "react-modal";
+import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { small } from "../../molecules/popups/styles";
 import { createRecommendationConsumedEventAsync } from "../../../api/eventsApi";
 import { useAccessToken } from "../../../api-hooks/token";
@@ -12,6 +13,7 @@ export const ConsumeRecommendationPopup = ({
   onConsumed,
 }) => {
   const token = useAccessToken();
+  const { analytics } = useAnalytics();
   const [error, setError] = React.useState();
 
   if (!recommendation) {
@@ -24,12 +26,16 @@ export const ConsumeRecommendationPopup = ({
       correlatorId: recommendation.correlatorId,
     })
       .then(() => {
+        analytics.track("site:recommender_consume_success");
         setIsOpen(false);
         if (onConsumed) {
           onConsumed();
         }
       })
-      .catch((error) => setError(error));
+      .catch((e) => {
+        analytics.track("site:recommender_consume_failure");
+        setError(e);
+      });
   };
 
   const onRequestClose = () => setIsOpen(false);
