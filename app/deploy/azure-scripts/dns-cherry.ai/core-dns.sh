@@ -28,7 +28,7 @@ az network dns record-set mx add-record -g $RG -z $ZONE -n @ -e "cherry-ai.mail.
 az network dns record-set txt add-record -g $RG -z $ZONE -n @ -v "MS=ms74302510"
 az network dns record-set txt add-record -g $RG -z $ZONE -n @ -v "v=spf1 include:spf.protection.outlook.com -all"
 
-ZONE=$ZONE RG=$RG ./webflow-dns.sh
+ZONE=$ZONE RG=$RG ./azure-static-website-dns.sh
 
 ## ------- HUBSPOT ------------
 echo "Setting Hubspot DNS"
