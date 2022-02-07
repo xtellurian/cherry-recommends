@@ -43,7 +43,7 @@ const DestinationRow = ({ destination, remove }) => {
           <Link
             to={`/settings/integrations/detail/${destination.connectedSystemId}`}
           >
-            <button className="btn btn-outline-primary mr-1" onClick={remove}>
+            <button className="btn btn-outline-primary mr-1">
               View Integration
             </button>
           </Link>
