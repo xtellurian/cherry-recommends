@@ -6,7 +6,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 {
     internal abstract class EnvironmentScopedEntityTypeConfigurationBase<T> : EntityTypeConfigurationBase<T>, IEntityTypeConfiguration<T> where T : EnvironmentScopedEntity
     {
-        protected virtual DeleteBehavior OnEnvironmentDelete => DeleteBehavior.Cascade;
+        protected virtual DeleteBehavior OnEnvironmentDelete => DeleteBehavior.NoAction;
         public override void Configure(EntityTypeBuilder<T> builder)
         {
             base.Configure(builder);

@@ -7,7 +7,7 @@ namespace SignalBox.Infrastructure.EntityFramework
     internal class CustomerTypeConfiguration : CommonEntityTypeConfigurationBase<Customer>, IEntityTypeConfiguration<Customer>
     {
         // TODO: make this cascase (causes error on migrate)
-        protected override DeleteBehavior OnEnvironmentDelete => DeleteBehavior.SetNull;
+        protected override DeleteBehavior OnEnvironmentDelete => DeleteBehavior.Cascade;
         public override void Configure(EntityTypeBuilder<Customer> builder)
         {
             base.Configure(builder);
