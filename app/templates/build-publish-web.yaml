@@ -8,6 +8,21 @@ steps:
     displayName: Dotnet build solution
     workingDirectory: app
 
+  - task: DotNetCoreCLI@2
+    displayName: "Dotnet test solution"
+    inputs:
+      command: "test"
+      projects: "**/*[Tt]est*/*.csproj"
+      publishTestResults: true
+      arguments: '--no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura'
+      workingDirectory: app
+
+  - task: PublishCodeCoverageResults@1
+    displayName: "Publish code coverage results"
+    inputs:
+      codeCoverageTool: "Cobertura"
+      summaryFileLocation: "$(Agent.TempDirectory)/**/coverage.cobertura.xml"
+
   - script: npx prettier --check .
     displayName: Prettier - /ClientApp
     workingDirectory: app/web/ClientApp/
