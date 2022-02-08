@@ -9,8 +9,7 @@ export const AdminComponent = () => {
       <div className="border border-warning rounded text-muted text-center mb-2">
         Admin Zone
       </div>
-      <Switch>
-      </Switch>
+      <Switch></Switch>
     </React.Fragment>
   );
 };

@@ -66,11 +66,7 @@ export const LearningMetricsUtil = ({
       {error && <ErrorCard error={error} />}
 
       {learningMetrics.map((f) => (
-        <LearningMetricRow
-          metric={f}
-          key={f.id}
-          requestRemove={handleRemove}
-        />
+        <LearningMetricRow metric={f} key={f.id} requestRemove={handleRemove} />
       ))}
       {learningMetrics.length === 0 && (
         <EmptyList>There are no Learning Metrics yet.</EmptyList>

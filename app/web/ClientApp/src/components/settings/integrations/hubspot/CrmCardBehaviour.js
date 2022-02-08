@@ -81,38 +81,29 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
 
   React.useEffect(() => {
     if (metrics.items) {
-       setMetricOptions(
-        metrics.items.map((f) => ({ label: f.name, value: f }))
-      );
+      setMetricOptions(metrics.items.map((f) => ({ label: f.name, value: f })));
     }
   }, [metrics]);
 
   React.useEffect(() => {
     if (behaviour.items) {
-       setMetricOptions(
-        metrics.items.map((f) => ({ label: f.name, value: f }))
-      );
+      setMetricOptions(metrics.items.map((f) => ({ label: f.name, value: f })));
     }
   }, [behaviour, metrics]);
 
-  const [selectedMetrics,  setSelectedMetrics] = React.useState([]);
+  const [selectedMetrics, setSelectedMetrics] = React.useState([]);
 
   React.useEffect(() => {
     if (behaviour.includedMetrics && behaviour.includedMetrics.length) {
-       setSelectedMetrics(behaviour.includedMetrics || []);
-    } else if (
-      behaviour.excludedMetrics &&
-      behaviour.excludedMetrics.length
-    ) {
-       setSelectedMetrics(behaviour.excludedMetrics || []);
+      setSelectedMetrics(behaviour.includedMetrics || []);
+    } else if (behaviour.excludedMetrics && behaviour.excludedMetrics.length) {
+      setSelectedMetrics(behaviour.excludedMetrics || []);
     } else {
-       setSelectedMetrics([]);
+      setSelectedMetrics([]);
     }
   }, [behaviour]);
 
-  const [excludedMetricOptions, setExcludedMetricOptions] = React.useState(
-    []
-  );
+  const [excludedMetricOptions, setExcludedMetricOptions] = React.useState([]);
 
   React.useEffect(() => {
     if (behaviour && behaviour.includedMetrics) {
@@ -228,7 +219,7 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
           value={excludedMetricOptions}
           onChange={(so) => {
             setExcludedMetricOptions(so);
-             setSelectedMetrics([...so.map((_) => _.value.commonId)]);
+            setSelectedMetrics([...so.map((_) => _.value.commonId)]);
           }}
           options={metricOptions}
         />

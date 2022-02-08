@@ -36,7 +36,7 @@ const ReportRow = ({ reportInfo }) => {
             })
               .then((blob) => {
                 analytics.track("site:report_download_success", {
-                  name: reportInfo.name
+                  name: reportInfo.name,
                 });
                 saveBlob({ blob, name: reportInfo.name });
               })

@@ -14,11 +14,7 @@ const MetricsComponent = () => {
       <Switch>
         <AuthorizeRoute exact path={`${path}`} component={MetricsSummary} />
         <AuthorizeRoute exact path={`${path}/create`} component={Create} />
-        <AuthorizeRoute
-          exact
-          path={`${path}/detail/:id`}
-          component={Detail}
-        />
+        <AuthorizeRoute exact path={`${path}/detail/:id`} component={Detail} />
         <AuthorizeRoute
           exact
           path={`${path}/set-value/:id`}

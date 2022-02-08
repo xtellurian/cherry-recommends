@@ -8,11 +8,7 @@ const MetricGeneratorsComponent = () => {
   return (
     <React.Fragment>
       <Switch>
-        <AuthorizeRoute
-          exact
-          path={`${path}`}
-          component={GeneratorsSummary}
-        />
+        <AuthorizeRoute exact path={`${path}`} component={GeneratorsSummary} />
       </Switch>
     </React.Fragment>
   );

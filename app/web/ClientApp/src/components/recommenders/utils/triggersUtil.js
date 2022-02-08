@@ -51,10 +51,7 @@ export const TriggersUtil = ({
       metricCommonIds,
     };
     // check if null and empty, just shoot up null
-    if (
-      !metricsChanged.name &&
-      metricsChanged.metricCommonIds.length === 0
-    ) {
+    if (!metricsChanged.name && metricsChanged.metricCommonIds.length === 0) {
       metricsChanged = null;
     }
     setTriggerAsync({
