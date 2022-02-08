@@ -11111,7 +11111,8 @@
       },
       "CreateMetric": {
         "required": [
-          "commonId"
+          "commonId",
+          "valueType"
         ],
         "type": "object",
         "properties": {
@@ -11124,6 +11125,9 @@
           "name": {
             "type": "string",
             "nullable": true
+          },
+          "valueType": {
+            "$ref": "#/components/schemas/MetricValueType"
           }
         },
         "additionalProperties": false
@@ -12731,6 +12735,9 @@
             "type": "object",
             "additionalProperties": { },
             "nullable": true
+          },
+          "valueType": {
+            "$ref": "#/components/schemas/MetricValueType"
           }
         },
         "additionalProperties": false
@@ -12919,6 +12926,13 @@
           }
         },
         "additionalProperties": false
+      },
+      "MetricValueType": {
+        "enum": [
+          "numeric",
+          "categorical"
+        ],
+        "type": "string"
       },
       "ModelInputDto": {
         "type": "object",

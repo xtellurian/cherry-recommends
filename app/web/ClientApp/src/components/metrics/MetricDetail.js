@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import {  useMetric } from "../../api-hooks/metricsApi";
+import { useMetric } from "../../api-hooks/metricsApi";
 import { deleteMetricAsync } from "../../api/metricsApi";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 
@@ -29,7 +29,7 @@ const MetricDetail = () => {
   const canWrite = scopes && scopes.find((_) => _ == "write:metrics");
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/metrics">
+      <BackButton className="float-right" to="/metrics/">
         All Metrics
       </BackButton>
       {canWrite && (
@@ -45,7 +45,13 @@ const MetricDetail = () => {
       {metric.loading && <Spinner />}
       {metric.error && <ErrorCard error={metric.error} />}
       {metric.commonId && (
-        <CopyableField label="Common Id" value={metric.commonId} />
+        <>
+          <CopyableField label="Common Id" value={metric.commonId} />
+          <CopyableField
+            label="Value Type"
+            value={metric.valueType ?? "Unset"}
+          />
+        </>
       )}
       <ConfirmDeletePopup
         entity={metric}

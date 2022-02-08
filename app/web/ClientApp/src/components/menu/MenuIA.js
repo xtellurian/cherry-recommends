@@ -1,12 +1,46 @@
 const AuthenticatedIA = [
   {
-    name: "Items",
-    icon: "/icons/items.svg",
-    to: { pathname: "/", hash: "#items" },
+    name: "Customers",
+    icon: "/icons/customer.svg",
+    to: { pathname: "/customers", hash: "#customers" },
     items: [
       {
-        name: "Library",
-        to: "/recommendable-items",
+        name: "All Customers",
+        to: "/customers",
+      },
+      {
+        name: "Add a Customer",
+        to: "/customers/create",
+      },
+      {
+        name: "Events Overview",
+        to: "/dataview",
+      },
+    ],
+  },
+  {
+    name: "Metrics",
+    icon: "/icons/graph-up.svg",
+    to: { pathname: "/metrics/", hash: "#metrics" },
+    items: [
+      {
+        name: "All Metrics",
+        to: "/metrics/",
+      },
+      {
+        name: "Create a Metric",
+        to: "/metrics/create",
+      },
+    ],
+  },
+  {
+    name: "Items",
+    icon: "/icons/items.svg",
+    to: { pathname: "/recommendable-items/", hash: "#items" },
+    items: [
+      {
+        name: "All Items",
+        to: "/recommendable-items/",
       },
       {
         name: "Recommenders",
@@ -17,34 +51,15 @@ const AuthenticatedIA = [
   {
     name: "Parameters",
     icon: "/icons/parameters.svg",
-    to: { pathname: "/", hash: "#parameters" },
+    to: { pathname: "/parameters/", hash: "#parameters" },
     items: [
       {
-        name: "Library",
-        to: "/parameters",
+        name: "All Parameters",
+        to: "/parameters/",
       },
       {
         name: "Recommenders",
         to: "/recommenders/parameter-set-recommenders",
-      },
-    ],
-  },
-  {
-    name: "Customers",
-    icon: "/icons/customer.svg",
-    to: { pathname: "/customers", hash: "#customers" },
-    items: [
-      {
-        name: "Add a Customer",
-        to: "/customers/create",
-      },
-      {
-        name: "Metrics",
-        to: "/metrics/",
-      },
-      {
-        name: "Events Overview",
-        to: "/dataview",
       },
     ],
   },

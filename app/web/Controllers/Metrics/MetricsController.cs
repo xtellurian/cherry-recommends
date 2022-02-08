@@ -36,7 +36,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost]
         public async Task<Metric> CreateMetric([FromBody] CreateMetric dto)
         {
-            return await workflows.CreateMetric(dto.CommonId, dto.Name);
+            return await workflows.CreateMetric(dto.CommonId, dto.Name, dto.ValueType);
         }
 
         /// <summary>Get's the Customers associated with a Metric.</summary>

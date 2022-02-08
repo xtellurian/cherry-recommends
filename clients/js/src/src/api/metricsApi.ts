@@ -1,8 +1,18 @@
-import { AuthenticatedRequest, DeleteRequest, EntityRequest, EntitySearchRequest, PaginatedEntityRequest } from "../interfaces";
+import {
+  AuthenticatedRequest,
+  DeleteRequest,
+  EntityRequest,
+  EntitySearchRequest,
+  PaginatedEntityRequest,
+} from "../interfaces";
 import { executeFetch } from "./client/apiClientTs";
-import {components} from "../model/api"
+import { components } from "../model/api";
 
-export const fetchMetricsAsync = async ({ token, page, searchTerm }: EntitySearchRequest) => {
+export const fetchMetricsAsync = async ({
+  token,
+  page,
+  searchTerm,
+}: EntitySearchRequest): Promise<components["schemas"]["MetricPaginated"]> => {
   return await executeFetch({
     path: "api/Metrics",
     token,
@@ -13,14 +23,21 @@ export const fetchMetricsAsync = async ({ token, page, searchTerm }: EntitySearc
   });
 };
 
-export const fetchMetricAsync = async ({ token, id }: EntityRequest) => {
+export const fetchMetricAsync = async ({
+  token,
+  id,
+}: EntityRequest): Promise<components["schemas"]["Metric"]> => {
   return await executeFetch({
     path: `api/Metrics/${id}`,
     token,
   });
 };
 
-export const fetchMetricCustomersAsync = async ({ token, page, id }: PaginatedEntityRequest) => {
+export const fetchMetricCustomersAsync = async ({
+  token,
+  page,
+  id,
+}: PaginatedEntityRequest) => {
   return await executeFetch({
     path: `api/Metrics/${id}/Customers`,
     token,
@@ -41,9 +58,12 @@ export const fetchMetricCustomerMetricsAsync = async ({
 };
 
 interface CreateMetricRequest extends AuthenticatedRequest {
-  metric: components["schemas"]["CreateMetric"]
+  metric: components["schemas"]["CreateMetric"];
 }
-export const createMetricAsync = async ({ token, metric }: CreateMetricRequest) => {
+export const createMetricAsync = async ({
+  token,
+  metric,
+}: CreateMetricRequest) => {
   return await executeFetch({
     path: "api/Metrics",
     token,
@@ -60,7 +80,10 @@ export const deleteMetricAsync = async ({ token, id }: DeleteRequest) => {
   });
 };
 
-export const fetchCustomersMetricsAsync = async ({ token, id }: EntityRequest) => {
+export const fetchCustomersMetricsAsync = async ({
+  token,
+  id,
+}: EntityRequest) => {
   return await executeFetch({
     path: `api/Customers/${id}/Metrics`,
     token,
@@ -69,7 +92,7 @@ export const fetchCustomersMetricsAsync = async ({ token, id }: EntityRequest) =
 
 interface CustomersMetricRequest extends EntityRequest {
   metricId: string | number;
-  version?: number | undefined
+  version?: number | undefined;
 }
 export const fetchCustomersMetricAsync = async ({
   token,
@@ -94,9 +117,13 @@ export const fetchDestinationsAsync = async ({ token, id }: EntityRequest) => {
 };
 
 interface CreateMetricDestinationRequest extends EntityRequest {
-  destination: components["schemas"]["CreateDestinationDto"]
+  destination: components["schemas"]["CreateDestinationDto"];
 }
-export const createDestinationAsync = async ({ token, id, destination }: CreateMetricDestinationRequest) => {
+export const createDestinationAsync = async ({
+  token,
+  id,
+  destination,
+}: CreateMetricDestinationRequest) => {
   return await executeFetch({
     path: `api/Metrics/${id}/Destinations`,
     token,
@@ -106,9 +133,13 @@ export const createDestinationAsync = async ({ token, id, destination }: CreateM
 };
 
 interface DeleteDestinationRequest extends DeleteRequest {
-  destinationId: number
+  destinationId: number;
 }
-export const deleteDestinationAsync = async ({ token, id, destinationId }: DeleteDestinationRequest) => {
+export const deleteDestinationAsync = async ({
+  token,
+  id,
+  destinationId,
+}: DeleteDestinationRequest) => {
   return await executeFetch({
     path: `api/Metrics/${id}/Destinations/${destinationId}`,
     token,

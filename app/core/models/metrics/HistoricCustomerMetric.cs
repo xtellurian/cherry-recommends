@@ -7,13 +7,23 @@ namespace SignalBox.Core
         protected HistoricCustomerMetric()
         { }
 
-        public HistoricCustomerMetric(Customer customer, Metric metric, string value, int version)
+        public static HistoricCustomerMetric FromString(Customer customer, Metric metric, string value, int version)
+        {
+            return new HistoricCustomerMetric(customer, metric, value, version);
+        }
+
+        public static HistoricCustomerMetric FromDouble(Customer customer, Metric metric, double value, int version)
+        {
+            return new HistoricCustomerMetric(customer, metric, value, version);
+        }
+
+        protected HistoricCustomerMetric(Customer customer, Metric metric, string value, int version)
         : base(customer, metric, value)
         {
             Version = version;
         }
 
-        public HistoricCustomerMetric(Customer customer, Metric metric, double value, int version)
+        protected HistoricCustomerMetric(Customer customer, Metric metric, double value, int version)
         : base(customer, metric, value)
         {
             Version = version;

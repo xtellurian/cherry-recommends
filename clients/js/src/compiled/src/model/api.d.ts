@@ -5516,6 +5516,7 @@ export interface components {
         CreateMetric: {
             commonId: string;
             name?: string | null;
+            valueType: components["schemas"]["MetricValueType"];
         };
         CreateMetricGenerator: {
             featureCommonId?: string | null;
@@ -5948,6 +5949,7 @@ export interface components {
             properties?: {
                 [key: string]: unknown;
             } | null;
+            valueType?: components["schemas"]["MetricValueType"];
         };
         MetricDestinationBase: {
             id?: number;
@@ -5994,6 +5996,7 @@ export interface components {
             featureCommonIds?: string[] | null;
             metricCommonIds?: string[] | null;
         };
+        MetricValueType: "numeric" | "categorical";
         ModelInputDto: {
             customerId?: string | null;
             commonUserId?: string | null;

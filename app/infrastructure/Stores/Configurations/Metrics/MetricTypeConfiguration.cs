@@ -21,6 +21,10 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasMany(_ => _.Destinations)
                 .WithOne(_ => _.Metric);
 
+            builder // string enum conversion
+                .Property(_ => _.ValueType)
+                .HasConversion<string>();
+
             builder.HasData(Metric.Revenue, Metric.TotalEvents);
         }
     }

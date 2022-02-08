@@ -3,13 +3,19 @@ import { useHistory } from "react-router-dom";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createMetricAsync } from "../../api/metricsApi";
-import { BackButton, ErrorCard, Title } from "../molecules";
+import { AsyncButton, BackButton, ErrorCard, Title } from "../molecules";
 import {
   InputGroup,
   TextInput,
   createLengthValidator,
   createServerErrorValidator,
 } from "../molecules/TextInput";
+import Select from "../molecules/selectors/Select";
+
+const valueTypeOptons = [
+  { value: "numeric", label: "Numeric" },
+  { value: "categorical", label: "Categorical" },
+];
 
 const CreateMetric = () => {
   const token = useAccessToken();
@@ -19,10 +25,13 @@ const CreateMetric = () => {
   const [metric, setMetric] = React.useState({
     commonId: "",
     name: "",
+    valueType: "",
   });
+  const [creating, setCreating] = React.useState(false);
 
   const handleCreate = () => {
     setError(null);
+    setCreating(true);
     createMetricAsync({
       metric,
       token,
@@ -34,11 +43,15 @@ const CreateMetric = () => {
       .catch((e) => {
         analytics.track("site:metric_create_failure");
         setError(e);
-      });
+      })
+      .finally(() => setCreating(false));
+  };
+  const setSelectedValueType = (o) => {
+    setMetric({ ...metric, valueType: o.value });
   };
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/metrics">
+      <BackButton className="float-right" to="/metrics/">
         All Metrics
       </BackButton>
       <Title>Create Metric</Title>
@@ -47,7 +60,7 @@ const CreateMetric = () => {
       {error && <ErrorCard error={error} />}
 
       <div>
-        <InputGroup>
+        <InputGroup className="mb-1">
           <TextInput
             placeholder="Something human readable"
             value={metric.name}
@@ -61,7 +74,7 @@ const CreateMetric = () => {
             }
           />
         </InputGroup>
-        <InputGroup>
+        <InputGroup className="mb-1">
           <TextInput
             placeholder="Something unique"
             value={metric.commonId}
@@ -76,9 +89,20 @@ const CreateMetric = () => {
           />
         </InputGroup>
 
-        <button className="btn btn-primary" onClick={handleCreate}>
+        <Select
+          className="mb-1"
+          placeholder="Select a metric value type"
+          onChange={setSelectedValueType}
+          options={valueTypeOptons}
+        />
+
+        <AsyncButton
+          loading={creating}
+          className="btn btn-primary btn-block"
+          onClick={handleCreate}
+        >
           Create
-        </button>
+        </AsyncButton>
       </div>
     </React.Fragment>
   );

@@ -1,6 +1,8 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core.Metrics;
 using SignalBox.Core.Metrics.Destinations;
 
 namespace SignalBox.Core.Workflows
@@ -26,11 +28,12 @@ namespace SignalBox.Core.Workflows
             this.trackedUserStore = trackedUserStore;
         }
 
-        public async Task<Metric> CreateMetric(string commonId, string name)
+        public async Task<Metric> CreateMetric(string commonId, string name, MetricValueType valueType)
         {
-            var metric = await metricStore.Create(new Metric(commonId, name));
+            var metric = await metricStore.Create(new Metric(commonId, name, valueType));
             await metricStore.Context.SaveChanges();
             return metric;
+
         }
 
         public async Task<Paginated<Customer>> GetCustomers(Metric metric, int page)

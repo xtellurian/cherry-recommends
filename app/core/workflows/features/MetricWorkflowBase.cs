@@ -121,52 +121,65 @@ namespace SignalBox.Core.Workflows
 
         private HistoricCustomerMetric GenerateMetricValues(Customer user, Metric metric, object value, int version)
         {
-            if (double.TryParse(value?.ToString(), out var doubleValue))
-            {
-                value = doubleValue;
-            };
-
             if (value == null)
             {
                 throw new System.NullReferenceException("Metric value cannot be null");
             }
-            else if (value is double f)
+
+            if (metric.ValueType == Metrics.MetricValueType.Numeric || metric.ValueType == null) // null is backwards compat
             {
-                return new HistoricCustomerMetric(user, metric, f, version);
-            }
-            else if (value is int n)
-            {
-                return new HistoricCustomerMetric(user, metric, n, version);
-            }
-            else if (value is string s)
-            {
-                return new HistoricCustomerMetric(user, metric, s, version);
-            }
-            else if (value is System.Text.Json.JsonElement jsonElement)
-            {
-                if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.String)
+                if (double.TryParse(value?.ToString(), out var doubleValue))
                 {
-                    return new HistoricCustomerMetric(user, metric, jsonElement.GetString(), version);
+                    value = doubleValue;
+                };
+
+                if (value == null)
+                {
+                    throw new System.NullReferenceException("Metric value cannot be null");
                 }
-                if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Number)
+                else if (value is double f)
                 {
-                    if (jsonElement.TryGetInt32(out var i))
+                    return HistoricCustomerMetric.FromDouble(user, metric, f, version);
+                }
+                else if (value is int n)
+                {
+                    return HistoricCustomerMetric.FromDouble(user, metric, n, version);
+                }
+                else if (value is System.Text.Json.JsonElement jsonElement)
+                {
+                    if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Number)
                     {
-                        return new HistoricCustomerMetric(user, metric, i, version);
-                    }
-                    else if (jsonElement.TryGetDouble(out var d))
-                    {
-                        return new HistoricCustomerMetric(user, metric, d, version);
-                    }
-                    else
-                    {
-                        throw new System.ArgumentException($"{value} JsonElement of ValueKind {jsonElement.ValueKind} is an unknown metric value type");
+                        if (jsonElement.TryGetInt32(out var i))
+                        {
+                            return HistoricCustomerMetric.FromDouble(user, metric, i, version);
+                        }
+                        else if (jsonElement.TryGetDouble(out var d))
+                        {
+                            return HistoricCustomerMetric.FromDouble(user, metric, d, version);
+                        }
                     }
                 }
             }
 
-            throw new System.ArgumentException($"{value} of type {value.GetType()} is an unknown metric value type");
+
+            if (metric.ValueType == Metrics.MetricValueType.Categorical || metric.ValueType == null) // null is backwards compat
+            {
+
+                if (value is string s)
+                {
+                    return HistoricCustomerMetric.FromString(user, metric, s, version);
+                }
+                else if (value is System.Text.Json.JsonElement jsonElement)
+                {
+                    if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.String)
+                    {
+                        return HistoricCustomerMetric.FromString(user, metric, jsonElement.GetString(), version);
+                    }
+                }
+            }
+
+
+            throw new BadRequestException($"{value} ({value.GetType()}) cannot be parsed as metric of value type {metric.ValueType}");
         }
-
     }
 }

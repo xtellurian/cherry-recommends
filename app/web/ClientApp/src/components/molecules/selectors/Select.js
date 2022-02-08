@@ -2,6 +2,8 @@ import Select from "react-select";
 
 export const Selector = Select;
 
+export default Selector;
+
 // const options = [
 //   { value: 'chocolate', label: 'Chocolate' },
 //   { value: 'strawberry', label: 'Strawberry' },
