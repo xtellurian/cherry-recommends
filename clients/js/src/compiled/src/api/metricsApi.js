@@ -1,5 +1,5 @@
 import { executeFetch } from "./client/apiClientTs";
-export const fetchMetricsAsync = async ({ token, page, searchTerm }) => {
+export const fetchMetricsAsync = async ({ token, page, searchTerm, }) => {
     return await executeFetch({
         path: "api/Metrics",
         token,
@@ -9,13 +9,13 @@ export const fetchMetricsAsync = async ({ token, page, searchTerm }) => {
         },
     });
 };
-export const fetchMetricAsync = async ({ token, id }) => {
+export const fetchMetricAsync = async ({ token, id, }) => {
     return await executeFetch({
         path: `api/Metrics/${id}`,
         token,
     });
 };
-export const fetchMetricCustomersAsync = async ({ token, page, id }) => {
+export const fetchMetricCustomersAsync = async ({ token, page, id, }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/Customers`,
         token,
@@ -29,7 +29,7 @@ export const fetchMetricCustomerMetricsAsync = async ({ token, page, id, }) => {
         page,
     });
 };
-export const createMetricAsync = async ({ token, metric }) => {
+export const createMetricAsync = async ({ token, metric, }) => {
     return await executeFetch({
         path: "api/Metrics",
         token,
@@ -44,7 +44,7 @@ export const deleteMetricAsync = async ({ token, id }) => {
         method: "delete",
     });
 };
-export const fetchCustomersMetricsAsync = async ({ token, id }) => {
+export const fetchCustomersMetricsAsync = async ({ token, id, }) => {
     return await executeFetch({
         path: `api/Customers/${id}/Metrics`,
         token,
@@ -65,7 +65,7 @@ export const fetchDestinationsAsync = async ({ token, id }) => {
         token,
     });
 };
-export const createDestinationAsync = async ({ token, id, destination }) => {
+export const createDestinationAsync = async ({ token, id, destination, }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/Destinations`,
         token,
@@ -73,7 +73,7 @@ export const createDestinationAsync = async ({ token, id, destination }) => {
         body: destination,
     });
 };
-export const deleteDestinationAsync = async ({ token, id, destinationId }) => {
+export const deleteDestinationAsync = async ({ token, id, destinationId, }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/Destinations/${destinationId}`,
         token,

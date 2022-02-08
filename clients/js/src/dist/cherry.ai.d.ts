@@ -182,6 +182,13 @@ declare function fetchCustomersActionsAsync({ token, page, id, revenueOnly, }: {
     id: any;
     revenueOnly: any;
 }): Promise<any>;
+declare function setCustomerMetricAsync({ token, id, metricId, useInternalId, value, }: {
+    token: any;
+    id: any;
+    metricId: any;
+    useInternalId: any;
+    value: any;
+}): Promise<any>;
 
 declare const customersApi_d_fetchCustomersAsync: typeof fetchCustomersAsync;
 declare const customersApi_d_fetchCustomerAsync: typeof fetchCustomerAsync;
@@ -189,6 +196,7 @@ declare const customersApi_d_fetchUniqueCustomerActionGroupsAsync: typeof fetchU
 declare const customersApi_d_fetchCustomerActionAsync: typeof fetchCustomerActionAsync;
 declare const customersApi_d_createOrUpdateCustomerAsync: typeof createOrUpdateCustomerAsync;
 declare const customersApi_d_fetchCustomersActionsAsync: typeof fetchCustomersActionsAsync;
+declare const customersApi_d_setCustomerMetricAsync: typeof setCustomerMetricAsync;
 declare namespace customersApi_d {
   export {
     customersApi_d_fetchCustomersAsync as fetchCustomersAsync,
@@ -200,6 +208,7 @@ declare namespace customersApi_d {
     uploadUserDataAsync$1 as uploadUserDataAsync,
     customersApi_d_createOrUpdateCustomerAsync as createOrUpdateCustomerAsync,
     customersApi_d_fetchCustomersActionsAsync as fetchCustomersActionsAsync,
+    customersApi_d_setCustomerMetricAsync as setCustomerMetricAsync,
   };
 }
 
@@ -1709,16 +1718,16 @@ declare namespace itemsRecommendersApi_d {
   };
 }
 
-declare const fetchMetricsAsync: ({ token, page, searchTerm }: EntitySearchRequest) => Promise<any>;
-declare const fetchMetricAsync: ({ token, id }: EntityRequest) => Promise<any>;
-declare const fetchMetricCustomersAsync: ({ token, page, id }: PaginatedEntityRequest) => Promise<any>;
+declare const fetchMetricsAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<components["schemas"]["MetricPaginated"]>;
+declare const fetchMetricAsync: ({ token, id, }: EntityRequest) => Promise<components["schemas"]["Metric"]>;
+declare const fetchMetricCustomersAsync: ({ token, page, id, }: PaginatedEntityRequest) => Promise<any>;
 declare const fetchMetricCustomerMetricsAsync: ({ token, page, id, }: PaginatedEntityRequest) => Promise<any>;
 interface CreateMetricRequest extends AuthenticatedRequest {
     metric: components["schemas"]["CreateMetric"];
 }
-declare const createMetricAsync: ({ token, metric }: CreateMetricRequest) => Promise<any>;
+declare const createMetricAsync: ({ token, metric, }: CreateMetricRequest) => Promise<any>;
 declare const deleteMetricAsync: ({ token, id }: DeleteRequest) => Promise<any>;
-declare const fetchCustomersMetricsAsync: ({ token, id }: EntityRequest) => Promise<any>;
+declare const fetchCustomersMetricsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 interface CustomersMetricRequest extends EntityRequest {
     metricId: string | number;
     version?: number | undefined;
@@ -1728,11 +1737,11 @@ declare const fetchDestinationsAsync$1: ({ token, id }: EntityRequest) => Promis
 interface CreateMetricDestinationRequest extends EntityRequest {
     destination: components["schemas"]["CreateDestinationDto"];
 }
-declare const createDestinationAsync$1: ({ token, id, destination }: CreateMetricDestinationRequest) => Promise<any>;
+declare const createDestinationAsync$1: ({ token, id, destination, }: CreateMetricDestinationRequest) => Promise<any>;
 interface DeleteDestinationRequest extends DeleteRequest {
     destinationId: number;
 }
-declare const deleteDestinationAsync: ({ token, id, destinationId }: DeleteDestinationRequest) => Promise<any>;
+declare const deleteDestinationAsync: ({ token, id, destinationId, }: DeleteDestinationRequest) => Promise<any>;
 declare const fetchGeneratorsAsync: ({ token, id }: EntityRequest) => Promise<any>;
 
 declare const metricsApi_d_fetchMetricsAsync: typeof fetchMetricsAsync;

@@ -192,7 +192,7 @@
     }
 
     const MAX_ARRAY = 5000;
-    const basePath = "api/customers";
+    const basePath = "api/Customers";
     const fetchCustomersAsync = async ({ token, page, searchTerm }) => {
         return await executeFetch$1({
             path: basePath,
@@ -283,6 +283,17 @@
             },
         });
     };
+    const setCustomerMetricAsync = async ({ token, id, metricId, useInternalId, value, }) => {
+        return await executeFetch$1({
+            path: `${basePath}/${id}/Metrics/${metricId}`,
+            method: "post",
+            token,
+            query: {
+                useInternalId,
+            },
+            body: { value },
+        });
+    };
 
     var customersApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -294,7 +305,8 @@
         fetchCustomerActionAsync: fetchCustomerActionAsync,
         uploadUserDataAsync: uploadUserDataAsync$1,
         createOrUpdateCustomerAsync: createOrUpdateCustomerAsync,
-        fetchCustomersActionsAsync: fetchCustomersActionsAsync
+        fetchCustomersActionsAsync: fetchCustomersActionsAsync,
+        setCustomerMetricAsync: setCustomerMetricAsync
     });
 
     const fetchEventSummaryAsync = async ({ token }) => {
@@ -573,7 +585,7 @@
         fetchGeneratorsAsync: fetchGeneratorsAsync$1
     });
 
-    const fetchMetricsAsync = async ({ token, page, searchTerm }) => {
+    const fetchMetricsAsync = async ({ token, page, searchTerm, }) => {
         return await executeFetch({
             path: "api/Metrics",
             token,
@@ -583,13 +595,13 @@
             },
         });
     };
-    const fetchMetricAsync = async ({ token, id }) => {
+    const fetchMetricAsync = async ({ token, id, }) => {
         return await executeFetch({
             path: `api/Metrics/${id}`,
             token,
         });
     };
-    const fetchMetricCustomersAsync = async ({ token, page, id }) => {
+    const fetchMetricCustomersAsync = async ({ token, page, id, }) => {
         return await executeFetch({
             path: `api/Metrics/${id}/Customers`,
             token,
@@ -603,7 +615,7 @@
             page,
         });
     };
-    const createMetricAsync = async ({ token, metric }) => {
+    const createMetricAsync = async ({ token, metric, }) => {
         return await executeFetch({
             path: "api/Metrics",
             token,
@@ -618,7 +630,7 @@
             method: "delete",
         });
     };
-    const fetchCustomersMetricsAsync = async ({ token, id }) => {
+    const fetchCustomersMetricsAsync = async ({ token, id, }) => {
         return await executeFetch({
             path: `api/Customers/${id}/Metrics`,
             token,
@@ -639,7 +651,7 @@
             token,
         });
     };
-    const createDestinationAsync$3 = async ({ token, id, destination }) => {
+    const createDestinationAsync$3 = async ({ token, id, destination, }) => {
         return await executeFetch({
             path: `api/Metrics/${id}/Destinations`,
             token,
@@ -647,7 +659,7 @@
             body: destination,
         });
     };
-    const deleteDestinationAsync = async ({ token, id, destinationId }) => {
+    const deleteDestinationAsync = async ({ token, id, destinationId, }) => {
         return await executeFetch({
             path: `api/Metrics/${id}/Destinations/${destinationId}`,
             token,

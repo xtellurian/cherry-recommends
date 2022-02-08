@@ -44,3 +44,10 @@ export function fetchCustomersActionsAsync({ token, page, id, revenueOnly, }: {
     id: any;
     revenueOnly: any;
 }): Promise<any>;
+export function setCustomerMetricAsync({ token, id, metricId, useInternalId, value, }: {
+    token: any;
+    id: any;
+    metricId: any;
+    useInternalId: any;
+    value: any;
+}): Promise<any>;

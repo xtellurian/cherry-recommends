@@ -2,7 +2,7 @@ import { chunkArray } from "../utilities/chunk";
 import { handleErrorResponse } from "../utilities/errorHandling";
 import { executeFetch } from "./client/apiClient";
 const MAX_ARRAY = 5000;
-const basePath = "api/customers";
+const basePath = "api/Customers";
 export const fetchCustomersAsync = async ({ token, page, searchTerm }) => {
     return await executeFetch({
         path: basePath,
@@ -91,5 +91,16 @@ export const fetchCustomersActionsAsync = async ({ token, page, id, revenueOnly,
         query: {
             revenueOnly: !!revenueOnly,
         },
+    });
+};
+export const setCustomerMetricAsync = async ({ token, id, metricId, useInternalId, value, }) => {
+    return await executeFetch({
+        path: `${basePath}/${id}/Metrics/${metricId}`,
+        method: "post",
+        token,
+        query: {
+            useInternalId,
+        },
+        body: { value },
     });
 };

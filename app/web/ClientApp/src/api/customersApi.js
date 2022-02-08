@@ -18,21 +18,4 @@ const headers = (token) =>
     ? defaultHeaders
     : { ...defaultHeaders, Authorization: `Bearer ${token}` };
 
-export const setCustomerMetricAsync = async ({
-  id,
-  metricId,
-  value,
-  token,
-}) => {
-  const url = `api/Customers/${id}/Metrics/${metricId}`;
-  const response = await fetch(url, {
-    headers: headers(token),
-    method: "post",
-    body: JSON.stringify({ value }),
-  });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
+export const setCustomerMetricAsync = customers.setCustomerMetricAsync;
