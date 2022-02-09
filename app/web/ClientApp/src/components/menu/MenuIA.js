@@ -50,7 +50,7 @@ const AuthenticatedIA = [
   },
   {
     name: "Parameters",
-    icon: "/icons/parameters.svg",
+    icon: "/icons/beta.svg",
     to: { pathname: "/parameters/", hash: "#parameters" },
     items: [
       {
