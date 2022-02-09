@@ -5,6 +5,9 @@ namespace SignalBox.Core
     /// </summary>
     public class BadRequestException : SignalBoxException
     {
+        public BadRequestException(string title, System.Exception inner) : base(title, inner)
+        { }
+
         public BadRequestException(string message) : base("Bad Request", message)
         {
             this._status = 400;

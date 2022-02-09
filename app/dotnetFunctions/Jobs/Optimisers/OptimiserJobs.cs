@@ -16,17 +16,17 @@ namespace SignalBox.Functions
     {
         readonly JsonSerializerOptions deSerializerOptions = new()
         {
-            PropertyNameCaseInsensitive = true,            
+            PropertyNameCaseInsensitive = true,
         };
         readonly JsonSerializerOptions serializerOptions = new()
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase                     
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
 
         [Function("CreateCategoricalOptimiser")]
         public async Task<CreateCategoricalOptimiserResponse> TriggerCreateCategoricalOptimiser([HttpTrigger(AuthorizationLevel.Function, "post",
-            Route = "v1/{tenant}/categorical")] HttpRequestData req, 
+            Route = "v1/{tenant}/categorical")] HttpRequestData req,
             FunctionContext executionContext)
         {
             var logger = executionContext.GetLogger("CreateCategoricalOptimiser");
@@ -37,9 +37,9 @@ namespace SignalBox.Functions
             {
                 info = await JsonSerializer.DeserializeAsync<CategoricalOptimiser>(req.Body, deSerializerOptions);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new BadRequestException("Body of request must be JSON");
+                throw new BadRequestException("Body of request must be JSON", ex);
             }
 
             var tenant = executionContext.BindingContext.BindingData["tenant"].ToString();
@@ -77,7 +77,7 @@ namespace SignalBox.Functions
 
         public PopulationDistributionCollection CreateCategoricalOptimiser(CategoricalOptimiser info, string tenant)
         {
-            try 
+            try
             {
                 CategoricalOptimiserValidator.Validate(info);
             }
@@ -103,7 +103,7 @@ namespace SignalBox.Functions
         [Function("InvokeCategoricalOptimiser")]
 
         public async Task<HttpResponseData> TriggerInvokeCategoricalOptimiser([HttpTrigger(AuthorizationLevel.Function, "post",
-            Route = "v1/{tenant}/categorical/{id}/invoke")] HttpRequestData req, 
+            Route = "v1/{tenant}/categorical/{id}/invoke")] HttpRequestData req,
             // [TableInput("CategoricalOptimisers", "{tenant}", "{id}")] CategoricalOptimiserRecord record,
             [BlobInput("{tenant}/categorical-optimisers/{id}.json")] string inputBlob,
             FunctionContext executionContext)
@@ -121,8 +121,7 @@ namespace SignalBox.Functions
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                throw new BadRequestException("Body of request must be JSON");
+                throw new BadRequestException("Body of request must be JSON", ex);
             }
 
             List<ScoredItem> chosenItems = InvokeCategoricalOptimiser(collection, payloadInfo);

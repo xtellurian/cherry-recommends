@@ -24,7 +24,8 @@ namespace SignalBox.Core
             Id = totalEventsId // need to include the primary key for EF Core reasons
         };
 
-        protected Metric()
+        [JsonConstructor]
+        public Metric() // this ensures the object can be deserialized between dotnetFunctions and the server
         { }
         public Metric(string commonId, string name, MetricValueType valueType) : base(commonId, name)
         {
