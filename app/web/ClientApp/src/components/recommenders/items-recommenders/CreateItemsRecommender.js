@@ -32,6 +32,7 @@ import { SettingRow } from "../../molecules/layout/SettingRow";
 import { Container, Row } from "../../molecules/layout";
 import { AdvancedOptionsPanel } from "../../molecules/layout/AdvancedOptionsPanel";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
+import { useCommonId } from "../../../utility/utility";
 
 export const CreateRecommender = () => {
   const token = useAccessToken();
@@ -50,6 +51,7 @@ export const CreateRecommender = () => {
     : [];
   const startingMetric = useGlobalStartingMetric();
   const { analytics } = useAnalytics();
+  const { generateCommonId } = useCommonId();
 
   const [selectedItems, setSelectedItems] = React.useState();
   const [recommender, setRecommender] = React.useState({
@@ -99,6 +101,13 @@ export const CreateRecommender = () => {
       })
       .finally(() => setLoading(false));
   };
+
+  React.useEffect(() => {
+    setRecommender({
+      ...recommender,
+      commonId: generateCommonId(recommender.name),
+    });
+  }, [recommender.name]);
 
   return (
     <React.Fragment>

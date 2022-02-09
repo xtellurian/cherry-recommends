@@ -10,11 +10,13 @@ import {
   InputGroup,
 } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
+import { useCommonId } from "../../utility/utility";
 
 const parameterTypes = ["Numerical", "Categorical"];
 export const CreateParameterPanel = ({ onCreated }) => {
   const token = useAccessToken();
   const { analytics } = useAnalytics();
+  const { generateCommonId } = useCommonId();
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [parameter, setParameter] = React.useState({
@@ -60,6 +62,14 @@ export const CreateParameterPanel = ({ onCreated }) => {
       }
     },
   ]);
+
+  React.useEffect(() => {
+    setParameter({
+      ...parameter,
+      commonId: generateCommonId(parameter.name),
+    });
+  }, [parameter.name]);
+
   return (
     <React.Fragment>
       <Subtitle>Create Parameter</Subtitle>

@@ -19,6 +19,7 @@ import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 import { ArgumentsEditor } from "../../molecules/ArgumentsEditor";
 import { useHistory } from "react-router-dom";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
+import { useCommonId } from "../../../utility/utility";
 
 const BoundRow = ({ bound, onChange }) => {
   if (bound.categoricalBounds) {
@@ -96,6 +97,7 @@ export const CreateParameterSetRecommender = () => {
   const [error, setError] = React.useState();
   const parameters = useParameters();
   const { analytics } = useAnalytics();
+  const { generateCommonId } = useCommonId();
   React.useEffect(() => {
     if (parameters.items && parameters.items.length > 0) {
       setAvailableParameters(
@@ -171,6 +173,14 @@ export const CreateParameterSetRecommender = () => {
         setError(e);
       });
   };
+
+  React.useEffect(() => {
+    setRecommender({
+      ...recommender,
+      commonId: generateCommonId(recommender.name),
+    });
+  }, [recommender.name]);
+
   return (
     <React.Fragment>
       <BackButton

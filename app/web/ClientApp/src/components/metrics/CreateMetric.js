@@ -11,6 +11,7 @@ import {
   createServerErrorValidator,
 } from "../molecules/TextInput";
 import Select from "../molecules/selectors/Select";
+import { useCommonId } from "../../utility/utility";
 
 const valueTypeOptons = [
   { value: "numeric", label: "Numeric" },
@@ -21,6 +22,7 @@ const CreateMetric = () => {
   const token = useAccessToken();
   const history = useHistory();
   const { analytics } = useAnalytics();
+  const { generateCommonId } = useCommonId();
   const [error, setError] = React.useState();
   const [metric, setMetric] = React.useState({
     commonId: "",
@@ -49,6 +51,14 @@ const CreateMetric = () => {
   const setSelectedValueType = (o) => {
     setMetric({ ...metric, valueType: o.value });
   };
+
+  React.useEffect(() => {
+    setMetric({
+      ...metric,
+      commonId: generateCommonId(metric.name),
+    });
+  }, [metric.name]);
+
   return (
     <React.Fragment>
       <BackButton className="float-right" to="/metrics/">
