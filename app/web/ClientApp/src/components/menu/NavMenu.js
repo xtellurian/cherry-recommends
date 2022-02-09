@@ -115,7 +115,7 @@ export const NavMenu = ({ children }) => {
               isOpen={!state.collapsed}
               navbar
             >
-              <ul className="navbar-nav flex-grow">
+              <ul className="navbar-nav flex-grow align-items-center">
                 {isAuthenticated && (
                   <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav>Settings</DropdownToggle>
@@ -145,7 +145,7 @@ export const NavMenu = ({ children }) => {
 
                 {isAuthenticated && (
                   <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle nav className="ml-4">
+                    <DropdownToggle nav className="ml-md-4">
                       {currentEnvironment?.name ?? "Environments"}
                     </DropdownToggle>
                     <DropdownMenu right>
@@ -192,7 +192,7 @@ export const NavMenu = ({ children }) => {
                   </UncontrolledDropdown>
                 )}
 
-                <div className="ml-4">
+                <div className="ml-md-4 py-md-0 py-2">
                   <ToggleGettingStartedChecklistButton />
                 </div>
               </ul>

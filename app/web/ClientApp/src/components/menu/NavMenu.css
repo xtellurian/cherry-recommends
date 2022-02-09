@@ -20,7 +20,7 @@ html {
 }
 
 .nav-logo {
-  min-height: 2em;
+  min-width: 5em;
 }
 
 section.content {
