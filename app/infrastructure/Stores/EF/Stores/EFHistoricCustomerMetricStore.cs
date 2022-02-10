@@ -54,5 +54,31 @@ namespace SignalBox.Infrastructure.EntityFramework
 
             return customer.HistoricCustomerMetrics.Any(_ => _.MetricId == metric.Id && _.Version == version.Value);
         }
+
+        public async Task<IEnumerable<CustomerMetricWeeklyNumericAggregate>> GetAggregateMetricValuesNumeric(Metric metric)
+        {
+            // past twelve weeks worth of aggregation
+            var twelveWeeksAgo = DateTime.Today.AddDays(-7 * 12);
+            DateTimeOffset firstOfWeek = twelveWeeksAgo.FirstDayOfWeek(DayOfWeek.Monday);
+            var numericAggregates = await context.CustomerMetricWeeklyNumericAggregates
+            .Where(_ => _.MetricId == metric.Id && _.FirstOfWeek >= firstOfWeek)
+            .OrderBy(_ => _.FirstOfWeek)
+            .ToListAsync();
+
+            return numericAggregates;
+        }
+
+        public async Task<IEnumerable<CustomerMetricWeeklyStringAggregate>> GetAggregateMetricValuesString(Metric metric)
+        {
+            // past twelve weeks worth of aggregation
+            var twelveWeeksAgo = DateTime.Today.AddDays(-7 * 12);
+            DateTimeOffset firstOfWeek = twelveWeeksAgo.FirstDayOfWeek(DayOfWeek.Monday);
+            var stringAggregates = await context.CustomerMetricWeeklyStringAggregates
+            .Where(_ => _.MetricId == metric.Id && _.FirstOfWeek >= firstOfWeek)
+            .OrderBy(_ => _.FirstOfWeek)
+            .ToListAsync();
+
+            return stringAggregates;
+        }
     }
 }

@@ -28,5 +28,9 @@ namespace SignalBox.Core
         {
             return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
         }
+        public static DateTime FirstDayOfWeek(this DateTime dt, DayOfWeek day)
+        {
+            return dt.AddDays(day - dt.DayOfWeek).Date;
+        }
     }
 }

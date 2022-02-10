@@ -65,5 +65,10 @@ namespace SignalBox.Infrastructure
         public DbSet<WebhookReceiver> WebhookReceivers { get; set; }
         public DbSet<TrackedUserSystemMap> TrackUserSystemMaps { get; set; }
 
+        // views
+        public DbSet<CustomerMetricDailyNumericAggregate> CustomerMetricDailyNumericAggregates { get; set; }
+        public DbSet<CustomerMetricWeeklyNumericAggregate> CustomerMetricWeeklyNumericAggregates { get; set; }
+        public DbSet<CustomerMetricDailyStringAggregate> CustomerMetricDailyStringAggregates { get; set; }
+        public DbSet<CustomerMetricWeeklyStringAggregate> CustomerMetricWeeklyStringAggregates { get; set; }
     }
 }

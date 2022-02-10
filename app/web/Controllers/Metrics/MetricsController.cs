@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -18,16 +19,19 @@ namespace SignalBox.Web.Controllers
     public class MetricsController : CommonEntityControllerBase<Metric>
     {
         private readonly ILogger<MetricsController> logger;
+        private readonly IHistoricCustomerMetricStore customerMetricStore;
         private readonly MetricWorkflows workflows;
         private readonly MetricGeneratorWorkflows generatorWorkflows;
 
         public MetricsController(
             ILogger<MetricsController> logger,
             IMetricStore store,
+            IHistoricCustomerMetricStore customerMetricStore,
             MetricWorkflows workflows,
             MetricGeneratorWorkflows generatorWorkflows) : base(store)
         {
             this.logger = logger;
+            this.customerMetricStore = customerMetricStore;
             this.workflows = workflows;
             this.generatorWorkflows = generatorWorkflows;
         }
@@ -70,6 +74,22 @@ namespace SignalBox.Web.Controllers
             }
 
             return new Paginated<HistoricCustomerMetric>(metricValues, customers.Pagination.PageCount, customers.Pagination.TotalItemCount, customers.Pagination.PageNumber);
+        }
+
+        [HttpGet("{id}/AggregateMetricValuesNumeric")]
+        public async Task<IEnumerable<CustomerMetricWeeklyNumericAggregate>> AggregateMetricValuesNumeric(string id)
+        {
+            var metric = await base.GetResource(id);
+            var aggregateMetricValues = await customerMetricStore.GetAggregateMetricValuesNumeric(metric);
+            return aggregateMetricValues;
+        }
+
+        [HttpGet("{id}/AggregateMetricValuesString")]
+        public async Task<IEnumerable<CustomerMetricWeeklyStringAggregate>> AggregateMetricValuesString(string id)
+        {
+            var metric = await base.GetResource(id);
+            var aggregateMetricValues = await customerMetricStore.GetAggregateMetricValuesString(metric);
+            return aggregateMetricValues;
         }
 
         [HttpGet("{id}/Destinations")]

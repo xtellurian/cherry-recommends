@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220208082809_develop_view_customer_metric_weekly_numeric_aggregate")]
+    partial class develop_view_customer_metric_weekly_numeric_aggregate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,107 +223,6 @@ namespace sqlserver.SignalBox
                         .HasFilter("[EventId] IS NOT NULL AND [EnvironmentId] IS NOT NULL");
 
                     b.ToTable("TrackedUserEvents");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.CustomerMetricDailyNumericAggregate", b =>
-                {
-                    b.Property<DateTimeOffset>("CalendarDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<long>("CustomerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("EndDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("FirstOfWeek")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("LastOfWeek")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<long>("MetricId")
-                        .HasColumnType("bigint");
-
-                    b.Property<double>("NumericValue")
-                        .HasColumnType("float");
-
-                    b.Property<DateTimeOffset>("StartDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.ToView("View_CustomerMetricDailyNumericAggregate");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.CustomerMetricDailyStringAggregate", b =>
-                {
-                    b.Property<DateTimeOffset>("CalendarDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<long>("CustomerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("FirstOfWeek")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("LastOfWeek")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<long>("MetricId")
-                        .HasColumnType("bigint");
-
-                    b.Property<double>("StringValue")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ValueCount")
-                        .HasColumnType("int");
-
-                    b.ToView("View_CustomerMetricDailyStringAggregate");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.CustomerMetricWeeklyNumericAggregate", b =>
-                {
-                    b.Property<DateTimeOffset>("FirstOfWeek")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("LastOfWeek")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<long>("MetricId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("WeeklyDistinctCustomerCount")
-                        .HasColumnType("int");
-
-                    b.Property<double>("WeeklyMeanNumericValue")
-                        .HasColumnType("float");
-
-                    b.ToView("View_CustomerMetricWeeklyNumericAggregate");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.CustomerMetricWeeklyStringAggregate", b =>
-                {
-                    b.Property<DateTimeOffset>("FirstOfWeek")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("LastOfWeek")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<long>("MetricId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("StringValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("WeeklyDistinctCustomerCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WeeklyValueCount")
-                        .HasColumnType("int");
-
-                    b.ToView("View_CustomerMetricWeeklyStringAggregate");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Environment", b =>
@@ -565,9 +466,6 @@ namespace sqlserver.SignalBox
                     b.Property<string>("Properties")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ValueType")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CommonId");
@@ -587,8 +485,7 @@ namespace sqlserver.SignalBox
                             Created = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Revenue",
-                            Properties = "{}",
-                            ValueType = "Numeric"
+                            Properties = "{}"
                         },
                         new
                         {
@@ -597,8 +494,7 @@ namespace sqlserver.SignalBox
                             Created = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Total Events",
-                            Properties = "{}",
-                            ValueType = "Numeric"
+                            Properties = "{}"
                         });
                 });
 
@@ -660,26 +556,20 @@ namespace sqlserver.SignalBox
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<long>("ConnectedSystemId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<long>("MetricId")
                         .HasColumnType("bigint");

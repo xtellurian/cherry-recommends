@@ -220,6 +220,107 @@ namespace sqlite.SignalBox
                     b.ToTable("TrackedUserEvents");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.CustomerMetricDailyNumericAggregate", b =>
+                {
+                    b.Property<long>("CalendarDate")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("EndDate")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("FirstOfWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LastOfWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("MetricId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("NumericValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<long>("StartDate")
+                        .HasColumnType("INTEGER");
+
+                    b.ToView("View_CustomerMetricDailyNumericAggregate");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.CustomerMetricDailyStringAggregate", b =>
+                {
+                    b.Property<long>("CalendarDate")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("FirstOfWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LastOfWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("MetricId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("StringValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("ValueCount")
+                        .HasColumnType("INTEGER");
+
+                    b.ToView("View_CustomerMetricDailyStringAggregate");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.CustomerMetricWeeklyNumericAggregate", b =>
+                {
+                    b.Property<long>("FirstOfWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LastOfWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("MetricId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("WeeklyDistinctCustomerCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("WeeklyMeanNumericValue")
+                        .HasColumnType("REAL");
+
+                    b.ToView("View_CustomerMetricWeeklyNumericAggregate");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.CustomerMetricWeeklyStringAggregate", b =>
+                {
+                    b.Property<long>("FirstOfWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LastOfWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("MetricId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("StringValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("WeeklyDistinctCustomerCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("WeeklyValueCount")
+                        .HasColumnType("INTEGER");
+
+                    b.ToView("View_CustomerMetricWeeklyStringAggregate");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Environment", b =>
                 {
                     b.Property<long>("Id")
