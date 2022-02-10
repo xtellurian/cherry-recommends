@@ -59,6 +59,18 @@ export const fetchCustomersMetricAsync = async ({ token, id, metricId, version, 
         },
     });
 };
+export const fetchAggregateMetricValuesNumericAsync = async ({ token, id }) => {
+    return await executeFetch({
+        path: `api/Metrics/${id}/AggregateMetricValuesNumeric`,
+        token,
+    });
+};
+export const fetchAggregateMetricValuesStringAsync = async ({ token, id }) => {
+    return await executeFetch({
+        path: `api/Metrics/${id}/AggregateMetricValuesString`,
+        token,
+    });
+};
 export const fetchDestinationsAsync = async ({ token, id }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/Destinations`,

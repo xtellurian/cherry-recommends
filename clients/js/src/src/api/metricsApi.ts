@@ -109,6 +109,26 @@ export const fetchCustomersMetricAsync = async ({
   });
 };
 
+export const fetchAggregateMetricValuesNumericAsync = async ({
+  token,
+  id,
+}: EntityRequest) => {
+  return await executeFetch({
+    path: `api/Metrics/${id}/AggregateMetricValuesNumeric`,
+    token,
+  });
+};
+
+export const fetchAggregateMetricValuesStringAsync = async ({
+  token,
+  id,
+}: EntityRequest) => {
+  return await executeFetch({
+    path: `api/Metrics/${id}/AggregateMetricValuesString`,
+    token,
+  });
+};
+
 export const fetchDestinationsAsync = async ({ token, id }: EntityRequest) => {
   return await executeFetch({
     path: `api/Metrics/${id}/Destinations`,

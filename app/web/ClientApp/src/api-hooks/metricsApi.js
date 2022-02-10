@@ -9,6 +9,8 @@ import {
   fetchCustomersMetricsAsync,
   fetchCustomersMetricAsync,
   fetchGeneratorsAsync,
+  fetchAggregateMetricValuesNumericAsync,
+  fetchAggregateMetricValuesStringAsync,
 } from "../api/metricsApi";
 
 export const useMetrics = () => {
@@ -104,6 +106,46 @@ export const useCustomersMetrics = ({ id, metricId, version }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, metricId, version]);
+
+  return state;
+};
+
+export const useAggregateMetricsNumeric = ({ id }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({
+    loading: true,
+  });
+  React.useEffect(() => {
+    setState(loadingState);
+    if (token && id) {
+      fetchAggregateMetricValuesNumericAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id]);
+
+  return state;
+};
+
+export const useAggregateMetricsString = ({ id }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({
+    loading: true,
+  });
+  React.useEffect(() => {
+    setState(loadingState);
+    if (token && id) {
+      fetchAggregateMetricValuesStringAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id]);
 
   return state;
 };
