@@ -188,9 +188,10 @@ namespace SignalBox.Web
             services.Configure<PythonAzureFunctionsConnectionOptions>(Configuration.GetSection("PythonFunctions"));
             services.Configure<DotnetAzureFunctionsConnectionOptions>(Configuration.GetSection("DotnetFunctions"));
 
-
             services.AddScoped<ITenantAuthorizationStrategy, TokenClaimTenantAuthorizor>();
 
+            services.AddHealthChecks();
+            
             services.AddApiVersioning(o =>
             {
                 o.AssumeDefaultVersionWhenUnspecified = true;
@@ -311,6 +312,7 @@ namespace SignalBox.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapHealthChecks("/health");
             });
 
             app.UseSpa(spa =>

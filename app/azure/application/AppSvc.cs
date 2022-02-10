@@ -85,6 +85,7 @@ namespace SignalBox.Azure
                             ConnectionString = multiDb.TenantDbConnectionString
                         },
                     },
+                    HealthCheckPath = "/health",
                 }
             });
             var pythonFuncs = CreatePythonFunctions(rg, storage, insights, plan);
