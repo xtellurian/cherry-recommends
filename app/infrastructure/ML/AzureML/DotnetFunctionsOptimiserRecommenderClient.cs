@@ -46,7 +46,7 @@ namespace SignalBox.Infrastructure.ML.Azure
 
         }
 
-        public Task Reward(IRecommender recommender, RewardingContext context, TrackedUserAction action)
+        public Task Reward(IRecommender recommender, RewardingContext context)
         {
             throw new System.NotImplementedException();
         }

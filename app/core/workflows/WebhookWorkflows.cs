@@ -39,7 +39,7 @@ namespace SignalBox.Core.Workflows
                     throw new ArgumentException("Unprocessable Webhook type");
             }
 
-            logger.LogInformation($"Processed {eventLoggingResponse.EventsProcessed} events and {eventLoggingResponse.ActionsProcessed} actions");
+            logger.LogInformation($"Processed {eventLoggingResponse.EventsProcessed} events");
         }
 
         private async Task<EventLoggingResponse> ProcessSegmentWebhook(WebhookReceiver receiver, string webhookBody, string signature)

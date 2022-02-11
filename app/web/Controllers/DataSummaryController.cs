@@ -37,13 +37,6 @@ namespace SignalBox.Web.Controllers
             return await workflows.GenerateSummary();
         }
 
-        /// <summary>Gets the latest actions that have been logged against any tracked user.</summary>
-        [HttpGet("actions")]
-        public async Task<Paginated<TrackedUserAction>> LatestActions()
-        {
-            return await workflows.LatestActions();
-        }
-
         /// <summary>Summarises a timeline of event counts each month.</summary>
         [HttpGet("events/timeline/{kind}/{eventType}")]
         public async Task<EventCountTimeline> EventTimeline(string kind, string eventType)

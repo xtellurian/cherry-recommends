@@ -53,7 +53,6 @@ namespace SignalBox.Web.Controllers
         public async Task<CustomerEvent> GetEvent(string id)
         {
             var e = await eventStore.Read(id);
-            await eventStore.LoadMany(e, _ => _.Actions);
             return e;
         }
     }

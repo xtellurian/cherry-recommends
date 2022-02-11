@@ -49,9 +49,9 @@ namespace SignalBox.Infrastructure
             return Task.FromResult(output);
         }
 
-        public Task Reward(IRecommender recommender, RewardingContext context, TrackedUserAction action)
+        public Task Reward(IRecommender recommender, RewardingContext context)
         {
-            context.Logger.LogWarning($"{this.GetType()} cannot be rewarded");
+            context.Logger.LogWarning("{type} cannot be rewarded", this.GetType());
             return Task.CompletedTask;
         }
     }

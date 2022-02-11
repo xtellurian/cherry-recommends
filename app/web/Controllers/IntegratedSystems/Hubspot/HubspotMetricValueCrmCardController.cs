@@ -29,7 +29,6 @@ namespace SignalBox.Web.Controllers
         private readonly HubspotWorkflows hubspotWorkflows;
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
-        private readonly ITrackedUserTouchpointStore trackedUserTouchpointStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IItemsRecommenderStore itemsRecommenderStore;
         private readonly ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation;
@@ -47,7 +46,6 @@ namespace SignalBox.Web.Controllers
                                          IOptions<HubspotAppCredentials> hubspotOptions,
                                          IIntegratedSystemStore integratedSystemStore,
                                          ITrackedUserSystemMapStore systemMapStore,
-                                         ITrackedUserTouchpointStore trackedUserTouchpointStore,
                                          IParameterSetRecommenderStore parameterSetRecommenderStore,
                                          IItemsRecommenderStore itemsRecommenderStore,
                                          ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation,
@@ -62,7 +60,6 @@ namespace SignalBox.Web.Controllers
             this.hubspotWorkflows = hubspotWorkflows;
             this.integratedSystemStore = integratedSystemStore;
             this.systemMapStore = systemMapStore;
-            this.trackedUserTouchpointStore = trackedUserTouchpointStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
             this.itemsRecommenderStore = itemsRecommenderStore;
             this.parameterSetRecommenderInvokation = parameterSetRecommenderInvokation;

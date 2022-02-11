@@ -14,7 +14,6 @@ namespace SignalBox.Core.Workflows
         private readonly ICustomerStore customerStore;
         private readonly ITrackedUserSystemMapStore trackedUserSystemMapStore;
         private readonly IIntegratedSystemStore integratedSystemStore;
-        private readonly ITrackedUserActionStore trackedUserActionStore;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public CustomerWorkflows(IStorageContext storageContext,
@@ -22,7 +21,6 @@ namespace SignalBox.Core.Workflows
             ICustomerStore customerStore,
             ITrackedUserSystemMapStore trackedUserSystemMapStore,
             IIntegratedSystemStore integratedSystemStore,
-            ITrackedUserActionStore trackedUserActionStore,
             IDateTimeProvider dateTimeProvider)
         {
             this.storageContext = storageContext;
@@ -30,7 +28,6 @@ namespace SignalBox.Core.Workflows
             this.customerStore = customerStore;
             this.trackedUserSystemMapStore = trackedUserSystemMapStore;
             this.integratedSystemStore = integratedSystemStore;
-            this.trackedUserActionStore = trackedUserActionStore;
             this.dateTimeProvider = dateTimeProvider;
         }
 
@@ -48,13 +45,7 @@ namespace SignalBox.Core.Workflows
         }
         public async Task<Customer> MergeUpdateProperties(Customer customer, IDictionary<string, object> properties, long? integratedSystemId = null, bool? saveOnComplete = true)
         {
-            await customerStore.LoadMany(customer, _ => _.Actions);
-            customer.Actions ??= new List<TrackedUserAction>();
             var newProperties = new DynamicPropertyDictionary(properties);
-            foreach (var a in customer.ActionsFromChanges(newProperties, dateTimeProvider.Now, null, integratedSystemId))
-            {
-                customer.Actions.Add(await trackedUserActionStore.Create(a));
-            }
 
             customer.Properties = newProperties;
             customer.LastUpdated = dateTimeProvider.Now;
@@ -74,7 +65,6 @@ namespace SignalBox.Core.Workflows
                                                     bool saveOnComplete = true)
         {
             Customer customer;
-            var actions = new List<TrackedUserAction>();
             if (await customerStore.ExistsFromCommonId(commonUserId))
             {
                 customer = await customerStore.ReadFromCommonId(commonUserId, _ => _.IntegratedSystemMaps);

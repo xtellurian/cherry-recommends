@@ -13,7 +13,6 @@ namespace SignalBox.Core.Workflows
         private readonly ICustomerEventStore eventStore;
         private readonly ILogger<DataSummaryWorkflows> logger;
         private readonly ICustomerStore customerStore;
-        private readonly ITrackedUserActionStore actionStore;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IItemsRecommendationStore itemsRecommendationStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
@@ -22,7 +21,6 @@ namespace SignalBox.Core.Workflows
         public DataSummaryWorkflows(ICustomerEventStore eventStore,
                                     ILogger<DataSummaryWorkflows> logger,
                                     ICustomerStore customerStore,
-                                    ITrackedUserActionStore actionStore,
                                     IDateTimeProvider dateTimeProvider,
                                     IItemsRecommendationStore itemsRecommendationStore,
                                     IParameterSetRecommendationStore parameterSetRecommendationStore,
@@ -31,16 +29,10 @@ namespace SignalBox.Core.Workflows
             this.eventStore = eventStore;
             this.logger = logger;
             this.customerStore = customerStore;
-            this.actionStore = actionStore;
             this.dateTimeProvider = dateTimeProvider;
             this.itemsRecommendationStore = itemsRecommendationStore;
             this.parameterSetRecommendationStore = parameterSetRecommendationStore;
             this.telemetry = telemetry;
-        }
-
-        public async Task<Paginated<TrackedUserAction>> LatestActions()
-        {
-            return await actionStore.Query(1);
         }
 
         public async Task<TrackedUserEventSummary> GenerateSummary()

@@ -73,6 +73,5 @@ namespace SignalBox.Core
         public Customer TrackedUser => Customer;
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Customer Customer { get; set; }
-        public ICollection<TrackedUserAction> Actions { get; set; }
     }
 }

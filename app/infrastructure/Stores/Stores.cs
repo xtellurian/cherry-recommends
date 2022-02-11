@@ -117,8 +117,6 @@ namespace SignalBox.Infrastructure
         public static IServiceCollection AddEFStores(this IServiceCollection services)
         {
             services.AddScoped<ICustomerEventStore, EFCustomerEventStore>();
-            services.AddScoped<ITrackedUserActionStore, EFTrackedUserActionStore>();
-            services.AddScoped<IRewardSelectorStore, EFRewardSelectorStore>();
             services.AddScoped<ICustomerStore, EFCustomerStore>();
 
             services.AddScoped<ISegmentStore, EFSegmentStore>();
@@ -144,9 +142,6 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IMetricStore, EFMetricStore>();
             services.AddScoped<IMetricGeneratorStore, EFMetricGeneratorStore>();
             services.AddScoped<IHistoricCustomerMetricStore, EFHistoricCustomerMetricStore>();
-
-            services.AddScoped<ITouchpointStore, EFTouchpointStore>();
-            services.AddScoped<ITrackedUserTouchpointStore, EFTrackedUserTouchpointStore>();
 
             services.AddScoped<IHashedApiKeyStore, EFHashedAPIKeyStore>();
             services.AddScoped<IModelRegistrationStore, EFModelRegistrationStore>();

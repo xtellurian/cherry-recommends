@@ -17,10 +17,6 @@ namespace SignalBox.Infrastructure
         public DbSet<Segment> Segments { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<CustomerEvent> CustomerEvents { get; set; }
-        public DbSet<TrackedUserAction> TrackedUserActions { get; set; }
-        public DbSet<RewardSelector> RewardSelectors { get; set; }
-        public DbSet<Touchpoint> Touchpoints { get; set; }
-        public DbSet<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
         public DbSet<Parameter> Parameters { get; set; }
 
         // metrics

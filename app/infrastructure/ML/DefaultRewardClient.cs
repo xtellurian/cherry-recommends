@@ -6,7 +6,7 @@ namespace SignalBox.Infrastructure.ML
 {
     public class DefaultRewardClient : IRecommenderModelRewardClient
     {
-        public Task Reward(IRecommender recommender, RewardingContext context, TrackedUserAction action)
+        public Task Reward(IRecommender recommender, RewardingContext context)
         {
             return Task.CompletedTask;
         }

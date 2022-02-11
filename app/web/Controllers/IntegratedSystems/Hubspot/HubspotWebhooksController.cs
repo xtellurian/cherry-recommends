@@ -24,8 +24,6 @@ namespace SignalBox.Web.Controllers
         private readonly HubspotWorkflows hubspotWorkflows;
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
-        private readonly ITrackedUserTouchpointStore trackedUserTouchpointStore;
-        private readonly ITouchpointStore touchpointStore;
         private readonly HubspotAppCredentials credentials;
         private readonly DeploymentInformation deploymentOptions;
 
@@ -36,9 +34,7 @@ namespace SignalBox.Web.Controllers
                                          HubspotWorkflows hubspotWorkflows,
                                          IOptions<HubspotAppCredentials> hubspotOptions,
                                          IIntegratedSystemStore integratedSystemStore,
-                                         ITrackedUserSystemMapStore systemMapStore,
-                                         ITrackedUserTouchpointStore trackedUserTouchpointStore,
-                                         ITouchpointStore touchpointStore) : base(logger, deploymentOptions, hasher, hubspotOptions)
+                                         ITrackedUserSystemMapStore systemMapStore) : base(logger, deploymentOptions, hasher, hubspotOptions)
         {
             this.logger = logger;
             this.hasher = hasher;
@@ -46,8 +42,6 @@ namespace SignalBox.Web.Controllers
             this.hubspotWorkflows = hubspotWorkflows;
             this.integratedSystemStore = integratedSystemStore;
             this.systemMapStore = systemMapStore;
-            this.trackedUserTouchpointStore = trackedUserTouchpointStore;
-            this.touchpointStore = touchpointStore;
             this.credentials = hubspotOptions.Value;
             this.deploymentOptions = deploymentOptions.Value;
         }

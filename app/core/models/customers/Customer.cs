@@ -42,12 +42,8 @@ namespace SignalBox.Core
         public string CustomerId => CommonId;
 
         [JsonIgnore]
-        public ICollection<TrackedUserAction> Actions { get; set; }
-        [JsonIgnore]
         public ICollection<Segment> Segments { get; set; }
 
-        [JsonIgnore]
-        public ICollection<TrackedUserTouchpoint> TrackedUserTouchpoints { get; set; }
         [JsonIgnore]
         public ICollection<HistoricCustomerMetric> HistoricCustomerMetrics { get; set; }
         // this can be serialised and sent out
