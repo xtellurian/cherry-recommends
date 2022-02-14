@@ -565,6 +565,12 @@ namespace sqlserver.SignalBox
                     b.Property<string>("Properties")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Scope")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Customer");
+
                     b.Property<string>("ValueType")
                         .HasColumnType("nvarchar(max)");
 
@@ -588,6 +594,7 @@ namespace sqlserver.SignalBox
                             LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Revenue",
                             Properties = "{}",
+                            Scope = "Customer",
                             ValueType = "Numeric"
                         },
                         new
@@ -598,6 +605,7 @@ namespace sqlserver.SignalBox
                             LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Total Events",
                             Properties = "{}",
+                            Scope = "Customer",
                             ValueType = "Numeric"
                         });
                 });

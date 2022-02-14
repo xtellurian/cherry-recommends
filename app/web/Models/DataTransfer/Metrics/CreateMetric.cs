@@ -8,5 +8,7 @@ namespace SignalBox.Web.Dto
     {
         [Required]
         public MetricValueType ValueType { get; set; }
+        [Required]
+        public MetricScopes Scope { get; set; }
     }
 }

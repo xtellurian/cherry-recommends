@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SignalBox.Core;
+using SignalBox.Core.Metrics;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
@@ -23,6 +24,11 @@ namespace SignalBox.Infrastructure.EntityFramework
 
             builder // string enum conversion
                 .Property(_ => _.ValueType)
+                .HasConversion<string>();
+
+            builder // string enum conversion
+                .Property(_ => _.Scope)
+                .HasDefaultValue(MetricScopes.Customer) // backwards compat - existing metrics are all customer scoped.
                 .HasConversion<string>();
 
             builder.HasData(Metric.Revenue, Metric.TotalEvents);

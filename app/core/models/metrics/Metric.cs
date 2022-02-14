@@ -15,11 +15,11 @@ namespace SignalBox.Core
         private const long totalEventsId = 101;
         public static string RevenueCommonId => revenueCommonId;
         public static string TotalEventsCommonId => totalEventsCommonId;
-        public static Metric Revenue => new Metric(revenueCommonId, "Revenue", MetricValueType.Numeric)
+        public static Metric Revenue => new Metric(revenueCommonId, "Revenue", MetricValueType.Numeric, MetricScopes.Customer)
         {
             Id = revenueId // need to include the primary key for EF Core reasons
         };
-        public static Metric TotalEvents => new Metric(totalEventsCommonId, "Total Events", MetricValueType.Numeric)
+        public static Metric TotalEvents => new Metric(totalEventsCommonId, "Total Events", MetricValueType.Numeric, MetricScopes.Customer)
         {
             Id = totalEventsId // need to include the primary key for EF Core reasons
         };
@@ -27,13 +27,15 @@ namespace SignalBox.Core
         [JsonConstructor]
         public Metric() // this ensures the object can be deserialized between dotnetFunctions and the server
         { }
-        public Metric(string commonId, string name, MetricValueType valueType) : base(commonId, name)
+        public Metric(string commonId, string name, MetricValueType valueType, MetricScopes scope) : base(commonId, name)
         {
             ValueType = valueType;
+            Scope = scope;
         }
 
         // properties
         public MetricValueType? ValueType { get; set; }
+        public MetricScopes Scope { get; set; }
 
         [JsonIgnore]
         public ICollection<RecommenderEntityBase> Recommenders { get; set; }
