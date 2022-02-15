@@ -11,4 +11,7 @@ az network dns record-set txt add-record -g $RG -z $ZONE -n @ -v "4hbxtq92m0gwz8
 STATIC_ID=$(az staticwebapp show -n cherry-website-prod --query id -o tsv)
 az network dns record-set a create -g $RG -z $ZONE -n @ --target-resource "$STATIC_ID"
 
+# set the DNS record for the docs static website
+az network dns record-set cname set-record -g $RG -z $ZONE -n docs -c "agreeable-flower-007f6611e.1.azurestaticapps.net"
+
 echo "Finished setting Azure Static WebApp cherry-website-prod DNS"
