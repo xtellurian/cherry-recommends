@@ -6,6 +6,7 @@ using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommendations.Destinations;
 using SignalBox.Core.Recommenders;
 using SignalBox.Infrastructure.EntityFramework;
+using SignalBox.Core.Metrics;
 
 namespace SignalBox.Infrastructure
 {
@@ -22,7 +23,9 @@ namespace SignalBox.Infrastructure
         // metrics
         public DbSet<Metric> Metrics { get; set; }
         public DbSet<MetricGenerator> MetricGenerators { get; set; }
+        public DbSet<MetricValueBase> MetricValues { get; set; }
         public DbSet<HistoricCustomerMetric> HistoricCustomerMetrics { get; set; }
+        public DbSet<GlobalMetricValue> GlobalMetrics { get; set; }
         public DbSet<LatestMetricVersion> LatestFeatureVersions { get; set; } // SQL view
 
         // recommenders

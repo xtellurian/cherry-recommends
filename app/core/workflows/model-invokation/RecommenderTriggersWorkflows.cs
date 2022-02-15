@@ -47,7 +47,7 @@ namespace SignalBox.Core.Workflows
             await HandleNewMetricValueParameterSetRecommenders(metricValue);
         }
 
-        private async Task<IEnumerable<ItemsRecommendation>> HandleNewMetricValueItemsRecommenders(CustomerMetricBase metricValue)
+        private async Task<IEnumerable<ItemsRecommendation>> HandleNewMetricValueItemsRecommenders(HistoricCustomerMetric metricValue)
         {
             var recommendations = new List<ItemsRecommendation>();
             var recommenders = await itemsRecommenderStore.Query(1, _ => _.TriggerCollection != null);
@@ -71,7 +71,7 @@ namespace SignalBox.Core.Workflows
             return recommendations;
         }
 
-        private async Task InvokeItemsRecommenderMetricsChangedTrigger(ItemsRecommender recommender, CustomerMetricBase metricValue, List<ItemsRecommendation> recommendations)
+        private async Task InvokeItemsRecommenderMetricsChangedTrigger(ItemsRecommender recommender, HistoricCustomerMetric metricValue, List<ItemsRecommendation> recommendations)
         {
             if (recommender?.TriggerCollection?.FeaturesChanged != null) // check the features changed trigger exists
             {
@@ -86,7 +86,7 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        private async Task<IEnumerable<ParameterSetRecommendation>> HandleNewMetricValueParameterSetRecommenders(CustomerMetricBase metricValue)
+        private async Task<IEnumerable<ParameterSetRecommendation>> HandleNewMetricValueParameterSetRecommenders(HistoricCustomerMetric metricValue)
         {
             var recommendations = new List<ParameterSetRecommendation>();
             var recommenders = await parameterSetRecommenderStore.Query(1, _ => _.TriggerCollection != null);
@@ -110,7 +110,7 @@ namespace SignalBox.Core.Workflows
             return recommendations;
         }
 
-        private async Task InvokeParameterSetRecommenderMetricsChangedTrigger(ParameterSetRecommender recommender, CustomerMetricBase metricValue, List<ParameterSetRecommendation> recommendations)
+        private async Task InvokeParameterSetRecommenderMetricsChangedTrigger(ParameterSetRecommender recommender, HistoricCustomerMetric metricValue, List<ParameterSetRecommendation> recommendations)
         {
             if (recommender?.TriggerCollection?.FeaturesChanged != null) // check the metrics aka features changed trigger exists
             {

@@ -399,50 +399,6 @@ namespace sqlserver.SignalBox
                     b.ToTable("ApiKeys");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.HistoricCustomerMetric", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long>("MetricId")
-                        .HasColumnType("bigint");
-
-                    b.Property<double?>("NumericValue")
-                        .HasColumnType("float");
-
-                    b.Property<string>("StringValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("TrackedUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TrackedUserId");
-
-                    b.HasIndex("MetricId", "TrackedUserId", "Version")
-                        .IsUnique();
-
-                    b.ToTable("HistoricTrackedUserFeatures");
-                });
-
             modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
                 {
                     b.Property<long>("Id")
@@ -701,6 +657,50 @@ namespace sqlserver.SignalBox
                     b.ToTable("FeatureDestinations");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("MetricDestinationBase");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Metrics.MetricValueBase", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("HistoricCustomerMetric");
+
+                    b.Property<DateTimeOffset>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("MetricId")
+                        .HasColumnType("bigint");
+
+                    b.Property<double?>("NumericValue")
+                        .HasColumnType("float");
+
+                    b.Property<string>("StringValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HistoricTrackedUserFeatures");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("MetricValueBase");
                 });
 
             modelBuilder.Entity("SignalBox.Core.ModelRegistration", b =>
@@ -1588,6 +1588,32 @@ namespace sqlserver.SignalBox
                     b.HasDiscriminator().HasValue("WebhookMetricDestination");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.HistoricCustomerMetric", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.Metrics.MetricValueBase");
+
+                    b.Property<long>("TrackedUserId")
+                        .HasColumnType("bigint");
+
+                    b.HasIndex("TrackedUserId");
+
+                    b.HasIndex("MetricId", "TrackedUserId", "Version")
+                        .IsUnique();
+
+                    b.ToTable("HistoricTrackedUserFeatures");
+
+                    b.HasDiscriminator().HasValue("HistoricCustomerMetric");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Metrics.GlobalMetricValue", b =>
+                {
+                    b.HasBaseType("SignalBox.Core.Metrics.MetricValueBase");
+
+                    b.HasIndex("MetricId");
+
+                    b.HasDiscriminator().HasValue("GlobalMetricValue");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Recommendations.Destinations.SegmentSourceFunctionDestination", b =>
                 {
                     b.HasBaseType("SignalBox.Core.Recommendations.Destinations.RecommendationDestinationBase");
@@ -1769,25 +1795,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("Source");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.HistoricCustomerMetric", b =>
-                {
-                    b.HasOne("SignalBox.Core.Metric", "Metric")
-                        .WithMany("HistoricTrackedUserFeatures")
-                        .HasForeignKey("MetricId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignalBox.Core.Customer", "Customer")
-                        .WithMany("HistoricCustomerMetrics")
-                        .HasForeignKey("TrackedUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Metric");
-                });
-
             modelBuilder.Entity("SignalBox.Core.IntegratedSystem", b =>
                 {
                     b.HasOne("SignalBox.Core.Environment", "Environment")
@@ -1814,6 +1821,90 @@ namespace sqlserver.SignalBox
                         .HasForeignKey("MetricId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("SignalBox.Core.Metrics.AggregateCustomerMetric", "AggregateCustomerMetric", b1 =>
+                        {
+                            b1.Property<long>("MetricGeneratorId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bigint")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("AggregationType")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("CategoricalValue")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<long>("MetricId")
+                                .HasColumnType("bigint");
+
+                            b1.HasKey("MetricGeneratorId");
+
+                            b1.HasIndex("MetricId");
+
+                            b1.ToTable("FeatureGenerators");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MetricGeneratorId");
+
+                            b1.HasOne("SignalBox.Core.Metric", "Metric")
+                                .WithMany()
+                                .HasForeignKey("MetricId")
+                                .OnDelete(DeleteBehavior.NoAction)
+                                .IsRequired();
+
+                            b1.Navigation("Metric");
+                        });
+
+                    b.OwnsOne("SignalBox.Core.Metrics.JoinTwoMetrics", "JoinTwoMetrics", b1 =>
+                        {
+                            b1.Property<long>("MetricGeneratorId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bigint")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("JoinType")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<long>("Metric1Id")
+                                .HasColumnType("bigint");
+
+                            b1.Property<long>("Metric2Id")
+                                .HasColumnType("bigint");
+
+                            b1.HasKey("MetricGeneratorId");
+
+                            b1.HasIndex("Metric1Id");
+
+                            b1.HasIndex("Metric2Id");
+
+                            b1.ToTable("FeatureGenerators");
+
+                            b1.HasOne("SignalBox.Core.Metric", "Metric1")
+                                .WithMany()
+                                .HasForeignKey("Metric1Id")
+                                .OnDelete(DeleteBehavior.NoAction)
+                                .IsRequired();
+
+                            b1.HasOne("SignalBox.Core.Metric", "Metric2")
+                                .WithMany()
+                                .HasForeignKey("Metric2Id")
+                                .OnDelete(DeleteBehavior.NoAction)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("MetricGeneratorId");
+
+                            b1.Navigation("Metric1");
+
+                            b1.Navigation("Metric2");
+                        });
+
+                    b.Navigation("AggregateCustomerMetric");
+
+                    b.Navigation("JoinTwoMetrics");
 
                     b.Navigation("Metric");
                 });
@@ -2091,6 +2182,36 @@ namespace sqlserver.SignalBox
                     b.Navigation("Environment");
 
                     b.Navigation("IntegratedSystem");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.HistoricCustomerMetric", b =>
+                {
+                    b.HasOne("SignalBox.Core.Metric", "Metric")
+                        .WithMany("HistoricTrackedUserFeatures")
+                        .HasForeignKey("MetricId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
+                        .WithMany("HistoricCustomerMetrics")
+                        .HasForeignKey("TrackedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Metric");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.Metrics.GlobalMetricValue", b =>
+                {
+                    b.HasOne("SignalBox.Core.Metric", "Metric")
+                        .WithMany()
+                        .HasForeignKey("MetricId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Metric");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.ItemsRecommender", b =>

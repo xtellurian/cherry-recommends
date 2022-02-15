@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
 using SignalBox.Core.Constants;
@@ -14,17 +13,20 @@ namespace SignalBox.Functions
 {
     public class MetricGeneratorJobs
     {
-        private readonly MetricGeneratorWorkflows workflows;
+        private readonly MetricGeneratorWorkflows customerMetricWorkflows;
+        private readonly AggregateCustomerMetricWorkflow aggregateCustomerMetricWorkflow;
         private readonly IEnvironmentProvider environmentProvider;
         private readonly IMetricGeneratorStore metricGeneratorStore;
         private readonly IDateTimeProvider dateTimeProvider;
 
-        public MetricGeneratorJobs(MetricGeneratorWorkflows workflows,
+        public MetricGeneratorJobs(MetricGeneratorWorkflows customerMetricWorkflows,
+                                   AggregateCustomerMetricWorkflow aggregateCustomerMetricWorkflow,
                                    IEnvironmentProvider environmentProvider,
                                    IMetricGeneratorStore metricGeneratorStore,
                                    IDateTimeProvider dateTimeProvider)
         {
-            this.workflows = workflows;
+            this.customerMetricWorkflows = customerMetricWorkflows;
+            this.aggregateCustomerMetricWorkflow = aggregateCustomerMetricWorkflow;
             this.environmentProvider = environmentProvider;
             this.metricGeneratorStore = metricGeneratorStore;
             this.dateTimeProvider = dateTimeProvider;
@@ -66,9 +68,22 @@ namespace SignalBox.Functions
             logger.LogInformation($"Starting to run one metric generator with id = {message.MetricGeneratorId}.");
             environmentProvider.SetOverride(message.EnvironmentId);
             var generator = await metricGeneratorStore.Read(message.MetricGeneratorId);
-            var summary = await workflows.RunMetricGeneration(generator);
+            await metricGeneratorStore.Load(generator, _ => _.Metric);
 
-            logger.LogInformation($"Finished RunOneGeneratorFromQueue for generator {generator.Id} with total writes: {summary.TotalWrites}");
+            if (generator.Metric.Scope == Core.Metrics.MetricScopes.Customer)
+            {
+                var summary = await customerMetricWorkflows.RunMetricGeneration(generator);
+                logger.LogInformation($"Finished RunOneGeneratorFromQueue for generator {generator.Id} with total writes: {summary.TotalWrites}");
+            }
+            else if (generator.Metric.Scope == Core.Metrics.MetricScopes.Global)
+            {
+                throw new NotImplementedException("Global metrics cannot be generated yet");
+                // await aggregateCustomerMetricWorkflow.RunAggregateCustomerMetricWorkflow(generator);
+            }
+            else
+            {
+                throw new WorkflowException($"Metric {generator.MetricId} has unknown scope {generator.Metric.Scope}");
+            }
         }
 
 

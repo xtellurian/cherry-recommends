@@ -10,7 +10,7 @@ namespace SignalBox.Core
         Task<bool> MetricExists(Customer customer, Metric metric, int? version = null);
         Task<int> CurrentMaximumCustomerMetricVersion(Customer customer, Metric metric);
         Task<IEnumerable<Metric>> GetMetricsFor(Customer customer);
-        Task<IEnumerable<CustomerMetricWeeklyNumericAggregate>> GetAggregateMetricValuesNumeric(Metric metric);
-        Task<IEnumerable<CustomerMetricWeeklyStringAggregate>> GetAggregateMetricValuesString(Metric metric);
+        Task<IEnumerable<CustomerMetricWeeklyNumericAggregate>> GetAggregateMetricValuesNumeric(Metric metric, int weeksAgo = 11);
+        Task<IEnumerable<CustomerMetricWeeklyStringAggregate>> GetAggregateMetricValuesString(Metric metric, int weeksAgo = 11);
     }
 }

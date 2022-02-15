@@ -99,7 +99,7 @@ namespace SignalBox.Core.Workflows
         protected async Task<IDictionary<string, object>> GetMetrics(T recommender, RecommendingContext context)
         {
             await store.LoadMany(recommender, _ => _.LearningFeatures);
-            var metricValues = new List<CustomerMetricBase>();
+            var metricValues = new List<HistoricCustomerMetric>();
             context.LogMessage($"Recommender has {recommender.LearningFeatures.Count} Learning Metrics.");
             foreach (var metric in recommender.LearningFeatures)
             {

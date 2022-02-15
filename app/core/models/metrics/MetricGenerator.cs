@@ -7,6 +7,7 @@ namespace SignalBox.Core
     {
         MonthsSinceEarliestEvent,
         FilterSelectAggregate,
+        AggregateCustomerMetric,
     }
 
     public class MetricGenerator : Entity
@@ -19,8 +20,19 @@ namespace SignalBox.Core
         };
         public static MetricGenerator TotalEventsGenerator => new MetricGenerator(Metric.TotalEvents.Id, MetricGeneratorTypes.FilterSelectAggregate, TotalEventsGeneratorSteps)
         {
-            Id = totalEventsGeneratorId, 
+            Id = totalEventsGeneratorId,
         };
+
+        public static MetricGenerator ForAggregateCustomerMetric(Metric metric, AggregateCustomerMetric definition)
+        {
+            return new MetricGenerator
+            {
+                MetricId = metric.Id,
+                Metric = metric,
+                GeneratorType = MetricGeneratorTypes.AggregateCustomerMetric,
+                AggregateCustomerMetric = definition
+            };
+        }
 
         protected MetricGenerator()
         { }
@@ -49,5 +61,9 @@ namespace SignalBox.Core
         public Metric Feature => Metric;
         public MetricGeneratorTypes GeneratorType { get; set; }
         public List<FilterSelectAggregateStep> FilterSelectAggregateSteps { get; set; }
+
+#nullable enable
+        public AggregateCustomerMetric? AggregateCustomerMetric { get; set; }
+        public JoinTwoMetrics? JoinTwoMetrics { get; set; }
     }
 }

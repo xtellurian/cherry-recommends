@@ -12,7 +12,7 @@ namespace SignalBox.Core.Adapters.Hubspot
         private const string userFeaturesEntryKey = "commonUserId";
         private const string customerInformationTitle = "Customer Information";
         private const string recommendationTitle = "Recommendation";
-        public void AddMetricValueCard(CustomerMetricBase metricValue)
+        public void AddMetricValueCard(HistoricCustomerMetric metricValue)
         {
             this.Results ??= new List<Dictionary<string, object>>();
             var cardEntry = Results.FirstOrDefault(_ => _.GetValueOrDefault("title") as string == customerInformationTitle);

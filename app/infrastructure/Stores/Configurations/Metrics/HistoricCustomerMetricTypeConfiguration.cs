@@ -4,7 +4,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal class HistoricCustomerMetricTypeConfiguration : EntityTypeConfigurationBase<HistoricCustomerMetric>, IEntityTypeConfiguration<HistoricCustomerMetric>
+    internal class HistoricCustomerMetricTypeConfiguration : MetricValueBaseTypeConfiguration<HistoricCustomerMetric>, IEntityTypeConfiguration<HistoricCustomerMetric>
     {
         public override void Configure(EntityTypeBuilder<HistoricCustomerMetric> builder)
         {
@@ -13,10 +13,12 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder.HasIndex(f => new { f.MetricId, f.TrackedUserId, f.Version })
                 .IsUnique();
 
-            builder.ToTable("HistoricTrackedUserFeatures");
-
             builder.Ignore(_ => _.TrackedUser);
-            builder.Ignore(_ => _.Feature);
+
+            builder.Property(_ => _.Discriminator).HasDefaultValue("HistoricCustomerMetric"); // compat
+
+            builder.HasOne(_ => _.Metric).WithMany(_ => _.HistoricTrackedUserFeatures).HasForeignKey(_ => _.MetricId);
+
             builder.HasOne(_ => _.Customer)
                 .WithMany(_ => _.HistoricCustomerMetrics)
                 .HasForeignKey(_ => _.TrackedUserId);
