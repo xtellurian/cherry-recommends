@@ -44,3 +44,7 @@ export const fetchTrackedUsersActionsAsync: ({ token, page, id, revenueOnly, }: 
     id: any;
     revenueOnly: any;
 }) => Promise<any>;
+export const deleteCustomerAsync: ({ token, id, }: {
+    token: any;
+    id: any;
+}) => Promise<any>;

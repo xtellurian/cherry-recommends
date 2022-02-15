@@ -11,6 +11,7 @@ export const uploadUserDataAsync = customers.uploadUserDataAsync;
 export const createOrUpdateCustomerAsync =
   customers.createOrUpdateCustomerAsync;
 export const updateMergePropertiesAsync = customers.updateMergePropertiesAsync;
+export const deleteCustomerAsync = customers.deleteCustomerAsync;
 
 const defaultHeaders = { "Content-Type": "application/json" };
 const headers = (token) =>

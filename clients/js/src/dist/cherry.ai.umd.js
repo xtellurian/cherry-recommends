@@ -294,6 +294,13 @@
             body: { value },
         });
     };
+    const deleteCustomerAsync$1 = async ({ token, id, }) => {
+        return await executeFetch$1({
+            path: `${basePath}/${id}`,
+            token,
+            method: "delete",
+        });
+    };
 
     var customersApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -306,7 +313,8 @@
         uploadUserDataAsync: uploadUserDataAsync$1,
         createOrUpdateCustomerAsync: createOrUpdateCustomerAsync,
         fetchCustomersActionsAsync: fetchCustomersActionsAsync,
-        setCustomerMetricAsync: setCustomerMetricAsync
+        setCustomerMetricAsync: setCustomerMetricAsync,
+        deleteCustomerAsync: deleteCustomerAsync$1
     });
 
     const fetchEventSummaryAsync = async ({ token }) => {
@@ -1797,6 +1805,7 @@
     const uploadUserDataAsync = uploadUserDataAsync$1;
     const createOrUpdateTrackedUserAsync = createOrUpdateCustomerAsync;
     const fetchTrackedUsersActionsAsync = fetchCustomersActionsAsync;
+    const deleteCustomerAsync = deleteCustomerAsync$1;
 
     var trackedUsersApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -1808,7 +1817,8 @@
         fetchTrackedUserActionAsync: fetchTrackedUserActionAsync,
         uploadUserDataAsync: uploadUserDataAsync,
         createOrUpdateTrackedUserAsync: createOrUpdateTrackedUserAsync,
-        fetchTrackedUsersActionsAsync: fetchTrackedUsersActionsAsync
+        fetchTrackedUsersActionsAsync: fetchTrackedUsersActionsAsync,
+        deleteCustomerAsync: deleteCustomerAsync
     });
 
     const fetchRewardSelectorsAsync = async ({ token, page }) => {

@@ -9,3 +9,4 @@ export const fetchTrackedUserActionAsync = customers.fetchCustomerActionAsync;
 export const uploadUserDataAsync = customers.uploadUserDataAsync;
 export const createOrUpdateTrackedUserAsync = customers.createOrUpdateCustomerAsync;
 export const fetchTrackedUsersActionsAsync = customers.fetchCustomersActionsAsync;
+export const deleteCustomerAsync = customers.deleteCustomerAsync;

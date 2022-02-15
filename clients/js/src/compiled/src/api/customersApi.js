@@ -104,3 +104,10 @@ export const setCustomerMetricAsync = async ({ token, id, metricId, useInternalI
         body: { value },
     });
 };
+export const deleteCustomerAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        path: `${basePath}/${id}`,
+        token,
+        method: "delete",
+    });
+};

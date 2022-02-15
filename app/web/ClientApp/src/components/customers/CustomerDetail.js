@@ -1,6 +1,8 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import { useCustomer } from "../../api-hooks/customersApi";
+import { useAccessToken } from "../../api-hooks/token";
+import { deleteCustomerAsync } from "../../api/customersApi";
 import { BackButton } from "../molecules/BackButton";
 import { Subtitle, Title, ErrorCard, Spinner, EmptyList } from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
@@ -12,6 +14,7 @@ import {
   ActionLink,
 } from "../molecules/buttons/ActionsButton";
 import { JsonView } from "../molecules/JsonView";
+import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 
 import { HistorySection } from "./HistorySection";
 import { LatestRecommendationsSection } from "./LatestRecommendationsSection";
@@ -33,10 +36,16 @@ const tabs = [
 const defaultTabId = tabs[0].id;
 
 export const CustomerDetail = () => {
+  const token = useAccessToken();
+  const history = useHistory();
   const { id } = useParams();
   const trackedUser = useCustomer({ id });
 
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = React.useState(false);
+  const [error, setError] = React.useState();
+
   const numProperties = Object.keys(trackedUser?.properties || {}).length;
+
   return (
     <React.Fragment>
       <ActionsButton
@@ -56,7 +65,12 @@ export const CustomerDetail = () => {
           </ActionLink>
         </ActionItemsGroup>
       </ActionsButton>
-
+      <button
+        className="btn btn-danger ml-1 float-right"
+        onClick={() => setIsDeletePopupOpen(true)}
+      >
+        Delete Customer
+      </button>
       <BackButton className="float-right" to="/customers">
         All Customers
       </BackButton>
@@ -96,6 +110,18 @@ export const CustomerDetail = () => {
       >
         <LatestRecommendationsSection trackedUser={trackedUser} />
       </TabActivator>
+
+      <ConfirmDeletePopup
+        entity={trackedUser}
+        error={error}
+        open={isDeletePopupOpen}
+        setOpen={setIsDeletePopupOpen}
+        handleDelete={() =>
+          deleteCustomerAsync({ id, token })
+            .then(() => history.push("/customers"))
+            .catch(setError)
+        }
+      />
     </React.Fragment>
   );
 };

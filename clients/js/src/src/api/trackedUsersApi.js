@@ -23,3 +23,5 @@ export const createOrUpdateTrackedUserAsync =
 
 export const fetchTrackedUsersActionsAsync =
   customers.fetchCustomersActionsAsync;
+
+export const deleteCustomerAsync = customers.deleteCustomerAsync;

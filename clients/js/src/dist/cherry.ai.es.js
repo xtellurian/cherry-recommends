@@ -288,6 +288,13 @@ const setCustomerMetricAsync = async ({ token, id, metricId, useInternalId, valu
         body: { value },
     });
 };
+const deleteCustomerAsync$1 = async ({ token, id, }) => {
+    return await executeFetch$1({
+        path: `${basePath}/${id}`,
+        token,
+        method: "delete",
+    });
+};
 
 var customersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -300,7 +307,8 @@ var customersApi = /*#__PURE__*/Object.freeze({
     uploadUserDataAsync: uploadUserDataAsync$1,
     createOrUpdateCustomerAsync: createOrUpdateCustomerAsync,
     fetchCustomersActionsAsync: fetchCustomersActionsAsync,
-    setCustomerMetricAsync: setCustomerMetricAsync
+    setCustomerMetricAsync: setCustomerMetricAsync,
+    deleteCustomerAsync: deleteCustomerAsync$1
 });
 
 const fetchEventSummaryAsync = async ({ token }) => {
@@ -1791,6 +1799,7 @@ const fetchTrackedUserActionAsync = fetchCustomerActionAsync;
 const uploadUserDataAsync = uploadUserDataAsync$1;
 const createOrUpdateTrackedUserAsync = createOrUpdateCustomerAsync;
 const fetchTrackedUsersActionsAsync = fetchCustomersActionsAsync;
+const deleteCustomerAsync = deleteCustomerAsync$1;
 
 var trackedUsersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -1802,7 +1811,8 @@ var trackedUsersApi = /*#__PURE__*/Object.freeze({
     fetchTrackedUserActionAsync: fetchTrackedUserActionAsync,
     uploadUserDataAsync: uploadUserDataAsync,
     createOrUpdateTrackedUserAsync: createOrUpdateTrackedUserAsync,
-    fetchTrackedUsersActionsAsync: fetchTrackedUsersActionsAsync
+    fetchTrackedUsersActionsAsync: fetchTrackedUsersActionsAsync,
+    deleteCustomerAsync: deleteCustomerAsync
 });
 
 const fetchRewardSelectorsAsync = async ({ token, page }) => {

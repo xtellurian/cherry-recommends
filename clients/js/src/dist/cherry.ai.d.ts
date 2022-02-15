@@ -189,6 +189,10 @@ declare function setCustomerMetricAsync({ token, id, metricId, useInternalId, va
     useInternalId: any;
     value: any;
 }): Promise<any>;
+declare function deleteCustomerAsync$1({ token, id, }: {
+    token: any;
+    id: any;
+}): Promise<any>;
 
 declare const customersApi_d_fetchCustomersAsync: typeof fetchCustomersAsync;
 declare const customersApi_d_fetchCustomerAsync: typeof fetchCustomerAsync;
@@ -209,6 +213,7 @@ declare namespace customersApi_d {
     customersApi_d_createOrUpdateCustomerAsync as createOrUpdateCustomerAsync,
     customersApi_d_fetchCustomersActionsAsync as fetchCustomersActionsAsync,
     customersApi_d_setCustomerMetricAsync as setCustomerMetricAsync,
+    deleteCustomerAsync$1 as deleteCustomerAsync,
   };
 }
 
@@ -2226,6 +2231,10 @@ declare const fetchTrackedUsersActionsAsync: ({ token, page, id, revenueOnly, }:
     id: any;
     revenueOnly: any;
 }) => Promise<any>;
+declare const deleteCustomerAsync: ({ token, id, }: {
+    token: any;
+    id: any;
+}) => Promise<any>;
 
 declare const trackedUsersApi_d_fetchTrackedUsersAsync: typeof fetchTrackedUsersAsync;
 declare const trackedUsersApi_d_updateMergePropertiesAsync: typeof updateMergePropertiesAsync;
@@ -2236,6 +2245,7 @@ declare const trackedUsersApi_d_fetchTrackedUserActionAsync: typeof fetchTracked
 declare const trackedUsersApi_d_uploadUserDataAsync: typeof uploadUserDataAsync;
 declare const trackedUsersApi_d_createOrUpdateTrackedUserAsync: typeof createOrUpdateTrackedUserAsync;
 declare const trackedUsersApi_d_fetchTrackedUsersActionsAsync: typeof fetchTrackedUsersActionsAsync;
+declare const trackedUsersApi_d_deleteCustomerAsync: typeof deleteCustomerAsync;
 declare namespace trackedUsersApi_d {
   export {
     trackedUsersApi_d_fetchTrackedUsersAsync as fetchTrackedUsersAsync,
@@ -2247,6 +2257,7 @@ declare namespace trackedUsersApi_d {
     trackedUsersApi_d_uploadUserDataAsync as uploadUserDataAsync,
     trackedUsersApi_d_createOrUpdateTrackedUserAsync as createOrUpdateTrackedUserAsync,
     trackedUsersApi_d_fetchTrackedUsersActionsAsync as fetchTrackedUsersActionsAsync,
+    trackedUsersApi_d_deleteCustomerAsync as deleteCustomerAsync,
   };
 }
 
