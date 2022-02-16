@@ -22,6 +22,7 @@ import {
   createRequiredByServerValidator,
 } from "../../molecules/TextInput";
 import LearnMoreContent from "./LearnMoreAboutMetricGenerators";
+import Select from "../../molecules/selectors/Select";
 
 const aggregationOptions = [
   { value: "Mean", label: "Average of all event property values" },
@@ -156,6 +157,13 @@ const tabs = [
     label: "Custom",
   },
 ];
+
+const timeWindowOptions = [
+  { value: "sevenDays", label: "7 days" },
+  { value: "thirtyDays", label: "30 days" },
+  { value: "allTime", label: "All Time" },
+];
+
 export const CreateOrEditFilterSelectAggregateGenerator = ({
   metric,
   onCreated,
@@ -177,6 +185,7 @@ export const CreateOrEditFilterSelectAggregateGenerator = ({
         id: "default-agg",
       },
     ],
+    timeWindow: "allTime",
   });
 
   const addStep = (step) => {
@@ -199,7 +208,7 @@ export const CreateOrEditFilterSelectAggregateGenerator = ({
 
   const handleCreateCustom = () => {
     setLoading(true);
-    createMetricGeneratorAsync({ token, payload: generator })
+    createMetricGeneratorAsync({ token, generator: generator })
       .then(onCreated)
       .catch(setError)
       .finally(() => {
@@ -226,6 +235,7 @@ export const CreateOrEditFilterSelectAggregateGenerator = ({
             order: 2,
           },
         ],
+        timeWindow: generator.timeWindow
       },
     })
       .then(onCreated)
@@ -233,6 +243,10 @@ export const CreateOrEditFilterSelectAggregateGenerator = ({
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const setSelectedTimeWindow = (o) => {
+    setGenerator({ ...generator, timeWindow: o.value });
   };
 
   const [currentTabId, setCurrentTabId] = React.useState(tabs[0].id);
@@ -258,6 +272,15 @@ export const CreateOrEditFilterSelectAggregateGenerator = ({
       <TabActivator currentTabId={currentTabId} tabId="custom">
         <div className="text-muted">
           Generator Type: {generator.generatorType}
+        </div>
+
+        <div>
+          <Select
+            className="mt-3"
+            placeholder="Select a time window"
+            onChange={setSelectedTimeWindow}
+            options={timeWindowOptions}
+          />
         </div>
 
         <div>
@@ -308,6 +331,14 @@ export const CreateOrEditFilterSelectAggregateGenerator = ({
             <p>
               This template counts the total number of event from each Customer.
             </p>
+          </div>
+          <div className="col-3">
+            <Select
+            className="ml-3"
+            placeholder="Select a time window"
+            onChange={setSelectedTimeWindow}
+            options={timeWindowOptions}
+          />
           </div>
           <div className="col-4">
             <AsyncButton

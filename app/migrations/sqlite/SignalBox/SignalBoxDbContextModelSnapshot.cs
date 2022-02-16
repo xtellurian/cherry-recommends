@@ -15,7 +15,7 @@ namespace sqlite.SignalBox
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.13");
+                .HasAnnotation("ProductVersion", "5.0.14");
 
             modelBuilder.Entity("CustomerSegment", b =>
                 {
@@ -597,6 +597,9 @@ namespace sqlite.SignalBox
 
                     b.Property<long>("MetricId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("TimeWindow")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

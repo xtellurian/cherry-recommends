@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,13 +22,13 @@ namespace SignalBox.Core.Metrics.Generators
         public Metric Metric { get; }
         public List<CustomerEvent> Events { get; private set; }
 
-        public async Task LoadEventsIntoContext(FilterStep filter = null)
+        public async Task LoadEventsIntoContext(FilterStep filter = null, DateTimeOffset? since = null)
         {
             var isAllEvents = filter?.EventTypeMatch == null;
             var result = await eventStore.ReadEventsForUser(Customer, new EventQueryOptions
             {
                 Filter = _ => isAllEvents || (_.EventType == filter.EventTypeMatch)
-            });
+            }, since);
 
             this.Events = result.ToList();
         }

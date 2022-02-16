@@ -59,7 +59,7 @@ namespace SignalBox.Web.Controllers
             if (System.Enum.TryParse<MetricGeneratorTypes>(dto.GeneratorType, out var generatorType))
             {
                 var feature = await featureStore.ReadFromCommonId(dto.FeatureCommonId);
-                var generator = await store.Create(new MetricGenerator(feature, generatorType, dto.Steps.ToCoreRepresentation()));
+                var generator = await store.Create(new MetricGenerator(feature, generatorType, dto.Steps.ToCoreRepresentation(), dto.TimeWindow));
                 await featureStore.Context.SaveChanges();
                 return generator;
             }

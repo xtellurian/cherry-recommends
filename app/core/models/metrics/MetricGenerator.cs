@@ -10,6 +10,13 @@ namespace SignalBox.Core
         AggregateCustomerMetric,
     }
 
+    public enum MetricGeneratorTimeWindow
+    {
+        AllTime,
+        SevenDays,
+        ThirtyDays,
+    }
+
     public class MetricGenerator : Entity
     {
         private const long totalEventsGeneratorId = 100;
@@ -36,23 +43,30 @@ namespace SignalBox.Core
 
         protected MetricGenerator()
         { }
-        protected MetricGenerator(Metric metric, MetricGeneratorTypes generatorType)
+    
+        protected MetricGenerator(Metric metric, MetricGeneratorTypes generatorType, MetricGeneratorTimeWindow? timeWindowInDays)
         {
             this.Metric = metric;
             this.MetricId = metric.Id;
             this.GeneratorType = generatorType;
+            this.TimeWindow = timeWindowInDays;
         }
+
         protected MetricGenerator(long metricId, MetricGeneratorTypes generatorType, IEnumerable<FilterSelectAggregateStep> steps) // added for seed data
         {
             this.MetricId = metricId;
             this.GeneratorType = generatorType;
             this.FilterSelectAggregateSteps = new List<FilterSelectAggregateStep>(steps);
         }
-        public MetricGenerator(Metric metric, MetricGeneratorTypes generatorType, IEnumerable<FilterSelectAggregateStep> steps)
-        : this(metric, generatorType)
+
+        public MetricGenerator(Metric metric, MetricGeneratorTypes generatorType, IEnumerable<FilterSelectAggregateStep> steps, MetricGeneratorTimeWindow? timeWindow)
+        : this(metric, generatorType, timeWindow)
         {
             this.FilterSelectAggregateSteps = new List<FilterSelectAggregateStep>(steps);
         }
+
+
+
 
         public System.DateTimeOffset? LastEnqueued { get; set; }
         public System.DateTimeOffset? LastCompleted { get; set; }
@@ -61,6 +75,7 @@ namespace SignalBox.Core
         public Metric Feature => Metric;
         public MetricGeneratorTypes GeneratorType { get; set; }
         public List<FilterSelectAggregateStep> FilterSelectAggregateSteps { get; set; }
+        public MetricGeneratorTimeWindow? TimeWindow { get; set; } 
 
 #nullable enable
         public AggregateCustomerMetric? AggregateCustomerMetric { get; set; }

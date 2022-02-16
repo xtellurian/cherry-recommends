@@ -66,14 +66,16 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await QuerySet.Where(predicate ?? ((x) => true)).Select(_ => _.CustomerId).Distinct().CountAsync();
         }
 
-        public async Task<IEnumerable<CustomerEvent>> ReadEventsForUser(Customer customer, EventQueryOptions options = null)
+        public async Task<IEnumerable<CustomerEvent>> ReadEventsForUser(Customer customer, EventQueryOptions options = null, DateTimeOffset? since = null)
         {
             options ??= new EventQueryOptions();
             options.Filter ??= _ => true;
+            since ??= DateTimeOffset.MinValue;
 
             var query = QuerySet
                 .Where(_ => _.TrackedUserId == customer.Id)
-                .Where(options.Filter);
+                .Where(options.Filter)
+                .Where(_ => _.Timestamp > since);
 
             if (options.NoTracking)
             {

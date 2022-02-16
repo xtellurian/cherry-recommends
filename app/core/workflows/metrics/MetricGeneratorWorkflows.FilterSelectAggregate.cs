@@ -24,9 +24,19 @@ namespace SignalBox.Core.Workflows
             {
                 var context = new FilterSelectAggregateContext(customer, generator.Metric, trackedUserEventStore);
                 logger.LogInformation($"Running generator {generator.Id} for metric {generator.MetricId} and Customer {customer.Id}.");
+                DateTimeOffset since = DateTimeOffset.MinValue;
+                if (generator.TimeWindow == MetricGeneratorTimeWindow.SevenDays)
+                {
+                    since = DateTimeOffset.Now.AddDays(-7);
+                }
+                else if (generator.TimeWindow == MetricGeneratorTimeWindow.ThirtyDays)
+                {
+                    since = DateTimeOffset.Now.AddDays(-30);
+                }
+
                 try
                 {
-                    var value = await GenerateMetricValueForCustomer(steps, context);
+                    var value = await GenerateMetricValueForCustomer(steps, context, since);
                     if (value != null)
                     {
                         summary.TotalWrites += 1;
@@ -43,12 +53,12 @@ namespace SignalBox.Core.Workflows
             return summary;
         }
 
-        private async Task<HistoricCustomerMetric?> GenerateMetricValueForCustomer(IOrderedEnumerable<FilterSelectAggregateStep> steps, FilterSelectAggregateContext context)
+        private async Task<HistoricCustomerMetric?> GenerateMetricValueForCustomer(IOrderedEnumerable<FilterSelectAggregateStep> steps, FilterSelectAggregateContext context, DateTimeOffset? since = null)
         {
             // step 1 (filter if exists)
             // todo: this is breaking 
             // There is already an open DataReader associated with this Connection which must be closed first.
-            await context.LoadEventsIntoContext(steps.FirstOrDefault(_ => _.Filter != null)?.Filter);
+            await context.LoadEventsIntoContext(steps.FirstOrDefault(_ => _.Filter != null)?.Filter, since);
 
             // step 2 (select the property that we care about)
             var select = steps.FirstOrDefault(_ => _.Select != null)?.Select;

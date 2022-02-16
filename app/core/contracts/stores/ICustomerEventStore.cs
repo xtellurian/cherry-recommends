@@ -16,7 +16,7 @@ namespace SignalBox.Core
         Task<TProperty> Min<TProperty>(Expression<Func<CustomerEvent, TProperty>> selector);
         Task<TProperty> Min<TProperty>(Expression<Func<CustomerEvent, bool>> predicate, Expression<Func<CustomerEvent, TProperty>> selector);
         Task<int> CountTrackedUsers(Expression<Func<CustomerEvent, bool>> predicate = null);
-        Task<IEnumerable<CustomerEvent>> ReadEventsForUser(Customer user, EventQueryOptions options = null);
+        Task<IEnumerable<CustomerEvent>> ReadEventsForUser(Customer user, EventQueryOptions options = null, DateTimeOffset? since = null);
         Task<Paginated<CustomerEvent>> ReadEventsForUser(int page, Customer user, Expression<Func<CustomerEvent, bool>> predicate = null);
         Task<IEnumerable<CustomerEvent>> ReadEventsOfKind(string kind, DateTimeOffset? since = null, DateTimeOffset? until = null);
         Task<long> CountEventsOfKind(string kind, DateTimeOffset? since = null, DateTimeOffset? until = null);

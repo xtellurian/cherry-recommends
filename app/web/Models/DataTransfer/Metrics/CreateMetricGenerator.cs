@@ -38,6 +38,6 @@ namespace SignalBox.Web.Dto
         public string GeneratorType { get; set; }
 
         public List<FilterSelectAggregateStepDto> Steps { get; set; }
-
+        public MetricGeneratorTimeWindow? TimeWindow { get; set; }
     }
 }

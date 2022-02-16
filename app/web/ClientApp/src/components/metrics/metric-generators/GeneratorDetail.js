@@ -6,6 +6,7 @@ import { ButtonGroup } from "../../molecules/buttons/ButtonGroup";
 import { SectionHeading } from "../../molecules/layout";
 import { EntityRow } from "../../molecules/layout/EntityRow";
 import { DateTimeField } from "../../molecules/DateTimeField";
+import { CopyableField } from "../../molecules/fields/CopyableField";
 
 const StepRow = ({ step }) => {
   return (
@@ -22,7 +23,7 @@ const StepRow = ({ step }) => {
         </div>
       )}
       {step.aggregate && (
-        <div className="col">Aggreate by {step.aggregate.aggregationType}</div>
+        <div className="col">Aggregate by {step.aggregate.aggregationType}</div>
       )}
     </EntityRow>
   );
@@ -42,6 +43,12 @@ export const GeneratorDetail = ({ generator, requestClose }) => {
       .catch(setError)
       .finally(() => setRunning(false));
   };
+  let timeWindow = "All Time";
+  if (generator.timeWindow === "sevenDays")
+    timeWindow = "7 Days";
+  else if (generator.timeWindow === "thirtyDays")
+    timeWindow = "30 Days";
+
   return (
     <>
       <div>
@@ -53,7 +60,7 @@ export const GeneratorDetail = ({ generator, requestClose }) => {
           .map((s) => (
             <StepRow key={s.order} step={s} />
           ))}
-
+        <CopyableField label="Time Window" value={timeWindow} />
         <div>
           {generator.lastEnqueued ? (
             <DateTimeField
