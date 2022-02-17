@@ -150,6 +150,37 @@ export const useAggregateMetricsString = ({ id }) => {
   return state;
 };
 
+export const useAggregateMetrics = ({ id, valueType }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({
+    loading: true,
+  });
+  React.useEffect(() => {
+    setState(loadingState);
+    if (token && id) {
+      if (valueType === "numeric") {
+        fetchAggregateMetricValuesNumericAsync({
+          token,
+          id,
+        })
+          .then(setState)
+          .catch((error) => setState({ error }));
+      } else if (valueType === "categorical") {
+        fetchAggregateMetricValuesStringAsync({
+          token,
+          id,
+        })
+          .then(setState)
+          .catch((error) => setState({ error }));
+      } else {
+        setState({ loading: false });
+      }
+    }
+  }, [token, id, valueType]);
+
+  return state;
+};
+
 export const useDestinations = ({ id, trigger }) => {
   const token = useAccessToken();
   const [state, setState] = React.useState({

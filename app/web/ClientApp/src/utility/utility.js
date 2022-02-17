@@ -36,6 +36,28 @@ export function toShortDate(value) {
   return date?.toLocaleDateString();
 }
 
+export function getFirstLastOfTheWeek(date) {
+  // First day is the day of the month - the day of the week. +1 for Monday
+  var first = date.getDate() - date.getDay() + 1;
+  var last = first + 6; // last day is the first day + 6
+  var firstday = new Date(date.setDate(first));
+  var lastday = new Date(date.setDate(last));
+
+  return {
+    firstday,
+    lastday,
+  };
+}
+
+export function generateRandomHexColor() {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 export function useCommonId() {
   const randomStr = useRef(
     Math.floor(Math.random() * 0x10000000000)
