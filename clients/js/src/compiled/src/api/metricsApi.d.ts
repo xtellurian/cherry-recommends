@@ -15,9 +15,10 @@ interface CustomersMetricRequest extends EntityRequest {
     version?: number | undefined;
 }
 export declare const fetchCustomersMetricAsync: ({ token, id, metricId, version, }: CustomersMetricRequest) => Promise<any>;
-export declare const fetchAggregateMetricValuesNumericAsync: ({ token, id }: EntityRequest) => Promise<any>;
-export declare const fetchAggregateMetricValuesStringAsync: ({ token, id }: EntityRequest) => Promise<any>;
+export declare const fetchAggregateMetricValuesNumericAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+export declare const fetchAggregateMetricValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 export declare const fetchDestinationsAsync: ({ token, id }: EntityRequest) => Promise<any>;
+export declare const fetchExportCustomers: ({ token, id }: EntityRequest) => Promise<any>;
 interface CreateMetricDestinationRequest extends EntityRequest {
     destination: components["schemas"]["CreateDestinationDto"];
 }

@@ -10,6 +10,7 @@ export const fetchAggregateMetricValuesNumericAsync =
   metrics.fetchAggregateMetricValuesNumericAsync;
 export const fetchAggregateMetricValuesStringAsync =
   metrics.fetchAggregateMetricValuesStringAsync;
+export const fetchExportCustomers = metrics.fetchExportCustomers;
 
 export const deleteMetricAsync = metrics.deleteMetricAsync;
 

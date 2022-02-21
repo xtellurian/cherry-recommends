@@ -1,14 +1,24 @@
 import React from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
+import dayjs from "dayjs";
 import { useMetric } from "../../api-hooks/metricsApi";
-import { deleteMetricAsync } from "../../api/metricsApi";
+import { deleteMetricAsync, fetchExportCustomers } from "../../api/metricsApi";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
-import { Title, Subtitle, Spinner, ErrorCard, BackButton } from "../molecules";
+
+import {
+  Title,
+  Subtitle,
+  Spinner,
+  ErrorCard,
+  BackButton,
+  AsyncButton,
+} from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { useAccessToken, useTokenScopes } from "../../api-hooks/token";
 import { MetricDestinations } from "./MetricDestinations";
 
 import { MetricGenerators } from "./MetricGenerators";
+import { saveBlob } from "../../utility/utility";
 import { TabActivator, Tabs } from "../molecules/layout/Tabs";
 import MetricReports from "./MetricReports";
 import { SectionHeading } from "../molecules/layout";
@@ -47,8 +57,31 @@ const MetricDetail = () => {
       .catch(setDeleteError);
   };
 
+  const [isExportLoading, setIsExportLoading] = React.useState(false);
+  const [exportError, setExportError] = React.useState();
+
   const scopes = useTokenScopes();
   const canWrite = scopes && scopes.find((_) => _ == "write:metrics");
+
+  const exportTopCustomers = () => {
+    setIsExportLoading(true);
+    fetchExportCustomers({ token, id })
+      .then(async (response) => {
+        const blob = await response.blob();
+        const dateFormat = dayjs().format("YYYYMMDD");
+        const fileName =
+          `${metric.name}_cherry_customer_exports_${dateFormat}.csv`.toLowerCase();
+        saveBlob({ blob, name: fileName });
+      })
+      .catch((e) => {
+        console.log(e);
+        setExportError(e);
+      })
+      .finally(() => {
+        setIsExportLoading(false);
+      });
+  };
+
   return (
     <React.Fragment>
       <BackButton className="float-right" to="/metrics/">
@@ -56,11 +89,18 @@ const MetricDetail = () => {
       </BackButton>
       {canWrite && (
         <Link to={`/metrics/set-value/${id}`}>
-          <button className="btn btn-primary float-right">
+          <button className="btn btn-primary float-right mr-1">
             Manually Set a Metric Value
           </button>
         </Link>
       )}
+      <AsyncButton
+        loading={isExportLoading}
+        className="btn btn-outline-primary float-right mr-1"
+        onClick={exportTopCustomers}
+      >
+        Export top customers
+      </AsyncButton>
       <Title>Metric</Title>
       <Subtitle>{metric.name ? metric.name : "..."}</Subtitle>
       <Tabs tabs={tabs} defaultTabId={tabs[0].id} />

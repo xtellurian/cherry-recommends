@@ -136,6 +136,13 @@ export const fetchDestinationsAsync = async ({ token, id }: EntityRequest) => {
   });
 };
 
+export const fetchExportCustomers = async ({ token, id }: EntityRequest) => {
+  return await executeFetch({
+    path: `api/Metrics/${id}/ExportCustomers`,
+    token,
+  });
+};
+
 interface CreateMetricDestinationRequest extends EntityRequest {
   destination: components["schemas"]["CreateDestinationDto"];
 }

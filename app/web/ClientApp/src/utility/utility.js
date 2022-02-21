@@ -92,3 +92,16 @@ export function useCommonId() {
     generateCommonId,
   };
 }
+
+export function saveBlob({ blob, name }) {
+  var a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+
+  window.URL.createObjectURL(blob);
+  a.download = name;
+  const url = window.URL.createObjectURL(blob);
+  a.href = url;
+  a.click();
+  window.URL.revokeObjectURL(url);
+};

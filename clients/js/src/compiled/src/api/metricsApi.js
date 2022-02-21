@@ -59,13 +59,13 @@ export const fetchCustomersMetricAsync = async ({ token, id, metricId, version, 
         },
     });
 };
-export const fetchAggregateMetricValuesNumericAsync = async ({ token, id }) => {
+export const fetchAggregateMetricValuesNumericAsync = async ({ token, id, }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/AggregateMetricValuesNumeric`,
         token,
     });
 };
-export const fetchAggregateMetricValuesStringAsync = async ({ token, id }) => {
+export const fetchAggregateMetricValuesStringAsync = async ({ token, id, }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/AggregateMetricValuesString`,
         token,
@@ -74,6 +74,12 @@ export const fetchAggregateMetricValuesStringAsync = async ({ token, id }) => {
 export const fetchDestinationsAsync = async ({ token, id }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/Destinations`,
+        token,
+    });
+};
+export const fetchExportCustomers = async ({ token, id }) => {
+    return await executeFetch({
+        path: `api/Metrics/${id}/ExportCustomers`,
         token,
     });
 };

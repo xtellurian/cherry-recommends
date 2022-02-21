@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Metrics;
@@ -106,6 +107,20 @@ namespace SignalBox.Core.Workflows
             }
 
             return destination;
+        }
+
+        public async Task<byte[]> GetExportCustomers(Metric metric)
+        {
+            var data = await customerMetricStore.GetMetricCustomerExports(metric);
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("CustomerId, Metric Name, Metric Value");
+            var prepLines = data
+                .Select(_ => $"{_.CustomerId}, {_.MetricName}, {_.MetricValue}")
+                .ToArray();
+            Array.ForEach<string>(prepLines, _ => sb.AppendLine(_));
+            var bytes = new UTF8Encoding().GetBytes(sb.ToString());
+
+            return bytes;
         }
     }
 }

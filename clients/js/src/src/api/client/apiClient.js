@@ -4,7 +4,7 @@ import {
   handleErrorResponse,
   handleErrorFetch,
 } from "../../utilities/errorHandling";
-import logger from "../logging/logger"
+import logger from "../logging/logger";
 
 export const executeFetch = async ({
   token,
@@ -46,7 +46,12 @@ export const executeFetch = async ({
     return handleErrorFetch(ex);
   }
   if (response.ok) {
-    return await response.json();
+    var responseClone = response.clone();
+    try {
+      return await response.json();
+    } catch {
+      return await responseClone;
+    }
   } else {
     logger.error("Response was not OK.");
     return await handleErrorResponse(response);

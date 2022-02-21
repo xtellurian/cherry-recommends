@@ -114,7 +114,13 @@ const executeFetch$1 = async ({ token, apiKey, path, page, pageSize, body, metho
         return handleErrorFetch(ex);
     }
     if (response.ok) {
-        return await response.json();
+        var responseClone = response.clone();
+        try {
+            return await response.json();
+        }
+        catch (_a) {
+            return await responseClone;
+        }
     }
     else {
         logger.error("Response was not OK.");
@@ -647,13 +653,13 @@ const fetchCustomersMetricAsync = async ({ token, id, metricId, version, }) => {
         },
     });
 };
-const fetchAggregateMetricValuesNumericAsync = async ({ token, id }) => {
+const fetchAggregateMetricValuesNumericAsync = async ({ token, id, }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/AggregateMetricValuesNumeric`,
         token,
     });
 };
-const fetchAggregateMetricValuesStringAsync = async ({ token, id }) => {
+const fetchAggregateMetricValuesStringAsync = async ({ token, id, }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/AggregateMetricValuesString`,
         token,
@@ -662,6 +668,12 @@ const fetchAggregateMetricValuesStringAsync = async ({ token, id }) => {
 const fetchDestinationsAsync$3 = async ({ token, id }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/Destinations`,
+        token,
+    });
+};
+const fetchExportCustomers = async ({ token, id }) => {
+    return await executeFetch({
+        path: `api/Metrics/${id}/ExportCustomers`,
         token,
     });
 };
@@ -700,6 +712,7 @@ var metricsApi = /*#__PURE__*/Object.freeze({
     fetchAggregateMetricValuesNumericAsync: fetchAggregateMetricValuesNumericAsync,
     fetchAggregateMetricValuesStringAsync: fetchAggregateMetricValuesStringAsync,
     fetchDestinationsAsync: fetchDestinationsAsync$3,
+    fetchExportCustomers: fetchExportCustomers,
     createDestinationAsync: createDestinationAsync$3,
     deleteDestinationAsync: deleteDestinationAsync,
     fetchGeneratorsAsync: fetchGeneratorsAsync

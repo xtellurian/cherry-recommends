@@ -100,6 +100,15 @@ namespace SignalBox.Web.Controllers
             return metric.Destinations;
         }
 
+        [HttpGet("{id}/ExportCustomers")]
+        public async Task<IActionResult> GetExportCustomers(string id)
+        {
+            var metric = await base.GetResource(id);
+            var exportCustomers = await workflows.GetExportCustomers(metric);
+            return File(exportCustomers, "text/csv",
+                $"{metric.Name}_customers.csv".ToLower());
+        }
+
         [HttpPost("{id}/Destinations/")]
         public async Task<MetricDestinationBase> AddDestination(string id, CreateDestinationDto dto)
         {

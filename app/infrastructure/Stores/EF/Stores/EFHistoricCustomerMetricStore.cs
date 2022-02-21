@@ -80,5 +80,38 @@ namespace SignalBox.Infrastructure.EntityFramework
 
             return stringAggregates;
         }
+
+        public async Task<IEnumerable<MetricCustomerExport>> GetMetricCustomerExports(Metric metric)
+        {
+            var result = await context.LatestFeatureVersions
+                .Join(context.Customers, _ => _.CustomerId, _ => _.Id, (latest, customer) => new
+                {
+                    latest,
+                    customer
+                })
+                .Join(context.Metrics, _ => _.latest.MetricId, _ => _.Id, (g, metric) => new
+                {
+                    latest = g.latest,
+                    customer = g.customer,
+                    metric = metric
+                })
+                .Join(context.HistoricCustomerMetrics, _ => _.latest.HistoricCustomerMetricId, _ => _.Id, (g, historic) => new
+                {
+                    latest = g.latest,
+                    customer = g.customer,
+                    metric = g.metric,
+                    historic = historic
+                })
+                .Where(_ => _.metric.Id == metric.Id)
+                .Select(_ => new MetricCustomerExport
+                {
+                    CustomerId = _.customer.CommonId,
+                    Email = "",
+                    MetricName = _.metric.Name,
+                    MetricValue = _.historic.NumericValue.HasValue ? _.historic.NumericValue.Value : _.historic.StringValue
+                }).ToListAsync();
+
+            return result;
+        }
     }
 }

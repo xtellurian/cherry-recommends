@@ -34,7 +34,13 @@ export const executeFetch = async ({ token, apiKey, path, page, pageSize, body, 
         return handleErrorFetch(ex);
     }
     if (response.ok) {
-        return await response.json();
+        var responseClone = response.clone();
+        try {
+            return await response.json();
+        }
+        catch (_a) {
+            return await responseClone;
+        }
     }
     else {
         logger.error("Response was not OK.");
