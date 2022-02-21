@@ -684,6 +684,18 @@
             token,
         });
     };
+    const fetchMetricBinValuesNumericAsync = async ({ token, id, }) => {
+        return await executeFetch({
+            path: `api/Metrics/${id}/NumericMetricBinValues`,
+            token,
+        });
+    };
+    const fetchMetricBinValuesStringAsync = async ({ token, id, }) => {
+        return await executeFetch({
+            path: `api/Metrics/${id}/CategoricalMetricBinValues`,
+            token,
+        });
+    };
     const createDestinationAsync$3 = async ({ token, id, destination, }) => {
         return await executeFetch({
             path: `api/Metrics/${id}/Destinations`,
@@ -720,6 +732,8 @@
         fetchAggregateMetricValuesStringAsync: fetchAggregateMetricValuesStringAsync,
         fetchDestinationsAsync: fetchDestinationsAsync$3,
         fetchExportCustomers: fetchExportCustomers,
+        fetchMetricBinValuesNumericAsync: fetchMetricBinValuesNumericAsync,
+        fetchMetricBinValuesStringAsync: fetchMetricBinValuesStringAsync,
         createDestinationAsync: createDestinationAsync$3,
         deleteDestinationAsync: deleteDestinationAsync,
         fetchGeneratorsAsync: fetchGeneratorsAsync

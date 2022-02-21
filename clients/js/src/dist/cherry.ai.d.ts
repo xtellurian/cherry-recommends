@@ -1730,6 +1730,8 @@ declare const fetchAggregateMetricValuesNumericAsync: ({ token, id, }: EntityReq
 declare const fetchAggregateMetricValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 declare const fetchDestinationsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
 declare const fetchExportCustomers: ({ token, id }: EntityRequest) => Promise<any>;
+declare const fetchMetricBinValuesNumericAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+declare const fetchMetricBinValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 interface CreateMetricDestinationRequest extends EntityRequest {
     destination: components["schemas"]["CreateDestinationDto"];
 }
@@ -1751,6 +1753,8 @@ declare const metricsApi_d_fetchCustomersMetricAsync: typeof fetchCustomersMetri
 declare const metricsApi_d_fetchAggregateMetricValuesNumericAsync: typeof fetchAggregateMetricValuesNumericAsync;
 declare const metricsApi_d_fetchAggregateMetricValuesStringAsync: typeof fetchAggregateMetricValuesStringAsync;
 declare const metricsApi_d_fetchExportCustomers: typeof fetchExportCustomers;
+declare const metricsApi_d_fetchMetricBinValuesNumericAsync: typeof fetchMetricBinValuesNumericAsync;
+declare const metricsApi_d_fetchMetricBinValuesStringAsync: typeof fetchMetricBinValuesStringAsync;
 declare const metricsApi_d_deleteDestinationAsync: typeof deleteDestinationAsync;
 declare const metricsApi_d_fetchGeneratorsAsync: typeof fetchGeneratorsAsync;
 declare namespace metricsApi_d {
@@ -1767,6 +1771,8 @@ declare namespace metricsApi_d {
     metricsApi_d_fetchAggregateMetricValuesStringAsync as fetchAggregateMetricValuesStringAsync,
     fetchDestinationsAsync$1 as fetchDestinationsAsync,
     metricsApi_d_fetchExportCustomers as fetchExportCustomers,
+    metricsApi_d_fetchMetricBinValuesNumericAsync as fetchMetricBinValuesNumericAsync,
+    metricsApi_d_fetchMetricBinValuesStringAsync as fetchMetricBinValuesStringAsync,
     createDestinationAsync$1 as createDestinationAsync,
     metricsApi_d_deleteDestinationAsync as deleteDestinationAsync,
     metricsApi_d_fetchGeneratorsAsync as fetchGeneratorsAsync,

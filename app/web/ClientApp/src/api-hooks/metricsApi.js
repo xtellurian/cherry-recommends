@@ -11,6 +11,8 @@ import {
   fetchGeneratorsAsync,
   fetchAggregateMetricValuesNumericAsync,
   fetchAggregateMetricValuesStringAsync,
+  fetchMetricBinValuesNumericAsync,
+  fetchMetricBinValuesStringAsync,
 } from "../api/metricsApi";
 
 export const useMetrics = ({ scope } = {}) => {
@@ -147,6 +149,37 @@ export const useAggregateMetricsString = ({ id }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id]);
+
+  return state;
+};
+
+export const useMetricBin = ({ id, valueType }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({
+    loading: true,
+  });
+  React.useEffect(() => {
+    setState(loadingState);
+    if (token && id) {
+      if (valueType === "numeric") {
+        fetchMetricBinValuesNumericAsync({
+          token,
+          id,
+        })
+          .then(setState)
+          .catch((error) => setState({ error }));
+      } else if (valueType === "categorical") {
+        fetchMetricBinValuesStringAsync({
+          token,
+          id,
+        })
+          .then(setState)
+          .catch((error) => setState({ error }));
+      } else {
+        setState({ loading: false });
+      }
+    }
+  }, [token, id, valueType]);
 
   return state;
 };

@@ -149,6 +149,26 @@ export const fetchExportCustomers = async ({ token, id }: EntityRequest) => {
   });
 };
 
+export const fetchMetricBinValuesNumericAsync = async ({
+  token,
+  id,
+}: EntityRequest) => {
+  return await executeFetch({
+    path: `api/Metrics/${id}/NumericMetricBinValues`,
+    token,
+  });
+};
+
+export const fetchMetricBinValuesStringAsync = async ({
+  token,
+  id,
+}: EntityRequest) => {
+  return await executeFetch({
+    path: `api/Metrics/${id}/CategoricalMetricBinValues`,
+    token,
+  });
+};
+
 interface CreateMetricDestinationRequest extends EntityRequest {
   destination: components["schemas"]["CreateDestinationDto"];
 }

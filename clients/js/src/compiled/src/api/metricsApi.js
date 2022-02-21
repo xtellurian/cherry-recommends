@@ -84,6 +84,18 @@ export const fetchExportCustomers = async ({ token, id }) => {
         token,
     });
 };
+export const fetchMetricBinValuesNumericAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        path: `api/Metrics/${id}/NumericMetricBinValues`,
+        token,
+    });
+};
+export const fetchMetricBinValuesStringAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        path: `api/Metrics/${id}/CategoricalMetricBinValues`,
+        token,
+    });
+};
 export const createDestinationAsync = async ({ token, id, destination, }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/Destinations`,

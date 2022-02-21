@@ -22,6 +22,8 @@ export declare const fetchAggregateMetricValuesNumericAsync: ({ token, id, }: En
 export declare const fetchAggregateMetricValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 export declare const fetchDestinationsAsync: ({ token, id }: EntityRequest) => Promise<any>;
 export declare const fetchExportCustomers: ({ token, id }: EntityRequest) => Promise<any>;
+export declare const fetchMetricBinValuesNumericAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+export declare const fetchMetricBinValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 interface CreateMetricDestinationRequest extends EntityRequest {
     destination: components["schemas"]["CreateDestinationDto"];
 }
