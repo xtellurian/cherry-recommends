@@ -599,13 +599,14 @@
         fetchGeneratorsAsync: fetchGeneratorsAsync$1
     });
 
-    const fetchMetricsAsync = async ({ token, page, searchTerm, }) => {
+    const fetchMetricsAsync = async ({ token, page, scope, searchTerm, }) => {
         return await executeFetch({
             path: "api/Metrics",
             token,
             page,
             query: {
                 "q.term": searchTerm,
+                "q.scope": scope,
             },
         });
     };

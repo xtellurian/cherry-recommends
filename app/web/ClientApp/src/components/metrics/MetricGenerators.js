@@ -4,7 +4,7 @@ import { deleteMetricGeneratorAsync } from "../../api/metricGeneratorsApi";
 import { BigPopup } from "../molecules/popups/BigPopup";
 import { Spinner, ErrorCard } from "../molecules";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
-import { CreateOrEditFilterSelectAggregateGenerator } from "./metric-generators/CreateMetricGenerator";
+import { CreateOrEditFilterSelectAggregateGenerator } from "./metric-generators/CreateCustomerScopeMetricGenerator";
 import { useAccessToken } from "../../api-hooks/token";
 import { SectionHeading } from "../molecules/layout";
 import { EmptyList, EmptyStateText } from "../molecules/empty";
@@ -12,6 +12,7 @@ import { GeneratorDetail } from "./metric-generators/GeneratorDetail";
 import { EntityRow } from "../molecules/layout/EntityRow";
 import { DeleteButton } from "../molecules/buttons/DeleteButton";
 import { DateTimeField } from "../molecules/DateTimeField";
+import { CreateGlobalScopeMetricGenerator } from "./metric-generators/CreateGlobalScopeMetricGenerator";
 // import { CreateButton } from "../molecules/CreateButton";
 
 const GeneratorTableRow = ({ generator, onDeleted, requestReload }) => {
@@ -127,8 +128,17 @@ export const MetricGenerators = ({ metric }) => {
       <BigPopup isOpen={generatorPopupOpen} setIsOpen={setGeneratorPopupOpen}>
         <div style={{ minHeight: "65vh" }}>
           {metric.loading && <Spinner />}
-          {!metric.loading && (
+          {!metric.loading && metric.scope == "customer" && (
             <CreateOrEditFilterSelectAggregateGenerator
+              metric={metric}
+              onCreated={(r) => {
+                setTrigger(r);
+                setGeneratorPopupOpen(false);
+              }}
+            />
+          )}
+          {!metric.loading && metric.scope == "global" && (
+            <CreateGlobalScopeMetricGenerator
               metric={metric}
               onCreated={(r) => {
                 setTrigger(r);

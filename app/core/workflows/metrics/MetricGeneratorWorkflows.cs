@@ -35,7 +35,8 @@ namespace SignalBox.Core.Workflows
 
         public async Task<Paginated<MetricGenerator>> GetGenerators(int page, Metric metric)
         {
-            return await metricGeneratorStore.Query(page, _ => _.MetricId == metric.Id);
+            return await metricGeneratorStore.Query(_ => _.AggregateCustomerMetric.Metric,
+                new EntityStoreQueryOptions<MetricGenerator>(page, _ => _.MetricId == metric.Id));
         }
 
         public async Task<IEnumerable<MetricGeneratorRunSummary>> RunAllMetricGenerators()
@@ -65,10 +66,6 @@ namespace SignalBox.Core.Workflows
                 default:
                     throw new BadRequestException($"{generator.GeneratorType} is an unhandlable generator type");
             }
-
-            generator.LastCompleted = dateTimeProvider.Now;
-            await metricGeneratorStore.Update(generator);
-            await metricGeneratorStore.Context.SaveChanges();
 
             return summary;
         }

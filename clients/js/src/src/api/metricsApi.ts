@@ -8,17 +8,23 @@ import {
 import { executeFetch } from "./client/apiClientTs";
 import { components } from "../model/api";
 
+interface MetricSearchRequest extends EntitySearchRequest {
+  scope?: components["schemas"]["MetricScopes"];
+}
+
 export const fetchMetricsAsync = async ({
   token,
   page,
+  scope,
   searchTerm,
-}: EntitySearchRequest): Promise<components["schemas"]["MetricPaginated"]> => {
+}: MetricSearchRequest): Promise<components["schemas"]["MetricPaginated"]> => {
   return await executeFetch({
     path: "api/Metrics",
     token,
     page,
     query: {
       "q.term": searchTerm,
+      "q.scope": scope,
     },
   });
 };

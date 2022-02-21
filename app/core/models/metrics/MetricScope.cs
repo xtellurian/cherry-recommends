@@ -8,7 +8,7 @@ namespace SignalBox.Core.Metrics
     /// </summary>
     public enum MetricScopes
     {
-        Customer,
+        Customer, // defaults to customer, it's the first
         Global
     }
 }

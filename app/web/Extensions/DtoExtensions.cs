@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SignalBox.Core;
 using SignalBox.Core.Metrics;
 using SignalBox.Core.Recommenders;
 using SignalBox.Web.Dto;
@@ -48,6 +49,20 @@ namespace SignalBox.Web
                         throw new Core.BadRequestException($"{s.Type} is an unknown step type");
                 }
             })?.OrderBy(_ => _.Order).ToList();
+        }
+
+        public static AggregateCustomerMetric ToCoreRepresentation(this AggregateCustomerMetricDto dto)
+        {
+            if (dto.AggregationType == null)
+            {
+                throw new BadRequestException("AggregationType is required");
+            };
+            return new AggregateCustomerMetric
+            {
+                AggregationType = dto.AggregationType.Value,
+                CategoricalValue = dto.CategoricalValue,
+                MetricId = dto.MetricId
+            };
         }
     }
 }

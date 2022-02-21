@@ -8,6 +8,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
+#nullable enable
     public abstract class EFEntityStoreBase<T> : EFStoreBase<T>, IEntityStore<T> where T : Entity
     {
         protected virtual Expression<Func<T, DateTimeOffset>> defaultOrderBy => _ => _.LastUpdated;
@@ -16,7 +17,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, selector)
         { }
 
-        public async Task<int> Count(Expression<Func<T, bool>> predicate = null)
+        public async Task<int> Count(Expression<Func<T, bool>>? predicate = null)
         {
             if (await QuerySet.AnyAsync(predicate ?? ((x) => true)))
             {
@@ -29,7 +30,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
         }
 
-        public async Task<TResult> Min<TResult>(Expression<Func<T, TResult>> selector)
+        public async Task<TResult?> Min<TResult>(Expression<Func<T, TResult>> selector)
         {
             if (await QuerySet.AnyAsync())
             {
@@ -37,7 +38,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
             else
             {
-                return default(TResult);
+                return default;
             }
         }
 
@@ -73,51 +74,48 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await QuerySet.AnyAsync(_ => _.Id == id);
         }
 
-        public async Task<Paginated<T>> Query(int page, Expression<Func<T, bool>> predicate = null)
+        public async Task<Paginated<T>> Query<TProperty>(Expression<Func<T, TProperty>>? include = null, EntityStoreQueryOptions<T>? queryOptions = null)
         {
-            predicate ??= _ => true; // default to all entities
-            var itemCount = await QuerySet.CountAsync(predicate);
+            queryOptions ??= new EntityStoreQueryOptions<T>();
+            var itemCount = await QuerySet.CountAsync(queryOptions.Predicate);
             List<T> results;
 
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
-                results = await QuerySet
-                    .Where(predicate)
+                var q = QuerySet
+                    .Where(queryOptions.Predicate)
                     .OrderByDescending(defaultOrderBy)
-                    .Skip((page - 1) * PageSize).Take(PageSize)
-                    .ToListAsync();
+                    .Skip((queryOptions.Page - 1) * PageSize).Take(PageSize);
+
+                if (include != null)
+                {
+                    q = q.Include(include);
+                }
+
+                results = await q.ToListAsync(); // manifest the query
             }
             else
             {
                 results = new List<T>();
             }
             var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
-            return new Paginated<T>(results, pageCount, itemCount, page);
+            return new Paginated<T>(results, pageCount, itemCount, queryOptions.Page);
+        }
+        public async Task<Paginated<T>> Query(EntityStoreQueryOptions<T>? queryOptions = null)
+        {
+            return await this.Query<object>(null, queryOptions);
+        }
+
+        public async Task<Paginated<T>> Query(int page, Expression<Func<T, bool>>? predicate = null)
+        {
+            return await Query(new EntityStoreQueryOptions<T>(page, predicate));
         }
 
         public async Task<Paginated<T>> Query<TProperty>(int page,
                                                          Expression<Func<T, TProperty>> include,
-                                                         Expression<Func<T, bool>> predicate = null)
+                                                         Expression<Func<T, bool>>? predicate = null)
         {
-            predicate ??= _ => true; // default to all entities
-            var itemCount = await QuerySet.CountAsync(predicate);
-            List<T> results;
-
-            if (itemCount > 0) // check and let's see whether the query is worth running against the database
-            {
-                results = await QuerySet
-                    .Where(predicate)
-                    .Include(include)
-                    .OrderByDescending(defaultOrderBy)
-                    .Skip((page - 1) * PageSize).Take(PageSize)
-                    .ToListAsync();
-            }
-            else
-            {
-                results = new List<T>();
-            }
-            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
-            return new Paginated<T>(results, pageCount, itemCount, page);
+            return await Query<TProperty>(include, new EntityStoreQueryOptions<T>(page, predicate));
         }
 
         public virtual async Task<T> Read(long id)
@@ -181,7 +179,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .LoadAsync();
         }
 
-        public virtual async IAsyncEnumerable<T> Iterate(Expression<Func<T, bool>> predicate = null, IterateOrderBy orderBy = IterateOrderBy.DescendingId)
+        public virtual async IAsyncEnumerable<T> Iterate(Expression<Func<T, bool>>? predicate = null, IterateOrderBy orderBy = IterateOrderBy.DescendingId)
         {
             predicate ??= _ => true;
             bool hasMoreItems = await QuerySet.AnyAsync(predicate);

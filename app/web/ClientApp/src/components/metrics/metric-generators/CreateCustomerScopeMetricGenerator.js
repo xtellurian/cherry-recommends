@@ -235,7 +235,7 @@ export const CreateOrEditFilterSelectAggregateGenerator = ({
             order: 2,
           },
         ],
-        timeWindow: generator.timeWindow
+        timeWindow: generator.timeWindow,
       },
     })
       .then(onCreated)
@@ -334,11 +334,11 @@ export const CreateOrEditFilterSelectAggregateGenerator = ({
           </div>
           <div className="col-3">
             <Select
-            className="ml-3"
-            placeholder="Select a time window"
-            onChange={setSelectedTimeWindow}
-            options={timeWindowOptions}
-          />
+              className="ml-3"
+              placeholder="Select a time window"
+              onChange={setSelectedTimeWindow}
+              options={timeWindowOptions}
+            />
           </div>
           <div className="col-4">
             <AsyncButton

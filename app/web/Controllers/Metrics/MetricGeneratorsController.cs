@@ -16,20 +16,20 @@ namespace SignalBox.Web.Controllers
     public class MetricGeneratorsController : EntityControllerBase<MetricGenerator>
     {
         private readonly ILogger<MetricGeneratorsController> logger;
-        private readonly IMetricStore featureStore;
+        private readonly IMetricStore metricStore;
         private readonly IRunMetricGeneratorQueueStore generatorQueue;
         private readonly ITenantProvider tenantProvider;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public MetricGeneratorsController(ILogger<MetricGeneratorsController> logger,
-                                           IMetricStore featureStore,
+                                           IMetricStore metricStore,
                                            IRunMetricGeneratorQueueStore generatorQueue,
                                            ITenantProvider tenantProvider,
                                            IDateTimeProvider dateTimeProvider,
                                            IMetricGeneratorStore store) : base(store)
         {
             this.logger = logger;
-            this.featureStore = featureStore;
+            this.metricStore = metricStore;
             this.generatorQueue = generatorQueue;
             this.tenantProvider = tenantProvider;
             this.dateTimeProvider = dateTimeProvider;
@@ -43,9 +43,11 @@ namespace SignalBox.Web.Controllers
             return await store.Query(p.Page, _ => _.Metric);
         }
 
-        /// <summary>Creates a new generic Feature that can used on any tracked user.</summary>
+        /// <summary>
+        /// Creates a new Metric generator
+        /// </summary>
         [HttpPost]
-        public async Task<MetricGenerator> CreateFeatureGenerator([FromBody] CreateMetricGenerator dto)
+        public async Task<MetricGenerator> CreateMetricGenerator([FromBody] CreateMetricGenerator dto)
         {
             dto.Validate();
             if (dto.Steps != null)
@@ -56,17 +58,23 @@ namespace SignalBox.Web.Controllers
                 }
             }
 
-            if (System.Enum.TryParse<MetricGeneratorTypes>(dto.GeneratorType, out var generatorType))
+            var metric = await metricStore.ReadFromCommonId(dto.FeatureCommonId);
+            MetricGenerator generator;
+            switch (dto.GeneratorType)
             {
-                var feature = await featureStore.ReadFromCommonId(dto.FeatureCommonId);
-                var generator = await store.Create(new MetricGenerator(feature, generatorType, dto.Steps.ToCoreRepresentation(), dto.TimeWindow));
-                await featureStore.Context.SaveChanges();
-                return generator;
+                case MetricGeneratorTypes.FilterSelectAggregate:
+                    generator = MetricGenerator.CreateFilterSelectAggregateGenerator(metric, dto.GeneratorType, dto.Steps.ToCoreRepresentation(), dto.TimeWindow);
+                    break;
+                case MetricGeneratorTypes.AggregateCustomerMetric:
+                    generator = MetricGenerator.CreateAggregateCustomerMetric(metric, dto.GeneratorType, dto.AggregateCustomerMetric.ToCoreRepresentation(), dto.TimeWindow);
+                    break;
+                default:
+                    throw new BadRequestException($"{dto.GeneratorType} is an unknown generator type");
             }
-            else
-            {
-                throw new BadRequestException($"{dto.GeneratorType} is an unknown generator type");
-            }
+
+            generator = await store.Create(generator);
+            await store.Context.SaveChanges();
+            return generator;
         }
 
         [HttpPost("{id}/Trigger")]

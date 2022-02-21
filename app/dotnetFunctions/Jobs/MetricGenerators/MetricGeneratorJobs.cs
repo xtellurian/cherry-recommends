@@ -77,13 +77,17 @@ namespace SignalBox.Functions
             }
             else if (generator.Metric.Scope == Core.Metrics.MetricScopes.Global)
             {
-                throw new NotImplementedException("Global metrics cannot be generated yet");
-                // await aggregateCustomerMetricWorkflow.RunAggregateCustomerMetricWorkflow(generator);
+                await aggregateCustomerMetricWorkflow.RunAggregateCustomerMetricWorkflow(generator);
             }
             else
             {
                 throw new WorkflowException($"Metric {generator.MetricId} has unknown scope {generator.Metric.Scope}");
             }
+
+
+            generator.LastCompleted = dateTimeProvider.Now;
+            await metricGeneratorStore.Update(generator);
+            await metricGeneratorStore.Context.SaveChanges();
         }
 
 

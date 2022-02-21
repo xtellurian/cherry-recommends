@@ -106,6 +106,7 @@
     "build": "node scripts/build.js",
     "test": "cross-env CI=true node scripts/test.js --env=jsdom",
     "lint": "eslint ./src/",
+    "prettier": " prettier --write .",
     "stats": "source-map-explorer build/static/js/*.js"
   },
   "browserslist": {

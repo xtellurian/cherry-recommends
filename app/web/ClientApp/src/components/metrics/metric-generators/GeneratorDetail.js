@@ -4,8 +4,9 @@ import { manualTriggerMetricGeneratorsAsync } from "../../../api/metricGenerator
 import { AsyncButton, ErrorCard } from "../../molecules";
 import { ButtonGroup } from "../../molecules/buttons/ButtonGroup";
 import { SectionHeading } from "../../molecules/layout";
-import { EntityRow } from "../../molecules/layout/EntityRow";
+import EntityRow from "../../molecules/layout/EntityFlexRow";
 import { DateTimeField } from "../../molecules/DateTimeField";
+import { Link } from "react-router-dom";
 import { CopyableField } from "../../molecules/fields/CopyableField";
 
 const StepRow = ({ step }) => {
@@ -23,9 +24,27 @@ const StepRow = ({ step }) => {
         </div>
       )}
       {step.aggregate && (
-        <div className="col">Aggregate by {step.aggregate.aggregationType}</div>
+        <div className="col">Aggreate by {step.aggregate.aggregationType}</div>
       )}
     </EntityRow>
+  );
+};
+
+const AggregateCustomerMetricInfo = ({ aggregateCustomerMetric }) => {
+  return (
+    <>
+      <EntityRow>
+        <div>Aggregating another metric</div>
+        <div>
+          Calculating the {aggregateCustomerMetric.aggregationType} of{" "}
+          <Link to={`/metrics/detail/${aggregateCustomerMetric.metricId}`}>
+            {aggregateCustomerMetric.metric?.name}
+          </Link>
+          {aggregateCustomerMetric.categoricalValue &&
+            `, by counting the value '${aggregateCustomerMetric.categoricalValue}'`}
+        </div>
+      </EntityRow>
+    </>
   );
 };
 export const GeneratorDetail = ({ generator, requestClose }) => {
@@ -43,24 +62,32 @@ export const GeneratorDetail = ({ generator, requestClose }) => {
       .catch(setError)
       .finally(() => setRunning(false));
   };
-  let timeWindow = "All Time";
-  if (generator.timeWindow === "sevenDays")
-    timeWindow = "7 Days";
-  else if (generator.timeWindow === "thirtyDays")
-    timeWindow = "30 Days";
 
+  const timeWindowLabels = {
+    sevenDays: "7 Days",
+    thirtyDays: "30 Days",
+  };
+
+  const timeWindow = timeWindowLabels[generator.timeWindow] || "All Time";
   return (
     <>
       <div>
         <SectionHeading>Generator Information</SectionHeading>
         <div className="text-muted">Generators are run once per day.</div>
+        <hr />
         {error && <ErrorCard error={error} />}
-        {generator.filterSelectAggregateSteps
-          .sort((a, b) => a.order - b.order)
-          .map((s) => (
-            <StepRow key={s.order} step={s} />
-          ))}
+        {generator.generatorType === "filterSelectAggregate" &&
+          generator.filterSelectAggregateSteps
+            .sort((a, b) => a.order - b.order)
+            .map((s) => <StepRow key={s.order} step={s} />)}
+
         <CopyableField label="Time Window" value={timeWindow} />
+
+        {generator.generatorType === "aggregateCustomerMetric" && (
+          <AggregateCustomerMetricInfo
+            aggregateCustomerMetric={generator.aggregateCustomerMetric}
+          />
+        )}
         <div>
           {generator.lastEnqueued ? (
             <DateTimeField

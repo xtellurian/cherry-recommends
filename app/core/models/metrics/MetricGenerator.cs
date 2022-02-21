@@ -43,7 +43,7 @@ namespace SignalBox.Core
 
         protected MetricGenerator()
         { }
-    
+
         protected MetricGenerator(Metric metric, MetricGeneratorTypes generatorType, MetricGeneratorTimeWindow? timeWindowInDays)
         {
             this.Metric = metric;
@@ -59,10 +59,21 @@ namespace SignalBox.Core
             this.FilterSelectAggregateSteps = new List<FilterSelectAggregateStep>(steps);
         }
 
-        public MetricGenerator(Metric metric, MetricGeneratorTypes generatorType, IEnumerable<FilterSelectAggregateStep> steps, MetricGeneratorTimeWindow? timeWindow)
+        public static MetricGenerator CreateFilterSelectAggregateGenerator(Metric metric, MetricGeneratorTypes generatorType, IEnumerable<FilterSelectAggregateStep> steps, MetricGeneratorTimeWindow? timeWindow)
+        {
+            return new MetricGenerator(metric, generatorType, steps, timeWindow);
+        }
+        protected MetricGenerator(Metric metric, MetricGeneratorTypes generatorType, IEnumerable<FilterSelectAggregateStep> steps, MetricGeneratorTimeWindow? timeWindow)
         : this(metric, generatorType, timeWindow)
         {
             this.FilterSelectAggregateSteps = new List<FilterSelectAggregateStep>(steps);
+        }
+        public static MetricGenerator CreateAggregateCustomerMetric(Metric metric, MetricGeneratorTypes generatorType, AggregateCustomerMetric aggregateCustomerMetric, MetricGeneratorTimeWindow? timeWindow)
+        {
+            return new MetricGenerator(metric, generatorType, timeWindow)
+            {
+                AggregateCustomerMetric = aggregateCustomerMetric
+            };
         }
 
 
@@ -75,7 +86,7 @@ namespace SignalBox.Core
         public Metric Feature => Metric;
         public MetricGeneratorTypes GeneratorType { get; set; }
         public List<FilterSelectAggregateStep> FilterSelectAggregateSteps { get; set; }
-        public MetricGeneratorTimeWindow? TimeWindow { get; set; } 
+        public MetricGeneratorTimeWindow? TimeWindow { get; set; }
 
 #nullable enable
         public AggregateCustomerMetric? AggregateCustomerMetric { get; set; }

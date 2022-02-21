@@ -487,17 +487,20 @@ declare namespace integratedSystemsApi_d {
 
 interface components {
     schemas: {
-        ActionCategoryAndName: {
-            category?: string | null;
-            actionName?: string | null;
-        };
-        ActionCategoryAndNamePaginated: {
-            items?: components["schemas"]["ActionCategoryAndName"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
-        };
         AddItemDto: {
             id?: number | null;
             commonId?: string | null;
+        };
+        AggregateCustomerMetric: {
+            metricId?: number;
+            metric?: components["schemas"]["Metric"];
+            aggregationType?: components["schemas"]["AggregationTypes"];
+            categoricalValue?: string | null;
+        };
+        AggregateCustomerMetricDto: {
+            metricId: number;
+            aggregationType: components["schemas"]["AggregationTypes"];
+            categoricalValue?: string | null;
         };
         AggregateStep: {
             aggregationType?: components["schemas"]["AggregationTypes"];
@@ -617,13 +620,16 @@ interface components {
         CreateMetric: {
             commonId: string;
             name?: string | null;
-            valueType: components["schemas"]["MetricValueType"];
+            valueType?: components["schemas"]["MetricValueType"];
+            scope: components["schemas"]["MetricScopes"];
         };
         CreateMetricGenerator: {
             featureCommonId?: string | null;
             metricCommonId?: string | null;
-            generatorType?: string | null;
+            generatorType?: components["schemas"]["MetricGeneratorTypes"];
             steps?: components["schemas"]["FilterSelectAggregateStepDto"][] | null;
+            aggregateCustomerMetric?: components["schemas"]["AggregateCustomerMetricDto"];
+            timeWindow?: components["schemas"]["MetricGeneratorTimeWindow"];
         };
         CreateOrUpdateCustomerDto: {
             commonUserId?: string | null;
@@ -672,11 +678,6 @@ interface components {
                 [key: string]: unknown;
             } | null;
         };
-        CreateRewardSelectorDto: {
-            category?: string | null;
-            actionName: string;
-            selectorType: string;
-        };
         CreateSegmentDto: {
             name?: string | null;
         };
@@ -720,11 +721,25 @@ interface components {
             trackedUserId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
-            actions?: components["schemas"]["TrackedUserAction"][] | null;
         };
         CustomerEventPaginated: {
             items?: components["schemas"]["CustomerEvent"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
+        };
+        CustomerMetricWeeklyNumericAggregate: {
+            firstOfWeek?: string;
+            lastOfWeek?: string;
+            metricId?: number;
+            weeklyMeanNumericValue?: number;
+            weeklyDistinctCustomerCount?: number;
+        };
+        CustomerMetricWeeklyStringAggregate: {
+            firstOfWeek?: string;
+            lastOfWeek?: string;
+            metricId?: number;
+            stringValue?: string | null;
+            weeklyValueCount?: number;
+            weeklyDistinctCustomerCount?: number;
         };
         CustomerPaginated: {
             items?: components["schemas"]["Customer"][] | null;
@@ -815,7 +830,6 @@ interface components {
         };
         EventLoggingResponse: {
             eventsProcessed?: number;
-            actionsProcessed?: number;
             eventsEnqueued?: number;
         };
         EventStats: {
@@ -865,9 +879,6 @@ interface components {
             id?: number;
             created?: string;
             lastUpdated?: string;
-            trackedUserId?: number;
-            trackedUser?: components["schemas"]["Customer"];
-            customer?: components["schemas"]["Customer"];
             metricId?: number;
             feature?: components["schemas"]["Metric"];
             metric?: components["schemas"]["Metric"];
@@ -875,6 +886,10 @@ interface components {
             stringValue?: string | null;
             value?: unknown | null;
             version?: number;
+            discriminator?: string | null;
+            trackedUserId?: number;
+            trackedUser?: components["schemas"]["Customer"];
+            customer?: components["schemas"]["Customer"];
         };
         HistoricCustomerMetricPaginated: {
             items?: components["schemas"]["HistoricCustomerMetric"][] | null;
@@ -1033,6 +1048,14 @@ interface components {
             targetMetric?: components["schemas"]["Metric"];
             performanceByItem?: components["schemas"]["PerformanceByItem"][] | null;
         };
+        JoinTwoMetrics: {
+            metric1Id?: number;
+            metric1?: components["schemas"]["Metric"];
+            metric2Id?: number;
+            metric2?: components["schemas"]["Metric"];
+            joinType?: components["schemas"]["JoinType"];
+        };
+        JoinType: "divide";
         LinkModel: {
             modelId?: number;
         };
@@ -1051,6 +1074,7 @@ interface components {
                 [key: string]: unknown;
             } | null;
             valueType?: components["schemas"]["MetricValueType"];
+            scope?: components["schemas"]["MetricScopes"];
         };
         MetricDestinationBase: {
             id?: number;
@@ -1077,6 +1101,9 @@ interface components {
             feature?: components["schemas"]["Metric"];
             generatorType?: components["schemas"]["MetricGeneratorTypes"];
             filterSelectAggregateSteps?: components["schemas"]["FilterSelectAggregateStep"][] | null;
+            timeWindow?: components["schemas"]["MetricGeneratorTimeWindow"];
+            aggregateCustomerMetric?: components["schemas"]["AggregateCustomerMetric"];
+            joinTwoMetrics?: components["schemas"]["JoinTwoMetrics"];
         };
         MetricGeneratorPaginated: {
             items?: components["schemas"]["MetricGenerator"][] | null;
@@ -1087,7 +1114,8 @@ interface components {
             totalWrites?: number | null;
             maxSubsetSize?: number | null;
         };
-        MetricGeneratorTypes: "monthsSinceEarliestEvent" | "filterSelectAggregate";
+        MetricGeneratorTimeWindow: "allTime" | "sevenDays" | "thirtyDays";
+        MetricGeneratorTypes: "monthsSinceEarliestEvent" | "filterSelectAggregate" | "aggregateCustomerMetric";
         MetricPaginated: {
             items?: components["schemas"]["Metric"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
@@ -1097,6 +1125,7 @@ interface components {
             featureCommonIds?: string[] | null;
             metricCommonIds?: string[] | null;
         };
+        MetricScopes: "customer" | "global";
         MetricValueType: "numeric" | "categorical";
         ModelInputDto: {
             customerId?: string | null;
@@ -1377,18 +1406,6 @@ interface components {
             modelType: string;
             hostingType: string;
         };
-        RewardSelector: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            category?: string | null;
-            actionName?: string | null;
-            selectorType?: components["schemas"]["SelectorTypes"];
-        };
-        RewardSelectorPaginated: {
-            items?: components["schemas"]["RewardSelector"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
-        };
         Schema: {
             $ref?: string | null;
         };
@@ -1418,7 +1435,6 @@ interface components {
             items?: components["schemas"]["Segment"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
         };
-        SelectorTypes: "revenue";
         SelectStep: {
             propertyNameMatch?: string | null;
         };
@@ -1450,10 +1466,6 @@ interface components {
         };
         StatusDto: {
             status?: string | null;
-        };
-        StringPaginated: {
-            items?: string[] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
         };
         SwaggerDefinition: {
             swagger?: string | null;
@@ -1491,33 +1503,6 @@ interface components {
             totalMinutes?: number;
             totalSeconds?: number;
         };
-        TrackedUserAction: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            trackedUserId?: number | null;
-            trackedUser?: components["schemas"]["Customer"];
-            customer?: components["schemas"]["Customer"];
-            commonUserId?: string | null;
-            customerId?: string | null;
-            eventId?: string | null;
-            timestamp?: string;
-            recommendationCorrelatorId?: number | null;
-            recommendationCorrelator?: components["schemas"]["RecommendationCorrelator"];
-            integratedSystemId?: number | null;
-            category?: string | null;
-            actionName?: string | null;
-            actionValue?: string | null;
-            valueType?: components["schemas"]["TrackedUserActionValueType"];
-            trackedUserEventId?: number | null;
-            feedbackScore?: number | null;
-            associatedRevenue?: number | null;
-        };
-        TrackedUserActionPaginated: {
-            items?: components["schemas"]["TrackedUserAction"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
-        };
-        TrackedUserActionValueType: "string" | "float" | "int";
         TrackedUserEventSummary: {
             keys?: string[] | null;
             kinds?: {
@@ -1723,7 +1708,10 @@ declare namespace itemsRecommendersApi_d {
   };
 }
 
-declare const fetchMetricsAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<components["schemas"]["MetricPaginated"]>;
+interface MetricSearchRequest extends EntitySearchRequest {
+    scope?: components["schemas"]["MetricScopes"];
+}
+declare const fetchMetricsAsync: ({ token, page, scope, searchTerm, }: MetricSearchRequest) => Promise<components["schemas"]["MetricPaginated"]>;
 declare const fetchMetricAsync: ({ token, id, }: EntityRequest) => Promise<components["schemas"]["Metric"]>;
 declare const fetchMetricCustomersAsync: ({ token, page, id, }: PaginatedEntityRequest) => Promise<any>;
 declare const fetchMetricCustomerMetricsAsync: ({ token, page, id, }: PaginatedEntityRequest) => Promise<any>;

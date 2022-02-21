@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SignalBox.Core.Metrics;
 
 namespace SignalBox.Core.Workflows
@@ -9,12 +9,15 @@ namespace SignalBox.Core.Workflows
     {
         private readonly IHistoricCustomerMetricStore historicCustomerMetricStore;
         private readonly IGlobalMetricValueStore globalMetricValueStore;
+        private readonly ILogger<AggregateCustomerMetricWorkflow> logger;
 
         public AggregateCustomerMetricWorkflow(IHistoricCustomerMetricStore historicCustomerMetricStore,
-                                               IGlobalMetricValueStore globalMetricValueStore)
+                                               IGlobalMetricValueStore globalMetricValueStore,
+                                               ILogger<AggregateCustomerMetricWorkflow> logger)
         {
             this.historicCustomerMetricStore = historicCustomerMetricStore;
             this.globalMetricValueStore = globalMetricValueStore;
+            this.logger = logger;
         }
 
         public async Task RunAggregateCustomerMetricWorkflow(MetricGenerator generator)
@@ -37,18 +40,24 @@ namespace SignalBox.Core.Workflows
                     break;
             }
 
-            var latest = await globalMetricValueStore.LatestMetricValue(generator.Metric);
             if (result == null)
             {
+                logger.LogWarning("Generator {generatorId} produced null", generator.Id);
                 return;
             }
 
+            var latest = await globalMetricValueStore.LatestMetricValue(generator.Metric);
             if (result.HasValue && (latest == null || latest.NumericValue != result))
             {
+                logger.LogInformation("Updating metric {metricId}", generator.MetricId);
                 var version = (latest?.Version ?? 0) + 1;
                 // then this value should be written to the database
                 await globalMetricValueStore.Create(new GlobalMetricValue(generator.Metric, version, result.Value));
                 await globalMetricValueStore.Context.SaveChanges();
+            }
+            else
+            {
+                logger.LogInformation("Not updating aggregate metric {metricId}", generator.MetricId);
             }
         }
 

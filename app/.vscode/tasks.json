@@ -15,7 +15,7 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
+            }
         },
         {
             "type": "func",
@@ -43,6 +43,14 @@
             "options": {
                 "cwd": "${workspaceFolder}/pythonFunctions"
             }
+        },
+        {
+            "type": "npm",
+            "script": "prettier",
+            "path": "web/ClientApp/",
+            "problemMatcher": [],
+            "label": "npm: prettier - web/ClientApp",
+            "detail": " prettier --write ."
         }
     ]
 }

@@ -1,6 +1,9 @@
 import { AuthenticatedRequest, DeleteRequest, EntityRequest, EntitySearchRequest, PaginatedEntityRequest } from "../interfaces";
 import { components } from "../model/api";
-export declare const fetchMetricsAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<components["schemas"]["MetricPaginated"]>;
+interface MetricSearchRequest extends EntitySearchRequest {
+    scope?: components["schemas"]["MetricScopes"];
+}
+export declare const fetchMetricsAsync: ({ token, page, scope, searchTerm, }: MetricSearchRequest) => Promise<components["schemas"]["MetricPaginated"]>;
 export declare const fetchMetricAsync: ({ token, id, }: EntityRequest) => Promise<components["schemas"]["Metric"]>;
 export declare const fetchMetricCustomersAsync: ({ token, page, id, }: PaginatedEntityRequest) => Promise<any>;
 export declare const fetchMetricCustomerMetricsAsync: ({ token, page, id, }: PaginatedEntityRequest) => Promise<any>;

@@ -6,5 +6,7 @@ namespace SignalBox.Web.Dto
     {
         [FromQuery(Name = "term")]
         public string Term { get; set; }
+        [FromQuery(Name = "scope")]
+        public string Scope { get; set; }
     }
 }

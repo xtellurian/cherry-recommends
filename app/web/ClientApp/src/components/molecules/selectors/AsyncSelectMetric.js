@@ -11,9 +11,10 @@ const AsyncSelectMetric = ({
   allowNone,
   isMulti,
   defaultCommonIds,
+  scope,
 }) => {
   const token = useAccessToken();
-  const metrics = useMetrics();
+  const metrics = useMetrics({ scope });
   const metricsSelectable = metrics.items
     ? metrics.items.map((u) => ({
         label: u.name || u.commonId,
@@ -45,6 +46,7 @@ const AsyncSelectMetric = ({
     fetchMetricAsync({
       token,
       searchTerm: inputValue,
+      scope,
     })
       .then((r) => {
         const selectable = r.items.map((x) => ({

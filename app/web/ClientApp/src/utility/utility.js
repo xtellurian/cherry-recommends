@@ -104,4 +104,4 @@ export function saveBlob({ blob, name }) {
   a.href = url;
   a.click();
   window.URL.revokeObjectURL(url);
-};
+}

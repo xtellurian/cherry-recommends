@@ -5,116 +5,6 @@
     "version": "v1"
   },
   "paths": {
-    "/api/Actions/distinct-names": {
-      "get": {
-        "tags": [
-          "Actions"
-        ],
-        "summary": "Gets unique action names.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "term",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringPaginated"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Actions/distinct-groups": {
-      "get": {
-        "tags": [
-          "Actions"
-        ],
-        "summary": "Gets unique action names.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "term",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActionCategoryAndNamePaginated"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/ApiKeys/exchange": {
       "post": {
         "tags": [
@@ -1729,6 +1619,13 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1860,6 +1757,13 @@
           },
           {
             "name": "term",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
             "in": "query",
             "schema": {
               "type": "string"
@@ -2107,36 +2011,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TrackedUserEventSummary"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/DataSummary/actions": {
-      "get": {
-        "tags": [
-          "DataSummary"
-        ],
-        "summary": "Gets the latest actions that have been logged against any tracked user.",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrackedUserActionPaginated"
                 }
               }
             }
@@ -2586,6 +2460,13 @@
           },
           {
             "name": "term",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
             "in": "query",
             "schema": {
               "type": "string"
@@ -3129,6 +3010,13 @@
           },
           {
             "name": "term",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
             "in": "query",
             "schema": {
               "type": "string"
@@ -4918,7 +4806,7 @@
         "tags": [
           "MetricGenerators"
         ],
-        "summary": "Creates a new generic Feature that can used on any tracked user.",
+        "summary": "Creates a new Metric generator",
         "requestBody": {
           "content": {
             "application/json": {
@@ -5013,7 +4901,7 @@
         "tags": [
           "MetricGenerators"
         ],
-        "summary": "Creates a new generic Feature that can used on any tracked user.",
+        "summary": "Creates a new Metric generator",
         "requestBody": {
           "content": {
             "application/json": {
@@ -5298,6 +5186,66 @@
       }
     },
     "/api/Features": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "summary": "Returned a paginated list of items for this resource.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "Metrics"
@@ -5329,59 +5277,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Metric"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Metrics"
-        ],
-        "summary": "Returned a paginated list of items for this resource.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "term",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MetricPaginated"
                 }
               }
             }
@@ -5400,6 +5295,66 @@
       }
     },
     "/api/Metrics": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "summary": "Returned a paginated list of items for this resource.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "Metrics"
@@ -5431,59 +5386,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Metric"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Metrics"
-        ],
-        "summary": "Returned a paginated list of items for this resource.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "term",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MetricPaginated"
                 }
               }
             }
@@ -6061,6 +5963,174 @@
         }
       }
     },
+    "/api/Features/{id}/AggregateMetricValuesNumeric": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerMetricWeeklyNumericAggregate"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Metrics/{id}/AggregateMetricValuesNumeric": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerMetricWeeklyNumericAggregate"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Features/{id}/AggregateMetricValuesString": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerMetricWeeklyStringAggregate"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Metrics/{id}/AggregateMetricValuesString": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerMetricWeeklyStringAggregate"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Features/{id}/Destinations": {
       "get": {
         "tags": [
@@ -6243,6 +6313,70 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Features/{id}/ExportCustomers": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Metrics/{id}/ExportCustomers": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
           },
           "400": {
             "description": "Bad Request",
@@ -7115,6 +7249,13 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -7468,6 +7609,13 @@
           },
           {
             "name": "term",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
             "in": "query",
             "schema": {
               "type": "string"
@@ -9055,6 +9203,13 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -9445,180 +9600,6 @@
         "responses": {
           "200": {
             "description": "Success"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/RewardSelectors": {
-      "post": {
-        "tags": [
-          "RewardSelectors"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRewardSelectorDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRewardSelectorDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRewardSelectorDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RewardSelector"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "RewardSelectors"
-        ],
-        "summary": "Returned a paginated list of items for this resource.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RewardSelectorPaginated"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/RewardSelectors/{id}": {
-      "get": {
-        "tags": [
-          "RewardSelectors"
-        ],
-        "summary": "Returns the resource with this Id.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RewardSelector"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "RewardSelectors"
-        ],
-        "summary": "Deletes the resource with this Id.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteResponse"
-                }
-              }
-            }
           },
           "400": {
             "description": "Bad Request",
@@ -10080,384 +10061,6 @@
         }
       }
     },
-    "/api/TrackedUsers/{id}/action-groups": {
-      "get": {
-        "tags": [
-          "TrackedUserActions"
-        ],
-        "summary": "Gets the latest actions from a tracked user.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "useInternalId",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActionCategoryAndNamePaginated"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/api/Customers/{id}/action-groups": {
-      "get": {
-        "tags": [
-          "TrackedUserActions"
-        ],
-        "summary": "Gets the latest actions from a tracked user.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "useInternalId",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActionCategoryAndNamePaginated"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/api/TrackedUsers/{id}/actions/{category}": {
-      "get": {
-        "tags": [
-          "TrackedUserActions"
-        ],
-        "summary": "Gets the latest action from a tracked user for this category.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "category",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "actionName",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "useInternalId",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Customers/{id}/actions/{category}": {
-      "get": {
-        "tags": [
-          "TrackedUserActions"
-        ],
-        "summary": "Gets the latest action from a tracked user for this category.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "category",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "actionName",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "useInternalId",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/TrackedUsers/{id}/actions": {
-      "get": {
-        "tags": [
-          "TrackedUserActions"
-        ],
-        "summary": "Gets actions for a tracked user.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "revenueOnly",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "useInternalId",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrackedUserActionPaginated"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Customers/{id}/actions": {
-      "get": {
-        "tags": [
-          "TrackedUserActions"
-        ],
-        "summary": "Gets actions for a tracked user.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "revenueOnly",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "useInternalId",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrackedUserActionPaginated"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/TrackedUsers/{id}/latest-recommendations": {
       "get": {
         "tags": [
@@ -10620,37 +10223,6 @@
   },
   "components": {
     "schemas": {
-      "ActionCategoryAndName": {
-        "type": "object",
-        "properties": {
-          "category": {
-            "type": "string",
-            "nullable": true
-          },
-          "actionName": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ActionCategoryAndNamePaginated": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ActionCategoryAndName"
-            },
-            "nullable": true,
-            "readOnly": true
-          },
-          "pagination": {
-            "$ref": "#/components/schemas/PaginationInfo"
-          }
-        },
-        "additionalProperties": false
-      },
       "AddItemDto": {
         "type": "object",
         "properties": {
@@ -10660,6 +10232,47 @@
             "nullable": true
           },
           "commonId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AggregateCustomerMetric": {
+        "type": "object",
+        "properties": {
+          "metricId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "metric": {
+            "$ref": "#/components/schemas/Metric"
+          },
+          "aggregationType": {
+            "$ref": "#/components/schemas/AggregationTypes"
+          },
+          "categoricalValue": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AggregateCustomerMetricDto": {
+        "required": [
+          "aggregationType",
+          "metricId"
+        ],
+        "type": "object",
+        "properties": {
+          "metricId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "aggregationType": {
+            "$ref": "#/components/schemas/AggregationTypes"
+          },
+          "categoricalValue": {
             "type": "string",
             "nullable": true
           }
@@ -11112,7 +10725,7 @@
       "CreateMetric": {
         "required": [
           "commonId",
-          "valueType"
+          "scope"
         ],
         "type": "object",
         "properties": {
@@ -11128,6 +10741,9 @@
           },
           "valueType": {
             "$ref": "#/components/schemas/MetricValueType"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/MetricScopes"
           }
         },
         "additionalProperties": false
@@ -11144,9 +10760,7 @@
             "nullable": true
           },
           "generatorType": {
-            "pattern": "MonthsSinceEarliestEvent|FilterSelectAggregate",
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/MetricGeneratorTypes"
           },
           "steps": {
             "type": "array",
@@ -11154,6 +10768,12 @@
               "$ref": "#/components/schemas/FilterSelectAggregateStepDto"
             },
             "nullable": true
+          },
+          "aggregateCustomerMetric": {
+            "$ref": "#/components/schemas/AggregateCustomerMetricDto"
+          },
+          "timeWindow": {
+            "$ref": "#/components/schemas/MetricGeneratorTimeWindow"
           }
         },
         "additionalProperties": false
@@ -11340,27 +10960,6 @@
         },
         "additionalProperties": false
       },
-      "CreateRewardSelectorDto": {
-        "required": [
-          "actionName",
-          "selectorType"
-        ],
-        "type": "object",
-        "properties": {
-          "category": {
-            "type": "string",
-            "nullable": true
-          },
-          "actionName": {
-            "type": "string"
-          },
-          "selectorType": {
-            "pattern": "Revenue",
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateSegmentDto": {
         "type": "object",
         "properties": {
@@ -11519,13 +11118,6 @@
           },
           "customer": {
             "$ref": "#/components/schemas/Customer"
-          },
-          "actions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TrackedUserAction"
-            },
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -11543,6 +11135,62 @@
           },
           "pagination": {
             "$ref": "#/components/schemas/PaginationInfo"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerMetricWeeklyNumericAggregate": {
+        "type": "object",
+        "properties": {
+          "firstOfWeek": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastOfWeek": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metricId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "weeklyMeanNumericValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "weeklyDistinctCustomerCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerMetricWeeklyStringAggregate": {
+        "type": "object",
+        "properties": {
+          "firstOfWeek": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastOfWeek": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metricId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "stringValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "weeklyValueCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weeklyDistinctCustomerCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -11860,10 +11508,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "actionsProcessed": {
-            "type": "integer",
-            "format": "int32"
-          },
           "eventsEnqueued": {
             "type": "integer",
             "format": "int32"
@@ -12036,16 +11680,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "trackedUserId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "trackedUser": {
-            "$ref": "#/components/schemas/Customer"
-          },
-          "customer": {
-            "$ref": "#/components/schemas/Customer"
-          },
           "metricId": {
             "type": "integer",
             "format": "int64"
@@ -12072,6 +11706,20 @@
           "version": {
             "type": "integer",
             "format": "int32"
+          },
+          "discriminator": {
+            "type": "string",
+            "nullable": true
+          },
+          "trackedUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "trackedUser": {
+            "$ref": "#/components/schemas/Customer"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Customer"
           }
         },
         "additionalProperties": false
@@ -12680,6 +12328,35 @@
         },
         "additionalProperties": false
       },
+      "JoinTwoMetrics": {
+        "type": "object",
+        "properties": {
+          "metric1Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "metric1": {
+            "$ref": "#/components/schemas/Metric"
+          },
+          "metric2Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "metric2": {
+            "$ref": "#/components/schemas/Metric"
+          },
+          "joinType": {
+            "$ref": "#/components/schemas/JoinType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "JoinType": {
+        "enum": [
+          "divide"
+        ],
+        "type": "string"
+      },
       "LinkModel": {
         "type": "object",
         "properties": {
@@ -12738,6 +12415,9 @@
           },
           "valueType": {
             "$ref": "#/components/schemas/MetricValueType"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/MetricScopes"
           }
         },
         "additionalProperties": false
@@ -12834,6 +12514,15 @@
               "$ref": "#/components/schemas/FilterSelectAggregateStep"
             },
             "nullable": true
+          },
+          "timeWindow": {
+            "$ref": "#/components/schemas/MetricGeneratorTimeWindow"
+          },
+          "aggregateCustomerMetric": {
+            "$ref": "#/components/schemas/AggregateCustomerMetric"
+          },
+          "joinTwoMetrics": {
+            "$ref": "#/components/schemas/JoinTwoMetrics"
           }
         },
         "additionalProperties": false
@@ -12875,10 +12564,19 @@
         },
         "additionalProperties": false
       },
+      "MetricGeneratorTimeWindow": {
+        "enum": [
+          "allTime",
+          "sevenDays",
+          "thirtyDays"
+        ],
+        "type": "string"
+      },
       "MetricGeneratorTypes": {
         "enum": [
           "monthsSinceEarliestEvent",
-          "filterSelectAggregate"
+          "filterSelectAggregate",
+          "aggregateCustomerMetric"
         ],
         "type": "string"
       },
@@ -12926,6 +12624,13 @@
           }
         },
         "additionalProperties": false
+      },
+      "MetricScopes": {
+        "enum": [
+          "customer",
+          "global"
+        ],
+        "type": "string"
       },
       "MetricValueType": {
         "enum": [
@@ -13952,52 +13657,6 @@
         },
         "additionalProperties": false
       },
-      "RewardSelector": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "created": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastUpdated": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "category": {
-            "type": "string",
-            "nullable": true
-          },
-          "actionName": {
-            "type": "string",
-            "nullable": true
-          },
-          "selectorType": {
-            "$ref": "#/components/schemas/SelectorTypes"
-          }
-        },
-        "additionalProperties": false
-      },
-      "RewardSelectorPaginated": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RewardSelector"
-            },
-            "nullable": true,
-            "readOnly": true
-          },
-          "pagination": {
-            "$ref": "#/components/schemas/PaginationInfo"
-          }
-        },
-        "additionalProperties": false
-      },
       "Schema": {
         "type": "object",
         "properties": {
@@ -14106,12 +13765,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "SelectorTypes": {
-        "enum": [
-          "revenue"
-        ],
-        "type": "string"
       },
       "SelectStep": {
         "type": "object",
@@ -14225,23 +13878,6 @@
           "status": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "StringPaginated": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true,
-            "readOnly": true
-          },
-          "pagination": {
-            "$ref": "#/components/schemas/PaginationInfo"
           }
         },
         "additionalProperties": false
@@ -14395,120 +14031,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "TrackedUserAction": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "created": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastUpdated": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "trackedUserId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "trackedUser": {
-            "$ref": "#/components/schemas/Customer"
-          },
-          "customer": {
-            "$ref": "#/components/schemas/Customer"
-          },
-          "commonUserId": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "customerId": {
-            "type": "string",
-            "nullable": true
-          },
-          "eventId": {
-            "type": "string",
-            "nullable": true
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "recommendationCorrelatorId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "recommendationCorrelator": {
-            "$ref": "#/components/schemas/RecommendationCorrelator"
-          },
-          "integratedSystemId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "category": {
-            "type": "string",
-            "nullable": true
-          },
-          "actionName": {
-            "type": "string",
-            "nullable": true
-          },
-          "actionValue": {
-            "type": "string",
-            "nullable": true
-          },
-          "valueType": {
-            "$ref": "#/components/schemas/TrackedUserActionValueType"
-          },
-          "trackedUserEventId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "feedbackScore": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "associatedRevenue": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "TrackedUserActionPaginated": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TrackedUserAction"
-            },
-            "nullable": true,
-            "readOnly": true
-          },
-          "pagination": {
-            "$ref": "#/components/schemas/PaginationInfo"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TrackedUserActionValueType": {
-        "enum": [
-          "string",
-          "float",
-          "int"
-        ],
-        "type": "string"
       },
       "TrackedUserEventSummary": {
         "type": "object",

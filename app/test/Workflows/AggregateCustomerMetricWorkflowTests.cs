@@ -62,7 +62,10 @@ namespace SignalBox.Test.Stores
                 .ReturnsAsync(historicValues);
             mockGlobalMetricValueStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
 
-            var sut = new AggregateCustomerMetricWorkflow(mockHistoricCustomerMetricStore.Object, mockGlobalMetricValueStore.Object);
+            var sut = new AggregateCustomerMetricWorkflow(
+                mockHistoricCustomerMetricStore.Object,
+                mockGlobalMetricValueStore.Object,
+                Utility.MockLogger<AggregateCustomerMetricWorkflow>().Object);
 
             var generator = MetricGenerator.ForAggregateCustomerMetric(metric, definition);
             await sut.RunAggregateCustomerMetricWorkflow(generator);
@@ -144,7 +147,10 @@ namespace SignalBox.Test.Stores
                 .ReturnsAsync(historicValues);
             mockGlobalMetricValueStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
 
-            var sut = new AggregateCustomerMetricWorkflow(mockHistoricCustomerMetricStore.Object, mockGlobalMetricValueStore.Object);
+            var sut = new AggregateCustomerMetricWorkflow(
+                mockHistoricCustomerMetricStore.Object,
+                mockGlobalMetricValueStore.Object,
+                Utility.MockLogger<AggregateCustomerMetricWorkflow>().Object);
 
             var generator = MetricGenerator.ForAggregateCustomerMetric(metric, definition);
             await sut.RunAggregateCustomerMetricWorkflow(generator);

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
+using SignalBox.Core.Metrics;
 using SignalBox.Core.Metrics.Destinations;
 using SignalBox.Core.Workflows;
 using SignalBox.Web.Dto;
@@ -36,10 +37,25 @@ namespace SignalBox.Web.Controllers
             this.generatorWorkflows = generatorWorkflows;
         }
 
+        /// <summary>Returned a paginated list of items for this resource.</summary>
+        [HttpGet]
+        public override async Task<Paginated<Metric>> Query([FromQuery] PaginateRequest p, [FromQuery] SearchEntities q)
+        {
+            if (Enum.TryParse<MetricScopes>(q.Scope, ignoreCase: true, out var metricScope))
+            {
+                return await store.Query(new EntityStoreQueryOptions<Metric>(p.Page, _ => _.Scope == metricScope));
+            }
+            else
+            {
+                return await base.Query(p, q);
+            }
+        }
+
         /// <summary>Creates a new generic Metric that can used on any Customer.</summary>
         [HttpPost]
         public async Task<Metric> CreateMetric([FromBody] CreateMetric dto)
         {
+            dto.Validate();
             return await workflows.CreateMetric(dto.CommonId, dto.Name, dto.ValueType, dto.Scope);
         }
 

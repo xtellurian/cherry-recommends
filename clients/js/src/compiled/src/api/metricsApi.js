@@ -1,11 +1,12 @@
 import { executeFetch } from "./client/apiClientTs";
-export const fetchMetricsAsync = async ({ token, page, searchTerm, }) => {
+export const fetchMetricsAsync = async ({ token, page, scope, searchTerm, }) => {
     return await executeFetch({
         path: "api/Metrics",
         token,
         page,
         query: {
             "q.term": searchTerm,
+            "q.scope": scope,
         },
     });
 };

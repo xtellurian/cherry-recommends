@@ -4,56 +4,6 @@
  */
 
 export interface paths {
-  "/api/Actions/distinct-names": {
-    get: {
-      parameters: {
-        query: {
-          page?: number;
-          pageSize?: number;
-          term?: string;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["StringPaginated"];
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
-  "/api/Actions/distinct-groups": {
-    get: {
-      parameters: {
-        query: {
-          page?: number;
-          pageSize?: number;
-          term?: string;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["ActionCategoryAndNamePaginated"];
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
   "/api/ApiKeys/exchange": {
     post: {
       responses: {
@@ -778,6 +728,7 @@ export interface paths {
           page?: number;
           pageSize?: number;
           term?: string;
+          scope?: string;
         };
       };
       responses: {
@@ -841,6 +792,7 @@ export interface paths {
           page?: number;
           pageSize?: number;
           term?: string;
+          scope?: string;
         };
       };
       responses: {
@@ -1010,24 +962,6 @@ export interface paths {
         200: {
           content: {
             "application/json": components["schemas"]["TrackedUserEventSummary"];
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
-  "/api/DataSummary/actions": {
-    get: {
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["TrackedUserActionPaginated"];
           };
         };
         /** Bad Request */
@@ -1232,6 +1166,7 @@ export interface paths {
           page?: number;
           pageSize?: number;
           term?: string;
+          scope?: string;
         };
       };
       responses: {
@@ -1505,6 +1440,7 @@ export interface paths {
           page?: number;
           pageSize?: number;
           term?: string;
+          scope?: string;
         };
       };
       responses: {
@@ -2641,6 +2577,7 @@ export interface paths {
           page?: number;
           pageSize?: number;
           term?: string;
+          scope?: string;
         };
       };
       responses: {
@@ -2689,6 +2626,7 @@ export interface paths {
           page?: number;
           pageSize?: number;
           term?: string;
+          scope?: string;
         };
       };
       responses: {
@@ -3000,6 +2938,98 @@ export interface paths {
       };
     };
   };
+  "/api/Features/{id}/AggregateMetricValuesNumeric": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CustomerMetricWeeklyNumericAggregate"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/Metrics/{id}/AggregateMetricValuesNumeric": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CustomerMetricWeeklyNumericAggregate"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/Features/{id}/AggregateMetricValuesString": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CustomerMetricWeeklyStringAggregate"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/Metrics/{id}/AggregateMetricValuesString": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CustomerMetricWeeklyStringAggregate"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/Features/{id}/Destinations": {
     get: {
       parameters: {
@@ -3098,6 +3128,44 @@ export interface paths {
           "application/json": components["schemas"]["CreateDestinationDto"];
           "text/json": components["schemas"]["CreateDestinationDto"];
           "application/*+json": components["schemas"]["CreateDestinationDto"];
+        };
+      };
+    };
+  };
+  "/api/Features/{id}/ExportCustomers": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/Metrics/{id}/ExportCustomers": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
         };
       };
     };
@@ -3510,6 +3578,7 @@ export interface paths {
           page?: number;
           pageSize?: number;
           term?: string;
+          scope?: string;
         };
       };
       responses: {
@@ -3689,6 +3758,7 @@ export interface paths {
           page?: number;
           pageSize?: number;
           term?: string;
+          scope?: string;
         };
       };
       responses: {
@@ -4484,6 +4554,7 @@ export interface paths {
           page?: number;
           pageSize?: number;
           term?: string;
+          scope?: string;
         };
       };
       responses: {
@@ -4712,97 +4783,6 @@ export interface paths {
       responses: {
         /** Success */
         200: unknown;
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
-  "/api/RewardSelectors": {
-    get: {
-      parameters: {
-        query: {
-          page?: number;
-          pageSize?: number;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["RewardSelectorPaginated"];
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-    post: {
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["RewardSelector"];
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-      requestBody: {
-        content: {
-          "application/json": components["schemas"]["CreateRewardSelectorDto"];
-          "text/json": components["schemas"]["CreateRewardSelectorDto"];
-          "application/*+json": components["schemas"]["CreateRewardSelectorDto"];
-        };
-      };
-    };
-  };
-  "/api/RewardSelectors/{id}": {
-    get: {
-      parameters: {
-        path: {
-          id: number;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["RewardSelector"];
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-    delete: {
-      parameters: {
-        path: {
-          id: number;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["DeleteResponse"];
-          };
-        };
         /** Bad Request */
         400: {
           content: {
@@ -5057,168 +5037,6 @@ export interface paths {
       };
     };
   };
-  "/api/TrackedUsers/{id}/action-groups": {
-    get: {
-      parameters: {
-        query: {
-          page?: number;
-          pageSize?: number;
-          useInternalId?: boolean;
-        };
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["ActionCategoryAndNamePaginated"];
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
-  "/api/Customers/{id}/action-groups": {
-    get: {
-      parameters: {
-        query: {
-          page?: number;
-          pageSize?: number;
-          useInternalId?: boolean;
-        };
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["ActionCategoryAndNamePaginated"];
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
-  "/api/TrackedUsers/{id}/actions/{category}": {
-    get: {
-      parameters: {
-        path: {
-          id: string;
-          category: string;
-        };
-        query: {
-          actionName?: string;
-          useInternalId?: boolean;
-        };
-      };
-      responses: {
-        /** Success */
-        200: unknown;
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
-  "/api/Customers/{id}/actions/{category}": {
-    get: {
-      parameters: {
-        path: {
-          id: string;
-          category: string;
-        };
-        query: {
-          actionName?: string;
-          useInternalId?: boolean;
-        };
-      };
-      responses: {
-        /** Success */
-        200: unknown;
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
-  "/api/TrackedUsers/{id}/actions": {
-    get: {
-      parameters: {
-        query: {
-          page?: number;
-          pageSize?: number;
-          revenueOnly?: boolean;
-          useInternalId?: boolean;
-        };
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["TrackedUserActionPaginated"];
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
-  "/api/Customers/{id}/actions": {
-    get: {
-      parameters: {
-        query: {
-          page?: number;
-          pageSize?: number;
-          revenueOnly?: boolean;
-          useInternalId?: boolean;
-        };
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["TrackedUserActionPaginated"];
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
   "/api/TrackedUsers/{id}/latest-recommendations": {
     get: {
       parameters: {
@@ -5298,17 +5116,20 @@ export interface paths {
 
 export interface components {
   schemas: {
-    ActionCategoryAndName: {
-      category?: string | null;
-      actionName?: string | null;
-    };
-    ActionCategoryAndNamePaginated: {
-      items?: components["schemas"]["ActionCategoryAndName"][] | null;
-      pagination?: components["schemas"]["PaginationInfo"];
-    };
     AddItemDto: {
       id?: number | null;
       commonId?: string | null;
+    };
+    AggregateCustomerMetric: {
+      metricId?: number;
+      metric?: components["schemas"]["Metric"];
+      aggregationType?: components["schemas"]["AggregationTypes"];
+      categoricalValue?: string | null;
+    };
+    AggregateCustomerMetricDto: {
+      metricId: number;
+      aggregationType: components["schemas"]["AggregationTypes"];
+      categoricalValue?: string | null;
     };
     AggregateStep: {
       aggregationType?: components["schemas"]["AggregationTypes"];
@@ -5422,13 +5243,16 @@ export interface components {
     CreateMetric: {
       commonId: string;
       name?: string | null;
-      valueType: components["schemas"]["MetricValueType"];
+      valueType?: components["schemas"]["MetricValueType"];
+      scope: components["schemas"]["MetricScopes"];
     };
     CreateMetricGenerator: {
       featureCommonId?: string | null;
       metricCommonId?: string | null;
-      generatorType?: string | null;
+      generatorType?: components["schemas"]["MetricGeneratorTypes"];
       steps?: components["schemas"]["FilterSelectAggregateStepDto"][] | null;
+      aggregateCustomerMetric?: components["schemas"]["AggregateCustomerMetricDto"];
+      timeWindow?: components["schemas"]["MetricGeneratorTimeWindow"];
     };
     CreateOrUpdateCustomerDto: {
       commonUserId?: string | null;
@@ -5475,11 +5299,6 @@ export interface components {
       description?: string | null;
       properties?: { [key: string]: unknown } | null;
     };
-    CreateRewardSelectorDto: {
-      category?: string | null;
-      actionName: string;
-      selectorType: string;
-    };
     CreateSegmentDto: {
       name?: string | null;
     };
@@ -5521,11 +5340,25 @@ export interface components {
       trackedUserId?: number | null;
       trackedUser?: components["schemas"]["Customer"];
       customer?: components["schemas"]["Customer"];
-      actions?: components["schemas"]["TrackedUserAction"][] | null;
     };
     CustomerEventPaginated: {
       items?: components["schemas"]["CustomerEvent"][] | null;
       pagination?: components["schemas"]["PaginationInfo"];
+    };
+    CustomerMetricWeeklyNumericAggregate: {
+      firstOfWeek?: string;
+      lastOfWeek?: string;
+      metricId?: number;
+      weeklyMeanNumericValue?: number;
+      weeklyDistinctCustomerCount?: number;
+    };
+    CustomerMetricWeeklyStringAggregate: {
+      firstOfWeek?: string;
+      lastOfWeek?: string;
+      metricId?: number;
+      stringValue?: string | null;
+      weeklyValueCount?: number;
+      weeklyDistinctCustomerCount?: number;
     };
     CustomerPaginated: {
       items?: components["schemas"]["Customer"][] | null;
@@ -5614,7 +5447,6 @@ export interface components {
     };
     EventLoggingResponse: {
       eventsProcessed?: number;
-      actionsProcessed?: number;
       eventsEnqueued?: number;
     };
     EventStats: {
@@ -5662,9 +5494,6 @@ export interface components {
       id?: number;
       created?: string;
       lastUpdated?: string;
-      trackedUserId?: number;
-      trackedUser?: components["schemas"]["Customer"];
-      customer?: components["schemas"]["Customer"];
       metricId?: number;
       feature?: components["schemas"]["Metric"];
       metric?: components["schemas"]["Metric"];
@@ -5672,6 +5501,10 @@ export interface components {
       stringValue?: string | null;
       value?: unknown | null;
       version?: number;
+      discriminator?: string | null;
+      trackedUserId?: number;
+      trackedUser?: components["schemas"]["Customer"];
+      customer?: components["schemas"]["Customer"];
     };
     HistoricCustomerMetricPaginated: {
       items?: components["schemas"]["HistoricCustomerMetric"][] | null;
@@ -5829,6 +5662,14 @@ export interface components {
       targetMetric?: components["schemas"]["Metric"];
       performanceByItem?: components["schemas"]["PerformanceByItem"][] | null;
     };
+    JoinTwoMetrics: {
+      metric1Id?: number;
+      metric1?: components["schemas"]["Metric"];
+      metric2Id?: number;
+      metric2?: components["schemas"]["Metric"];
+      joinType?: components["schemas"]["JoinType"];
+    };
+    JoinType: "divide";
     LinkModel: {
       modelId?: number;
     };
@@ -5845,6 +5686,7 @@ export interface components {
       commonId?: string | null;
       properties?: { [key: string]: unknown } | null;
       valueType?: components["schemas"]["MetricValueType"];
+      scope?: components["schemas"]["MetricScopes"];
     };
     MetricDestinationBase: {
       id?: number;
@@ -5871,6 +5713,9 @@ export interface components {
       filterSelectAggregateSteps?:
         | components["schemas"]["FilterSelectAggregateStep"][]
         | null;
+      timeWindow?: components["schemas"]["MetricGeneratorTimeWindow"];
+      aggregateCustomerMetric?: components["schemas"]["AggregateCustomerMetric"];
+      joinTwoMetrics?: components["schemas"]["JoinTwoMetrics"];
     };
     MetricGeneratorPaginated: {
       items?: components["schemas"]["MetricGenerator"][] | null;
@@ -5881,7 +5726,11 @@ export interface components {
       totalWrites?: number | null;
       maxSubsetSize?: number | null;
     };
-    MetricGeneratorTypes: "monthsSinceEarliestEvent" | "filterSelectAggregate";
+    MetricGeneratorTimeWindow: "allTime" | "sevenDays" | "thirtyDays";
+    MetricGeneratorTypes:
+      | "monthsSinceEarliestEvent"
+      | "filterSelectAggregate"
+      | "aggregateCustomerMetric";
     MetricPaginated: {
       items?: components["schemas"]["Metric"][] | null;
       pagination?: components["schemas"]["PaginationInfo"];
@@ -5891,6 +5740,7 @@ export interface components {
       featureCommonIds?: string[] | null;
       metricCommonIds?: string[] | null;
     };
+    MetricScopes: "customer" | "global";
     MetricValueType: "numeric" | "categorical";
     ModelInputDto: {
       customerId?: string | null;
@@ -6155,18 +6005,6 @@ export interface components {
       modelType: string;
       hostingType: string;
     };
-    RewardSelector: {
-      id?: number;
-      created?: string;
-      lastUpdated?: string;
-      category?: string | null;
-      actionName?: string | null;
-      selectorType?: components["schemas"]["SelectorTypes"];
-    };
-    RewardSelectorPaginated: {
-      items?: components["schemas"]["RewardSelector"][] | null;
-      pagination?: components["schemas"]["PaginationInfo"];
-    };
     Schema: {
       $ref?: string | null;
     };
@@ -6196,7 +6034,6 @@ export interface components {
       items?: components["schemas"]["Segment"][] | null;
       pagination?: components["schemas"]["PaginationInfo"];
     };
-    SelectorTypes: "revenue";
     SelectStep: {
       propertyNameMatch?: string | null;
     };
@@ -6228,10 +6065,6 @@ export interface components {
     };
     StatusDto: {
       status?: string | null;
-    };
-    StringPaginated: {
-      items?: string[] | null;
-      pagination?: components["schemas"]["PaginationInfo"];
     };
     SwaggerDefinition: {
       swagger?: string | null;
@@ -6269,33 +6102,6 @@ export interface components {
       totalMinutes?: number;
       totalSeconds?: number;
     };
-    TrackedUserAction: {
-      id?: number;
-      created?: string;
-      lastUpdated?: string;
-      trackedUserId?: number | null;
-      trackedUser?: components["schemas"]["Customer"];
-      customer?: components["schemas"]["Customer"];
-      commonUserId?: string | null;
-      customerId?: string | null;
-      eventId?: string | null;
-      timestamp?: string;
-      recommendationCorrelatorId?: number | null;
-      recommendationCorrelator?: components["schemas"]["RecommendationCorrelator"];
-      integratedSystemId?: number | null;
-      category?: string | null;
-      actionName?: string | null;
-      actionValue?: string | null;
-      valueType?: components["schemas"]["TrackedUserActionValueType"];
-      trackedUserEventId?: number | null;
-      feedbackScore?: number | null;
-      associatedRevenue?: number | null;
-    };
-    TrackedUserActionPaginated: {
-      items?: components["schemas"]["TrackedUserAction"][] | null;
-      pagination?: components["schemas"]["PaginationInfo"];
-    };
-    TrackedUserActionValueType: "string" | "float" | "int";
     TrackedUserEventSummary: {
       keys?: string[] | null;
       kinds?: {

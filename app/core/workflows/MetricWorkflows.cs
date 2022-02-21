@@ -29,7 +29,7 @@ namespace SignalBox.Core.Workflows
             this.trackedUserStore = trackedUserStore;
         }
 
-        public async Task<Metric> CreateMetric(string commonId, string name, MetricValueType valueType, MetricScopes scope)
+        public async Task<Metric> CreateMetric(string commonId, string name, MetricValueType? valueType, MetricScopes scope)
         {
             var metric = await metricStore.Create(new Metric(commonId, name, valueType, scope));
             await metricStore.Context.SaveChanges();

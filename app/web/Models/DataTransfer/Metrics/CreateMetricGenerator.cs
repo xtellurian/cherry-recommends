@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using SignalBox.Core;
+using SignalBox.Core.Metrics;
 
 namespace SignalBox.Web.Dto
 {
@@ -11,7 +12,7 @@ namespace SignalBox.Web.Dto
         public override void Validate()
         {
             base.Validate();
-            if (this.GeneratorType == "FilterSelectAggregate")
+            if (GeneratorType == MetricGeneratorTypes.FilterSelectAggregate)
             {
                 // validate filter select aggregate
                 if (this.Steps == null || !this.Steps.Any())
@@ -33,11 +34,10 @@ namespace SignalBox.Web.Dto
         }
 
         public string MetricCommonId { get; set; }
-        [RegularExpression("MonthsSinceEarliestEvent|FilterSelectAggregate",
-            ErrorMessage = "GeneratorType must be one of MonthsSinceEarliestEvent, FilterSelectAggregate")]
-        public string GeneratorType { get; set; }
+        public MetricGeneratorTypes GeneratorType { get; set; }
 
         public List<FilterSelectAggregateStepDto> Steps { get; set; }
+        public AggregateCustomerMetricDto AggregateCustomerMetric { get; set; }
         public MetricGeneratorTimeWindow? TimeWindow { get; set; }
     }
 }

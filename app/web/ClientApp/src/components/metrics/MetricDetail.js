@@ -114,10 +114,13 @@ const MetricDetail = () => {
           {metric.commonId && (
             <>
               <CopyableField label="Common Id" value={metric.commonId} />
-              <CopyableField
-                label="Value Type"
-                value={metric.valueType ?? "Unset"}
-              />
+              {metric.scope === "customer" && (
+                <CopyableField
+                  label="Value Type"
+                  value={metric.valueType ?? "Unset"}
+                />
+              )}
+              <CopyableField label="Scope" value={metric.scope} />
             </>
           )}
           <ConfirmDeletePopup

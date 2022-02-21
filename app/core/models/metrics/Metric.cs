@@ -27,7 +27,7 @@ namespace SignalBox.Core
         [JsonConstructor]
         public Metric() // this ensures the object can be deserialized between dotnetFunctions and the server
         { }
-        public Metric(string commonId, string name, MetricValueType valueType, MetricScopes scope) : base(commonId, name)
+        public Metric(string commonId, string name, MetricValueType? valueType, MetricScopes scope) : base(commonId, name)
         {
             ValueType = valueType;
             Scope = scope;

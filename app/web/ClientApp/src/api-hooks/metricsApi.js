@@ -13,7 +13,7 @@ import {
   fetchAggregateMetricValuesStringAsync,
 } from "../api/metricsApi";
 
-export const useMetrics = () => {
+export const useMetrics = ({ scope } = {}) => {
   const token = useAccessToken();
   const page = usePagination();
   const [state, setState] = React.useState(loadingState);
@@ -23,6 +23,7 @@ export const useMetrics = () => {
       fetchMetricsAsync({
         token,
         page,
+        scope,
       })
         .then(setState)
         .catch((error) => setState({ error }));

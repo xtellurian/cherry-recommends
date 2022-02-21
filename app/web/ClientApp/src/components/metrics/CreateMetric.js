@@ -13,9 +13,14 @@ import {
 import Select from "../molecules/selectors/Select";
 import { useCommonId } from "../../utility/utility";
 
-const valueTypeOptons = [
+const valueTypeOptions = [
   { value: "numeric", label: "Numeric" },
   { value: "categorical", label: "Categorical" },
+];
+
+const scopeOptions = [
+  { value: "customer", label: "Customer" },
+  { value: "global", label: "Global" },
 ];
 
 const CreateMetric = () => {
@@ -27,7 +32,8 @@ const CreateMetric = () => {
   const [metric, setMetric] = React.useState({
     commonId: "",
     name: "",
-    valueType: "",
+    valueType: null,
+    scope: null,
   });
   const [creating, setCreating] = React.useState(false);
 
@@ -50,6 +56,9 @@ const CreateMetric = () => {
   };
   const setSelectedValueType = (o) => {
     setMetric({ ...metric, valueType: o.value });
+  };
+  const setSelectedScope = (s) => {
+    setMetric({ ...metric, scope: s.value });
   };
 
   React.useEffect(() => {
@@ -101,10 +110,18 @@ const CreateMetric = () => {
 
         <Select
           className="mb-1"
-          placeholder="Select a metric value type"
-          onChange={setSelectedValueType}
-          options={valueTypeOptons}
+          placeholder="Choose a scope"
+          onChange={setSelectedScope}
+          options={scopeOptions}
         />
+        {metric.scope === "customer" && (
+          <Select
+            className="mb-1"
+            placeholder="Select a metric value type"
+            onChange={setSelectedValueType}
+            options={valueTypeOptions}
+          />
+        )}
 
         <AsyncButton
           loading={creating}
