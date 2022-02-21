@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
 
@@ -79,6 +81,22 @@ namespace SignalBox.Infrastructure.EntityFramework
             .ToListAsync();
 
             return stringAggregates;
+        }
+
+        public async Task<IEnumerable<MetricDailyBinValueNumeric>> GetMetricBinValuesNumeric(Metric metric, int binCount = 12)
+        {
+            var numericBinValues = await context.MetricDailyBinNumericValues
+                .FromSqlInterpolated($"dbo.sp_NumericMetricBinning {metric.Id},{binCount}")
+                .ToListAsync();
+            return numericBinValues;
+        }
+
+        public async Task<IEnumerable<MetricDailyBinValueString>> GetMetricBinValuesString(Metric metric, int topKValue = 12)
+        {
+            var categoricalBinValues = await context.MetricDailyBinStringValues
+                .FromSqlInterpolated($"dbo.sp_CategoricalMetricBinning {metric.Id},{topKValue}")
+                .ToListAsync();
+            return categoricalBinValues;
         }
 
         public async Task<IEnumerable<MetricCustomerExport>> GetMetricCustomerExports(Metric metric)

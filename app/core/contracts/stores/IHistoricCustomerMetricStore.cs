@@ -12,6 +12,8 @@ namespace SignalBox.Core
         Task<IEnumerable<Metric>> GetMetricsFor(Customer customer);
         Task<IEnumerable<CustomerMetricWeeklyNumericAggregate>> GetAggregateMetricValuesNumeric(Metric metric, int weeksAgo = 11);
         Task<IEnumerable<CustomerMetricWeeklyStringAggregate>> GetAggregateMetricValuesString(Metric metric, int weeksAgo = 11);
+        Task<IEnumerable<MetricDailyBinValueNumeric>> GetMetricBinValuesNumeric(Metric metric, int binCount = 12);
+        Task<IEnumerable<MetricDailyBinValueString>> GetMetricBinValuesString(Metric metric, int topKValue = 12);
         Task<IEnumerable<MetricCustomerExport>> GetMetricCustomerExports(Metric metric);
     }
 }

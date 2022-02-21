@@ -107,6 +107,23 @@ namespace SignalBox.Web.Controllers
             var aggregateMetricValues = await customerMetricStore.GetAggregateMetricValuesString(metric);
             return aggregateMetricValues;
         }
+        
+        [HttpGet("{id}/NumericMetricBinValues")]
+        public async Task<IEnumerable<MetricDailyBinValueNumeric>> NumericMetricBinValues(string id)
+        {
+            var metric = await base.GetResource(id);
+            var numericBinValues = await customerMetricStore.GetMetricBinValuesNumeric(metric);
+            return numericBinValues;
+        }
+        
+        [HttpGet("{id}/CategoricalMetricBinValues")]
+        public async Task<IEnumerable<MetricDailyBinValueString>> CategoricalMetricBinValues(string id)
+        {
+            var metric = await base.GetResource(id);
+            var categoricalBinValues = await customerMetricStore.GetMetricBinValuesString(metric);
+            return categoricalBinValues;
+        }
+
 
         [HttpGet("{id}/Destinations")]
         public async Task<IEnumerable<MetricDestinationBase>> GetDestinations(string id)

@@ -27,6 +27,8 @@ namespace SignalBox.Infrastructure
         public DbSet<HistoricCustomerMetric> HistoricCustomerMetrics { get; set; }
         public DbSet<GlobalMetricValue> GlobalMetrics { get; set; }
         public DbSet<LatestMetricVersion> LatestFeatureVersions { get; set; } // SQL view
+        public DbSet<MetricDailyBinValueNumeric> MetricDailyBinNumericValues { get; set; } // DbSet for executing stored procedure
+        public DbSet<MetricDailyBinValueString> MetricDailyBinStringValues { get; set; } // DbSet for executing stored procedure
 
         // recommenders
         public DbSet<RecommenderEntityBase> Recommenders { get; set; }
