@@ -1,9 +1,9 @@
 import React from "react";
-import dayjs from "dayjs";
 
 import { AggregateMetricChartLoader } from "../molecules/charts/AggregateMetricChartLoader";
 import { MetricHistogramLoader } from "../molecules/charts/MetricHistogramLoader";
 import { BigPopup } from "../molecules/popups/BigPopup";
+import { DateTimeField } from "../molecules/DateTimeField";
 
 const ReportCard = ({ name, lastUpdated, chart }) => {
   const [openReport, setOpenReport] = React.useState(false);
@@ -18,7 +18,7 @@ const ReportCard = ({ name, lastUpdated, chart }) => {
           {name}
         </span>
         <span className="text-center mt-1">
-          Last updated: {dayjs(lastUpdated).format("DD/MM/YYYY, hh:mm:ss a")}
+          <DateTimeField label="Last updated" date={lastUpdated} />
         </span>
         <button
           onClick={() => setOpenReport(true)}
@@ -43,14 +43,14 @@ const MetricReports = ({ metric }) => {
           <div className="col-4 mt-2">
             <ReportCard
               name={`Mean Weekly - ${metric.name}`}
-              subheader={metric.lastUpdated}
+              lastUpdated={metric.lastUpdated}
               chart={<AggregateMetricChartLoader metric={metric} />}
             />
           </div>
           <div className="col-4 mt-2">
             <ReportCard
               name={`${metric.name} Distribution`}
-              subheader={metric.lastUpdated}
+              lastUpdated={metric.lastUpdated}
               chart={<MetricHistogramLoader metric={metric} />}
             />
           </div>
