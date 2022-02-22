@@ -2,6 +2,7 @@ import React from "react";
 import dayjs from "dayjs";
 
 import { AggregateMetricChartLoader } from "../molecules/charts/AggregateMetricChartLoader";
+import { MetricHistogramLoader } from "../molecules/charts/MetricHistogramLoader";
 import { BigPopup } from "../molecules/popups/BigPopup";
 
 const ReportCard = ({ name, lastUpdated, chart }) => {
@@ -9,7 +10,7 @@ const ReportCard = ({ name, lastUpdated, chart }) => {
 
   return (
     <React.Fragment>
-      <div className="card py-5 px-3">
+      <div className="card py-5 px-3 h-100 d-flex justify-content-center align-items-center">
         <span
           className="font-weight-bold text-center"
           style={{ fontSize: "1.25rem" }}
@@ -38,12 +39,19 @@ const MetricReports = ({ metric }) => {
   return (
     <React.Fragment>
       <div className="mt-3">
-        <div className="row no-gutters">
+        <div className="row">
           <div className="col-4 mt-2">
             <ReportCard
               name={`Mean Weekly - ${metric.name}`}
               subheader={metric.lastUpdated}
               chart={<AggregateMetricChartLoader metric={metric} />}
+            />
+          </div>
+          <div className="col-4 mt-2">
+            <ReportCard
+              name={`${metric.name} Distribution`}
+              subheader={metric.lastUpdated}
+              chart={<MetricHistogramLoader metric={metric} />}
             />
           </div>
         </div>
