@@ -9,6 +9,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         public void Configure(EntityTypeBuilder<MetricDailyBinValueString> builder)
         {
             builder.HasNoKey();
+            builder.Metadata.SetIsTableExcludedFromMigrations(true);
         }
     }
 }
