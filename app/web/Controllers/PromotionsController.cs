@@ -10,12 +10,13 @@ namespace SignalBox.Web.Controllers
     [Authorize]
     [ApiController]
     [ApiVersion("0.1")]
+    [Route("api/RecommendableItems")]
     [Route("api/[controller]")]
-    public class RecommendableItemsController : CommonEntityControllerBase<RecommendableItem>
+    public class PromotionsController : CommonEntityControllerBase<RecommendableItem>
     {
         private readonly RecommendableItemWorkflows workflows;
 
-        public RecommendableItemsController(IRecommendableItemStore store, RecommendableItemWorkflows workflows) : base(store)
+        public PromotionsController(IRecommendableItemStore store, RecommendableItemWorkflows workflows) : base(store)
         {
             this.workflows = workflows;
         }
@@ -24,7 +25,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost]
         public async Task<RecommendableItem> Create(CreateRecommendableItemDto dto)
         {
-            return await workflows.CreateRecommendableItem(dto.CommonId, dto.Name, dto.ListPrice, dto.DirectCost, dto.Description, dto.Properties);
+            return await workflows.CreateRecommendableItem(dto.CommonId, dto.Name, dto.DirectCost, dto.NumberOfRedemptions, dto.BenefitType, dto.BenefitValue, dto.PromotionType, dto.Description, dto.Properties);
         }
 
         /// <summary>Updates a recommendable item.</summary>
@@ -32,7 +33,7 @@ namespace SignalBox.Web.Controllers
         public async Task<RecommendableItem> Update(string id, UpdateRecommendableItem dto)
         {
             var entity = await store.GetEntity(id);
-            return await workflows.UpdateRecommendableItem(entity, dto.Name, dto.ListPrice, dto.DirectCost, dto.Description, dto.Properties);
+            return await workflows.UpdateRecommendableItem(entity, dto.Name, dto.DirectCost, dto.NumberOfRedemptions, dto.BenefitType, dto.BenefitValue, dto.PromotionType, dto.Description, dto.Properties);
         }
 
         protected override async Task<(bool, string)> CanDelete(RecommendableItem entity)
@@ -40,7 +41,7 @@ namespace SignalBox.Web.Controllers
             var isBaselineItem = await workflows.IsBaselineItemForRecommender(entity);
             if (isBaselineItem)
             {
-                return (false, "Cannot delete item as it is used as a Recommender's baseline item");
+                return (false, "Cannot delete promotion as it is used as a Recommender's baseline promotion");
             }
             else
             {

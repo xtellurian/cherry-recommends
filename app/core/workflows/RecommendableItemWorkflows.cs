@@ -18,13 +18,16 @@ namespace SignalBox.Core.Workflows
 
         public async Task<RecommendableItem> CreateRecommendableItem(string commonId,
                                                                      string name,
-                                                                     double? listPrice,
                                                                      double? directCost,
+                                                                     int numberOfRedemptions,
+                                                                     BenefitType benefitType,
+                                                                     double benefitValue,
+                                                                     PromotionType promotionType,
                                                                      string? description,
                                                                      DynamicPropertyDictionary? properties)
         {
             properties?.Validate();
-            var item = await store.Create(new RecommendableItem(commonId, name, listPrice ?? 1, directCost, properties)
+            var item = await store.Create(new RecommendableItem(commonId, name, directCost, numberOfRedemptions, benefitType, benefitValue, promotionType, properties)
             {
                 Description = description,
             });
@@ -41,15 +44,21 @@ namespace SignalBox.Core.Workflows
 
         public async Task<RecommendableItem> UpdateRecommendableItem(RecommendableItem item,
                                                                      string name,
-                                                                     double? listPrice,
                                                                      double? directCost,
+                                                                     int numberOfRedemptions,
+                                                                     BenefitType benefitType,
+                                                                     double benefitValue,
+                                                                     PromotionType promotionType,
                                                                      string? description,
                                                                      DynamicPropertyDictionary? properties)
         {
             properties?.Validate();
             item.Name = name;
-            item.ListPrice = listPrice;
             item.DirectCost = directCost;
+            item.NumberOfRedemptions = numberOfRedemptions;
+            item.BenefitType = benefitType;
+            item.BenefitValue = benefitValue;
+            item.PromotionType = promotionType;
             item.Description = description;
             item.Properties = properties;
 

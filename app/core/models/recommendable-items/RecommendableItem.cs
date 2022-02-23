@@ -9,10 +9,10 @@ namespace SignalBox.Core
     {
         private const string defaultRecommendableItemCommonId = "default";
         private const long defaultRecommendableItemId = -1;
-        public static RecommendableItem DefaultRecommendableItem => new RecommendableItem(defaultRecommendableItemCommonId, "Default Item")
+        public static RecommendableItem DefaultRecommendableItem => new RecommendableItem(defaultRecommendableItemCommonId, "Default Promotion")
         {
             Id = defaultRecommendableItemId,
-            Description = "The default recommendable item. When this item is recommended, no action should be taken.",
+            Description = "The default promotion. When this promotion is recommended, no action should be taken.",
             Discriminator = "RecommendableItem"
         };
         protected RecommendableItem()
@@ -22,11 +22,15 @@ namespace SignalBox.Core
         protected RecommendableItem(string commonId, string name) : base(commonId, name)
         { }
 
-        public RecommendableItem(string commonId, string name, double? listPrice, double? directCost, DynamicPropertyDictionary? properties)
+        public RecommendableItem(string commonId, string name, double? directCost,
+            int numberOfRedemptions, BenefitType benefitType, double benefitValue, PromotionType promotionType, DynamicPropertyDictionary? properties)
         : base(commonId, name, properties)
         {
-            ListPrice = listPrice;
             DirectCost = directCost;
+            NumberOfRedemptions = numberOfRedemptions;
+            BenefitType = benefitType;
+            BenefitValue = benefitValue;
+            PromotionType = promotionType;
         }
 
         // required property for a many to many relationship
@@ -36,9 +40,12 @@ namespace SignalBox.Core
         [JsonIgnore]
         public ICollection<ItemsRecommendation> Recommendations { get; set; } = null!;
 
-        public double? ListPrice { get; set; }
         public double? DirectCost { get; set; }
         public string? Description { get; set; }
+        public BenefitType BenefitType { get; set; }
+        public double BenefitValue { get; set; }
+        public PromotionType PromotionType { get; set; }
+        public int NumberOfRedemptions { get; set; }
         public string? Discriminator { get; set; }
     }
 }

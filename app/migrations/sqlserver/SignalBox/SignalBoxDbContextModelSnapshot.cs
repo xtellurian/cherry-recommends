@@ -813,6 +813,17 @@ namespace sqlserver.SignalBox
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("BenefitType")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Fixed");
+
+                    b.Property<double>("BenefitValue")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(1.0);
+
                     b.Property<string>("CommonId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -841,11 +852,19 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<double?>("ListPrice")
-                        .HasColumnType("float");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberOfRedemptions")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.Property<string>("PromotionType")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Other");
 
                     b.Property<string>("Properties")
                         .HasColumnType("nvarchar(max)");
@@ -865,12 +884,16 @@ namespace sqlserver.SignalBox
                         new
                         {
                             Id = -1L,
+                            BenefitType = "Percent",
+                            BenefitValue = 0.0,
                             CommonId = "default",
                             Created = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "The default recommendable item. When this item is recommended, no action should be taken.",
+                            Description = "The default promotion. When this promotion is recommended, no action should be taken.",
                             Discriminator = "RecommendableItem",
                             LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Default Item",
+                            Name = "Default Promotion",
+                            NumberOfRedemptions = 0,
+                            PromotionType = "Discount",
                             Properties = "{}"
                         });
                 });
