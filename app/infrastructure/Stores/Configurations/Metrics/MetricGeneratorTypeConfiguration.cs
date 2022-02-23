@@ -20,6 +20,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 
             builder.OwnsOne(_ => _.AggregateCustomerMetric, (b2) =>
             {
+                b2.Navigation(_ => _.Metric).AutoInclude();
                 b2.Property(_ => _.AggregationType).HasConversion<string>();
 
                 b2.HasOne(_ => _.Metric)
@@ -31,7 +32,8 @@ namespace SignalBox.Infrastructure.EntityFramework
 
             builder.OwnsOne(_ => _.JoinTwoMetrics, b2 =>
             {
-
+                b2.Navigation(_ => _.Metric1).AutoInclude();
+                b2.Navigation(_ => _.Metric2).AutoInclude();
                 b2.Property(_ => _.JoinType).HasConversion<string>();
 
                 b2

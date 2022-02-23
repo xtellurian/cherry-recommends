@@ -8,6 +8,7 @@ namespace SignalBox.Core
         MonthsSinceEarliestEvent,
         FilterSelectAggregate,
         AggregateCustomerMetric,
+        JoinTwoMetrics,
     }
 
     public enum MetricGeneratorTimeWindow
@@ -30,21 +31,10 @@ namespace SignalBox.Core
             Id = totalEventsGeneratorId,
         };
 
-        public static MetricGenerator ForAggregateCustomerMetric(Metric metric, AggregateCustomerMetric definition)
-        {
-            return new MetricGenerator
-            {
-                MetricId = metric.Id,
-                Metric = metric,
-                GeneratorType = MetricGeneratorTypes.AggregateCustomerMetric,
-                AggregateCustomerMetric = definition
-            };
-        }
-
         protected MetricGenerator()
         { }
 
-        protected MetricGenerator(Metric metric, MetricGeneratorTypes generatorType, MetricGeneratorTimeWindow? timeWindowInDays)
+        protected MetricGenerator(Metric metric, MetricGeneratorTypes generatorType, MetricGeneratorTimeWindow? timeWindowInDays = null)
         {
             this.Metric = metric;
             this.MetricId = metric.Id;
@@ -59,23 +49,27 @@ namespace SignalBox.Core
             this.FilterSelectAggregateSteps = new List<FilterSelectAggregateStep>(steps);
         }
 
-        public static MetricGenerator CreateFilterSelectAggregateGenerator(Metric metric, MetricGeneratorTypes generatorType, IEnumerable<FilterSelectAggregateStep> steps, MetricGeneratorTimeWindow? timeWindow)
+        public static MetricGenerator CreateFilterSelectAggregateGenerator(Metric metric, IEnumerable<FilterSelectAggregateStep> steps, MetricGeneratorTimeWindow? timeWindow)
         {
-            return new MetricGenerator(metric, generatorType, steps, timeWindow);
+            return new MetricGenerator(metric, MetricGeneratorTypes.FilterSelectAggregate, timeWindow)
+            {
+                FilterSelectAggregateSteps = new List<FilterSelectAggregateStep>(steps)
+            };
         }
-        protected MetricGenerator(Metric metric, MetricGeneratorTypes generatorType, IEnumerable<FilterSelectAggregateStep> steps, MetricGeneratorTimeWindow? timeWindow)
-        : this(metric, generatorType, timeWindow)
+        public static MetricGenerator CreateAggregateCustomerMetric(Metric metric, AggregateCustomerMetric aggregateCustomerMetric)
         {
-            this.FilterSelectAggregateSteps = new List<FilterSelectAggregateStep>(steps);
-        }
-        public static MetricGenerator CreateAggregateCustomerMetric(Metric metric, MetricGeneratorTypes generatorType, AggregateCustomerMetric aggregateCustomerMetric, MetricGeneratorTimeWindow? timeWindow)
-        {
-            return new MetricGenerator(metric, generatorType, timeWindow)
+            return new MetricGenerator(metric, MetricGeneratorTypes.AggregateCustomerMetric)
             {
                 AggregateCustomerMetric = aggregateCustomerMetric
             };
         }
-
+        public static MetricGenerator CreateJoinTwoGlobalMetric(Metric metric, JoinTwoMetrics joinTwoMetrics)
+        {
+            return new MetricGenerator(metric, MetricGeneratorTypes.JoinTwoMetrics)
+            {
+                JoinTwoMetrics = joinTwoMetrics
+            };
+        }
 
 
 

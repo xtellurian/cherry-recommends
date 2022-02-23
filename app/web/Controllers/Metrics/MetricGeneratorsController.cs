@@ -63,10 +63,13 @@ namespace SignalBox.Web.Controllers
             switch (dto.GeneratorType)
             {
                 case MetricGeneratorTypes.FilterSelectAggregate:
-                    generator = MetricGenerator.CreateFilterSelectAggregateGenerator(metric, dto.GeneratorType, dto.Steps.ToCoreRepresentation(), dto.TimeWindow);
+                    generator = MetricGenerator.CreateFilterSelectAggregateGenerator(metric, dto.Steps.ToCoreRepresentation(), dto.TimeWindow);
                     break;
                 case MetricGeneratorTypes.AggregateCustomerMetric:
-                    generator = MetricGenerator.CreateAggregateCustomerMetric(metric, dto.GeneratorType, dto.AggregateCustomerMetric.ToCoreRepresentation(), dto.TimeWindow);
+                    generator = MetricGenerator.CreateAggregateCustomerMetric(metric, dto.AggregateCustomerMetric.ToCoreRepresentation());
+                    break;
+                case MetricGeneratorTypes.JoinTwoMetrics:
+                    generator = MetricGenerator.CreateJoinTwoGlobalMetric(metric, dto.JoinTwoMetrics.ToCoreRepresentation());
                     break;
                 default:
                     throw new BadRequestException($"{dto.GeneratorType} is an unknown generator type");

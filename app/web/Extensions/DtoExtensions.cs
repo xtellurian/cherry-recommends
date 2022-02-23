@@ -64,5 +64,18 @@ namespace SignalBox.Web
                 MetricId = dto.MetricId
             };
         }
+        public static JoinTwoMetrics ToCoreRepresentation(this JoinTwoMetricsDto dto)
+        {
+            if (dto.JoinType == null)
+            {
+                throw new BadRequestException("JoinType is required");
+            };
+            return new JoinTwoMetrics
+            {
+                Metric1Id = dto.Metric1Id ?? throw new BadRequestException("metric1Id is required"),
+                Metric2Id = dto.Metric2Id ?? throw new BadRequestException("metric2Id is required"),
+                JoinType = dto.JoinType ?? throw new BadRequestException("joinType is required")
+            };
+        }
     }
 }

@@ -28,9 +28,16 @@ namespace SignalBox.Core
         {
             return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
         }
-        public static DateTime FirstDayOfWeek(this DateTime dt, DayOfWeek day)
+        public static DateTime FirstDayOfWeek(this DateTime dt, DayOfWeek day, bool toUtc = true)
         {
-            return dt.AddDays(day - dt.DayOfWeek).Date;
+            if (toUtc)
+            {
+                return dt.ToUniversalTime().AddDays(day - dt.DayOfWeek).Date;
+            }
+            else
+            {
+                return dt.AddDays(day - dt.DayOfWeek).Date;
+            }
         }
     }
 }

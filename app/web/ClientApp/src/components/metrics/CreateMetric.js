@@ -32,7 +32,7 @@ const CreateMetric = () => {
   const [metric, setMetric] = React.useState({
     commonId: "",
     name: "",
-    valueType: null,
+    valueType: "numeric",
     scope: null,
   });
   const [creating, setCreating] = React.useState(false);
@@ -120,6 +120,7 @@ const CreateMetric = () => {
             placeholder="Select a metric value type"
             onChange={setSelectedValueType}
             options={valueTypeOptions}
+            defaultValue={valueTypeOptions[0]}
           />
         )}
 

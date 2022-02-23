@@ -59,26 +59,34 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<IEnumerable<CustomerMetricWeeklyNumericAggregate>> GetAggregateMetricValuesNumeric(Metric metric, int weeksAgo = 11)
         {
+            if (metric == null)
+            {
+                throw new ArgumentNullException(nameof(metric));
+            }
             // past twelve weeks worth of aggregation
             var WeeksAgoDt = DateTime.Today.AddDays(-7 * weeksAgo);
             DateTimeOffset firstOfWeek = WeeksAgoDt.FirstDayOfWeek(DayOfWeek.Monday);
             var numericAggregates = await context.CustomerMetricWeeklyNumericAggregates
-            .Where(_ => _.MetricId == metric.Id && _.FirstOfWeek >= firstOfWeek)
-            .OrderBy(_ => _.FirstOfWeek)
-            .ToListAsync();
+                .Where(_ => _.MetricId == metric.Id && _.FirstOfWeek >= firstOfWeek)
+                .OrderBy(_ => _.FirstOfWeek)
+                .ToListAsync();
 
             return numericAggregates;
         }
 
         public async Task<IEnumerable<CustomerMetricWeeklyStringAggregate>> GetAggregateMetricValuesString(Metric metric, int weeksAgo = 11)
         {
+            if (metric == null)
+            {
+                throw new ArgumentNullException(nameof(metric));
+            }
             // past twelve weeks worth of aggregation
             var WeeksAgoDt = DateTime.Today.AddDays(-7 * weeksAgo);
             DateTimeOffset firstOfWeek = WeeksAgoDt.FirstDayOfWeek(DayOfWeek.Monday);
             var stringAggregates = await context.CustomerMetricWeeklyStringAggregates
-            .Where(_ => _.MetricId == metric.Id && _.FirstOfWeek >= firstOfWeek)
-            .OrderBy(_ => _.FirstOfWeek)
-            .ToListAsync();
+                .Where(_ => _.MetricId == metric.Id && _.FirstOfWeek >= firstOfWeek)
+                .OrderBy(_ => _.FirstOfWeek)
+                .ToListAsync();
 
             return stringAggregates;
         }

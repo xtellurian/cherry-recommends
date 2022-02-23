@@ -22,6 +22,7 @@ namespace SignalBox.Core.Workflows
 
         public async Task RunAggregateCustomerMetricWorkflow(MetricGenerator generator)
         {
+            logger.LogInformation("Starting RunAggregateCustomerMetricWorkflow");
             if (generator.AggregateCustomerMetric == null)
             {
                 throw new WorkflowException($"Metric Generator {generator.Id} has null AggregateCustomerMetric");
@@ -33,16 +34,16 @@ namespace SignalBox.Core.Workflows
             {
                 case MetricValueType.Numeric:
                 default:
-                    result = await CalculateForNumericInput(generator, definition);
+                    result = await CalculateForNumericInput(definition);
                     break;
                 case MetricValueType.Categorical:
-                    result = await CalculateForCategoricalInput(generator, definition);
+                    result = await CalculateForCategoricalInput(definition);
                     break;
             }
 
             if (result == null)
             {
-                logger.LogWarning("Generator {generatorId} produced null", generator.Id);
+                logger.LogWarning("Generator {generatorId} for metric {metricId} produced null. ", generator.Id, generator.MetricId);
                 return;
             }
 
@@ -61,13 +62,14 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        private async Task<double?> CalculateForNumericInput(MetricGenerator generator, AggregateCustomerMetric definition)
+        private async Task<double?> CalculateForNumericInput(AggregateCustomerMetric definition)
         {
             double result;
-            var values = await historicCustomerMetricStore.GetAggregateMetricValuesNumeric(generator.Metric, 0);
+            var values = await historicCustomerMetricStore.GetAggregateMetricValuesNumeric(definition.Metric, 0);
             var latestAggregation = values.OrderBy(_ => _.FirstOfWeek).LastOrDefault();
             if (latestAggregation == null)
             {
+                logger.LogWarning("GetAggregateMetricValuesNumeric produced empty for Metric {metricId}", definition.MetricId);
                 return null;
             }
 
@@ -84,14 +86,15 @@ namespace SignalBox.Core.Workflows
 
             return result;
         }
-        private async Task<double?> CalculateForCategoricalInput(MetricGenerator generator, AggregateCustomerMetric definition)
+        private async Task<double?> CalculateForCategoricalInput(AggregateCustomerMetric definition)
         {
             double result;
-            var values = await historicCustomerMetricStore.GetAggregateMetricValuesString(generator.Metric, 0);
+            var values = await historicCustomerMetricStore.GetAggregateMetricValuesString(definition.Metric, 0);
 
             var latestAggregation = values.Where(_ => _.StringValue == definition.CategoricalValue).OrderBy(_ => _.FirstOfWeek).LastOrDefault();
             if (latestAggregation == null)
             {
+                logger.LogWarning("GetAggregateMetricValuesString produced empty for Metric {metricId}", definition.MetricId);
                 return null;
             }
             switch (definition.AggregationType)

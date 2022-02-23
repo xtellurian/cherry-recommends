@@ -15,18 +15,21 @@ namespace SignalBox.Functions
     {
         private readonly MetricGeneratorWorkflows customerMetricWorkflows;
         private readonly AggregateCustomerMetricWorkflow aggregateCustomerMetricWorkflow;
+        private readonly JoinTwoMetricsWorkflow joinTwoMetricsWorkflow;
         private readonly IEnvironmentProvider environmentProvider;
         private readonly IMetricGeneratorStore metricGeneratorStore;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public MetricGeneratorJobs(MetricGeneratorWorkflows customerMetricWorkflows,
                                    AggregateCustomerMetricWorkflow aggregateCustomerMetricWorkflow,
+                                   JoinTwoMetricsWorkflow joinTwoMetricsWorkflow,
                                    IEnvironmentProvider environmentProvider,
                                    IMetricGeneratorStore metricGeneratorStore,
                                    IDateTimeProvider dateTimeProvider)
         {
             this.customerMetricWorkflows = customerMetricWorkflows;
             this.aggregateCustomerMetricWorkflow = aggregateCustomerMetricWorkflow;
+            this.joinTwoMetricsWorkflow = joinTwoMetricsWorkflow;
             this.environmentProvider = environmentProvider;
             this.metricGeneratorStore = metricGeneratorStore;
             this.dateTimeProvider = dateTimeProvider;
@@ -69,6 +72,7 @@ namespace SignalBox.Functions
             environmentProvider.SetOverride(message.EnvironmentId);
             var generator = await metricGeneratorStore.Read(message.MetricGeneratorId);
             await metricGeneratorStore.Load(generator, _ => _.Metric);
+            logger.LogInformation("Loaded generator {generatorId} for metric {metricId}", generator.Id, generator.MetricId);
 
             if (generator.Metric.Scope == Core.Metrics.MetricScopes.Customer)
             {
@@ -77,7 +81,18 @@ namespace SignalBox.Functions
             }
             else if (generator.Metric.Scope == Core.Metrics.MetricScopes.Global)
             {
-                await aggregateCustomerMetricWorkflow.RunAggregateCustomerMetricWorkflow(generator);
+                // global generators
+                switch (generator.GeneratorType)
+                {
+                    case MetricGeneratorTypes.AggregateCustomerMetric:
+                        await aggregateCustomerMetricWorkflow.RunAggregateCustomerMetricWorkflow(generator);
+                        break;
+                    case MetricGeneratorTypes.JoinTwoMetrics:
+                        await joinTwoMetricsWorkflow.RunJoinTwoMetricWorkflow(generator);
+                        break;
+                    default:
+                        throw new WorkflowException($"Unknown generator type for global scope: {generator.GeneratorType}");
+                }
             }
             else
             {

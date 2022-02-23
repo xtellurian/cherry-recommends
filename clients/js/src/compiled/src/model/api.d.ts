@@ -3069,6 +3069,98 @@ export interface paths {
             };
         };
     };
+    "/api/Features/{id}/NumericMetricBinValues": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricDailyBinValueNumeric"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Metrics/{id}/NumericMetricBinValues": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricDailyBinValueNumeric"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Features/{id}/CategoricalMetricBinValues": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricDailyBinValueString"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Metrics/{id}/CategoricalMetricBinValues": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["MetricDailyBinValueString"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
     "/api/Features/{id}/Destinations": {
         get: {
             parameters: {
@@ -5342,10 +5434,11 @@ export interface components {
         };
         CreateMetricGenerator: {
             featureCommonId?: string | null;
-            metricCommonId?: string | null;
-            generatorType?: components["schemas"]["MetricGeneratorTypes"];
+            metricCommonId: string;
+            generatorType: components["schemas"]["MetricGeneratorTypes"];
             steps?: components["schemas"]["FilterSelectAggregateStepDto"][] | null;
             aggregateCustomerMetric?: components["schemas"]["AggregateCustomerMetricDto"];
+            joinTwoMetrics?: components["schemas"]["JoinTwoMetricsDto"];
             timeWindow?: components["schemas"]["MetricGeneratorTimeWindow"];
         };
         CreateOrUpdateCustomerDto: {
@@ -5772,6 +5865,11 @@ export interface components {
             metric2?: components["schemas"]["Metric"];
             joinType?: components["schemas"]["JoinType"];
         };
+        JoinTwoMetricsDto: {
+            metric1Id: number;
+            metric2Id: number;
+            joinType: components["schemas"]["JoinType"];
+        };
         JoinType: "divide";
         LinkModel: {
             modelId?: number;
@@ -5792,6 +5890,16 @@ export interface components {
             } | null;
             valueType?: components["schemas"]["MetricValueType"];
             scope?: components["schemas"]["MetricScopes"];
+        };
+        MetricDailyBinValueNumeric: {
+            binFloor?: number;
+            binWidth?: number;
+            binRange?: string | null;
+            customerCount?: number;
+        };
+        MetricDailyBinValueString: {
+            stringValue?: string | null;
+            customerCount?: number;
         };
         MetricDestinationBase: {
             id?: number;
@@ -5832,7 +5940,7 @@ export interface components {
             maxSubsetSize?: number | null;
         };
         MetricGeneratorTimeWindow: "allTime" | "sevenDays" | "thirtyDays";
-        MetricGeneratorTypes: "monthsSinceEarliestEvent" | "filterSelectAggregate" | "aggregateCustomerMetric";
+        MetricGeneratorTypes: "monthsSinceEarliestEvent" | "filterSelectAggregate" | "aggregateCustomerMetric" | "joinTwoMetrics";
         MetricPaginated: {
             items?: components["schemas"]["Metric"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];

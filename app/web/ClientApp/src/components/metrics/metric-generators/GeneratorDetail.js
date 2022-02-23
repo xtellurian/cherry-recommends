@@ -9,6 +9,33 @@ import { DateTimeField } from "../../molecules/DateTimeField";
 import { Link } from "react-router-dom";
 import { CopyableField } from "../../molecules/fields/CopyableField";
 
+const GeneratorTypeDisplay = ({ generator }) => {
+  const labels = {
+    joinTwoMetrics: "Ratio of Metrics",
+  };
+  return (
+    <>
+      {generator.generatorType && <div>{labels[generator.generatorType]}</div>}
+    </>
+  );
+};
+const TimeWindowDisplay = ({ generator }) => {
+  if (generator.metric?.scope !== "customer") {
+    return <></>;
+  }
+  const timeWindowLabels = {
+    sevenDays: "7 Days",
+    thirtyDays: "30 Days",
+  };
+
+  const timeWindow = timeWindowLabels[generator.timeWindow] || "All Time";
+  return (
+    <>
+      <div>{timeWindow}</div>
+    </>
+  );
+};
+
 const StepRow = ({ step }) => {
   return (
     <EntityRow>
@@ -47,6 +74,25 @@ const AggregateCustomerMetricInfo = ({ aggregateCustomerMetric }) => {
     </>
   );
 };
+const JoinTwoMetrics = ({ joinTwoMetrics }) => {
+  return (
+    <>
+      <EntityRow>
+        <div>Joining 2 Metrics</div>
+        <div>
+          Dividing{" "}
+          <Link to={`/metrics/detail/${joinTwoMetrics.metric1Id}`}>
+            {joinTwoMetrics.metric1?.name}
+          </Link>
+          {" by "}
+          <Link to={`/metrics/detail/${joinTwoMetrics.metric2Id}`}>
+            {joinTwoMetrics.metric2?.name}
+          </Link>
+        </div>
+      </EntityRow>
+    </>
+  );
+};
 export const GeneratorDetail = ({ generator, requestClose }) => {
   const [error, setError] = React.useState();
   const [running, setRunning] = React.useState(false);
@@ -63,17 +109,13 @@ export const GeneratorDetail = ({ generator, requestClose }) => {
       .finally(() => setRunning(false));
   };
 
-  const timeWindowLabels = {
-    sevenDays: "7 Days",
-    thirtyDays: "30 Days",
-  };
-
-  const timeWindow = timeWindowLabels[generator.timeWindow] || "All Time";
   return (
     <>
       <div>
         <SectionHeading>Generator Information</SectionHeading>
-        <div className="text-muted">Generators are run once per day.</div>
+        <div className="text-muted">Generator ID: {generator.id}</div>
+        <GeneratorTypeDisplay generator={generator} />
+        <TimeWindowDisplay generator={generator} />
         <hr />
         {error && <ErrorCard error={error} />}
         {generator.generatorType === "filterSelectAggregate" &&
@@ -81,13 +123,16 @@ export const GeneratorDetail = ({ generator, requestClose }) => {
             .sort((a, b) => a.order - b.order)
             .map((s) => <StepRow key={s.order} step={s} />)}
 
-        <CopyableField label="Time Window" value={timeWindow} />
-
         {generator.generatorType === "aggregateCustomerMetric" && (
           <AggregateCustomerMetricInfo
             aggregateCustomerMetric={generator.aggregateCustomerMetric}
           />
         )}
+        {generator.generatorType === "joinTwoMetrics" && (
+          <JoinTwoMetrics joinTwoMetrics={generator.joinTwoMetrics} />
+        )}
+
+        <hr />
         <div>
           {generator.lastEnqueued ? (
             <DateTimeField

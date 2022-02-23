@@ -35,8 +35,24 @@ namespace SignalBox.Core.Workflows
 
         public async Task<Paginated<MetricGenerator>> GetGenerators(int page, Metric metric)
         {
-            return await metricGeneratorStore.Query(_ => _.AggregateCustomerMetric.Metric,
-                new EntityStoreQueryOptions<MetricGenerator>(page, _ => _.MetricId == metric.Id));
+            // need to load related entities
+            var generators = await metricGeneratorStore.Query(new EntityStoreQueryOptions<MetricGenerator>(page, _ => _.MetricId == metric.Id));
+            foreach (var g in generators.Items)
+            {
+                if (g.AggregateCustomerMetric?.MetricId != null)
+                {
+                    await metricStore.Read(g.AggregateCustomerMetric.MetricId); // load from DB
+                }
+                if (g.JoinTwoMetrics?.Metric1Id != null)
+                {
+                    await metricStore.Read(g.JoinTwoMetrics.Metric1Id); // load from db
+                }
+                if (g.JoinTwoMetrics?.Metric2Id != null)
+                {
+                    await metricStore.Read(g.JoinTwoMetrics.Metric2Id); // load from db
+                }
+            }
+            return generators;
         }
 
         public async Task<IEnumerable<MetricGeneratorRunSummary>> RunAllMetricGenerators()

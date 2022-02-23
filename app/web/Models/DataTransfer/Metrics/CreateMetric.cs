@@ -10,12 +10,13 @@ namespace SignalBox.Web.Dto
         public override void Validate()
         {
             base.Validate();
-            if (Scope == MetricScopes.Customer && ValueType == null)
+            if (Scope == MetricScopes.Global && ValueType != MetricValueType.Numeric)
             {
-                throw new BadRequestException("valueType is required when metricScope: Customer");
+                throw new BadRequestException("Global scope metrics must be numeric");
             }
         }
 
+        [Required]
         public MetricValueType? ValueType { get; set; }
         [Required]
         public MetricScopes Scope { get; set; }

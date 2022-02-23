@@ -7,6 +7,7 @@ using SignalBox.Core.Metrics;
 
 namespace SignalBox.Web.Dto
 {
+#nullable enable
     public class CreateMetricGenerator : DtoBase
     {
         public override void Validate()
@@ -20,9 +21,16 @@ namespace SignalBox.Web.Dto
                     throw new BadRequestException("At least one step is required.");
                 }
             }
+            else if (GeneratorType == MetricGeneratorTypes.JoinTwoMetrics)
+            {
+                if (JoinTwoMetrics == null)
+                {
+                    throw new BadRequestException("joinTwoMetrics is a required property");
+                }
+            }
         }
 
-        public string FeatureCommonId
+        public string? FeatureCommonId
         {
             get => MetricCommonId; set
             {
@@ -33,11 +41,15 @@ namespace SignalBox.Web.Dto
             }
         }
 
-        public string MetricCommonId { get; set; }
-        public MetricGeneratorTypes GeneratorType { get; set; }
+        [Required]
+        public string? MetricCommonId { get; set; }
+        [Required]
+        public MetricGeneratorTypes? GeneratorType { get; set; }
 
-        public List<FilterSelectAggregateStepDto> Steps { get; set; }
-        public AggregateCustomerMetricDto AggregateCustomerMetric { get; set; }
+        // below are set based on the generator type
+        public List<FilterSelectAggregateStepDto>? Steps { get; set; }
+        public AggregateCustomerMetricDto? AggregateCustomerMetric { get; set; }
+        public JoinTwoMetricsDto? JoinTwoMetrics { get; set; }
         public MetricGeneratorTimeWindow? TimeWindow { get; set; }
     }
 }

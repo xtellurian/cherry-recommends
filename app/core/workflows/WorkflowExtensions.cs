@@ -11,6 +11,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ModelRegistrationWorkflows>();
             services.AddScoped<MetricGeneratorWorkflows>();
             services.AddScoped<AggregateCustomerMetricWorkflow>();
+            services.AddScoped<JoinTwoMetricsWorkflow>();
             services.AddScoped<MetricWorkflows>();
             services.AddScoped<RecommendableItemWorkflows>();
             services.AddScoped<SegmentWorkflows>();

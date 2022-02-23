@@ -33,7 +33,8 @@ namespace SignalBox.Test.Stores
             var definition = new AggregateCustomerMetric
             {
                 AggregationType = aggType,
-                MetricId = metric.Id
+                MetricId = metric.Id,
+                Metric = metric
             };
 
             // setup mocks
@@ -67,7 +68,7 @@ namespace SignalBox.Test.Stores
                 mockGlobalMetricValueStore.Object,
                 Utility.MockLogger<AggregateCustomerMetricWorkflow>().Object);
 
-            var generator = MetricGenerator.ForAggregateCustomerMetric(metric, definition);
+            var generator = MetricGenerator.CreateAggregateCustomerMetric(metric, definition);
             await sut.RunAggregateCustomerMetricWorkflow(generator);
 
 
@@ -97,6 +98,7 @@ namespace SignalBox.Test.Stores
             {
                 AggregationType = AggregationTypes.Sum,
                 MetricId = metric.Id,
+                Metric = metric,
                 CategoricalValue = "dogs"
             };
 
@@ -152,7 +154,7 @@ namespace SignalBox.Test.Stores
                 mockGlobalMetricValueStore.Object,
                 Utility.MockLogger<AggregateCustomerMetricWorkflow>().Object);
 
-            var generator = MetricGenerator.ForAggregateCustomerMetric(metric, definition);
+            var generator = MetricGenerator.CreateAggregateCustomerMetric(metric, definition);
             await sut.RunAggregateCustomerMetricWorkflow(generator);
 
 

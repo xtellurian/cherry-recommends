@@ -6131,6 +6131,174 @@
         }
       }
     },
+    "/api/Features/{id}/NumericMetricBinValues": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MetricDailyBinValueNumeric"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Metrics/{id}/NumericMetricBinValues": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MetricDailyBinValueNumeric"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Features/{id}/CategoricalMetricBinValues": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MetricDailyBinValueString"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Metrics/{id}/CategoricalMetricBinValues": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MetricDailyBinValueString"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Features/{id}/Destinations": {
       "get": {
         "tags": [
@@ -10749,6 +10917,10 @@
         "additionalProperties": false
       },
       "CreateMetricGenerator": {
+        "required": [
+          "generatorType",
+          "metricCommonId"
+        ],
         "type": "object",
         "properties": {
           "featureCommonId": {
@@ -10756,8 +10928,7 @@
             "nullable": true
           },
           "metricCommonId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "generatorType": {
             "$ref": "#/components/schemas/MetricGeneratorTypes"
@@ -10771,6 +10942,9 @@
           },
           "aggregateCustomerMetric": {
             "$ref": "#/components/schemas/AggregateCustomerMetricDto"
+          },
+          "joinTwoMetrics": {
+            "$ref": "#/components/schemas/JoinTwoMetricsDto"
           },
           "timeWindow": {
             "$ref": "#/components/schemas/MetricGeneratorTimeWindow"
@@ -12351,6 +12525,28 @@
         },
         "additionalProperties": false
       },
+      "JoinTwoMetricsDto": {
+        "required": [
+          "joinType",
+          "metric1Id",
+          "metric2Id"
+        ],
+        "type": "object",
+        "properties": {
+          "metric1Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "metric2Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "joinType": {
+            "$ref": "#/components/schemas/JoinType"
+          }
+        },
+        "additionalProperties": false
+      },
       "JoinType": {
         "enum": [
           "divide"
@@ -12418,6 +12614,42 @@
           },
           "scope": {
             "$ref": "#/components/schemas/MetricScopes"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MetricDailyBinValueNumeric": {
+        "type": "object",
+        "properties": {
+          "binFloor": {
+            "type": "number",
+            "format": "double"
+          },
+          "binWidth": {
+            "type": "number",
+            "format": "double"
+          },
+          "binRange": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MetricDailyBinValueString": {
+        "type": "object",
+        "properties": {
+          "stringValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -12576,7 +12808,8 @@
         "enum": [
           "monthsSinceEarliestEvent",
           "filterSelectAggregate",
-          "aggregateCustomerMetric"
+          "aggregateCustomerMetric",
+          "joinTwoMetrics"
         ],
         "type": "string"
       },
