@@ -1,4 +1,5 @@
 import React from "react";
+import dayjs from "dayjs";
 import { useHistory, useParams } from "react-router-dom";
 import { createEventsAsync } from "../../api/eventsApi";
 import { useCustomer } from "../../api-hooks/customersApi";
@@ -14,6 +15,7 @@ import {
   InputGroup,
   TextInput,
   createRequiredByServerValidator,
+  maxCurrentDateValidator,
 } from "../molecules/TextInput";
 import { PropertiesEditor } from "../molecules/PropertiesEditor";
 import { useAccessToken } from "../../api-hooks/token";
@@ -45,6 +47,7 @@ export const CreateEvent = () => {
     eventType: "",
     properties: {},
     recommendationCorrelatorId: null,
+    timestamp: "",
   });
 
   const [properties, setProperties] = React.useState({});
@@ -62,19 +65,30 @@ export const CreateEvent = () => {
         eventType: "",
         recommendationCorrelatorId: null,
         properties: {},
+        timestamp: "",
       });
     }
   }, [trackedUser]);
 
   const handleCreate = () => {
-    payload.properties = properties;
+    const tempPayload = {
+      ...payload,
+      properties,
+      timestamp: payload.timestamp ? new Date(payload.timestamp) : new Date(),
+    };
     setLoading(true);
     setError(null);
-    createEventsAsync({ token, events: [payload] })
+    createEventsAsync({
+      token,
+      events: [tempPayload],
+    })
       .then((_) => history.push(`/customers/detail/${id}?tab=history`))
       .catch(setError)
       .finally(() => setLoading(false));
   };
+
+  const maxDate = dayjs().startOf("date").format().split("+")[0];
+  const isDisabled = maxCurrentDateValidator(payload.timestamp).length > 0;
 
   return (
     <React.Fragment>
@@ -126,6 +140,21 @@ export const CreateEvent = () => {
               }
             />
           </InputGroup>
+          <InputGroup className="mb-2">
+            <TextInput
+              label="Event Timestamp"
+              type="datetime-local"
+              value={payload.timestamp}
+              validator={maxCurrentDateValidator}
+              max={maxDate}
+              onChange={(v) => {
+                setPayload({
+                  ...payload,
+                  timestamp: v.target.value,
+                });
+              }}
+            />
+          </InputGroup>
         </ExpandableCard>
       </div>
 
@@ -138,6 +167,7 @@ export const CreateEvent = () => {
       <AsyncButton
         loading={loading}
         className="mt-2 btn btn-primary btn-block"
+        disabled={isDisabled}
         onClick={handleCreate}
       >
         Save

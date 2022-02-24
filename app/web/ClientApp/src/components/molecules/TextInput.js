@@ -1,5 +1,6 @@
 import React from "react";
 import Tippy from "@tippyjs/react";
+import { toDate } from "../../utility/utility";
 
 export const joinValidators = (validators) => {
   return (value) => {
@@ -83,6 +84,25 @@ export const emailValidator = (value) => {
   }
 };
 
+export const maxCurrentDateValidator = (value) => {
+  if (!value) {
+    return [];
+  }
+
+  const now = new Date();
+  const dateValue = toDate(value);
+  const errorMessage =
+    "Timestamp must be on or before the current date and time";
+
+  if (!dateValue) {
+    return ["Not a valid date"];
+  }
+
+  const diff = now.getTime() - dateValue.getTime();
+
+  return diff < 0 ? [errorMessage] : [];
+};
+
 export const createServerErrorValidator =
   (serverErrorKey, serverError) => (value) => {
     let hasError =
@@ -119,6 +139,7 @@ export const TextInput = ({
   resetTrigger,
   required,
   disabled,
+  max,
 }) => {
   const [hide, setHide] = React.useState(false);
   const [errorMessages, setErrorMessages] = React.useState([]);
@@ -198,6 +219,7 @@ export const TextInput = ({
           onBlur={onBlur}
           required={required}
           disabled={disabled}
+          max={max}
         />
       </Tippy>
     </React.Fragment>
