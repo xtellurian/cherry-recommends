@@ -19,6 +19,7 @@ namespace SignalBox.Infrastructure
         public DbSet<Customer> Customers { get; set; }
         public DbSet<CustomerEvent> CustomerEvents { get; set; }
         public DbSet<Parameter> Parameters { get; set; }
+        public DbSet<Business> Businesses { get; set; }
 
         // metrics
         public DbSet<Metric> Metrics { get; set; }

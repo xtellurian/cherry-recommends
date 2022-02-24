@@ -17,6 +17,15 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder.Property(_ => _.CommonId) // fixes legacy column name
                 .HasColumnName("CommonUserId");
 
+            builder.OwnsOne(_ => _.BusinessMembership, (b2) =>
+            {
+                b2.WithOwner(_ => _.Customer);
+                b2.HasOne(_ => _.Business)
+                    .WithMany()
+                    .HasForeignKey(_ => _.BusinessId)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
+
             builder.HasData(Customer.Anonymous);
         }
     }
