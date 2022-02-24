@@ -42,7 +42,7 @@ const App = () => {
           component={RecommendersComponent}
         />
         <AuthorizeRoute
-          path="/recommendable-items"
+          path="/promotions"
           component={RecommendableItemsComponent}
         />
         <AuthorizeRoute

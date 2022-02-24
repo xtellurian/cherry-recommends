@@ -68,21 +68,23 @@ export const Settings = () => {
           <React.Fragment>
             <SettingsUtil
               recommender={recommender}
-              basePath="/recommenders/items-recommenders"
+              basePath="/recommenders/promotions-recommenders"
               updateSettings={handleUpdate}
             />
             <SettingRow
-              label="Baseline Item"
-              description="The baseline item should be a safe default choice. The baseline will
-              be used in reporting to compare the performance of item variations."
+              label="Baseline Promotion"
+              description="The baseline promotion should be a safe default choice. The baseline will
+              be used in reporting to compare the performance of promotion variations."
             >
               {baselineItem.loading ? (
                 <Spinner />
               ) : (
                 <Selector
                   isSearchable
-                  placeholder={baselineItem.name || "Choose a baseline item."}
-                  noOptionsMessage={(inputValue) => "No Items Available"}
+                  placeholder={
+                    baselineItem.name || "Choose a baseline promotion."
+                  }
+                  noOptionsMessage={(inputValue) => "No Promotions Available"}
                   onChange={(so) => handleSetBaselineItem(so.value)}
                   options={itemOptions}
                 />

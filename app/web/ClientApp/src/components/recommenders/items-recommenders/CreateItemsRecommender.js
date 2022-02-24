@@ -93,7 +93,7 @@ export const CreateRecommender = () => {
     })
       .then((r) => {
         analytics.track("site:itemsRecommender_create_success");
-        history.push(`/recommenders/items-recommenders/detail/${r.id}`);
+        history.push(`/recommenders/promotions-recommenders/detail/${r.id}`);
       })
       .catch((e) => {
         analytics.track("site:itemsRecommender_create_failure");
@@ -118,11 +118,11 @@ export const CreateRecommender = () => {
       >
         Create and Save
       </AsyncButton>
-      <PrimaryBackButton to="/recommenders/items-recommenders">
-        All Item Recommenders
+      <PrimaryBackButton to="/recommenders/promotions-recommenders">
+        All Promotion Recommenders
       </PrimaryBackButton>
 
-      <Title>Create Item Recommender</Title>
+      <Title>Create Promotion Recommender</Title>
       <hr />
       {error && <ErrorCard error={error} />}
       <Container>
@@ -171,12 +171,12 @@ export const CreateRecommender = () => {
       </Container>
 
       <div className="mt-2">
-        Baseline Item
+        Baseline Promotion
         {!startingItem.loading && (
           <Selector
             isSearchable
-            placeholder="Choose a baseline item."
-            noOptionsMessage={(inputValue) => "No Items Available"}
+            placeholder="Choose a baseline promotion."
+            noOptionsMessage={(inputValue) => "No Promotions Available"}
             defaultValue={{ label: startingItem.name, value: startingItem.id }}
             onChange={(so) => {
               setRecommender({
@@ -192,9 +192,9 @@ export const CreateRecommender = () => {
         <Selector
           isMulti
           isSearchable
-          placeholder="Select items. Leave empty to include all."
+          placeholder="Select promotions. Leave empty to include all."
           noOptionsMessage={(inputValue) =>
-            `No items found matching ${inputValue}`
+            `No promotions found matching ${inputValue}`
           }
           defaultValue={selectedItems}
           onChange={(so) => {
@@ -225,7 +225,7 @@ export const CreateRecommender = () => {
             // max={selectedItems?.length || 1}
             max={1} // this should no default to 1
             defaultValue={1}
-            placeholder="Select number of items recommended"
+            placeholder="Select number of promotions recommended"
             onSelected={(numberOfItemsToRecommend) =>
               setRecommender({ ...recommender, numberOfItemsToRecommend })
             }

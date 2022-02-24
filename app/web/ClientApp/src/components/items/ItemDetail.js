@@ -31,8 +31,14 @@ export const ItemDetail = () => {
   };
 
   const handleEditProperty = (property, value) => {
-    item[property] = value;
-    updateItemAsync({ token, id, item }).then(setTrigger).catch(setError);
+    const _item = Object.assign({}, item);
+    _item[property] = value;
+    updateItemAsync({ token, id, item: _item })
+      .then((v) => {
+        setTrigger(v)
+        setError(undefined);
+      })
+      .catch(setError);
   };
 
   return (
@@ -41,31 +47,65 @@ export const ItemDetail = () => {
         onClick={() => setisDeletePopupOpen(true)}
         className="float-right ml-1 btn btn-danger"
       >
-        Delete Item
+        Delete Promotion
       </button>
-      <BackButton className="float-right" to="/recommendable-items">
-        All Recommendable Items
+      <BackButton className="float-right" to="/promotions">
+        All Promotions
       </BackButton>
-      <Title>Item Detail</Title>
+      <Title>Promotion Detail</Title>
       <Subtitle>{item.name || "..."}</Subtitle>
       <hr />
-      {item.loading && <Spinner>Loading Item</Spinner>}
+      {item.loading && <Spinner>Loading Promotion</Spinner>}
       {item.error && <ErrorCard error={item.error} />}
+      {!isDeletePopupOpen && error && (
+        <div className="mb-3">
+          <ErrorCard error={error} />
+        </div>
+      )}
       {!item.loading && !item.error && (
         <div>
-          <CopyableField label="Item Id" value={item.commonId} />
+          <CopyableField label="Promotion Id" value={item.commonId} />
+
           <CopyableField
-            label="List Price"
-            value={item.listPrice}
+            label="Promotion Type"
+            value={item.promotionType || "Not Set"}
+            isEditable={false}
+            onValueEdited={(v) => handleEditProperty("promotionType", v)}
+          />
+
+          <CopyableField
+            label="Benefit Type"
+            value={item.benefitType || "Not Set"}
+            isEditable={false}
+            onValueEdited={(v) => handleEditProperty("benefitType", v)}
+          />
+
+          <CopyableField
+            label="Benefit Value"
+            value={item.benefitValue}
+            isNumeric={true}
+            min={1}
             isEditable={true}
-            onValueEdited={(v) => handleEditProperty("listPrice", v)}
+            onValueEdited={(v) => handleEditProperty("benefitValue", v)}
           />
 
           <CopyableField
             label="Direct Cost"
             value={item.directCost || "Not Set"}
+            isNumeric={true}
+            min={0}
             isEditable={true}
             onValueEdited={(v) => handleEditProperty("directCost", v)}
+          />
+
+          <CopyableField
+            label="Redeemable (1-6)"
+            value={item.numberOfRedemptions || "Not Set"}
+            isNumeric={true}
+            min={1}
+            max={6}
+            isEditable={true}
+            onValueEdited={(v) => handleEditProperty("numberOfRedemptions", v)}
           />
 
           <p>{item.description}</p>
@@ -82,7 +122,7 @@ export const ItemDetail = () => {
             setOpen={setisDeletePopupOpen}
             handleDelete={() =>
               deleteItemAsync({ id: item.id, token })
-                .then(() => history.push("/recommendable-items"))
+                .then(() => history.push("/promotions"))
                 .catch(setError)
             }
           />

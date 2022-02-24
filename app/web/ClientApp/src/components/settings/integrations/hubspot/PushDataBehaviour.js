@@ -93,7 +93,7 @@ export const PushDataBehaviour = ({ integratedSystem }) => {
               defaultIds={behaviour.recommenderIds}
               isMulti={true}
               onChange={handleSelectItemsRecommenders}
-              placeholder="Select an Item Recommender"
+              placeholder="Select a Promotion Recommender"
             />
           </div>
         </SettingRow>

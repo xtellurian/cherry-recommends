@@ -12,11 +12,11 @@ export const ItemRecommenderLayout = ({ children }) => {
   return (
     <>
       <RecommenderStatusBox className="float-right" recommender={recommender} />
-      <PrimaryBackButton to={"/recommenders/items-recommenders"}>
+      <PrimaryBackButton to={"/recommenders/promotions-recommenders"}>
         Back to Recommenders
       </PrimaryBackButton>
       <Title>{recommender.name || "..."}</Title>
-      <Subtitle>Item Recommender</Subtitle>
+      <Subtitle>Promotion Recommender</Subtitle>
       <ItemsRecommenderPrimaryNav id={id} />
       {children}
     </>

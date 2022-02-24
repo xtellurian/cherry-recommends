@@ -890,9 +890,7 @@ namespace sqlserver.SignalBox
 
                     b.Property<string>("BenefitType")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Fixed");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("BenefitValue")
                         .ValueGeneratedOnAdd()
@@ -915,9 +913,7 @@ namespace sqlserver.SignalBox
                         .HasColumnType("float");
 
                     b.Property<string>("Discriminator")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Product");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("EnvironmentId")
                         .HasColumnType("bigint");
@@ -937,9 +933,7 @@ namespace sqlserver.SignalBox
 
                     b.Property<string>("PromotionType")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Other");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Properties")
                         .HasColumnType("nvarchar(max)");

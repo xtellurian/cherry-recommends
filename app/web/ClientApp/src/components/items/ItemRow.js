@@ -13,7 +13,7 @@ export const ItemRow = ({ item, children }) => {
       </div>
 
       <div className="col-sm text-right">
-        <Link to={`/recommendable-items/detail/${item.id}`}>
+        <Link to={`/promotions/detail/${item.id}`}>
           <button className="btn btn-outline-primary m-auto">View</button>
         </Link>
         {children}

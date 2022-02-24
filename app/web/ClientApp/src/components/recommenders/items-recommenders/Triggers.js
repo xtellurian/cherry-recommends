@@ -32,7 +32,7 @@ export const Triggers = () => {
         <TriggersUtil
           error={error}
           recommender={recommender}
-          basePath="/recommenders/items-recommenders"
+          basePath="/recommenders/promotions-recommenders"
           triggerCollection={triggerCollection}
           setTriggerAsync={handleSetTriggerAsync}
         />

@@ -19,7 +19,7 @@ export const TargetVariableValues = () => {
   return (
     <TargetVariableValuesUtility
       recommender={recommender}
-      rootPath="/recommenders/items-recommenders"
+      rootPath="/recommenders/promotions-recommenders"
       targetVariableValues={targetVariableValues}
     />
   );

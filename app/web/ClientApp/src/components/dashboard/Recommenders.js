@@ -35,7 +35,7 @@ export const Recommenders = ({ className, hasItems }) => {
   React.useEffect(() => {
     if (itemsRecommenders.items && parameterRecommenders.items) {
       for (const itemRec of itemsRecommenders.items) {
-        itemRec.recommenderSubPath = "items-recommenders";
+        itemRec.recommenderSubPath = "promotions-recommenders";
         itemRec.uniqueId = `items-${itemRec.id}`;
       }
 
@@ -71,12 +71,10 @@ export const Recommenders = ({ className, hasItems }) => {
               </EmptyStateText>
               <Tippy
                 content={
-                  !hasItems && (
-                    <Tooltip>First create some recommendable items</Tooltip>
-                  )
+                  !hasItems && <Tooltip>First create some promotions</Tooltip>
                 }
               >
-                <Link to="/recommenders/items-recommenders/create">
+                <Link to="/recommenders/promotions-recommenders/create">
                   <button disabled={!hasItems} className="btn btn-primary">
                     Create a Recommender
                   </button>
@@ -85,7 +83,7 @@ export const Recommenders = ({ className, hasItems }) => {
             </EmptyState>
           )}
           <div className="text-center text-muted">
-            <Link to="/recommenders/items-recommenders">
+            <Link to="/recommenders/promotions-recommenders">
               <button className="btn btn-link btn-sm">View More</button>
             </Link>
           </div>

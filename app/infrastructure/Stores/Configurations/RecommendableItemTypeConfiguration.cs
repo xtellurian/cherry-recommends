@@ -15,12 +15,11 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasMany(_ => _.Recommenders)
                 .WithMany(_ => _.Items);
 
-            builder.Property(_ => _.PromotionType).HasDefaultValue(PromotionType.Other).HasConversion<string>();
-            builder.Property(_ => _.BenefitType).HasDefaultValue(BenefitType.Fixed).HasConversion<string>();
+            builder.Property(_ => _.PromotionType).HasConversion<string>();
+            builder.Property(_ => _.BenefitType).HasConversion<string>();
             builder.Property(_ => _.BenefitValue).HasDefaultValue(1d);
             builder.Property(_ => _.NumberOfRedemptions).HasDefaultValue(1);
             builder.Property("Discriminator")
-                .HasDefaultValue("Product")
                 .IsRequired(false);
 
             builder.HasData(RecommendableItem.DefaultRecommendableItem);

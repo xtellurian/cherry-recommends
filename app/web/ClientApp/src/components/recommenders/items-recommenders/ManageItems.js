@@ -33,21 +33,21 @@ export const ManageItems = () => {
         onClick={() => setIsAddItemPopupOpen(true)}
         className="float-right btn btn-primary"
       >
-        Add an Item
+        Add a Promotion
       </button>
       <BackButton
         className="float-right mr-1"
-        to={`/recommenders/items-recommenders/detail/${id}`}
+        to={`/recommenders/promotions-recommenders/detail/${id}`}
       >
         Recommender
       </BackButton>
-      <Title>Manage Items</Title>
+      <Title>Manage Promotions</Title>
       <Subtitle>
         {recommender.loading && <Spinner />}
         {recommender.name}
       </Subtitle>
       <hr />
-      {items.loading && <Spinner>Loading Items</Spinner>}
+      {items.loading && <Spinner>Loading Promotions</Spinner>}
       {items.items &&
         items.items.map((i) => (
           <ItemRow key={i.id} item={i}>
@@ -58,21 +58,21 @@ export const ManageItems = () => {
               }}
               className="btn btn-outline-danger"
             >
-              Remove Item
+              Remove Promotion
             </button>
           </ItemRow>
         ))}
 
       {items.pagination && items.pagination.totalItemCount === 0 && (
         <EmptyList>
-          There are no items associated with this recommender. All items will be
-          used.
+          There are no promotions associated with this recommender. All
+          promotions will be used.
           <div className="mt-2 text-center">
             <button
               onClick={() => setIsAddItemPopupOpen(true)}
               className="btn btn-primary"
             >
-              Add an Item
+              Add a Promotion
             </button>
           </div>
         </EmptyList>

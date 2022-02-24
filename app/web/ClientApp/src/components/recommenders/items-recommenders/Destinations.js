@@ -69,7 +69,7 @@ export const Destinations = () => {
               destinations={destinations}
               createDestination={handleCreate}
               removeDestination={handleRemove}
-              rootPath="/recommenders/items-recommenders"
+              rootPath="/recommenders/promotions-recommenders"
             />
           )}
         </TabActivator>

@@ -43,7 +43,7 @@ const RecommenderDetailSection = () => {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState();
   const onDeleted = () => {
-    history.push("/recommenders/items-recommenders");
+    history.push("/recommenders/promotions-recommenders");
   };
 
   const cloneAsync = (name, commonId) => {
@@ -124,9 +124,9 @@ const RecommenderDetailSection = () => {
 
           {recommender.baselineItem && (
             <EntityField
-              label="Baseline Item"
+              label="Baseline Promotion"
               entity={recommender.baselineItem}
-              to={`/recommendable-items/detail/${recommender.baselineItemId}`}
+              to={`/promotions/detail/${recommender.baselineItemId}`}
             />
           )}
 
@@ -171,7 +171,7 @@ const RecommenderDetailSection = () => {
                 cloneAsync={cloneAsync}
                 onCloned={(r) =>
                   history.push(
-                    `/recommenders/items-recommenders/detail/${r.id}`
+                    `/recommenders/promotions-recommenders/detail/${r.id}`
                   )
                 }
               />
@@ -191,19 +191,17 @@ const RecommenderDetailSection = () => {
 
       <div className="mt-5">
         <div className="mb-4">
-          <Link to={`/recommenders/items-recommenders/manage-items/${id}`}>
+          <Link to={`/recommenders/promotions-recommenders/manage-items/${id}`}>
             <button className="float-right btn btn-outline-primary">
-              Manage Items
+              Manage Promotions
             </button>
           </Link>
-          <Subtitle>Associated Items</Subtitle>
+          <Subtitle>Associated Promotions</Subtitle>
         </div>
         {recommender.items &&
           recommender.items.map((i) => <ItemRow item={i} key={i.id} />)}
         {recommender.items && recommender.items.length === 0 && (
-          <EmptyList>
-            This recommender works with all recommendable items.
-          </EmptyList>
+          <EmptyList>This recommender works with all promotions.</EmptyList>
         )}
       </div>
     </React.Fragment>

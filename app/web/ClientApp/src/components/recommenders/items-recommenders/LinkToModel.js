@@ -14,7 +14,7 @@ export const LinkToModel = () => {
     <LinkToModelUtility
       recommender={recommender}
       createLinkRegisteredModelAsync={createLinkRegisteredModelAsync}
-      rootPath="/recommenders/items-recommenders"
+      rootPath="/recommenders/promotions-recommenders"
       linkedModel={linkedModel}
     />
   );

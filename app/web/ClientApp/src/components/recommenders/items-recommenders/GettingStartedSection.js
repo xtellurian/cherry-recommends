@@ -27,7 +27,7 @@ export const GettingStartedSection = ({ recommender }) => {
                   Integrated System, or by using the Javascript SDK.
                 </p>
                 <Link
-                  to={`/recommenders/items-recommenders/destinations/${recommender.id}`}
+                  to={`/recommenders/promotions-recommenders/destinations/${recommender.id}`}
                 >
                   <button className="btn btn-outline-primary">
                     Add a destination

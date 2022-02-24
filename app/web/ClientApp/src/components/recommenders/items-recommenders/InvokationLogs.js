@@ -18,7 +18,7 @@ export const InvokationLogs = () => {
       <InvokationLogsUtil
         invokations={invokations}
         recommender={recommender}
-        rootPath="/recommenders/items-recommenders"
+        rootPath="/recommenders/promotions-recommenders"
       />
     );
 };

@@ -8,6 +8,9 @@ export const EditPropertyPopup = ({
   setIsOpen,
   label,
   value,
+  type,
+  min,
+  max,
   onSetValue,
 }) => {
   const onRequestClose = () => setIsOpen(false);
@@ -33,6 +36,9 @@ export const EditPropertyPopup = ({
             <TextInput
               label={label}
               value={newValue}
+              type={type || "text"}
+              min={min}
+              max={max}
               onChange={(v) => setNewValue(v.target.value)}
             />
           </InputGroup>

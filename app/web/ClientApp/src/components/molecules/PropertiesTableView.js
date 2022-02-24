@@ -8,7 +8,7 @@ export const PropertiesTableView = ({ properties, onEdit }) => {
     if (propertyNames.length === 0) {
       return (
         <EmptyList>
-          <div className="mb-2">This item has no properties.</div>
+          <div className="mb-2">This promotion has no properties.</div>
           <button className="btn btn-outline-primary" onClick={onEdit}>
             Edit Properties
           </button>
@@ -35,7 +35,7 @@ export const PropertiesTableView = ({ properties, onEdit }) => {
   } else {
     return (
       <EmptyList>
-        <div className="mb-2">This item has no properties.</div>
+        <div className="mb-2">This promotion has no properties.</div>
         <button className="btn btn-outline-primary" onClick={onEdit}>
           Edit Properties
         </button>

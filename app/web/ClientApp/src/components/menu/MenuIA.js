@@ -34,17 +34,17 @@ const AuthenticatedIA = [
     ],
   },
   {
-    name: "Items",
+    name: "Promotions",
     icon: "/icons/items.svg",
-    to: { pathname: "/recommendable-items/", hash: "#items" },
+    to: { pathname: "/promotions/", hash: "#promotions" },
     items: [
       {
-        name: "All Items",
-        to: "/recommendable-items/",
+        name: "All Promotions",
+        to: "/promotions/",
       },
       {
         name: "Recommenders",
-        to: "/recommenders/items-recommenders",
+        to: "/recommenders/promotions-recommenders",
       },
     ],
   },

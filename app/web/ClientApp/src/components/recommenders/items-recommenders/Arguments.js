@@ -34,7 +34,7 @@ export const ArgumentsSection = ({ recommender, setTrigger }) => {
           {!recommender.loading && (
             <ArgumentsComponentUtil
               recommender={recommender}
-              basePath="/recommenders/items-recommenders"
+              basePath="/recommenders/promotions-recommenders"
               setArgumentsAsync={handleSet}
             />
           )}

@@ -37,7 +37,7 @@ const Top = ({ integratedSystem }) => {
 };
 
 const recommenderTypeOptions = [
-  { label: "Item Recommender", value: "ITEMS" },
+  { label: "Promotion Recommender", value: "ITEMS" },
   { label: "Parameter Set Recommender", value: "PARAMETER-SET" },
   { label: "None", value: "None" },
 ];
@@ -183,7 +183,9 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
         {recommenderType && recommenderType.value === "ITEMS" && (
           <AsyncSelectItemsRecommender
             allowNone={true}
-            placeholder={itemsRecommender.name || "Choose an items recommender"}
+            placeholder={
+              itemsRecommender.name || "Choose a promotions recommender"
+            }
             onChange={(v) => setRecommender(v.value)}
           />
         )}

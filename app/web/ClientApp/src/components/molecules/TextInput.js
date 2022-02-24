@@ -103,6 +103,26 @@ export const maxCurrentDateValidator = (value) => {
   return diff < 0 ? [errorMessage] : [];
 };
 
+export const numericValidator = (isInteger, min, max) => (value) => {
+  if (isNaN(value)) {
+    return ["Not a valid number"];
+  } else {
+    if (isInteger && !Number.isInteger(Number(value))) {
+      return ["Value must be an integer"];
+    }
+    let minMaxError = undefined;
+    if (min && !max && value < min) {
+      minMaxError = `Value must be a minimum of ${min}`;
+    } else if (!min && max && value > max) {
+      minMaxError = `Value must be a maximum of ${max}`;
+    } else if (min && max && (value < min || value > max)) {
+      minMaxError = `Value must be a minimum of ${min} and maximum of ${max}`;
+    }
+    
+    return minMaxError ? [minMaxError] : [];
+  }
+};
+
 export const createServerErrorValidator =
   (serverErrorKey, serverError) => (value) => {
     let hasError =
@@ -131,6 +151,8 @@ export const TextInput = ({
   hint,
   value,
   type,
+  min,
+  max,
   placeholder,
   onChange,
   onReturn,
@@ -139,7 +161,6 @@ export const TextInput = ({
   resetTrigger,
   required,
   disabled,
-  max,
 }) => {
   const [hide, setHide] = React.useState(false);
   const [errorMessages, setErrorMessages] = React.useState([]);
@@ -214,12 +235,13 @@ export const TextInput = ({
           className={`form-control ${formControlValidationClass}`}
           placeholder={placeholder}
           value={value}
+          min={min}
+          max={max}
           onChange={onChange}
           onKeyPress={handleOnKeyPress}
           onBlur={onBlur}
           required={required}
           disabled={disabled}
-          max={max}
         />
       </Tippy>
     </React.Fragment>

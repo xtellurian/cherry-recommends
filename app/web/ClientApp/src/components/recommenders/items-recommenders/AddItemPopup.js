@@ -35,7 +35,7 @@ export const AddItemPopup = ({ isOpen, setIsOpen, recommender, onAdded }) => {
   return (
     <React.Fragment>
       <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Title>Add an Item</Title>
+        <Title>Add a Promotion</Title>
         <Subtitle>{recommender.name}</Subtitle>
         <hr />
         {error && <ErrorCard error={error} />}

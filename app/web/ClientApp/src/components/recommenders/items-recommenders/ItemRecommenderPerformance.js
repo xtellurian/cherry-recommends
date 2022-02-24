@@ -19,9 +19,7 @@ const PerformanceTableRow = ({ data, itemsById }) => {
   return (
     <TableRow>
       <Cell>
-        <Link to={`/recommendable-items/detail/${data.itemId}`}>
-          {item.name}
-        </Link>
+        <Link to={`/promotions/detail/${data.itemId}`}>{item.name}</Link>
       </Cell>
       <Cell>{data.targetMetricSum}</Cell>
       <Cell>{data.customerCount}</Cell>
@@ -40,7 +38,7 @@ const PerformanceTable = ({ reports, itemsById, targetMetric }) => {
     <Table>
       <TableHead
         headings={[
-          "Item",
+          "Promotion",
           `Sum ${targetMetricName}`,
           "# Customers",
           "# Recommendations",

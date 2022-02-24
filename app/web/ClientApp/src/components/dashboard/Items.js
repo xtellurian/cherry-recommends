@@ -16,20 +16,22 @@ export const Items = ({ className, items }) => {
   return (
     <>
       <div className={className}>
-        <NoteBox label="Recommendable Items">
+        <NoteBox label="Promotions">
           {items.loading && <Spinner />}
           {itemList && itemList.map((i) => <ItemRow key={i.id} item={i} />)}
 
           {!items.loading && itemList.length === 0 && (
             <EmptyState>
-              <EmptyStateText>You haven't created any items.</EmptyStateText>
-              <Link to="/recommendable-items/create">
-                <button className="btn btn-primary">Create an Item</button>
+              <EmptyStateText>
+                You haven't created any promotions.
+              </EmptyStateText>
+              <Link to="/promotions/create">
+                <button className="btn btn-primary">Create a Promotion</button>
               </Link>
             </EmptyState>
           )}
           <div className="text-center text-muted">
-            <Link to="/recommendable-items">
+            <Link to="/promotions">
               <button className="btn btn-link btn-sm">View More</button>
             </Link>
           </div>

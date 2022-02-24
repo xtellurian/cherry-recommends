@@ -14,7 +14,7 @@ export const RecommendersComponent = () => {
           component={ParameterSetRecommendersComponent}
         />
         <AuthorizeRoute
-          path={`${path}/items-recommenders`}
+          path={`${path}/promotions-recommenders`}
           component={ItemsRecommendersComponent}
         />
       </Switch>

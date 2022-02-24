@@ -21,28 +21,28 @@ const ItemsRecommenderRow = ({ recommender }) => {
         <ButtonGroup>
           <div className="btn btn-outline-primary">
             <Link
-              to={`/recommenders/items-recommenders/detail/${recommender.id}`}
+              to={`/recommenders/promotions-recommenders/detail/${recommender.id}`}
             >
               <div>Details</div>
             </Link>
           </div>
           <div className="btn btn-outline-primary">
             <Link
-              to={`/recommenders/items-recommenders/monitor/${recommender.id}`}
+              to={`/recommenders/promotions-recommenders/monitor/${recommender.id}`}
             >
               <div>Monitor</div>
             </Link>
           </div>
           <div className="btn btn-outline-primary">
             <Link
-              to={`/recommenders/items-recommenders/performance/${recommender.id}`}
+              to={`/recommenders/promotions-recommenders/performance/${recommender.id}`}
             >
               <div>Performance</div>
             </Link>
           </div>
           <div className="btn btn-outline-primary">
             <Link
-              to={`/recommenders/items-recommenders/test/${recommender.id}`}
+              to={`/recommenders/promotions-recommenders/test/${recommender.id}`}
             >
               <div>Test</div>
             </Link>
@@ -58,19 +58,21 @@ export const ItemsRecommendersSummary = () => {
     <React.Fragment>
       <CreateButtonClassic
         className="float-right"
-        to="/recommenders/items-recommenders/create"
+        to="/recommenders/promotions-recommenders/create"
       >
-        Create Item Recommender
+        Create Promotion Recommender
       </CreateButtonClassic>
-      <Title>Item Recommenders</Title>
+      <Title>Promotion Recommenders</Title>
 
       <hr />
       {itemsRecommenders.error && <ErrorCard error={itemsRecommenders.error} />}
       {itemsRecommenders.loading && <Spinner />}
       {itemsRecommenders.items && itemsRecommenders.items.length === 0 && (
         <EmptyList>
-          <div className="text-muted m-3">There are no item recommenders.</div>
-          <CreateButtonClassic to="/recommenders/items-recommenders/create">
+          <div className="text-muted m-3">
+            There are no promotion recommenders.
+          </div>
+          <CreateButtonClassic to="/recommenders/promotions-recommenders/create">
             Create
           </CreateButtonClassic>
         </EmptyList>
