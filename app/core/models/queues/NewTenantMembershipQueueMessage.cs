@@ -4,5 +4,6 @@ namespace SignalBox.Core
     {
         public string TenantName { get; set; }
         public string UserId { get; set; }
+        public string Email { get; set; }
     }
 }

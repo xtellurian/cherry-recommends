@@ -83,9 +83,10 @@ namespace SignalBox.Web.Controllers
                 }
 
                 var creatorId = User.Auth0Id();
+                var email = User.Email();
                 if (!dryRun)
                 {
-                    await newTenantQueue.Enqueue(new NewTenantQueueMessage(dto.Name, creatorId, dto.TermsOfServiceVersion));
+                    await newTenantQueue.Enqueue(new NewTenantQueueMessage(dto.Name, creatorId, dto.TermsOfServiceVersion, email));
                 }
 
                 return new StatusDto("Submitted");
@@ -163,7 +164,8 @@ namespace SignalBox.Web.Controllers
             await newTenantMembersQueue.Enqueue(new NewTenantMembershipQueueMessage
             {
                 UserId = newUser.UserId,
-                TenantName = tenant.Name
+                TenantName = tenant.Name,
+                Email = newUser.Email
             });
 
             return newUser;

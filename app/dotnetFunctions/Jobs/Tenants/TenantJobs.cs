@@ -55,7 +55,8 @@ namespace SignalBox.Functions
                 var info = new CreateTenantModel
                 {
                     Name = message.Name,
-                    CreatorId = message.CreatorId
+                    CreatorId = message.CreatorId,
+                    CreatorEmail = message.CreatorEmail
                 };
 
                 await CreateTenant(info, logger);
@@ -162,7 +163,7 @@ namespace SignalBox.Functions
         {
             var logger = executionContext.GetLogger("TriggerCreateTenantMembership_FromQueue");
             // create a 
-            await AddTenantMember(new AddMember { UserId = message.UserId }, message.TenantName, logger);
+            await AddTenantMember(new AddMember(message.UserId, message.Email), message.TenantName, logger);
         }
 
         [Function("AddMember")]
@@ -341,7 +342,7 @@ namespace SignalBox.Functions
             // create role for accessing tenant
             await CreateRoleForTenant(tenant);
 
-            await AddUserToTenant(info.CreatorId, tenant, logger);
+            await AddUserToTenant(info.CreatorId, tenant, logger, info.CreatorEmail);
             tenant.Status = Tenant.Status_Created;
             await tenantStore.SaveChanges();
 
@@ -358,7 +359,7 @@ namespace SignalBox.Functions
             await auth0Service.CreateRoleForTenant(tenant);
         }
 
-        private async Task AddUserToTenant(string userId, Tenant tenant, ILogger logger)
+        private async Task AddUserToTenant(string userId, Tenant tenant, ILogger logger, string email = null)
         {
             await auth0Service.AddTenantPermission(userId, tenant);
             if (await membershipStore.IsMember(tenant, userId))
@@ -368,7 +369,7 @@ namespace SignalBox.Functions
             else
             {
                 logger.LogInformation($"Adding {userId} to tenant {tenant.Name}");
-                var membership = await membershipStore.Create(new TenantMembership(tenant, userId));
+                var membership = await membershipStore.Create(new TenantMembership(tenant, userId, email));
                 logger.LogInformation($"Created Membership {membership.Id}");
             }
         }

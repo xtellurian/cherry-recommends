@@ -5,10 +5,13 @@ namespace SignalBox.Functions
 {
     public class CreateTenantModel
     {
+        public CreateTenantModel()
+        { }
         [Required]
         public string Name { get; set; }
         [Required]
         public string CreatorId { get; set; }
+        public string CreatorEmail { get; set; }
         public string TermsOfServiceVersion { get; set; }
 
         public void Validate()

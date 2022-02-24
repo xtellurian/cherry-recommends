@@ -5,11 +5,12 @@ using SignalBox.Core.Internal;
 
 namespace SignalBox.Infrastructure
 {
+#nullable enable
     public static class Auth0Extensions
     {
         public static string Auth0Id(this ClaimsPrincipal principal)
         {
-            if (principal.Identity.IsAuthenticated)
+            if (principal.Identity?.IsAuthenticated == true)
             {
                 return principal.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             }
@@ -17,6 +18,10 @@ namespace SignalBox.Infrastructure
             {
                 throw new System.ArgumentException("principal must be authenticated to access Auth0Id");
             }
+        }
+        public static string? Email(this ClaimsPrincipal principal)
+        {
+            return principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         }
 
         public static UserInfo ToCoreRepresentation(this Auth0.ManagementApi.Models.User user)
