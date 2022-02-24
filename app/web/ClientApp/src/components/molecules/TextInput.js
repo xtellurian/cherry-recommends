@@ -118,7 +118,7 @@ export const numericValidator = (isInteger, min, max) => (value) => {
     } else if (min && max && (value < min || value > max)) {
       minMaxError = `Value must be a minimum of ${min} and maximum of ${max}`;
     }
-    
+
     return minMaxError ? [minMaxError] : [];
   }
 };

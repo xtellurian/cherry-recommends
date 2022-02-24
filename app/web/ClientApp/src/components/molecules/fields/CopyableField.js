@@ -17,7 +17,8 @@ export const CopyableField = ({
     setEditing(!editing);
   };
 
-  const type = isSecret ? "password" : isNumeric ? "number" : "text";
+  const editType = isSecret ? "password" : isNumeric ? "number" : "text";
+  const displayType = isSecret ? "password" : "text";
 
   if (isEditable && onValueEdited === undefined) {
     throw new Error("onValueEdited must be a function");
@@ -29,7 +30,7 @@ export const CopyableField = ({
         setIsOpen={setEditing}
         label={label}
         value={value}
-        type={type}
+        type={editType}
         min={min}
         max={max}
         isOpen={editing}
@@ -40,7 +41,7 @@ export const CopyableField = ({
           <span className="input-group-text">{label}</span>
         </div>
         <input
-          type={type}
+          type={displayType}
           value={value || ""} // dont allow uncontrolled
           className="form-control"
           aria-label={label}

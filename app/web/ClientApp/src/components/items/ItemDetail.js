@@ -35,7 +35,7 @@ export const ItemDetail = () => {
     _item[property] = value;
     updateItemAsync({ token, id, item: _item })
       .then((v) => {
-        setTrigger(v)
+        setTrigger(v);
         setError(undefined);
       })
       .catch(setError);
@@ -108,7 +108,10 @@ export const ItemDetail = () => {
             onValueEdited={(v) => handleEditProperty("numberOfRedemptions", v)}
           />
 
-          <p>{item.description}</p>
+          <div className="ml-1 mb-3">
+            <label className="font-weight-bold">Description</label>
+            <p>{item.description}</p>
+          </div>
 
           <PropertiesTableView
             properties={item.properties}
