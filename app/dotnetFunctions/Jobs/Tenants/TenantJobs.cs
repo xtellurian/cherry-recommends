@@ -201,25 +201,32 @@ namespace SignalBox.Functions
 
         private async Task<IEnumerable<TenantMembership>> AssignMemberTenantRole(Tenant tenant, string userId)
         {
-            var memberships = new List<TenantMembership>();
-            if (userId == "*")
+            try
             {
-                // the get all users
-                foreach (var member in await membershipStore.ReadMemberships(tenant))
+                var memberships = new List<TenantMembership>();
+                if (userId == "*")
                 {
-                    await auth0Service.AddTenantPermission(member.UserId, tenant);
-                    memberships.Add(member);
+                    // the get all users
+                    foreach (var member in await membershipStore.ReadMemberships(tenant))
+                    {
+                        await auth0Service.AddTenantPermission(member.UserId, tenant);
+                        memberships.Add(member);
+                    }
                 }
+                else
+                {
+                    var membershipsForUser = await membershipStore.ReadMemberships(userId);
+                    var membership = membershipsForUser.First(_ => _.TenantId == tenant.Id);
+                    memberships.Add(membership);
+                    await auth0Service.AddTenantPermission(userId, tenant);
+                    memberships.Add(membership);
+                }
+                return memberships;
             }
-            else
+            catch (System.Exception ex)
             {
-                var membershipsForUser = await membershipStore.ReadMemberships(userId);
-                var membership = membershipsForUser.First(_ => _.TenantId == tenant.Id);
-                memberships.Add(membership);
-                await auth0Service.AddTenantPermission(userId, tenant);
-                memberships.Add(membership);
+                throw new DependencyException($"AssignMemberTenantRole failed for {userId}", ex);
             }
-            return memberships;
         }
 
         private async Task<Tenant> AddTenantMember(AddMember addMember, string tenantName, ILogger logger)

@@ -20,6 +20,7 @@ namespace SignalBox.Azure
                 TokenLifetime = 60 * 60 * 24 * 30, // 30 days for tokens from this endpoint
                 TokenLifetimeForWeb = 60 * 60 * 12, // 1/2 day for tokens via browser
                 EnforcePolicies = true, // enables RBAC for this API
+                SkipConsentForVerifiableFirstPartyClients = true,
                 Scopes = {
                     // WARNING - DO NOT CHANGE THESE!
                     // When pulumi updates these scopes, any other scopes are deleted
