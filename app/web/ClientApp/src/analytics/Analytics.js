@@ -36,7 +36,10 @@ const Analytics = ({ children }) => {
       }
       if (plugins.length && commonProps) {
         // identify logged-in user
-        analytics.identify(user.sub);
+        analytics.identify(user.sub, {
+          email: user.email, // for hubspot
+          cherry_user: true,
+        });
       }
     }
   }, [analytics, plugins, user, isAuthenticated, commonProps, stack]);
