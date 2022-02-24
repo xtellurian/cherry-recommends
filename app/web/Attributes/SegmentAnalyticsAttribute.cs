@@ -58,12 +58,13 @@ namespace SignalBox.Web
                         var properties = new Dictionary<string, object>
                         {
                             { "tenant", tenant },
-                            { "stack", stack }
+                            { "stack", stack },
                         };
 
                         if (context.HttpContext.User.Identity.IsAuthenticated)
                         {
                             string userId = context.HttpContext.User.Auth0Id();
+                            properties["email"] = context.HttpContext.User.Email();
                             Segment.Analytics.Client.Track(userId, eventName, properties);
                         }
                         else

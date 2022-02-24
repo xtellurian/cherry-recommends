@@ -20,6 +20,7 @@ import { AdminComponent } from "./components/admin/AdminComponent";
 import { TenantSettingsComponent } from "./components/tenant-settings/TenantSettingsComponent";
 import { configure } from "./api/customisation";
 import Analytics from "./analytics/Analytics";
+import Identifier from "./analytics/Identifier";
 import "./global-css/cherry.css";
 
 configure();
@@ -60,6 +61,8 @@ const App = () => {
         <AuthorizeRoute path="/dataview" component={DataViewComponent} />
         <AuthorizeRoute path="/reports" component={ReportsComponent} />
         <Route path="/docs/api" component={ApiDocs} />
+
+        <Identifier />
       </Analytics>
     </Layout>
   );
