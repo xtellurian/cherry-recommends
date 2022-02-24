@@ -37,10 +37,7 @@ export const CreateGlobalScopeMetricGenerator = ({ metric, onCreated }) => {
         />
       </TabActivator>
       <TabActivator tabId="join" currentTabId={currentTabId}>
-        <CreateJoinMetricsGenerator
-          metric={metric}
-          onCreated={onCreated}
-        />
+        <CreateJoinMetricsGenerator metric={metric} onCreated={onCreated} />
       </TabActivator>
     </>
   );

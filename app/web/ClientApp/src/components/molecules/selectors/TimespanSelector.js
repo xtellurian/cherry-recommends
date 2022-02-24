@@ -11,6 +11,10 @@ const options = [
     value: "1.00:00:00",
   },
   {
+    label: "3 Days",
+    value: "3.00:00:00",
+  },
+  {
     label: "7 Days",
     value: "7.00:00:00",
   },
