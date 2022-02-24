@@ -12,12 +12,15 @@ const ReportCard = ({ name, lastUpdated, chart }) => {
     <React.Fragment>
       <div className="card py-5 px-3 h-100 d-flex justify-content-center align-items-center">
         <span
-          className="font-weight-bold text-center"
+          className="font-weight-bold text-center text-capitalize"
           style={{ fontSize: "1.25rem" }}
         >
           {name}
         </span>
-        <span className="text-center mt-1">
+        <span
+          className="text-center text-secondary mt-1"
+          style={{ fontSize: "0.9rem" }}
+        >
           <DateTimeField label="Last updated" date={lastUpdated} />
         </span>
         <button
@@ -49,7 +52,7 @@ const MetricReports = ({ metric }) => {
           </div>
           <div className="col-4 mt-2">
             <ReportCard
-              name={`${metric.name} Distribution`}
+              name={`Distribution - ${metric.name}`}
               lastUpdated={metric.lastUpdated}
               chart={<MetricHistogramLoader metric={metric} />}
             />
