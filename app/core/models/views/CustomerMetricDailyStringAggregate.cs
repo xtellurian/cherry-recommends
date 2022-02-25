@@ -15,5 +15,6 @@ namespace SignalBox.Core
         public double StringValue { get; set; }
         public int ValueCount { get; set; }
         public DateTimeOffset Created { get; set; }
+        public DateTimeOffset EndDate { get; set; }
     }
 }

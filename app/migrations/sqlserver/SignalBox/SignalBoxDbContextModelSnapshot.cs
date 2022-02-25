@@ -310,6 +310,9 @@ namespace sqlserver.SignalBox
                     b.Property<long>("CustomerId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTimeOffset>("EndDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<DateTimeOffset>("FirstOfWeek")
                         .HasColumnType("datetimeoffset");
 
@@ -1501,6 +1504,9 @@ namespace sqlserver.SignalBox
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTimeOffset>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -1510,6 +1516,7 @@ namespace sqlserver.SignalBox
                         .HasColumnType("bigint");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -1517,8 +1524,7 @@ namespace sqlserver.SignalBox
                     b.HasIndex("TenantId");
 
                     b.HasIndex("UserId", "TenantId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("TenantMembership", t => t.ExcludeFromMigrations());
                 });
