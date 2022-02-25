@@ -1,35 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useCustomerEvents } from "../../api-hooks/eventApi";
-import {
-  Subtitle,
-  Spinner,
-  ExpandableCard,
-  ErrorCard,
-  EmptyList,
-} from "../molecules";
-import { DateTimeField } from "../molecules/DateTimeField";
-import { JsonView } from "../molecules/JsonView";
+import { Subtitle, Spinner, ErrorCard, EmptyList } from "../molecules";
 
-const EventRow = ({ event }) => {
-  return (
-    <ExpandableCard label={`${event.kind} @ ${event.timestamp}`}>
-      <div>
-        {event.timestamp && (
-          <DateTimeField label="Timestamp" date={event.timestamp} />
-        )}
-        <JsonView
-          data={{
-            kind: event.eventKind ?? event.kind,
-            eventType: event.eventType,
-            recommendationCorrelatorId: event.recommendationCorrelatorId,
-            properties: event.properties,
-          }}
-        />
-      </div>
-    </ExpandableCard>
-  );
-};
+import { EventRow } from "../events/EventRow";
 
 const ViewAsEvents = ({ trackedUser }) => {
   const events = useCustomerEvents({ id: trackedUser?.id });

@@ -1,25 +1,7 @@
 import React from "react";
 import { useLatestRecommendations } from "../../api-hooks/customersApi";
-import { Spinner, ExpandableCard, EmptyList } from "../molecules";
-import { JsonView } from "../molecules/JsonView";
-
-const RecommendationRow = ({ recommendation }) => {
-  return (
-    <ExpandableCard
-      label={`${recommendation.recommenderType} @ ${recommendation.created}`}
-    >
-      <div className="row">
-        <div className="col">
-          Input
-          <JsonView data={JSON.parse(recommendation.modelInput)} />
-        </div>
-        <div className="col">
-          <JsonView data={JSON.parse(recommendation.modelOutput)} />
-        </div>
-      </div>
-    </ExpandableCard>
-  );
-};
+import { Spinner, EmptyList } from "../molecules";
+import { RecommendationRow } from "../recommendations/RecommendationRow";
 
 export const LatestRecommendationsSection = ({ trackedUser }) => {
   const latestRecommendations = useLatestRecommendations({
@@ -29,7 +11,6 @@ export const LatestRecommendationsSection = ({ trackedUser }) => {
   if (trackedUser.loading || latestRecommendations.loading) {
     return <Spinner />;
   }
-  console.log(latestRecommendations);
   return (
     <React.Fragment>
       {latestRecommendations.items &&

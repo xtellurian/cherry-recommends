@@ -1,56 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useDashboard } from "../../api-hooks/dataSummaryApi";
-import { ExpandableCard, Spinner, EmptyList, ErrorCard } from "../molecules";
-import { DateTimeField } from "../molecules/DateTimeField";
-import { JsonView } from "../molecules/JsonView";
+import { Spinner, EmptyList, ErrorCard } from "../molecules";
 import { NoteBox } from "../molecules/NoteBox";
+import { EventRow } from "../events/EventRow";
+import { RecommendationRow } from "../recommendations/RecommendationRow";
 
-const EventRow = ({ event }) => {
-  const ts = new Date(event.timestamp);
-  return (
-    <ExpandableCard label={`${event.kind}  @  ${ts.toLocaleDateString()}`}>
-      <Link to={`/events/detail/${event.eventId}`}>
-        <button className="btn btn-primary float-right">Detail</button>
-      </Link>
-      <DateTimeField label="Timestamp" date={event.timestamp} />
-      <JsonView data={event} />
-    </ExpandableCard>
-  );
-};
-const RecommendationRow = ({ recommendation }) => {
-  const ts = new Date(recommendation.created);
-  try {
-    const modelInput = JSON.parse(recommendation.modelInput);
-    const modelOutput = JSON.parse(recommendation.modelOutput);
-    return (
-      <ExpandableCard
-        label={`${
-          recommendation.recommenderType || ""
-        }  @  ${ts.toLocaleDateString()}`}
-      >
-        <DateTimeField label="Timestamp" date={recommendation.created} />
-        Model Input
-        <JsonView data={modelInput} />
-        Model Output
-        <JsonView data={modelOutput} />
-      </ExpandableCard>
-    );
-  } catch (ex) {
-    return (
-      <ExpandableCard label="Oops">
-        An error occurred when parsing model input or output.
-      </ExpandableCard>
-    );
-  }
-};
 export const RecentActivity = () => {
   const dashboard = useDashboard({ scope: null }); // choose null, kind, or type
   return (
     <React.Fragment>
       <NoteBox label="Activity">
-        {dashboard.loading && <Spinner />}
-        {dashboard.error && <ErrorCard error={dashboard.error} />}
+        {dashboard.loading ? <Spinner /> : null}
+        {dashboard.error ? <ErrorCard error={dashboard.error} /> : null}
         <div className="row">
           {dashboard.events && (
             <div className="col">

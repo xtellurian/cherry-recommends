@@ -1,6 +1,14 @@
 import React from "react";
 
-const EntityFlexRow = ({ children, direction, justify, align }) => {
+const EntityFlexRow = ({
+  children,
+  className,
+  direction,
+  justify,
+  align,
+  onClick,
+  style,
+}) => {
   if (!direction) {
     direction = "flex-md-row flex-column";
   }
@@ -12,7 +20,11 @@ const EntityFlexRow = ({ children, direction, justify, align }) => {
   }
   return (
     <div
-      className={`shadow-sm bg-body rounded d-flex p-2 ${direction} ${justify} ${align}`}
+      onClick={onClick}
+      style={style}
+      className={`${
+        className || ""
+      } shadow-sm bg-body rounded d-flex p-2 ${direction} ${justify} ${align}`}
     >
       {children}
     </div>

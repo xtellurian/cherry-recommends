@@ -26,4 +26,7 @@
     <ProjectReference Include="..\dotnetFunctions\dotnetFunctions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Conversions/segmentEvents.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

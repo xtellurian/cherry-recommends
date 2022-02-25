@@ -1,0 +1,59 @@
+{
+  "page": {
+    "version": 1,
+    "type": "page",
+    "userId": "019mr8mf4r",
+    "properties": {
+      "path": "/pricing",
+      "referrer": "https://segment.com",
+      "title": "Segment Pricing",
+      "url": "https://segment.com/pricing"
+    },
+    "timestamp": "2012-12-02T00:30:08.276Z"
+  },
+  "screen": {
+    "version": 1,
+    "type": "screen",
+    "userId": "019mr8mf4r",
+    "name": "Main Screen",
+    "timestamp": "2012-12-02T00:30:08.276Z",
+    "context": {
+      "device": {
+        "model": "x86_64",
+        "type": "ios"
+      },
+      "os": {
+        "name": "iPhone OS",
+        "version": "7.1"
+      },
+      "app": {
+        "build": "88",
+        "name": "YourApp",
+        "version": "2.0.0"
+      }
+    }
+  },
+  "identify": {
+    "version": 1,
+    "type": "identify",
+    "userId": "019mr8mf4r",
+    "traits": {
+      "email": "achilles@segment.com",
+      "name": "Achilles",
+      "subscriptionPlan": "Premium",
+      "friendCount": 29
+    },
+    "timestamp": "2012-12-02T00:30:08.276Z"
+  },
+  "track": {
+    "version": 1,
+    "type": "track",
+    "userId": "019mr8mf4r",
+    "event": "Purchased an Item",
+    "properties": {
+      "revenue": "39.95",
+      "shippingMethod": "2-day"
+    },
+    "timestamp": "2012-12-02T00:30:08.276Z"
+  }
+}

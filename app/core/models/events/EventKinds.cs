@@ -6,6 +6,8 @@ namespace SignalBox.Core
         Custom,
         PropertyUpdate,
         Behaviour,
+        PageView,
+        Identify,
         ConsumeRecommendation
     }
 }

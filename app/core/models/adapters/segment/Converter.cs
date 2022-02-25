@@ -15,6 +15,29 @@ namespace SignalBox.Core.Adapters.Segment
 
         public static CustomerEventInput ToTrackedUserEventInput(this SegmentModel model, IntegratedSystem sys)
         {
+            long? correlatorId = ExtractCorrelatorId(model);
+            if (string.IsNullOrEmpty(model.UserId))
+            {
+                model.Properties.TryAdd("anonymousId", model.AnonymousId);
+            }
+
+            return new CustomerEventInput
+            (
+                model.UserId ?? Customer.AnonymousCommonId,
+                eventId: model.MessageId,
+                timestamp: model.Timestamp,
+                environmentId: sys.EnvironmentId,
+                recommendationCorrelatorId: correlatorId,
+                sourceSystemId: sys.Id,
+                kind: MapEventKind(model),
+                eventType: model.Event ?? $"Segment|{model.Type}" ?? "Segment|Unknown",
+                properties: model.Properties ?? model.Traits
+            );
+
+        }
+
+        private static long? ExtractCorrelatorId(SegmentModel model)
+        {
             long? correlatorId = null;
             try
             {
@@ -33,26 +56,12 @@ namespace SignalBox.Core.Adapters.Segment
                     }
                 }
             }
-            catch(System.Exception)
+            catch (System.Exception)
             {
-                // swallow this exception
-            }
-            if(string.IsNullOrEmpty(model.UserId))
-            {
-                model.Properties.TryAdd("anonymousId", model.AnonymousId);
+                // swallow all exceptions
             }
 
-            return new CustomerEventInput(
-                model.UserId ?? Customer.AnonymousCommonId, 
-                eventId: model.MessageId,
-                timestamp: model.Timestamp,
-                environmentId: sys.EnvironmentId, 
-                recommendationCorrelatorId: correlatorId, 
-                sourceSystemId: sys.Id, 
-                MapEventKind(model), 
-                model.Event ?? "Segment|Unknown", 
-                model.Properties);
-
+            return correlatorId;
         }
 
         public static EventKinds MapEventKind(SegmentModel model)
@@ -60,7 +69,9 @@ namespace SignalBox.Core.Adapters.Segment
             return model.Type switch
             {
                 "track" => EventKinds.Behaviour,
-                "page" => EventKinds.Behaviour,
+                "page" => EventKinds.PageView,
+                "screen" => EventKinds.PageView,
+                "identify" => EventKinds.Identify,
                 _ => EventKinds.Custom,
             };
         }

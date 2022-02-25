@@ -109,6 +109,10 @@ a:hover {
   padding: 8px;
 }
 
+.clickable-row:hover {
+  background-color: var(--cherry-pink-alpha);
+}
+
 /* archive */
 
 code {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
-import { EventDetail } from "./EventDetail";
+import { EventDetailPage } from "./EventDetail";
 
 export const EventsComponent = () => {
   let { path } = useRouteMatch();
@@ -12,7 +12,7 @@ export const EventsComponent = () => {
         <AuthorizeRoute
           exact
           path={`${path}/detail/:id`}
-          component={EventDetail}
+          component={EventDetailPage}
         />
       </Switch>
     </React.Fragment>
