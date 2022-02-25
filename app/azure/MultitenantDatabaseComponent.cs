@@ -12,6 +12,7 @@ namespace SignalBox.Azure
         public MultitenantDatabaseComponent(ResourceGroup rg)
         {
             var config = new Config();
+            var databaseConfig = new Config("database");
             var username = config.Get("sqlAdmin") ?? "pulumi";
             var password = config.RequireSecret("sqlPassword");
             var sqlServer = new Server("multiSql", new ServerArgs
@@ -40,14 +41,14 @@ namespace SignalBox.Azure
                 Location = sqlServer.Location,
                 PerDatabaseSettings = new ElasticPoolPerDatabaseSettingsArgs
                 {
-                    MaxCapacity = 2,
+                    MaxCapacity = databaseConfig.GetInt32("poolMaxCapacityPerDatabase") ?? 2,
                     MinCapacity = 0,
                 },
                 ResourceGroupName = rg.Name,
                 ServerName = sqlServer.Name,
                 Sku = new SkuArgs
                 {
-                    Capacity = 2,
+                    Capacity = databaseConfig.GetInt32("poolCapacity") ?? 2,
                     Name = "GP_Gen5",
                     Tier = "GeneralPurpose",
                 }
