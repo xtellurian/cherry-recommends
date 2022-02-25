@@ -1,55 +1,55 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   Title,
   ErrorCard,
   Spinner,
   Paginator,
   EmptyList,
-  ExpandableCard,
 } from "../../molecules";
 import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { useItemsRecommenders } from "../../../api-hooks/itemsRecommendersApi";
-import EntityRow from "../../molecules/layout/EntityFlexRow";
 import { ButtonGroup } from "../../molecules/buttons/ButtonGroup";
+import { RecommenderRow } from "../RecommenderRow";
 
 const ItemsRecommenderRow = ({ recommender }) => {
+  const history = useHistory();
+  const handleNavigate = (page) => {
+    history.push(
+      `/recommenders/promotions-recommenders/${page}/${recommender.id}`
+    );
+  };
   return (
-    <EntityRow>
-      <div className="ml-2 align-middle">{recommender.name}</div>
+    <RecommenderRow recommender={recommender}>
       <div>
         <ButtonGroup>
-          <div className="btn btn-outline-primary">
-            <Link
-              to={`/recommenders/promotions-recommenders/detail/${recommender.id}`}
-            >
-              <div>Details</div>
-            </Link>
+          <div
+            className="btn btn-outline-primary"
+            onClick={() => handleNavigate("detail")}
+          >
+            Details
           </div>
-          <div className="btn btn-outline-primary">
-            <Link
-              to={`/recommenders/promotions-recommenders/monitor/${recommender.id}`}
-            >
-              <div>Monitor</div>
-            </Link>
+          <div
+            className="btn btn-outline-primary"
+            onClick={() => handleNavigate("monitor")}
+          >
+            Monitor
           </div>
-          <div className="btn btn-outline-primary">
-            <Link
-              to={`/recommenders/promotions-recommenders/performance/${recommender.id}`}
-            >
-              <div>Performance</div>
-            </Link>
+          <div
+            className="btn btn-outline-primary"
+            onClick={() => handleNavigate("performance")}
+          >
+            Performance
           </div>
-          <div className="btn btn-outline-primary">
-            <Link
-              to={`/recommenders/promotions-recommenders/test/${recommender.id}`}
-            >
-              <div>Test</div>
-            </Link>
+          <div
+            className="btn btn-outline-primary"
+            onClick={() => handleNavigate("test")}
+          >
+            Test
           </div>
         </ButtonGroup>
       </div>
-    </EntityRow>
+    </RecommenderRow>
   );
 };
 export const ItemsRecommendersSummary = () => {

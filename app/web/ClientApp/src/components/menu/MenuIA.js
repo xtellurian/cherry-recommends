@@ -1,5 +1,20 @@
 const AuthenticatedIA = [
   {
+    name: "Promotions",
+    icon: "/icons/tag.svg",
+    to: { pathname: "/promotions/", hash: "#promotions" },
+    items: [
+      {
+        name: "All Promotions",
+        to: "/promotions/",
+      },
+      {
+        name: "Recommenders",
+        to: "/recommenders/promotions-recommenders",
+      },
+    ],
+  },
+  {
     name: "Customers",
     icon: "/icons/customer.svg",
     to: { pathname: "/customers", hash: "#customers" },
@@ -30,21 +45,6 @@ const AuthenticatedIA = [
       {
         name: "Create a Metric",
         to: "/metrics/create",
-      },
-    ],
-  },
-  {
-    name: "Promotions",
-    icon: "/icons/items.svg",
-    to: { pathname: "/promotions/", hash: "#promotions" },
-    items: [
-      {
-        name: "All Promotions",
-        to: "/promotions/",
-      },
-      {
-        name: "Recommenders",
-        to: "/recommenders/promotions-recommenders",
       },
     ],
   },

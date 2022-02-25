@@ -8,9 +8,9 @@ const label = "Recommender Status";
 export const RecommenderStatusBox = ({ className, recommender }) => {
   if (recommender.loading) {
     return (
-      <NoteBox className={className} label={label}>
+      <div className="float-right">
         <Spinner />
-      </NoteBox>
+      </div>
     );
   } else if (!recommender.modelRegistrationId) {
     return (

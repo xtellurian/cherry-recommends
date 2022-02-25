@@ -3,7 +3,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { setCustomerMetricAsync } from "../../api/customersApi";
 import { AsyncSelectCustomer } from "../molecules/selectors/AsyncSelectCustomer";
-import { CustomerListItem } from "../molecules/CustomerLists";
+import { CustomerRow } from "../customers/CustomerRow";
 import { useMetric } from "../../api-hooks/metricsApi";
 import {
   Title,
@@ -63,7 +63,7 @@ const SetMetricValue = () => {
         placeholder="Choose a Customer"
         onChange={(v) => setTrackedUser(v.value)}
       />
-      {trackedUser && <CustomerListItem customer={trackedUser} />}
+      {trackedUser && <CustomerRow customer={trackedUser} />}
       <hr />
 
       {valueWasSet && (

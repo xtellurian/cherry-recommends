@@ -2,7 +2,6 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useSegment } from "../../api-hooks/segmentsApi";
 import { Title, Subtitle } from "../molecules/layout";
-import { CustomerList } from "../molecules/CustomerLists";
 import { Spinner } from "../molecules/Spinner";
 
 export const SegmentMembers = () => {
@@ -21,9 +20,7 @@ export const SegmentMembers = () => {
       <Title>Segment | Members</Title>
       <Subtitle>{segment.name}</Subtitle>
       <hr />
-      <div>
-        <CustomerList ids={segment.inSegment} />
-      </div>
+      <div>TODO: show customers here</div>
     </div>
   );
 };

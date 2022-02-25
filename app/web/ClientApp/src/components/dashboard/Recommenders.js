@@ -4,28 +4,14 @@ import { useItemsRecommenders } from "../../api-hooks/itemsRecommendersApi";
 import { useParameterSetRecommenders } from "../../api-hooks/parameterSetRecommendersApi";
 import { EmptyState, Spinner } from "../molecules";
 import { NoteBox } from "../molecules/NoteBox";
-import { EntityRow } from "../molecules/layout/EntityRow";
 import { Link } from "react-router-dom";
 import { EmptyStateText } from "../molecules/empty/EmptyStateText";
+import { RecommenderRow } from "../recommenders/RecommenderRow";
 
 const Tooltip = ({ children }) => {
   return <div className="bg-light border rounded p-3">{children}</div>;
 };
 
-const RecommenderRow = ({ recommender }) => {
-  return (
-    <EntityRow>
-      <div className="col text-left">{recommender.name}</div>
-      <div className="col-4">
-        <Link
-          to={`/recommenders/${recommender.recommenderSubPath}/detail/${recommender.id}`}
-        >
-          <button className="btn btn-outline-primary btn-block">View</button>
-        </Link>
-      </div>
-    </EntityRow>
-  );
-};
 const MAX_LIST_LENGTH = 5;
 export const Recommenders = ({ className, hasItems }) => {
   const itemsRecommenders = useItemsRecommenders();

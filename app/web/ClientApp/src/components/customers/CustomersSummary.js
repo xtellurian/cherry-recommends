@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useCustomers } from "../../api-hooks/customersApi";
 import { Title, Spinner, Paginator, ErrorCard } from "../molecules";
 import { SearchBox } from "../molecules/SearchBox";
-import { CustomerListItem } from "../molecules/CustomerLists";
+import { CustomerRow } from "../customers/CustomerRow";
 import { EmptyList } from "../molecules";
 
 const CreateButton = () => {
@@ -41,7 +41,7 @@ export const CustomersSummary = () => {
       <div className="mt-3">
         {trackedUsers.items &&
           trackedUsers.items.map((u) => (
-            <CustomerListItem key={u.id} customer={u} />
+            <CustomerRow key={u.id} customer={u} />
           ))}
       </div>
       <Paginator {...trackedUsers.pagination} />

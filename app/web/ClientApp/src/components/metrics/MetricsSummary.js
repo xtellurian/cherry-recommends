@@ -1,19 +1,9 @@
 import React from "react";
 import { EmptyList, Paginator, Title, ErrorCard, Spinner } from "../molecules";
-import { ClickableRow } from "../molecules/layout/ClickableRow";
 
 import { useMetrics } from "../../api-hooks/metricsApi";
 import { CreateButtonClassic } from "../molecules/CreateButton";
-
-const MetricRow = ({ metric }) => {
-  return (
-    <ClickableRow
-      buttonText="Detail"
-      label={metric.name}
-      to={`/metrics/detail/${metric.id}`}
-    />
-  );
-};
+import { MetricRow } from "./MetricRow";
 
 const MetricsSummary = () => {
   const metrics = useMetrics();

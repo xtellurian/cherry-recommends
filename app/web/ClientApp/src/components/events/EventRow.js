@@ -18,11 +18,10 @@ export const EventRow = ({ event }) => {
         onClick={() => setIsPopupOpen(true)}
         style={{ cursor: "pointer" }}
       >
-        <div>
+        <div className="flex-grow-0">
           <CaretRightFill style={{ color: "var(--cherry-pink)" }} />
           <span className="ml-2">{event.kind}</span>
         </div>
-        <div>{event.eventType}</div>
         <DateTimeField date={event.timestamp} />
       </FlexRow>
     </React.Fragment>
