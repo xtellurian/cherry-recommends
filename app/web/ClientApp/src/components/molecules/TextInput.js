@@ -104,18 +104,19 @@ export const maxCurrentDateValidator = (value) => {
 };
 
 export const numericValidator = (isInteger, min, max) => (value) => {
-  if (isNaN(value)) {
+  const number = Number(value);
+  if (isNaN(number)) {
     return ["Not a valid number"];
   } else {
-    if (isInteger && !Number.isInteger(Number(value))) {
+    if (isInteger && !Number.isInteger(number)) {
       return ["Value must be an integer"];
     }
     let minMaxError = undefined;
-    if (min && !max && value < min) {
+    if (!isNaN(min) && isNaN(max) && number < min) {
       minMaxError = `Value must be a minimum of ${min}`;
-    } else if (!min && max && value > max) {
+    } else if (isNaN(min) && !isNaN(max) && number > max) {
       minMaxError = `Value must be a maximum of ${max}`;
-    } else if (min && max && (value < min || value > max)) {
+    } else if (!isNaN(min) && !isNaN(max) && (number < min || number > max)) {
       minMaxError = `Value must be a minimum of ${min} and maximum of ${max}`;
     }
 

@@ -41,7 +41,7 @@ export const CreateItem = () => {
     commonId: "",
     directCost: 0,
     benefitType: "",
-    benefitValue: 1,
+    benefitValue: 0,
     promotionType: null,
     numberOfRedemptions: 1,
   });
@@ -134,11 +134,11 @@ export const CreateItem = () => {
               label="Benefit Value"
               placeholder="Value of the benefit, per unit."
               type="number"
-              min={1}
+              min={0}
               value={item.benefitValue}
               validator={joinValidators([
                 createRequiredByServerValidator(error),
-                numericValidator(false, 1),
+                numericValidator(false, 0),
               ])}
               onChange={(e) =>
                 setItem({
@@ -167,7 +167,7 @@ export const CreateItem = () => {
 
           <InputGroup className="m-1">
             <TextInput
-              label="Redeemable (1-6)"
+              label="Redemption Limit"
               placeholder="# of promotion redemptions."
               type="number"
               min={1}

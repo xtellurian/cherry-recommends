@@ -17,7 +17,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 
             builder.Property(_ => _.PromotionType).HasConversion<string>();
             builder.Property(_ => _.BenefitType).HasConversion<string>();
-            builder.Property(_ => _.BenefitValue).HasDefaultValue(1d);
+            builder.Property(_ => _.BenefitValue).HasDefaultValue(0d);
             builder.Property(_ => _.NumberOfRedemptions).HasDefaultValue(1);
             builder.Property("Discriminator")
                 .IsRequired(false);

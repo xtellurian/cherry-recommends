@@ -898,7 +898,7 @@ namespace sqlserver.SignalBox
                     b.Property<double>("BenefitValue")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("float")
-                        .HasDefaultValue(1.0);
+                        .HasDefaultValue(0.0);
 
                     b.Property<string>("CommonId")
                         .IsRequired()

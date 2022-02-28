@@ -82,9 +82,9 @@ export const ItemDetail = () => {
 
           <CopyableField
             label="Benefit Value"
-            value={item.benefitValue}
+            value={item.benefitValue || "Not Set"}
             isNumeric={true}
-            min={1}
+            min={0}
             isEditable={true}
             onValueEdited={(v) => handleEditProperty("benefitValue", v)}
           />
@@ -99,7 +99,7 @@ export const ItemDetail = () => {
           />
 
           <CopyableField
-            label="Redeemable (1-6)"
+            label="Redemption Limit"
             value={item.numberOfRedemptions || "Not Set"}
             isNumeric={true}
             min={1}

@@ -11,8 +11,8 @@ namespace SignalBox.Web.Dto
         [Required]
         public BenefitType BenefitType { get; set; }
         [Required]
-        [DefaultValue(1d)]
-        [Range(1.0, double.MaxValue, ErrorMessage = "The field {0} must be greater than {1}.")]
+        [DefaultValue(0d)]
+        [Range(0d, double.MaxValue, ErrorMessage = "The field {0} must be greater than or equal to {1}.")]
         public double BenefitValue { get; set; }
         [Required]
         public PromotionType PromotionType { get; set; }
