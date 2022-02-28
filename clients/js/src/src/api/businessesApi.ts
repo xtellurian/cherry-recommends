@@ -1,9 +1,11 @@
 import {
+  AuthenticatedRequest,
   EntitySearchRequest,
   PaginateResponse,
   Business
 } from "../interfaces";
 import { executeFetch } from "./client/apiClientTs";
+import { components } from "../model/api";
 
 export const fetchBusinessesAsync = async ({
   token,
@@ -17,5 +19,20 @@ export const fetchBusinessesAsync = async ({
     query: {
       "q.term": searchTerm,
     },
+  });
+};
+
+interface CreateBusinessRequest extends AuthenticatedRequest {
+  business: components["schemas"]["CreateBusiness"];
+}
+export const createBusinessAsync = async ({
+  token,
+  business,
+}: CreateBusinessRequest) => {
+  return await executeFetch({
+    path: "api/Businesses",
+    token,
+    method: "post",
+    body: business,
   });
 };

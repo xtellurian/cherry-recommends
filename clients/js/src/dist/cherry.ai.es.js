@@ -183,10 +183,19 @@ const fetchBusinessesAsync = async ({ token, page, searchTerm, }) => {
         },
     });
 };
+const createBusinessAsync = async ({ token, business, }) => {
+    return await executeFetch({
+        path: "api/Businesses",
+        token,
+        method: "post",
+        body: business,
+    });
+};
 
 var businessesApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    fetchBusinessesAsync: fetchBusinessesAsync
+    fetchBusinessesAsync: fetchBusinessesAsync,
+    createBusinessAsync: createBusinessAsync
 });
 
 /**

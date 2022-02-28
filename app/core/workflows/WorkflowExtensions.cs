@@ -27,6 +27,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ParameterSetRecommenderWorkflows>();
             services.AddScoped<ItemsRecommenderWorkflows>();
             services.AddScoped<ItemsRecommenderPerformanceWorkflows>();
+            services.AddScoped<BusinessWorkflows>();
             // images and blob reports
             services.AddScoped<ReportWorkflows>();
             services.AddScoped<RecommenderReportImageWorkflows>();

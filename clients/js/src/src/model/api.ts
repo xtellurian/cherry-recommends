@@ -5297,6 +5297,11 @@ export interface components {
       name?: string | null;
       apiKey?: string | null;
     };
+    CreateBusiness: {
+      commonId: string;
+      name?: string | null;
+      description?: string | null;
+    };
     CreateCustomerMetric: {
       value: unknown;
     };

@@ -138,364 +138,6 @@ declare namespace apiKeyApi_d {
   };
 }
 
-declare const fetchBusinessesAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<Business>>;
-
-declare const businessesApi_d_fetchBusinessesAsync: typeof fetchBusinessesAsync;
-declare namespace businessesApi_d {
-  export {
-    businessesApi_d_fetchBusinessesAsync as fetchBusinessesAsync,
-  };
-}
-
-declare function fetchCustomersAsync({ token, page, searchTerm }: {
-    token: any;
-    page: any;
-    searchTerm: any;
-}): Promise<any>;
-declare function updateMergePropertiesAsync$1({ token, id, properties }: {
-    token: any;
-    id: any;
-    properties: any;
-}): Promise<any>;
-declare function fetchCustomerAsync({ token, id, useInternalId }: {
-    token: any;
-    id: any;
-    useInternalId: any;
-}): Promise<any>;
-declare function fetchUniqueCustomerActionGroupsAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function fetchLatestRecommendationsAsync$1({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function fetchCustomerActionAsync({ token, id, category, actionName, }: {
-    token: any;
-    id: any;
-    category: any;
-    actionName: any;
-}): Promise<any>;
-declare function uploadUserDataAsync$1({ token, payload }: {
-    token: any;
-    payload: any;
-}): Promise<any[] | {
-    error: any;
-} | undefined>;
-declare function createOrUpdateCustomerAsync({ token, customer, user, }: {
-    token: any;
-    customer: any;
-    user: any;
-}): Promise<any>;
-declare function fetchCustomersActionsAsync({ token, page, id, revenueOnly, }: {
-    token: any;
-    page: any;
-    id: any;
-    revenueOnly: any;
-}): Promise<any>;
-declare function setCustomerMetricAsync({ token, id, metricId, useInternalId, value, }: {
-    token: any;
-    id: any;
-    metricId: any;
-    useInternalId: any;
-    value: any;
-}): Promise<any>;
-declare function deleteCustomerAsync$1({ token, id, }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-
-declare const customersApi_d_fetchCustomersAsync: typeof fetchCustomersAsync;
-declare const customersApi_d_fetchCustomerAsync: typeof fetchCustomerAsync;
-declare const customersApi_d_fetchUniqueCustomerActionGroupsAsync: typeof fetchUniqueCustomerActionGroupsAsync;
-declare const customersApi_d_fetchCustomerActionAsync: typeof fetchCustomerActionAsync;
-declare const customersApi_d_createOrUpdateCustomerAsync: typeof createOrUpdateCustomerAsync;
-declare const customersApi_d_fetchCustomersActionsAsync: typeof fetchCustomersActionsAsync;
-declare const customersApi_d_setCustomerMetricAsync: typeof setCustomerMetricAsync;
-declare namespace customersApi_d {
-  export {
-    customersApi_d_fetchCustomersAsync as fetchCustomersAsync,
-    updateMergePropertiesAsync$1 as updateMergePropertiesAsync,
-    customersApi_d_fetchCustomerAsync as fetchCustomerAsync,
-    customersApi_d_fetchUniqueCustomerActionGroupsAsync as fetchUniqueCustomerActionGroupsAsync,
-    fetchLatestRecommendationsAsync$1 as fetchLatestRecommendationsAsync,
-    customersApi_d_fetchCustomerActionAsync as fetchCustomerActionAsync,
-    uploadUserDataAsync$1 as uploadUserDataAsync,
-    customersApi_d_createOrUpdateCustomerAsync as createOrUpdateCustomerAsync,
-    customersApi_d_fetchCustomersActionsAsync as fetchCustomersActionsAsync,
-    customersApi_d_setCustomerMetricAsync as setCustomerMetricAsync,
-    deleteCustomerAsync$1 as deleteCustomerAsync,
-  };
-}
-
-declare function fetchEventSummaryAsync({ token }: {
-    token: any;
-}): Promise<any>;
-declare function fetchEventTimelineAsync({ token, kind, eventType }: {
-    token: any;
-    kind: any;
-    eventType: any;
-}): Promise<any>;
-declare function fetchDashboardAsync({ token, scope }: {
-    token: any;
-    scope: any;
-}): Promise<any>;
-declare function fetchLatestActionsAsync({ token }: {
-    token: any;
-}): Promise<any>;
-
-declare const dataSummaryApi_d_fetchEventSummaryAsync: typeof fetchEventSummaryAsync;
-declare const dataSummaryApi_d_fetchEventTimelineAsync: typeof fetchEventTimelineAsync;
-declare const dataSummaryApi_d_fetchDashboardAsync: typeof fetchDashboardAsync;
-declare const dataSummaryApi_d_fetchLatestActionsAsync: typeof fetchLatestActionsAsync;
-declare namespace dataSummaryApi_d {
-  export {
-    dataSummaryApi_d_fetchEventSummaryAsync as fetchEventSummaryAsync,
-    dataSummaryApi_d_fetchEventTimelineAsync as fetchEventTimelineAsync,
-    dataSummaryApi_d_fetchDashboardAsync as fetchDashboardAsync,
-    dataSummaryApi_d_fetchLatestActionsAsync as fetchLatestActionsAsync,
-  };
-}
-
-declare function fetchDeploymentConfigurationAsync({ token }: {
-    token: any;
-}): Promise<any>;
-
-declare const deploymentApi_d_fetchDeploymentConfigurationAsync: typeof fetchDeploymentConfigurationAsync;
-declare namespace deploymentApi_d {
-  export {
-    deploymentApi_d_fetchDeploymentConfigurationAsync as fetchDeploymentConfigurationAsync,
-  };
-}
-
-declare const Custom = "Custom";
-declare const Behaviour = "Behaviour";
-declare const ConsumeRecommendation = "ConsumeRecommendation";
-declare const fetchEventAsync: ({ id, token }: EntityRequest) => Promise<any>;
-interface CreateEventRequest {
-    apiKey?: string | undefined;
-    token?: string | undefined;
-    events: CustomerEvent[];
-}
-declare const createEventsAsync: ({ apiKey, token, events, }: CreateEventRequest) => Promise<any>;
-declare const fetchCustomersEventsAsync: ({ token, id, useInternalId, }: EntityRequest) => Promise<any>;
-declare const fetchTrackedUsersEventsAsync: ({ token, id, useInternalId, }: EntityRequest) => Promise<any>;
-interface CreateRecommendationConsumedRequest {
-    token: string;
-    commonUserId: string | undefined;
-    customerId: string;
-    correlatorId: number;
-}
-declare const createRecommendationConsumedEventAsync: ({ token, commonUserId, customerId, correlatorId, }: CreateRecommendationConsumedRequest) => Promise<any>;
-
-declare const eventsApi_d_Custom: typeof Custom;
-declare const eventsApi_d_Behaviour: typeof Behaviour;
-declare const eventsApi_d_ConsumeRecommendation: typeof ConsumeRecommendation;
-declare const eventsApi_d_fetchEventAsync: typeof fetchEventAsync;
-declare const eventsApi_d_createEventsAsync: typeof createEventsAsync;
-declare const eventsApi_d_fetchCustomersEventsAsync: typeof fetchCustomersEventsAsync;
-declare const eventsApi_d_fetchTrackedUsersEventsAsync: typeof fetchTrackedUsersEventsAsync;
-declare const eventsApi_d_createRecommendationConsumedEventAsync: typeof createRecommendationConsumedEventAsync;
-declare namespace eventsApi_d {
-  export {
-    eventsApi_d_Custom as Custom,
-    eventsApi_d_Behaviour as Behaviour,
-    eventsApi_d_ConsumeRecommendation as ConsumeRecommendation,
-    eventsApi_d_fetchEventAsync as fetchEventAsync,
-    eventsApi_d_createEventsAsync as createEventsAsync,
-    eventsApi_d_fetchCustomersEventsAsync as fetchCustomersEventsAsync,
-    eventsApi_d_fetchTrackedUsersEventsAsync as fetchTrackedUsersEventsAsync,
-    eventsApi_d_createRecommendationConsumedEventAsync as createRecommendationConsumedEventAsync,
-  };
-}
-
-declare function fetchEnvironmentsAsync({ token, page }: {
-    token: any;
-    page: any;
-}): Promise<any>;
-declare function createEnvironmentAsync({ token, environment }: {
-    token: any;
-    environment: any;
-}): Promise<any>;
-declare function deleteEnvironmentAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare const setDefaultEnvironmentId$1: (e: any) => void;
-
-declare const environmentsApi_d_fetchEnvironmentsAsync: typeof fetchEnvironmentsAsync;
-declare const environmentsApi_d_createEnvironmentAsync: typeof createEnvironmentAsync;
-declare const environmentsApi_d_deleteEnvironmentAsync: typeof deleteEnvironmentAsync;
-declare namespace environmentsApi_d {
-  export {
-    environmentsApi_d_fetchEnvironmentsAsync as fetchEnvironmentsAsync,
-    environmentsApi_d_createEnvironmentAsync as createEnvironmentAsync,
-    environmentsApi_d_deleteEnvironmentAsync as deleteEnvironmentAsync,
-    setDefaultEnvironmentId$1 as setDefaultEnvironmentId,
-  };
-}
-
-declare function fetchFeatureGeneratorsAsync({ page, token }: {
-    page: any;
-    token: any;
-}): Promise<any>;
-declare function createFeatureGeneratorAsync({ token, payload }: {
-    token: any;
-    payload: any;
-}): Promise<any>;
-declare function deleteFeatureGeneratorAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function manualTriggerFeatureGeneratorsAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-
-declare const featureGeneratorsApi_d_fetchFeatureGeneratorsAsync: typeof fetchFeatureGeneratorsAsync;
-declare const featureGeneratorsApi_d_createFeatureGeneratorAsync: typeof createFeatureGeneratorAsync;
-declare const featureGeneratorsApi_d_deleteFeatureGeneratorAsync: typeof deleteFeatureGeneratorAsync;
-declare const featureGeneratorsApi_d_manualTriggerFeatureGeneratorsAsync: typeof manualTriggerFeatureGeneratorsAsync;
-declare namespace featureGeneratorsApi_d {
-  export {
-    featureGeneratorsApi_d_fetchFeatureGeneratorsAsync as fetchFeatureGeneratorsAsync,
-    featureGeneratorsApi_d_createFeatureGeneratorAsync as createFeatureGeneratorAsync,
-    featureGeneratorsApi_d_deleteFeatureGeneratorAsync as deleteFeatureGeneratorAsync,
-    featureGeneratorsApi_d_manualTriggerFeatureGeneratorsAsync as manualTriggerFeatureGeneratorsAsync,
-  };
-}
-
-declare function fetchFeaturesAsync({ token, page, searchTerm }: {
-    token: any;
-    page: any;
-    searchTerm: any;
-}): Promise<any>;
-declare function fetchFeatureAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function fetchFeatureTrackedUsersAsync({ token, page, id }: {
-    token: any;
-    page: any;
-    id: any;
-}): Promise<any>;
-declare function fetchFeatureTrackedUserFeaturesAsync({ token, page, id, }: {
-    token: any;
-    page: any;
-    id: any;
-}): Promise<any>;
-declare function createFeatureAsync({ token, feature }: {
-    token: any;
-    feature: any;
-}): Promise<any>;
-declare function deleteFeatureAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function fetchTrackedUserFeaturesAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function fetchTrackedUserFeatureValuesAsync({ token, id, feature, version, }: {
-    token: any;
-    id: any;
-    feature: any;
-    version: any;
-}): Promise<any>;
-declare function fetchDestinationsAsync$3({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function createDestinationAsync$3({ token, id, destination }: {
-    token: any;
-    id: any;
-    destination: any;
-}): Promise<any>;
-declare function deleteDestinationAsync$1({ token, id, destinationId }: {
-    token: any;
-    id: any;
-    destinationId: any;
-}): Promise<any>;
-declare function fetchGeneratorsAsync$1({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-
-declare const featuresApi_d_fetchFeaturesAsync: typeof fetchFeaturesAsync;
-declare const featuresApi_d_fetchFeatureAsync: typeof fetchFeatureAsync;
-declare const featuresApi_d_fetchFeatureTrackedUsersAsync: typeof fetchFeatureTrackedUsersAsync;
-declare const featuresApi_d_fetchFeatureTrackedUserFeaturesAsync: typeof fetchFeatureTrackedUserFeaturesAsync;
-declare const featuresApi_d_createFeatureAsync: typeof createFeatureAsync;
-declare const featuresApi_d_deleteFeatureAsync: typeof deleteFeatureAsync;
-declare const featuresApi_d_fetchTrackedUserFeaturesAsync: typeof fetchTrackedUserFeaturesAsync;
-declare const featuresApi_d_fetchTrackedUserFeatureValuesAsync: typeof fetchTrackedUserFeatureValuesAsync;
-declare namespace featuresApi_d {
-  export {
-    featuresApi_d_fetchFeaturesAsync as fetchFeaturesAsync,
-    featuresApi_d_fetchFeatureAsync as fetchFeatureAsync,
-    featuresApi_d_fetchFeatureTrackedUsersAsync as fetchFeatureTrackedUsersAsync,
-    featuresApi_d_fetchFeatureTrackedUserFeaturesAsync as fetchFeatureTrackedUserFeaturesAsync,
-    featuresApi_d_createFeatureAsync as createFeatureAsync,
-    featuresApi_d_deleteFeatureAsync as deleteFeatureAsync,
-    featuresApi_d_fetchTrackedUserFeaturesAsync as fetchTrackedUserFeaturesAsync,
-    featuresApi_d_fetchTrackedUserFeatureValuesAsync as fetchTrackedUserFeatureValuesAsync,
-    fetchDestinationsAsync$3 as fetchDestinationsAsync,
-    createDestinationAsync$3 as createDestinationAsync,
-    deleteDestinationAsync$1 as deleteDestinationAsync,
-    fetchGeneratorsAsync$1 as fetchGeneratorsAsync,
-  };
-}
-
-declare function fetchIntegratedSystemsAsync({ token, page }: {
-    token: any;
-    page: any;
-}): Promise<any>;
-declare function fetchIntegratedSystemAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function renameAsync({ token, id, name }: {
-    token: any;
-    id: any;
-    name: any;
-}): Promise<any>;
-declare function createIntegratedSystemAsync({ token, payload }: {
-    token: any;
-    payload: any;
-}): Promise<any>;
-declare function deleteIntegratedSystemAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function fetchWebhookReceiversAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function createWebhookReceiverAsync({ token, id, useSharedSecret, }: {
-    token: any;
-    id: any;
-    useSharedSecret: any;
-}): Promise<any>;
-
-declare const integratedSystemsApi_d_fetchIntegratedSystemsAsync: typeof fetchIntegratedSystemsAsync;
-declare const integratedSystemsApi_d_fetchIntegratedSystemAsync: typeof fetchIntegratedSystemAsync;
-declare const integratedSystemsApi_d_renameAsync: typeof renameAsync;
-declare const integratedSystemsApi_d_createIntegratedSystemAsync: typeof createIntegratedSystemAsync;
-declare const integratedSystemsApi_d_deleteIntegratedSystemAsync: typeof deleteIntegratedSystemAsync;
-declare const integratedSystemsApi_d_fetchWebhookReceiversAsync: typeof fetchWebhookReceiversAsync;
-declare const integratedSystemsApi_d_createWebhookReceiverAsync: typeof createWebhookReceiverAsync;
-declare namespace integratedSystemsApi_d {
-  export {
-    integratedSystemsApi_d_fetchIntegratedSystemsAsync as fetchIntegratedSystemsAsync,
-    integratedSystemsApi_d_fetchIntegratedSystemAsync as fetchIntegratedSystemAsync,
-    integratedSystemsApi_d_renameAsync as renameAsync,
-    integratedSystemsApi_d_createIntegratedSystemAsync as createIntegratedSystemAsync,
-    integratedSystemsApi_d_deleteIntegratedSystemAsync as deleteIntegratedSystemAsync,
-    integratedSystemsApi_d_fetchWebhookReceiversAsync as fetchWebhookReceiversAsync,
-    integratedSystemsApi_d_createWebhookReceiverAsync as createWebhookReceiverAsync,
-  };
-}
-
 interface components {
     schemas: {
         AddItemDto: {
@@ -594,6 +236,11 @@ interface components {
         CreateApiKeyResponseDto: {
             name?: string | null;
             apiKey?: string | null;
+        };
+        CreateBusiness: {
+            commonId: string;
+            name?: string | null;
+            description?: string | null;
         };
         CreateCustomerMetric: {
             value: unknown;
@@ -1579,6 +1226,370 @@ interface components {
             sharedSecret?: string | null;
         };
     };
+}
+
+declare const fetchBusinessesAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<Business>>;
+interface CreateBusinessRequest extends AuthenticatedRequest {
+    business: components["schemas"]["CreateBusiness"];
+}
+declare const createBusinessAsync: ({ token, business, }: CreateBusinessRequest) => Promise<any>;
+
+declare const businessesApi_d_fetchBusinessesAsync: typeof fetchBusinessesAsync;
+declare const businessesApi_d_createBusinessAsync: typeof createBusinessAsync;
+declare namespace businessesApi_d {
+  export {
+    businessesApi_d_fetchBusinessesAsync as fetchBusinessesAsync,
+    businessesApi_d_createBusinessAsync as createBusinessAsync,
+  };
+}
+
+declare function fetchCustomersAsync({ token, page, searchTerm }: {
+    token: any;
+    page: any;
+    searchTerm: any;
+}): Promise<any>;
+declare function updateMergePropertiesAsync$1({ token, id, properties }: {
+    token: any;
+    id: any;
+    properties: any;
+}): Promise<any>;
+declare function fetchCustomerAsync({ token, id, useInternalId }: {
+    token: any;
+    id: any;
+    useInternalId: any;
+}): Promise<any>;
+declare function fetchUniqueCustomerActionGroupsAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function fetchLatestRecommendationsAsync$1({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function fetchCustomerActionAsync({ token, id, category, actionName, }: {
+    token: any;
+    id: any;
+    category: any;
+    actionName: any;
+}): Promise<any>;
+declare function uploadUserDataAsync$1({ token, payload }: {
+    token: any;
+    payload: any;
+}): Promise<any[] | {
+    error: any;
+} | undefined>;
+declare function createOrUpdateCustomerAsync({ token, customer, user, }: {
+    token: any;
+    customer: any;
+    user: any;
+}): Promise<any>;
+declare function fetchCustomersActionsAsync({ token, page, id, revenueOnly, }: {
+    token: any;
+    page: any;
+    id: any;
+    revenueOnly: any;
+}): Promise<any>;
+declare function setCustomerMetricAsync({ token, id, metricId, useInternalId, value, }: {
+    token: any;
+    id: any;
+    metricId: any;
+    useInternalId: any;
+    value: any;
+}): Promise<any>;
+declare function deleteCustomerAsync$1({ token, id, }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+
+declare const customersApi_d_fetchCustomersAsync: typeof fetchCustomersAsync;
+declare const customersApi_d_fetchCustomerAsync: typeof fetchCustomerAsync;
+declare const customersApi_d_fetchUniqueCustomerActionGroupsAsync: typeof fetchUniqueCustomerActionGroupsAsync;
+declare const customersApi_d_fetchCustomerActionAsync: typeof fetchCustomerActionAsync;
+declare const customersApi_d_createOrUpdateCustomerAsync: typeof createOrUpdateCustomerAsync;
+declare const customersApi_d_fetchCustomersActionsAsync: typeof fetchCustomersActionsAsync;
+declare const customersApi_d_setCustomerMetricAsync: typeof setCustomerMetricAsync;
+declare namespace customersApi_d {
+  export {
+    customersApi_d_fetchCustomersAsync as fetchCustomersAsync,
+    updateMergePropertiesAsync$1 as updateMergePropertiesAsync,
+    customersApi_d_fetchCustomerAsync as fetchCustomerAsync,
+    customersApi_d_fetchUniqueCustomerActionGroupsAsync as fetchUniqueCustomerActionGroupsAsync,
+    fetchLatestRecommendationsAsync$1 as fetchLatestRecommendationsAsync,
+    customersApi_d_fetchCustomerActionAsync as fetchCustomerActionAsync,
+    uploadUserDataAsync$1 as uploadUserDataAsync,
+    customersApi_d_createOrUpdateCustomerAsync as createOrUpdateCustomerAsync,
+    customersApi_d_fetchCustomersActionsAsync as fetchCustomersActionsAsync,
+    customersApi_d_setCustomerMetricAsync as setCustomerMetricAsync,
+    deleteCustomerAsync$1 as deleteCustomerAsync,
+  };
+}
+
+declare function fetchEventSummaryAsync({ token }: {
+    token: any;
+}): Promise<any>;
+declare function fetchEventTimelineAsync({ token, kind, eventType }: {
+    token: any;
+    kind: any;
+    eventType: any;
+}): Promise<any>;
+declare function fetchDashboardAsync({ token, scope }: {
+    token: any;
+    scope: any;
+}): Promise<any>;
+declare function fetchLatestActionsAsync({ token }: {
+    token: any;
+}): Promise<any>;
+
+declare const dataSummaryApi_d_fetchEventSummaryAsync: typeof fetchEventSummaryAsync;
+declare const dataSummaryApi_d_fetchEventTimelineAsync: typeof fetchEventTimelineAsync;
+declare const dataSummaryApi_d_fetchDashboardAsync: typeof fetchDashboardAsync;
+declare const dataSummaryApi_d_fetchLatestActionsAsync: typeof fetchLatestActionsAsync;
+declare namespace dataSummaryApi_d {
+  export {
+    dataSummaryApi_d_fetchEventSummaryAsync as fetchEventSummaryAsync,
+    dataSummaryApi_d_fetchEventTimelineAsync as fetchEventTimelineAsync,
+    dataSummaryApi_d_fetchDashboardAsync as fetchDashboardAsync,
+    dataSummaryApi_d_fetchLatestActionsAsync as fetchLatestActionsAsync,
+  };
+}
+
+declare function fetchDeploymentConfigurationAsync({ token }: {
+    token: any;
+}): Promise<any>;
+
+declare const deploymentApi_d_fetchDeploymentConfigurationAsync: typeof fetchDeploymentConfigurationAsync;
+declare namespace deploymentApi_d {
+  export {
+    deploymentApi_d_fetchDeploymentConfigurationAsync as fetchDeploymentConfigurationAsync,
+  };
+}
+
+declare const Custom = "Custom";
+declare const Behaviour = "Behaviour";
+declare const ConsumeRecommendation = "ConsumeRecommendation";
+declare const fetchEventAsync: ({ id, token }: EntityRequest) => Promise<any>;
+interface CreateEventRequest {
+    apiKey?: string | undefined;
+    token?: string | undefined;
+    events: CustomerEvent[];
+}
+declare const createEventsAsync: ({ apiKey, token, events, }: CreateEventRequest) => Promise<any>;
+declare const fetchCustomersEventsAsync: ({ token, id, useInternalId, }: EntityRequest) => Promise<any>;
+declare const fetchTrackedUsersEventsAsync: ({ token, id, useInternalId, }: EntityRequest) => Promise<any>;
+interface CreateRecommendationConsumedRequest {
+    token: string;
+    commonUserId: string | undefined;
+    customerId: string;
+    correlatorId: number;
+}
+declare const createRecommendationConsumedEventAsync: ({ token, commonUserId, customerId, correlatorId, }: CreateRecommendationConsumedRequest) => Promise<any>;
+
+declare const eventsApi_d_Custom: typeof Custom;
+declare const eventsApi_d_Behaviour: typeof Behaviour;
+declare const eventsApi_d_ConsumeRecommendation: typeof ConsumeRecommendation;
+declare const eventsApi_d_fetchEventAsync: typeof fetchEventAsync;
+declare const eventsApi_d_createEventsAsync: typeof createEventsAsync;
+declare const eventsApi_d_fetchCustomersEventsAsync: typeof fetchCustomersEventsAsync;
+declare const eventsApi_d_fetchTrackedUsersEventsAsync: typeof fetchTrackedUsersEventsAsync;
+declare const eventsApi_d_createRecommendationConsumedEventAsync: typeof createRecommendationConsumedEventAsync;
+declare namespace eventsApi_d {
+  export {
+    eventsApi_d_Custom as Custom,
+    eventsApi_d_Behaviour as Behaviour,
+    eventsApi_d_ConsumeRecommendation as ConsumeRecommendation,
+    eventsApi_d_fetchEventAsync as fetchEventAsync,
+    eventsApi_d_createEventsAsync as createEventsAsync,
+    eventsApi_d_fetchCustomersEventsAsync as fetchCustomersEventsAsync,
+    eventsApi_d_fetchTrackedUsersEventsAsync as fetchTrackedUsersEventsAsync,
+    eventsApi_d_createRecommendationConsumedEventAsync as createRecommendationConsumedEventAsync,
+  };
+}
+
+declare function fetchEnvironmentsAsync({ token, page }: {
+    token: any;
+    page: any;
+}): Promise<any>;
+declare function createEnvironmentAsync({ token, environment }: {
+    token: any;
+    environment: any;
+}): Promise<any>;
+declare function deleteEnvironmentAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare const setDefaultEnvironmentId$1: (e: any) => void;
+
+declare const environmentsApi_d_fetchEnvironmentsAsync: typeof fetchEnvironmentsAsync;
+declare const environmentsApi_d_createEnvironmentAsync: typeof createEnvironmentAsync;
+declare const environmentsApi_d_deleteEnvironmentAsync: typeof deleteEnvironmentAsync;
+declare namespace environmentsApi_d {
+  export {
+    environmentsApi_d_fetchEnvironmentsAsync as fetchEnvironmentsAsync,
+    environmentsApi_d_createEnvironmentAsync as createEnvironmentAsync,
+    environmentsApi_d_deleteEnvironmentAsync as deleteEnvironmentAsync,
+    setDefaultEnvironmentId$1 as setDefaultEnvironmentId,
+  };
+}
+
+declare function fetchFeatureGeneratorsAsync({ page, token }: {
+    page: any;
+    token: any;
+}): Promise<any>;
+declare function createFeatureGeneratorAsync({ token, payload }: {
+    token: any;
+    payload: any;
+}): Promise<any>;
+declare function deleteFeatureGeneratorAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function manualTriggerFeatureGeneratorsAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+
+declare const featureGeneratorsApi_d_fetchFeatureGeneratorsAsync: typeof fetchFeatureGeneratorsAsync;
+declare const featureGeneratorsApi_d_createFeatureGeneratorAsync: typeof createFeatureGeneratorAsync;
+declare const featureGeneratorsApi_d_deleteFeatureGeneratorAsync: typeof deleteFeatureGeneratorAsync;
+declare const featureGeneratorsApi_d_manualTriggerFeatureGeneratorsAsync: typeof manualTriggerFeatureGeneratorsAsync;
+declare namespace featureGeneratorsApi_d {
+  export {
+    featureGeneratorsApi_d_fetchFeatureGeneratorsAsync as fetchFeatureGeneratorsAsync,
+    featureGeneratorsApi_d_createFeatureGeneratorAsync as createFeatureGeneratorAsync,
+    featureGeneratorsApi_d_deleteFeatureGeneratorAsync as deleteFeatureGeneratorAsync,
+    featureGeneratorsApi_d_manualTriggerFeatureGeneratorsAsync as manualTriggerFeatureGeneratorsAsync,
+  };
+}
+
+declare function fetchFeaturesAsync({ token, page, searchTerm }: {
+    token: any;
+    page: any;
+    searchTerm: any;
+}): Promise<any>;
+declare function fetchFeatureAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function fetchFeatureTrackedUsersAsync({ token, page, id }: {
+    token: any;
+    page: any;
+    id: any;
+}): Promise<any>;
+declare function fetchFeatureTrackedUserFeaturesAsync({ token, page, id, }: {
+    token: any;
+    page: any;
+    id: any;
+}): Promise<any>;
+declare function createFeatureAsync({ token, feature }: {
+    token: any;
+    feature: any;
+}): Promise<any>;
+declare function deleteFeatureAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function fetchTrackedUserFeaturesAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function fetchTrackedUserFeatureValuesAsync({ token, id, feature, version, }: {
+    token: any;
+    id: any;
+    feature: any;
+    version: any;
+}): Promise<any>;
+declare function fetchDestinationsAsync$3({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function createDestinationAsync$3({ token, id, destination }: {
+    token: any;
+    id: any;
+    destination: any;
+}): Promise<any>;
+declare function deleteDestinationAsync$1({ token, id, destinationId }: {
+    token: any;
+    id: any;
+    destinationId: any;
+}): Promise<any>;
+declare function fetchGeneratorsAsync$1({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+
+declare const featuresApi_d_fetchFeaturesAsync: typeof fetchFeaturesAsync;
+declare const featuresApi_d_fetchFeatureAsync: typeof fetchFeatureAsync;
+declare const featuresApi_d_fetchFeatureTrackedUsersAsync: typeof fetchFeatureTrackedUsersAsync;
+declare const featuresApi_d_fetchFeatureTrackedUserFeaturesAsync: typeof fetchFeatureTrackedUserFeaturesAsync;
+declare const featuresApi_d_createFeatureAsync: typeof createFeatureAsync;
+declare const featuresApi_d_deleteFeatureAsync: typeof deleteFeatureAsync;
+declare const featuresApi_d_fetchTrackedUserFeaturesAsync: typeof fetchTrackedUserFeaturesAsync;
+declare const featuresApi_d_fetchTrackedUserFeatureValuesAsync: typeof fetchTrackedUserFeatureValuesAsync;
+declare namespace featuresApi_d {
+  export {
+    featuresApi_d_fetchFeaturesAsync as fetchFeaturesAsync,
+    featuresApi_d_fetchFeatureAsync as fetchFeatureAsync,
+    featuresApi_d_fetchFeatureTrackedUsersAsync as fetchFeatureTrackedUsersAsync,
+    featuresApi_d_fetchFeatureTrackedUserFeaturesAsync as fetchFeatureTrackedUserFeaturesAsync,
+    featuresApi_d_createFeatureAsync as createFeatureAsync,
+    featuresApi_d_deleteFeatureAsync as deleteFeatureAsync,
+    featuresApi_d_fetchTrackedUserFeaturesAsync as fetchTrackedUserFeaturesAsync,
+    featuresApi_d_fetchTrackedUserFeatureValuesAsync as fetchTrackedUserFeatureValuesAsync,
+    fetchDestinationsAsync$3 as fetchDestinationsAsync,
+    createDestinationAsync$3 as createDestinationAsync,
+    deleteDestinationAsync$1 as deleteDestinationAsync,
+    fetchGeneratorsAsync$1 as fetchGeneratorsAsync,
+  };
+}
+
+declare function fetchIntegratedSystemsAsync({ token, page }: {
+    token: any;
+    page: any;
+}): Promise<any>;
+declare function fetchIntegratedSystemAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function renameAsync({ token, id, name }: {
+    token: any;
+    id: any;
+    name: any;
+}): Promise<any>;
+declare function createIntegratedSystemAsync({ token, payload }: {
+    token: any;
+    payload: any;
+}): Promise<any>;
+declare function deleteIntegratedSystemAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function fetchWebhookReceiversAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function createWebhookReceiverAsync({ token, id, useSharedSecret, }: {
+    token: any;
+    id: any;
+    useSharedSecret: any;
+}): Promise<any>;
+
+declare const integratedSystemsApi_d_fetchIntegratedSystemsAsync: typeof fetchIntegratedSystemsAsync;
+declare const integratedSystemsApi_d_fetchIntegratedSystemAsync: typeof fetchIntegratedSystemAsync;
+declare const integratedSystemsApi_d_renameAsync: typeof renameAsync;
+declare const integratedSystemsApi_d_createIntegratedSystemAsync: typeof createIntegratedSystemAsync;
+declare const integratedSystemsApi_d_deleteIntegratedSystemAsync: typeof deleteIntegratedSystemAsync;
+declare const integratedSystemsApi_d_fetchWebhookReceiversAsync: typeof fetchWebhookReceiversAsync;
+declare const integratedSystemsApi_d_createWebhookReceiverAsync: typeof createWebhookReceiverAsync;
+declare namespace integratedSystemsApi_d {
+  export {
+    integratedSystemsApi_d_fetchIntegratedSystemsAsync as fetchIntegratedSystemsAsync,
+    integratedSystemsApi_d_fetchIntegratedSystemAsync as fetchIntegratedSystemAsync,
+    integratedSystemsApi_d_renameAsync as renameAsync,
+    integratedSystemsApi_d_createIntegratedSystemAsync as createIntegratedSystemAsync,
+    integratedSystemsApi_d_deleteIntegratedSystemAsync as deleteIntegratedSystemAsync,
+    integratedSystemsApi_d_fetchWebhookReceiversAsync as fetchWebhookReceiversAsync,
+    integratedSystemsApi_d_createWebhookReceiverAsync as createWebhookReceiverAsync,
+  };
 }
 
 declare const fetchItemsRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;

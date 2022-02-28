@@ -9,3 +9,11 @@ export const fetchBusinessesAsync = async ({ token, page, searchTerm, }) => {
         },
     });
 };
+export const createBusinessAsync = async ({ token, business, }) => {
+    return await executeFetch({
+        path: "api/Businesses",
+        token,
+        method: "post",
+        body: business,
+    });
+};
