@@ -118,11 +118,13 @@ namespace SignalBox.Infrastructure
         {
             services.AddScoped<ICustomerEventStore, EFCustomerEventStore>();
             services.AddScoped<ICustomerStore, EFCustomerStore>();
-
+ 
             services.AddScoped<ISegmentStore, EFSegmentStore>();
 
             services.AddScoped<IRecommendableItemStore, EFRecommendableItemStore>();
             services.AddScoped<IParameterStore, EFParameterStore>();
+
+            services.AddScoped<IBusinessStore, EFBusinessStore>();
 
             // environment
             services.AddScoped<IEnvironmentStore, EFEnvironmentStore>();

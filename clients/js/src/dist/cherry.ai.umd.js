@@ -179,6 +179,22 @@
         deleteApiKeyAsync: deleteApiKeyAsync
     });
 
+    const fetchBusinessesAsync = async ({ token, page, searchTerm, }) => {
+        return await executeFetch({
+            path: "api/Businesses",
+            token,
+            page,
+            query: {
+                "q.term": searchTerm,
+            },
+        });
+    };
+
+    var businessesApi = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        fetchBusinessesAsync: fetchBusinessesAsync
+    });
+
     /**
      * Returns an array with arrays of the given size.
      *
@@ -1931,6 +1947,7 @@
 
     exports.actions = actionsApi;
     exports.apiKeys = apiKeyApi;
+    exports.businesses = businessesApi;
     exports.customers = customersApi;
     exports.dataSummary = dataSummaryApi;
     exports.deployment = deploymentApi;

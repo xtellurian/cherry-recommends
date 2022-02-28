@@ -22,6 +22,7 @@ import { configure } from "./api/customisation";
 import Analytics from "./analytics/Analytics";
 import Identifier from "./analytics/Identifier";
 import "./global-css/cherry.css";
+import { BusinessesComponent } from "./components/businesses/BusinessesComponent";
 
 configure();
 const App = () => {
@@ -60,6 +61,7 @@ const App = () => {
 
         <AuthorizeRoute path="/dataview" component={DataViewComponent} />
         <AuthorizeRoute path="/reports" component={ReportsComponent} />
+        <AuthorizeRoute path="/businesses" component={BusinessesComponent} />
         <Route path="/docs/api" component={ApiDocs} />
 
         <Identifier />

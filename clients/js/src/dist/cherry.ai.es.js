@@ -173,6 +173,22 @@ var apiKeyApi = /*#__PURE__*/Object.freeze({
     deleteApiKeyAsync: deleteApiKeyAsync
 });
 
+const fetchBusinessesAsync = async ({ token, page, searchTerm, }) => {
+    return await executeFetch({
+        path: "api/Businesses",
+        token,
+        page,
+        query: {
+            "q.term": searchTerm,
+        },
+    });
+};
+
+var businessesApi = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    fetchBusinessesAsync: fetchBusinessesAsync
+});
+
 /**
  * Returns an array with arrays of the given size.
  *
@@ -1923,4 +1939,4 @@ else {
     throw new Error("Unknown JavaScript environment: Not supported");
 }
 
-export { actionsApi as actions, apiKeyApi as apiKeys, customersApi as customers, dataSummaryApi as dataSummary, deploymentApi as deployment, environmentsApi as environments, errorHandling, eventsApi as events, featureGeneratorsApi as featureGenerators, featuresApi as features, integratedSystemsApi as integratedSystems, itemsRecommendersApi as itemsRecommenders, metricGeneratorsApi as metricGenerators, metricsApi as metrics, modelRegistrationsApi as modelRegistrations, index as models, parameterSetRecommendersApi as parameterSetRecommenders, parametersApi as parameters, profileApi as profile, reactConfigApi as reactConfig, recommendableItemsApi as recommendableItems, reportsApi as reports, rewardSelectorsApi as rewardSelectors, segmentsApi as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId$1 as setDefaultEnvironmentId, touchpointsApi as touchpoints, trackedUsersApi as trackedUsers };
+export { actionsApi as actions, apiKeyApi as apiKeys, businessesApi as businesses, customersApi as customers, dataSummaryApi as dataSummary, deploymentApi as deployment, environmentsApi as environments, errorHandling, eventsApi as events, featureGeneratorsApi as featureGenerators, featuresApi as features, integratedSystemsApi as integratedSystems, itemsRecommendersApi as itemsRecommenders, metricGeneratorsApi as metricGenerators, metricsApi as metrics, modelRegistrationsApi as modelRegistrations, index as models, parameterSetRecommendersApi as parameterSetRecommenders, parametersApi as parameters, profileApi as profile, reactConfigApi as reactConfig, recommendableItemsApi as recommendableItems, reportsApi as reports, rewardSelectorsApi as rewardSelectors, segmentsApi as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId$1 as setDefaultEnvironmentId, touchpointsApi as touchpoints, trackedUsersApi as trackedUsers };

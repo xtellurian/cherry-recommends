@@ -12,6 +12,7 @@ if (typeof globalThis === "object") {
 }
 
 import * as apiKeys from "./api/apiKeyApi";
+import * as businesses from "./api/businessesApi";
 import * as customers from "./api/customersApi";
 import * as dataSummary from "./api/dataSummaryApi";
 import * as deployment from "./api/deploymentApi";
@@ -48,6 +49,7 @@ import * as errorHandling from "./utilities/errorHandling";
 export {
   actions,
   apiKeys,
+  businesses,
   customers,
   dataSummary,
   deployment,

@@ -100,6 +100,8 @@ interface ItemsRecommendation {
     customer: Customer;
     trigger: string;
 }
+interface Business extends CommonEntity {
+}
 
 declare const fetchApiKeysAsync: ({ token, page }: PaginatedRequest) => Promise<any>;
 declare enum ApiKeyType {
@@ -133,6 +135,15 @@ declare namespace apiKeyApi_d {
     apiKeyApi_d_createApiKeyAsync as createApiKeyAsync,
     apiKeyApi_d_exchangeApiKeyAsync as exchangeApiKeyAsync,
     apiKeyApi_d_deleteApiKeyAsync as deleteApiKeyAsync,
+  };
+}
+
+declare const fetchBusinessesAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<Business>>;
+
+declare const businessesApi_d_fetchBusinessesAsync: typeof fetchBusinessesAsync;
+declare namespace businessesApi_d {
+  export {
+    businessesApi_d_fetchBusinessesAsync as fetchBusinessesAsync,
   };
 }
 
@@ -2299,4 +2310,4 @@ declare namespace errorHandling_d {
   };
 }
 
-export { actionsApi_d as actions, apiKeyApi_d as apiKeys, components, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, metricGeneratorsApi_d as metricGenerators, metricsApi_d as metrics, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };
+export { actionsApi_d as actions, apiKeyApi_d as apiKeys, businessesApi_d as businesses, components, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, metricGeneratorsApi_d as metricGenerators, metricsApi_d as metrics, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };

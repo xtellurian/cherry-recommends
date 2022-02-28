@@ -28,6 +28,10 @@ const AuthenticatedIA = [
         to: "/customers/create",
       },
       {
+        name: "All Businesses",
+        to: "/businesses",
+      },
+      {
         name: "Events Overview",
         to: "/dataview",
       },

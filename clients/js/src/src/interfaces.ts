@@ -87,3 +87,5 @@ export interface ItemsRecommendation {
   customer: Customer;
   trigger: string;
 }
+
+export interface Business extends CommonEntity {}
