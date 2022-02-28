@@ -34,7 +34,8 @@ namespace SignalBox.Infrastructure
                         serverName,
                         tenantProvider.CurrentDatabaseName,
                         sqlServerUserName: sqlServerUserName,
-                        sqlServerPassword: sqlServerPassword);
+                        sqlServerPassword: sqlServerPassword,
+                        maxPoolSize: 50);
                     options.UseSqlServer(cs, b => b.MigrationsAssembly(migrationAssembly).CommandTimeout(180));
                 }, ServiceLifetime.Scoped);
             return services;
