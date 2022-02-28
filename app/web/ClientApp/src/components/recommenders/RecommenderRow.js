@@ -7,7 +7,6 @@ export const RecommenderRow = ({ recommender, children }) => {
   const subPath = recommender.baselineItemId
     ? "promotions-recommenders"
     : "parameter-set-recommenders";
-  const recommenderType = recommender.baselineItemId ? "Promos" : "Parameters";
 
   const history = useHistory();
   const handleClick = () =>
@@ -23,7 +22,6 @@ export const RecommenderRow = ({ recommender, children }) => {
         <EmojiHeartEyes className="m-2" size={25} />
       </div>
       <div className="flex-grow-1 text-left">{recommender.name}</div>
-      <div className="mr-2">{recommenderType}</div>
       {children ? (
         <div onClick={(e) => e.stopPropagation()}>{children}</div>
       ) : null}
