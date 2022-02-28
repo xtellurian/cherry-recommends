@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Title, Spinner, Paginator, ErrorCard } from "../molecules";
 import { SearchBox } from "../molecules/SearchBox";
-import { BusinessListItem } from "../molecules/BusinessList";
+import { BusinessRow } from "./BusinessRow";
 import { useBusinesses } from "../../api-hooks/businessesApi";
 import { EmptyList } from "../molecules";
 
@@ -30,15 +30,12 @@ export const BusinessesSummary = () => {
       {businesses.items && businesses.items.length === 0 && (
         <EmptyList>
           There are no Businesses.
-          <div className="mt-3">
-            <CreateButton />
-          </div>
         </EmptyList>
       )}
       <div className="mt-3">
         {businesses.items &&
           businesses.items.map((u) => (
-            <BusinessListItem key={u.id} business={u} />
+            <BusinessRow key={u.id} business={u} />
           ))}
       </div>
       <Paginator {...businesses.pagination} />
