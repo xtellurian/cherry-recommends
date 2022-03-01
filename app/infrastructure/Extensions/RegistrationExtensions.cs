@@ -25,6 +25,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IRecommendationCache<ParameterSetRecommender, ParameterSetRecommendation>, SimpleParameterSetRecommendationCache>();
             services.AddScoped<ICategoricalOptimiserClient, AzureFunctionsOptimiserClient>();
             services.AddSingleton<IM2MTokenCache, Caches.TokenMemoryCache>();
+            services.AddSingleton<IEventIngestor, AzureEventHubEventIngestor>(); // singleton to re-use the same eventhub connection
             services.AddHttpClient();
             return services;
         }

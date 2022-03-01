@@ -13,118 +13,111 @@ namespace SignalBox.Core.Workflows
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ILogger<CustomerEventsWorkflows> logger;
         private readonly ICustomerStore userStore;
-        private readonly IQueueMessagesFileStore fileStore;
         private readonly IEnvironmentProvider environmentProvider;
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ICustomerEventStore trackedUserEventStore;
-        private readonly ITrackedUserEventQueueStore eventQueueStore;
-        private readonly INewTrackedUserEventQueueStore newTrackedUserQueue;
+        private readonly IEventIngestor eventIngestor;
 
         public JsonSerializerOptions SerializerOptions => new JsonSerializerOptions();
         public CustomerEventsWorkflows(IStorageContext storageContext,
                                           IDateTimeProvider dateTimeProvider,
                                           ILogger<CustomerEventsWorkflows> logger,
                                           ICustomerStore userStore,
-                                          IQueueMessagesFileStore fileStore,
                                           IEnvironmentProvider environmentProvider,
                                           IIntegratedSystemStore integratedSystemStore,
                                           ICustomerEventStore trackedUserEventStore,
-                                          ITrackedUserEventQueueStore eventQueueStore,
-                                          INewTrackedUserEventQueueStore newTrackedUserQueue)
+                                          IEventIngestor eventIngestor)
         {
             this.storageContext = storageContext;
             this.dateTimeProvider = dateTimeProvider;
             this.logger = logger;
             this.userStore = userStore;
-            this.fileStore = fileStore;
             this.environmentProvider = environmentProvider;
             this.integratedSystemStore = integratedSystemStore;
             this.trackedUserEventStore = trackedUserEventStore;
-            this.eventQueueStore = eventQueueStore;
-            this.newTrackedUserQueue = newTrackedUserQueue;
+            this.eventIngestor = eventIngestor;
         }
 
-        public async Task<EventLoggingResponse> AddEvents(IEnumerable<CustomerEventInput> input, bool addToQueue = false)
+        public async Task<EventLoggingResponse> Ingest(IEnumerable<CustomerEventInput> input)
         {
-
-            if (await eventQueueStore.IsWriteEnabled() && addToQueue)
+            // ingest by default
+            if (eventIngestor.CanIngest)
             {
-                var json = JsonSerializer.Serialize(input, SerializerOptions);
-                var fileName = "TrackedUserEventsWorkflows_TrackedUserEvents_" + dateTimeProvider.Now.ToUnixTimeMilliseconds() + ".json";
-                // save to the blob store, then drop message into queue
-                await fileStore.WriteFile(json, fileName);
-                // save the wholet
-
-                await eventQueueStore.Enqueue(new TrackedUserEventsQueueMessage(fileName));
-                // check the amount of users per message isn't too big (azure throws at messages > 64kB)
-                var newCustomers = input.Select(_ => new PendingCustomer(_.CustomerId, _.EnvironmentId)).Distinct();
-                foreach (var uIds in newCustomers.Batch(512))
+                await eventIngestor.Ingest(input);
+                return new EventLoggingResponse
                 {
-                    await newTrackedUserQueue.Enqueue(new NewCustomerEventQueueMessage(newCustomers));
-                }
-                return new EventLoggingResponse { EventsEnqueued = input.Count() };
+                    EventsEnqueued = input.Count()
+                };
             }
             else
             {
-                logger.LogWarning("Not enqueuing. Prcessing events directly.");
-                var events = new List<CustomerEvent>();
-                var lastUpdated = dateTimeProvider.Now;
-                var customers = await userStore.CreateIfNotExists(input.Select(_ => new PendingCustomer(_.CustomerId, _.EnvironmentId)).Distinct());
-                if (customers.Any())
+                // process directly
+                logger.LogWarning("Event Ingestor is not available for ingestion. Processing events directly.");
+                return await ProcessEvents(input);
+            }
+        }
+        public async Task<EventLoggingResponse> ProcessEvents(IEnumerable<CustomerEventInput> input)
+        {
+
+            logger.LogWarning("Not enqueuing. Prcessing events directly.");
+            var events = new List<CustomerEvent>();
+            var lastUpdated = dateTimeProvider.Now;
+            var customers = await userStore.CreateIfNotExists(input.Select(_ => new PendingCustomer(_.CustomerId, _.EnvironmentId)).Distinct());
+            if (customers.Any())
+            {
+                foreach (var u in customers)
                 {
-                    foreach (var u in customers)
-                    {
-                        u.LastUpdated = lastUpdated;
-                    }
+                    u.LastUpdated = lastUpdated;
                 }
-
-                foreach (var d in input)
-                {
-                    // make sure you set this before loading the integrated system.
-                    if (d.EnvironmentId != null)
-                    {
-                        environmentProvider.SetOverride(d.EnvironmentId.Value);
-                    }
-
-                    IntegratedSystem sourceSystem = null;
-                    if (d.SourceSystemId != null)
-                    {
-                        sourceSystem = await integratedSystemStore.Read(d.SourceSystemId.Value);
-                    }
-
-                    var customer = customers.First(_ => _.CommonId == d.CustomerId);
-                    customer.LastUpdated = dateTimeProvider.Now; // user has been updated.
-                    events.Add(new CustomerEvent(customer,
-                                                    d.EventId,
-                                                    d.Timestamp ?? dateTimeProvider.Now,
-                                                    sourceSystem,
-                                                    d.Kind,
-                                                    d.EventType,
-                                                    d.Properties,
-                                                    d.RecommendationCorrelatorId));
-                }
-
-
-                var results = await trackedUserEventStore.AddRange(events);
-                await storageContext.SaveChanges();
-                return new EventLoggingResponse { EventsProcessed = input.Count() };
             }
 
+            foreach (var d in input)
+            {
+                // make sure you set this before loading the integrated system.
+                if (d.EnvironmentId != null)
+                {
+                    environmentProvider.SetOverride(d.EnvironmentId.Value);
+                }
+
+                IntegratedSystem sourceSystem = null;
+                if (d.SourceSystemId != null)
+                {
+                    sourceSystem = await integratedSystemStore.Read(d.SourceSystemId.Value);
+                }
+
+                var customer = customers.First(_ => _.CommonId == d.CustomerId);
+                customer.LastUpdated = dateTimeProvider.Now; // user has been updated.
+                events.Add(new CustomerEvent(customer,
+                                                d.EventId,
+                                                d.Timestamp ?? dateTimeProvider.Now,
+                                                sourceSystem,
+                                                d.Kind,
+                                                d.EventType,
+                                                d.Properties,
+                                                d.RecommendationCorrelatorId));
+            }
+
+
+            var results = await trackedUserEventStore.AddRange(events);
+            await storageContext.SaveChanges();
+            return new EventLoggingResponse { EventsProcessed = input.Count() };
         }
 
 #nullable enable
         public struct CustomerEventInput
         {
-            public CustomerEventInput(string customerId,
-                                         string eventId,
-                                         DateTimeOffset? timestamp,
-                                         long? environmentId,
-                                         long? recommendationCorrelatorId,
-                                         long? sourceSystemId,
-                                         EventKinds kind,
-                                         string eventType,
-                                         Dictionary<string, object> properties)
+            public CustomerEventInput(string tenantName,
+                                      string customerId,
+                                      string eventId,
+                                      DateTimeOffset? timestamp,
+                                      long? environmentId,
+                                      long? recommendationCorrelatorId,
+                                      long? sourceSystemId,
+                                      EventKinds kind,
+                                      string eventType,
+                                      Dictionary<string, object> properties)
             {
+                TenantName = tenantName;
                 CustomerId = customerId;
                 EventId = eventId;
                 Timestamp = timestamp;
@@ -136,6 +129,7 @@ namespace SignalBox.Core.Workflows
                 Properties = new DynamicPropertyDictionary(properties);
             }
 
+            public string TenantName { get; set; } // required for sending messages to dotnetFunctions
             public string CustomerId { get; set; }
             public string EventId { get; set; }
             public DateTimeOffset? Timestamp { get; set; }

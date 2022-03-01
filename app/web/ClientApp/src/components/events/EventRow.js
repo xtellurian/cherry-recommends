@@ -20,7 +20,7 @@ export const EventRow = ({ event }) => {
       >
         <div className="flex-grow-0">
           <CaretRightFill style={{ color: "var(--cherry-pink)" }} />
-          <span className="ml-2">{event.kind}</span>
+          <span className="ml-2">{event.eventKind}</span>
         </div>
         <DateTimeField date={event.timestamp} />
       </FlexRow>

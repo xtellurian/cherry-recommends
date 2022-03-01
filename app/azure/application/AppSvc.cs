@@ -15,12 +15,13 @@ namespace SignalBox.Azure
         protected string environment;
         protected string? canonicalRootDomain;
         private readonly bool multitenant;
-        private Dictionary<string, string> tags;
+        private readonly Dictionary<string, string> tags;
 
         public AppSvc(ResourceGroup rg,
                       MultitenantDatabaseComponent multiDb,
                       Storage storage,
                       AzureML ml,
+                      EventProcessing eventProcessing,
                       Pulumi.AzureNative.Insights.Component insights,
                       Dictionary<string, string>? tags = null)
         {
@@ -103,6 +104,7 @@ namespace SignalBox.Azure
                                                       multiDb,
                                                       storage,
                                                       insights,
+                                                      eventProcessing,
                                                       plan,
                                                       auth0);
 
@@ -150,7 +152,7 @@ namespace SignalBox.Azure
                     {"ReportFileHosting__ConnectionString", ml.PrimaryStorageConnectionString},
                     {"ReportFileHosting__ContainerName", "reports"},
                     {"ReportFileHosting__Source", "blob"},
-                   
+
                     {"RecommenderImageFileHosting__ConnectionString", ml.PrimaryStorageConnectionString},
                     {"RecommenderImageFileHosting__ContainerName", "recommenders"},
                     {"RecommenderImageFileHosting__SubPath", "reports"},
@@ -186,6 +188,10 @@ namespace SignalBox.Azure
                     {"AzureEnvironment__SqlServerName", multiDb.ServerName},
                     {"AzureEnvironment__SqlServerUserName", multiDb.UserName},
                     {"AzureEnvironment__SqlServerPassword", multiDb.Password},
+
+                    // event processing 
+                    {"EventProcessing__Eventhub__ConnectionString", eventProcessing.PrimaryNamespaceWriteConnectionString},
+                    {"EventProcessing__Eventhub__EventhubName", eventProcessing.EventhubName},
 
                     // segment
                     {"Segment__WriteKey", segmentConfig.Get("writeKey") ?? ""}

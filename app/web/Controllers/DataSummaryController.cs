@@ -32,14 +32,14 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Summarises the events that have been collected.</summary>
         [HttpGet("events")]
-        public async Task<TrackedUserEventSummary> EventsSummary()
+        public async Task<CustomerEventSummary> EventsSummary()
         {
             return await workflows.GenerateSummary();
         }
 
         /// <summary>Summarises a timeline of event counts each month.</summary>
         [HttpGet("events/timeline/{kind}/{eventType}")]
-        public async Task<EventCountTimeline> EventTimeline(string kind, string eventType)
+        public async Task<EventCountTimeline> EventTimeline(EventKinds kind, string eventType)
         {
             return await workflows.GenerateTimeline(kind, eventType);
         }

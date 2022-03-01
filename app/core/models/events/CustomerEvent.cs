@@ -9,7 +9,6 @@ namespace SignalBox.Core
     {
         public const string FOUR2_INTERNAL_PREFIX = "_f2_internal_use_";
         public static string FEEDBACK = $"{FOUR2_INTERNAL_PREFIX}_feedback";
-        private string kind;
 
         protected CustomerEvent()
         { }
@@ -57,15 +56,8 @@ namespace SignalBox.Core
 #nullable disable
 
         public EventKinds? EventKind { get; set; }
-
-        public string Kind
-        {
-            get => kind; set
-            {
-                this.EventKind ??= value?.ToEventKind(); // try to backwards compat
-                kind = value;
-            }
-        }
+        [JsonIgnore]
+        public string Kind { get; protected set; }
         public string EventType { get; set; }
         public DynamicPropertyDictionary Properties { get; set; }
         public long? TrackedUserId { get; set; }

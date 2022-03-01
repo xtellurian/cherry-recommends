@@ -18,14 +18,17 @@ namespace SignalBox.Web.Controllers
     public class EventsController : SignalBoxControllerBase
     {
         private readonly IEnvironmentProvider environmentProvider;
+        private readonly ITenantProvider tenantProvider;
         private readonly CustomerEventsWorkflows workflows;
         private readonly ICustomerEventStore eventStore;
 
         public EventsController(IEnvironmentProvider environmentProvider,
+                                ITenantProvider tenantProvider,
                                 CustomerEventsWorkflows workflows,
                                 ICustomerEventStore eventStore)
         {
             this.environmentProvider = environmentProvider;
+            this.tenantProvider = tenantProvider;
             this.workflows = workflows;
             this.eventStore = eventStore;
         }
@@ -36,17 +39,17 @@ namespace SignalBox.Web.Controllers
         [EnableCors(CorsPolicies.WebApiKeyPolicy)]
         public async Task<EventLoggingResponse> LogEvents([FromBody] List<EventDto> dto)
         {
-            var enqueue = dto.Count > 100;
-            return await workflows.AddEvents(dto.Select(d =>
-            new CustomerEventsWorkflows.CustomerEventInput(d.GetCustomerId(),
-                                                                 d.EventId,
-                                                                 d.Timestamp,
-                                                                 environmentProvider.CurrentEnvironmentId,
-                                                                 d.RecommendationCorrelatorId,
-                                                                 d.SourceSystemId,
-                                                                 d.Kind.ToEventKind(),
-                                                                 d.EventType,
-                                                                 d.Properties)), addToQueue: enqueue); // add to queue if available
+            return await workflows.Ingest(dto.Select(d =>
+            new CustomerEventsWorkflows.CustomerEventInput(tenantName: tenantProvider.RequestedTenantName,
+                                                            d.GetCustomerId(),
+                                                            d.EventId,
+                                                            d.Timestamp,
+                                                            environmentProvider.CurrentEnvironmentId,
+                                                            d.RecommendationCorrelatorId,
+                                                            d.SourceSystemId,
+                                                            d.Kind,
+                                                            d.EventType,
+                                                            d.Properties)));
         }
 
         [HttpGet("{id}")]

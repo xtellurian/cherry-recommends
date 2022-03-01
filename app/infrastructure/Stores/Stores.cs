@@ -22,6 +22,7 @@ namespace SignalBox.Infrastructure
                                                     string serverName,
                                                     string sqlServerPassword,
                                                     string sqlServerUserName,
+                                                    int maxPoolSize = 50,
                                                     string migrationAssembly = "sqlserver")
         {
             System.Console.WriteLine($"SQL Server Name: {serverName}");
@@ -35,7 +36,7 @@ namespace SignalBox.Infrastructure
                         tenantProvider.CurrentDatabaseName,
                         sqlServerUserName: sqlServerUserName,
                         sqlServerPassword: sqlServerPassword,
-                        maxPoolSize: 50);
+                        maxPoolSize);
                     options.UseSqlServer(cs, b => b.MigrationsAssembly(migrationAssembly).CommandTimeout(180));
                 }, ServiceLifetime.Scoped);
             return services;
@@ -119,7 +120,7 @@ namespace SignalBox.Infrastructure
         {
             services.AddScoped<ICustomerEventStore, EFCustomerEventStore>();
             services.AddScoped<ICustomerStore, EFCustomerStore>();
- 
+
             services.AddScoped<ISegmentStore, EFSegmentStore>();
 
             services.AddScoped<IRecommendableItemStore, EFRecommendableItemStore>();

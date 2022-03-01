@@ -187,11 +187,13 @@ namespace SignalBox.Web
             services.Configure<Hosting>(Configuration.GetSection("Hosting"));
             services.Configure<PythonAzureFunctionsConnectionOptions>(Configuration.GetSection("PythonFunctions"));
             services.Configure<DotnetAzureFunctionsConnectionOptions>(Configuration.GetSection("DotnetFunctions"));
+            services.Configure<EventhubConfig>(Configuration.GetSection("EventProcessing").GetSection("Eventhub"));
+
 
             services.AddScoped<ITenantAuthorizationStrategy, TokenClaimTenantAuthorizor>();
 
             services.AddHealthChecks();
-            
+
             services.AddApiVersioning(o =>
             {
                 o.AssumeDefaultVersionWhenUnspecified = true;

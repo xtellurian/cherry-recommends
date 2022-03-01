@@ -42,20 +42,21 @@ const EmptyInfo = ({ children }) => {
 
 export const ViewEventData = () => {
   const { result } = useEventDataSummary();
+  console.log(result);
   const [state, setState] = React.useState({
-    kind: null,
+    eventKind: null,
     eventType: null,
     eventTypes: null,
     eventTypeSummary: null,
   });
 
-  const toggleKind = (kind) => {
-    if (state.kind === kind) {
+  const toggleKind = (eventKind) => {
+    if (state.eventKind === eventKind) {
       setState({});
     } else {
       setState({
-        kind,
-        eventTypes: result.kinds[kind].keys,
+        eventKind,
+        eventTypes: result.kinds[eventKind].keys,
       });
     }
   };
@@ -70,7 +71,7 @@ export const ViewEventData = () => {
       setState({
         ...state,
         eventType,
-        eventTypeSummary: result.kinds[state.kind].eventTypes[eventType],
+        eventTypeSummary: result.kinds[state.eventKind].eventTypes[eventType],
       });
     }
   };
@@ -92,7 +93,7 @@ export const ViewEventData = () => {
           {result.keys.map((k) => (
             <SelectableCard
               onToggled={() => toggleKind(k)}
-              isSelected={state.kind === k}
+              isSelected={state.eventKind === k}
               key={k}
             >
               {k}
@@ -111,7 +112,7 @@ export const ViewEventData = () => {
                 {t}
               </SelectableCard>
             ))}
-          {!state.kind && <EmptyInfo>Select an event kind</EmptyInfo>}
+          {!state.eventKind && <EmptyInfo>Select an event kind</EmptyInfo>}
         </Col>
 
         <Col>
@@ -123,7 +124,7 @@ export const ViewEventData = () => {
         </Col>
       </Row>
       <hr />
-      <EventHistoryBarChart kind={state.kind} eventType={state.eventType} />
+      <EventHistoryBarChart kind={state.eventKind} eventType={state.eventType} />
     </React.Fragment>
   );
 };

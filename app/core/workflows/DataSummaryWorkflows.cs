@@ -35,23 +35,31 @@ namespace SignalBox.Core.Workflows
             this.telemetry = telemetry;
         }
 
-        public async Task<TrackedUserEventSummary> GenerateSummary()
+        public async Task<CustomerEventSummary> GenerateSummary()
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var kinds = await eventStore.ReadUniqueKinds();
+            var kinds = new List<EventKinds>
+            {
+                EventKinds.Custom,
+                EventKinds.PropertyUpdate,
+                EventKinds.Behaviour,
+                EventKinds.PageView,
+                EventKinds.Identify,
+                EventKinds.ConsumeRecommendation
+            };
 
-            var summary = new TrackedUserEventSummary();
+            var summary = new CustomerEventSummary();
             foreach (var k in kinds)
             {
-                var totalOfKind = await eventStore.Count(_ => _.Kind == k);
+                var totalOfKind = await eventStore.Count(_ => _.EventKind == k);
                 var eventTypes = await eventStore.ReadUniqueEventTypes(k);
                 var counts = new Dictionary<string, EventStats>();
                 foreach (var t in eventTypes)
                 {
-                    var instances = await eventStore.Count(_ => _.Kind == k && _.EventType == t);
-                    var users = await eventStore.CountTrackedUsers(_ => _.Kind == k && _.EventType == t);
+                    var instances = await eventStore.Count(_ => _.EventKind == k && _.EventType == t);
+                    var users = await eventStore.CountTrackedUsers(_ => _.EventKind == k && _.EventType == t);
                     double fractionOfKind = (double)instances / totalOfKind;
                     var stats = new EventStats(instances, fractionOfKind, users);
                     counts.Add(t, stats);
@@ -64,7 +72,7 @@ namespace SignalBox.Core.Workflows
             return summary;
         }
 
-        public async Task<EventCountTimeline> GenerateTimeline(string kind, string eventType)
+        public async Task<EventCountTimeline> GenerateTimeline(EventKinds kind, string eventType)
         {
             var start = await eventStore.Min(_ => _.Timestamp);
             var end = await eventStore.Max(_ => _.Timestamp);
@@ -77,7 +85,7 @@ namespace SignalBox.Core.Workflows
                     _.Timestamp > start &&
                     _.Timestamp < start.AddMonths(1) &&
                     _.EventType == eventType &&
-                    _.Kind == kind);
+                    _.EventKind == kind);
                 moments.Add(new MomentCount(start, count));
                 start = start.AddMonths(1);
             }

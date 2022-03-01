@@ -122,23 +122,23 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await QuerySet.Where(_ => _.EventType == eventType && _.Timestamp > since && _.Timestamp < until).ToListAsync();
         }
 
-        public async Task<IEnumerable<CustomerEvent>> ReadEventsOfType(string kind, string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
+        public async Task<IEnumerable<CustomerEvent>> ReadEventsOfType(EventKinds kind, string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
         {
             since ??= DateTimeOffset.MinValue;
             until ??= DateTimeOffset.MaxValue;
-            return await QuerySet.Where(_ => _.Kind == kind && _.EventType == eventType && _.Timestamp > since && _.Timestamp < until).ToListAsync();
+            return await QuerySet.Where(_ => _.EventKind == kind && _.EventType == eventType && _.Timestamp > since && _.Timestamp < until).ToListAsync();
         }
 
-        public async Task<IEnumerable<CustomerEvent>> ReadEventsOfKind(string kind, DateTimeOffset? since = null, DateTimeOffset? until = null)
+        public async Task<IEnumerable<CustomerEvent>> ReadEventsOfKind(EventKinds kind, DateTimeOffset? since = null, DateTimeOffset? until = null)
         {
             since ??= DateTimeOffset.MinValue;
             until ??= DateTimeOffset.MaxValue;
-            return await QuerySet.Where(_ => _.Kind == kind && _.Timestamp > since && _.Timestamp < until).ToListAsync();
+            return await QuerySet.Where(_ => _.EventKind == kind && _.Timestamp > since && _.Timestamp < until).ToListAsync();
         }
 
-        public async Task<IEnumerable<string>> ReadUniqueEventTypes(string kind)
+        public async Task<IEnumerable<string>> ReadUniqueEventTypes(EventKinds kind)
         {
-            return await QuerySet.Where(_ => _.Kind == kind).Select(_ => _.EventType).Distinct().ToListAsync();
+            return await QuerySet.Where(_ => _.EventKind == kind).Select(_ => _.EventType).Distinct().ToListAsync();
         }
 
         public async Task<IEnumerable<string>> ReadUniqueEventTypes()
@@ -151,18 +151,18 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await QuerySet.Select(_ => _.Kind).Distinct().ToListAsync();
         }
 
-        public async Task<long> CountEventsOfKind(string kind, DateTimeOffset? since = null, DateTimeOffset? until = null)
+        public async Task<long> CountEventsOfKind(EventKinds kind, DateTimeOffset? since = null, DateTimeOffset? until = null)
         {
             since ??= DateTimeOffset.MinValue;
             until ??= DateTimeOffset.MaxValue;
-            Expression<Func<CustomerEvent, bool>> predicate = _ => _.Kind == kind && _.Timestamp > since && _.Timestamp < until;
+            Expression<Func<CustomerEvent, bool>> predicate = _ => _.EventKind == kind && _.Timestamp > since && _.Timestamp < until;
             return await base.Count(predicate);
         }
-        public async Task<long> CountEventsOfType(string kind, string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
+        public async Task<long> CountEventsOfType(EventKinds kind, string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
         {
             since ??= DateTimeOffset.MinValue;
             until ??= DateTimeOffset.MaxValue;
-            Expression<Func<CustomerEvent, bool>> predicate = _ => _.Kind == kind && _.EventType == eventType && _.Timestamp > since && _.Timestamp < until;
+            Expression<Func<CustomerEvent, bool>> predicate = _ => _.EventKind == kind && _.EventType == eventType && _.Timestamp > since && _.Timestamp < until;
             return await base.Count(predicate);
         }
         public async Task<long> CountEventsOfType(string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)

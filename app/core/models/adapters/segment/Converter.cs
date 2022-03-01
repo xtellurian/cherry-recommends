@@ -13,7 +13,7 @@ namespace SignalBox.Core.Adapters.Segment
             "RecommendationCorrelatorId",
         };
 
-        public static CustomerEventInput ToTrackedUserEventInput(this SegmentModel model, IntegratedSystem sys)
+        public static CustomerEventInput ToTrackedUserEventInput(this SegmentModel model, ITenantProvider tenantProvider, IntegratedSystem sys)
         {
             long? correlatorId = ExtractCorrelatorId(model);
             if (string.IsNullOrEmpty(model.UserId))
@@ -23,6 +23,7 @@ namespace SignalBox.Core.Adapters.Segment
 
             return new CustomerEventInput
             (
+                tenantName: tenantProvider.RequestedTenantName,
                 model.UserId ?? Customer.AnonymousCommonId,
                 eventId: model.MessageId,
                 timestamp: model.Timestamp,

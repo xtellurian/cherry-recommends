@@ -40,13 +40,14 @@ namespace SignalBox.Azure
 
             var storage = new Storage(appRg);
             var multitenant = new MultitenantDatabaseComponent(databasesRg);
+            var eventProcessing = new EventProcessing(appRg, tags);
 
             // Create an Azure analytics environment
             var synapse = new AzureSynapse(analyticsRg);
             var analytics = new AzureML(analyticsRg, synapse, multitenant);
 
             // create the app svcs
-            var appSvc = new AppSvc(appRg, multitenant, storage, analytics, appInsights, tags);
+            var appSvc = new AppSvc(appRg, multitenant, storage, analytics, eventProcessing, appInsights, tags);
             // set the stack outputs
 
             this.SqlServerAzureId = multitenant.Server.Id;

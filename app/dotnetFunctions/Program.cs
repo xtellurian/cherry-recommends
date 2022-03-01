@@ -62,7 +62,8 @@ namespace SignalBox.Functions
                                 services.UseMultitenantAzureSqlServer(
                                     azEnv.SqlServerName,
                                     azEnv.SqlServerPassword,
-                                    azEnv.SqlServerUserName);
+                                    azEnv.SqlServerUserName,
+                                    maxPoolSize: 30); // smaller pool size in multitenant
                             }
                             else
                             {
@@ -96,7 +97,8 @@ namespace SignalBox.Functions
                                 services.UseMultitenantAzureSqlServer(
                                     azEnv.SqlServerName,
                                     azEnv.SqlServerPassword,
-                                    azEnv.SqlServerUserName);
+                                    azEnv.SqlServerUserName,
+                                    maxPoolSize: 50);
                             }
                             else
                             {

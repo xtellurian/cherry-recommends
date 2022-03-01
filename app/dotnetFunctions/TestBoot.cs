@@ -15,6 +15,7 @@ namespace dotnetFunctions
         public TestBoot(
               CustomerEventsWorkflows eventWorkflow,
                         CustomerWorkflows customerWorkflows,
+                        CustomerEventsWorkflows customerEventsWorkflows,
                         HubspotPushWorkflows hubspotPushWorkflows,
                         IItemsRecommenderStore itemsRecommenderStore,
                         IQueueMessagesFileStore queueMessagesFileStore,

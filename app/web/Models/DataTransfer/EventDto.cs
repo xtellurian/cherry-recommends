@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SignalBox.Core;
 
 namespace SignalBox.Web.Dto
 {
@@ -14,7 +15,7 @@ namespace SignalBox.Web.Dto
         public DateTimeOffset? Timestamp { get; set; }
         public long? RecommendationCorrelatorId { get; set; }
         public long? SourceSystemId { get; set; }
-        public string Kind { get; set; }
+        public EventKinds Kind { get; set; }
         [Required]
         public string EventType { get; set; }
         public Dictionary<string, object> Properties { get; set; }

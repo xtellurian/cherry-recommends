@@ -11,6 +11,7 @@ namespace SignalBox.Core.Workflows
 {
     public class HubspotWorkflows : HubspotWorkflowBase, IWorkflow
     {
+        private readonly ITenantProvider tenantProvider;
         private readonly CustomerEventsWorkflows eventsWorkflows;
         private readonly ICustomerEventStore eventStore;
         private readonly IEnvironmentProvider environmentProvider;
@@ -21,6 +22,7 @@ namespace SignalBox.Core.Workflows
         private readonly ITelemetry telemetry;
 
         public HubspotWorkflows(IIntegratedSystemStore integratedSystemStore,
+                                ITenantProvider tenantProvider,
                                 CustomerEventsWorkflows eventsWorkflows,
                                 ICustomerStore trackedUserStore,
                                 ICustomerEventStore eventStore,
@@ -36,6 +38,7 @@ namespace SignalBox.Core.Workflows
                                 IOptions<HubspotAppCredentials> hubspotCreds)
                                 : base(logger, hubspotService, hubspotCreds, integratedSystemStore, trackedUserStore, dateTimeProvider)
         {
+            this.tenantProvider = tenantProvider;
             this.eventsWorkflows = eventsWorkflows;
             this.eventStore = eventStore;
             this.environmentProvider = environmentProvider;
@@ -215,9 +218,10 @@ namespace SignalBox.Core.Workflows
                 outcomeFeedbackValue = -0.4;
             }
 
-            return await eventsWorkflows.AddEvents(new List<CustomerEventsWorkflows.CustomerEventInput>
+            return await eventsWorkflows.Ingest(new List<CustomerEventsWorkflows.CustomerEventInput>
                 {
                     new CustomerEventsWorkflows.CustomerEventInput(
+                        tenantName: tenantProvider.RequestedTenantName,
                         customer.CustomerId,
                         eventId,
                         timestamp: dateTimeProvider.Now,
@@ -230,7 +234,7 @@ namespace SignalBox.Core.Workflows
                     {
                         {CustomerEvent.FEEDBACK, outcomeFeedbackValue},
                     })
-                }, addToQueue: false);
+                });
 
         }
         public async Task<Customer> HandleWebhookPayload(IntegratedSystem integratedSystem, HubspotWebhookPayload webhookPayload)

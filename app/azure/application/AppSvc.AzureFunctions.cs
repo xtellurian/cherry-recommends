@@ -19,6 +19,7 @@ namespace SignalBox.Azure
                                         MultitenantDatabaseComponent multiDb,
                                         Storage storage,
                                         Component insights,
+                                        EventProcessing eventProcessing,
                                         AppServicePlan plan,
                                         Auth0 auth0)
         {
@@ -34,6 +35,10 @@ namespace SignalBox.Azure
                 {
                     AlwaysOn = true, // recommended in the Azure portal.
                     AppSettings = {
+                        new NameValuePairArgs{
+                            Name = "EventIngestionConnectionString",
+                            Value = eventProcessing.PrimaryNamespaceReadConnectionString // this must be a namespace scope connection string
+                        },
                         new NameValuePairArgs{
                             Name = "AzureWebJobsStorage",
                             Value = storage.PrimaryConnectionString,

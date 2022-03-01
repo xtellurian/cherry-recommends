@@ -42,7 +42,7 @@ namespace SignalBox.Functions
 
             try
             {
-                await eventWorkflow.AddEvents(events, addToQueue: false);
+                await eventWorkflow.ProcessEvents(events);
             }
             catch (System.Exception ex)
             {

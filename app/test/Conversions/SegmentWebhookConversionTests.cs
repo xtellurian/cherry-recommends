@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Moq;
 using Newtonsoft.Json.Linq;
 using SignalBox.Core;
 using SignalBox.Core.Adapters.Segment;
@@ -47,9 +48,12 @@ namespace SignalBox.Test
                 Id = 1,
                 EnvironmentId = 2
             };
+            var mockTenantProvider = new Mock<ITenantProvider>();
+            mockTenantProvider.Setup(_ => _.RequestedTenantName).Returns("tenant-name");
 
-            var e = Converter.ToTrackedUserEventInput(p, integratedSystem);
+            var e = Converter.ToTrackedUserEventInput(p, mockTenantProvider.Object, integratedSystem);
             Assert.Equal(integratedSystem.Id, e.SourceSystemId);
+            Assert.Equal("tenant-name", e.TenantName);
             Assert.Equal(p.UserId, e.CustomerId);
             Assert.Equal(eventKind, e.Kind);
             Assert.Equal(p.MessageId, e.EventId);

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
@@ -32,12 +33,14 @@ namespace SignalBox.Functions
         {
             var tenantProvider = (ITenantProvider)context.InstanceServices.GetService(typeof(ITenantProvider));
 
-            if (context.BindingContext.BindingData.TryGetValue("TenantName", out var tenantNameObj))
+            if (context.BindingContext.BindingData.TryGetValue("TenantName", out var tenantNameObj1))
             {
-                if (tenantNameObj != null)
-                {
-                    await tenantProvider.SetTenantName(tenantNameObj?.ToString());
-                }
+                await HandleTenantNameObj(tenantProvider, tenantNameObj1);
+            }
+            if (context.BindingContext.BindingData.TryGetValue("tenantName", out var tenantNameObj2)) // camel case
+            {
+                // handles tenant selection for incoming non-batch EventHub events
+                await HandleTenantNameObj(tenantProvider, tenantNameObj2);
             }
             else if (context.BindingContext.BindingData.TryGetValue("Query", out var queryDicObject))
             {
@@ -58,6 +61,14 @@ namespace SignalBox.Functions
             }
 
             await next(context);
+        }
+
+        private static async Task HandleTenantNameObj(ITenantProvider tenantProvider, object tenantNameObj)
+        {
+            if (tenantNameObj != null)
+            {
+                await tenantProvider.SetTenantName(tenantNameObj?.ToString());
+            }
         }
     }
 }
