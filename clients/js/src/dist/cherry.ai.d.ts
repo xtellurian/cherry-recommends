@@ -106,6 +106,9 @@ interface PromotionsRecommendation extends ItemsRecommendation {
 }
 interface Business extends CommonEntity {
 }
+interface MetricBinRequest extends EntityRequest {
+    binCount: number;
+}
 
 declare const fetchApiKeysAsync: ({ token, page }: PaginatedRequest) => Promise<any>;
 declare enum ApiKeyType {
@@ -1968,7 +1971,7 @@ declare const fetchAggregateMetricValuesNumericAsync: ({ token, id, }: EntityReq
 declare const fetchAggregateMetricValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 declare const fetchDestinationsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
 declare const fetchExportCustomers: ({ token, id }: EntityRequest) => Promise<any>;
-declare const fetchMetricBinValuesNumericAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+declare const fetchMetricBinValuesNumericAsync: ({ token, id, binCount, }: MetricBinRequest) => Promise<any>;
 declare const fetchMetricBinValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 interface CreateMetricDestinationRequest extends EntityRequest {
     destination: components["schemas"]["CreateDestinationDto"];

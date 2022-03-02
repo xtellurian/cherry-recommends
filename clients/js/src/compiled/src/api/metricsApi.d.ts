@@ -1,4 +1,4 @@
-import { AuthenticatedRequest, DeleteRequest, EntityRequest, EntitySearchRequest, PaginatedEntityRequest } from "../interfaces";
+import { AuthenticatedRequest, DeleteRequest, EntityRequest, EntitySearchRequest, PaginatedEntityRequest, MetricBinRequest } from "../interfaces";
 import { components } from "../model/api";
 interface MetricSearchRequest extends EntitySearchRequest {
     scope?: components["schemas"]["MetricScopes"];
@@ -22,7 +22,7 @@ export declare const fetchAggregateMetricValuesNumericAsync: ({ token, id, }: En
 export declare const fetchAggregateMetricValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 export declare const fetchDestinationsAsync: ({ token, id }: EntityRequest) => Promise<any>;
 export declare const fetchExportCustomers: ({ token, id }: EntityRequest) => Promise<any>;
-export declare const fetchMetricBinValuesNumericAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+export declare const fetchMetricBinValuesNumericAsync: ({ token, id, binCount, }: MetricBinRequest) => Promise<any>;
 export declare const fetchMetricBinValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 interface CreateMetricDestinationRequest extends EntityRequest {
     destination: components["schemas"]["CreateDestinationDto"];

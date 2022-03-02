@@ -4,6 +4,7 @@ import {
   EntityRequest,
   EntitySearchRequest,
   PaginatedEntityRequest,
+  MetricBinRequest
 } from "../interfaces";
 import { executeFetch } from "./client/apiClientTs";
 import { components } from "../model/api";
@@ -152,10 +153,14 @@ export const fetchExportCustomers = async ({ token, id }: EntityRequest) => {
 export const fetchMetricBinValuesNumericAsync = async ({
   token,
   id,
-}: EntityRequest) => {
+  binCount,
+}: MetricBinRequest) => {
   return await executeFetch({
     path: `api/Metrics/${id}/NumericMetricBinValues`,
     token,
+    query: {
+      binCount,
+    },
   });
 };
 

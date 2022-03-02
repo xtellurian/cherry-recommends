@@ -9,7 +9,7 @@ export const Layout = ({ children }) => {
     <AnonymousSwitcher>
       <TenantChecker>
         <NavMenu>
-          <Container>{children}</Container>
+          <Container className="mw-100">{children}</Container>
         </NavMenu>
       </TenantChecker>
     </AnonymousSwitcher>

@@ -153,7 +153,7 @@ export const useAggregateMetricsString = ({ id }) => {
   return state;
 };
 
-export const useMetricBin = ({ id, valueType }) => {
+export const useMetricBin = ({ id, valueType, binCount = 12 }) => {
   const token = useAccessToken();
   const [state, setState] = React.useState({
     loading: true,
@@ -165,6 +165,7 @@ export const useMetricBin = ({ id, valueType }) => {
         fetchMetricBinValuesNumericAsync({
           token,
           id,
+          binCount,
         })
           .then(setState)
           .catch((error) => setState({ error }));

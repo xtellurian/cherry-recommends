@@ -84,10 +84,13 @@ export const fetchExportCustomers = async ({ token, id }) => {
         token,
     });
 };
-export const fetchMetricBinValuesNumericAsync = async ({ token, id, }) => {
+export const fetchMetricBinValuesNumericAsync = async ({ token, id, binCount, }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/NumericMetricBinValues`,
         token,
+        query: {
+            binCount,
+        },
     });
 };
 export const fetchMetricBinValuesStringAsync = async ({ token, id, }) => {

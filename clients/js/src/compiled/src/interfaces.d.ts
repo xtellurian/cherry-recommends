@@ -86,4 +86,7 @@ export interface PromotionsRecommendation extends ItemsRecommendation {
 }
 export interface Business extends CommonEntity {
 }
+export interface MetricBinRequest extends EntityRequest {
+    binCount: number;
+}
 export {};

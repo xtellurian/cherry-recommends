@@ -91,7 +91,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             return stringAggregates;
         }
 
-        public async Task<IEnumerable<MetricDailyBinValueNumeric>> GetMetricBinValuesNumeric(Metric metric, int binCount = 12)
+        public async Task<IEnumerable<MetricDailyBinValueNumeric>> GetMetricBinValuesNumeric(Metric metric, int? binCount = 12)
         {
             var numericBinValues = await context.MetricDailyBinNumericValues
                 .FromSqlInterpolated($"dbo.sp_NumericMetricBinning {metric.Id},{binCount}")

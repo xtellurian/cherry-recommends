@@ -733,10 +733,13 @@
             token,
         });
     };
-    const fetchMetricBinValuesNumericAsync = async ({ token, id, }) => {
+    const fetchMetricBinValuesNumericAsync = async ({ token, id, binCount, }) => {
         return await executeFetch({
             path: `api/Metrics/${id}/NumericMetricBinValues`,
             token,
+            query: {
+                binCount,
+            },
         });
     };
     const fetchMetricBinValuesStringAsync = async ({ token, id, }) => {

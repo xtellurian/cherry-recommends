@@ -205,7 +205,7 @@ export const NavMenu = ({ children }) => {
         <SideNavMenu />
       </aside>
 
-      <section className="content py-4">{children}</section>
+      <section className="content p-4">{children}</section>
 
       <LoadingPopup
         label="Switching Environment"
