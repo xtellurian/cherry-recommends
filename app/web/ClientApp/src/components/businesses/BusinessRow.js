@@ -5,7 +5,7 @@ import FlexRow from "../molecules/layout/EntityFlexRow";
 
 export const BusinessRow = ({ business, children }) => {
   const history = useHistory();
-  const handleClick = () => history.push(`/businesses`);
+  const handleClick = () => history.push(`/businesses/detail/${business.id}`);
 
   return (
     <FlexRow

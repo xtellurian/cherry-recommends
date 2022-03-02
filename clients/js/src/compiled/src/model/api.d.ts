@@ -5370,6 +5370,19 @@ export interface components {
             schema?: components["schemas"]["Schema"];
             type?: string | null;
         };
+        Business: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            name?: string | null;
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            description?: string | null;
+        };
         CategoricalParameterBounds: {
             categories?: string[] | null;
         };

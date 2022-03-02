@@ -1,21 +1,19 @@
-using System;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SignalBox.Core.Metrics;
-using SignalBox.Core.Metrics.Destinations;
 
 namespace SignalBox.Core.Workflows
 {
     public class BusinessWorkflows : IWorkflow
     {
+        private readonly IStorageContext storageContext;
         private readonly IBusinessStore businessStore;
         private readonly ILogger<BusinessWorkflows> logger;
 
-        public BusinessWorkflows(IBusinessStore businessStore,
+        public BusinessWorkflows(IStorageContext storageContext,
+                                IBusinessStore businessStore,
                                 ILogger<BusinessWorkflows> logger)
         {
+            this.storageContext = storageContext;
             this.businessStore = businessStore;
             this.logger = logger;
         }
@@ -23,7 +21,7 @@ namespace SignalBox.Core.Workflows
         public async Task<Business> CreateBusiness(string commonId, string name, string description)
         {
             var business = await businessStore.Create(new Business(commonId, name, description));
-            await businessStore.Context.SaveChanges();
+            await storageContext.SaveChanges();
             return business;
         }
     }

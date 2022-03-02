@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Moq;
 using SignalBox.Core;
@@ -18,9 +17,7 @@ namespace SignalBox.Test.Stores
             var mockBusinessStore = new Mock<IBusinessStore>();
             var mockStorageContext = new Mock<IStorageContext>();
 
-            mockBusinessStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
-
-            var workflow = new BusinessWorkflows(mockBusinessStore.Object, Utility.MockLogger<BusinessWorkflows>().Object);
+            var workflow = new BusinessWorkflows(mockStorageContext.Object, mockBusinessStore.Object, Utility.MockLogger<BusinessWorkflows>().Object);
             await workflow.CreateBusiness(commonId, name, description);
                         
             mockBusinessStore.Verify(_ => _.Create(It.Is<Business>(b => b.CommonId == commonId)));
@@ -36,9 +33,7 @@ namespace SignalBox.Test.Stores
             var mockBusinessStore = new Mock<IBusinessStore>();
             var mockStorageContext = new Mock<IStorageContext>();
 
-            mockBusinessStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
-
-            var workflow = new BusinessWorkflows(mockBusinessStore.Object, Utility.MockLogger<BusinessWorkflows>().Object);
+            var workflow = new BusinessWorkflows(mockStorageContext.Object, mockBusinessStore.Object, Utility.MockLogger<BusinessWorkflows>().Object);
 
             var act = () => workflow.CreateBusiness(commonId, null, null);
             CommonIdException exception = await Assert.ThrowsAsync<CommonIdException>(act);

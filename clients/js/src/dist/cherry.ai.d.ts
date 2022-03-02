@@ -214,6 +214,19 @@ interface components {
             schema?: components["schemas"]["Schema"];
             type?: string | null;
         };
+        Business: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            name?: string | null;
+            commonId?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
+            description?: string | null;
+        };
         CategoricalParameterBounds: {
             categories?: string[] | null;
         };
@@ -1229,17 +1242,31 @@ interface components {
 }
 
 declare const fetchBusinessesAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<Business>>;
+declare const fetchBusinessAsync: ({ token, id, }: EntityRequest) => Promise<components["schemas"]["Business"]>;
+declare const deleteBusinessAsync: ({ token, id }: DeleteRequest) => Promise<any>;
 interface CreateBusinessRequest extends AuthenticatedRequest {
     business: components["schemas"]["CreateBusiness"];
 }
 declare const createBusinessAsync: ({ token, business, }: CreateBusinessRequest) => Promise<any>;
+interface UpdateBusinessPropertiesRequest extends EntityRequest {
+    properties?: {
+        [key: string]: unknown;
+    } | null;
+}
+declare const updateBusinessPropertiesAsync: ({ token, id, properties }: UpdateBusinessPropertiesRequest) => Promise<any>;
 
 declare const businessesApi_d_fetchBusinessesAsync: typeof fetchBusinessesAsync;
+declare const businessesApi_d_fetchBusinessAsync: typeof fetchBusinessAsync;
+declare const businessesApi_d_deleteBusinessAsync: typeof deleteBusinessAsync;
 declare const businessesApi_d_createBusinessAsync: typeof createBusinessAsync;
+declare const businessesApi_d_updateBusinessPropertiesAsync: typeof updateBusinessPropertiesAsync;
 declare namespace businessesApi_d {
   export {
     businessesApi_d_fetchBusinessesAsync as fetchBusinessesAsync,
+    businessesApi_d_fetchBusinessAsync as fetchBusinessAsync,
+    businessesApi_d_deleteBusinessAsync as deleteBusinessAsync,
     businessesApi_d_createBusinessAsync as createBusinessAsync,
+    businessesApi_d_updateBusinessPropertiesAsync as updateBusinessPropertiesAsync,
   };
 }
 

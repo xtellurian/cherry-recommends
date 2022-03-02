@@ -183,6 +183,19 @@ const fetchBusinessesAsync = async ({ token, page, searchTerm, }) => {
         },
     });
 };
+const fetchBusinessAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        path: `api/Businesses/${id}`,
+        token,
+    });
+};
+const deleteBusinessAsync = async ({ token, id }) => {
+    return await executeFetch({
+        path: `api/Businesses/${id}`,
+        token,
+        method: "delete",
+    });
+};
 const createBusinessAsync = async ({ token, business, }) => {
     return await executeFetch({
         path: "api/Businesses",
@@ -191,11 +204,22 @@ const createBusinessAsync = async ({ token, business, }) => {
         body: business,
     });
 };
+const updateBusinessPropertiesAsync = async ({ token, id, properties }) => {
+    return await executeFetch({
+        token,
+        path: `api/Businesses/${id}/properties`,
+        method: "post",
+        body: properties,
+    });
+};
 
 var businessesApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchBusinessesAsync: fetchBusinessesAsync,
-    createBusinessAsync: createBusinessAsync
+    fetchBusinessAsync: fetchBusinessAsync,
+    deleteBusinessAsync: deleteBusinessAsync,
+    createBusinessAsync: createBusinessAsync,
+    updateBusinessPropertiesAsync: updateBusinessPropertiesAsync
 });
 
 /**

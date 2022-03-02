@@ -34,7 +34,7 @@ export const CreateBusiness = () => {
     })
       .then((u) => {
         analytics.track("site:business_create_success");
-        history.push(`/businesses`); // TODO: route to details when Business Details page is available
+        history.push(`/businesses/detail/${u.id}`);
       })
       .catch((e) => {
         analytics.track("site:business_create_failure");

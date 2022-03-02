@@ -20,8 +20,8 @@ namespace SignalBox.Web.Controllers
         private readonly BusinessWorkflows workflows;
 
         public BusinessesController(ILogger<BusinessesController> logger,
-                                      IBusinessStore store,
-                                      BusinessWorkflows workflows) : base(store)
+                                    IBusinessStore store,
+                                    BusinessWorkflows workflows) : base(store)
         {
             _logger = logger;
             this.workflows = workflows;

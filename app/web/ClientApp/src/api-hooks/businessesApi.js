@@ -3,6 +3,7 @@ import { usePagination } from "../utility/utility";
 import { useAccessToken } from "./token";
 import {
   fetchBusinessesAsync,
+  fetchBusinessAsync,
 } from "../api/businessesApi";
 import { useEnvironmentReducer } from "./environmentsApi";
 
@@ -24,5 +25,23 @@ export const useBusinesses = ({ searchTerm }) => {
     }
   }, [token, page, searchTerm, environment]);
 
+  return result;
+};
+
+export const useBusiness = ({ id }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchBusinessAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id]);
+  
   return result;
 };
