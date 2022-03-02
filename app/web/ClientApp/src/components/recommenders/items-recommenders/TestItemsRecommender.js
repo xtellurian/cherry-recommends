@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useItemsRecommender } from "../../../api-hooks/itemsRecommendersApi";
-import { invokeItemsRecommenderAsync } from "../../../api/itemsRecommendersApi";
+import { usePromotionsRecommender } from "../../../api-hooks/promotionsRecommendersApi";
+import { invokePromotionsRecommenderAsync } from "../../../api/promotionsRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { Title, Subtitle, AsyncButton, BackButton } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
@@ -13,7 +13,7 @@ import { useAnalytics } from "../../../analytics/analyticsHooks";
 export const TestRecommender = () => {
   const { id } = useParams();
   const token = useAccessToken();
-  const recommender = useItemsRecommender({ id });
+  const recommender = usePromotionsRecommender({ id });
   const { analytics } = useAnalytics();
   const [consumePopupOpen, setConsumePopupOpen] = React.useState(false);
 
@@ -22,7 +22,7 @@ export const TestRecommender = () => {
   const [modelResponse, setModelResponse] = React.useState();
   const handleInvoke = () => {
     setInvoking(true);
-    invokeItemsRecommenderAsync({
+    invokePromotionsRecommenderAsync({
       token,
       id: recommender?.id || id,
       input: {

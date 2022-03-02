@@ -2,16 +2,16 @@ import React from "react";
 import { TriggersUtil } from "../utils/triggersUtil";
 import { useParams } from "react-router-dom";
 import {
-  useItemsRecommender,
+  usePromotionsRecommender,
   useTrigger,
-} from "../../../api-hooks/itemsRecommendersApi";
-import { setTriggerAsync } from "../../../api/itemsRecommendersApi";
+} from "../../../api-hooks/promotionsRecommendersApi";
+import { setTriggerAsync } from "../../../api/promotionsRecommendersApi";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import { Spinner } from "../../molecules";
 
 export const Triggers = () => {
   const { id } = useParams();
-  var recommender = useItemsRecommender({ id });
+  var recommender = usePromotionsRecommender({ id });
   const [reloadTrigger, setReloadTrigger] = React.useState();
   var triggerCollection = useTrigger({ id, trigger: reloadTrigger });
   const [error, setError] = React.useState();

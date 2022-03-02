@@ -102,15 +102,23 @@ export const BusinessDetail = () => {
           </button>
         </Link>
         {numProperties > 0 && <JsonView data={business.properties} />}
-        {numProperties === 0 && <EmptyList>Business has no properties.</EmptyList>}
+        {numProperties === 0 && (
+          <EmptyList>Business has no properties.</EmptyList>
+        )}
       </TabActivator>
 
-      <TabActivator tabId={"history"} defaultTabId={defaultTabId}>
-      </TabActivator>
-      <TabActivator tabId={"latest-recommendations"} defaultTabId={defaultTabId}>
-      </TabActivator>
-      <TabActivator tabId={"members"} defaultTabId={defaultTabId}>
-      </TabActivator>
+      <TabActivator
+        tabId={"history"}
+        defaultTabId={defaultTabId}
+      ></TabActivator>
+      <TabActivator
+        tabId={"latest-recommendations"}
+        defaultTabId={defaultTabId}
+      ></TabActivator>
+      <TabActivator
+        tabId={"members"}
+        defaultTabId={defaultTabId}
+      ></TabActivator>
 
       <ConfirmDeletePopup
         entity={business}

@@ -1,13 +1,13 @@
 import React from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import {
-  useItemsRecommender,
+  usePromotionsRecommender,
   useReportImageBlobUrl,
-} from "../../../api-hooks/itemsRecommendersApi";
+} from "../../../api-hooks/promotionsRecommendersApi";
 import {
-  deleteItemsRecommenderAsync,
-  createItemsRecommenderAsync,
-} from "../../../api/itemsRecommendersApi";
+  deletePromotionsRecommenderAsync,
+  createPromotionsRecommenderAsync,
+} from "../../../api/promotionsRecommendersApi";
 import { ItemRow } from "../../items/ItemRow";
 import { useAccessToken } from "../../../api-hooks/token";
 import { Subtitle, Spinner, ErrorCard, EmptyList } from "../../molecules";
@@ -38,7 +38,7 @@ const RecommenderDetailSection = () => {
   const history = useHistory();
   const [reportOpen, setReportOpen] = React.useState(false);
   const [trigger, setTrigger] = React.useState();
-  const recommender = useItemsRecommender({ id, trigger });
+  const recommender = usePromotionsRecommender({ id, trigger });
   const [cloneOpen, setCloneOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState();
@@ -47,7 +47,7 @@ const RecommenderDetailSection = () => {
   };
 
   const cloneAsync = (name, commonId) => {
-    return createItemsRecommenderAsync({
+    return createPromotionsRecommenderAsync({
       token,
       payload: {
         name,
@@ -80,7 +80,7 @@ const RecommenderDetailSection = () => {
           <button
             className="btn btn-danger"
             onClick={() => {
-              deleteItemsRecommenderAsync({
+              deletePromotionsRecommenderAsync({
                 token,
                 id: recommender.id,
               })

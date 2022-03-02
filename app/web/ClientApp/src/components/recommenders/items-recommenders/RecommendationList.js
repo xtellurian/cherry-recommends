@@ -11,9 +11,9 @@ import {
 import { JsonView } from "../../molecules/JsonView";
 import { DateTimeField } from "../../molecules/DateTimeField";
 import {
-  useItemsRecommendations,
-  useItemsRecommender,
-} from "../../../api-hooks/itemsRecommendersApi";
+  usePromotionsRecommendations,
+  usePromotionsRecommender,
+} from "../../../api-hooks/promotionsRecommendersApi";
 import { BigPopup } from "../../molecules/popups/BigPopup";
 import { EntityRow } from "../../molecules/layout/EntityRow";
 import { Col } from "../../molecules/layout/Grid";
@@ -70,8 +70,8 @@ const RecommendationRow = ({ recommendation, size }) => {
 };
 export const ItemsRecommendationList = ({ size }) => {
   const { id } = useParams();
-  const recommender = useItemsRecommender({ id });
-  const recommendations = useItemsRecommendations({ id, pageSize: 5 });
+  const recommender = usePromotionsRecommender({ id });
+  const recommendations = usePromotionsRecommendations({ id, pageSize: 5 });
 
   return (
     <div className="container">

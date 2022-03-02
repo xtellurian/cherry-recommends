@@ -3,7 +3,7 @@ import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import { CardSection, Label } from "../../molecules/layout/CardSection";
 import { Row, Col } from "../../molecules/layout/Grid";
 import { ItemsRecommendationList } from "./RecommendationList";
-import { useStatistics } from "../../../api-hooks/itemsRecommendersApi";
+import { useStatistics } from "../../../api-hooks/promotionsRecommendersApi";
 import { useParams } from "react-router-dom";
 import { TargetMetricChartLoader } from "../../molecules/charts/TargetMetricChartLoader";
 

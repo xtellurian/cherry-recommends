@@ -3,12 +3,12 @@ import { useParams } from "react-router";
 import { PrimaryBackButton } from "../../molecules/BackButton";
 import { Title, Subtitle } from "../../molecules";
 import { ItemsRecommenderPrimaryNav } from "./ItemsRecommenderPrimaryNav";
-import { useItemsRecommender } from "../../../api-hooks/itemsRecommendersApi";
+import { usePromotionsRecommender } from "../../../api-hooks/promotionsRecommendersApi";
 import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
 
 export const ItemRecommenderLayout = ({ children }) => {
   const { id } = useParams();
-  const recommender = useItemsRecommender({ id });
+  const recommender = usePromotionsRecommender({ id });
   return (
     <>
       <RecommenderStatusBox className="float-right" recommender={recommender} />

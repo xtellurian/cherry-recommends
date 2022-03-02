@@ -8,7 +8,7 @@ import { AsyncButton } from "../molecules";
 import {
   InputGroup,
   TextInput,
-  createServerErrorValidator
+  createServerErrorValidator,
 } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useCommonId } from "../../utility/utility";
@@ -17,7 +17,7 @@ export const CreateBusiness = () => {
   const [newBusiness, setNewBusiness] = React.useState({
     name: "",
     commonId: "",
-    description: ""
+    description: "",
   });
 
   const token = useAccessToken();

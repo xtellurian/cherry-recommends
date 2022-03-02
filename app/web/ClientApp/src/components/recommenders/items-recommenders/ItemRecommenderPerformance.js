@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router";
-import { usePerformance } from "../../../api-hooks/itemsRecommendersApi";
+import { usePerformance } from "../../../api-hooks/promotionsRecommendersApi";
 import { ErrorCard, Spinner } from "../../molecules";
 import { EntityRow } from "../../molecules/layout/EntityRow";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";

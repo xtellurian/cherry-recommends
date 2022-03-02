@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router";
-import { useItemsRecommender } from "../../../api-hooks/itemsRecommendersApi";
-import { setArgumentsAsync } from "../../../api/itemsRecommendersApi";
+import { usePromotionsRecommender } from "../../../api-hooks/promotionsRecommendersApi";
+import { setArgumentsAsync } from "../../../api/promotionsRecommendersApi";
 import { ErrorCard, Spinner } from "../../molecules";
 import { ArgumentsComponentUtil } from "../utils/argumentsComponent";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
@@ -9,7 +9,7 @@ import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 export const Arguments = () => {
   const { id } = useParams();
   const [trigger, setTrigger] = React.useState();
-  const recommender = useItemsRecommender({ id, trigger });
+  const recommender = usePromotionsRecommender({ id, trigger });
   return <ArgumentsSection recommender={recommender} setTrigger={setTrigger} />;
 };
 

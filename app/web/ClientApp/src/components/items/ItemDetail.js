@@ -1,11 +1,11 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { useItem } from "../../api-hooks/recommendableItemsApi";
+import { usePromotion } from "../../api-hooks/promotionsApi";
 import {
-  deleteItemAsync,
-  updateItemAsync,
+  deletePromotionAsync,
+  updatePromotionAsync,
   setPropertiesAsync,
-} from "../../api/recommendableItemsApi";
+} from "../../api/promotionsApi";
 import { Title, Subtitle, Spinner, ErrorCard, BackButton } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { PropertiesTableView } from "../molecules/PropertiesTableView";
@@ -18,7 +18,7 @@ export const ItemDetail = () => {
   const { id } = useParams();
   const token = useAccessToken();
   const [trigger, setTrigger] = React.useState({});
-  const item = useItem({ id, trigger });
+  const item = usePromotion({ id, trigger });
   const [isDeletePopupOpen, setisDeletePopupOpen] = React.useState(false);
   const [isPropertyEditorPopupOpen, setIsPropertyEditorPopupOpen] =
     React.useState(false);
@@ -33,7 +33,7 @@ export const ItemDetail = () => {
   const handleEditProperty = (property, value) => {
     const _item = Object.assign({}, item);
     _item[property] = value;
-    updateItemAsync({ token, id, item: _item })
+    updatePromotionAsync({ token, id, promotion: _item })
       .then((v) => {
         setTrigger(v);
         setError(undefined);
@@ -124,7 +124,7 @@ export const ItemDetail = () => {
             open={isDeletePopupOpen}
             setOpen={setisDeletePopupOpen}
             handleDelete={() =>
-              deleteItemAsync({ id: item.id, token })
+              deletePromotionAsync({ id: item.id, token })
                 .then(() => history.push("/promotions"))
                 .catch(setError)
             }

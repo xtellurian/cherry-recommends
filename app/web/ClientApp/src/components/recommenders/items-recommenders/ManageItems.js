@@ -1,9 +1,9 @@
 import React from "react";
 import { useParams } from "react-router";
 import {
-  useItemsRecommender,
-  useItems,
-} from "../../../api-hooks/itemsRecommendersApi";
+  usePromotionsRecommender,
+  usePromotions,
+} from "../../../api-hooks/promotionsRecommendersApi";
 import {
   EmptyList,
   Paginator,
@@ -18,10 +18,10 @@ import { RemoveItemPopup } from "./RemoveItemPopup";
 
 export const ManageItems = () => {
   const { id } = useParams();
-  const recommender = useItemsRecommender({ id });
+  const recommender = usePromotionsRecommender({ id });
 
   const [trigger, setTrigger] = React.useState();
-  const items = useItems({ id, trigger });
+  const items = usePromotions({ id, trigger });
 
   const [isAddItemPopupOpen, setIsAddItemPopupOpen] = React.useState(false);
   const [isRemoveItemPopupOpen, setIsRemoveItemPopupOpen] =

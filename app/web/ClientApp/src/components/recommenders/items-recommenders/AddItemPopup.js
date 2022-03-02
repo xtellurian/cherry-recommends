@@ -1,6 +1,6 @@
 import React from "react";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
-import { addItemAsync } from "../../../api/itemsRecommendersApi";
+import { addPromotionAsync } from "../../../api/promotionsRecommendersApi";
 import { AsyncButton, ErrorCard, Subtitle, Title } from "../../molecules";
 import { BigPopup } from "../../molecules/popups/BigPopup";
 import { AsyncSelectItem } from "../../molecules/selectors/AsyncSelectItem";
@@ -15,10 +15,10 @@ export const AddItemPopup = ({ isOpen, setIsOpen, recommender, onAdded }) => {
   const handleAdd = () => {
     setError(null);
     setLoading(true);
-    addItemAsync({
+    addPromotionAsync({
       token,
       id: recommender.id,
-      item: selectedItem,
+      promotion: selectedItem,
     })
       .then((r) => {
         analytics.track("site:itemsRecommender_addItem_success");

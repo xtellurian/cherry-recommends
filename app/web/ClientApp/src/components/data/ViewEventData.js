@@ -124,7 +124,10 @@ export const ViewEventData = () => {
         </Col>
       </Row>
       <hr />
-      <EventHistoryBarChart kind={state.eventKind} eventType={state.eventType} />
+      <EventHistoryBarChart
+        kind={state.eventKind}
+        eventType={state.eventType}
+      />
     </React.Fragment>
   );
 };

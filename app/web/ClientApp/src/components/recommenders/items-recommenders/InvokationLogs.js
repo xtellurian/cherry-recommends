@@ -1,14 +1,14 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import {
-  useItemsRecommender,
+  usePromotionsRecommender,
   useInvokationLogs,
-} from "../../../api-hooks/itemsRecommendersApi";
+} from "../../../api-hooks/promotionsRecommendersApi";
 import { Spinner } from "../../molecules";
 import { InvokationLogsUtil } from "../utils/InvokationLogsUtil";
 export const InvokationLogs = () => {
   const { id } = useParams();
-  const recommender = useItemsRecommender({ id });
+  const recommender = usePromotionsRecommender({ id });
   const invokations = useInvokationLogs({ id });
 
   if (recommender.loading || invokations.loading) {

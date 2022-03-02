@@ -1,14 +1,14 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import {
-  useItemsRecommender,
+  usePromotionsRecommender,
   useLinkedRegisteredModel,
-} from "../../../api-hooks/itemsRecommendersApi";
-import { createLinkRegisteredModelAsync } from "../../../api/itemsRecommendersApi";
+} from "../../../api-hooks/promotionsRecommendersApi";
+import { createLinkRegisteredModelAsync } from "../../../api/promotionsRecommendersApi";
 import { LinkToModelUtility } from "../utils/LinkToModel";
 export const LinkToModel = () => {
   const { id } = useParams();
-  const recommender = useItemsRecommender({ id });
+  const recommender = usePromotionsRecommender({ id });
   const linkedModel = useLinkedRegisteredModel({ id });
   return (
     <LinkToModelUtility

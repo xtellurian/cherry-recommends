@@ -1,14 +1,14 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import {
-  useItemsRecommender,
+  usePromotionsRecommender,
   useDestinations,
-} from "../../../api-hooks/itemsRecommendersApi";
+} from "../../../api-hooks/promotionsRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import {
   createDestinationAsync,
   removeDestinationAsync,
-} from "../../../api/itemsRecommendersApi";
+} from "../../../api/promotionsRecommendersApi";
 import { Spinner } from "../../molecules";
 import { LoadingPopup } from "../../molecules/popups/LoadingPopup";
 import { DestinationsUtil } from "../utils/destinationsUtil";
@@ -33,7 +33,7 @@ export const Destinations = () => {
   const token = useAccessToken();
   const [trigger, setTrigger] = React.useState();
   const [error, setError] = React.useState();
-  const recommender = useItemsRecommender({ id });
+  const recommender = usePromotionsRecommender({ id });
   const destinations = useDestinations({ id, trigger });
 
   const [handlingCreate, setHandlingCreate] = React.useState(false);

@@ -28,15 +28,11 @@ export const BusinessesSummary = () => {
       {businesses.error && <ErrorCard error={businesses.error} />}
       <SearchBox onSearch={setSearchTerm} />
       {businesses.items && businesses.items.length === 0 && (
-        <EmptyList>
-          There are no Businesses.
-        </EmptyList>
+        <EmptyList>There are no Businesses.</EmptyList>
       )}
       <div className="mt-3">
         {businesses.items &&
-          businesses.items.map((u) => (
-            <BusinessRow key={u.id} business={u} />
-          ))}
+          businesses.items.map((u) => <BusinessRow key={u.id} business={u} />)}
       </div>
       <Paginator {...businesses.pagination} />
     </div>

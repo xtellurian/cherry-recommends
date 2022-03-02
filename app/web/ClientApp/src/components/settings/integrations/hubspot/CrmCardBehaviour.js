@@ -16,7 +16,7 @@ import { useAccessToken } from "../../../../api-hooks/token";
 import { useParameterSetRecommender } from "../../../../api-hooks/parameterSetRecommendersApi";
 import { AsyncSelectParameterSetRecommender } from "../../../molecules/selectors/AsyncSelectParameterSetRecommender";
 import { AsyncSelectItemsRecommender } from "../../../molecules/selectors/AsyncSelectItemsRecommender";
-import { useItemsRecommender } from "../../../../api-hooks/itemsRecommendersApi";
+import { usePromotionsRecommender } from "../../../../api-hooks/promotionsRecommendersApi";
 
 const Top = ({ integratedSystem }) => {
   return (
@@ -53,7 +53,7 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
   const parameterSetRecommender = useParameterSetRecommender({
     id: behaviour.parameterSetRecommenderId,
   });
-  const itemsRecommender = useItemsRecommender({
+  const itemsRecommender = usePromotionsRecommender({
     id: behaviour.itemsRecommenderId,
   });
 

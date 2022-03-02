@@ -1,6 +1,6 @@
 import React from "react";
 import Tippy from "@tippyjs/react";
-import { useItemsRecommenders } from "../../api-hooks/itemsRecommendersApi";
+import { usePromotionsRecommenders } from "../../api-hooks/promotionsRecommendersApi";
 import { useParameterSetRecommenders } from "../../api-hooks/parameterSetRecommendersApi";
 import { EmptyState, Spinner } from "../molecules";
 import { NoteBox } from "../molecules/NoteBox";
@@ -14,7 +14,7 @@ const Tooltip = ({ children }) => {
 
 const MAX_LIST_LENGTH = 5;
 export const Recommenders = ({ className, hasItems }) => {
-  const itemsRecommenders = useItemsRecommenders();
+  const itemsRecommenders = usePromotionsRecommenders();
   const parameterRecommenders = useParameterSetRecommenders();
   const [allRecommenders, setAllRecommenders] = React.useState([]);
   const loading = itemsRecommenders.loading || parameterRecommenders.loading;

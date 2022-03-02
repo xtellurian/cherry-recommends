@@ -11,26 +11,22 @@ export const BusinessesComponent = (props) => {
   return (
     <React.Fragment>
       <Switch>
-        <AuthorizeRoute 
-          exact 
-          path={`${path}`} 
-          component={BusinessesSummary} 
-        />
+        <AuthorizeRoute exact path={`${path}`} component={BusinessesSummary} />
         <AuthorizeRoute
           exact
           path={`${path}/detail/:id`}
           component={BusinessDetail}
-          />
-        <AuthorizeRoute 
-          exact 
-          path={`${path}/create`} 
-          component={CreateBusiness} 
         />
         <AuthorizeRoute
-            exact
-            path={`${path}/edit-properties/:id`}
-            component={EditBusinessProperties}
-          />
+          exact
+          path={`${path}/create`}
+          component={CreateBusiness}
+        />
+        <AuthorizeRoute
+          exact
+          path={`${path}/edit-properties/:id`}
+          component={EditBusinessProperties}
+        />
       </Switch>
     </React.Fragment>
   );

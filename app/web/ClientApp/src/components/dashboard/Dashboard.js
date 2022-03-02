@@ -1,6 +1,6 @@
 import React from "react";
 import { useDashboard } from "../../api-hooks/dataSummaryApi";
-import { useItems } from "../../api-hooks/recommendableItemsApi";
+import { usePromotions } from "../../api-hooks/promotionsApi";
 import { Title, Spinner } from "../molecules";
 
 import { NoteBox } from "../molecules/NoteBox";
@@ -10,7 +10,7 @@ import { RecentActivity } from "./RecentActivity";
 
 export const Dashboard = () => {
   const dashboard = useDashboard({ scope: null }); // choose null, kind, or type
-  const items = useItems();
+  const items = usePromotions();
   return (
     <React.Fragment>
       <Title>Dashboard</Title>

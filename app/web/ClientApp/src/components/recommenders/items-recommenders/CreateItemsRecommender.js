@@ -1,11 +1,11 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { useAccessToken } from "../../../api-hooks/token";
-import { createItemsRecommenderAsync } from "../../../api/itemsRecommendersApi";
+import { createPromotionsRecommenderAsync } from "../../../api/promotionsRecommendersApi";
 import {
-  useGlobalStartingItem,
-  useItems,
-} from "../../../api-hooks/recommendableItemsApi";
+  useGlobalStartingPromotion,
+  usePromotions,
+} from "../../../api-hooks/promotionsApi";
 import {
   useGlobalStartingMetric,
   useMetrics,
@@ -38,12 +38,12 @@ export const CreateRecommender = () => {
   const token = useAccessToken();
   const history = useHistory();
   const [error, setError] = React.useState();
-  const items = useItems();
+  const items = usePromotions();
   const itemsOptions = items.items
     ? items.items.map((p) => ({ label: p.name, value: `${p.id}` }))
     : [];
 
-  const startingItem = useGlobalStartingItem();
+  const startingItem = useGlobalStartingPromotion();
 
   const metrics = useMetrics();
   const metricsOptions = metrics.items
@@ -58,7 +58,7 @@ export const CreateRecommender = () => {
     commonId: "",
     name: "",
     itemIds: null,
-    baselineItemId: "",
+    baselinePromotionId: "",
     numberOfItemsToRecommend: null,
     useAutoAi: true,
     targetMetricId: "",
@@ -68,7 +68,7 @@ export const CreateRecommender = () => {
     if (startingItem.commonId) {
       setRecommender({
         ...recommender,
-        baselineItemId: `${startingItem.id}`,
+        baselinePromotionId: `${startingItem.id}`,
       });
     }
   }, [startingItem]);
@@ -86,7 +86,7 @@ export const CreateRecommender = () => {
 
   const handleCreate = () => {
     setLoading(true);
-    createItemsRecommenderAsync({
+    createPromotionsRecommenderAsync({
       token,
       payload: recommender,
       useInternalId: true,
@@ -181,7 +181,7 @@ export const CreateRecommender = () => {
             onChange={(so) => {
               setRecommender({
                 ...recommender,
-                baselineItemId: so.value,
+                baselinePromotionId: so.value,
               });
             }}
             options={itemsOptions}

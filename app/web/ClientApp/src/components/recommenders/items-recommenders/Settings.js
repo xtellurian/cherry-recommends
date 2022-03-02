@@ -1,15 +1,15 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useItems } from "../../../api-hooks/recommendableItemsApi";
+import { usePromotions } from "../../../api-hooks/promotionsApi";
 import {
-  useItemsRecommender,
-  useBaselineItem,
-} from "../../../api-hooks/itemsRecommendersApi";
+  usePromotionsRecommender,
+  useBaselinePromotion,
+} from "../../../api-hooks/promotionsRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import {
   setSettingsAsync,
-  setBaselineItemAsync,
-} from "../../../api/itemsRecommendersApi";
+  setBaselinePromotionAsync,
+} from "../../../api/promotionsRecommendersApi";
 import { Selector } from "../../molecules/selectors/Select";
 import { SettingsUtil } from "../utils/settingsUtil";
 import { ErrorCard, Spinner } from "../../molecules";
@@ -21,11 +21,11 @@ export const Settings = () => {
   const { id } = useParams();
   const [error, setError] = React.useState();
   const [saving, setSaving] = React.useState(false);
-  const recommender = useItemsRecommender({
+  const recommender = usePromotionsRecommender({
     id,
   });
   const token = useAccessToken();
-  const items = useItems();
+  const items = usePromotions();
   const itemOptions = items.items
     ? items.items.map((p) => ({ label: p.name, value: p.commonId }))
     : [];
@@ -37,7 +37,7 @@ export const Settings = () => {
   };
 
   const [updatedBaselineItem, setUpdatedBaselineItem] = React.useState({});
-  const baselineItem = useBaselineItem({
+  const baselineItem = useBaselinePromotion({
     id,
     trigger: updatedBaselineItem,
   });
@@ -54,7 +54,7 @@ export const Settings = () => {
   };
 
   const handleSetBaselineItem = (itemId) => {
-    setBaselineItemAsync({ token, id, itemId })
+    setBaselinePromotionAsync({ token, id, promotionId: itemId })
       .then(setUpdatedBaselineItem)
       .catch(handleUpdateError);
   };

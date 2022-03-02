@@ -2,9 +2,9 @@ import React from "react";
 import { CodeView } from "../../molecules/CodeView";
 
 const jsIntegrate = ({ id }) => `
-import { itemsRecommenders } from "cherry.ai";
+import { promotionsRecommenders } from "cherry.ai";
 
-itemsRecommenders.invokeItemsRecommenderAsync({
+promotionsRecommenders.invokePromotionsRecommenderAsync({
     token: "Your JSON Web Token / access token",
     id: ${id}, // the id of this recommender
     input: {
@@ -17,7 +17,7 @@ itemsRecommenders.invokeItemsRecommenderAsync({
 
 const restIntegrate = ({ id, basePath }) => `
 # location
-POST ${basePath}/api/Recommenders/ItemsRecommenders/${id}/Invoke
+POST ${basePath}/api/Recommenders/PromotionsRecommenders/${id}/Invoke
 
 # headers
 Content-Type: 'application/json'

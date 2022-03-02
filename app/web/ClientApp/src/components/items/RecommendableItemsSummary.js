@@ -1,12 +1,12 @@
 import React from "react";
-import { useItems } from "../../api-hooks/recommendableItemsApi";
+import { usePromotions } from "../../api-hooks/promotionsApi";
 import { Title, EmptyList, Spinner, ErrorCard, Paginator } from "../molecules";
 import { CreateButtonClassic } from "../molecules/CreateButton";
 
 import { ItemRow } from "./ItemRow";
 
 export const RecommendableItemsSummary = () => {
-  const items = useItems();
+  const items = usePromotions();
   return (
     <React.Fragment>
       <CreateButtonClassic className="float-right" to="/promotions/create">

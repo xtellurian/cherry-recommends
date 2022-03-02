@@ -1,10 +1,7 @@
 import React from "react";
 import { usePagination } from "../utility/utility";
 import { useAccessToken } from "./token";
-import {
-  fetchBusinessesAsync,
-  fetchBusinessAsync,
-} from "../api/businessesApi";
+import { fetchBusinessesAsync, fetchBusinessAsync } from "../api/businessesApi";
 import { useEnvironmentReducer } from "./environmentsApi";
 
 export const useBusinesses = ({ searchTerm }) => {
@@ -42,6 +39,6 @@ export const useBusiness = ({ id }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id]);
-  
+
   return result;
 };

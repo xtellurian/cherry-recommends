@@ -2,14 +2,14 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Spinner, ErrorCard } from "../../molecules";
 import {
-  useItemsRecommender,
+  usePromotionsRecommender,
   useTargetVariables,
-} from "../../../api-hooks/itemsRecommendersApi";
+} from "../../../api-hooks/promotionsRecommendersApi";
 
 import { TargetVariableValuesUtility } from "../utils/TargetVariableValues";
 export const TargetVariableValues = () => {
   const { id } = useParams();
-  const recommender = useItemsRecommender({ id });
+  const recommender = usePromotionsRecommender({ id });
   const targetVariableValues = useTargetVariables({ id });
   if (targetVariableValues.loading) {
     return <Spinner>Loading Data</Spinner>;

@@ -1,7 +1,7 @@
 import React from "react";
 import { ConfirmationPopup } from "../../molecules/popups/ConfirmationPopup";
 import { ErrorCard } from "../../molecules/ErrorCard";
-import { removeItemAsync } from "../../../api/itemsRecommendersApi";
+import { removePromotionAsync } from "../../../api/promotionsRecommendersApi";
 import { AsyncButton } from "../../molecules";
 import { useAccessToken } from "../../../api-hooks/token";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
@@ -18,7 +18,7 @@ export const RemoveItemPopup = ({
   const token = useAccessToken();
   const { analytics } = useAnalytics();
   const handleRemove = () => {
-    removeItemAsync({ token, id: recommender.id, itemId: item.id })
+    removePromotionAsync({ token, id: recommender.id, promotionId: item.id })
       .then((r) => {
         analytics.track("site:itemsRecommender_removeItem_success");
         onRemoved(r);

@@ -2,12 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {
   useDestinations,
-  useItemsRecommendations,
-} from "../../../api-hooks/itemsRecommendersApi";
+  usePromotionsRecommendations,
+} from "../../../api-hooks/promotionsRecommendersApi";
 import { NoteBox } from "../../molecules/NoteBox";
 
 export const GettingStartedSection = ({ recommender }) => {
-  const recommendations = useItemsRecommendations({ id: recommender.id });
+  const recommendations = usePromotionsRecommendations({ id: recommender.id });
   const destinations = useDestinations({ id: recommender.id });
 
   const noRecommendations =

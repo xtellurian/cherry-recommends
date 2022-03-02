@@ -8,7 +8,7 @@ import {
   EmptyList,
 } from "../../molecules";
 import { CreateButtonClassic } from "../../molecules/CreateButton";
-import { useItemsRecommenders } from "../../../api-hooks/itemsRecommendersApi";
+import { usePromotionsRecommenders } from "../../../api-hooks/promotionsRecommendersApi";
 import { ButtonGroup } from "../../molecules/buttons/ButtonGroup";
 import { RecommenderRow } from "../RecommenderRow";
 
@@ -53,7 +53,7 @@ const ItemsRecommenderRow = ({ recommender }) => {
   );
 };
 export const ItemsRecommendersSummary = () => {
-  const itemsRecommenders = useItemsRecommenders();
+  const itemsRecommenders = usePromotionsRecommenders();
   return (
     <React.Fragment>
       <CreateButtonClassic

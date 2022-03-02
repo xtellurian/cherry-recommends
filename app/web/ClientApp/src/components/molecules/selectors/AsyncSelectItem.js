@@ -1,8 +1,8 @@
 import React from "react";
 import { AsyncSelector } from "./AsyncSelect";
 import { Spinner } from "../Spinner";
-import { useItems } from "../../../api-hooks/recommendableItemsApi";
-import { fetchItemsAsync } from "../../../api/recommendableItemsApi";
+import { usePromotions } from "../../../api-hooks/promotionsApi";
+import { fetchPromotionsAsync } from "../../../api/promotionsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 
 export const AsyncSelectItem = ({
@@ -13,7 +13,7 @@ export const AsyncSelectItem = ({
   isMulti,
 }) => {
   const token = useAccessToken();
-  const items = useItems();
+  const items = usePromotions();
   const itemsSelectable = items.items
     ? items.items.map((u) => ({
         label: u.name || u.commonId,
@@ -39,7 +39,7 @@ export const AsyncSelectItem = ({
 
   const loadSelectable = (inputValue, callback) => {
     console.log(inputValue);
-    fetchItemsAsync({
+    fetchPromotionsAsync({
       token,
       searchTerm: inputValue,
     })

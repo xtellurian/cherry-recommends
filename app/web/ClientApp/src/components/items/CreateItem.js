@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
-import { createItemAsync } from "../../api/recommendableItemsApi";
+import { createPromotionAsync } from "../../api/promotionsApi";
 import { ErrorCard, Title, BackButton } from "../molecules";
 import {
   InputGroup,
@@ -47,9 +47,9 @@ export const CreateItem = () => {
   });
 
   const handleCreate = () => {
-    createItemAsync({
+    createPromotionAsync({
       token,
-      item,
+      promotion: item,
     })
       .then((p) => {
         analytics.track("site:item_create_success");

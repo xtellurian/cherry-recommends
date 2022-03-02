@@ -6,7 +6,7 @@ import { useMetadata } from "../../api-hooks/profileApi";
 import { setMetadataAsync } from "../../api/profileApi";
 import { Link } from "react-router-dom";
 import { useAccessToken } from "../../api-hooks/token";
-import { useItemsRecommenders } from "../../api-hooks/itemsRecommendersApi";
+import { usePromotionsRecommenders } from "../../api-hooks/promotionsRecommendersApi";
 
 import "./getting-started.css";
 
@@ -92,7 +92,7 @@ const GettingStartedChecklistPopup = ({ requestClose }) => {
   const steps = gettingStartedChecklist?.steps;
   const stepIndex = Object.keys(gettingStartedChecklist?.steps || {});
 
-  const recommenders = useItemsRecommenders();
+  const recommenders = usePromotionsRecommenders();
   let defaultRecommenderId = 1;
   if (!recommenders.loading && recommenders.items) {
     defaultRecommenderId = recommenders.items.find((_) => _.id)?.id;

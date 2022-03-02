@@ -1,19 +1,19 @@
 import React from "react";
 import { useParams } from "react-router";
 import {
-  useItemsRecommender,
+  usePromotionsRecommender,
   useLearningMetrics,
-} from "../../../api-hooks/itemsRecommendersApi";
+} from "../../../api-hooks/promotionsRecommendersApi";
 
 import { LearningMetricsUtil } from "../utils/learningMetricsUtil";
 import { Spinner } from "../../molecules";
-import { setLearningMetricsAsync } from "../../../api/itemsRecommendersApi";
+import { setLearningMetricsAsync } from "../../../api/promotionsRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 
 export const LearningMetrics = () => {
   const { id } = useParams();
-  const recommender = useItemsRecommender({ id });
+  const recommender = usePromotionsRecommender({ id });
   const token = useAccessToken();
 
   const [error, setError] = React.useState();
