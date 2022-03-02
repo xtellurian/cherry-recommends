@@ -17,6 +17,7 @@ namespace SignalBox.Core.Workflows
         private readonly ICustomerStore customerStore;
         private readonly IHistoricCustomerMetricStore historicCustomerMetricStore;
         private readonly IItemsRecommenderPerformanceReportStore performanceReportStore;
+        private readonly IRecommendableItemStore recommendableItemStore;
         private readonly ILogger<ItemsRecommenderPerformanceWorkflows> logger;
 
         public ItemsRecommenderPerformanceWorkflows(
@@ -29,6 +30,7 @@ namespace SignalBox.Core.Workflows
             IIntegratedSystemStore systemStore,
             RecommenderReportImageWorkflows reportImageWorkflows,
             IItemsRecommenderPerformanceReportStore performanceReportStore,
+            IRecommendableItemStore recommendableItemStore,
             ILogger<ItemsRecommenderPerformanceWorkflows> logger) : base(store, systemStore, metricStore, reportImageWorkflows)
         {
             this.dateTimeProvider = dateTimeProvider;
@@ -36,6 +38,7 @@ namespace SignalBox.Core.Workflows
             this.customerStore = customerStore;
             this.historicCustomerMetricStore = historicCustomerMetricStore;
             this.performanceReportStore = performanceReportStore;
+            this.recommendableItemStore = recommendableItemStore;
             this.logger = logger;
         }
 
@@ -56,8 +59,9 @@ namespace SignalBox.Core.Workflows
             {
                 var latestReport = await performanceReportStore.ReadLatestForRecommender(recommender);
 
-                if (latestReport.Created.AddDays(7) > dateTimeProvider.Now)
+                if (latestReport.Created.AddHours(6) > dateTimeProvider.Now)
                 {
+                    await FixRecommmendersWithNullOrEmptyItems(recommender); // temp bug fix
                     return latestReport;
                 }
             }
@@ -109,9 +113,9 @@ namespace SignalBox.Core.Workflows
                 itemPerformances.Add(new PerformanceByItem
                 {
                     ItemId = itemId,
-                    RecommendationCount = itemRecommendationCounts[itemId],
-                    CustomerCount = itemCustomerCounts[itemId],
-                    TargetMetricSum = itemMetricSumValues[itemId],
+                    RecommendationCount = itemRecommendationCounts.GetValueOrDefault(itemId),
+                    CustomerCount = itemCustomerCounts.GetValueOrDefault(itemId),
+                    TargetMetricSum = itemMetricSumValues.GetValueOrDefault(itemId),
                 });
             }
 
@@ -119,7 +123,27 @@ namespace SignalBox.Core.Workflows
             logger.LogInformation("Generated new report. Saving results.");
             await performanceReportStore.Create(result);
             await performanceReportStore.Context.SaveChanges();
+
+            await FixRecommmendersWithNullOrEmptyItems(recommender); // temporary bug fix
             return result;
+        }
+
+        /// <summary>
+        /// Adds all items to a recommender with null items.
+        /// This should be called right before returning to the caller.
+        /// </summary>
+        /// <param name="recommender"></param>
+        private async Task FixRecommmendersWithNullOrEmptyItems(ItemsRecommender recommender)
+        {
+            if (recommender.Items == null || recommender.Items.Count == 0)
+            {
+                recommender.Items = new List<RecommendableItem>();
+                // then load all the items into here
+                await foreach (var item in recommendableItemStore.Iterate())
+                {
+                    recommender.Items.Add(item);
+                }
+            }
         }
     }
 }

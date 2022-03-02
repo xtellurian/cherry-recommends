@@ -15,6 +15,10 @@ import { Link } from "react-router-dom";
 
 const PerformanceTableRow = ({ data, itemsById }) => {
   const item = itemsById[data.itemId];
+  if (!item) {
+    console.warn("ItemID not found in itemsById");
+    return null;
+  }
 
   return (
     <TableRow>
@@ -34,6 +38,8 @@ const PerformanceTableRow = ({ data, itemsById }) => {
 
 const PerformanceTable = ({ reports, itemsById, targetMetric }) => {
   const targetMetricName = targetMetric.name;
+  console.log(reports);
+  console.log(itemsById);
   return (
     <Table>
       <TableHead
