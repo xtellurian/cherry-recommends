@@ -1,43 +1,41 @@
 import { components } from "../../model/api";
-import { PaginatedRequest, EntityRequest, DeleteRequest, AuthenticatedRequest, ModelInput, ItemsRecommendation, PaginatedEntityRequest } from "../../interfaces";
-export declare const fetchItemsRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
-export declare const fetchItemsRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-interface ItemsRecommendationsRequest extends PaginatedEntityRequest {
+import { PaginatedRequest, EntityRequest, DeleteRequest, AuthenticatedRequest, ModelInput, PaginatedEntityRequest, PromotionsRecommendation } from "../../interfaces";
+export declare const fetchPromotionsRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
+export declare const fetchPromotionsRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+interface PromotionsRecommendationsRequest extends PaginatedEntityRequest {
     page: number;
 }
-export declare const fetchItemsRecommendationsAsync: ({ token, page, pageSize, id, }: ItemsRecommendationsRequest) => Promise<any>;
-export declare const deleteItemsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
-interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
+export declare const fetchPromotionsRecommendationsAsync: ({ token, page, pageSize, id, }: PromotionsRecommendationsRequest) => Promise<any>;
+export declare const deletePromotionsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
+interface CreatePromotionsRecommenderRequest extends AuthenticatedRequest {
     payload: components["schemas"]["CreatePromotionsRecommender"];
 }
-export declare const createItemsRecommenderAsync: ({ token, payload, useInternalId, }: CreateItemsRecommenderRequest) => Promise<any>;
-export declare const fetchItemsAsync: ({ token, id }: EntityRequest) => Promise<any>;
-interface AddItemPayload {
+export declare const createPromotionsRecommenderAsync: ({ token, payload, useInternalId, }: CreatePromotionsRecommenderRequest) => Promise<any>;
+export declare const fetchPromotionsAsync: ({ token, id }: EntityRequest) => Promise<any>;
+interface AddPromotionPayload {
     id: number | undefined;
     commonId: string | undefined;
 }
-interface AddItemRequest extends EntityRequest {
-    item: AddItemPayload;
+interface AddPromotionRequest extends EntityRequest {
+    promotion: AddPromotionPayload;
 }
-export declare const addItemAsync: ({ token, id, item }: AddItemRequest) => Promise<any>;
-interface RemoveItemRequest extends EntityRequest {
-    itemId: string | number;
+export declare const addPromotionAsync: ({ token, id, promotion, }: AddPromotionRequest) => Promise<any>;
+interface RemovePromotionRequest extends EntityRequest {
+    promotionId: string | number;
 }
-export declare const removeItemAsync: ({ token, id, itemId, }: RemoveItemRequest) => Promise<any>;
-interface SetBaselineItemRequest extends EntityRequest {
-    itemId: string | number;
+export declare const removePromotionAsync: ({ token, id, promotionId, }: RemovePromotionRequest) => Promise<any>;
+interface SetBaselinePromotionRequest extends EntityRequest {
+    promotionId: string | number;
 }
-export declare const setBaselineItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
-export declare const setDefaultItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
-export declare const getBaselineItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
-export declare const getDefaultItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
+export declare const setBaselinePromotionAsync: ({ token, id, promotionId, }: SetBaselinePromotionRequest) => Promise<any>;
+export declare const getBaselinePromotionAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 declare type LinkRegisteredModelRequest = EntityRequest & components["schemas"]["LinkModel"];
 export declare const createLinkRegisteredModelAsync: ({ token, id, modelId, }: LinkRegisteredModelRequest) => Promise<any>;
 export declare const fetchLinkedRegisteredModelAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-interface InvokeItemRecommenderRequest extends EntityRequest {
+interface InvokePromotionRecommenderRequest extends EntityRequest {
     input: ModelInput;
 }
-export declare const invokeItemsRecommenderAsync: ({ token, id, input, }: InvokeItemRecommenderRequest) => Promise<ItemsRecommendation>;
+export declare const invokePromotionsRecommenderAsync: ({ token, id, input, }: InvokePromotionRecommenderRequest) => Promise<PromotionsRecommendation>;
 interface FetchInvokationLogsRequest extends EntityRequest {
     page: number;
 }

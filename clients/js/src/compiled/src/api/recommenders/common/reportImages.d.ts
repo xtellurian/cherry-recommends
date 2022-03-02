@@ -3,4 +3,4 @@ export function fetchReportImageBlobUrlAsync({ recommenderApiName, token, id, us
     token: any;
     id: any;
     useInternalId: any;
-}): Promise<any>;
+}): Promise<string | void>;

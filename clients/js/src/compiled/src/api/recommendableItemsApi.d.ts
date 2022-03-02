@@ -3,7 +3,7 @@ import { components } from "../model/api";
 export declare const fetchItemsAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<RecommendableItem>>;
 export declare const fetchItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
 interface CreateItemRequest extends AuthenticatedRequest {
-    item: components["schemas"]["CreateRecommendableItemDto"];
+    item: components["schemas"]["CreatePromotionDto"];
 }
 export declare const createItemAsync: ({ token, item, }: CreateItemRequest) => Promise<RecommendableItem>;
 interface UpdateItemRequest extends EntityRequest {

@@ -5,20 +5,21 @@ using SignalBox.Core;
 namespace SignalBox.Web.Dto
 {
 #nullable enable
-    public class CreateItemsRecommender : CreateRecommenderDtoBase
+    public class CreatePromotionsRecommender : CreateRecommenderDtoBase
     {
-        public string GetBaselineItemId()
+        public string GetBaselinePromotionId()
         {
-            var id = BaselineItemId ?? DefaultItemId;
+            var id = BaselinePromotionId ?? BaselineItemId ?? DefaultItemId;
             if (string.IsNullOrEmpty(id))
             {
-                throw new BadRequestException("BaselineItemId is required");
+                throw new BadRequestException("BaselinePromotionId is required");
             }
             return id;
         }
         public IEnumerable<string>? ItemIds { get; set; }
         public string? DefaultItemId { get; set; } // backwards compat only
-        public string? BaselineItemId { get; set; }
+        public string? BaselineItemId { get; set; } // backwards compat only
+        public string? BaselinePromotionId { get; set; }
         public int? NumberOfItemsToRecommend { get; set; }
         public bool? UseAutoAi { get; set; }
     }

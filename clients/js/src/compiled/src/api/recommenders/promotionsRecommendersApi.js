@@ -9,82 +9,79 @@ import * as trig from "./common/trigger";
 import * as lf from "./common/learningFeatures";
 import * as lm from "./common/learningMetrics";
 import * as ri from "./common/reportImages";
-const recommenderApiName = "ItemsRecommenders";
-console.warn("Deprecation Notice: Items Recommenders are replaced by Promotions Recommenders.");
-export const fetchItemsRecommendersAsync = async ({ token, page, }) => {
+const recommenderApiName = "PromotionsRecommenders";
+export const fetchPromotionsRecommendersAsync = async ({ token, page, }) => {
     return await executeFetch({
         token,
-        path: "api/recommenders/ItemsRecommenders",
+        path: "api/recommenders/PromotionsRecommenders",
         page,
     });
 };
-export const fetchItemsRecommenderAsync = async ({ token, id, }) => {
+export const fetchPromotionsRecommenderAsync = async ({ token, id, }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}`,
+        path: `api/recommenders/PromotionsRecommenders/${id}`,
         token,
     });
 };
-export const fetchItemsRecommendationsAsync = async ({ token, page, pageSize, id, }) => {
+export const fetchPromotionsRecommendationsAsync = async ({ token, page, pageSize, id, }) => {
     return await executeFetch({
         token,
-        path: `api/recommenders/ItemsRecommenders/${id}/Recommendations`,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Recommendations`,
         page,
         pageSize,
     });
 };
-export const deleteItemsRecommenderAsync = async ({ token, id, }) => {
+export const deletePromotionsRecommenderAsync = async ({ token, id, }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}`,
+        path: `api/recommenders/PromotionsRecommenders/${id}`,
         token,
         method: "delete",
     });
 };
-export const createItemsRecommenderAsync = async ({ token, payload, useInternalId, }) => {
+export const createPromotionsRecommenderAsync = async ({ token, payload, useInternalId, }) => {
     return await executeFetch({
-        path: "api/recommenders/ItemsRecommenders",
+        path: "api/recommenders/PromotionsRecommenders",
         token,
         method: "post",
         body: payload,
         query: { useInternalId },
     });
 };
-export const fetchItemsAsync = async ({ token, id }) => {
+export const fetchPromotionsAsync = async ({ token, id }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}/Items`,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Promotions`,
         token,
     });
 };
-export const addItemAsync = async ({ token, id, item }) => {
+export const addPromotionAsync = async ({ token, id, promotion, }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}/Items`,
-        token,
-        method: "post",
-        body: item,
-    });
-};
-export const removeItemAsync = async ({ token, id, itemId, }) => {
-    return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}/Items/${itemId}`,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Promotions`,
         token,
         method: "post",
+        body: promotion,
     });
 };
-export const setBaselineItemAsync = async ({ token, id, itemId, }) => {
+export const removePromotionAsync = async ({ token, id, promotionId, }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}/BaselineItem`,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Promotions/${promotionId}`,
         token,
         method: "post",
-        body: { itemId },
     });
 };
-export const setDefaultItemAsync = setBaselineItemAsync; // backwards compat
-export const getBaselineItemAsync = async ({ token, id }) => {
+export const setBaselinePromotionAsync = async ({ token, id, promotionId, }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}/BaselineItem`,
+        path: `api/recommenders/PromotionsRecommenders/${id}/BaselinePromotion`,
+        token,
+        method: "post",
+        body: { promotionId },
+    });
+};
+export const getBaselinePromotionAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        path: `api/recommenders/PromotionsRecommenders/${id}/BaselinePromotion`,
         token,
     });
 };
-export const getDefaultItemAsync = getBaselineItemAsync; // backwards compat
 export const createLinkRegisteredModelAsync = async ({ token, id, modelId, }) => {
     return await link.createLinkedRegisteredModelAsync({
         recommenderApiName,
@@ -100,9 +97,9 @@ export const fetchLinkedRegisteredModelAsync = async ({ token, id, }) => {
         token,
     });
 };
-export const invokeItemsRecommenderAsync = async ({ token, id, input, }) => {
+export const invokePromotionsRecommenderAsync = async ({ token, id, input, }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}/Invoke`,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Invoke`,
         token,
         method: "post",
         body: input,
@@ -222,7 +219,7 @@ export const setLearningMetricsAsync = async ({ id, token, metricIds, useInterna
 };
 export const fetchStatisticsAsync = async ({ id, token, }) => {
     return await executeFetch({
-        path: `api/recommenders/ItemsRecommenders/${id}/Statistics`,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Statistics`,
         token,
     });
 };
@@ -237,6 +234,6 @@ export const fetchReportImageBlobUrlAsync = async ({ id, token, useInternalId, }
 export const fetchPerformanceAsync = async ({ token, id, reportId, }) => {
     return await executeFetch({
         token,
-        path: `api/recommenders/ItemsRecommenders/${id}/Performance/${reportId !== null && reportId !== void 0 ? reportId : "latest"}`,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Performance/${reportId !== null && reportId !== void 0 ? reportId : "latest"}`,
     });
 };

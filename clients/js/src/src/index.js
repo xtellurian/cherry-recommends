@@ -29,8 +29,10 @@ import * as parameters from "./api/parametersApi";
 import * as parameterSetRecommenders from "./api/recommenders/parameterSetRecommendersApi";
 import * as profile from "./api/profileApi";
 import * as itemsRecommenders from "./api/recommenders/itemsRecommendersApi";
+import * as promotionsRecommenders from "./api/recommenders/promotionsRecommendersApi";
 import * as reactConfig from "./api/reactConfigApi";
 import * as recommendableItems from "./api/recommendableItemsApi";
+import * as promotions from "./api/promotionsApi";
 import * as reports from "./api/reportsApi";
 import * as segments from "./api/segmentsApi";
 import * as touchpoints from "./api/touchpointsApi";
@@ -59,6 +61,7 @@ export {
   features,
   integratedSystems,
   itemsRecommenders,
+  promotionsRecommenders,
   metrics,
   metricGenerators,
   modelRegistrations,
@@ -68,6 +71,7 @@ export {
   profile,
   reactConfig,
   recommendableItems,
+  promotions,
   reports,
   rewardSelectors,
   segments,

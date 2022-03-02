@@ -51,7 +51,7 @@ const StepRow = ({ step }) => {
         </div>
       )}
       {step.aggregate && (
-        <div className="col">Aggreate by {step.aggregate.aggregationType}</div>
+        <div className="col">Aggregate by {step.aggregate.aggregationType}</div>
       )}
     </EntityRow>
   );

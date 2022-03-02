@@ -29,11 +29,11 @@ namespace SignalBox.Core.Recommenders
 
             if (numberOfItemsToRecommend > 9)
             {
-                throw new BadRequestException("Maximum number of items to recommend cannot be greater than 9");
+                throw new BadRequestException("Maximum number of promotions to recommend cannot be greater than 9");
             }
             if (Items.Any() && numberOfItemsToRecommend > Items.Count)
             {
-                throw new BadRequestException($"Maximum number of items cannot be greater than the number of items provided ({Items.Count})");
+                throw new BadRequestException($"Maximum number of promotions cannot be greater than the number of promotions provided ({Items.Count})");
             }
         }
 

@@ -6,9 +6,9 @@ using SignalBox.Core.Recommendations;
 namespace SignalBox.Infrastructure.Dto
 {
     // This is a public API in the webhook destination
-    public class ItemsRecommendationDto : IRecommendationDto
+    public class PromotionsRecommendationDto : IRecommendationDto
     {
-        public ItemsRecommendationDto(ItemsRecommendation recommendation)
+        public PromotionsRecommendationDto(ItemsRecommendation recommendation)
         {
             this.Created = recommendation.Created;
             this.ScoredItems = recommendation.ScoredItems;

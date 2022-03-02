@@ -1,9 +1,11 @@
 import { executeFetch } from "../client/apiClientTs";
-import { components } from "../../model/api";
 import * as link from "./common/linkRegisteredModels";
+
+import { components } from "../../model/api";
+
+import * as ar from "./common/args";
 import * as tv from "./common/targetvariables";
 import * as il from "./common/invokationLogs";
-import * as ar from "./common/args";
 import * as st from "./common/settings";
 import * as ds from "./common/destinations";
 import * as trig from "./common/trigger";
@@ -12,84 +14,150 @@ import * as lm from "./common/learningMetrics";
 import * as ri from "./common/reportImages";
 
 import {
-  AuthenticatedRequest,
-  EntityRequest,
-  EntitySearchRequest,
-  PaginatedEntityRequest,
   PaginatedRequest,
+  EntityRequest,
+  DeleteRequest,
+  AuthenticatedRequest,
+  ModelInput,
+  PaginatedEntityRequest,
+  PromotionsRecommendation,
 } from "../../interfaces";
 
-const recommenderApiName = "ParameterSetRecommenders";
+const recommenderApiName = "PromotionsRecommenders";
 
-export const fetchParameterSetRecommendersAsync = async ({
+export const fetchPromotionsRecommendersAsync = async ({
   token,
   page,
 }: PaginatedRequest) => {
   return await executeFetch({
-    path: "api/recommenders/ParameterSetRecommenders",
     token,
+    path: "api/recommenders/PromotionsRecommenders",
     page,
   });
 };
 
-export const fetchParameterSetRecommenderAsync = async ({
-  token,
-  id,
-  searchTerm,
-}: EntitySearchRequest) => {
-  return await executeFetch({
-    path: `api/recommenders/ParameterSetRecommenders/${id}`,
-    token,
-    query: {
-      "q.term": searchTerm,
-    },
-  });
-};
-
-interface CreateParameterSetRecommenderRequest extends AuthenticatedRequest {
-  payload: {
-    name: string;
-    commonId: string;
-    settings: components["schemas"]["RecommenderSettingsDto"];
-    parameters: string[];
-    bounds: components["schemas"]["ParameterBounds"][];
-    arguments: components["schemas"]["CreateOrUpdateRecommenderArgument"][];
-  };
-}
-export const createParameterSetRecommenderAsync = async ({
-  token,
-  payload,
-}: CreateParameterSetRecommenderRequest) => {
-  return await executeFetch({
-    path: "api/recommenders/ParameterSetRecommenders",
-    token,
-    method: "post",
-    body: payload,
-  });
-};
-
-export const deleteParameterSetRecommenderAsync = async ({
+export const fetchPromotionsRecommenderAsync = async ({
   token,
   id,
 }: EntityRequest) => {
   return await executeFetch({
-    path: `api/recommenders/ParameterSetRecommenders/${id}`,
+    path: `api/recommenders/PromotionsRecommenders/${id}`,
+    token,
+  });
+};
+
+interface PromotionsRecommendationsRequest extends PaginatedEntityRequest {
+  page: number;
+}
+
+export const fetchPromotionsRecommendationsAsync = async ({
+  token,
+  page,
+  pageSize,
+  id,
+}: PromotionsRecommendationsRequest) => {
+  return await executeFetch({
+    token,
+    path: `api/recommenders/PromotionsRecommenders/${id}/Recommendations`,
+    page,
+    pageSize,
+  });
+};
+
+export const deletePromotionsRecommenderAsync = async ({
+  token,
+  id,
+}: DeleteRequest) => {
+  return await executeFetch({
+    path: `api/recommenders/PromotionsRecommenders/${id}`,
     token,
     method: "delete",
   });
 };
 
-export const fetchParameterSetRecommendationsAsync = async ({
+interface CreatePromotionsRecommenderRequest extends AuthenticatedRequest {
+  payload: components["schemas"]["CreatePromotionsRecommender"];
+}
+export const createPromotionsRecommenderAsync = async ({
   token,
-  page,
-  pageSize,
-  id,
-}: PaginatedEntityRequest) => {
+  payload,
+  useInternalId,
+}: CreatePromotionsRecommenderRequest) => {
   return await executeFetch({
-    path: `api/recommenders/ParameterSetRecommenders/${id}/recommendations`,
+    path: "api/recommenders/PromotionsRecommenders",
     token,
-    page,
-    pageSize,
+    method: "post",
+    body: payload,
+    query: { useInternalId },
+  });
+};
+
+export const fetchPromotionsAsync = async ({ token, id }: EntityRequest) => {
+  return await executeFetch({
+    path: `api/recommenders/PromotionsRecommenders/${id}/Promotions`,
+    token,
+  });
+};
+
+interface AddPromotionPayload {
+  id: number | undefined;
+  commonId: string | undefined;
+}
+
+interface AddPromotionRequest extends EntityRequest {
+  promotion: AddPromotionPayload;
+}
+export const addPromotionAsync = async ({
+  token,
+  id,
+  promotion,
+}: AddPromotionRequest) => {
+  return await executeFetch({
+    path: `api/recommenders/PromotionsRecommenders/${id}/Promotions`,
+    token,
+    method: "post",
+    body: promotion,
+  });
+};
+
+interface RemovePromotionRequest extends EntityRequest {
+  promotionId: string | number;
+}
+export const removePromotionAsync = async ({
+  token,
+  id,
+  promotionId,
+}: RemovePromotionRequest) => {
+  return await executeFetch({
+    path: `api/recommenders/PromotionsRecommenders/${id}/Promotions/${promotionId}`,
+    token,
+    method: "post",
+  });
+};
+
+interface SetBaselinePromotionRequest extends EntityRequest {
+  promotionId: string | number;
+}
+export const setBaselinePromotionAsync = async ({
+  token,
+  id,
+  promotionId,
+}: SetBaselinePromotionRequest) => {
+  return await executeFetch({
+    path: `api/recommenders/PromotionsRecommenders/${id}/BaselinePromotion`,
+    token,
+    method: "post",
+    body: { promotionId },
+  });
+};
+
+export const getBaselinePromotionAsync = async ({
+  token,
+  id,
+}: EntityRequest) => {
+  return await executeFetch({
+    path: `api/recommenders/PromotionsRecommenders/${id}/BaselinePromotion`,
+    token,
   });
 };
 
@@ -119,27 +187,30 @@ export const fetchLinkedRegisteredModelAsync = async ({
   });
 };
 
-interface InvokeParameterSetRecommenderRequest extends EntityRequest {
-  input: components["schemas"]["ModelInputDto"];
+interface InvokePromotionRecommenderRequest extends EntityRequest {
+  input: ModelInput;
 }
-export const invokeParameterSetRecommenderAsync = async ({
+export const invokePromotionsRecommenderAsync = async ({
   token,
   id,
   input,
-}: InvokeParameterSetRecommenderRequest) => {
+}: InvokePromotionRecommenderRequest): Promise<PromotionsRecommendation> => {
   return await executeFetch({
-    path: `api/recommenders/ParameterSetRecommenders/${id}/invoke`,
+    path: `api/recommenders/PromotionsRecommenders/${id}/Invoke`,
     token,
     method: "post",
     body: input,
   });
 };
 
+interface FetchInvokationLogsRequest extends EntityRequest {
+  page: number;
+}
 export const fetchInvokationLogsAsync = async ({
   id,
   token,
   page,
-}: PaginatedEntityRequest) => {
+}: FetchInvokationLogsRequest) => {
   return await il.fetchRecommenderInvokationLogsAsync({
     recommenderApiName,
     id,
@@ -170,8 +241,13 @@ export const createTargetVariableAsync = async ({
   });
 };
 
+interface RecommenderSettings {
+  requireConsumptionEvent: boolean;
+  throwOnBadInput: boolean;
+  recommendationCacheTime: string;
+}
 interface SetSettingsRequest extends EntityRequest {
-  settings: components["schemas"]["RecommenderSettingsDto"];
+  settings: RecommenderSettings;
 }
 export const setSettingsAsync = async ({
   id,
@@ -186,9 +262,16 @@ export const setSettingsAsync = async ({
   });
 };
 
-interface SetArgumentsRequest extends EntityRequest {
-  args: components["schemas"]["CreateOrUpdateRecommenderArgument"][];
+interface Argument {
+  commonId: string;
+  argumentType: "Numerical" | "Categorical";
+  defaultValue: string | number;
+  isRequired: boolean;
 }
+interface SetArgumentsRequest extends EntityRequest {
+  args: Argument[];
+}
+
 export const setArgumentsAsync = async ({
   id,
   token,
@@ -210,8 +293,16 @@ export const fetchDestinationsAsync = async ({ id, token }: EntityRequest) => {
   });
 };
 
+interface Destination {
+  destinationType:
+    | "Webhook"
+    | "SegmentSourceFunction"
+    | "HubspotContactProperty";
+  endpoint: string;
+  integratedSystemId: number;
+}
 interface CreateDestinationRequest extends EntityRequest {
-  destination: components["schemas"]["CreateDestinationDto"];
+  destination: Destination;
 }
 export const createDestinationAsync = async ({
   id,
@@ -227,7 +318,7 @@ export const createDestinationAsync = async ({
 };
 
 interface RemoveDestinationRequest extends EntityRequest {
-  destinationId: string | number;
+  destinationId: number;
 }
 export const removeDestinationAsync = async ({
   id,
@@ -250,8 +341,11 @@ export const fetchTriggerAsync = async ({ id, token }: EntityRequest) => {
   });
 };
 
+interface Trigger {
+  featuresChanged: any;
+}
 interface SetTriggerRequest extends EntityRequest {
-  trigger: components["schemas"]["SetTriggersDto"];
+  trigger: Trigger;
 }
 export const setTriggerAsync = async ({
   id,
@@ -280,7 +374,7 @@ export const fetchLearningFeaturesAsync = async ({
 };
 
 interface SetLearningFeaturesRequest extends EntityRequest {
-  featureIds: string[] | number[];
+  featureIds: string[];
 }
 export const setLearningFeaturesAsync = async ({
   id,
@@ -334,7 +428,7 @@ export const fetchStatisticsAsync = async ({
   token,
 }: EntityRequest): Promise<RecommenderStatistics> => {
   return await executeFetch({
-    path: `api/recommenders/ParameterSetRecommenders/${id}/Statistics`,
+    path: `api/recommenders/PromotionsRecommenders/${id}/Statistics`,
     token,
   });
 };
@@ -349,5 +443,24 @@ export const fetchReportImageBlobUrlAsync = async ({
     id,
     token,
     useInternalId,
+  });
+};
+
+type PerformanceResponse =
+  components["schemas"]["ItemsRecommenderPerformanceReport"];
+
+interface PerformanceRequest extends EntityRequest {
+  reportId?: string | number | undefined;
+}
+export const fetchPerformanceAsync = async ({
+  token,
+  id,
+  reportId,
+}: PerformanceRequest): Promise<PerformanceResponse> => {
+  return await executeFetch({
+    token,
+    path: `api/recommenders/PromotionsRecommenders/${id}/Performance/${
+      reportId ?? "latest"
+    }`,
   });
 };

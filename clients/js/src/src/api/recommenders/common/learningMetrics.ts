@@ -4,7 +4,10 @@ import { components } from "../../../model/api";
 import { EntityRequest } from "../../../interfaces";
 
 interface CommonFetchLearningMetricsRequest extends EntityRequest {
-  recommenderApiName: "ParameterSetRecommenders" | "ItemsRecommenders";
+  recommenderApiName:
+    | "ParameterSetRecommenders"
+    | "ItemsRecommenders"
+    | "PromotionsRecommenders";
 }
 export const fetchLearningMetricsAsync = async ({
   recommenderApiName,
@@ -20,7 +23,10 @@ export const fetchLearningMetricsAsync = async ({
 };
 
 interface CommonSetLearningMetricsRequest extends EntityRequest {
-  recommenderApiName: "ParameterSetRecommenders" | "ItemsRecommenders";
+  recommenderApiName:
+    | "ParameterSetRecommenders"
+    | "ItemsRecommenders"
+    | "PromotionsRecommenders";
   metricIds: string[];
 }
 

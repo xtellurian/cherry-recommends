@@ -17,15 +17,16 @@ namespace SignalBox.Web.Controllers
     [Authorize]
     [ApiController]
     [ApiVersion("0.1")]
+    [Route("api/recommenders/ItemsRecommenders")]
     [Route("api/recommenders/[controller]")]
-    public class ItemsRecommendersController : RecommenderControllerBase<ItemsRecommender>
+    public class PromotionsRecommendersController : RecommenderControllerBase<ItemsRecommender>
     {
-        private readonly ILogger<ItemsRecommendersController> logger;
+        private readonly ILogger<PromotionsRecommendersController> logger;
         private readonly ItemsRecommenderInvokationWorkflows invokationWorkflows;
         private readonly ItemsRecommenderPerformanceWorkflows performanceWorkflows;
         private readonly ItemsRecommenderWorkflows workflows;
 
-        public ItemsRecommendersController(ILogger<ItemsRecommendersController> logger,
+        public PromotionsRecommendersController(ILogger<PromotionsRecommendersController> logger,
                                                  IItemsRecommenderStore store,
                                                  ItemsRecommenderInvokationWorkflows invokationWorkflows,
                                                  ItemsRecommenderPerformanceWorkflows performanceWorkflows,                                                 ItemsRecommenderWorkflows workflows) : base(store, workflows, invokationWorkflows)
@@ -47,9 +48,9 @@ namespace SignalBox.Web.Controllers
             return recommender;
         }
 
-        /// <summary>Creates a new items recommender.</summary>
+        /// <summary>Creates a new promotions recommender.</summary>
         [HttpPost]
-        public async Task<ItemsRecommender> Create(CreateItemsRecommender dto, bool? useInternalId = null)
+        public async Task<ItemsRecommender> Create(CreatePromotionsRecommender dto, bool? useInternalId = null)
         {
             var c = new CreateCommonEntityModel(dto.CommonId, dto.Name);
             if (dto.CloneFromId.HasValue)
@@ -59,7 +60,7 @@ namespace SignalBox.Web.Controllers
                 return await workflows.CloneItemsRecommender(c, from);
             }
             return await workflows.CreateItemsRecommender(c,
-                dto.GetBaselineItemId(), dto.ItemIds, dto.NumberOfItemsToRecommend,
+                dto.GetBaselinePromotionId(), dto.ItemIds, dto.NumberOfItemsToRecommend,
                 dto.Arguments.ToCoreRepresentation(),
                 dto.Settings.ToCoreRepresentation(),
                 dto.UseAutoAi ?? false,
@@ -67,23 +68,25 @@ namespace SignalBox.Web.Controllers
                 useInternalId: useInternalId);
         }
 
-        /// <summary>Sets the baseline item for the recommender.</summary>
+        /// <summary>Sets the baseline promotion for the recommender.</summary>
         [HttpPost("{id}/DefaultItem")]
         [HttpPost("{id}/BaselineItem")]
-        public async Task<RecommendableItem> SetBaselineItem(string id, [FromBody] BaselineItemDto dto, bool? useInternalId = null)
+        [HttpPost("{id}/BaselinePromotion")]
+        public async Task<RecommendableItem> SetBaselineItem(string id, [FromBody] BaselinePromotionDto dto, bool? useInternalId = null)
         {
             var recommender = await GetEntity(id, useInternalId);
-            return await workflows.SetBaselineItem(recommender, dto.ItemId);
+            return await workflows.SetBaselineItem(recommender, dto.GetPromotionId());
         }
 
-        /// <summary>Gets the baseline item for the recommender.</summary>
+        /// <summary>Gets the baseline promotion for the recommender.</summary>
         [HttpGet("{id}/DefaultItem")]
         [HttpGet("{id}/BaselineItem")]
+        [HttpGet("{id}/BaselinePromotion")]
         public async Task<RecommendableItem> GetBaselineItem(string id, bool? useInternalId = null)
         {
             var recommender = await GetEntity(id, useInternalId);
             await store.Load(recommender, _ => _.BaselineItem);
-            return recommender.BaselineItem ?? throw new BadRequestException("Recommender has no baseline item");
+            return recommender.BaselineItem ?? throw new BadRequestException("Recommender has no baseline promotion");
         }
 
         /// <summary>Set the backing model information.</summary>
@@ -117,7 +120,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost("{id}/invoke")]
         [AllowApiKey]
         [EnableCors(CorsPolicies.WebApiKeyPolicy)]
-        public async Task<ItemsRecommendationDto> InvokeModel(
+        public async Task<PromotionsRecommendationDto> InvokeModel(
             string id,
             [FromBody] ModelInputDto input,
             bool? useInternalId = null)
@@ -127,11 +130,11 @@ namespace SignalBox.Web.Controllers
             var convertedInput = new ItemsModelInputDto(input.GetCustomerId(), input.Arguments);
             if (convertedInput.Items != null && convertedInput.Items.Any())
             {
-                throw new BadRequestException($"Items must not be set externally");
+                throw new BadRequestException($"Promotions must not be set externally");
             }
 
             var recommendation = await invokationWorkflows.InvokeItemsRecommender(recommender, convertedInput);
-            return new ItemsRecommendationDto(recommendation);
+            return new PromotionsRecommendationDto(recommendation);
         }
 
         /// <summary>Get the latest recommendations made by a recommender.</summary>
@@ -141,16 +144,18 @@ namespace SignalBox.Web.Controllers
             return await workflows.QueryRecommendations(id, p.Page, p.PageSize, useInternalId);
         }
 
-        /// <summary>Get the items associated with a recommender.</summary>
+        /// <summary>Get the promotions associated with a recommender.</summary>
         [HttpGet("{id}/Items")]
+        [HttpGet("{id}/Promotions")]
         public async Task<Paginated<RecommendableItem>> GetItems(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
         {
             return await workflows.QueryItems(id, p.Page, useInternalId);
         }
 
-        /// <summary>Get the items associated with a recommender.</summary>
+        /// <summary>Get the promotions associated with a recommender.</summary>
         [HttpPost("{id}/Items")]
-        public async Task<RecommendableItem> AddItem(string id, [FromBody] AddItemDto dto, bool? useInternalId = null)
+        [HttpPost("{id}/Promotions")]
+        public async Task<RecommendableItem> AddItem(string id, [FromBody] AddPromotionDto dto, bool? useInternalId = null)
         {
             var recommender = await GetEntity(id, useInternalId);
             if (dto.Id.HasValue)
@@ -194,8 +199,9 @@ namespace SignalBox.Web.Controllers
             }
         }
 
-        /// <summary>Remove an items association with a recommender.</summary>
+        /// <summary>Remove a promotion association with a recommender.</summary>
         [HttpDelete("{id}/Items/{itemId}")]
+        [HttpDelete("{id}/Promotions/{itemId}")]
         public async Task<RecommendableItem> RemoveItem(string id, string itemId, bool? useInternalId = null)
         {
             var recommender = await GetEntity(id, useInternalId);

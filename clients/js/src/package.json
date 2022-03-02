@@ -26,6 +26,7 @@
   "license": "MIT",
   "readme": "README.md",
   "devDependencies": {
+    "@types/node": "^17.0.21",
     "openapi-typescript": "^4.4.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.51.0",

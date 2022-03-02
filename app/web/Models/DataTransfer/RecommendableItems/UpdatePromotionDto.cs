@@ -4,8 +4,11 @@ using SignalBox.Core;
 
 namespace SignalBox.Web.Dto
 {
-    public class CreateRecommendableItemDto : CommonDtoBase
+#nullable enable
+    public class UpdatePromotionDto : DtoBase
     {
+        [Required]
+        public string? Name { get; set; }
         [Required]
         public double DirectCost { get; set; }
         [Required]
@@ -20,7 +23,7 @@ namespace SignalBox.Web.Dto
         [DefaultValue(1)]
         [Range(1, 6)]
         public int NumberOfRedemptions { get; set; }
-        public string Description { get; set; }
-        public DynamicPropertyDictionary Properties { get; set; }
+        public string? Description { get; set; }
+        public DynamicPropertyDictionary? Properties { get; set; }
     }
 }

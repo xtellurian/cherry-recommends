@@ -43,7 +43,7 @@ export const deleteBusinessAsync = async ({ token, id }: DeleteRequest) => {
 };
 
 interface CreateBusinessRequest extends AuthenticatedRequest {
-  business: components["schemas"]["CreateBusiness"];
+  business: components["schemas"]["CreateBusinessDto"];
 }
 export const createBusinessAsync = async ({
   token,

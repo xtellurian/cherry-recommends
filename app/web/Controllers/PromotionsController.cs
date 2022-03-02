@@ -21,16 +21,16 @@ namespace SignalBox.Web.Controllers
             this.workflows = workflows;
         }
 
-        /// <summary>Creates a new recommendable item.</summary>
+        /// <summary>Creates a new recommendable promotion.</summary>
         [HttpPost]
-        public async Task<RecommendableItem> Create(CreateRecommendableItemDto dto)
+        public async Task<RecommendableItem> Create(CreatePromotionDto dto)
         {
             return await workflows.CreateRecommendableItem(dto.CommonId, dto.Name, dto.DirectCost, dto.NumberOfRedemptions, dto.BenefitType, dto.BenefitValue, dto.PromotionType, dto.Description, dto.Properties);
         }
 
-        /// <summary>Updates a recommendable item.</summary>
+        /// <summary>Updates a recommendable promotion.</summary>
         [HttpPost("{id}")]
-        public async Task<RecommendableItem> Update(string id, UpdateRecommendableItem dto)
+        public async Task<RecommendableItem> Update(string id, UpdatePromotionDto dto)
         {
             var entity = await store.GetEntity(id);
             return await workflows.UpdateRecommendableItem(entity, dto.Name, dto.DirectCost, dto.NumberOfRedemptions, dto.BenefitType, dto.BenefitValue, dto.PromotionType, dto.Description, dto.Properties);

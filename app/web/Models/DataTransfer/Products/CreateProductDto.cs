@@ -2,6 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SignalBox.Web.Dto
 {
-    public class CreateProductDto : CreateRecommendableItemDto
+    public class CreateProductDto : CreatePromotionDto
     {}
 }

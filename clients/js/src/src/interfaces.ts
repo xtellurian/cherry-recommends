@@ -60,6 +60,7 @@ interface CommonEntity extends Entity {
 }
 
 export interface RecommendableItem extends CommonEntity {}
+export interface Promotion extends RecommendableItem {}
 export interface CustomerEvent {
   commonUserId?: string | undefined;
   customerId: string;
@@ -87,5 +88,7 @@ export interface ItemsRecommendation {
   customer: Customer;
   trigger: string;
 }
+
+export interface PromotionsRecommendation extends ItemsRecommendation {}
 
 export interface Business extends CommonEntity {}

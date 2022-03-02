@@ -1,9 +1,8 @@
 import { executeFetch } from "./client/apiClientTs";
 import * as pr from "./commonEntity/propertiesApiUtil";
-console.warn("Deprecation Notice: Recommendable Items are replaced by Promotions.");
-export const fetchItemsAsync = async ({ token, page, searchTerm, }) => {
+export const fetchPromotionsAsync = async ({ token, page, searchTerm, }) => {
     return await executeFetch({
-        path: "api/RecommendableItems",
+        path: "api/Promotions",
         token,
         page,
         query: {
@@ -11,31 +10,31 @@ export const fetchItemsAsync = async ({ token, page, searchTerm, }) => {
         },
     });
 };
-export const fetchItemAsync = async ({ token, id }) => {
+export const fetchPromotionAsync = async ({ token, id }) => {
     return await executeFetch({
-        path: `api/RecommendableItems/${id}`,
+        path: `api/Promotions/${id}`,
         token,
     });
 };
-export const createItemAsync = async ({ token, item, }) => {
+export const createPromotionAsync = async ({ token, promotion, }) => {
     return await executeFetch({
-        path: "api/RecommendableItems",
-        token,
-        method: "post",
-        body: item,
-    });
-};
-export const updateItemAsync = async ({ token, id, item, }) => {
-    return await executeFetch({
-        path: `api/RecommendableItems/${id}`,
+        path: "api/Promotions",
         token,
         method: "post",
-        body: item,
+        body: promotion,
     });
 };
-export const deleteItemAsync = async ({ token, id, }) => {
+export const updatePromotionAsync = async ({ token, id, promotion, }) => {
     return await executeFetch({
-        path: `api/RecommendableItems/${id}`,
+        path: `api/Promotions/${id}`,
+        token,
+        method: "post",
+        body: promotion,
+    });
+};
+export const deletePromotionAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        path: `api/Promotions/${id}`,
         token,
         method: "delete",
     });
@@ -44,7 +43,7 @@ export const getPropertiesAsync = async ({ token, id }) => {
     return await pr.getPropertiesAsync({
         token,
         id,
-        api: "RecommendableItems",
+        api: "Promotions",
     });
 };
 export const setPropertiesAsync = async ({ token, id, properties, }) => {
@@ -52,6 +51,6 @@ export const setPropertiesAsync = async ({ token, id, properties, }) => {
         token,
         id,
         properties,
-        api: "RecommendableItems",
+        api: "Promotions",
     });
 };

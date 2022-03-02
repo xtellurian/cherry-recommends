@@ -4,7 +4,7 @@ export declare const fetchBusinessesAsync: ({ token, page, searchTerm, }: Entity
 export declare const fetchBusinessAsync: ({ token, id, }: EntityRequest) => Promise<components["schemas"]["Business"]>;
 export declare const deleteBusinessAsync: ({ token, id }: DeleteRequest) => Promise<any>;
 interface CreateBusinessRequest extends AuthenticatedRequest {
-    business: components["schemas"]["CreateBusiness"];
+    business: components["schemas"]["CreateBusinessDto"];
 }
 export declare const createBusinessAsync: ({ token, business, }: CreateBusinessRequest) => Promise<any>;
 interface UpdateBusinessPropertiesRequest extends EntityRequest {

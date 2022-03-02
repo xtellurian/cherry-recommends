@@ -1,6 +1,6 @@
 namespace SignalBox.Web.Dto
 {
-    public class AddItemDto
+    public class AddPromotionDto
     {
         public long? Id { get; set; }
         public string CommonId { get; set; }

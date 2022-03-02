@@ -25,6 +25,7 @@ import {
 
 const recommenderApiName = "ItemsRecommenders";
 
+console.warn("Deprecation Notice: Items Recommenders are replaced by Promotions Recommenders.")
 export const fetchItemsRecommendersAsync = async ({
   token,
   page,
@@ -76,7 +77,7 @@ export const deleteItemsRecommenderAsync = async ({
 };
 
 interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
-  payload: components["schemas"]["CreateItemsRecommender"];
+  payload: components["schemas"]["CreatePromotionsRecommender"];
 }
 export const createItemsRecommenderAsync = async ({
   token,
@@ -433,7 +434,7 @@ export const fetchReportImageBlobUrlAsync = async ({
   id,
   token,
   useInternalId,
-}: EntityRequest): Promise<RecommenderStatistics> => {
+}: EntityRequest): Promise<string | void> => {
   return await ri.fetchReportImageBlobUrlAsync({
     recommenderApiName,
     id,

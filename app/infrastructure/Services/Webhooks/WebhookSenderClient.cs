@@ -70,7 +70,7 @@ namespace SignalBox.Infrastructure.Webhooks
             }
             else if (recommendation is ItemsRecommendation itemRec)
             {
-                var serialized = Serialize(new ItemsRecommendationDto(itemRec));
+                var serialized = Serialize(new PromotionsRecommendationDto(itemRec));
                 await SendStringWithSig(destination, serialized);
             }
             else
@@ -96,7 +96,7 @@ namespace SignalBox.Infrastructure.Webhooks
             }
             else if (recommendation is ItemsRecommendation itemRec)
             {
-                var dto = new ItemsRecommendationDto(itemRec);
+                var dto = new PromotionsRecommendationDto(itemRec);
                 var serialized = Serialize(dto);
                 await HttpPostToDestination(destination, serialized);
             }
