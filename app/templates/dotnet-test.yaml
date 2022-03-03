@@ -14,7 +14,7 @@ steps:
       command: "test"
       projects: "**/*[Tt]est*/*.csproj"
       publishTestResults: true
-      arguments: '--no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura'
+      arguments: '--no-build --collect:"XPlat Code Coverage" --settings test/runsettings.xml'
       workingDirectory: app
 
   - task: PublishCodeCoverageResults@1
