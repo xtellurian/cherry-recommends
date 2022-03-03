@@ -8,7 +8,7 @@ namespace SignalBox.Core.Adapters.Segment
     public class SegmentModel
     {
         [JsonPropertyName("version")]
-        public long Version { get; set; }
+        public double Version { get; set; }
 
         [JsonPropertyName("type")]
         public string Type { get; set; } = null!;
@@ -27,6 +27,8 @@ namespace SignalBox.Core.Adapters.Segment
         [JsonPropertyName("traits")]
         public Dictionary<string, object>? Traits { get; set; }
 
+        [JsonPropertyName("groupId")]
+        public string? GroupId { get; set; }
         [JsonPropertyName("userId")]
         public string? UserId { get; set; }
         [JsonPropertyName("anonymousId")]

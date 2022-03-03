@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core;
 using SignalBox.Core.Constants;
 using SignalBox.Core.Workflows;
-using static SignalBox.Core.Workflows.CustomerEventsWorkflows;
 
 namespace dotnetFunctions
 {

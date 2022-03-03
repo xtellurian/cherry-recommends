@@ -8,6 +8,7 @@ namespace SignalBox.Core
         Behaviour,
         PageView,
         Identify,
-        ConsumeRecommendation
+        ConsumeRecommendation,
+        AddToBusiness,
     }
 }

@@ -3,14 +3,14 @@ using Microsoft.Extensions.Logging;
 
 namespace SignalBox.Core.Workflows
 {
-    public class SegmentWorkflows : IWorkflow
+    public class CustomerSegmentWorkflows : IWorkflow
     {
-        private readonly ILogger<SegmentWorkflows> logger;
+        private readonly ILogger<CustomerSegmentWorkflows> logger;
         private readonly ISegmentStore segmentStore;
         private readonly ICustomerStore customerStore;
         private readonly IStorageContext storageContext;
 
-        public SegmentWorkflows(ILogger<SegmentWorkflows> logger,
+        public CustomerSegmentWorkflows(ILogger<CustomerSegmentWorkflows> logger,
                                 ISegmentStore segmentStore,
                                 ICustomerStore customerStore,
                                 IStorageContext storageContext)

@@ -218,11 +218,12 @@ namespace SignalBox.Core.Workflows
                 outcomeFeedbackValue = -0.4;
             }
 
-            return await eventsWorkflows.Ingest(new List<CustomerEventsWorkflows.CustomerEventInput>
+            return await eventsWorkflows.Ingest(new List<CustomerEventInput>
                 {
-                    new CustomerEventsWorkflows.CustomerEventInput(
+                    new CustomerEventInput(
                         tenantName: tenantProvider.RequestedTenantName,
-                        customer.CustomerId,
+                        customerId: customer.CustomerId,
+                        businessCommonId: null, // no way for a hubspot workflow to produce a biz ID yet.
                         eventId,
                         timestamp: dateTimeProvider.Now,
                         environmentId: customer.EnvironmentId,

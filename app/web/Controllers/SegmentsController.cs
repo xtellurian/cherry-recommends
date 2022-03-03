@@ -16,9 +16,9 @@ namespace SignalBox.Web.Controllers
     public class SegmentsController : EntityControllerBase<SignalBox.Core.Segment>
     {
         private readonly ILogger<SegmentsController> logger;
-        private readonly SegmentWorkflows workflow;
+        private readonly CustomerSegmentWorkflows workflow;
 
-        public SegmentsController(ILogger<SegmentsController> logger, SegmentWorkflows workflow, ISegmentStore store): base(store)
+        public SegmentsController(ILogger<SegmentsController> logger, CustomerSegmentWorkflows workflow, ISegmentStore store): base(store)
         {
             this.logger = logger;
             this.workflow = workflow;

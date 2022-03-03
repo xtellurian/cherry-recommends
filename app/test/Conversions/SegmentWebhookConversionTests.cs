@@ -1,39 +1,32 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using Moq;
-using Newtonsoft.Json.Linq;
 using SignalBox.Core;
 using SignalBox.Core.Adapters.Segment;
 using Xunit;
 
-namespace SignalBox.Test
+namespace SignalBox.Test.Converters
 {
-    public class AggregateCustomerMetricWorkflowTests
+    public class SegmentWebhookConversionTests
     {
-        // https://segment.com/docs/connections/destinations/catalog/webhooks/
-        public static SegmentModel LoadJson(string key)
-        {
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Conversions", "segmentEvents.json");
-            var json = File.ReadAllText(filePath);
-            return JObject.Parse(json)[key].ToObject<SegmentModel>();
-        }
         public static IEnumerable<object[]> PageEvent()
         {
-            yield return new object[] { LoadJson("page"), EventKinds.PageView };
+            yield return new object[] { DataLoader.LoadSegmentWebhookJson("page"), EventKinds.PageView };
         }
         public static IEnumerable<object[]> IdentifyEvent()
         {
-            yield return new object[] { LoadJson("identify"), EventKinds.Identify };
+            yield return new object[] { DataLoader.LoadSegmentWebhookJson("identify"), EventKinds.Identify };
         }
         public static IEnumerable<object[]> ScreenEvent()
         {
-            yield return new object[] { LoadJson("screen"), EventKinds.PageView };
+            yield return new object[] { DataLoader.LoadSegmentWebhookJson("screen"), EventKinds.PageView };
         }
         public static IEnumerable<object[]> TrackEvent()
         {
-            yield return new object[] { LoadJson("track"), EventKinds.Behaviour };
+            yield return new object[] { DataLoader.LoadSegmentWebhookJson("track"), EventKinds.Behaviour };
+        }
+        public static IEnumerable<object[]> GroupEvent()
+        {
+            yield return new object[] { DataLoader.LoadSegmentWebhookJson("group"), EventKinds.AddToBusiness };
         }
 
         [Theory]
@@ -41,6 +34,7 @@ namespace SignalBox.Test
         [MemberData(nameof(IdentifyEvent))]
         [MemberData(nameof(ScreenEvent))]
         [MemberData(nameof(TrackEvent))]
+        [MemberData(nameof(GroupEvent))]
         public void CanConvertSegmentPayloadToCustomerEvents(SegmentModel p, EventKinds eventKind)
         {
             var integratedSystem = new IntegratedSystem("segmentTest", "Segment", IntegratedSystemTypes.Segment)
@@ -51,7 +45,7 @@ namespace SignalBox.Test
             var mockTenantProvider = new Mock<ITenantProvider>();
             mockTenantProvider.Setup(_ => _.RequestedTenantName).Returns("tenant-name");
 
-            var e = Converter.ToTrackedUserEventInput(p, mockTenantProvider.Object, integratedSystem);
+            var e = Converter.ToCustomerEventInput(p, mockTenantProvider.Object, integratedSystem);
             Assert.Equal(integratedSystem.Id, e.SourceSystemId);
             Assert.Equal("tenant-name", e.TenantName);
             Assert.Equal(p.UserId, e.CustomerId);

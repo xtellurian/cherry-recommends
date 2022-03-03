@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using static SignalBox.Core.Workflows.CustomerEventsWorkflows;
 
 namespace SignalBox.Core.Adapters.Segment
 {
@@ -13,18 +13,30 @@ namespace SignalBox.Core.Adapters.Segment
             "RecommendationCorrelatorId",
         };
 
-        public static CustomerEventInput ToTrackedUserEventInput(this SegmentModel model, ITenantProvider tenantProvider, IntegratedSystem sys)
+        public static CustomerEventInput ToCustomerEventInput(this SegmentModel model, ITenantProvider tenantProvider, IntegratedSystem sys)
         {
-            long? correlatorId = ExtractCorrelatorId(model);
-            if (string.IsNullOrEmpty(model.UserId))
+            if (model == null)
             {
+                throw new ArgumentNullException(nameof(model));
+            }
+            long? correlatorId = ExtractCorrelatorId(model);
+            if (string.IsNullOrEmpty(model.UserId) && !string.IsNullOrEmpty(model.AnonymousId) && model.Type != "group")
+            {
+                model.Properties ??= new Dictionary<string, object>();
                 model.Properties.TryAdd("anonymousId", model.AnonymousId);
+            }
+            // because we want the business ID in the properties
+            if (!string.IsNullOrEmpty(model.GroupId))
+            {
+                model.Traits ??= new Dictionary<string, object>();
+                model.Traits.TryAdd("businessId", model.GroupId);
             }
 
             return new CustomerEventInput
             (
                 tenantName: tenantProvider.RequestedTenantName,
-                model.UserId ?? Customer.AnonymousCommonId,
+                customerId: model.UserId ?? Customer.AnonymousCommonId,
+                businessCommonId: model.GroupId,
                 eventId: model.MessageId,
                 timestamp: model.Timestamp,
                 environmentId: sys.EnvironmentId,
@@ -34,7 +46,6 @@ namespace SignalBox.Core.Adapters.Segment
                 eventType: model.Event ?? $"Segment|{model.Type}" ?? "Segment|Unknown",
                 properties: model.Properties ?? model.Traits
             );
-
         }
 
         private static long? ExtractCorrelatorId(SegmentModel model)
@@ -69,10 +80,11 @@ namespace SignalBox.Core.Adapters.Segment
         {
             return model.Type switch
             {
-                "track" => EventKinds.Behaviour,
-                "page" => EventKinds.PageView,
-                "screen" => EventKinds.PageView,
-                "identify" => EventKinds.Identify,
+                SegmentModelTypes.Track => EventKinds.Behaviour,
+                SegmentModelTypes.Page => EventKinds.PageView,
+                SegmentModelTypes.Screen => EventKinds.PageView,
+                SegmentModelTypes.Identify => EventKinds.Identify,
+                SegmentModelTypes.Group => EventKinds.AddToBusiness,
                 _ => EventKinds.Custom,
             };
         }

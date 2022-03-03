@@ -6,8 +6,12 @@ namespace SignalBox.Core
 #nullable enable
     public class DynamicPropertyDictionary : Dictionary<string, object>
     {
-        public void Merge(IDictionary<string, object> other)
+        public void Merge(IDictionary<string, object>? other)
         {
+            if (other == null)
+            {
+                return;
+            }
             foreach (var key in other.Keys)
             {
                 this[key] = other[key];
@@ -16,6 +20,10 @@ namespace SignalBox.Core
 
         public void Merge(IDictionary<string, string> other)
         {
+            if (other == null)
+            {
+                return;
+            }
             foreach (var key in other.Keys)
             {
                 this[key] = other[key];

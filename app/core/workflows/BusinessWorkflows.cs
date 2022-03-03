@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 namespace SignalBox.Core.Workflows
 {
-    public class BusinessWorkflows : IWorkflow
+    public class BusinessWorkflows : IWorkflow, IBusinessWorkflow
     {
         private readonly IStorageContext storageContext;
         private readonly IBusinessStore businessStore;
@@ -27,7 +28,7 @@ namespace SignalBox.Core.Workflows
             await storageContext.SaveChanges();
             return business;
         }
-        
+
         public async Task<Customer> RemoveBusinessMembership(Business business, long customerId)
         {
             var customer = await customerStore.Read(customerId);
@@ -44,6 +45,49 @@ namespace SignalBox.Core.Workflows
             customer.BusinessMembership = null;
             await storageContext.SaveChanges();
             return customer;
+        }
+
+        /// <summary>
+        /// Adds a customer to a business. Creates the business if it doesn't exist.
+        /// </summary>
+        /// <param name="businessCommonId">Lookuop this business. Create if not exist.</param>
+        /// <param name="customer">The customer to add to the Business</param>
+        /// <param name="properties">Optional. Add these properties to the businesses. </param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public async Task<BusinessMembership> AddToBusiness(string businessCommonId, Customer customer, Dictionary<string, object> properties = null)
+        {
+            Business business;
+            if (customer.BusinessMembership?.BusinessId != null)
+            {
+                var currentBusiness = await businessStore.Read(customer.BusinessMembership.BusinessId);
+                if (!string.Equals(businessCommonId, currentBusiness.CommonId))
+                {
+                    logger.LogWarning($"Customer {customer.Id} is changing businesses");
+                }
+            }
+
+            if (await businessStore.ExistsFromCommonId(businessCommonId))
+            {
+                business = await businessStore.ReadFromCommonId(businessCommonId);
+            }
+            else
+            {
+                business = await businessStore.Create(new Business(businessCommonId));
+            }
+
+            customer.BusinessMembership ??= new BusinessMembership
+            {
+                BusinessId = business.Id,
+                Business = business,
+                CustomerId = customer.Id,
+                Customer = customer
+            };
+            business.Properties ??= new DynamicPropertyDictionary();
+            business.Properties.Merge(properties);
+
+            await businessStore.Context.SaveChanges();
+            return customer.BusinessMembership;
         }
     }
 }

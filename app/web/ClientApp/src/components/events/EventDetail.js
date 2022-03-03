@@ -33,7 +33,7 @@ export const EventDetail = ({ event }) => {
           to={`/customers/detail/${event.trackedUserId}`}
         />
         <CopyableField label="Event ID" value={event.eventId} />
-        <CopyableField label="Kind" value={event.kind} />
+        <CopyableField label="Kind" value={event.eventKind} />
         <CopyableField label="Event Type" value={event.eventType} />
         <CopyableField
           label="Recommendation Correlator"

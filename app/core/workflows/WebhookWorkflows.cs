@@ -6,7 +6,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Adapters.Segment;
-using static SignalBox.Core.Workflows.CustomerEventsWorkflows;
 
 namespace SignalBox.Core.Workflows
 {
@@ -15,13 +14,13 @@ namespace SignalBox.Core.Workflows
         private readonly ILogger<WebhookWorkflows> logger;
         private readonly ITenantProvider tenantProvider;
         private readonly IWebhookReceiverStore receiverStore;
-        private readonly CustomerEventsWorkflows eventsWorkflows;
+        private readonly ICustomerEventsWorkflow eventsWorkflows;
 
         public WebhookWorkflows(
             ILogger<WebhookWorkflows> logger,
             ITenantProvider tenantProvider,
             IWebhookReceiverStore receiverStore,
-            CustomerEventsWorkflows eventsWorkflows)
+            ICustomerEventsWorkflow eventsWorkflows)
         {
             this.logger = logger;
             this.tenantProvider = tenantProvider;
@@ -50,9 +49,9 @@ namespace SignalBox.Core.Workflows
         {
             // first check if the receiver has a shared secret, and if yes, validate the thing
             AssertSegmentSignatureValid(receiver, webhookBody, signature);
-            var segmentEvents = JsonSerializer.Deserialize<SegmentModel>(webhookBody);
-            var trackedUserEventInput = segmentEvents.ToTrackedUserEventInput(tenantProvider, receiver.IntegratedSystem);
+            var segmentEvent = JsonSerializer.Deserialize<SegmentModel>(webhookBody);
 
+            var trackedUserEventInput = segmentEvent.ToCustomerEventInput(tenantProvider, receiver.IntegratedSystem);
             var res = await eventsWorkflows.Ingest(new List<CustomerEventInput> { trackedUserEventInput });
             return res;
         }

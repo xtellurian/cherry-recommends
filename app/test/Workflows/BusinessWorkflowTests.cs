@@ -6,7 +6,7 @@ using SignalBox.Core;
 using SignalBox.Core.Workflows;
 using Xunit;
 
-namespace SignalBox.Test.Stores
+namespace SignalBox.Test.Workflows
 {
     public class BusinessWorkflowTests
     {
@@ -22,7 +22,7 @@ namespace SignalBox.Test.Stores
 
             var workflow = new BusinessWorkflows(mockStorageContext.Object, mockBusinessStore.Object, mockCustomerStore.Object, Utility.MockLogger<BusinessWorkflows>().Object);
             await workflow.CreateBusiness(commonId, name, description);
-                        
+
             mockBusinessStore.Verify(_ => _.Create(It.Is<Business>(b => b.CommonId == commonId)));
             mockStorageContext.Verify(_ => _.SaveChanges(), Times.Once);
         }
@@ -122,5 +122,125 @@ namespace SignalBox.Test.Stores
             BadRequestException exception = await Assert.ThrowsAsync<BadRequestException>(act);
         }
 
+        [Fact]
+        public async Task AddCustomerToBusiness_BusinessNotExists()
+        {
+            // arrange
+            var mockBusinessStore = new Mock<IBusinessStore>();
+            var mockStorageContext = new Mock<IStorageContext>();
+            var mockCustomerStore = new Mock<ICustomerStore>();
+            var businessCommonId = "business-id";
+            var workflow = new BusinessWorkflows(mockStorageContext.Object, mockBusinessStore.Object, mockCustomerStore.Object, Utility.MockLogger<BusinessWorkflows>().Object);
+            var customer = new Customer("customerId");
+            var businessProperties = new Dictionary<string, object>
+            {
+                {"headCount",  100},
+                {"accountStatic",  "active"},
+                {"nested",  new Dictionary<string, object>
+                    {
+                        {"testNested", 5}
+                    }
+                }
+            };
+            mockBusinessStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
+            mockBusinessStore.Setup(_ => _.Create(It.Is<Business>(b => b.CommonId == businessCommonId)))
+                .ReturnsAsync((Business bs) => bs);
+
+            // act
+            var membership = await workflow.AddToBusiness(businessCommonId, customer, businessProperties);
+
+            mockBusinessStore.Verify(_ => _.Create(It.Is<Business>(b => b.CommonId == businessCommonId)));
+            mockStorageContext.Verify(_ => _.SaveChanges(), Times.Once);
+            Assert.Equal(businessCommonId, customer.BusinessMembership.Business.CommonId);
+            Assert.Equal(customer.CustomerId, customer.BusinessMembership.Customer.CustomerId);
+        }
+
+        [Fact]
+        public async Task AddCustomerToBusiness_BusinessExists()
+        {
+            // arrange
+            var mockBusinessStore = new Mock<IBusinessStore>();
+            var mockStorageContext = new Mock<IStorageContext>();
+            var mockCustomerStore = new Mock<ICustomerStore>();
+            var businessCommonId = "business-id";
+            var workflow = new BusinessWorkflows(mockStorageContext.Object, mockBusinessStore.Object, mockCustomerStore.Object, Utility.MockLogger<BusinessWorkflows>().Object);
+            var customer = new Customer("customerId");
+            var businessProperties = new Dictionary<string, object>
+            {
+                {"headCount",  100},
+                {"accountStatic",  "active"},
+                {"nested",  new Dictionary<string, object>
+                    {
+                        {"testNested", 5}
+                    }
+                }
+            };
+            mockBusinessStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
+            mockBusinessStore.Setup(_ => _.ExistsFromCommonId(It.Is<string>(x => x == businessCommonId)))
+                .ReturnsAsync(true);
+            mockBusinessStore.Setup(_ => _.ReadFromCommonId(It.Is<string>(x => x == businessCommonId)))
+                .ReturnsAsync(new Business(businessCommonId));
+
+            // act
+            var membership = await workflow.AddToBusiness(businessCommonId, customer, businessProperties);
+
+            // assert
+            mockBusinessStore.Verify(_ => _.ReadFromCommonId(It.Is<string>(s => s == businessCommonId)));
+            mockStorageContext.Verify(_ => _.SaveChanges(), Times.Once);
+            Assert.Equal(businessCommonId, customer.BusinessMembership.Business.CommonId);
+            Assert.Equal(customer.CustomerId, customer.BusinessMembership.Customer.CustomerId);
+        }
+
+        [Fact]
+        public async Task AddCustomerToBusiness_MembershipExists()
+        {
+            // arrange
+            var mockBusinessStore = new Mock<IBusinessStore>();
+            var mockStorageContext = new Mock<IStorageContext>();
+            var mockCustomerStore = new Mock<ICustomerStore>();
+            var businessCommonId = "business-id";
+            var workflow = new BusinessWorkflows(mockStorageContext.Object, mockBusinessStore.Object, mockCustomerStore.Object, Utility.MockLogger<BusinessWorkflows>().Object);
+            var business = new Business(businessCommonId)
+            {
+                Id = 1
+            };
+            var customer = new Customer("customerId")
+            {
+                Id = 1,
+            };
+            customer.BusinessMembership = new BusinessMembership
+            {
+                Business = business,
+                BusinessId = business.Id,
+                Customer = customer,
+                CustomerId = customer.Id
+            };
+            var businessProperties = new Dictionary<string, object>
+            {
+                {"headCount",  100},
+                {"accountStatic",  "active"},
+                {"nested",  new Dictionary<string, object>
+                    {
+                        {"testNested", 5}
+                    }
+                }
+            };
+            mockBusinessStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
+            mockBusinessStore.Setup(_ => _.Read(It.Is<long>(x => x == business.Id)))
+                .ReturnsAsync(business);
+            mockBusinessStore.Setup(_ => _.ExistsFromCommonId(It.Is<string>(x => x == business.CommonId)))
+                .ReturnsAsync(true);
+            mockBusinessStore.Setup(_ => _.ReadFromCommonId(It.Is<string>(x => x == business.CommonId)))
+                .ReturnsAsync(business);
+
+            // act
+            var membership = await workflow.AddToBusiness(businessCommonId, customer, businessProperties);
+
+            // assert
+            mockBusinessStore.Verify(_ => _.Read(It.Is<long>(s => s == business.Id)));
+            mockStorageContext.Verify(_ => _.SaveChanges(), Times.Once);
+            Assert.Equal(customer.BusinessMembership, membership);
+            Assert.Equal(customer.CustomerId, customer.BusinessMembership.Customer.CustomerId);
+        }
     }
 }

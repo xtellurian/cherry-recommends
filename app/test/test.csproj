@@ -27,6 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Conversions/segmentEvents.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="data/segmentEvents.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

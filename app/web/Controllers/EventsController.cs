@@ -40,8 +40,9 @@ namespace SignalBox.Web.Controllers
         public async Task<EventLoggingResponse> LogEvents([FromBody] List<EventDto> dto)
         {
             return await workflows.Ingest(dto.Select(d =>
-            new CustomerEventsWorkflows.CustomerEventInput(tenantName: tenantProvider.RequestedTenantName,
-                                                            d.GetCustomerId(),
+            new CustomerEventInput(tenantName: tenantProvider.RequestedTenantName,
+                                                            customerId: d.GetCustomerId(),
+                                                            businessCommonId: null, // no way for this to produce a business ID yet
                                                             d.EventId,
                                                             d.Timestamp,
                                                             environmentProvider.CurrentEnvironmentId,

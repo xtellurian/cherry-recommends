@@ -38,7 +38,7 @@ namespace SignalBox.Infrastructure.Services
             }
         }
 
-        public async Task Ingest(IEnumerable<CustomerEventsWorkflows.CustomerEventInput> inputs)
+        public async Task Ingest(IEnumerable<CustomerEventInput> inputs)
         {
             if (producerClient == null)
             {

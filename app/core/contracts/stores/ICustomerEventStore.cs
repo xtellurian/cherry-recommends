@@ -7,6 +7,7 @@ namespace SignalBox.Core
 {
     public interface ICustomerEventStore
     {
+        IStorageContext Context { get; }
         Task<CustomerEvent> Read(string eventId);
         Task<IEnumerable<CustomerEvent>> AddRange(IEnumerable<CustomerEvent> events);
         Task LoadMany<TProperty>(CustomerEvent entity, Expression<Func<CustomerEvent, IEnumerable<TProperty>>> propertyExpression) where TProperty : class;

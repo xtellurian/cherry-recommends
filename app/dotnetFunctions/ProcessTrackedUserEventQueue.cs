@@ -7,7 +7,6 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
 using SignalBox.Core.Workflows;
-using static SignalBox.Core.Workflows.CustomerEventsWorkflows;
 
 namespace SignalBox.Functions
 {

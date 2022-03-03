@@ -7,34 +7,35 @@ using Microsoft.Extensions.Logging;
 
 namespace SignalBox.Core.Workflows
 {
-    public class CustomerEventsWorkflows : IWorkflow
+    public class CustomerEventsWorkflows : IWorkflow, ICustomerEventsWorkflow
     {
-        private readonly IStorageContext storageContext;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ILogger<CustomerEventsWorkflows> logger;
         private readonly ICustomerStore userStore;
         private readonly IEnvironmentProvider environmentProvider;
         private readonly IIntegratedSystemStore integratedSystemStore;
-        private readonly ICustomerEventStore trackedUserEventStore;
+        private readonly ICustomerEventStore customerEventStore;
+        private readonly IBusinessWorkflow businessWorkflow;
         private readonly IEventIngestor eventIngestor;
 
         public JsonSerializerOptions SerializerOptions => new JsonSerializerOptions();
-        public CustomerEventsWorkflows(IStorageContext storageContext,
-                                          IDateTimeProvider dateTimeProvider,
-                                          ILogger<CustomerEventsWorkflows> logger,
-                                          ICustomerStore userStore,
-                                          IEnvironmentProvider environmentProvider,
-                                          IIntegratedSystemStore integratedSystemStore,
-                                          ICustomerEventStore trackedUserEventStore,
-                                          IEventIngestor eventIngestor)
+        public CustomerEventsWorkflows(
+            IDateTimeProvider dateTimeProvider,
+            ILogger<CustomerEventsWorkflows> logger,
+            ICustomerStore userStore,
+            IEnvironmentProvider environmentProvider,
+            IIntegratedSystemStore integratedSystemStore,
+            ICustomerEventStore customerEventStore,
+            IBusinessWorkflow businessWorkflow,
+            IEventIngestor eventIngestor)
         {
-            this.storageContext = storageContext;
             this.dateTimeProvider = dateTimeProvider;
             this.logger = logger;
             this.userStore = userStore;
             this.environmentProvider = environmentProvider;
             this.integratedSystemStore = integratedSystemStore;
-            this.trackedUserEventStore = trackedUserEventStore;
+            this.customerEventStore = customerEventStore;
+            this.businessWorkflow = businessWorkflow;
             this.eventIngestor = eventIngestor;
         }
 
@@ -59,8 +60,32 @@ namespace SignalBox.Core.Workflows
         public async Task<EventLoggingResponse> ProcessEvents(IEnumerable<CustomerEventInput> input)
         {
 
-            logger.LogWarning("Not enqueuing. Prcessing events directly.");
-            var events = new List<CustomerEvent>();
+            logger.LogInformation("Processing Events");
+
+            var customers = await CreateOrGetCustomers(input);
+            var events = await CreateCustomerEvents(input, customers);
+
+            // save changes
+            await customerEventStore.Context.SaveChanges();
+
+            // check if we should add any customer to a business
+            await AddToBusinesses(input, customers);
+            return new EventLoggingResponse { EventsProcessed = events.Count() };
+        }
+
+        private async Task AddToBusinesses(IEnumerable<CustomerEventInput> input, IEnumerable<Customer> customers)
+        {
+            if (input.Any(_ => _.Kind == EventKinds.AddToBusiness))
+            {
+                foreach (var e in input.Where(_ => _.Kind == EventKinds.AddToBusiness))
+                {
+                    await businessWorkflow.AddToBusiness(e.BusinessCommonId, customers.First(_ => _.CustomerId == e.CustomerId), e.Properties);
+                }
+            }
+        }
+
+        private async Task<IEnumerable<Customer>> CreateOrGetCustomers(IEnumerable<CustomerEventInput> input)
+        {
             var lastUpdated = dateTimeProvider.Now;
             var customers = await userStore.CreateIfNotExists(input.Select(_ => new PendingCustomer(_.CustomerId, _.EnvironmentId)).Distinct());
             if (customers.Any())
@@ -71,6 +96,12 @@ namespace SignalBox.Core.Workflows
                 }
             }
 
+            return customers;
+        }
+
+        private async Task<IEnumerable<CustomerEvent>> CreateCustomerEvents(IEnumerable<CustomerEventInput> input, IEnumerable<Customer> customers)
+        {
+            var events = new List<CustomerEvent>();
             foreach (var d in input)
             {
                 // make sure you set this before loading the integrated system.
@@ -97,49 +128,7 @@ namespace SignalBox.Core.Workflows
                                                 d.RecommendationCorrelatorId));
             }
 
-
-            var results = await trackedUserEventStore.AddRange(events);
-            await storageContext.SaveChanges();
-            return new EventLoggingResponse { EventsProcessed = input.Count() };
+            return await customerEventStore.AddRange(events);
         }
-
-#nullable enable
-        public struct CustomerEventInput
-        {
-            public CustomerEventInput(string tenantName,
-                                      string customerId,
-                                      string eventId,
-                                      DateTimeOffset? timestamp,
-                                      long? environmentId,
-                                      long? recommendationCorrelatorId,
-                                      long? sourceSystemId,
-                                      EventKinds kind,
-                                      string eventType,
-                                      Dictionary<string, object> properties)
-            {
-                TenantName = tenantName;
-                CustomerId = customerId;
-                EventId = eventId;
-                Timestamp = timestamp;
-                EnvironmentId = environmentId; // because events aren't using the same EFStoreBase hierarchy
-                RecommendationCorrelatorId = recommendationCorrelatorId;
-                SourceSystemId = sourceSystemId;
-                Kind = kind;
-                EventType = eventType;
-                Properties = new DynamicPropertyDictionary(properties);
-            }
-
-            public string TenantName { get; set; } // required for sending messages to dotnetFunctions
-            public string CustomerId { get; set; }
-            public string EventId { get; set; }
-            public DateTimeOffset? Timestamp { get; set; }
-            public long? EnvironmentId { get; set; }
-            public long? RecommendationCorrelatorId { get; set; }
-            public long? SourceSystemId { get; set; }
-            public EventKinds Kind { get; set; }
-            public string EventType { get; set; }
-            public DynamicPropertyDictionary Properties { get; set; }
-        }
-#nullable disable
     }
 }

@@ -14,7 +14,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<JoinTwoMetricsWorkflow>();
             services.AddScoped<MetricWorkflows>();
             services.AddScoped<RecommendableItemWorkflows>();
-            services.AddScoped<SegmentWorkflows>();
+            services.AddScoped<CustomerSegmentWorkflows>();
             services.AddScoped<CustomerWorkflows>();
             services.AddScoped<CustomerEventsWorkflows>();
             services.AddScoped<DataSummaryWorkflows>();
@@ -40,6 +40,10 @@ namespace SignalBox.Core.Workflows
 
             services.AddScoped<RecommenderTriggersWorkflows>();
             services.AddScoped<AggregateCustomerMetricWorkflow>();
+
+            // also register any interfaces that are implemented by workflows
+            services.AddScoped<ICustomerEventsWorkflow, CustomerEventsWorkflows>();
+            services.AddScoped<IBusinessWorkflow, BusinessWorkflows>();
             return services;
         }
     }

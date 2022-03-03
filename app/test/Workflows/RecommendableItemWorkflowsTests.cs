@@ -30,8 +30,8 @@ namespace SignalBox.Test.Stores
 
             // Act
 
-            var created = await sut.CreateRecommendableItem(recommendableItem.CommonId, recommendableItem.Name, recommendableItem.DirectCost, 
-                recommendableItem.NumberOfRedemptions, recommendableItem.BenefitType, recommendableItem.BenefitValue, 
+            var created = await sut.CreateRecommendableItem(recommendableItem.CommonId, recommendableItem.Name, recommendableItem.DirectCost,
+                recommendableItem.NumberOfRedemptions, recommendableItem.BenefitType, recommendableItem.BenefitValue,
                 recommendableItem.PromotionType, recommendableItem.Description, recommendableItem.Properties);
 
             // Assert
