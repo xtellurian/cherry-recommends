@@ -67,8 +67,40 @@ export const updateBusinessPropertiesAsync = async ({
 }: UpdateBusinessPropertiesRequest) => {
   return await executeFetch({
     token,
-    path: `api/Businesses/${id}/properties`,
+    path: `api/Businesses/${id}/Properties`,
     method: "post",
     body: properties,
+  });
+};
+
+export const fetchBusinessMembersAsync = async ({
+  token,
+  id,
+  page,
+  searchTerm,
+}: EntitySearchRequest): Promise<PaginateResponse<Business>> => {
+  return await executeFetch({
+    path: `api/Businesses/${id}/Members`,
+    token,
+    page,
+    query: {
+      "q.term": searchTerm,
+    },
+  });
+};
+
+interface DeleteBusinessMemberRequest extends DeleteRequest {
+  customerId: number;
+}
+
+export const deleteBusinessMemberAsync = async ({ 
+  token, 
+  id, 
+  customerId 
+}: DeleteBusinessMemberRequest) => {
+  return await executeFetch({
+    path: `api/Businesses/${id}/Members/${customerId}`,
+    token,
+    method: "delete",
   });
 };

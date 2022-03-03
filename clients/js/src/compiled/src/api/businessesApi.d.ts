@@ -13,4 +13,9 @@ interface UpdateBusinessPropertiesRequest extends EntityRequest {
     } | null;
 }
 export declare const updateBusinessPropertiesAsync: ({ token, id, properties }: UpdateBusinessPropertiesRequest) => Promise<any>;
+export declare const fetchBusinessMembersAsync: ({ token, id, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<Business>>;
+interface DeleteBusinessMemberRequest extends DeleteRequest {
+    customerId: number;
+}
+export declare const deleteBusinessMemberAsync: ({ token, id, customerId }: DeleteBusinessMemberRequest) => Promise<any>;
 export {};

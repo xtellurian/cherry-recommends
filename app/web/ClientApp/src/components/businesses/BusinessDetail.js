@@ -15,6 +15,7 @@ import {
 } from "../molecules/buttons/ActionsButton";
 import { JsonView } from "../molecules/JsonView";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
+import { MembersSection } from "./MembersSection";
 
 const tabs = [
   {
@@ -61,9 +62,6 @@ export const BusinessDetail = () => {
           <ActionLink to={`/businesses/create-event/${id}`}>
             Log Event
           </ActionLink>
-          <ActionLink to={`/businesses/link-to-integrated-system/${id}`}>
-            Add Members
-          </ActionLink>
         </ActionItemsGroup>
       </ActionsButton>
       <button
@@ -107,18 +105,13 @@ export const BusinessDetail = () => {
         )}
       </TabActivator>
 
-      <TabActivator
-        tabId={"history"}
-        defaultTabId={defaultTabId}
-      ></TabActivator>
-      <TabActivator
-        tabId={"latest-recommendations"}
-        defaultTabId={defaultTabId}
-      ></TabActivator>
-      <TabActivator
-        tabId={"members"}
-        defaultTabId={defaultTabId}
-      ></TabActivator>
+      <TabActivator tabId={"history"} defaultTabId={defaultTabId}>
+      </TabActivator>
+      <TabActivator tabId={"latest-recommendations"} defaultTabId={defaultTabId}>
+      </TabActivator>
+      <TabActivator tabId={"members"} defaultTabId={defaultTabId}>
+        <MembersSection business={business} />
+      </TabActivator>
 
       <ConfirmDeletePopup
         entity={business}
