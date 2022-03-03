@@ -52,10 +52,10 @@ namespace SignalBox.Core.Workflows
             bool hasMore = true;
             while (hasMore)
             {
-                var mapQuery = await systemMapStore.Query(page++, _ => _.TrackedUser, _ => _.IntegratedSystemId == system.Id);
+                var mapQuery = await systemMapStore.Query(page++, _ => _.Customer, _ => _.IntegratedSystemId == system.Id);
                 foreach (var map in mapQuery.Items)
                 {
-                    if (await SetRecommendationProperty(system, recommender, map.TrackedUser))
+                    if (await SetRecommendationProperty(system, recommender, map.Customer))
                     {
                         report.NumberOfContactsUpdated += 1;
                     }

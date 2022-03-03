@@ -166,10 +166,10 @@ namespace SignalBox.Core.Workflows
                 .Where(_ => _.Type == "ticket_to_contact")
                 .Select(_ => _.Id);
             var systemMaps = await systemMapStore.Query(1,  // first page
-                    _ => _.TrackedUser,
+                    _ => _.Customer,
                     _ => contactIds.Contains(_.UserId) && _.IntegratedSystemId == system.Id);
 
-            return systemMaps.Items.Select(_ => _.TrackedUser);
+            return systemMaps.Items.Select(_ => _.Customer);
         }
 
         public Task<HubspotAppCredentials> GetHubspotCredentials()

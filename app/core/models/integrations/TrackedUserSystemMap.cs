@@ -23,9 +23,5 @@ namespace SignalBox.Core
         public long TrackedUserId { get; protected set; }
         [JsonIgnore]
         public Customer Customer { get; set; }
-
-        // this is a property for API backwards compat
-        [JsonIgnore]
-        public Customer TrackedUser => Customer;
     }
 }

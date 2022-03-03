@@ -16,9 +16,9 @@ namespace SignalBox.Core
             {
                 // this may cause issues if more than one, but for now, just return the first.
                 var map = systemMaps.Items.First();
-                await systemMapStore.Load(map, _ => _.TrackedUser);
+                await systemMapStore.Load(map, _ => _.Customer);
                 // happy path
-                return map.TrackedUser;
+                return map.Customer;
             }
             else
             {
