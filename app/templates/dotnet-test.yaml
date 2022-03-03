@@ -24,6 +24,6 @@ steps:
       summaryFileLocation: "$(Agent.TempDirectory)/**/coverage.cobertura.xml"
 
   - script: npx prettier --check .
-    displayName: Prettier - /ClientApp
+    condition:  eq(variables['Build.Reason'], 'PullRequest') # only run pretty check if in PR
+    displayName: Check Prettier - /ClientApp
     workingDirectory: app/web/ClientApp/
-    continueOnError: true # for now, continue on error, until linting is complete.

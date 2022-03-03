@@ -6,22 +6,22 @@ import { MemberRow } from "./MemberRow";
 import { useBusinessMembers } from "../../api-hooks/businessesApi";
 
 export const MembersSection = ({ business }) => {
-
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [isEditMembersPopupOpen, setEditMembersPopupOpen] = React.useState(false);
+  const [isEditMembersPopupOpen, setEditMembersPopupOpen] =
+    React.useState(false);
   const members = useBusinessMembers({ id: business.id, searchTerm });
-  const numMembers = members?.items?.length; 
+  const numMembers = members?.items?.length;
 
   return (
     <React.Fragment>
       <Subtitle>Members ({numMembers})</Subtitle>
-      <button 
-          className="btn btn-outline-primary float-right mb-3"
-          onClick={() => setEditMembersPopupOpen(true)}
-        >
+      <button
+        className="btn btn-outline-primary float-right mb-3"
+        onClick={() => setEditMembersPopupOpen(true)}
+      >
         Add a Member
       </button>
-      <SearchBox onSearch={setSearchTerm} />      
+      <SearchBox onSearch={setSearchTerm} />
       {members.loading && <Spinner>Loading Members</Spinner>}
       {numMembers === 0 && <EmptyList>Business has no members.</EmptyList>}
       <div className="mt-3">
@@ -31,8 +31,10 @@ export const MembersSection = ({ business }) => {
           ))}
       </div>
       <Paginator {...members.pagination} />
-      <BigPopup isOpen={isEditMembersPopupOpen} setIsOpen={setEditMembersPopupOpen}>        
-      </BigPopup>
+      <BigPopup
+        isOpen={isEditMembersPopupOpen}
+        setIsOpen={setEditMembersPopupOpen}
+      ></BigPopup>
     </React.Fragment>
   );
 };

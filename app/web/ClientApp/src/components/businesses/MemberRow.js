@@ -19,9 +19,10 @@ export const MemberRow = ({ businessId, member }) => {
       </div>
       <div className="flex-grow-1">{member.name || member.commonId}</div>
       <div className="text-right">
-        <button className="btn btn-outline-primary"
+        <button
+          className="btn btn-outline-primary"
           onClick={() => setIsDeletePopupOpen(true)}
-          >
+        >
           X
         </button>
       </div>
@@ -31,8 +32,14 @@ export const MemberRow = ({ businessId, member }) => {
         open={isDeletePopupOpen}
         setOpen={setIsDeletePopupOpen}
         handleDelete={() =>
-          deleteBusinessMemberAsync({ id : businessId, token, customerId : member.id })
-            .then(() => history.push(`/businesses/detail/${businessId}?tab=members`))
+          deleteBusinessMemberAsync({
+            id: businessId,
+            token,
+            customerId: member.id,
+          })
+            .then(() =>
+              history.push(`/businesses/detail/${businessId}?tab=members`)
+            )
             .catch(setError)
         }
       />

@@ -105,10 +105,14 @@ export const BusinessDetail = () => {
         )}
       </TabActivator>
 
-      <TabActivator tabId={"history"} defaultTabId={defaultTabId}>
-      </TabActivator>
-      <TabActivator tabId={"latest-recommendations"} defaultTabId={defaultTabId}>
-      </TabActivator>
+      <TabActivator
+        tabId={"history"}
+        defaultTabId={defaultTabId}
+      ></TabActivator>
+      <TabActivator
+        tabId={"latest-recommendations"}
+        defaultTabId={defaultTabId}
+      ></TabActivator>
       <TabActivator tabId={"members"} defaultTabId={defaultTabId}>
         <MembersSection business={business} />
       </TabActivator>
