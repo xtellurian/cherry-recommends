@@ -1,41 +1,41 @@
 {
-    "sqltools.connections": [
-        {
-            "previewLimit": 50,
-            "driver": "SQLite",
-            "name": "tenants",
-            "database": "${workspaceFolder:app}/web/tenants.db"
-        },
-        {
-            "mssqlOptions": {
-                "appName": "SQLTools",
-                "useUTC": true,
-                "encrypt": true
-            },
-            "previewLimit": 50,
-            "server": "127.0.0.1",
-            "port": 1433,
-            "driver": "MSSQL",
-            "name": "local-container",
-            "group": "dev",
-            "database": "signalbox",
-            "username": "SA",
-            "password": "YourStrong@Passw0rd"
-        },
-        {
-            "previewLimit": 50,
-            "driver": "SQLite",
-            "name": "signalbox",
-            "group": "local",
-            "database": "${workspaceFolder:app}/web/databases/signalbox.db"
-        }
-    ],
-    "sqltools.useNodeRuntime": true,
-    "azureFunctions.deploySubpath": "pythonFunctions",
-    "azureFunctions.scmDoBuildDuringDeployment": true,
-    "azureFunctions.pythonVenv": ".venv",
-    "azureFunctions.projectLanguage": "Python",
-    "azureFunctions.projectRuntime": "~3",
-    "debug.internalConsoleOptions": "neverOpen",
-    "python.pythonPath": "/Users/rian/miniconda3/envs/pythonFunctions/bin/python"
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "tenants",
+      "database": "${workspaceFolder:app}/web/tenants.db"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "127.0.0.1",
+      "port": 1433,
+      "driver": "MSSQL",
+      "name": "local-container",
+      "group": "dev",
+      "database": "signalbox",
+      "username": "SA",
+      "password": "YourStrong@Passw0rd"
+    },
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "signalbox",
+      "group": "local",
+      "database": "${workspaceFolder:app}/web/databases/signalbox.db"
+    }
+  ],
+  "sqltools.useNodeRuntime": true,
+  "azureFunctions.deploySubpath": "pythonFunctions",
+  "azureFunctions.scmDoBuildDuringDeployment": true,
+  "azureFunctions.pythonVenv": ".venv",
+  "azureFunctions.projectLanguage": "Python",
+  "azureFunctions.projectRuntime": "~3",
+  "debug.internalConsoleOptions": "neverOpen",
+  "python.pythonPath": "/Users/rian/miniconda3/envs/pythonFunctions/bin/python"
 }

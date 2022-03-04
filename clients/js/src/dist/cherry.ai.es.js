@@ -229,6 +229,14 @@ const deleteBusinessMemberAsync = async ({ token, id, customerId }) => {
         method: "delete",
     });
 };
+const addBusinessMemberAsync = async ({ token, id, customer, }) => {
+    return await executeFetch({
+        path: `api/Businesses/${id}/Members`,
+        token,
+        method: "post",
+        body: customer,
+    });
+};
 
 var businessesApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -238,7 +246,8 @@ var businessesApi = /*#__PURE__*/Object.freeze({
     createBusinessAsync: createBusinessAsync,
     updateBusinessPropertiesAsync: updateBusinessPropertiesAsync,
     fetchBusinessMembersAsync: fetchBusinessMembersAsync,
-    deleteBusinessMemberAsync: deleteBusinessMemberAsync
+    deleteBusinessMemberAsync: deleteBusinessMemberAsync,
+    addBusinessMemberAsync: addBusinessMemberAsync
 });
 
 /**

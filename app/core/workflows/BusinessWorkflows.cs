@@ -76,7 +76,7 @@ namespace SignalBox.Core.Workflows
                 business = await businessStore.Create(new Business(businessCommonId));
             }
 
-            customer.BusinessMembership ??= new BusinessMembership
+            customer.BusinessMembership = new BusinessMembership
             {
                 BusinessId = business.Id,
                 Business = business,

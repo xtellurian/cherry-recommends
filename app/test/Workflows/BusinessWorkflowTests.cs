@@ -199,10 +199,15 @@ namespace SignalBox.Test.Workflows
             var mockStorageContext = new Mock<IStorageContext>();
             var mockCustomerStore = new Mock<ICustomerStore>();
             var businessCommonId = "business-id";
+            var newBusinessCommonId = "newbusiness-id";
             var workflow = new BusinessWorkflows(mockStorageContext.Object, mockBusinessStore.Object, mockCustomerStore.Object, Utility.MockLogger<BusinessWorkflows>().Object);
             var business = new Business(businessCommonId)
             {
                 Id = 1
+            };
+            var newBusiness = new Business(newBusinessCommonId)
+            {
+                Id = 2
             };
             var customer = new Customer("customerId")
             {
@@ -232,13 +237,17 @@ namespace SignalBox.Test.Workflows
                 .ReturnsAsync(true);
             mockBusinessStore.Setup(_ => _.ReadFromCommonId(It.Is<string>(x => x == business.CommonId)))
                 .ReturnsAsync(business);
-
+            mockBusinessStore.Setup(_ => _.ExistsFromCommonId(It.Is<string>(x => x == newBusiness.CommonId)))
+                .ReturnsAsync(true);
+            mockBusinessStore.Setup(_ => _.ReadFromCommonId(It.Is<string>(x => x == newBusiness.CommonId)))
+                .ReturnsAsync(newBusiness);
             // act
-            var membership = await workflow.AddToBusiness(businessCommonId, customer, businessProperties);
+            var membership = await workflow.AddToBusiness(newBusinessCommonId, customer, businessProperties);
 
             // assert
             mockBusinessStore.Verify(_ => _.Read(It.Is<long>(s => s == business.Id)));
             mockStorageContext.Verify(_ => _.SaveChanges(), Times.Once);
+            Assert.Equal(membership.BusinessId, newBusiness.Id);
             Assert.Equal(customer.BusinessMembership, membership);
             Assert.Equal(customer.CustomerId, customer.BusinessMembership.Customer.CustomerId);
         }

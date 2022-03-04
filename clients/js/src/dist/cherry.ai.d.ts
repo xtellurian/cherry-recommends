@@ -1288,6 +1288,10 @@ interface DeleteBusinessMemberRequest extends DeleteRequest {
     customerId: number;
 }
 declare const deleteBusinessMemberAsync: ({ token, id, customerId }: DeleteBusinessMemberRequest) => Promise<any>;
+interface AddBusinessMemberRequest extends EntityRequest {
+    customer: components["schemas"]["Customer"];
+}
+declare const addBusinessMemberAsync: ({ token, id, customer, }: AddBusinessMemberRequest) => Promise<any>;
 
 declare const businessesApi_d_fetchBusinessesAsync: typeof fetchBusinessesAsync;
 declare const businessesApi_d_fetchBusinessAsync: typeof fetchBusinessAsync;
@@ -1296,6 +1300,7 @@ declare const businessesApi_d_createBusinessAsync: typeof createBusinessAsync;
 declare const businessesApi_d_updateBusinessPropertiesAsync: typeof updateBusinessPropertiesAsync;
 declare const businessesApi_d_fetchBusinessMembersAsync: typeof fetchBusinessMembersAsync;
 declare const businessesApi_d_deleteBusinessMemberAsync: typeof deleteBusinessMemberAsync;
+declare const businessesApi_d_addBusinessMemberAsync: typeof addBusinessMemberAsync;
 declare namespace businessesApi_d {
   export {
     businessesApi_d_fetchBusinessesAsync as fetchBusinessesAsync,
@@ -1305,6 +1310,7 @@ declare namespace businessesApi_d {
     businessesApi_d_updateBusinessPropertiesAsync as updateBusinessPropertiesAsync,
     businessesApi_d_fetchBusinessMembersAsync as fetchBusinessMembersAsync,
     businessesApi_d_deleteBusinessMemberAsync as deleteBusinessMemberAsync,
+    businessesApi_d_addBusinessMemberAsync as addBusinessMemberAsync,
   };
 }
 

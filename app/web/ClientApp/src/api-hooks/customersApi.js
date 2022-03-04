@@ -65,3 +65,24 @@ export const useLatestRecommendations = ({ id }) => {
 
   return result;
 };
+
+export const useSearchCustomers = ({ searchTerm }) => {
+  const token = useAccessToken();
+  const page = usePagination();
+  const [environment] = useEnvironmentReducer();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && searchTerm) {
+      fetchCustomersAsync({
+        token,
+        page,
+        searchTerm,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, page, searchTerm, environment]);
+
+  return result;
+};

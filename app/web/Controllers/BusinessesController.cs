@@ -1,6 +1,4 @@
-using System;
-using System.Linq;
-using System.Linq.Expressions;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,8 +47,16 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}/Members")]
         public async Task<Paginated<Customer>> GetBusinessMembers(string id, [FromQuery] PaginateRequest p, [FromQuery] SearchEntities q)
         {
-            return await customerStore.Query(new EntityStoreQueryOptions<Customer>(p.Page, _ => _.BusinessMembership.BusinessId == Int64.Parse(id) && 
-                (EF.Functions.Like(_.CommonId, $"%{q.Term}%") || EF.Functions.Like(_.Name, $"%{q.Term}%"))));
+            if (long.TryParse(id, out var businessId))
+            {
+                return await customerStore.Query(new EntityStoreQueryOptions<Customer>(p.Page, _ => _.BusinessMembership.BusinessId == businessId && 
+                    (EF.Functions.Like(_.CommonId, $"%{q.Term}%") || EF.Functions.Like(_.Name, $"%{q.Term}%"))));
+            }
+            else
+            {            
+                var results = new List<Customer>();
+                return new Paginated<Customer>(results, 0, 0, 1);
+            }
         }
         
         [HttpDelete("{id}/Members/{customerId}")]
@@ -59,6 +65,15 @@ namespace SignalBox.Web.Controllers
             var business = await base.GetResource(id);
             var customer = await workflows.RemoveBusinessMembership(business, customerId);
             return customer;
+        }
+        
+        [HttpPost("{id}/Members/")]
+        public async Task<BusinessMembership> AddMember(string id, AddMemberDto memberDto)
+        {
+            var business = await base.GetResource(id);
+            var customer = await customerStore.ReadFromCommonId(memberDto.CommonId);
+            var membership = await workflows.AddToBusiness(business.CommonId, customer);
+            return membership;
         }
     }
 }

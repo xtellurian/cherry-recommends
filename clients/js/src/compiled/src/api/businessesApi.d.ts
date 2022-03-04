@@ -18,4 +18,8 @@ interface DeleteBusinessMemberRequest extends DeleteRequest {
     customerId: number;
 }
 export declare const deleteBusinessMemberAsync: ({ token, id, customerId }: DeleteBusinessMemberRequest) => Promise<any>;
+interface AddBusinessMemberRequest extends EntityRequest {
+    customer: components["schemas"]["Customer"];
+}
+export declare const addBusinessMemberAsync: ({ token, id, customer, }: AddBusinessMemberRequest) => Promise<any>;
 export {};

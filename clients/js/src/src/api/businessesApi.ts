@@ -104,3 +104,20 @@ export const deleteBusinessMemberAsync = async ({
     method: "delete",
   });
 };
+
+interface AddBusinessMemberRequest extends EntityRequest {
+  customer: components["schemas"]["Customer"];
+}
+
+export const addBusinessMemberAsync = async ({
+  token,
+  id,
+  customer,
+}: AddBusinessMemberRequest) => {
+  return await executeFetch({
+    path: `api/Businesses/${id}/Members`,
+    token,
+    method: "post",
+    body: customer,
+  });
+};

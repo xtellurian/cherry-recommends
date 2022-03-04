@@ -4,6 +4,7 @@ import { BigPopup } from "../molecules/popups/BigPopup";
 import { SearchBox } from "../molecules/SearchBox";
 import { MemberRow } from "./MemberRow";
 import { useBusinessMembers } from "../../api-hooks/businessesApi";
+import { AddMember } from "./AddMember";
 
 export const MembersSection = ({ business }) => {
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -34,7 +35,9 @@ export const MembersSection = ({ business }) => {
       <BigPopup
         isOpen={isEditMembersPopupOpen}
         setIsOpen={setEditMembersPopupOpen}
-      ></BigPopup>
+      >
+        <AddMember business={business} />
+      </BigPopup>
     </React.Fragment>
   );
 };
