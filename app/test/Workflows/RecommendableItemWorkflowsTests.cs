@@ -117,7 +117,7 @@ namespace SignalBox.Test.Stores
 
             // Assert
 
-            Assert.Equal(true, isBaselineItemForRecommender);
+            Assert.True(isBaselineItemForRecommender);
 
             mockItemsRecommenderStore.Verify(_ => _.Count(_ => _.BaselineItemId == recommendableItem.Id), Times.Exactly(1));
             mockStorageContext.Verify(_ => _.SaveChanges(), Times.Exactly(0));

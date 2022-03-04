@@ -8,5 +8,7 @@ namespace SignalBox.Web.Dto
         public string Term { get; set; }
         [FromQuery(Name = "scope")]
         public string Scope { get; set; }
+        [FromQuery(Name = "weeksAgo")]
+        public int? WeeksAgo { get; set; }
     }
 }
