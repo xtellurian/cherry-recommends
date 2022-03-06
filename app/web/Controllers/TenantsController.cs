@@ -86,7 +86,7 @@ namespace SignalBox.Web.Controllers
                 var email = User.Email();
                 if (!dryRun)
                 {
-                    await newTenantQueue.Enqueue(new NewTenantQueueMessage(dto.Name, creatorId, dto.TermsOfServiceVersion, email));
+                    await newTenantQueue.Enqueue(new NewTenantQueueMessage(dto.Name, creatorId, email, dto.TermsOfServiceVersion));
                 }
 
                 return new StatusDto("Submitted");
