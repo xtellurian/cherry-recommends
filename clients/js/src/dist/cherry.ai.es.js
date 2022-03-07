@@ -480,6 +480,12 @@ const createRecommendationConsumedEventAsync = async ({ token, commonUserId, cus
     };
     return await createEventsAsync({ token, events: [payload] });
 };
+const fetchBusinessEventsAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        path: `api/Businesses/${id}/events`,
+        token,
+    });
+};
 
 var eventsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -490,7 +496,8 @@ var eventsApi = /*#__PURE__*/Object.freeze({
     createEventsAsync: createEventsAsync,
     fetchCustomersEventsAsync: fetchCustomersEventsAsync,
     fetchTrackedUsersEventsAsync: fetchTrackedUsersEventsAsync,
-    createRecommendationConsumedEventAsync: createRecommendationConsumedEventAsync
+    createRecommendationConsumedEventAsync: createRecommendationConsumedEventAsync,
+    fetchBusinessEventsAsync: fetchBusinessEventsAsync
 });
 
 const fetchEnvironmentsAsync = async ({ token, page }) => {

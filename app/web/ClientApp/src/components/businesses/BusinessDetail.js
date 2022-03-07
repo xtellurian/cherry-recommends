@@ -16,6 +16,7 @@ import {
 import { JsonView } from "../molecules/JsonView";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { MembersSection } from "./MembersSection";
+import { BusinessEventsSection } from "./BusinessEventsSection";
 
 const tabs = [
   {
@@ -105,10 +106,9 @@ export const BusinessDetail = () => {
         )}
       </TabActivator>
 
-      <TabActivator
-        tabId={"history"}
-        defaultTabId={defaultTabId}
-      ></TabActivator>
+      <TabActivator tabId={"history"} defaultTabId={defaultTabId}>
+        <BusinessEventsSection business={business} />
+      </TabActivator>
       <TabActivator
         tabId={"latest-recommendations"}
         defaultTabId={defaultTabId}

@@ -1454,6 +1454,7 @@ interface CreateRecommendationConsumedRequest {
     correlatorId: number;
 }
 declare const createRecommendationConsumedEventAsync: ({ token, commonUserId, customerId, correlatorId, }: CreateRecommendationConsumedRequest) => Promise<any>;
+declare const fetchBusinessEventsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 
 declare const eventsApi_d_Custom: typeof Custom;
 declare const eventsApi_d_Behaviour: typeof Behaviour;
@@ -1463,6 +1464,7 @@ declare const eventsApi_d_createEventsAsync: typeof createEventsAsync;
 declare const eventsApi_d_fetchCustomersEventsAsync: typeof fetchCustomersEventsAsync;
 declare const eventsApi_d_fetchTrackedUsersEventsAsync: typeof fetchTrackedUsersEventsAsync;
 declare const eventsApi_d_createRecommendationConsumedEventAsync: typeof createRecommendationConsumedEventAsync;
+declare const eventsApi_d_fetchBusinessEventsAsync: typeof fetchBusinessEventsAsync;
 declare namespace eventsApi_d {
   export {
     eventsApi_d_Custom as Custom,
@@ -1473,6 +1475,7 @@ declare namespace eventsApi_d {
     eventsApi_d_fetchCustomersEventsAsync as fetchCustomersEventsAsync,
     eventsApi_d_fetchTrackedUsersEventsAsync as fetchTrackedUsersEventsAsync,
     eventsApi_d_createRecommendationConsumedEventAsync as createRecommendationConsumedEventAsync,
+    eventsApi_d_fetchBusinessEventsAsync as fetchBusinessEventsAsync,
   };
 }
 

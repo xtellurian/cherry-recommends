@@ -39,3 +39,9 @@ export const createRecommendationConsumedEventAsync = async ({ token, commonUser
     };
     return await createEventsAsync({ token, events: [payload] });
 };
+export const fetchBusinessEventsAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        path: `api/Businesses/${id}/events`,
+        token,
+    });
+};

@@ -73,3 +73,13 @@ export const createRecommendationConsumedEventAsync = async ({
   };
   return await createEventsAsync({ token, events: [payload] });
 };
+
+export const fetchBusinessEventsAsync = async ({
+  token,
+  id,  
+}: EntityRequest) => {
+  return await executeFetch({
+    path: `api/Businesses/${id}/events`,
+    token,
+  });
+};

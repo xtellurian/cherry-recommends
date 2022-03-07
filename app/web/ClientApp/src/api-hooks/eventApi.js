@@ -1,6 +1,10 @@
 import React from "react";
 import { useAccessToken } from "./token";
-import { fetchCustomersEventsAsync, fetchEventAsync } from "../api/eventsApi";
+import {
+  fetchCustomersEventsAsync,
+  fetchEventAsync,
+  fetchBusinessEventsAsync,
+} from "../api/eventsApi";
 
 export const useEvent = ({ id }) => {
   const token = useAccessToken();
@@ -28,6 +32,25 @@ export const useCustomerEvents = ({ id }) => {
         token,
         id,
         useInternalId: true,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id]);
+
+  return result;
+};
+
+export const useBusinessEvents = ({ id }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({
+    loading: true,
+  });
+  React.useEffect(() => {
+    if (token && id) {
+      fetchBusinessEventsAsync({
+        token,
+        id,
       })
         .then(setState)
         .catch((error) => setState({ error }));

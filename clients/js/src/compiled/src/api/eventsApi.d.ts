@@ -18,4 +18,5 @@ interface CreateRecommendationConsumedRequest {
     correlatorId: number;
 }
 export declare const createRecommendationConsumedEventAsync: ({ token, commonUserId, customerId, correlatorId, }: CreateRecommendationConsumedRequest) => Promise<any>;
+export declare const fetchBusinessEventsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 export {};

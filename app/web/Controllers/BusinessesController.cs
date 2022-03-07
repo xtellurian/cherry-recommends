@@ -20,15 +20,18 @@ namespace SignalBox.Web.Controllers
 
         private readonly BusinessWorkflows workflows;
         private readonly ICustomerStore customerStore;
+        private readonly ICustomerEventStore customerEventStore;
 
         public BusinessesController(ILogger<BusinessesController> logger,
                                     IBusinessStore store,
                                     ICustomerStore customerStore,
+                                    ICustomerEventStore customerEventStore,
                                     BusinessWorkflows workflows) : base(store)
         {
             _logger = logger;
             this.workflows = workflows;
             this.customerStore = customerStore;
+            this.customerEventStore = customerEventStore;
         }
 
         protected override Task<(bool, string)> CanDelete(Business entity)
@@ -66,7 +69,7 @@ namespace SignalBox.Web.Controllers
             var customer = await workflows.RemoveBusinessMembership(business, customerId);
             return customer;
         }
-        
+
         [HttpPost("{id}/Members/")]
         public async Task<BusinessMembership> AddMember(string id, AddMemberDto memberDto)
         {
@@ -75,5 +78,13 @@ namespace SignalBox.Web.Controllers
             var membership = await workflows.AddToBusiness(business.CommonId, customer);
             return membership;
         }
+        
+        /// <summary>Returns a list of events for a given business.</summary>
+        [HttpGet("{id}/events")]
+        public async Task<Paginated<CustomerEvent>> GetEvents(string id, [FromQuery] PaginateRequest p)
+        {
+            var business = await base.GetResource(id);
+            return await customerEventStore.ReadEventsForBusiness(p.Page, business);
+        }        
     }
 }

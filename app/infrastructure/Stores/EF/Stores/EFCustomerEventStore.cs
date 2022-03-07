@@ -181,5 +181,30 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .Take(32).Skip(0)
                 .ToListAsync();
         }
+
+        public async Task<Paginated<CustomerEvent>> ReadEventsForBusiness(int page, Business business)
+        {
+            var result = await context.CustomerEvents
+                .Join(context.Customers, evt => evt.TrackedUserId, cust => cust.Id, (customerEvent, customer) => new
+                {
+                    customerEvent,
+                    customer
+                })                
+                .Join(context.Businesses, combined => combined.customer.BusinessMembership.BusinessId, biz => biz.Id, (x, business) => new
+                {
+                    customerEvent = x.customerEvent,
+                    customer = x.customer,
+                    business = business
+                })
+                .Where(_ => _.business.Id == business.Id)
+                .Select(_ => _.customerEvent)
+                .OrderByDescending(_ => _.Timestamp)
+                .Skip((page - 1) * PageSize).Take(PageSize)
+                .ToListAsync();
+
+            int itemCount = result.Count;
+            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
+            return new Paginated<CustomerEvent>(result, pageCount, itemCount, page);
+        }
     }
 }
