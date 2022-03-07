@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 export function useQuery() {
@@ -105,3 +105,18 @@ export function saveBlob({ blob, name }) {
   a.click();
   window.URL.revokeObjectURL(url);
 }
+
+export const useOutsideClick = ({ ref, onClick }) => {
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        onClick();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
+};

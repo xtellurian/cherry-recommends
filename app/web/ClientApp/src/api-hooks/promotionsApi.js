@@ -8,7 +8,7 @@ import { usePagination } from "../utility/utility";
 import { useEnvironmentReducer } from "./environmentsApi";
 
 export const usePromotions = (p) => {
-  const { trigger } = p || {}; // ensure this works in the case of p === undefinfed
+  const { trigger, searchTerm, benefitType, promotionType, weeksAgo } = p || {}; // ensure this works in the case of p === undefinfed
   const token = useAccessToken();
   const page = usePagination();
   const [environment] = useEnvironmentReducer();
@@ -19,11 +19,15 @@ export const usePromotions = (p) => {
       fetchPromotionsAsync({
         token,
         page,
+        searchTerm,
+        benefitType,
+        promotionType,
+        weeksAgo,
       })
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, page, trigger, environment]);
+  }, [token, page, trigger, environment, searchTerm]);
 
   return result;
 };

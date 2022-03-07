@@ -109,6 +109,11 @@ interface Business extends CommonEntity {
 interface MetricBinRequest extends EntityRequest {
     binCount: number;
 }
+interface PromotionsRequest extends EntitySearchRequest {
+    promotionType: string | undefined;
+    benefitType: string | undefined;
+    weeksAgo: number | undefined;
+}
 
 declare const fetchApiKeysAsync: ({ token, page }: PaginatedRequest) => Promise<any>;
 declare enum ApiKeyType {
@@ -2317,7 +2322,7 @@ declare namespace recommendableItemsApi_d {
   };
 }
 
-declare const fetchPromotionsAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<Promotion>>;
+declare const fetchPromotionsAsync: ({ token, page, searchTerm, promotionType, benefitType, weeksAgo, }: PromotionsRequest) => Promise<PaginateResponse<Promotion>>;
 declare const fetchPromotionAsync: ({ token, id }: EntityRequest) => Promise<any>;
 interface CreatePromotionRequest extends AuthenticatedRequest {
     promotion: components["schemas"]["CreatePromotionDto"];

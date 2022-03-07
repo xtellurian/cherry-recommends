@@ -7,6 +7,7 @@ import {
     PaginateResponse,
     Promotion,
     SetpropertiesRequest,
+    PromotionsRequest
   } from "../interfaces";
   import { executeFetch } from "./client/apiClientTs";
   import { components } from "../model/api";
@@ -17,13 +18,19 @@ import {
     token,
     page,
     searchTerm,
-  }: EntitySearchRequest): Promise<PaginateResponse<Promotion>> => {
+    promotionType,
+    benefitType,
+    weeksAgo,
+  }: PromotionsRequest): Promise<PaginateResponse<Promotion>> => {
     return await executeFetch({
       path: "api/Promotions",
       token,
       page,
       query: {
         "q.term": searchTerm,
+        "q.weeksAgo": weeksAgo,  
+        "promotionType": promotionType,
+        "benefitType": benefitType,
       },
     });
   };

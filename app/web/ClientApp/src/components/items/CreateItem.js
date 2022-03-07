@@ -16,12 +16,12 @@ import {
 import Select from "../molecules/selectors/Select";
 import { useCommonId } from "../../utility/utility";
 
-const benefitTypeOptons = [
+export const benefitTypeOptons = [
   { value: "percent", label: "%" },
   { value: "fixed", label: "Fixed" },
 ];
 
-const promotionTypeOptons = [
+export const promotionTypeOptons = [
   { value: "discount", label: "Discount" },
   { value: "gift", label: "Gift" },
   { value: "service", label: "Service" },

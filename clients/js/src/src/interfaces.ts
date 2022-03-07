@@ -96,3 +96,9 @@ export interface Business extends CommonEntity {}
 export interface MetricBinRequest extends EntityRequest {
   binCount: number;
 }
+
+export interface PromotionsRequest extends EntitySearchRequest {
+  promotionType: string | undefined,
+  benefitType: string | undefined,
+  weeksAgo: number | undefined;
+}

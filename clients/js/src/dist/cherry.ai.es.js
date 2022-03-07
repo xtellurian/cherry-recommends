@@ -2059,13 +2059,16 @@ var recommendableItemsApi = /*#__PURE__*/Object.freeze({
     setPropertiesAsync: setPropertiesAsync$1
 });
 
-const fetchPromotionsAsync = async ({ token, page, searchTerm, }) => {
+const fetchPromotionsAsync = async ({ token, page, searchTerm, promotionType, benefitType, weeksAgo, }) => {
     return await executeFetch({
         path: "api/Promotions",
         token,
         page,
         query: {
             "q.term": searchTerm,
+            "q.weeksAgo": weeksAgo,
+            "promotionType": promotionType,
+            "benefitType": benefitType,
         },
     });
 };

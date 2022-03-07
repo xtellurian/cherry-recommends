@@ -1,6 +1,6 @@
-import { AuthenticatedRequest, DeleteRequest, DeleteResponse, EntityRequest, EntitySearchRequest, PaginateResponse, Promotion, SetpropertiesRequest } from "../interfaces";
+import { AuthenticatedRequest, DeleteRequest, DeleteResponse, EntityRequest, PaginateResponse, Promotion, SetpropertiesRequest, PromotionsRequest } from "../interfaces";
 import { components } from "../model/api";
-export declare const fetchPromotionsAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<Promotion>>;
+export declare const fetchPromotionsAsync: ({ token, page, searchTerm, promotionType, benefitType, weeksAgo, }: PromotionsRequest) => Promise<PaginateResponse<Promotion>>;
 export declare const fetchPromotionAsync: ({ token, id }: EntityRequest) => Promise<any>;
 interface CreatePromotionRequest extends AuthenticatedRequest {
     promotion: components["schemas"]["CreatePromotionDto"];

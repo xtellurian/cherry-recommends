@@ -192,7 +192,7 @@ export const TextInput = ({
 
   const handleOnKeyPress = (e) => {
     if (e.key == "Enter" && onReturn) {
-      onReturn(value);
+      onReturn(value || e.target.value);
       e.preventDefault();
     }
   };
