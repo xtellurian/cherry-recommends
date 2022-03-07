@@ -11,7 +11,7 @@ namespace SignalBox.Core.Workflows
     {
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ILogger<CustomerEventsWorkflows> logger;
-        private readonly ICustomerStore userStore;
+        private readonly ICustomerWorkflow customerWorkflow;
         private readonly IEnvironmentProvider environmentProvider;
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ICustomerEventStore customerEventStore;
@@ -22,7 +22,7 @@ namespace SignalBox.Core.Workflows
         public CustomerEventsWorkflows(
             IDateTimeProvider dateTimeProvider,
             ILogger<CustomerEventsWorkflows> logger,
-            ICustomerStore userStore,
+            ICustomerWorkflow customerWorkflow,
             IEnvironmentProvider environmentProvider,
             IIntegratedSystemStore integratedSystemStore,
             ICustomerEventStore customerEventStore,
@@ -31,7 +31,7 @@ namespace SignalBox.Core.Workflows
         {
             this.dateTimeProvider = dateTimeProvider;
             this.logger = logger;
-            this.userStore = userStore;
+            this.customerWorkflow = customerWorkflow;
             this.environmentProvider = environmentProvider;
             this.integratedSystemStore = integratedSystemStore;
             this.customerEventStore = customerEventStore;
@@ -63,6 +63,7 @@ namespace SignalBox.Core.Workflows
             logger.LogInformation("Processing Events");
 
             var customers = await CreateOrGetCustomers(input);
+            SetCustomerProperties(input, customers);
             var events = await CreateCustomerEvents(input, customers);
 
             // save changes
@@ -71,6 +72,38 @@ namespace SignalBox.Core.Workflows
             // check if we should add any customer to a business
             await AddToBusinesses(input, customers);
             return new EventLoggingResponse { EventsProcessed = events.Count() };
+        }
+
+        private void SetCustomerProperties(IEnumerable<CustomerEventInput> input, IEnumerable<Customer> customers)
+        {
+            foreach (var customer in customers)
+            {
+                var identifyEvents = input
+                    .Where(_ => _.CustomerId == customer.CustomerId && _.Kind == EventKinds.Identify)
+                    .ToList();
+                if (identifyEvents.Any())
+                {
+                    customer.Properties ??= new DynamicPropertyDictionary();
+                    foreach (var e in identifyEvents)
+                    {
+                        customer.Properties.Merge(e.Properties);
+                    }
+                }
+                foreach (var k in customer.Properties.Keys)
+                {
+                    switch (k)
+                    {
+                        case "firstName":
+                            customer.Name = customer.Properties[k]?.ToString();
+                            break;
+                        case "email":
+                            customer.Email = customer.Properties[k]?.ToString();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
         }
 
         private async Task AddToBusinesses(IEnumerable<CustomerEventInput> input, IEnumerable<Customer> customers)
@@ -87,7 +120,7 @@ namespace SignalBox.Core.Workflows
         private async Task<IEnumerable<Customer>> CreateOrGetCustomers(IEnumerable<CustomerEventInput> input)
         {
             var lastUpdated = dateTimeProvider.Now;
-            var customers = await userStore.CreateIfNotExists(input.Select(_ => new PendingCustomer(_.CustomerId, _.EnvironmentId)).Distinct());
+            var customers = await customerWorkflow.CreateOrUpdate(input.Select(_ => new PendingCustomer(_.CustomerId, _.EnvironmentId, null, false)).Distinct());
             if (customers.Any())
             {
                 foreach (var u in customers)

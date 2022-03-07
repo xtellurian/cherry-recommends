@@ -113,11 +113,11 @@ namespace SignalBox.Core.Workflows
         {
             var data = await customerMetricStore.GetMetricCustomerExports(metric);
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("CustomerId, Metric Name, Metric Value");
+            sb.AppendLine("CustomerId, Email, Metric Name, Metric Value");
             var prepLines = data
-                .Select(_ => $"{_.CustomerId}, {_.MetricName}, {_.MetricValue}")
+                .Select(_ => $"{_.CustomerId},{_.Email ?? ""},{_.MetricName},{_.MetricValue}")
                 .ToArray();
-            Array.ForEach<string>(prepLines, _ => sb.AppendLine(_));
+            Array.ForEach(prepLines, _ => sb.AppendLine(_));
             var bytes = new UTF8Encoding().GetBytes(sb.ToString());
 
             return bytes;

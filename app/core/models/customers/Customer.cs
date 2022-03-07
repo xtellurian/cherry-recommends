@@ -40,6 +40,8 @@ namespace SignalBox.Core
 
         public string CommonUserId => CommonId;
         public string CustomerId => CommonId;
+#nullable enable
+        public string? Email { get; set; }
 
         [JsonIgnore]
         public ICollection<Segment> Segments { get; set; }
@@ -49,7 +51,6 @@ namespace SignalBox.Core
         // this can be serialised and sent out
         public ICollection<TrackedUserSystemMap> IntegratedSystemMaps { get; set; } = new List<TrackedUserSystemMap>(); // for initialising
 
-#nullable enable
         public BusinessMembership? BusinessMembership { get; set; }
     }
 }

@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using SignalBox.Core;
 
 #nullable enable
 namespace SignalBox.Web.Dto
@@ -11,6 +10,7 @@ namespace SignalBox.Web.Dto
         public string? CommonUserId { get; set; } = null!; // to be deprecated
         public string? CustomerId { get; set; } = null!;
         public string? Name { get; set; }
+        public string? Email { get; set; }
         public Dictionary<string, object>? Properties { get; set; }
         public IntegratedSystemReference? IntegratedSystemReference { get; set; }
     }

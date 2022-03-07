@@ -415,6 +415,124 @@
         }
       }
     },
+    "/api/Businesses/{id}/Members": {
+      "get": {
+        "tags": [
+          "Businesses"
+        ],
+        "summary": "Gets the Customers that are members of a Business.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Businesses/{id}/Members/{customerId}": {
+      "delete": {
+        "tags": [
+          "Businesses"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Businesses/{id}": {
       "get": {
         "tags": [
@@ -4597,6 +4715,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "binCount",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -4638,6 +4764,14 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "binCount",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -14292,6 +14426,10 @@
             "type": "string",
             "nullable": true
           },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
           "properties": {
             "type": "object",
             "additionalProperties": { },
@@ -14623,6 +14761,10 @@
             "type": "string",
             "nullable": true,
             "readOnly": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
           },
           "integratedSystemMaps": {
             "type": "array",
@@ -15086,7 +15228,8 @@
           "behaviour",
           "pageView",
           "identify",
-          "consumeRecommendation"
+          "consumeRecommendation",
+          "addToBusiness"
         ],
         "type": "string"
       },
@@ -15474,16 +15617,13 @@
         "properties": {
           "integratedSystemId": {
             "type": "integer",
-            "description": "The SignalBox Identifier of the integrated system.",
             "format": "int64"
           },
           "userId": {
-            "type": "string",
-            "description": "The unqiue User Id in the external system, e.g. Hubspot Contact Id."
+            "type": "string"
           }
         },
-        "additionalProperties": false,
-        "description": "Links a user to an existing Integrated System resource."
+        "additionalProperties": false
       },
       "IntegratedSystemTypes": {
         "enum": [

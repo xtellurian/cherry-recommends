@@ -62,7 +62,7 @@ namespace SignalBox.Web.Controllers
         public override async Task<DynamicPropertyDictionary> SetProperties(string id, [FromBody] DynamicPropertyDictionary properties, bool? useInternalId = null)
         {
             var customer = await base.GetResource(id);
-            customer = await workflows.MergeUpdateProperties(customer, properties, null, saveOnComplete: true);
+            customer = await workflows.MergeUpdateProperties(customer, properties, saveOnComplete: true);
             return customer.Properties;
         }
 
@@ -70,21 +70,28 @@ namespace SignalBox.Web.Controllers
         [HttpPost]
         public async Task<object> CreateOrUpdate([FromBody] CreateOrUpdateCustomerDto dto)
         {
-            return await workflows.CreateOrUpdate(dto.GetCustomerId(), dto.Name, dto.Properties,
-                                                     dto.IntegratedSystemReference?.IntegratedSystemId,
-                                                     dto.IntegratedSystemReference?.UserId);
+            return await workflows.CreateOrUpdate(new PendingCustomer(dto.GetCustomerId())
+            {
+                Name = dto.Name,
+                Email = dto.Email,
+                Properties = dto.Properties,
+                IntegratedSystemReference = dto.IntegratedSystemReference
+            });
         }
 
         /// <summary>Creates or updates a set of users with properties.</summary>
         [HttpPut]
         public async Task<object> CreateBatch([FromBody] BatchCreateOrUpdateCustomersDto dto)
         {
-            await workflows.CreateOrUpdateMultiple(
-                dto.Items().Select(u => new CustomerWorkflows.CreateOrUpdateCustomerModel(u.GetCustomerId(),
-                                                                                         u.Name,
-                                                                                         u.Properties,
-                                                                                         u.IntegratedSystemReference?.IntegratedSystemId,
-                                                                                         u.IntegratedSystemReference?.UserId)));
+            await workflows.CreateOrUpdate(
+                dto.Items().Select(u => new PendingCustomer(u.GetCustomerId())
+                {
+                    Name = u.Name,
+                    Email = u.Email,
+                    Properties = u.Properties,
+                    IntegratedSystemReference = u.IntegratedSystemReference
+                }
+            ));
             return new object();
         }
 

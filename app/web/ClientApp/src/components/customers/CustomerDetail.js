@@ -21,16 +21,16 @@ import { LatestRecommendationsSection } from "./LatestRecommendationsSection";
 
 const tabs = [
   {
-    id: "properties",
-    label: "Current Properties",
-  },
-  {
     id: "history",
     label: "Event History",
   },
   {
     id: "latest-recommendations",
     label: "Recommendations",
+  },
+  {
+    id: "properties",
+    label: "Current Properties",
   },
 ];
 const defaultTabId = tabs[0].id;
@@ -86,10 +86,13 @@ export const CustomerDetail = () => {
       {trackedUser.commonId && (
         <CopyableField label="Common Id" value={trackedUser.commonId} />
       )}
+      {trackedUser.email && (
+        <CopyableField label="Email" value={trackedUser.email} />
+      )}
 
       <Tabs tabs={tabs} defaultTabId={tabs[0].id} />
 
-      <TabActivator tabId={tabs[0].id} defaultTabId={defaultTabId}>
+      <TabActivator tabId="properties" defaultTabId={defaultTabId}>
         <Subtitle>Properties ({numProperties})</Subtitle>
 
         <Link to={`/customers/edit-properties/${trackedUser.id}`}>

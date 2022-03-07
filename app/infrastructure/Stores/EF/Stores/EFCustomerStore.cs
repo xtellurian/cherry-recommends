@@ -29,7 +29,10 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<Customer> CreateIfNotExists(PendingCustomer pendingCustomer)
         {
-            environmentProvider.SetOverride(pendingCustomer.EnvironmentId);
+            if (pendingCustomer.EnvironmentId != environmentProvider.CurrentEnvironmentId)
+            {
+                environmentProvider.SetOverride(pendingCustomer.EnvironmentId);
+            }
             if (!await this.QuerySet.AnyAsync(_ => _.CommonId == pendingCustomer.CommonId))
             {
                 return await this.Create(new Customer(pendingCustomer.CommonId, pendingCustomer.Name));

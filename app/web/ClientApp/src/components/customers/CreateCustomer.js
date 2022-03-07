@@ -18,9 +18,10 @@ import {
 import { useAnalytics } from "../../analytics/analyticsHooks";
 
 export const CreateCustomer = () => {
-  const [newUser, setNewUser] = React.useState({
+  const [newCustomer, setNewCustomer] = React.useState({
     customerId: "",
     name: "",
+    email: null,
     integratedSystemReference: null,
   });
 
@@ -40,10 +41,10 @@ export const CreateCustomer = () => {
   const handleCreate = () => {
     setLoading(true);
     if (integratedSystemReference.integratedSystemId > 0) {
-      newUser.integratedSystemReference = integratedSystemReference;
+      newCustomer.integratedSystemReference = integratedSystemReference;
     }
     createOrUpdateCustomerAsync({
-      user: newUser,
+      customer: newCustomer,
       token,
     })
       .then((u) => {
@@ -62,19 +63,7 @@ export const CreateCustomer = () => {
         <Title>Add a Customer</Title>
         <hr />
         {error && <ErrorCard error={error} />}
-        <InputGroup>
-          <TextInput
-            label="Customer Name"
-            placeholder="Johnny Greensleaves"
-            value={newUser.name}
-            onChange={(e) =>
-              setNewUser({
-                ...newUser,
-                name: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+        <label>Required</label>
         <InputGroup>
           <TextInput
             validator={joinValidators([
@@ -84,11 +73,41 @@ export const CreateCustomer = () => {
             ])}
             label="Customer ID"
             placeholder="XXXXXX-XXXX-XXXXX"
-            value={newUser.customerId}
+            value={newCustomer.customerId}
             onChange={(e) =>
-              setNewUser({
-                ...newUser,
+              setNewCustomer({
+                ...newCustomer,
                 customerId: e.target.value,
+              })
+            }
+          />
+        </InputGroup>
+
+        <label className="mt-3">Optional</label>
+
+        <InputGroup>
+          <TextInput
+            label="Name"
+            placeholder="Billy Buystuff"
+            value={newCustomer.name}
+            onChange={(e) =>
+              setNewCustomer({
+                ...newCustomer,
+                name: e.target.value,
+              })
+            }
+          />
+        </InputGroup>
+
+        <InputGroup>
+          <TextInput
+            label="Email"
+            placeholder="william@example.com"
+            value={newCustomer.email || ""}
+            onChange={(e) =>
+              setNewCustomer({
+                ...newCustomer,
+                email: e.target.value,
               })
             }
           />

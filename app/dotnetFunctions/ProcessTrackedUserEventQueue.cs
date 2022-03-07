@@ -53,7 +53,7 @@ namespace SignalBox.Functions
 
         [Function("ProcessNewTrackedUsersEventQueue")]
         public async Task ProcessNewTrackedUsersEvents(
-            [QueueTrigger(SignalBox.Core.Constants.AzureQueueNames.NewTrackedUsers)] NewCustomerEventQueueMessage queueMessage,
+            [QueueTrigger(Core.Constants.AzureQueueNames.NewTrackedUsers)] NewCustomerEventQueueMessage queueMessage,
             FunctionContext context)
         {
             var logger = context.GetLogger(nameof(ProcessNewTrackedUsersEvents));
@@ -61,7 +61,7 @@ namespace SignalBox.Functions
             logger.LogInformation($"Processing message with {queueMessage.PendingCustomers.Count()} create customer messages: ");
             try
             {
-                await customerWorkflows.CreateIfNotExist(queueMessage.PendingCustomers);
+                await customerWorkflows.CreateOrUpdate(queueMessage.PendingCustomers);
             }
             catch (Exception ex)
             {

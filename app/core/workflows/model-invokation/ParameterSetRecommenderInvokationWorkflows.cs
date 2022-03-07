@@ -22,7 +22,7 @@ namespace SignalBox.Core.Workflows
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
-        private readonly ICustomerStore customerStore;
+        private readonly ICustomerWorkflow customerWorkflow;
         private readonly IRecommenderModelClientFactory modelClientFactory;
 
         public ParameterSetRecommenderInvokationWorkflows(ILogger<ParameterSetRecommenderInvokationWorkflows> logger,
@@ -34,7 +34,7 @@ namespace SignalBox.Core.Workflows
                                     IParameterSetRecommendationStore parameterSetRecommendationStore,
                                     IWebhookSenderClient webhookSenderClient,
                                     IHistoricCustomerMetricStore historicFeatureStore,
-                                    ICustomerStore customerStore,
+                                    ICustomerWorkflow customerWorkflow,
                                     IRecommenderModelClientFactory modelClientFactory)
                                      : base(storageContext, parameterSetRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider)
         {
@@ -44,7 +44,7 @@ namespace SignalBox.Core.Workflows
             this.correlatorStore = correlatorStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
             this.parameterSetRecommendationStore = parameterSetRecommendationStore;
-            this.customerStore = customerStore;
+            this.customerWorkflow = customerWorkflow;
             this.modelClientFactory = modelClientFactory;
         }
 
@@ -63,7 +63,8 @@ namespace SignalBox.Core.Workflows
             try
             {
                 var model = recommender.ModelRegistration;
-                context.Customer = await customerStore.CreateIfNotExists(new PendingCustomer(input.GetCustomerId(), recommender.EnvironmentId, $"Auto-created by Recommender {recommender.Name}"));
+                context.Customer = await customerWorkflow.CreateOrUpdate(
+                    new PendingCustomer(input.GetCustomerId(), recommender.EnvironmentId, $"Auto-created by Recommender {recommender.Name}", false));
 
                 // check the cache and load the context 
                 if (await recommendationCache.HasCached(recommender, context.Customer))

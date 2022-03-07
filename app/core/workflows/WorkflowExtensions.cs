@@ -42,6 +42,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<AggregateCustomerMetricWorkflow>();
 
             // also register any interfaces that are implemented by workflows
+            services.AddScoped<ICustomerWorkflow, CustomerWorkflows>();
             services.AddScoped<ICustomerEventsWorkflow, CustomerEventsWorkflows>();
             services.AddScoped<IBusinessWorkflow, BusinessWorkflows>();
             return services;

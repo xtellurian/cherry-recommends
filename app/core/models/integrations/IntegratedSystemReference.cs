@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SignalBox.Web.Dto
+namespace SignalBox.Core
 {
     /// <summary>
     /// Links a user to an existing Integrated System resource.

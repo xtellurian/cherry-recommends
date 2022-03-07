@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core;
 
 #nullable enable
 namespace SignalBox.Core.Workflows
 {
-    public class CustomerWorkflows : IWorkflow
+    public class CustomerWorkflows : IWorkflow, ICustomerWorkflow
     {
         private readonly IStorageContext storageContext;
         private readonly ILogger<CustomerWorkflows> logger;
@@ -31,19 +32,19 @@ namespace SignalBox.Core.Workflows
             this.dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<IEnumerable<Customer>> CreateIfNotExist(IEnumerable<PendingCustomer> pendingCustomers)
-        {
-            var newCustomers = await customerStore.CreateIfNotExists(pendingCustomers);
+        // public async Task<IEnumerable<Customer>> CreateIfNotExist(IEnumerable<PendingCustomer> pendingCustomers)
+        // {
+        //     var newCustomers = await customerStore.CreateIfNotExists(pendingCustomers);
 
-            foreach (var u in newCustomers)
-            {
-                u.LastUpdated = dateTimeProvider.Now;
-            }
+        //     foreach (var u in newCustomers)
+        //     {
+        //         u.LastUpdated = dateTimeProvider.Now;
+        //     }
 
-            await storageContext.SaveChanges();
-            return newCustomers;
-        }
-        public async Task<Customer> MergeUpdateProperties(Customer customer, IDictionary<string, object> properties, long? integratedSystemId = null, bool? saveOnComplete = true)
+        //     await storageContext.SaveChanges();
+        //     return newCustomers;
+        // }
+        public async Task<Customer> MergeUpdateProperties(Customer customer, IDictionary<string, object> properties, bool? saveOnComplete = true)
         {
             var newProperties = new DynamicPropertyDictionary(properties);
 
@@ -57,38 +58,42 @@ namespace SignalBox.Core.Workflows
             return customer;
         }
 
-        public async Task<Customer> CreateOrUpdate(string commonUserId,
-                                                    string? name,
-                                                    Dictionary<string, object>? properties,
-                                                    long? integratedSystemId,
-                                                    string? integratedSystemUserId,
-                                                    bool saveOnComplete = true)
+        public async Task<Customer> CreateOrUpdate(PendingCustomer pendingCustomer, bool saveOnComplete = true)
         {
             Customer customer;
-            if (await customerStore.ExistsFromCommonId(commonUserId))
+            if (await customerStore.ExistsFromCommonId(pendingCustomer.CommonId))
             {
-                customer = await customerStore.ReadFromCommonId(commonUserId, _ => _.IntegratedSystemMaps);
+                customer = await customerStore.ReadFromCommonId(pendingCustomer.CommonId, _ => _.IntegratedSystemMaps);
                 logger.LogInformation($"Updating user {customer.Id}");
-                if (!string.IsNullOrEmpty(name))
+                if(pendingCustomer.OverwriteExisting)
                 {
-                    customer.Name = name;
-                }
-                if (properties != null && properties.Keys.Count > 0)
-                {
-                    customer = await MergeUpdateProperties(customer, properties, integratedSystemId, saveOnComplete: false);
+                    if (!string.IsNullOrEmpty(pendingCustomer.Name))
+                    {
+                        customer.Name = pendingCustomer.Name;
+                    }
+                    if (!string.IsNullOrEmpty(pendingCustomer.Email))
+                    {
+                        customer.Email = pendingCustomer.Email;
+                    }
+                    if (pendingCustomer.Properties != null && pendingCustomer.Properties.Keys.Any())
+                    {
+                        customer = await MergeUpdateProperties(customer, pendingCustomer.Properties, saveOnComplete: false);
+                    }
                 }
             }
             else
             {
-                customer = await customerStore.Create(new Customer(commonUserId, name, new DynamicPropertyDictionary(properties)));
+                customer = await customerStore.Create(pendingCustomer.ToCoreRepresentation());
                 logger.LogInformation($"Created user {customer.Id}");
             }
 
-            if (integratedSystemId.HasValue && !customer.IntegratedSystemMaps.Any(_ => _.IntegratedSystemId == integratedSystemId))
+            if (pendingCustomer.IntegratedSystemReference != null &&
+                !customer.IntegratedSystemMaps.Any(_ => _.IntegratedSystemId == pendingCustomer.IntegratedSystemReference.IntegratedSystemId))
             {
-                logger.LogInformation($"Connecting user to integrated system: {integratedSystemId}");
-                var integratedSystem = await integratedSystemStore.Read(integratedSystemId.Value);
-                await trackedUserSystemMapStore.Create(new TrackedUserSystemMap(integratedSystemUserId, integratedSystem, customer));
+                logger.LogInformation($"Connecting user to integrated system: { pendingCustomer.IntegratedSystemReference.IntegratedSystemId}");
+                var integratedSystem = await integratedSystemStore.Read(pendingCustomer.IntegratedSystemReference.IntegratedSystemId);
+                await trackedUserSystemMapStore.Create(
+                    new TrackedUserSystemMap(pendingCustomer.IntegratedSystemReference.UserId, integratedSystem, customer));
             }
             else
             {
@@ -104,45 +109,25 @@ namespace SignalBox.Core.Workflows
             return customer;
         }
 
-        public async Task<IEnumerable<Customer>> CreateOrUpdateMultiple(
-            IEnumerable<CreateOrUpdateCustomerModel> newUsers)
+        public async Task<IEnumerable<Customer>> CreateOrUpdate(
+           IEnumerable<PendingCustomer> pendingCustomers, bool saveOnComplete = true)
         {
             // check for incoming duplicates
-            var numDistinct = newUsers.Select(_ => _.CustomerId).Distinct().Count();
-            if (numDistinct < newUsers.Count())
+            var numDistinct = pendingCustomers.Select(_ => _.CommonId).Distinct().Count();
+            if (numDistinct < pendingCustomers.Count())
             {
                 throw new BadRequestException("All CommonUserId must be unique when batch creating or updating.");
             }
-            var users = new List<Customer>();
-            foreach (var u in newUsers)
+            var customers = new List<Customer>();
+            foreach (var pendingCustomer in pendingCustomers)
             {
-                var user = await CreateOrUpdate(u.CustomerId, u.Name, u.Properties, u.IntegratedSystemId, u.IntegratedSystemUserId, false);
+                // var user = await CreateOrUpdate(u.CustomerId, u.Name, u.Email, u.Properties, u.IntegratedSystemId, u.IntegratedSystemUserId, false);
+                var customer = await CreateOrUpdate(pendingCustomer, false);
+                customers.Add(customer);
             }
 
             await storageContext.SaveChanges();
-            return users;
-        }
-
-        public struct CreateOrUpdateCustomerModel
-        {
-            public CreateOrUpdateCustomerModel(string customerId,
-                                             string? name,
-                                             Dictionary<string, object>? properties,
-                                             long? integratedSystemId,
-                                             string? integratedSystemUserId)
-            {
-                CustomerId = customerId;
-                Name = name;
-                Properties = properties;
-                IntegratedSystemId = integratedSystemId;
-                IntegratedSystemUserId = integratedSystemUserId;
-            }
-
-            public string CustomerId { get; set; }
-            public string? Name { get; set; }
-            public Dictionary<string, object>? Properties { get; set; }
-            public long? IntegratedSystemId { get; set; }
-            public string? IntegratedSystemUserId { get; set; }
+            return customers;
         }
     }
 }

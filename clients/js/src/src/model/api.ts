@@ -206,6 +206,59 @@ export interface paths {
       };
     };
   };
+  "/api/Businesses/{id}/Members": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          page?: number;
+          pageSize?: number;
+          term?: string;
+          scope?: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CustomerPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/Businesses/{id}/Members/{customerId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          customerId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Customer"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/Businesses/{id}": {
     get: {
       parameters: {
@@ -2260,6 +2313,9 @@ export interface paths {
         path: {
           id: string;
         };
+        query: {
+          binCount?: number;
+        };
       };
       responses: {
         /** Success */
@@ -2282,6 +2338,9 @@ export interface paths {
       parameters: {
         path: {
           id: string;
+        };
+        query: {
+          binCount?: number;
         };
       };
       responses: {
@@ -6989,6 +7048,7 @@ export interface components {
       commonUserId?: string | null;
       customerId?: string | null;
       name?: string | null;
+      email?: string | null;
       properties?: { [key: string]: unknown } | null;
       integratedSystemReference?: components["schemas"]["IntegratedSystemReference"];
     };
@@ -7070,6 +7130,7 @@ export interface components {
       properties?: { [key: string]: unknown } | null;
       commonUserId?: string | null;
       customerId?: string | null;
+      email?: string | null;
       integratedSystemMaps?:
         | components["schemas"]["TrackedUserSystemMap"][]
         | null;
@@ -7199,7 +7260,8 @@ export interface components {
       | "behaviour"
       | "pageView"
       | "identify"
-      | "consumeRecommendation";
+      | "consumeRecommendation"
+      | "addToBusiness";
     EventKindSummary: {
       keys?: string[] | null;
       instanceCount?: number;
@@ -7303,11 +7365,8 @@ export interface components {
       items?: components["schemas"]["IntegratedSystem"][] | null;
       pagination?: components["schemas"]["PaginationInfo"];
     };
-    /** Links a user to an existing Integrated System resource. */
     IntegratedSystemReference: {
-      /** The SignalBox Identifier of the integrated system. */
       integratedSystemId: number;
-      /** The unqiue User Id in the external system, e.g. Hubspot Contact Id. */
       userId: string;
     };
     IntegratedSystemTypes: "segment" | "hubspot" | "custom";

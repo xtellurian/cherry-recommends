@@ -23,5 +23,14 @@ namespace SignalBox.Core
                 return await store.ReadFromCommonId(id);
             }
         }
+
+        public static Customer ToCoreRepresentation(this PendingCustomer pending)
+        {
+            return new Customer(pending.CommonId, pending.Name, pending.Properties)
+            {
+                Email = pending.Email,
+                EnvironmentId = pending.EnvironmentId,
+            };
+        }
     }
 }
