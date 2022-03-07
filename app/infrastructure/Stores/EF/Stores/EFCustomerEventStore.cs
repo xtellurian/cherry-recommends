@@ -189,7 +189,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 {
                     customerEvent,
                     customer
-                })                
+                })
                 .Join(context.Businesses, combined => combined.customer.BusinessMembership.BusinessId, biz => biz.Id, (x, business) => new
                 {
                     customerEvent = x.customerEvent,

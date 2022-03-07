@@ -2,7 +2,7 @@ namespace SignalBox.Core
 {
     public struct CreateParameterModel
     {
-        #nullable enable
+#nullable enable
         public CreateParameterModel(CreateCommonEntityModel commonEntityModel, string parameterType, object? defaultValue, string? description = null)
         {
             Common = commonEntityModel;

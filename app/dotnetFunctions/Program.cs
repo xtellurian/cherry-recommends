@@ -140,7 +140,7 @@ namespace SignalBox.Functions
                         throw new ConfigurationException("No valid provider");
                     }
 
-                    services.Configure<JsonSerializerOptions>(options => 
+                    services.Configure<JsonSerializerOptions>(options =>
                     {
                         options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                         options.Converters.Add(new JsonStringEnumConverter());

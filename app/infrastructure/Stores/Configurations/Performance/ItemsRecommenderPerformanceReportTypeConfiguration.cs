@@ -5,7 +5,7 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal class ItemsRecommenderPerformanceReportTypeConfiguration : 
+    internal class ItemsRecommenderPerformanceReportTypeConfiguration :
         RecommenderPerformanceReportTypeConfigurationBase<ItemsRecommenderPerformanceReport>, IEntityTypeConfiguration<ItemsRecommenderPerformanceReport>
     {
         public override void Configure(EntityTypeBuilder<ItemsRecommenderPerformanceReport> builder)

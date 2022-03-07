@@ -28,13 +28,13 @@ namespace SignalBox.Web.Controllers
         {
             return await workflows.ListReports();
         }
-        
+
         /// <summary>Downloads a file.</summary>
         [HttpGet("download")]
         public async Task<FileResult> ListReports(string report)
         {
             var fileBytes = await workflows.DownloadReport(report);
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, report); 
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, report);
         }
 
     }

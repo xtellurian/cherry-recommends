@@ -6,7 +6,7 @@ namespace SignalBox.Functions
 {
     public class PayloadItem
     {
-        public ICollection<RecommendableItem> Items { get; set; } 
+        public ICollection<RecommendableItem> Items { get; set; }
     }
 
     public class InvokeCategoricalOptimiserModel
@@ -14,7 +14,7 @@ namespace SignalBox.Functions
         public int Id { get; set; }
         public string Name { get; set; }
         [Required]
-        public PayloadItem Payload { get; set; } 
+        public PayloadItem Payload { get; set; }
 
         public void Validate()
         {

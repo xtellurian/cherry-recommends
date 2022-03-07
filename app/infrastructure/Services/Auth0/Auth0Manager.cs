@@ -268,7 +268,7 @@ namespace SignalBox.Infrastructure.Services
                     Scope = new List<string> { tenant.AccessScope() }
                 });
             }
-        } 
+        }
 
         private async Task EnsureTenantScopeExists(Tenant tenant)
         {

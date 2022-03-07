@@ -5,7 +5,7 @@ namespace SignalBox.Core.Adapters.Hubspot
     public class ConfirmationActionHookCrmCardAction : CrmCardAction
     {
         [JsonPropertyName("type")]
-        public override string Type { get; protected set; } =  "CONFIRMATION_ACTION_HOOK";
+        public override string Type { get; protected set; } = "CONFIRMATION_ACTION_HOOK";
         [JsonPropertyName("httpMethod")]
         public string HttpMethod { get; protected set; } = "GET";
 

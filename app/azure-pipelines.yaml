@@ -24,21 +24,26 @@ stages:
   - stage: build_artifacts
     displayName: Build artifacts
     jobs:
-      - job: build_artifacts_app
-        displayName: dotnet sln build and publish
-        continueOnError: false
-        steps:
-          - template: templates/build-publish-web.yaml
-      
       - job: run_tests
         displayName: Run Tests
         continueOnError: false
         steps:
           - template: templates/dotnet-test.yaml
 
+      - job: build_artifacts_app
+        displayName: dotnet sln build and publish
+        dependsOn:
+          - run_tests
+        continueOnError: false
+        steps:
+          - template: templates/build-publish-web.yaml
+
       # On a Pull Request, build the app on latest multiple operating systems.
       - job: build_artifacts_os
-        condition: eq(variables['Build.Reason'], 'PullRequest')
+        dependsOn:
+          - run_tests
+          - build_artifacts_app
+        condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
         strategy:
           matrix:
             linux:

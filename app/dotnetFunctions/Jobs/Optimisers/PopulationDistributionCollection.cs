@@ -9,13 +9,13 @@ namespace SignalBox.Functions
         private const int ConstantPopulationId = 1;
         public List<PopulationItemDistribution> Populations { get; set; } = new List<PopulationItemDistribution>();
         public int NItemsToRecommend { get; set; }
-        public RecommendableItem DefaultItem { get; set; } 
+        public RecommendableItem DefaultItem { get; set; }
 
         public PopulationDistributionCollection()
         {
         }
 
-        public PopulationItemDistribution GetPopulation (int populationId)
+        public PopulationItemDistribution GetPopulation(int populationId)
         {
             foreach (var item in Populations)
             {
@@ -28,7 +28,7 @@ namespace SignalBox.Functions
         }
 
         public void Add(PopulationItemDistribution population)
-        {            
+        {
             Populations.Add(population);
         }
 

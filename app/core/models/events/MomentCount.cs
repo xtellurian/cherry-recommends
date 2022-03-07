@@ -9,7 +9,7 @@ namespace SignalBox.Core
             Timestamp = timestamp;
             Count = count;
         }
-        
+
         public MomentCount(string category, DateTimeOffset timestamp, long count)
         {
             Category = category;

@@ -3,7 +3,7 @@ using SignalBox.Core.Workflows;
 
 namespace SignalBox.Core.Recommenders
 {
-    public class RewardingContext: RecommenderContextBase
+    public class RewardingContext : RecommenderContextBase
     {
         public RewardingContext(ILogger<IWorkflow> logger) : base(logger)
         {

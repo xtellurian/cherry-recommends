@@ -52,16 +52,16 @@ namespace SignalBox.Web.Controllers
         {
             if (long.TryParse(id, out var businessId))
             {
-                return await customerStore.Query(new EntityStoreQueryOptions<Customer>(p.Page, _ => _.BusinessMembership.BusinessId == businessId && 
+                return await customerStore.Query(new EntityStoreQueryOptions<Customer>(p.Page, _ => _.BusinessMembership.BusinessId == businessId &&
                     (EF.Functions.Like(_.CommonId, $"%{q.Term}%") || EF.Functions.Like(_.Name, $"%{q.Term}%"))));
             }
             else
-            {            
+            {
                 var results = new List<Customer>();
                 return new Paginated<Customer>(results, 0, 0, 1);
             }
         }
-        
+
         [HttpDelete("{id}/Members/{customerId}")]
         public async Task<Customer> RemoveBusinessMembership(string id, long customerId)
         {
@@ -78,13 +78,13 @@ namespace SignalBox.Web.Controllers
             var membership = await workflows.AddToBusiness(business.CommonId, customer);
             return membership;
         }
-        
+
         /// <summary>Returns a list of events for a given business.</summary>
         [HttpGet("{id}/events")]
         public async Task<Paginated<CustomerEvent>> GetEvents(string id, [FromQuery] PaginateRequest p)
         {
             var business = await base.GetResource(id);
             return await customerEventStore.ReadEventsForBusiness(p.Page, business);
-        }        
+        }
     }
 }

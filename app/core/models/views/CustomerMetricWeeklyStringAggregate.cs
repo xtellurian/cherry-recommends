@@ -10,7 +10,7 @@ namespace SignalBox.Core
         public DateTimeOffset FirstOfWeek { get; set; }
         public DateTimeOffset LastOfWeek { get; set; }
         public long MetricId { get; set; }
-        public string StringValue {get;set;}
+        public string StringValue { get; set; }
         /// <summary>
         /// The sum of the occurrance of a particular string value in a week
         /// </summary>

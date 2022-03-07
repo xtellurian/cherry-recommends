@@ -16,18 +16,18 @@ namespace SignalBox.Functions
         [JsonPropertyName("default_item")]
         public RecommendableItem Default_Item { get; set; }
         public List<RecommendableItem> Items { get; set; } = new List<RecommendableItem>();
-        public Dictionary<string, double> Probabilities { get; set; }  = new Dictionary<string, double>();
+        public Dictionary<string, double> Probabilities { get; set; } = new Dictionary<string, double>();
 
         public PopulationItemDistribution()
         {
         }
 
-        public PopulationItemDistribution(RecommendableItem defaultItem, IEnumerable<RecommendableItem> items, int populationId = 1 )
+        public PopulationItemDistribution(RecommendableItem defaultItem, IEnumerable<RecommendableItem> items, int populationId = 1)
         {
             Population_Id = populationId;
             Default_Item = defaultItem;
             Items.AddRange(items);
-            if (items == null || items.Count() == 0 )
+            if (items == null || items.Count() == 0)
             {
                 Items.Add(Default_Item);
             }
@@ -35,7 +35,7 @@ namespace SignalBox.Functions
             foreach (var item in Items)
             {
                 double prob = 1.0; // item == DefaultItem
-                
+
                 if (item.CommonId != Default_Item?.CommonId)
                 {
                     prob = 1.0 / (double)items.Count();
@@ -68,7 +68,7 @@ namespace SignalBox.Functions
             return newDict;
         }
 
-        
+
         public double GetItemProbability(string itemId)
         {
             double probability = 0.0;
@@ -76,7 +76,7 @@ namespace SignalBox.Functions
             return probability;
         }
 
-    
+
         public List<ScoredItem> ChooseItems(ICollection<RecommendableItem> items, int nitems)
         {
             if (items.Count <= 0)
@@ -85,13 +85,13 @@ namespace SignalBox.Functions
             }
 
             List<string> itemIds = new List<string>();
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 itemIds.Add(item.CommonId);
             }
 
             Dictionary<string, double> newProbabilities = new Dictionary<string, double>();
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 double probability = 0.0;
                 if (Probabilities.TryGetValue(item.CommonId, out probability))
@@ -120,7 +120,7 @@ namespace SignalBox.Functions
         {
             List<ScoredItem> selectedItems = new List<ScoredItem>();
             var cumulativeWeight = new List<double>();
-            double last = 0;            
+            double last = 0;
             foreach (var cur in probabilities)
             {
                 last += cur.Value;
@@ -128,7 +128,7 @@ namespace SignalBox.Functions
             }
 
             double minimum = 0.0;
-            double choice = _rnd.NextDouble() * (last - minimum) + minimum;;
+            double choice = _rnd.NextDouble() * (last - minimum) + minimum; ;
             int i = 0;
             foreach (var cur in probabilities)
             {
@@ -148,7 +148,7 @@ namespace SignalBox.Functions
 
         private RecommendableItem GetItem(ICollection<RecommendableItem> items, string key)
         {
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 if (item.CommonId == key)
                 {
@@ -158,5 +158,5 @@ namespace SignalBox.Functions
             return null;
         }
     }
- 
+
 }

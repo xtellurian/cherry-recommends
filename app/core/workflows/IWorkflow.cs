@@ -4,6 +4,6 @@ namespace SignalBox.Core.Workflows
     // For example, some operations tie together multiple stores.
     public interface IWorkflow
     {
-        
+
     }
 }

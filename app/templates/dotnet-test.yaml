@@ -8,6 +8,22 @@ steps:
     displayName: Dotnet build solution
     workingDirectory: app
 
+  - script: dotnet format whitespace --verify-no-changes
+    displayName: Check C# format whitespace
+    workingDirectory: app
+
+  - script: dotnet format style --verify-no-changes
+    displayName: Check C# format style
+    workingDirectory: app
+
+  # # this is failing due to exception on the build server
+  # # System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.CodeAnalysis.CSharp, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.
+  # # The system cannot find the file specified.
+  # # File name: 'Microsoft.CodeAnalysis.CSharp, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+  # - script: dotnet format analyzers --verify-no-changes
+  #   displayName: Check C# format analyzers
+  #   workingDirectory: app
+
   - task: DotNetCoreCLI@2
     displayName: "Dotnet test solution"
     inputs:
@@ -24,6 +40,6 @@ steps:
       summaryFileLocation: "$(Agent.TempDirectory)/**/coverage.cobertura.xml"
 
   - script: npx prettier --check .
-    condition:  eq(variables['Build.Reason'], 'PullRequest') # only run pretty check if in PR
+    condition: eq(variables['Build.Reason'], 'PullRequest') # only run pretty check if in PR
     displayName: Check Prettier - /ClientApp
     workingDirectory: app/web/ClientApp/

@@ -10,7 +10,7 @@ namespace SignalBox.Infrastructure.EntityFramework
     public class EFBusinessStore : EFCommonEntityStoreBase<Business>, IBusinessStore
     {
         protected override bool IsEnvironmentScoped => true;
-        
+
         public EFBusinessStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)
         : base(contextProvider, environmentProvider, (c) => c.Businesses)
         { }

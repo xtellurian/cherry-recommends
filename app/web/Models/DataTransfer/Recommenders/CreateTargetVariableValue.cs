@@ -10,7 +10,7 @@ namespace SignalBox.Web.Dto
         [Required]
         public DateTimeOffset End { get; set; }
         [Required]
-        [StringLength(100, MinimumLength =3)]
+        [StringLength(100, MinimumLength = 3)]
         public string Name { get; set; }
         [Required]
         public double Value { get; set; }

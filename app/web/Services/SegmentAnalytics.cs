@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace SignalBox.Web.Services
 {
-    public static class SegmentAnalytics 
+    public static class SegmentAnalytics
     {
         public static IServiceCollection UseSegmentAnalytics(this IServiceCollection services, string writeKey)
         {

@@ -16,7 +16,7 @@ namespace SignalBox.Core
         { }
 
         public Business(string businessId, string businessName, string description) : base(businessId, businessName)
-        { 
+        {
             Description = description;
         }
 

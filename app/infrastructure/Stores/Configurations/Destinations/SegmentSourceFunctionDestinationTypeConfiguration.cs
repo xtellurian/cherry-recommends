@@ -5,7 +5,7 @@ using SignalBox.Core.Recommendations.Destinations;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal class SegmentSourceFunctionDestinationTypeConfiguration 
+    internal class SegmentSourceFunctionDestinationTypeConfiguration
     : RecommendationDestinationTypeConfigurationBase<SegmentSourceFunctionDestination>, IEntityTypeConfiguration<SegmentSourceFunctionDestination>
     {
         public override void Configure(EntityTypeBuilder<SegmentSourceFunctionDestination> builder)

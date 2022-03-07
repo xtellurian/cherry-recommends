@@ -15,8 +15,8 @@ namespace SignalBox.Test.Stores
         };
 
         private string CreateCategoricalOptimiserBody()
-        {            
-            return 
+        {
+            return
             @"
              {
                 ""id"": ""Id1"",
@@ -33,12 +33,12 @@ namespace SignalBox.Test.Stores
                         ""commonId"": ""Test3""
                     }
                 ]
-            }";            
+            }";
         }
 
         private string CreateCategoricalOptimiserPayload()
         {
-            return 
+            return
             @"
             {
                 ""id"": 3,
@@ -61,7 +61,7 @@ namespace SignalBox.Test.Stores
 
         private string CreateCategoricalOptimiserCollection()
         {
-            return 
+            return
             @"
             {
                 ""populations"": [
@@ -92,7 +92,7 @@ namespace SignalBox.Test.Stores
                     ""commonId"": ""bcjadbf""
                 }]
             }";
-            
+
             var info = JsonSerializer.Deserialize<CategoricalOptimiser>(jsonString, serializerOptions);
             Action act = () => jobs.CreateCategoricalOptimiser(info, "tenant1");
             BadRequestException exception = Assert.Throws<BadRequestException>(act);
@@ -104,9 +104,9 @@ namespace SignalBox.Test.Stores
             OptimiserJobs jobs = new OptimiserJobs();
             var jsonString = CreateCategoricalOptimiserBody();
             var info = JsonSerializer.Deserialize<CategoricalOptimiser>(jsonString, serializerOptions);
-            
+
             var data = jobs.CreateCategoricalOptimiser(info, "tenant1");
-            
+
             Assert.NotNull(data);
             Assert.NotNull(data.Populations);
             Assert.NotEmpty(data.Populations);
@@ -123,13 +123,13 @@ namespace SignalBox.Test.Stores
             var jsonCollectionString = CreateCategoricalOptimiserCollection();
             PopulationDistributionCollection collection = null;
 
-            try 
+            try
             {
                 payload = JsonSerializer.Deserialize<InvokeCategoricalOptimiserModel>(jsonString, serializerOptions);
 
                 collection = JsonSerializer.Deserialize<PopulationDistributionCollection>(jsonCollectionString, serializerOptions);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string str = ex.Message;
             }

@@ -4,7 +4,7 @@ namespace SignalBox.Core.Recommendations
     {
         public DefaultRecommendation()
         {
-            
+
         }
     }
 }

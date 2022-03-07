@@ -65,7 +65,7 @@ namespace SignalBox.Core.Workflows
             {
                 customer = await customerStore.ReadFromCommonId(pendingCustomer.CommonId, _ => _.IntegratedSystemMaps);
                 logger.LogInformation($"Updating user {customer.Id}");
-                if(pendingCustomer.OverwriteExisting)
+                if (pendingCustomer.OverwriteExisting)
                 {
                     if (!string.IsNullOrEmpty(pendingCustomer.Name))
                     {

@@ -6,7 +6,7 @@ namespace SignalBox.Functions
     {
         public static string FixSqliteConnectionString(this string cs)
         {
-            var result =  cs.Replace("{AppDir}", Directory.GetCurrentDirectory()).Replace("dotnetFunctions/bin/output/", "");
+            var result = cs.Replace("{AppDir}", Directory.GetCurrentDirectory()).Replace("dotnetFunctions/bin/output/", "");
 
             return result;
         }

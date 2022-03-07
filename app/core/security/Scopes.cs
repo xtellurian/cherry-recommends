@@ -24,7 +24,7 @@ namespace SignalBox.Core.Security
         }
         // warning - DO NOT CHANGE THESE.
         // see azure/Auth0.cs
-        public static ReadWriteScope Metrics => new ReadWriteScope("metrics"); 
+        public static ReadWriteScope Metrics => new ReadWriteScope("metrics");
     }
 
     public class ReadWriteScope

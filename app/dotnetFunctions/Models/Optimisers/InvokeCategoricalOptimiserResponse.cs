@@ -10,7 +10,7 @@ namespace SignalBox.Functions
             CommonId = commonId;
             Score = score;
         }
-        
+
         public string CommonId { get; set; }
         public double Score { get; set; }
     }

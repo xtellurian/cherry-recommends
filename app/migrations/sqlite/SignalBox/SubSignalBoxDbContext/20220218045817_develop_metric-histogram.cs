@@ -4,7 +4,7 @@ namespace sqlite.SignalBox.SubSignalBoxDbContext
 {
     public partial class develop_metrichistogram : Migration
     {
-         private readonly string sp_GetNumericMetricBinning = @"
+        private readonly string sp_GetNumericMetricBinning = @"
             CREATE PROCEDURE dbo.sp_NumericMetricBinning
             @MetricId INTEGER
             ,@BinNumber INTEGER

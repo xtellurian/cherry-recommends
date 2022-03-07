@@ -5,7 +5,7 @@ namespace SignalBox.Functions
 {
     public class CreateCategoricalOptimiserResponse
     {
-        [TableOutput("CategoricalOptimisers", Connection = "AzureWebJobsStorage")] 
+        [TableOutput("CategoricalOptimisers", Connection = "AzureWebJobsStorage")]
         public CategoricalOptimiserRecord Record { get; set; }
 
 
