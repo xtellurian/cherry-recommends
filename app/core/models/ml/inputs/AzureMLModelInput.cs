@@ -12,6 +12,7 @@ namespace SignalBox.Core
         public Datum[] Data { get; set; } = null!;
         public string? CustomerId { get; set; }
         public string? CommonUserId { get; set; }
+        public string? BusinessId { get; set; }
         public IDictionary<string, object>? Arguments { get; set; }
         public IDictionary<string, object>? Metrics { get; set; }
         public IDictionary<string, object>? Features

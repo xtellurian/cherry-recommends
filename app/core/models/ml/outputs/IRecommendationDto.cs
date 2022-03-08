@@ -6,7 +6,9 @@ namespace SignalBox.Core
     {
         string? Trigger { get; }
         System.DateTimeOffset Created { get; }
-        Customer Customer { get; }
-        string CustomerId { get; }
+        Business? Business { get; }
+        string? BusinessId { get; }
+        Customer? Customer { get; }
+        string? CustomerId { get; }
     }
 }

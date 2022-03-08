@@ -11,6 +11,9 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             builder.Property(_ => _.Arguments).HasJsonConversion();
             builder.Property(_ => _.TriggerCollection).HasJsonConversion();
+            builder.Property(_ => _.TargetType)
+                .HasConversion<string>()
+                .HasDefaultValue(PromotionRecommenderTargetTypes.Customer); // TODO: remove default value after first migration
 
             builder
                 .HasMany(_ => _.Items)

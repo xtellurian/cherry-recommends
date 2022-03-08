@@ -29,6 +29,30 @@ namespace SignalBox.Core.Workflows
             return business;
         }
 
+        public async Task<Business> CreateOrUpdate(PendingBusiness pendingBusiness, bool saveOnComplete = true)
+        {
+            Business business;
+            if (await businessStore.ExistsFromCommonId(pendingBusiness.CommonId))
+            {
+                business = await businessStore.ReadFromCommonId(pendingBusiness.CommonId);
+                if (pendingBusiness.OverwriteExisting)
+                {
+                    business.Name = pendingBusiness.Name;
+                    business.Description = pendingBusiness.Description;
+                    business.Properties = new DynamicPropertyDictionary(pendingBusiness.Properties);
+                }
+            }
+            else
+            {
+                business = await businessStore.Create(new Business(pendingBusiness.CommonId, pendingBusiness.Name, pendingBusiness.Description));
+                if (saveOnComplete)
+                {
+                    await storageContext.SaveChanges();
+                }
+            }
+            return business;
+        }
+
         public async Task<Customer> RemoveBusinessMembership(Business business, long customerId)
         {
             var customer = await customerStore.Read(customerId);

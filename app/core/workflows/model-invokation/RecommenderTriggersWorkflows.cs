@@ -10,6 +10,7 @@ namespace SignalBox.Core.Workflows
     public class RecommenderTriggersWorkflows : IWorkflow
     {
         private readonly ILogger<RecommenderTriggersWorkflows> logger;
+        private readonly ITelemetry telemetry;
         private readonly IItemsRecommenderStore itemsRecommenderStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
         private readonly ItemsRecommenderInvokationWorkflows itemsRecommenderInvokationWorkflows;
@@ -17,6 +18,7 @@ namespace SignalBox.Core.Workflows
         private readonly IHistoricCustomerMetricStore historicMetricStore;
 
         public RecommenderTriggersWorkflows(ILogger<RecommenderTriggersWorkflows> logger,
+                                            ITelemetry telemetry,
                                             IItemsRecommenderStore itemsRecommenderStore,
                                             IParameterSetRecommenderStore parameterSetRecommenderStore,
                                             ItemsRecommenderInvokationWorkflows itemsRecommenderInvokationWorkflows,
@@ -24,6 +26,7 @@ namespace SignalBox.Core.Workflows
                                             IHistoricCustomerMetricStore historicMetricStore)
         {
             this.logger = logger;
+            this.telemetry = telemetry;
             this.itemsRecommenderStore = itemsRecommenderStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
             this.itemsRecommenderInvokationWorkflows = itemsRecommenderInvokationWorkflows;
@@ -50,7 +53,8 @@ namespace SignalBox.Core.Workflows
         private async Task<IEnumerable<ItemsRecommendation>> HandleNewMetricValueItemsRecommenders(HistoricCustomerMetric metricValue)
         {
             var recommendations = new List<ItemsRecommendation>();
-            var recommenders = await itemsRecommenderStore.Query(1, _ => _.TriggerCollection != null);
+            // only query for customer target recommenders
+            var recommenders = await itemsRecommenderStore.Query(1, _ => _.TriggerCollection != null && _.TargetType == PromotionRecommenderTargetTypes.Customer);
             logger.LogInformation($"Found {recommenders.Pagination.TotalItemCount} items recommenders with Triggers");
             if (recommenders.Pagination.PageNumber > 1)
             {
@@ -61,17 +65,18 @@ namespace SignalBox.Core.Workflows
             {
                 try
                 {
-                    await InvokeItemsRecommenderMetricsChangedTrigger(recommender, metricValue, recommendations);
+                    await InvokeItemsRecommenderCustomerMetricsChangedTrigger(recommender, metricValue, recommendations);
                 }
                 catch (Exception ex)
                 {
                     logger.LogError($"Exception invoking items recommender Id={recommender.Id}. {ex.Message}");
+                    telemetry.TrackException(ex);
                 }
             }
             return recommendations;
         }
 
-        private async Task InvokeItemsRecommenderMetricsChangedTrigger(ItemsRecommender recommender, HistoricCustomerMetric metricValue, List<ItemsRecommendation> recommendations)
+        private async Task InvokeItemsRecommenderCustomerMetricsChangedTrigger(ItemsRecommender recommender, HistoricCustomerMetric metricValue, List<ItemsRecommendation> recommendations)
         {
             if (recommender?.TriggerCollection?.FeaturesChanged != null) // check the features changed trigger exists
             {

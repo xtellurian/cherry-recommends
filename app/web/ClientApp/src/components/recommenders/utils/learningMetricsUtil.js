@@ -69,11 +69,16 @@ export const LearningMetricsUtil = ({
         <LearningMetricRow metric={f} key={f.id} requestRemove={handleRemove} />
       ))}
       {learningMetrics.length === 0 && (
-        <EmptyList>There are no Learning Metrics yet.</EmptyList>
+        <EmptyList>
+          {recommender.targetType === "business"
+            ? "Business targets do not support learning metrics"
+            : "There are no Learning Metrics yet."}
+        </EmptyList>
       )}
 
       <div className="mt-4">
         <button
+          disabled={recommender.targetType === "business"}
           className="btn btn-primary float-right"
           onClick={() => setIsOpen(true)}
         >

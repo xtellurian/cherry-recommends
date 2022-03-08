@@ -114,6 +114,9 @@ const RecommenderDetailSection = () => {
           {recommender.commonId && (
             <CopyableField label="Common Id" value={recommender.commonId} />
           )}
+          {recommender.targetType && (
+            <CopyableField label="Target" value={recommender.targetType} />
+          )}
 
           {recommender.id && (
             <CopyableField

@@ -14,7 +14,17 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder.Ignore(_ => _.IsFromCache);
 
             builder.Ignore(_ => _.TrackedUser);
-            builder.HasOne(_ => _.Customer).WithMany().HasForeignKey(_ => _.TrackedUserId);
+            builder
+                .HasOne(_ => _.Customer)
+                .WithMany()
+                .HasForeignKey(_ => _.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder
+                .HasOne(_ => _.Business)
+                .WithMany()
+                .HasForeignKey(_ => _.BusinessId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

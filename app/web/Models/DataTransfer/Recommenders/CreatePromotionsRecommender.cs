@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using SignalBox.Core;
+using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Web.Dto
 {
@@ -22,5 +23,6 @@ namespace SignalBox.Web.Dto
         public string? BaselinePromotionId { get; set; }
         public int? NumberOfItemsToRecommend { get; set; }
         public bool? UseAutoAi { get; set; }
+        public PromotionRecommenderTargetTypes? TargetType { get; set; }
     }
 }

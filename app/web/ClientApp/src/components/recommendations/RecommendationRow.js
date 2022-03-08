@@ -1,5 +1,6 @@
 import React from "react";
 import { CaretRightFill } from "react-bootstrap-icons";
+import { useBusiness } from "../../api-hooks/businessesApi";
 import { useCustomer } from "../../api-hooks/customersApi";
 import { Title, Subtitle } from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
@@ -11,15 +12,21 @@ import { BigPopup } from "../molecules/popups/BigPopup";
 
 const tabs = [
   { id: "output", label: "Output" },
-  { id: "customer", label: "Customer" },
+  { id: "target", label: "Target" },
   { id: "input", label: "Input" },
 ];
 const RecommendationDetail = ({ recommendation }) => {
   const [currentTabId, setCurrentTabId] = React.useState(tabs[0].id);
   const customer = useCustomer({
-    id: recommendation.trackedUserId,
+    id: recommendation.customerId,
     useInternalId: true,
   });
+  const business = useBusiness({
+    id: recommendation.businessId,
+    useInternalId: true,
+  });
+  console.log(recommendation);
+  console.log(business);
   const modelInput = JSON.parse(recommendation.modelInput);
   const modelOutput = JSON.parse(recommendation.modelOutput);
   return (
@@ -39,12 +46,21 @@ const RecommendationDetail = ({ recommendation }) => {
           shouldExpandNode={(n) => n.includes("scoredItems")}
         />
       </TabActivator>
-      <TabActivator tabId="customer" currentTabId={currentTabId}>
-        <EntityField
-          entity={customer}
-          label="Customer"
-          to={`customers/detail/${customer.id}`}
-        />
+      <TabActivator tabId="target" currentTabId={currentTabId}>
+        {recommendation.customerId ? (
+          <EntityField
+            entity={customer}
+            label="Customer"
+            to={`/customers/detail/${customer.id}`}
+          />
+        ) : null}
+        {recommendation.businessId ? (
+          <EntityField
+            entity={business}
+            label="Business"
+            to={`/businesses/detail/${business.id}`}
+          />
+        ) : null}
       </TabActivator>
       <TabActivator tabId="input" currentTabId={currentTabId}>
         <JsonView data={modelInput} />
@@ -52,6 +68,7 @@ const RecommendationDetail = ({ recommendation }) => {
     </React.Fragment>
   );
 };
+
 export const RecommendationRow = ({ recommendation }) => {
   const [isPopupOpen, setIsPopupOpen] = React.useState(false);
 

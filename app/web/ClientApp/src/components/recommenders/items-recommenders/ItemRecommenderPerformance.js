@@ -27,6 +27,7 @@ const PerformanceTableRow = ({ data, itemsById }) => {
       </Cell>
       <Cell>{data.targetMetricSum}</Cell>
       <Cell>{data.customerCount}</Cell>
+      <Cell>{data.businessCount}</Cell>
       <Cell>{data.recommendationCount}</Cell>
       <Cell>
         {Math.round((100 * data.targetMetricSum) / data.recommendationCount) /
@@ -46,8 +47,9 @@ const PerformanceTable = ({ reports, itemsById, targetMetric }) => {
         headings={[
           "Promotion",
           `Sum ${targetMetricName}`,
-          "# Customers",
-          "# Recommendations",
+          "Customers",
+          "Businesses",
+          "Recommendations",
           `Sum ${targetMetricName} / # Recommendations`,
         ]}
       />

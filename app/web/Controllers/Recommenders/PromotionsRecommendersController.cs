@@ -65,6 +65,7 @@ namespace SignalBox.Web.Controllers
                 dto.Settings.ToCoreRepresentation(),
                 dto.UseAutoAi ?? false,
                 dto.TargetMetricId,
+                dto.TargetType ?? PromotionRecommenderTargetTypes.Customer,
                 useInternalId: useInternalId);
         }
 
@@ -127,7 +128,12 @@ namespace SignalBox.Web.Controllers
         {
             ValidateInvokationDto(input);
             var recommender = await base.GetResource(id, useInternalId);
-            var convertedInput = new ItemsModelInputDto(input.GetCustomerId(), input.Arguments);
+            var convertedInput = new ItemsModelInputDto(input.Arguments)
+            {
+                CustomerId = input.GetCustomerId(),
+                BusinessId = input.BusinessId
+            };
+
             if (convertedInput.Items != null && convertedInput.Items.Any())
             {
                 throw new BadRequestException($"Promotions must not be set externally");

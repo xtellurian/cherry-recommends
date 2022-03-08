@@ -14,6 +14,7 @@ namespace SignalBox.Core.Workflows
         private readonly IRecommendationCache<ItemsRecommender, ItemsRecommendation> recommendationCache;
         private readonly IRecommenderModelClientFactory modelClientFactory;
         private readonly ICustomerWorkflow customerWorkflow;
+        private readonly IBusinessWorkflow businessWorkflow;
         private readonly IRecommendableItemStore itemStore;
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IItemsRecommenderStore itemsRecommenderStore;
@@ -25,6 +26,7 @@ namespace SignalBox.Core.Workflows
                                     IRecommendationCache<ItemsRecommender, ItemsRecommendation> recommendationCache,
                                     IRecommenderModelClientFactory modelClientFactory,
                                     ICustomerWorkflow customerWorkflow,
+                                    IBusinessWorkflow businessWorkflow,
                                     IHistoricCustomerMetricStore historicMetricStore,
                                     IRecommendableItemStore itemStore,
                                     IWebhookSenderClient webhookSenderClient,
@@ -38,6 +40,7 @@ namespace SignalBox.Core.Workflows
             this.recommendationCache = recommendationCache;
             this.modelClientFactory = modelClientFactory;
             this.customerWorkflow = customerWorkflow;
+            this.businessWorkflow = businessWorkflow;
             this.itemStore = itemStore;
             this.correlatorStore = correlatorStore;
             this.itemsRecommenderStore = itemsRecommenderStore;
@@ -49,38 +52,75 @@ namespace SignalBox.Core.Workflows
             IItemsModelInput input,
             string? trigger = null)
         {
+            switch (recommender.TargetType)
+            {
+                case PromotionRecommenderTargetTypes.Customer:
+                    if (input.CustomerId == null)
+                    {
+                        throw new BadRequestException("CustomerId is required to invoke a recommender targeting Customer");
+                    }
+                    break;
+                case PromotionRecommenderTargetTypes.Business:
+                    if (input.BusinessId == null)
+                    {
+                        throw new BadRequestException("BusinessId is required to invoke a recommender targeting Business");
+                    }
+                    break;
+            }
+
             await itemsRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             var invokationEntry = await base.StartTrackInvokation(recommender, input);
             var context = new RecommendingContext(invokationEntry, trigger);
             context.SetLogger(logger);
-            var userName = input.GetCustomerId(); // initialise the name
+
+            string commonIdOrName;
             try
             {
-                // enrich values from the touchpoint
-                var customerId = input.GetCustomerId() ?? throw new BadRequestException("Customer ID and CommonUserId were null");
-                context.Customer = await customerWorkflow.CreateOrUpdate(
-                    new PendingCustomer(customerId, recommender.EnvironmentId, $"Auto-created by Recommender {recommender.Name}", false));
-                userName = context.Customer.Name ?? context.Customer.CommonId ?? userName;
-                // check the cache
-                if (await recommendationCache.HasCached(recommender, context.Customer))
+                string commonId;
+                if (recommender.TargetType == PromotionRecommenderTargetTypes.Customer)
                 {
-                    var rec = await recommendationCache.GetCached(recommender, context.Customer);
-                    // ensure to load the items
-                    await itemsRecommendationStore.LoadMany(rec, _ => _.Items);
-                    await itemsRecommendationStore.Load(rec, _ => _.RecommendationCorrelator);
-                    context.Correlator = rec.RecommendationCorrelator;
-                    await base.EndTrackInvokation(context, true, "Completed using cached recommendation");
-                    return rec;
+                    commonId = input.GetCustomerId()!; // initialise the name
+
+                    context.Customer = await customerWorkflow.CreateOrUpdate(
+                        new PendingCustomer(commonId, recommender.EnvironmentId, $"Auto-created by Recommender {recommender.Name}", false));
+                    commonIdOrName = context.Customer.Name ?? context.Customer.CommonId ?? commonId;
+
+                    // check the cache
+                    if (await recommendationCache.HasCached(recommender, context.Customer))
+                    {
+                        var rec = await recommendationCache.GetCached(recommender, context.Customer);
+                        // ensure to load the items
+                        await itemsRecommendationStore.LoadMany(rec, _ => _.Items);
+                        await itemsRecommendationStore.Load(rec, _ => _.RecommendationCorrelator);
+                        context.Correlator = rec.RecommendationCorrelator;
+                        await base.EndTrackInvokation(context, true, "Completed using cached recommendation");
+                        return rec;
+                    }
+                    else
+                    {
+                        context.Correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
+                        logger.LogInformation("Saving correlator to create Id");
+                        await storageContext.SaveChanges();
+                    }
+                }
+                else if (recommender.TargetType == PromotionRecommenderTargetTypes.Business && input.BusinessId != null)
+                {
+                    commonId = input.BusinessId; // initialise the name
+                    context.Business = await businessWorkflow.CreateOrUpdate(
+                        new PendingBusiness(input.BusinessId, recommender.EnvironmentId, $"Auto-created by Recommender {recommender.Name}", false));
+                    commonIdOrName = context.Business.Name ?? context.Business.CommonId ?? commonId;
+                    // TODO: check for business rec cache
+
+                    context.Correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
                 }
                 else
                 {
-                    context.Correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
-                    logger.LogInformation("Saving correlator to create Id");
-                    await storageContext.SaveChanges();
+                    throw new BadRequestException("Failed invokation - unknown target.");
                 }
 
 
-                // load the features of the tracked user
+
+                // load the metrics for the invokation
                 input.Metrics = await base.GetMetrics(recommender, context);
 
                 // load the items that a model can choose from
@@ -163,7 +203,7 @@ namespace SignalBox.Core.Workflows
                 await base.EndTrackInvokation(
                     context,
                     false,
-                    message: $"Invoke failed for {userName}",
+                    message: $"Invoke failed for {commonIdEx.CommonId}",
                     modelResponse: commonIdEx.Message);
                 throw; // rethrow the error to propagate to calling client
             }
@@ -185,7 +225,7 @@ namespace SignalBox.Core.Workflows
                     await base.EndTrackInvokation(
                         context,
                         false,
-                        message: $"Invoke failed for {userName}",
+                        message: "Invoke failed",
                         modelResponse: modelResponseContent,
                         saveOnComplete: true);
                     throw; // rethrow the error to propagate to calling client
@@ -217,9 +257,9 @@ namespace SignalBox.Core.Workflows
         }
 
         private async Task<ItemsRecommendation> HandleRecommendation(ItemsRecommender recommender,
-                                                                        RecommendingContext context,
-                                                                        IModelInput input,
-                                                                        ItemsRecommenderModelOutputV1 output)
+                                                                     RecommendingContext context,
+                                                                     IModelInput input,
+                                                                     ItemsRecommenderModelOutputV1 output)
         {
             // produce the recommendation entity
             var recommendation = new ItemsRecommendation(recommender, context, output.ScoredItems);

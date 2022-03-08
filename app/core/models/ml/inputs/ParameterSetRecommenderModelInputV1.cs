@@ -18,6 +18,7 @@ namespace SignalBox.Core
         [StringLength(256, MinimumLength = 3)]
         public string? CustomerId { get; set; } = System.Guid.NewGuid().ToString(); // create a new GUID here if empty
         public string? CommonUserId { get; set; }
+        public string? BusinessId { get; set; }
         [Required]
         public IDictionary<string, object>? Arguments { get; set; } = null!;
         public IDictionary<string, object>? Metrics { get; set; }

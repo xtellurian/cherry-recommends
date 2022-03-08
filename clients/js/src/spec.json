@@ -389,6 +389,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -459,6 +467,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -468,6 +484,62 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CustomerPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Businesses"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMemberDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMemberDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMemberDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessMembership"
                 }
               }
             }
@@ -516,6 +588,62 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Businesses/{id}/events": {
+      "get": {
+        "tags": [
+          "Businesses"
+        ],
+        "summary": "Returns a list of events for a given business.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerEventPaginated"
                 }
               }
             }
@@ -772,6 +900,69 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": { }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Businesses/{id}/recommendations": {
+      "get": {
+        "tags": [
+          "BusinessRecommendations"
+        ],
+        "summary": "Gets recent recommendations for a business.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemsRecommendationPaginated"
                 }
               }
             }
@@ -1557,6 +1748,132 @@
         }
       }
     },
+    "/api/TrackedUsers/{id}/latest-recommendations": {
+      "get": {
+        "tags": [
+          "CustomerRecommendations"
+        ],
+        "summary": "Gets recent recommendations for a tracked user.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Customers/{id}/latest-recommendations": {
+      "get": {
+        "tags": [
+          "CustomerRecommendations"
+        ],
+        "summary": "Gets recent recommendations for a tracked user.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/TrackedUsers/{id}": {
       "get": {
         "tags": [
@@ -2109,6 +2426,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -2250,6 +2575,14 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -2953,6 +3286,14 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -3792,6 +4133,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -3900,6 +4249,14 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -6011,6 +6368,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -6374,6 +6739,14 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -7883,53 +8256,6 @@
       }
     },
     "/api/RecommendableItems": {
-      "post": {
-        "tags": [
-          "Promotions"
-        ],
-        "summary": "Creates a new recommendable promotion.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePromotionDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePromotionDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePromotionDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RecommendableItem"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
       "get": {
         "tags": [
           "Promotions"
@@ -7965,6 +8291,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -7974,6 +8308,53 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RecommendableItemPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Promotions"
+        ],
+        "summary": "Creates a new recommendable promotion.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromotionDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromotionDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromotionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendableItem"
                 }
               }
             }
@@ -7992,53 +8373,6 @@
       }
     },
     "/api/Promotions": {
-      "post": {
-        "tags": [
-          "Promotions"
-        ],
-        "summary": "Creates a new recommendable promotion.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePromotionDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePromotionDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePromotionDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RecommendableItem"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
       "get": {
         "tags": [
           "Promotions"
@@ -8074,6 +8408,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -8083,6 +8425,53 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RecommendableItemPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Promotions"
+        ],
+        "summary": "Creates a new recommendable promotion.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromotionDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromotionDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromotionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendableItem"
                 }
               }
             }
@@ -8990,6 +9379,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -9107,6 +9504,14 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -13648,132 +14053,6 @@
         }
       }
     },
-    "/api/TrackedUsers/{id}/latest-recommendations": {
-      "get": {
-        "tags": [
-          "TrackedUserRecommendations"
-        ],
-        "summary": "Gets recent recommendations for a tracked user.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "useInternalId",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ObjectPaginated"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Customers/{id}/latest-recommendations": {
-      "get": {
-        "tags": [
-          "TrackedUserRecommendations"
-        ],
-        "summary": "Gets recent recommendations for a tracked user.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "useInternalId",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ObjectPaginated"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Webhooks/receivers/{endpointId}": {
       "post": {
         "tags": [
@@ -13810,6 +14089,29 @@
   },
   "components": {
     "schemas": {
+      "AddMemberDto": {
+        "required": [
+          "commonId"
+        ],
+        "type": "object",
+        "properties": {
+          "commonId": {
+            "maxLength": 99,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z0-9_\\-]+$",
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "useInternalId": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "AddPromotionDto": {
         "type": "object",
         "properties": {
@@ -13996,6 +14298,10 @@
             "nullable": true
           },
           "commonUserId": {
+            "type": "string",
+            "nullable": true
+          },
+          "businessId": {
             "type": "string",
             "nullable": true
           },
@@ -15704,7 +16010,7 @@
           "correlator": {
             "$ref": "#/components/schemas/RecommendationCorrelator"
           },
-          "trackedUserId": {
+          "customerId": {
             "type": "integer",
             "format": "int64",
             "nullable": true
@@ -15712,8 +16018,13 @@
           "customer": {
             "$ref": "#/components/schemas/Customer"
           },
-          "trackedUser": {
-            "$ref": "#/components/schemas/Customer"
+          "businessId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "business": {
+            "$ref": "#/components/schemas/Business"
           }
         },
         "additionalProperties": false
@@ -15776,7 +16087,7 @@
           "recommenderType": {
             "$ref": "#/components/schemas/RecommenderTypes"
           },
-          "trackedUserId": {
+          "customerId": {
             "type": "integer",
             "format": "int64",
             "nullable": true
@@ -15786,6 +16097,14 @@
           },
           "customer": {
             "$ref": "#/components/schemas/Customer"
+          },
+          "businessId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "business": {
+            "$ref": "#/components/schemas/Business"
           },
           "targetMetricId": {
             "type": "integer",
@@ -16424,6 +16743,10 @@
             "type": "string",
             "nullable": true
           },
+          "businessId": {
+            "type": "string",
+            "nullable": true
+          },
           "arguments": {
             "type": "object",
             "additionalProperties": { },
@@ -16753,7 +17076,7 @@
           "recommenderType": {
             "$ref": "#/components/schemas/RecommenderTypes"
           },
-          "trackedUserId": {
+          "customerId": {
             "type": "integer",
             "format": "int64",
             "nullable": true
@@ -16763,6 +17086,14 @@
           },
           "customer": {
             "$ref": "#/components/schemas/Customer"
+          },
+          "businessId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "business": {
+            "$ref": "#/components/schemas/Business"
           },
           "targetMetricId": {
             "type": "integer",
@@ -16840,6 +17171,13 @@
           },
           "customer": {
             "$ref": "#/components/schemas/Customer"
+          },
+          "business": {
+            "$ref": "#/components/schemas/Business"
+          },
+          "businessId": {
+            "type": "string",
+            "nullable": true
           },
           "trigger": {
             "type": "string",
@@ -17091,11 +17429,6 @@
             "nullable": true,
             "readOnly": true
           },
-          "customerId": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
           "scoredItems": {
             "type": "array",
             "items": {
@@ -17103,8 +17436,21 @@
             },
             "nullable": true
           },
+          "business": {
+            "$ref": "#/components/schemas/Business"
+          },
+          "businessId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
           "customer": {
             "$ref": "#/components/schemas/Customer"
+          },
+          "customerId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
           },
           "trigger": {
             "type": "string",

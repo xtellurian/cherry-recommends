@@ -18,6 +18,7 @@ namespace SignalBox.Core.Recommendations
             Recommender = recommender;
             RecommenderId = recommender.Id;
             Customer = context.Customer;
+            Business = context.Business;
             Items = items.Select(_ => _.Item).ToList();
             Scores = items.Select(_ => new ScoreContainer(_.Item, _.Score)).ToList();
             TargetMetric = recommender.TargetMetric;

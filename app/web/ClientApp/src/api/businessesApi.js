@@ -9,3 +9,4 @@ export const updateBusinessPropertiesAsync =
 export const fetchBusinessMembersAsync = businesses.fetchBusinessMembersAsync;
 export const deleteBusinessMemberAsync = businesses.deleteBusinessMemberAsync;
 export const addBusinessMemberAsync = businesses.addBusinessMemberAsync;
+export const fetchRecommendationsAsync = businesses.fetchRecommendationsAsync;

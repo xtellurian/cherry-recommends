@@ -5,10 +5,11 @@ import {
   fetchBusinessesAsync,
   fetchBusinessAsync,
   fetchBusinessMembersAsync,
+  fetchRecommendationsAsync,
 } from "../api/businessesApi";
 import { useEnvironmentReducer } from "./environmentsApi";
 
-export const useBusinesses = ({ searchTerm }) => {
+export const useBusinesses = ({ searchTerm } = {}) => {
   const token = useAccessToken();
   const page = usePagination();
   const [environment] = useEnvironmentReducer();
@@ -65,6 +66,26 @@ export const useBusinessMembers = ({ id, searchTerm }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, page, searchTerm, environment]);
+
+  return result;
+};
+
+export const useRecommendations = ({ id }) => {
+  const token = useAccessToken();
+  const [environment] = useEnvironmentReducer();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchRecommendationsAsync({
+        token,
+        id,
+        page: 1,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, environment]);
 
   return result;
 };

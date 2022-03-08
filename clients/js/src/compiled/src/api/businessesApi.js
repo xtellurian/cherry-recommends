@@ -30,7 +30,7 @@ export const createBusinessAsync = async ({ token, business, }) => {
         body: business,
     });
 };
-export const updateBusinessPropertiesAsync = async ({ token, id, properties }) => {
+export const updateBusinessPropertiesAsync = async ({ token, id, properties, }) => {
     return await executeFetch({
         token,
         path: `api/Businesses/${id}/Properties`,
@@ -48,7 +48,7 @@ export const fetchBusinessMembersAsync = async ({ token, id, page, searchTerm, }
         },
     });
 };
-export const deleteBusinessMemberAsync = async ({ token, id, customerId }) => {
+export const deleteBusinessMemberAsync = async ({ token, id, customerId, }) => {
     return await executeFetch({
         path: `api/Businesses/${id}/Members/${customerId}`,
         token,
@@ -61,5 +61,11 @@ export const addBusinessMemberAsync = async ({ token, id, customer, }) => {
         token,
         method: "post",
         body: customer,
+    });
+};
+export const fetchRecommendationsAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        token,
+        path: `api/businesses/${id}/recommendations`,
     });
 };

@@ -10,6 +10,10 @@ namespace SignalBox.Test
         {
             return new Mock<ILogger<T>>();
         }
+        public static Mock<ITelemetry> MockTelemetry()
+        {
+            return new Mock<ITelemetry>();
+        }
         public static Mock<IStorageContext> MockStorageContext()
         {
             return new Mock<IStorageContext>();

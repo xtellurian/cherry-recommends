@@ -60,10 +60,10 @@ export const createBusinessAsync = async ({
 interface UpdateBusinessPropertiesRequest extends EntityRequest {
   properties?: { [key: string]: unknown } | null;
 }
-export const updateBusinessPropertiesAsync = async ({ 
-  token, 
-  id, 
-  properties 
+export const updateBusinessPropertiesAsync = async ({
+  token,
+  id,
+  properties,
 }: UpdateBusinessPropertiesRequest) => {
   return await executeFetch({
     token,
@@ -93,10 +93,10 @@ interface DeleteBusinessMemberRequest extends DeleteRequest {
   customerId: number;
 }
 
-export const deleteBusinessMemberAsync = async ({ 
-  token, 
-  id, 
-  customerId 
+export const deleteBusinessMemberAsync = async ({
+  token,
+  id,
+  customerId,
 }: DeleteBusinessMemberRequest) => {
   return await executeFetch({
     path: `api/Businesses/${id}/Members/${customerId}`,
@@ -119,5 +119,15 @@ export const addBusinessMemberAsync = async ({
     token,
     method: "post",
     body: customer,
+  });
+};
+
+export const fetchRecommendationsAsync = async ({
+  token,
+  id,
+}: EntityRequest): Promise<components["schemas"]["ItemsRecommendation"]> => {
+  return await executeFetch({
+    token,
+    path: `api/businesses/${id}/recommendations`,
   });
 };

@@ -48,5 +48,6 @@ namespace SignalBox.Core.Recommenders
         public ICollection<ItemsRecommendation> Recommendations { get; set; } = null!;
         public long? TargetMetricId { get; set; }
         public Metric? TargetMetric { get; set; }
+        public PromotionRecommenderTargetTypes TargetType { get; set; }
     }
 }

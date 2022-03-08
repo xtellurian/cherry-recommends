@@ -17,8 +17,10 @@ import {
 import { BigPopup } from "../../molecules/popups/BigPopup";
 import { EntityRow } from "../../molecules/layout/EntityRow";
 import { Col } from "../../molecules/layout/Grid";
+import { RecommendationRow } from "../../recommendations/RecommendationRow";
 
-const RecommendationRow = ({ recommendation, size }) => {
+const RecommendationRowTemp = ({ recommendation, size }) => {
+  return <RecommendationRow recommendation={recommendation} />;
   const dataSubset = {
     recommendationCorrelatorId: recommendation.recommendationCorrelatorId,
     scoredItems: recommendation.scoredItems,
@@ -74,7 +76,7 @@ export const ItemsRecommendationList = ({ size }) => {
   const recommendations = usePromotionsRecommendations({ id, pageSize: 5 });
 
   return (
-    <div className="container">
+    <React.Fragment>
       {recommendations.loading && <Spinner />}
       {recommendations.error && <ErrorCard error={recommendations.error} />}
       {recommendations.items && recommendations.items.length === 0 && (
@@ -82,11 +84,11 @@ export const ItemsRecommendationList = ({ size }) => {
       )}
       {recommendations.items &&
         recommendations.items.map((r) => (
-          <RecommendationRow size={size} recommendation={r} key={r.id} />
+          <RecommendationRowTemp size={size} recommendation={r} key={r.id} />
         ))}
       {recommendations.pagination && size !== "sm" && (
         <Paginator {...recommendations.pagination} />
       )}
-    </div>
+    </React.Fragment>
   );
 };

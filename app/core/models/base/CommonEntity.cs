@@ -23,15 +23,15 @@ namespace SignalBox.Core
         {
             if (string.IsNullOrEmpty(commonId))
             {
-                throw new CommonIdException("Common Id must not be null");
+                throw new CommonIdException(commonId, "Common Id must not be null");
             }
             else if (commonId.Length < CommonIdMinLength)
             {
-                throw new CommonIdException($"Common Id must not be at least {CommonIdMinLength} characters");
+                throw new CommonIdException(commonId, $"Common Id must not be at least {CommonIdMinLength} characters");
             }
             else if (!commonId.ContainsOnlyAlphaNumeric('-', '_'))
             {
-                throw new CommonIdException($"Common Id must only contain alpha-numeric, underscore, or hyphen");
+                throw new CommonIdException(commonId, $"Common Id must only contain alpha-numeric, underscore, or hyphen");
             }
         }
 

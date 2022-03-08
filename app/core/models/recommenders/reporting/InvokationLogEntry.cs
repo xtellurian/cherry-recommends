@@ -41,10 +41,12 @@ namespace SignalBox.Core.Recommenders
         public long? CorrelatorId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public RecommendationCorrelator? Correlator { get; set; }
-        public long? TrackedUserId { get; set; }
+        public long? CustomerId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Customer? Customer { get; set; }
+
+        public long? BusinessId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public Customer? TrackedUser => Customer;
+        public Business? Business { get; set; }
     }
 }

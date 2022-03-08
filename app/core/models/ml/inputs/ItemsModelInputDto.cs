@@ -9,9 +9,8 @@ namespace SignalBox.Core
         { }
         public ItemsModelInputDto(string customerId) : base(customerId)
         { }
-        public ItemsModelInputDto(string customerId, IDictionary<string, object> arguments) : base(customerId, arguments)
-        {
-        }
+        public ItemsModelInputDto(IDictionary<string, object> arguments) : base(arguments)
+        { }
 
         public IEnumerable<RecommendableItem> Items { get; set; }
     }

@@ -34,6 +34,16 @@ import { AdvancedOptionsPanel } from "../../molecules/layout/AdvancedOptionsPane
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useCommonId } from "../../../utility/utility";
 
+const targetTypeOptions = [
+  {
+    value: "customer",
+    label: "Customer",
+  },
+  {
+    value: "business",
+    label: "Business",
+  },
+];
 export const CreateRecommender = () => {
   const token = useAccessToken();
   const history = useHistory();
@@ -62,6 +72,7 @@ export const CreateRecommender = () => {
     numberOfItemsToRecommend: null,
     useAutoAi: true,
     targetMetricId: "",
+    targetType: "customer",
   });
 
   React.useEffect(() => {
@@ -205,6 +216,19 @@ export const CreateRecommender = () => {
             });
           }}
           options={itemsOptions}
+        />
+      </div>
+      <div className="mt-2 mb-2">
+        <label>For Customers or Businesses</label>
+        <Selector
+          defaultValue={targetTypeOptions[0]}
+          onChange={(o) => {
+            setRecommender({
+              ...recommender,
+              targetType: o.value,
+            });
+          }}
+          options={targetTypeOptions}
         />
       </div>
 

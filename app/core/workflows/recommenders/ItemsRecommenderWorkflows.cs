@@ -47,6 +47,7 @@ namespace SignalBox.Core.Workflows
                                                   from.ErrorHandling ?? new RecommenderSettings(),
                                                   true,
                                                   from.TargetMetric?.CommonId,
+                                                  from.TargetType,
                                                   useInternalId: true);
         }
 
@@ -59,14 +60,15 @@ namespace SignalBox.Core.Workflows
         }
 
         public async Task<ItemsRecommender> CreateItemsRecommender(CreateCommonEntityModel common,
-                                                                       string? baselineItemId,
-                                                                       IEnumerable<string>? itemIds,
-                                                                       int? numberOfItemsToRecommend,
-                                                                       IEnumerable<RecommenderArgument>? arguments,
-                                                                       RecommenderSettings settings,
-                                                                       bool useOptimiser,
-                                                                       string? targetMetricId,
-                                                                       bool? useInternalId)
+                                                                   string? baselineItemId,
+                                                                   IEnumerable<string>? itemIds,
+                                                                   int? numberOfItemsToRecommend,
+                                                                   IEnumerable<RecommenderArgument>? arguments,
+                                                                   RecommenderSettings settings,
+                                                                   bool useOptimiser,
+                                                                   string? targetMetricId,
+                                                                   PromotionRecommenderTargetTypes targetType,
+                                                                   bool? useInternalId)
         {
             RecommendableItem? baselineItem = null;
             if (!string.IsNullOrEmpty(baselineItemId))
@@ -91,14 +93,20 @@ namespace SignalBox.Core.Workflows
 
                 recommender = await store.Create(
                     new ItemsRecommender(common.CommonId, common.Name, baselineItem, items, arguments, settings, targetMetric)
-                    { NumberOfItemsToRecommend = numberOfItemsToRecommend });
+                    {
+                        NumberOfItemsToRecommend = numberOfItemsToRecommend,
+                        TargetType = targetType
+                    });
 
             }
             else
             {
                 recommender = await store.Create(
                     new ItemsRecommender(common.CommonId, common.Name, baselineItem, null, arguments, settings, targetMetric)
-                    { NumberOfItemsToRecommend = numberOfItemsToRecommend });
+                    {
+                        NumberOfItemsToRecommend = numberOfItemsToRecommend,
+                        TargetType = targetType
+                    });
             }
 
             if (useOptimiser)

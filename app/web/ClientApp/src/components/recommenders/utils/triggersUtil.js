@@ -6,6 +6,7 @@ import {
   Spinner,
   ErrorCard,
   AsyncButton,
+  EmptyState,
 } from "../../molecules";
 
 import { SettingRow } from "../../molecules/layout/SettingRow";
@@ -62,6 +63,16 @@ export const TriggersUtil = ({
       },
     }).finally(() => setSaving(false));
   };
+
+  if (recommender.targetType === "business") {
+    return (
+      <React.Fragment>
+        <div>
+          <EmptyState>Business Recommenders do not support triggers</EmptyState>
+        </div>
+      </React.Fragment>
+    );
+  }
 
   return (
     <React.Fragment>

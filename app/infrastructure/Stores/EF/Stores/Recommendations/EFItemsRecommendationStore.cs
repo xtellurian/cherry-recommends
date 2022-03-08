@@ -62,7 +62,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             return await QuerySet
                  .Where(_ => _.RecommenderId == recommenderId &&
-                     _.TrackedUserId == customer.Id &&
+                     _.CustomerId == customer.Id &&
                      _.Created > since)
                  .ToListAsync();
         }
@@ -73,7 +73,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             {
                 return await QuerySet
                     .Where(_ => _.RecommenderId == recommenderId)
-                    .Select(_ => _.TrackedUserId)
+                    .Select(_ => _.CustomerId)
                     .Distinct()
                     .CountAsync();
             }

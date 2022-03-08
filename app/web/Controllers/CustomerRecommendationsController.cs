@@ -15,31 +15,31 @@ namespace SignalBox.Web.Controllers
     [ApiVersion("0.1")]
     [Route("api/TrackedUsers")]
     [Route("api/Customers")]
-    public class TrackedUserRecommendationsController : SignalBoxControllerBase
+    public class CustomerRecommendationsController : SignalBoxControllerBase
     {
-        private readonly ILogger<TrackedUserRecommendationsController> logger;
+        private readonly ILogger<CustomerRecommendationsController> logger;
         private readonly IItemsRecommendationStore itemsRecommendationStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
-        private readonly ICustomerStore trackedUserStore;
+        private readonly ICustomerStore customerStore;
 
-        public TrackedUserRecommendationsController(ILogger<TrackedUserRecommendationsController> logger,
-        IItemsRecommendationStore itemsRecommendationStore,
-        IParameterSetRecommendationStore parameterSetRecommendationStore,
-                                      ICustomerStore trackedUserStore)
+        public CustomerRecommendationsController(ILogger<CustomerRecommendationsController> logger,
+                                                    IItemsRecommendationStore itemsRecommendationStore,
+                                                    IParameterSetRecommendationStore parameterSetRecommendationStore,
+                                                    ICustomerStore customerStore)
         {
             this.logger = logger;
             this.itemsRecommendationStore = itemsRecommendationStore;
             this.parameterSetRecommendationStore = parameterSetRecommendationStore;
-            this.trackedUserStore = trackedUserStore;
+            this.customerStore = customerStore;
         }
 
         /// <summary>Gets recent recommendations for a tracked user.</summary>
         [HttpGet("{id}/latest-recommendations")]
         public async Task<Paginated<object>> GetRecommendations([FromQuery] PaginateRequest p, string id, bool? useInternalId = null)
         {
-            var customer = await trackedUserStore.GetEntity(id);
-            var parameterSetRecommendations = await parameterSetRecommendationStore.Query(1, _ => _.TrackedUserId == customer.Id);
-            var itemsRecommendations = await itemsRecommendationStore.Query(1, _ => _.TrackedUserId == customer.Id);
+            var customer = await customerStore.GetEntity(id, useInternalId);
+            var parameterSetRecommendations = await parameterSetRecommendationStore.Query(1, _ => _.CustomerId == customer.Id);
+            var itemsRecommendations = await itemsRecommendationStore.Query(new EntityStoreQueryOptions<ItemsRecommendation>(1, _ => _.CustomerId == _.CustomerId));
             var recommendations = new List<RecommendationEntity>();
             recommendations.AddRange(parameterSetRecommendations.Items);
             recommendations.AddRange(itemsRecommendations.Items);

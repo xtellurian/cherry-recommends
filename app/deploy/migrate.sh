@@ -7,7 +7,8 @@ CONTEXT=$2
 if [ -z "$PROVIDER" ]
 then
       echo "Usage: $0 <provider> <context>"
-      exit 1
+      echo "Provider manually set to sqlserver. Continuing."
+      PROVIDER="sqlserver"
 fi
 
 
@@ -15,7 +16,7 @@ if [ -z "$CONTEXT" ]
 then
       echo "Using default context: SignalBoxDbContext"
       CONTEXT="SignalBoxDbContext"
-      MIGRATIONS_DIR="SignalBox"
+      MIGRATIONS_DIR="SignalBox/Sub$CONTEXT"
 else
       MIGRATIONS_DIR="SignalBox/Sub$CONTEXT"
 fi

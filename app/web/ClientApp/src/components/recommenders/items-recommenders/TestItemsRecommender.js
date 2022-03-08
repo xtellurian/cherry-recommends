@@ -9,6 +9,8 @@ import { ConsumeRecommendationPopup } from "../utils/consumeRecommendationPopup"
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import { AsyncSelectCustomer } from "../../molecules/selectors/AsyncSelectCustomer";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
+import { AsyncSelectBusiness } from "../../molecules/selectors/AsyncSelectBusiness";
+import { Row } from "../../molecules/layout";
 
 export const TestRecommender = () => {
   const { id } = useParams();
@@ -17,7 +19,8 @@ export const TestRecommender = () => {
   const { analytics } = useAnalytics();
   const [consumePopupOpen, setConsumePopupOpen] = React.useState(false);
 
-  const [selectedTrackedUser, setSelectedTrackedUser] = React.useState();
+  const [selectedCustomer, setSelectedCustomer] = React.useState();
+  const [selectedBusiness, setSelectedBusiness] = React.useState();
   const [loading, setInvoking] = React.useState(false);
   const [modelResponse, setModelResponse] = React.useState();
   const handleInvoke = () => {
@@ -26,7 +29,8 @@ export const TestRecommender = () => {
       token,
       id: recommender?.id || id,
       input: {
-        commonUserId: selectedTrackedUser.commonId,
+        customerId: selectedCustomer?.commonId,
+        businessId: selectedBusiness?.commonId,
         arguments: {},
       },
     })
@@ -44,34 +48,53 @@ export const TestRecommender = () => {
   return (
     <React.Fragment>
       <ItemRecommenderLayout>
-        <AsyncSelectCustomer
-          placeholder="Search for a user to make a recommendation for."
-          onChange={(v) => setSelectedTrackedUser(v.value)}
-        />
-
-        <AsyncButton
-          disabled={!selectedTrackedUser}
-          onClick={handleInvoke}
-          className="btn btn-primary m-2 w-25"
-          loading={loading}
-        >
-          Invoke
-        </AsyncButton>
-        {modelResponse && (
-          <div className="row">
+        <Row className="mb-2">
+          <div className="col">
+            {recommender.targetType === "customer" ? (
+              <AsyncSelectCustomer
+                placeholder="Search for a Customer to make a recommendation for."
+                onChange={(v) => setSelectedCustomer(v.value)}
+              />
+            ) : null}
+            {recommender.targetType === "business" ? (
+              <AsyncSelectBusiness
+                placeholder="Search for a business to make a recommendation for."
+                onChange={(v) => setSelectedBusiness(v.value)}
+              />
+            ) : null}
+          </div>
+          <div className="col">
+            <AsyncButton
+              disabled={!selectedCustomer && !selectedBusiness}
+              onClick={handleInvoke}
+              className="btn btn-primary w-100"
+              loading={loading}
+            >
+              Invoke
+            </AsyncButton>
+          </div>
+        </Row>
+        {modelResponse ? (
+          <Row>
             <div className="col">
               <JsonView
                 data={modelResponse}
                 shouldExpandNode={(n) => n.includes("scoredItems")}
               />
             </div>
-            <div className="col-4">
+            <div className="col">
               <button
-                className="btn btn-primary"
+                disabled={recommender.targetType === "business"}
+                className="btn btn-outline-primary w-100"
                 onClick={() => setConsumePopupOpen(true)}
               >
                 Consume Recommendation
               </button>
+              {recommender.targetType === "business" ? (
+                <div className="text-muted">
+                  Businesses may not consume recommendations
+                </div>
+              ) : null}
               <ConsumeRecommendationPopup
                 recommendation={modelResponse}
                 isOpen={consumePopupOpen}
@@ -79,8 +102,8 @@ export const TestRecommender = () => {
                 onConsumed={() => setModelResponse(null)}
               />
             </div>
-          </div>
-        )}
+          </Row>
+        ) : null}
       </ItemRecommenderLayout>
     </React.Fragment>
   );

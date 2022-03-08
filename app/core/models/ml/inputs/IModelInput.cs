@@ -10,6 +10,7 @@ namespace SignalBox.Core
         string? GetCustomerId();
         string? CommonUserId { get; }
         string? CustomerId { get; set; }
+        string? BusinessId { get; set; }
         IDictionary<string, object>? Arguments { get; set; }
         IDictionary<string, object>? Features { get; set; }
         IDictionary<string, object>? Metrics { get; set; }

@@ -152,6 +152,11 @@ declare namespace apiKeyApi_d {
 
 interface components {
     schemas: {
+        AddMemberDto: {
+            commonId: string;
+            name?: string | null;
+            useInternalId?: boolean | null;
+        };
         AddPromotionDto: {
             id?: number | null;
             commonId?: string | null;
@@ -201,6 +206,7 @@ interface components {
             }[] | null;
             customerId?: string | null;
             commonUserId?: string | null;
+            businessId?: string | null;
             arguments?: {
                 [key: string]: unknown;
             } | null;
@@ -313,6 +319,7 @@ interface components {
             commonUserId?: string | null;
             customerId?: string | null;
             name?: string | null;
+            email?: string | null;
             properties?: {
                 [key: string]: unknown;
             } | null;
@@ -396,6 +403,7 @@ interface components {
             } | null;
             commonUserId?: string | null;
             customerId?: string | null;
+            email?: string | null;
             integratedSystemMaps?: components["schemas"]["TrackedUserSystemMap"][] | null;
             businessMembership?: components["schemas"]["BusinessMembership"];
         };
@@ -525,7 +533,7 @@ interface components {
                 [key: string]: unknown;
             } | null;
         };
-        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation";
+        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation" | "addToBusiness";
         EventKindSummary: {
             keys?: string[] | null;
             instanceCount?: number;
@@ -630,11 +638,8 @@ interface components {
             items?: components["schemas"]["IntegratedSystem"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
         };
-        /** Links a user to an existing Integrated System resource. */
         IntegratedSystemReference: {
-            /** The SignalBox Identifier of the integrated system. */
             integratedSystemId: number;
-            /** The unqiue User Id in the external system, e.g. Hubspot Contact Id. */
             userId: string;
         };
         IntegratedSystemTypes: "segment" | "hubspot" | "custom";
@@ -655,9 +660,10 @@ interface components {
             invokeEnded?: string | null;
             correlatorId?: number | null;
             correlator?: components["schemas"]["RecommendationCorrelator"];
-            trackedUserId?: number | null;
+            customerId?: number | null;
             customer?: components["schemas"]["Customer"];
-            trackedUser?: components["schemas"]["Customer"];
+            businessId?: number | null;
+            business?: components["schemas"]["Business"];
         };
         InvokationLogEntryPaginated: {
             items?: components["schemas"]["InvokationLogEntry"][] | null;
@@ -675,9 +681,11 @@ interface components {
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
             recommenderType?: components["schemas"]["RecommenderTypes"];
-            trackedUserId?: number | null;
+            customerId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
+            businessId?: number | null;
+            business?: components["schemas"]["Business"];
             targetMetricId?: number | null;
             targetMetric?: components["schemas"]["Metric"];
             trigger?: string | null;
@@ -841,6 +849,7 @@ interface components {
         ModelInputDto: {
             customerId?: string | null;
             commonUserId?: string | null;
+            businessId?: string | null;
             arguments?: {
                 [key: string]: unknown;
             } | null;
@@ -933,9 +942,11 @@ interface components {
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
             recommenderType?: components["schemas"]["RecommenderTypes"];
-            trackedUserId?: number | null;
+            customerId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
+            businessId?: number | null;
+            business?: components["schemas"]["Business"];
             targetMetricId?: number | null;
             targetMetric?: components["schemas"]["Metric"];
             trigger?: string | null;
@@ -957,6 +968,8 @@ interface components {
             commonUserId?: string | null;
             customerId?: string | null;
             customer?: components["schemas"]["Customer"];
+            business?: components["schemas"]["Business"];
+            businessId?: string | null;
             trigger?: string | null;
         };
         ParameterSetRecommendationPaginated: {
@@ -1023,9 +1036,11 @@ interface components {
             created?: string;
             correlatorId?: number | null;
             commonUserId?: string | null;
-            customerId?: string | null;
             scoredItems?: components["schemas"]["ScoredRecommendableItem"][] | null;
+            business?: components["schemas"]["Business"];
+            businessId?: string | null;
             customer?: components["schemas"]["Customer"];
+            customerId?: string | null;
             trigger?: string | null;
         };
         PromotionType: "discount" | "gift" | "service" | "upgrade" | "other";
@@ -1287,16 +1302,17 @@ interface UpdateBusinessPropertiesRequest extends EntityRequest {
         [key: string]: unknown;
     } | null;
 }
-declare const updateBusinessPropertiesAsync: ({ token, id, properties }: UpdateBusinessPropertiesRequest) => Promise<any>;
+declare const updateBusinessPropertiesAsync: ({ token, id, properties, }: UpdateBusinessPropertiesRequest) => Promise<any>;
 declare const fetchBusinessMembersAsync: ({ token, id, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<Business>>;
 interface DeleteBusinessMemberRequest extends DeleteRequest {
     customerId: number;
 }
-declare const deleteBusinessMemberAsync: ({ token, id, customerId }: DeleteBusinessMemberRequest) => Promise<any>;
+declare const deleteBusinessMemberAsync: ({ token, id, customerId, }: DeleteBusinessMemberRequest) => Promise<any>;
 interface AddBusinessMemberRequest extends EntityRequest {
     customer: components["schemas"]["Customer"];
 }
 declare const addBusinessMemberAsync: ({ token, id, customer, }: AddBusinessMemberRequest) => Promise<any>;
+declare const fetchRecommendationsAsync: ({ token, id, }: EntityRequest) => Promise<components["schemas"]["ItemsRecommendation"]>;
 
 declare const businessesApi_d_fetchBusinessesAsync: typeof fetchBusinessesAsync;
 declare const businessesApi_d_fetchBusinessAsync: typeof fetchBusinessAsync;
@@ -1306,6 +1322,7 @@ declare const businessesApi_d_updateBusinessPropertiesAsync: typeof updateBusine
 declare const businessesApi_d_fetchBusinessMembersAsync: typeof fetchBusinessMembersAsync;
 declare const businessesApi_d_deleteBusinessMemberAsync: typeof deleteBusinessMemberAsync;
 declare const businessesApi_d_addBusinessMemberAsync: typeof addBusinessMemberAsync;
+declare const businessesApi_d_fetchRecommendationsAsync: typeof fetchRecommendationsAsync;
 declare namespace businessesApi_d {
   export {
     businessesApi_d_fetchBusinessesAsync as fetchBusinessesAsync,
@@ -1316,6 +1333,7 @@ declare namespace businessesApi_d {
     businessesApi_d_fetchBusinessMembersAsync as fetchBusinessMembersAsync,
     businessesApi_d_deleteBusinessMemberAsync as deleteBusinessMemberAsync,
     businessesApi_d_addBusinessMemberAsync as addBusinessMemberAsync,
+    businessesApi_d_fetchRecommendationsAsync as fetchRecommendationsAsync,
   };
 }
 

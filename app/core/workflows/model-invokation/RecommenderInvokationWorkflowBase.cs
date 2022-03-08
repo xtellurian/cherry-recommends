@@ -87,6 +87,7 @@ namespace SignalBox.Core.Workflows
             context.InvokationLog.LogMessage(message);
             context.InvokationLog.Correlator = context.Correlator;
             context.InvokationLog.Customer = context.Customer;
+            context.InvokationLog.Business = context.Business;
             context.InvokationLog.ModelResponse = modelResponse;
             context.InvokationLog.Status = "Complete";
             if (saveOnComplete == true)
@@ -103,9 +104,16 @@ namespace SignalBox.Core.Workflows
             context.LogMessage($"Recommender has {recommender.LearningFeatures.Count} Learning Metrics.");
             foreach (var metric in recommender.LearningFeatures)
             {
-                if (await customerMetricStore.MetricExists(context.Customer, metric))
+                if (context.Customer != null)
                 {
-                    metricValues.Add(await customerMetricStore.ReadCustomerMetric(context.Customer, metric));
+                    if (await customerMetricStore.MetricExists(context.Customer, metric))
+                    {
+                        metricValues.Add(await customerMetricStore.ReadCustomerMetric(context.Customer, metric));
+                    }
+                }
+                else if (context.Business != null)
+                {
+                    // TODO: insert business metrics here
                 }
             }
 

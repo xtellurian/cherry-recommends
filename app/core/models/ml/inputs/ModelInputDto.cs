@@ -16,15 +16,14 @@ namespace SignalBox.Core
             this.CommonUserId = customerId;
             this.Arguments = new Dictionary<string, object>();
         }
-        public ModelInputDto(string customerId, IDictionary<string, object> arguments)
+        protected ModelInputDto(IDictionary<string, object> arguments)
         {
-            this.CustomerId = customerId;
-            this.CommonUserId = customerId;
             this.Arguments = arguments ?? new Dictionary<string, object>();
         }
 
         public string? CustomerId { get; set; }
         public string? CommonUserId { get; set; }
+        public string? BusinessId { get; set; }
         public IDictionary<string, object>? Arguments { get; set; }
         public IDictionary<string, object>? Metrics { get; set; }
         public IDictionary<string, object>? Features

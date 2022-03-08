@@ -10,9 +10,9 @@ namespace SignalBox.Infrastructure.Dto
         public ParameterSetRecommendationDto(ParameterSetRecommendation recommendation, Dictionary<string, object> parameters)
         {
             this.Customer = recommendation.Customer;
+            this.Business = recommendation.Business;
             this.RecommendedParameters = parameters;
             this.CorrelatorId = recommendation.RecommendationCorrelatorId;
-            this.CommonUserId = recommendation.Customer?.CommonUserId;
             this.Created = recommendation.Created;
             this.Trigger = recommendation.Trigger;
         }
@@ -20,9 +20,11 @@ namespace SignalBox.Infrastructure.Dto
         public System.DateTimeOffset Created { get; set; }
         public long? CorrelatorId { get; set; }
         public IDictionary<string, object> RecommendedParameters { get; set; }
-        public string CommonUserId { get; private set; }
+        public string CommonUserId => CustomerId;
         public string CustomerId => Customer?.CustomerId;
         public Customer Customer { get; set; }
+        public Business Business { get; set; }
+        public string BusinessId { get; set; }
         public string Trigger { get; set; }
     }
 }

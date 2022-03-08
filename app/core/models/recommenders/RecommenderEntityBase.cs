@@ -14,8 +14,8 @@ namespace SignalBox.Core.Recommenders
 #nullable enable
         public RecommenderEntityBase(string commonId, string? name, IEnumerable<RecommenderArgument>? arguments, RecommenderSettings? settings) : base(commonId, name)
         {
-            this.ErrorHandling = settings is RecommenderErrorHandling
-                ? (RecommenderErrorHandling)settings
+            this.ErrorHandling = settings is RecommenderErrorHandling handling
+                ? handling
                 : new RecommenderErrorHandling(settings);
             this.Settings = settings;
             this.Arguments = arguments?.ToList() ?? new List<RecommenderArgument>();

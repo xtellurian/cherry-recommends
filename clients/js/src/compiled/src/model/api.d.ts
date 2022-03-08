@@ -164,6 +164,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -201,6 +202,115 @@ export interface paths {
                     "application/json": components["schemas"]["CreateBusinessDto"];
                     "text/json": components["schemas"]["CreateBusinessDto"];
                     "application/*+json": components["schemas"]["CreateBusinessDto"];
+                };
+            };
+        };
+    };
+    "/api/Businesses/{id}/Members": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    page?: number;
+                    pageSize?: number;
+                    term?: string;
+                    scope?: string;
+                    weeksAgo?: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["CustomerPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["BusinessMembership"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AddMemberDto"];
+                    "text/json": components["schemas"]["AddMemberDto"];
+                    "application/*+json": components["schemas"]["AddMemberDto"];
+                };
+            };
+        };
+    };
+    "/api/Businesses/{id}/Members/{customerId}": {
+        delete: {
+            parameters: {
+                path: {
+                    id: string;
+                    customerId: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["Customer"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Businesses/{id}/events": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    page?: number;
+                    pageSize?: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["CustomerEventPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
                 };
             };
         };
@@ -341,6 +451,34 @@ export interface paths {
                     };
                     "application/*+json": {
                         [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    "/api/Businesses/{id}/recommendations": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    pageSize?: number;
+                    useInternalId?: boolean;
+                };
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ItemsRecommendationPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
                     };
                 };
             };
@@ -694,6 +832,62 @@ export interface paths {
             };
         };
     };
+    "/api/TrackedUsers/{id}/latest-recommendations": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    pageSize?: number;
+                    useInternalId?: boolean;
+                };
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ObjectPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Customers/{id}/latest-recommendations": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    pageSize?: number;
+                    useInternalId?: boolean;
+                };
+                path: {
+                    id: string;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ObjectPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
     "/api/TrackedUsers/{id}": {
         get: {
             parameters: {
@@ -934,6 +1128,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -998,6 +1193,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -1376,6 +1572,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -1841,6 +2038,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -1890,6 +2088,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -2299,6 +2498,9 @@ export interface paths {
                 path: {
                     id: string;
                 };
+                query: {
+                    binCount?: number;
+                };
             };
             responses: {
                 /** Success */
@@ -2321,6 +2523,9 @@ export interface paths {
             parameters: {
                 path: {
                     id: string;
+                };
+                query: {
+                    binCount?: number;
                 };
             };
             responses: {
@@ -2954,6 +3159,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -3144,6 +3350,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -3950,6 +4157,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -3999,6 +4207,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -4480,6 +4689,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -4534,6 +4744,7 @@ export interface paths {
                     pageSize?: number;
                     term?: string;
                     scope?: string;
+                    weeksAgo?: number;
                 };
             };
             responses: {
@@ -6878,62 +7089,6 @@ export interface paths {
             };
         };
     };
-    "/api/TrackedUsers/{id}/latest-recommendations": {
-        get: {
-            parameters: {
-                query: {
-                    page?: number;
-                    pageSize?: number;
-                    useInternalId?: boolean;
-                };
-                path: {
-                    id: string;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["ObjectPaginated"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-    };
-    "/api/Customers/{id}/latest-recommendations": {
-        get: {
-            parameters: {
-                query: {
-                    page?: number;
-                    pageSize?: number;
-                    useInternalId?: boolean;
-                };
-                path: {
-                    id: string;
-                };
-            };
-            responses: {
-                /** Success */
-                200: {
-                    content: {
-                        "application/json": components["schemas"]["ObjectPaginated"];
-                    };
-                };
-                /** Bad Request */
-                400: {
-                    content: {
-                        "application/json": components["schemas"]["ProblemDetails"];
-                    };
-                };
-            };
-        };
-    };
     "/api/Webhooks/receivers/{endpointId}": {
         post: {
             parameters: {
@@ -6956,6 +7111,11 @@ export interface paths {
 }
 export interface components {
     schemas: {
+        AddMemberDto: {
+            commonId: string;
+            name?: string | null;
+            useInternalId?: boolean | null;
+        };
         AddPromotionDto: {
             id?: number | null;
             commonId?: string | null;
@@ -7005,6 +7165,7 @@ export interface components {
             }[] | null;
             customerId?: string | null;
             commonUserId?: string | null;
+            businessId?: string | null;
             arguments?: {
                 [key: string]: unknown;
             } | null;
@@ -7117,6 +7278,7 @@ export interface components {
             commonUserId?: string | null;
             customerId?: string | null;
             name?: string | null;
+            email?: string | null;
             properties?: {
                 [key: string]: unknown;
             } | null;
@@ -7200,6 +7362,7 @@ export interface components {
             } | null;
             commonUserId?: string | null;
             customerId?: string | null;
+            email?: string | null;
             integratedSystemMaps?: components["schemas"]["TrackedUserSystemMap"][] | null;
             businessMembership?: components["schemas"]["BusinessMembership"];
         };
@@ -7329,7 +7492,7 @@ export interface components {
                 [key: string]: unknown;
             } | null;
         };
-        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation";
+        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation" | "addToBusiness";
         EventKindSummary: {
             keys?: string[] | null;
             instanceCount?: number;
@@ -7434,11 +7597,8 @@ export interface components {
             items?: components["schemas"]["IntegratedSystem"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
         };
-        /** Links a user to an existing Integrated System resource. */
         IntegratedSystemReference: {
-            /** The SignalBox Identifier of the integrated system. */
             integratedSystemId: number;
-            /** The unqiue User Id in the external system, e.g. Hubspot Contact Id. */
             userId: string;
         };
         IntegratedSystemTypes: "segment" | "hubspot" | "custom";
@@ -7459,9 +7619,10 @@ export interface components {
             invokeEnded?: string | null;
             correlatorId?: number | null;
             correlator?: components["schemas"]["RecommendationCorrelator"];
-            trackedUserId?: number | null;
+            customerId?: number | null;
             customer?: components["schemas"]["Customer"];
-            trackedUser?: components["schemas"]["Customer"];
+            businessId?: number | null;
+            business?: components["schemas"]["Business"];
         };
         InvokationLogEntryPaginated: {
             items?: components["schemas"]["InvokationLogEntry"][] | null;
@@ -7479,9 +7640,11 @@ export interface components {
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
             recommenderType?: components["schemas"]["RecommenderTypes"];
-            trackedUserId?: number | null;
+            customerId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
+            businessId?: number | null;
+            business?: components["schemas"]["Business"];
             targetMetricId?: number | null;
             targetMetric?: components["schemas"]["Metric"];
             trigger?: string | null;
@@ -7645,6 +7808,7 @@ export interface components {
         ModelInputDto: {
             customerId?: string | null;
             commonUserId?: string | null;
+            businessId?: string | null;
             arguments?: {
                 [key: string]: unknown;
             } | null;
@@ -7737,9 +7901,11 @@ export interface components {
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
             recommenderType?: components["schemas"]["RecommenderTypes"];
-            trackedUserId?: number | null;
+            customerId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
+            businessId?: number | null;
+            business?: components["schemas"]["Business"];
             targetMetricId?: number | null;
             targetMetric?: components["schemas"]["Metric"];
             trigger?: string | null;
@@ -7761,6 +7927,8 @@ export interface components {
             commonUserId?: string | null;
             customerId?: string | null;
             customer?: components["schemas"]["Customer"];
+            business?: components["schemas"]["Business"];
+            businessId?: string | null;
             trigger?: string | null;
         };
         ParameterSetRecommendationPaginated: {
@@ -7827,9 +7995,11 @@ export interface components {
             created?: string;
             correlatorId?: number | null;
             commonUserId?: string | null;
-            customerId?: string | null;
             scoredItems?: components["schemas"]["ScoredRecommendableItem"][] | null;
+            business?: components["schemas"]["Business"];
+            businessId?: string | null;
             customer?: components["schemas"]["Customer"];
+            customerId?: string | null;
             trigger?: string | null;
         };
         PromotionType: "discount" | "gift" | "service" | "upgrade" | "other";

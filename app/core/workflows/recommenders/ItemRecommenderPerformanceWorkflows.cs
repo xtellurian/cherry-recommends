@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core.Workflows
@@ -15,6 +16,7 @@ namespace SignalBox.Core.Workflows
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IItemsRecommendationStore recommendationStore;
         private readonly ICustomerStore customerStore;
+        private readonly IBusinessStore businessStore;
         private readonly IHistoricCustomerMetricStore historicCustomerMetricStore;
         private readonly IItemsRecommenderPerformanceReportStore performanceReportStore;
         private readonly IRecommendableItemStore recommendableItemStore;
@@ -26,6 +28,7 @@ namespace SignalBox.Core.Workflows
             IItemsRecommendationStore recommendationStore,
             IMetricStore metricStore,
             ICustomerStore customerStore,
+            IBusinessStore businessStore,
             IHistoricCustomerMetricStore historicCustomerMetricStore,
             IIntegratedSystemStore systemStore,
             RecommenderReportImageWorkflows reportImageWorkflows,
@@ -36,6 +39,7 @@ namespace SignalBox.Core.Workflows
             this.dateTimeProvider = dateTimeProvider;
             this.recommendationStore = recommendationStore;
             this.customerStore = customerStore;
+            this.businessStore = businessStore;
             this.historicCustomerMetricStore = historicCustomerMetricStore;
             this.performanceReportStore = performanceReportStore;
             this.recommendableItemStore = recommendableItemStore;
@@ -68,26 +72,48 @@ namespace SignalBox.Core.Workflows
 
             // var customerIds = new HashSet<long>();
             var customerItemIds = new Dictionary<long, long>();
+            var businessItemIds = new Dictionary<long, long>();
             var itemMetricSumValues = new Dictionary<long, double>();
             var itemRecommendationCounts = new Dictionary<long, int>();
+            var recommendations = new List<ItemsRecommendation>();
             // ascending forces the latest recommendations to win
             await foreach (var recommendation in recommendationStore.Iterate(_ => _.RecommenderId == recommender.Id, IterateOrderBy.AscendingId))
             {
-                // await recommendationStore.Load(recommendation, _ => _.Customer);
-                if (recommendation.TrackedUserId.HasValue && recommendation.MaxScoreItemId.HasValue)
+                recommendations.Add(recommendation);
+                // get customer IDs if this is a recommender targeting customers
+                if (recommender.TargetType == PromotionRecommenderTargetTypes.Customer)
                 {
-                    // should always have a value
-                    customerItemIds[recommendation.TrackedUserId.Value] = recommendation.MaxScoreItemId.Value;
-                    itemMetricSumValues[recommendation.MaxScoreItemId.Value] = 0; // initialise this
-
-                    if (!itemRecommendationCounts.ContainsKey(recommendation.MaxScoreItemId.Value))
+                    if (recommendation.CustomerId.HasValue && recommendation.MaxScoreItemId.HasValue)
                     {
-                        itemRecommendationCounts.Add(recommendation.MaxScoreItemId.Value, 0);
+                        // should always have a value
+                        customerItemIds[recommendation.CustomerId.Value] = recommendation.MaxScoreItemId.Value;
+                        itemMetricSumValues[recommendation.MaxScoreItemId.Value] = 0; // initialise this
+
+                        if (!itemRecommendationCounts.ContainsKey(recommendation.MaxScoreItemId.Value))
+                        {
+                            itemRecommendationCounts.Add(recommendation.MaxScoreItemId.Value, 0);
+                        }
+                        itemRecommendationCounts[recommendation.MaxScoreItemId.Value] += 1;
                     }
-                    itemRecommendationCounts[recommendation.MaxScoreItemId.Value] += 1;
+                }
+                // get businesses if this is a recommender targeting businesses
+                else if (recommender.TargetType == PromotionRecommenderTargetTypes.Business)
+                {
+                    if (recommendation.BusinessId.HasValue && recommendation.MaxScoreItemId.HasValue)
+                    {
+                        // should always have a value
+                        businessItemIds[recommendation.BusinessId.Value] = recommendation.MaxScoreItemId.Value;
+                        itemMetricSumValues[recommendation.MaxScoreItemId.Value] = 0; // initialise this
+
+                        if (!itemRecommendationCounts.ContainsKey(recommendation.MaxScoreItemId.Value))
+                        {
+                            itemRecommendationCounts.Add(recommendation.MaxScoreItemId.Value, 0);
+                        }
+                        itemRecommendationCounts[recommendation.MaxScoreItemId.Value] += 1;
+                    }
                 }
             }
-
+            // run customer metric values
             foreach (var customerId in customerItemIds.Keys)
             {
                 var customer = await customerStore.Read(customerId);
@@ -105,9 +131,28 @@ namespace SignalBox.Core.Workflows
                     logger.LogWarning("No metric values found for {customerId}", customer.Id);
                 }
             }
+            foreach (var businessId in businessItemIds.Keys)
+            {
+                var business = await businessStore.Read(businessId);
+                // TODO: get business metrics here.
+                // if (await historicCustomerMetricStore.MetricExists(customer, recommender.TargetMetric))
+                // {
+                //     var latestValue = await historicCustomerMetricStore.ReadCustomerMetric(customer, recommender.TargetMetric);
+                //     var itemId = customerItemIds[customerId];
+                //     if (latestValue.NumericValue.HasValue)
+                //     {
+                //         itemMetricSumValues[itemId] += latestValue.NumericValue.Value;
+                //     }
+                // }
+                // else
+                // {
+                //     logger.LogWarning("No metric values found for {businessId}", business.Id);
+                // }
+            }
 
             var itemPerformances = new List<PerformanceByItem>();
             var itemCustomerCounts = customerItemIds.Values.ValueCounts();
+            var itemBusinessCounts = businessItemIds.Values.ValueCounts();
             foreach (var itemId in itemMetricSumValues.Keys)
             {
                 itemPerformances.Add(new PerformanceByItem
@@ -115,6 +160,7 @@ namespace SignalBox.Core.Workflows
                     ItemId = itemId,
                     RecommendationCount = itemRecommendationCounts.GetValueOrDefault(itemId),
                     CustomerCount = itemCustomerCounts.GetValueOrDefault(itemId),
+                    BusinessCount = itemBusinessCounts.GetValueOrDefault(itemId),
                     TargetMetricSum = itemMetricSumValues.GetValueOrDefault(itemId),
                 });
             }

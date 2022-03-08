@@ -17,9 +17,11 @@ namespace SignalBox.Core.Recommendations
         }
 
         public RecommenderTypes? RecommenderType { get; set; } // nullable for backwards compat
-        public long? TrackedUserId { get; set; }
+        public long? CustomerId { get; set; }
         public Customer? TrackedUser => Customer;
         public Customer? Customer { get; set; }
+        public long? BusinessId { get; set; }
+        public Business? Business { get; set; }
         public long? TargetMetricId { get; set; }
         public Metric? TargetMetric { get; set; }
 

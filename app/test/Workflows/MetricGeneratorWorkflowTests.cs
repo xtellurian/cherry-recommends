@@ -75,6 +75,7 @@ namespace SignalBox.Test.Workflows
             var mockRecommendationCache = new Mock<IRecommendationCache<ItemsRecommender, ItemsRecommendation>>();
             var mockModelClientFactory = new Mock<IRecommenderModelClientFactory>();
             var mockCustomerWorkflow = new Mock<ICustomerWorkflow>();
+            var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
             var mockItemStore = new Mock<IRecommendableItemStore>();
             var mockWebhookSenderClient = new Mock<IWebhookSenderClient>();
             var mockCorrelatorStore = new Mock<IRecommendationCorrelatorStore>();
@@ -87,6 +88,7 @@ namespace SignalBox.Test.Workflows
                 mockRecommendationCache.Object,
                 mockModelClientFactory.Object,
                 mockCustomerWorkflow.Object,
+                mockBusinessWorkflow.Object,
                 mockHistoricStore.Object,
                 mockItemStore.Object,
                 mockWebhookSenderClient.Object,
@@ -120,6 +122,7 @@ namespace SignalBox.Test.Workflows
 
             return new RecommenderTriggersWorkflows(
                 mockTriggerLogger.Object,
+                Utility.MockTelemetry().Object,
                 mockItemsRecommenderStore.Object,
                 mockParameterSetRecommenderStore.Object,
                 itemsRecommenderInvokationWorkflows,

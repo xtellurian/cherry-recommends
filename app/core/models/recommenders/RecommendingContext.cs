@@ -33,6 +33,7 @@ namespace SignalBox.Core.Recommenders
 
         public string? Trigger { get; set; }
         public Customer? Customer { get; set; }
+        public Business? Business { get; set; }
         public RecommendationCorrelator? Correlator { get; set; }
         public InvokationLogEntry InvokationLog { get; }
     }
