@@ -25,7 +25,9 @@ export const Dashboard = () => {
           <Items items={items} />
         </div>
         <div className="col">
-          <Recommenders hasItems={!items.loading && items.items.length > 0} />
+          <Recommenders
+            hasItems={!items.loading && items.items && items.items.length > 0}
+          />
         </div>
       </div>
       <div className="row mb-3">
