@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -20,17 +21,20 @@ namespace SignalBox.Web.Controllers
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly CustomerWorkflows workflows;
         private readonly ICustomerEventStore eventStore;
+        private readonly ISegmentStore segmentStore;
 
         public CustomersController(ILogger<CustomersController> logger,
                                       IDateTimeProvider dateTimeProvider,
                                       CustomerWorkflows workflows,
                                       ICustomerStore store,
-                                      ICustomerEventStore eventStore) : base(store)
+                                      ICustomerEventStore eventStore,
+                                      ISegmentStore segmentStore) : base(store)
         {
             _logger = logger;
             this.dateTimeProvider = dateTimeProvider;
             this.workflows = workflows;
             this.eventStore = eventStore;
+            this.segmentStore = segmentStore;
         }
 
         public override async Task<Customer> GetResource(string id, bool? useInternalId = null)
@@ -55,6 +59,14 @@ namespace SignalBox.Web.Controllers
         {
             var customer = await store.GetEntity(id, useInternalId);
             return await eventStore.ReadEventsForUser(p.Page, customer);
+        }
+
+        /// <summary>Returns a list of segments for a given user.</summary>
+        [HttpGet("{id}/segments")]
+        public async Task<IEnumerable<SignalBox.Core.Segment>> GetSegments(string id)
+        {
+            var customer = await this.GetResource(id);
+            return await segmentStore.GetSegmentsByCustomer(customer);
         }
 
         /// <summary> Updates the properties of a customer.</summary>

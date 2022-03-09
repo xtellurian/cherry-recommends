@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 
 namespace SignalBox.Core
 {
@@ -13,7 +14,8 @@ namespace SignalBox.Core
             Name = name;
         }
 
-        public ICollection<Customer> InSegment { get; set; } = new Collection<Customer>();
+        [JsonIgnore]
+        public ICollection<CustomerSegment> InSegment { get; set; } = new Collection<CustomerSegment>();
 
         public string? Name { get; set; }
     }

@@ -28,5 +28,19 @@ namespace SignalBox.Core.Workflows
             await storageContext.SaveChanges();
             return segment;
         }
+
+        public async Task AddToSegment(Segment segment, Customer customer)
+        {
+            var customerSegment = await segmentStore.AddCustomer(segment, customer);
+            logger.LogInformation("Added customer {customerId} to segment {segmentId}", customer.Id, segment.Id);
+            await storageContext.SaveChanges();
+        }
+
+        public async Task RemoveFromSegment(Segment segment, Customer customer)
+        {
+            var customerSegment = await segmentStore.RemoveCustomer(segment, customer);
+            logger.LogInformation("Removed customer {customerId} from segment {segmentId}", customer.Id, segment.Id);
+            await storageContext.SaveChanges();
+        }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220309012746_develop_crud_segments")]
+    partial class develop_crud_segments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1030,16 +1032,10 @@ namespace sqlserver.SignalBox
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("BusinessId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long?>("CustomerId")
-                        .HasColumnType("bigint");
 
                     b.Property<long?>("EnvironmentId")
                         .HasColumnType("bigint");
@@ -1077,14 +1073,13 @@ namespace sqlserver.SignalBox
                     b.Property<long?>("TargetMetricId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("TrackedUserId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Trigger")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BusinessId");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("EnvironmentId");
 
@@ -1093,6 +1088,8 @@ namespace sqlserver.SignalBox
                     b.HasIndex("RecommenderId");
 
                     b.HasIndex("TargetMetricId");
+
+                    b.HasIndex("TrackedUserId");
 
                     b.ToTable("ItemsRecommendations");
                 });
@@ -1106,16 +1103,10 @@ namespace sqlserver.SignalBox
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("BusinessId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long?>("CustomerId")
-                        .HasColumnType("bigint");
 
                     b.Property<long?>("EnvironmentId")
                         .HasColumnType("bigint");
@@ -1149,14 +1140,13 @@ namespace sqlserver.SignalBox
                     b.Property<long?>("TargetMetricId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("TrackedUserId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Trigger")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BusinessId");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("EnvironmentId");
 
@@ -1165,6 +1155,8 @@ namespace sqlserver.SignalBox
                     b.HasIndex("RecommenderId");
 
                     b.HasIndex("TargetMetricId");
+
+                    b.HasIndex("TrackedUserId");
 
                     b.ToTable("ParameterSetRecommendations");
                 });
@@ -1217,9 +1209,6 @@ namespace sqlserver.SignalBox
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("BusinessId")
-                        .HasColumnType("bigint");
-
                     b.Property<long?>("CorrelatorId")
                         .HasColumnType("bigint");
 
@@ -1227,9 +1216,6 @@ namespace sqlserver.SignalBox
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long?>("CustomerId")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTimeOffset?>("InvokeEnded")
                         .HasColumnType("datetimeoffset");
@@ -1267,17 +1253,18 @@ namespace sqlserver.SignalBox
                     b.Property<bool?>("Success")
                         .HasColumnType("bit");
 
+                    b.Property<long?>("TrackedUserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("BusinessId");
-
                     b.HasIndex("CorrelatorId");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("InvokeStarted");
 
                     b.HasIndex("RecommenderEntityBaseId");
+
+                    b.HasIndex("TrackedUserId");
 
                     b.ToTable("InvokationLogEntry");
                 });
@@ -1778,12 +1765,6 @@ namespace sqlserver.SignalBox
                     b.Property<long?>("TargetMetricId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("TargetType")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Customer");
-
                     b.HasIndex("BaselineItemId");
 
                     b.HasIndex("TargetMetricId");
@@ -2146,16 +2127,6 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ItemsRecommendation", b =>
                 {
-                    b.HasOne("SignalBox.Core.Business", "Business")
-                        .WithMany()
-                        .HasForeignKey("BusinessId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SignalBox.Core.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("SignalBox.Core.Environment", "Environment")
                         .WithMany()
                         .HasForeignKey("EnvironmentId")
@@ -2174,7 +2145,9 @@ namespace sqlserver.SignalBox
                         .WithMany()
                         .HasForeignKey("TargetMetricId");
 
-                    b.Navigation("Business");
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("TrackedUserId");
 
                     b.Navigation("Customer");
 
@@ -2189,16 +2162,6 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Recommendations.ParameterSetRecommendation", b =>
                 {
-                    b.HasOne("SignalBox.Core.Business", "Business")
-                        .WithMany()
-                        .HasForeignKey("BusinessId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SignalBox.Core.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("SignalBox.Core.Environment", "Environment")
                         .WithMany()
                         .HasForeignKey("EnvironmentId")
@@ -2217,7 +2180,9 @@ namespace sqlserver.SignalBox
                         .WithMany()
                         .HasForeignKey("TargetMetricId");
 
-                    b.Navigation("Business");
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("TrackedUserId");
 
                     b.Navigation("Customer");
 
@@ -2253,26 +2218,18 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.InvokationLogEntry", b =>
                 {
-                    b.HasOne("SignalBox.Core.Business", "Business")
-                        .WithMany()
-                        .HasForeignKey("BusinessId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("SignalBox.Core.Recommendations.RecommendationCorrelator", "Correlator")
                         .WithMany()
                         .HasForeignKey("CorrelatorId");
-
-                    b.HasOne("SignalBox.Core.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", null)
                         .WithMany("RecommenderInvokationLogs")
                         .HasForeignKey("RecommenderEntityBaseId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("Business");
+                    b.HasOne("SignalBox.Core.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("TrackedUserId");
 
                     b.Navigation("Correlator");
 

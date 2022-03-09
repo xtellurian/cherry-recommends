@@ -44,7 +44,7 @@ namespace SignalBox.Core
         public string? Email { get; set; }
 
         [JsonIgnore]
-        public ICollection<Segment> Segments { get; set; }
+        public ICollection<CustomerSegment> Segments { get; set; }
 
         [JsonIgnore]
         public ICollection<HistoricCustomerMetric> HistoricCustomerMetrics { get; set; }
