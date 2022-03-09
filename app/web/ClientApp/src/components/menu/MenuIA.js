@@ -1,3 +1,6 @@
+import React from "react";
+import { useFeatureFlag } from "../launch-darkly/hooks";
+
 const AuthenticatedIA = [
   {
     name: "Promotions",
@@ -75,8 +78,21 @@ const AuthenticatedIA = [
   },
 ];
 
-export const getAuthenticatedIA = (scopes) => {
+export const useAuthenticatedIA = (scopes) => {
+  const [ia, setIa] = React.useState([]);
+  const enableParameters = useFeatureFlag("parameter-recommendations", false);
+  React.useEffect(() => {
+    setIa(getAuthenticatedIA(scopes, enableParameters));
+  }, [scopes, enableParameters]);
+
+  return ia;
+};
+
+const getAuthenticatedIA = (scopes, enableParameters) => {
   let ia = AuthenticatedIA;
+  if (!enableParameters) {
+    ia = ia.filter((_) => _.name != "Parameters");
+  }
   if (ia.filter((_) => _.name === "Admin").length > 0) {
     // already in there
     return ia;

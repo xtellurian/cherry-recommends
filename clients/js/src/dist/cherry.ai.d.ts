@@ -195,6 +195,16 @@ interface components {
         };
         ApiKeyTypes: "server" | "web";
         ArgumentTypes: "numerical" | "categorical";
+        Auth0ReactConfig: {
+            defaultAudience?: string | null;
+            audience?: string | null;
+            clientId?: string | null;
+            clientSecret?: string | null;
+            endpoint?: string | null;
+            domain?: string | null;
+            managementAudience?: string | null;
+            scope?: string | null;
+        };
         AzureMLClassifierOutput: {
             result?: string | null;
             correlatorId?: number | null;
@@ -383,6 +393,7 @@ interface components {
             baselinePromotionId?: string | null;
             numberOfItemsToRecommend?: number | null;
             useAutoAi?: boolean | null;
+            targetType?: components["schemas"]["PromotionRecommenderTargetTypes"];
         };
         CreateSegmentDto: {
             name?: string | null;
@@ -613,6 +624,10 @@ interface components {
             canonicalRootDomain?: string | null;
         };
         HostingTypes: "azureMLContainerInstance" | "azurePersonalizer" | "azureFunctions";
+        HotjarConfig: {
+            siteId?: number;
+            snippetVersion?: number;
+        };
         Info: {
             title?: string | null;
             description?: string | null;
@@ -728,6 +743,7 @@ interface components {
             items?: components["schemas"]["RecommendableItem"][] | null;
             targetMetricId?: number | null;
             targetMetric?: components["schemas"]["Metric"];
+            targetType?: components["schemas"]["PromotionRecommenderTargetTypes"];
         };
         ItemsRecommenderPaginated: {
             items?: components["schemas"]["ItemsRecommender"][] | null;
@@ -765,6 +781,11 @@ interface components {
             joinType: components["schemas"]["JoinType"];
         };
         JoinType: "divide";
+        LaunchDarklyConfig: {
+            sdkKey?: string | null;
+            mobileKey?: string | null;
+            clientSideId?: string | null;
+        };
         LinkModel: {
             modelId?: number;
         };
@@ -1009,7 +1030,8 @@ interface components {
             itemId?: number;
             weekIndex?: number;
             targetMetricSum?: number;
-            customerCount?: number;
+            customerCount?: number | null;
+            businessCount?: number | null;
             recommendationCount?: number;
         };
         Post: {
@@ -1032,6 +1054,7 @@ interface components {
         } & {
             [key: string]: unknown;
         };
+        PromotionRecommenderTargetTypes: "customer" | "business";
         PromotionsRecommendationDto: {
             created?: string;
             correlatorId?: number | null;
@@ -1044,6 +1067,12 @@ interface components {
             trigger?: string | null;
         };
         PromotionType: "discount" | "gift" | "service" | "upgrade" | "other";
+        ReactConfig: {
+            segment?: components["schemas"]["SegmentConfig"];
+            hotjar?: components["schemas"]["HotjarConfig"];
+            launchDarkly?: components["schemas"]["LaunchDarklyConfig"];
+            auth0?: components["schemas"]["Auth0ReactConfig"];
+        };
         RecommendableItem: {
             id?: number;
             created?: string;
@@ -1167,8 +1196,10 @@ interface components {
             lastUpdated?: string;
             environmentId?: number | null;
             environment?: components["schemas"]["Environment"];
-            inSegment?: components["schemas"]["Customer"][] | null;
             name?: string | null;
+        };
+        SegmentConfig: {
+            writeKey?: string | null;
         };
         SegmentPaginated: {
             items?: components["schemas"]["Segment"][] | null;
@@ -2293,8 +2324,10 @@ declare namespace profileApi_d {
   };
 }
 
-declare function fetchAuth0ConfigurationAsync(): Promise<any>;
-declare function fetchConfigurationAsync(): Promise<any>;
+declare type Auth0ReactConfig = components["schemas"]["Auth0ReactConfig"] | undefined;
+declare const fetchAuth0ConfigurationAsync: () => Promise<Auth0ReactConfig>;
+declare type ReactConfig = components["schemas"]["ReactConfig"] | undefined;
+declare const fetchConfigurationAsync: () => Promise<ReactConfig>;
 
 declare const reactConfigApi_d_fetchAuth0ConfigurationAsync: typeof fetchAuth0ConfigurationAsync;
 declare const reactConfigApi_d_fetchConfigurationAsync: typeof fetchConfigurationAsync;

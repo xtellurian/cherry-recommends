@@ -11,7 +11,7 @@ import { TenantsComponent } from "./TenantsComponent";
 export const TenantChecker = ({ children }) => {
   const tenant = useCurrentTenant();
   const hosting = useHosting();
-  console.log(hosting);
+  console.debug(hosting);
   if (tenant.loading || hosting.loading) {
     return <Spinner />;
   }

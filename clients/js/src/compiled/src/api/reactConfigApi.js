@@ -1,6 +1,7 @@
 import { getUrl } from "./client/baseUrl";
+import fetch from "./client/fetchWrapper";
 const defaultHeaders = { "Content-Type": "application/json" };
-let authConfig = null; // caches this because it rarely change
+let authConfig = undefined; // caches this because it rarely change
 export const fetchAuth0ConfigurationAsync = async () => {
     if (!authConfig) {
         console.log("fetching auth0 from server...");
@@ -12,7 +13,7 @@ export const fetchAuth0ConfigurationAsync = async () => {
     }
     return authConfig;
 };
-let config = null;
+let config = undefined;
 export const fetchConfigurationAsync = async () => {
     if (!config) {
         console.log("fetching configuration from server...");

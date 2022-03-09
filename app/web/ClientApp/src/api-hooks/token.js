@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAuth0Config } from "./reactConfigApi";
 import { decode } from "jsonwebtoken";
@@ -24,8 +24,11 @@ export const useAccessToken = () => {
 
 export const useTokenScopes = () => {
   const token = useAccessToken();
-  const decoded = decode(token);
-  return decoded ? decoded.scope.split(" ") : [];
+  const scopes = useMemo(() => {
+    const decoded = decode(token);
+    return decoded ? decoded.scope.split(" ") : [];
+  }, [token]);
+  return scopes;
 };
 
 export const useAuth0AccessToken = () => {

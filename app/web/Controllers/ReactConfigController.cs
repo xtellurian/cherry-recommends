@@ -10,40 +10,49 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [ApiVersion("0.1")]
     [Route("api/[controller]")]
-    [ApiExplorerSettings(IgnoreApi = true)]
     public class ReactConfigController : ControllerBase
     {
         private readonly IOptionsMonitor<SegmentConfig> segmentOptions;
+        private readonly IOptionsMonitor<LaunchDarklyConfig> launchDarklyOptions;
         private readonly IOptionsMonitor<Auth0ReactConfig> auth0Options;
         private readonly IOptionsMonitor<HotjarConfig> hotjarOptions;
 
         private readonly ITenantProvider tenantProvider;
 
-        public ReactConfigController(IOptionsMonitor<Auth0ReactConfig> auth0Options, IOptionsMonitor<SegmentConfig> segmentOptions, ITenantProvider tenantProvider, IOptionsMonitor<HotjarConfig> hotjarOptions)
+        public ReactConfigController(IOptionsMonitor<Auth0ReactConfig> auth0Options,
+                                     IOptionsMonitor<SegmentConfig> segmentOptions,
+                                     IOptionsMonitor<LaunchDarklyConfig> launchDarklyOptions,
+                                     ITenantProvider tenantProvider,
+                                     IOptionsMonitor<HotjarConfig> hotjarOptions)
         {
             this.auth0Options = auth0Options;
             this.segmentOptions = segmentOptions;
+            this.launchDarklyOptions = launchDarklyOptions;
             this.hotjarOptions = hotjarOptions;
             this.tenantProvider = tenantProvider;
         }
-
-        [HttpGet("auth0")]
-        public Auth0ReactConfig GetAuth0Configuration()
+        private Auth0ReactConfig CreateAuth0Config()
         {
             var config = auth0Options.CurrentValue;
             config.Scope = Core.Security.Scopes.AllScopes(config.Scope, tenantProvider.Current());
             return config;
         }
 
+        [HttpGet("auth0")]
+        public Auth0ReactConfig GetAuth0Configuration()
+        {
+            return CreateAuth0Config();
+        }
+
         [HttpGet]
         public ReactConfig GetReactConfig()
         {
-            var segment = segmentOptions.CurrentValue;
-            var hotjar = hotjarOptions.CurrentValue;
             var config = new ReactConfig
             {
-                Segment = segment,
-                Hotjar = hotjar
+                Auth0 = CreateAuth0Config(),
+                Segment = segmentOptions.CurrentValue,
+                Hotjar = hotjarOptions.CurrentValue,
+                LaunchDarkly = launchDarklyOptions.CurrentValue,
             };
 
             return config;

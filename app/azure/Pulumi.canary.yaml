@@ -19,6 +19,7 @@ config:
   hotjar:snippetVersion: "6"
   hubspot:appId: ""
   hubspot:clientId: ""
+  launch-darkly:clientSideId: 6227e4523c1cba143cd8fa86
   network:cherrySubdomain: canary
   segment:writeKey:
     secure: AAABALR/oWB+tGefHknu+aBwFKjaEDep6p9mHYiVMs+cYLELG+6uzMqVc/huxgEPB5TsTHRatcq5NeP65MIs3Q==

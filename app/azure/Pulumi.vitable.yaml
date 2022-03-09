@@ -17,6 +17,7 @@ config:
   azure-synapse:enable: "false"
   azure-synapse:sqlPassword:
     secure: AAABAMX9uRRapW/I80UW9gY5alaQSmeFG3p0k/vO7tb36Hpqzo9KMKm2
+  launch-darkly:clientSideId: 6227f1bfa0fd7014b02288e9
   signalbox:environment: Production
   signalbox:login-domain: canary.login.cherry.ai
   signalbox:sqlPassword:

@@ -18,6 +18,7 @@ config:
   hubspot:clientId: 05e9c9c1-dcc7-4415-b6ed-fc772f26de66
   hubspot:clientSecret:
     secure: AAABADnbBd/lQYVZ65z4uENxHQ/gWNYVu6Hf7giaAn8=
+  launch-darkly:clientSideId: 622802e7cc6fc7149d5348fd
   segment:writeKey:
     secure: AAABAEvVDNe2nl+m8tvVjPF18I7SSk3GHlNqcFnr6sBMZ05ReZpHNnsaxrNu8zvdi8fQXU3X/OviJxeua2/80w==
   signalbox:environment: Development

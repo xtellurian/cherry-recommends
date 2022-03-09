@@ -3,8 +3,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Modal from "react-modal";
 import { BrowserRouter } from "react-router-dom";
-import { Auth0Provider } from "@auth0/auth0-react";
-import { fetchAuth0ConfigurationAsync } from "./api/reactConfigApi";
 import { FunloaderContainer } from "./components/molecules/fullscreen/FunLoader";
 import { CherrySecret } from "./components/molecules/fullscreen/CherrySecret";
 import { FunError } from "./components/molecules/fullscreen/FunError";
@@ -12,6 +10,8 @@ import EnvironmentStore from "./contexts/EnvironmentStore";
 import { Auth0ProviderWrapper } from "./components/auth0/Auth0ProviderWrapper";
 import App from "./App";
 import { AnalyticsProvider } from "./analytics/analyticsHooks";
+import { getStartupConfigAsync } from "./utility/startupConfig";
+import LaunchDarklyConfigurator from "./components/launch-darkly/LaunchDarklyConfigurator";
 
 //import registerServiceWorker from './registerServiceWorker';
 Modal.setAppElement("#root");
@@ -25,17 +25,21 @@ if (window.location.host.startsWith("hidden-cherry-secret.local.zone")) {
   // if we're at cherry, then don't render the app yet
   ReactDOM.render(<CherrySecret />, rootElement);
 } else {
-  fetchAuth0ConfigurationAsync()
+  getStartupConfigAsync()
     .then((x) => new Promise((resolve) => setTimeout(() => resolve(x), 500))) // ensure you wait half a second for the loading screen
-    .then((auth0Config) => {
+    .then(({ auth0, LDProvider }) => {
       ReactDOM.render(
         <>
           <BrowserRouter basename={baseUrl}>
             <AnalyticsProvider>
-              <Auth0ProviderWrapper auth0Config={auth0Config}>
-                <EnvironmentStore>
-                  <App />
-                </EnvironmentStore>
+              <Auth0ProviderWrapper auth0Config={auth0}>
+                <LDProvider>
+                  <LaunchDarklyConfigurator>
+                    <EnvironmentStore>
+                      <App />
+                    </EnvironmentStore>
+                  </LaunchDarklyConfigurator>
+                </LDProvider>
               </Auth0ProviderWrapper>
             </AnalyticsProvider>
           </BrowserRouter>

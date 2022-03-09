@@ -50,10 +50,13 @@ namespace SignalBox.Web
 
             var useMulti = Configuration.GetSection("Hosting").GetValue<bool>("Multitenant");
             System.Console.WriteLine($"Multitenant: {useMulti}");
-
+            // Segment
             var segment = Configuration.GetSection("Segment");
             services.Configure<SegmentConfig>(segment);
             services.UseSegmentAnalytics(segment.GetValue<string>("WriteKey"));
+            // launch darkly
+            var ld = Configuration.GetSection("LaunchDarkly");
+            services.Configure<LaunchDarklyConfig>(ld);
 
             var hotjar = Configuration.GetSection("Hotjar");
             services.Configure<HotjarConfig>(hotjar);

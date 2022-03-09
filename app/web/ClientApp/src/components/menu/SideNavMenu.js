@@ -5,7 +5,7 @@ import { useAuth } from "../../utility/useAuth";
 import { useTokenScopes } from "../../api-hooks/token";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 
-import { getAuthenticatedIA } from "./MenuIA";
+import { useAuthenticatedIA } from "./MenuIA";
 
 import "./SideNavMenu.css";
 
@@ -46,8 +46,8 @@ export const SideNavMenu = () => {
   const { isAuthenticated } = useAuth();
   const scopes = useTokenScopes();
   const integratedSystems = useIntegratedSystems();
-
-  const authenticatedIA = getAuthenticatedIA(scopes).map((ia) => {
+  const authIA = useAuthenticatedIA(scopes);
+  const authenticatedIA = authIA.map((ia) => {
     // add integrated systems as subitems of integration menu
     if (ia.name === "Integrations") {
       const _integratedSystems =

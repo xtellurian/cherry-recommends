@@ -1029,6 +1029,52 @@ export interface paths {
       };
     };
   };
+  "/api/TrackedUsers/{id}/segments": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Segment"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/Customers/{id}/segments": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Segment"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/TrackedUsers/{id}/properties": {
     post: {
       parameters: {
@@ -6688,6 +6734,46 @@ export interface paths {
       };
     };
   };
+  "/api/ReactConfig/auth0": {
+    get: {
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["Auth0ReactConfig"];
+            "application/json": components["schemas"]["Auth0ReactConfig"];
+            "text/json": components["schemas"]["Auth0ReactConfig"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/ReactConfig": {
+    get: {
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["ReactConfig"];
+            "application/json": components["schemas"]["ReactConfig"];
+            "text/json": components["schemas"]["ReactConfig"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/Reports": {
     get: {
       responses: {
@@ -6768,6 +6854,108 @@ export interface paths {
           "application/json": components["schemas"]["CreateSegmentDto"];
           "text/json": components["schemas"]["CreateSegmentDto"];
           "application/*+json": components["schemas"]["CreateSegmentDto"];
+        };
+      };
+    };
+  };
+  "/api/Segments/{id}/Name": {
+    post: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        query: {
+          name?: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Segment"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/Segments/{id}/Customers/{customerId}": {
+    post: {
+      parameters: {
+        path: {
+          id: number;
+          customerId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Customer"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          id: number;
+          customerId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Customer"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/Segments/{id}/Customers": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          page?: number;
+          pageSize?: number;
+          term?: string;
+          scope?: string;
+          weeksAgo?: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CustomerPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
         };
       };
     };
@@ -7036,6 +7224,16 @@ export interface components {
     };
     ApiKeyTypes: "server" | "web";
     ArgumentTypes: "numerical" | "categorical";
+    Auth0ReactConfig: {
+      defaultAudience?: string | null;
+      audience?: string | null;
+      clientId?: string | null;
+      clientSecret?: string | null;
+      endpoint?: string | null;
+      domain?: string | null;
+      managementAudience?: string | null;
+      scope?: string | null;
+    };
     AzureMLClassifierOutput: {
       result?: string | null;
       correlatorId?: number | null;
@@ -7214,6 +7412,7 @@ export interface components {
       baselinePromotionId?: string | null;
       numberOfItemsToRecommend?: number | null;
       useAutoAi?: boolean | null;
+      targetType?: components["schemas"]["PromotionRecommenderTargetTypes"];
     };
     CreateSegmentDto: {
       name?: string | null;
@@ -7444,6 +7643,10 @@ export interface components {
       | "azureMLContainerInstance"
       | "azurePersonalizer"
       | "azureFunctions";
+    HotjarConfig: {
+      siteId?: number;
+      snippetVersion?: number;
+    };
     Info: {
       title?: string | null;
       description?: string | null;
@@ -7555,6 +7758,7 @@ export interface components {
       items?: components["schemas"]["RecommendableItem"][] | null;
       targetMetricId?: number | null;
       targetMetric?: components["schemas"]["Metric"];
+      targetType?: components["schemas"]["PromotionRecommenderTargetTypes"];
     };
     ItemsRecommenderPaginated: {
       items?: components["schemas"]["ItemsRecommender"][] | null;
@@ -7592,6 +7796,11 @@ export interface components {
       joinType: components["schemas"]["JoinType"];
     };
     JoinType: "divide";
+    LaunchDarklyConfig: {
+      sdkKey?: string | null;
+      mobileKey?: string | null;
+      clientSideId?: string | null;
+    };
     LinkModel: {
       modelId?: number;
     };
@@ -7830,7 +8039,8 @@ export interface components {
       itemId?: number;
       weekIndex?: number;
       targetMetricSum?: number;
-      customerCount?: number;
+      customerCount?: number | null;
+      businessCount?: number | null;
       recommendationCount?: number;
     };
     Post: {
@@ -7851,6 +8061,7 @@ export interface components {
       detail?: string | null;
       instance?: string | null;
     } & { [key: string]: unknown };
+    PromotionRecommenderTargetTypes: "customer" | "business";
     PromotionsRecommendationDto: {
       created?: string;
       correlatorId?: number | null;
@@ -7863,6 +8074,12 @@ export interface components {
       trigger?: string | null;
     };
     PromotionType: "discount" | "gift" | "service" | "upgrade" | "other";
+    ReactConfig: {
+      segment?: components["schemas"]["SegmentConfig"];
+      hotjar?: components["schemas"]["HotjarConfig"];
+      launchDarkly?: components["schemas"]["LaunchDarklyConfig"];
+      auth0?: components["schemas"]["Auth0ReactConfig"];
+    };
     RecommendableItem: {
       id?: number;
       created?: string;
@@ -7980,8 +8197,10 @@ export interface components {
       lastUpdated?: string;
       environmentId?: number | null;
       environment?: components["schemas"]["Environment"];
-      inSegment?: components["schemas"]["Customer"][] | null;
       name?: string | null;
+    };
+    SegmentConfig: {
+      writeKey?: string | null;
     };
     SegmentPaginated: {
       items?: components["schemas"]["Segment"][] | null;

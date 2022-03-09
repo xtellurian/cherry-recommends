@@ -1958,12 +1958,14 @@
         fetchPerformanceAsync: fetchPerformanceAsync
     });
 
+    var fetch$2 = fetch;
+
     const defaultHeaders = { "Content-Type": "application/json" };
-    let authConfig = null; // caches this because it rarely change
+    let authConfig = undefined; // caches this because it rarely change
     const fetchAuth0ConfigurationAsync = async () => {
         if (!authConfig) {
             console.log("fetching auth0 from server...");
-            const result = await fetch(getUrl("api/reactConfig/auth0"), {
+            const result = await fetch$2(getUrl("api/reactConfig/auth0"), {
                 headers: defaultHeaders,
             });
             authConfig = await result.json();
@@ -1971,11 +1973,11 @@
         }
         return authConfig;
     };
-    let config = null;
+    let config = undefined;
     const fetchConfigurationAsync = async () => {
         if (!config) {
             console.log("fetching configuration from server...");
-            const result = await fetch(getUrl("api/reactConfig"), {
+            const result = await fetch$2(getUrl("api/reactConfig"), {
                 headers: defaultHeaders,
             });
             config = await result.json();

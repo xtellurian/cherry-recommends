@@ -12,6 +12,7 @@ namespace SignalBox.Azure
         protected Pulumi.Config appSvcConfig;
         protected Pulumi.Config auth0Config;
         protected Pulumi.Config azureConfig;
+        protected Pulumi.Config launchDarklyConfig;
         protected string environment;
         protected string? canonicalRootDomain;
         private readonly bool multitenant;
@@ -30,6 +31,7 @@ namespace SignalBox.Azure
             this.appSvcConfig = new Pulumi.Config("appsvc");
             this.auth0Config = new Pulumi.Config("auth0");
             this.azureConfig = new Pulumi.Config("azure-native");
+            this.launchDarklyConfig = new Pulumi.Config("launch-darkly");
             this.environment = new Pulumi.Config().Require("environment");
             this.canonicalRootDomain = appSvcConfig.Get("canonical-root-domain");
             this.multitenant = appSvcConfig.RequireBoolean("multitenant");
@@ -199,7 +201,10 @@ namespace SignalBox.Azure
 
                     // hotjar
                     {"Hotjar__SiteId", hotjarConfig.Get("siteId") ?? "0"},
-                    {"Hotjar__SnippetVersion", hotjarConfig.Get("snippetVersion") ?? "0"}
+                    {"Hotjar__SnippetVersion", hotjarConfig.Get("snippetVersion") ?? "0"},
+                    
+                    // launch darkly
+                    {"LaunchDarkly__ClientSideId", launchDarklyConfig.Get("clientSideId") ?? ""},
                 }
             }, new CustomResourceOptions
             {

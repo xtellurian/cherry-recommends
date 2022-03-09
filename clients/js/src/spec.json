@@ -2170,6 +2170,92 @@
         }
       }
     },
+    "/api/TrackedUsers/{id}/segments": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Returns a list of segments for a given user.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Segment"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Customers/{id}/segments": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Returns a list of segments for a given user.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Segment"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/TrackedUsers/{id}/properties": {
       "post": {
         "tags": [
@@ -13541,6 +13627,84 @@
         }
       }
     },
+    "/api/ReactConfig/auth0": {
+      "get": {
+        "tags": [
+          "ReactConfig"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Auth0ReactConfig"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Auth0ReactConfig"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Auth0ReactConfig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ReactConfig": {
+      "get": {
+        "tags": [
+          "ReactConfig"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactConfig"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactConfig"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactConfig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Reports": {
       "get": {
         "tags": [
@@ -13684,6 +13848,230 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SegmentPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Segments/{id}/Name": {
+      "post": {
+        "tags": [
+          "Segments"
+        ],
+        "summary": "Update the name of this resource.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Segment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Segments/{id}/Customers/{customerId}": {
+      "post": {
+        "tags": [
+          "Segments"
+        ],
+        "summary": "Add a customer to a segment.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Segments"
+        ],
+        "summary": "Remove a customer from a segment.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Segments/{id}/Customers": {
+      "get": {
+        "tags": [
+          "Segments"
+        ],
+        "summary": "Gets the Customers that are in a segment.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "weeksAgo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerPaginated"
                 }
               }
             }
@@ -14262,6 +14650,44 @@
           "categorical"
         ],
         "type": "string"
+      },
+      "Auth0ReactConfig": {
+        "type": "object",
+        "properties": {
+          "defaultAudience": {
+            "type": "string",
+            "nullable": true
+          },
+          "audience": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientId": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientSecret": {
+            "type": "string",
+            "nullable": true
+          },
+          "endpoint": {
+            "type": "string",
+            "nullable": true
+          },
+          "domain": {
+            "type": "string",
+            "nullable": true
+          },
+          "managementAudience": {
+            "type": "string",
+            "nullable": true
+          },
+          "scope": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "AzureMLClassifierOutput": {
         "type": "object",
@@ -14993,6 +15419,9 @@
           "useAutoAi": {
             "type": "boolean",
             "nullable": true
+          },
+          "targetType": {
+            "$ref": "#/components/schemas/PromotionRecommenderTargetTypes"
           }
         },
         "additionalProperties": false
@@ -15825,6 +16254,20 @@
         ],
         "type": "string"
       },
+      "HotjarConfig": {
+        "type": "object",
+        "properties": {
+          "siteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "snippetVersion": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Info": {
         "type": "object",
         "properties": {
@@ -16274,6 +16717,9 @@
           },
           "targetMetric": {
             "$ref": "#/components/schemas/Metric"
+          },
+          "targetType": {
+            "$ref": "#/components/schemas/PromotionRecommenderTargetTypes"
           }
         },
         "additionalProperties": false
@@ -16412,6 +16858,24 @@
           "divide"
         ],
         "type": "string"
+      },
+      "LaunchDarklyConfig": {
+        "type": "object",
+        "properties": {
+          "sdkKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "mobileKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientSideId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "LinkModel": {
         "type": "object",
@@ -17332,12 +17796,18 @@
             "format": "double"
           },
           "customerCount": {
-            "type": "number",
-            "format": "double"
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "businessCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           },
           "recommendationCount": {
-            "type": "number",
-            "format": "double"
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -17412,6 +17882,13 @@
         },
         "additionalProperties": { }
       },
+      "PromotionRecommenderTargetTypes": {
+        "enum": [
+          "customer",
+          "business"
+        ],
+        "type": "string"
+      },
       "PromotionsRecommendationDto": {
         "type": "object",
         "properties": {
@@ -17468,6 +17945,24 @@
           "other"
         ],
         "type": "string"
+      },
+      "ReactConfig": {
+        "type": "object",
+        "properties": {
+          "segment": {
+            "$ref": "#/components/schemas/SegmentConfig"
+          },
+          "hotjar": {
+            "$ref": "#/components/schemas/HotjarConfig"
+          },
+          "launchDarkly": {
+            "$ref": "#/components/schemas/LaunchDarklyConfig"
+          },
+          "auth0": {
+            "$ref": "#/components/schemas/Auth0ReactConfig"
+          }
+        },
+        "additionalProperties": false
       },
       "RecommendableItem": {
         "type": "object",
@@ -17913,14 +18408,17 @@
           "environment": {
             "$ref": "#/components/schemas/Environment"
           },
-          "inSegment": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Customer"
-            },
-            "nullable": true
-          },
           "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SegmentConfig": {
+        "type": "object",
+        "properties": {
+          "writeKey": {
             "type": "string",
             "nullable": true
           }
