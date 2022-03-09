@@ -15,6 +15,8 @@ config:
   azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
   azure-synapse:sqlPassword:
     secure: AAABACOKM/uSJeGIvRn+8Psbn7UoDraSviY3VOdlMyp9DOFQrfyxNDOvVds=
+  hotjar:siteId: "2866572"
+  hotjar:snippetVersion: "6"
   hubspot:appId: ""
   hubspot:clientId: ""
   network:cherrySubdomain: canary

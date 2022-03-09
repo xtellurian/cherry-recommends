@@ -36,6 +36,7 @@ namespace SignalBox.Azure
 
             var hubspotConfig = new Pulumi.Config("hubspot");
             var segmentConfig = new Pulumi.Config("segment");
+            var hotjarConfig = new Pulumi.Config("hotjar");
             System.Console.WriteLine($"Canonical Root Domain is {canonicalRootDomain ?? "null"}");
 
             var plan = new AppServicePlan("asp", new AppServicePlanArgs
@@ -194,7 +195,11 @@ namespace SignalBox.Azure
                     {"EventProcessing__Eventhub__EventhubName", eventProcessing.EventhubName},
 
                     // segment
-                    {"Segment__WriteKey", segmentConfig.Get("writeKey") ?? ""}
+                    {"Segment__WriteKey", segmentConfig.Get("writeKey") ?? ""},
+
+                    // hotjar
+                    {"Hotjar__SiteId", hotjarConfig.Get("siteId") ?? "0"},
+                    {"Hotjar__SnippetVersion", hotjarConfig.Get("snippetVersion") ?? "0"}
                 }
             }, new CustomResourceOptions
             {

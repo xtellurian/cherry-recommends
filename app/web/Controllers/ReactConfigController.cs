@@ -15,12 +15,15 @@ namespace SignalBox.Web.Controllers
     {
         private readonly IOptionsMonitor<SegmentConfig> segmentOptions;
         private readonly IOptionsMonitor<Auth0ReactConfig> auth0Options;
+        private readonly IOptionsMonitor<HotjarConfig> hotjarOptions;
+
         private readonly ITenantProvider tenantProvider;
 
-        public ReactConfigController(IOptionsMonitor<Auth0ReactConfig> auth0Options, IOptionsMonitor<SegmentConfig> segmentOptions, ITenantProvider tenantProvider)
+        public ReactConfigController(IOptionsMonitor<Auth0ReactConfig> auth0Options, IOptionsMonitor<SegmentConfig> segmentOptions, ITenantProvider tenantProvider, IOptionsMonitor<HotjarConfig> hotjarOptions)
         {
             this.auth0Options = auth0Options;
             this.segmentOptions = segmentOptions;
+            this.hotjarOptions = hotjarOptions;
             this.tenantProvider = tenantProvider;
         }
 
@@ -36,9 +39,11 @@ namespace SignalBox.Web.Controllers
         public ReactConfig GetReactConfig()
         {
             var segment = segmentOptions.CurrentValue;
+            var hotjar = hotjarOptions.CurrentValue;
             var config = new ReactConfig
             {
-                Segment = segment
+                Segment = segment,
+                Hotjar = hotjar
             };
 
             return config;

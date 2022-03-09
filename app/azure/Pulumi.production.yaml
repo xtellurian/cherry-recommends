@@ -19,6 +19,8 @@ config:
     secure: AAABAMCoCQ8kDUX9lbWcvPd5L/Z0oLKjB9wV4mRzObU7DXDfJlmVDFU8w8w=
   database:poolCapacity: 4
   database:poolMaxCapacityPerDatabase: 2
+  hotjar:siteId: "2866573"
+  hotjar:snippetVersion: "6"
   hubspot:appId: todo
   hubspot:clientId: todo
   network:cherrySubdomain: app

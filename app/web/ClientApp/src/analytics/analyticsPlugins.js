@@ -1,4 +1,5 @@
 import segmentPlugin from "@analytics/segment";
+import { hotjar } from "react-hotjar";
 
 /* Add segment plugin */
 export const SegmentPlugin = (config) => {
@@ -32,4 +33,20 @@ export const ConsolePlugin = () => {
     },
   };
   return plugin;
+};
+
+/* Add hotjar plugin */
+export const HotjarPlugin = (config) => {
+  const hjid = config.hjid;
+  const hjsv = config.hjsv;
+
+  if (hjid && hjid) {
+    const plugin = hotjar.initialize(hjid, hjsv);
+    return plugin;
+  } else {
+    console.warn("No Hotjar hjid and hjsv.");
+    return {
+      name: "empty",
+    };
+  }
 };

@@ -55,6 +55,9 @@ namespace SignalBox.Web
             services.Configure<SegmentConfig>(segment);
             services.UseSegmentAnalytics(segment.GetValue<string>("WriteKey"));
 
+            var hotjar = Configuration.GetSection("Hotjar");
+            services.Configure<HotjarConfig>(hotjar);
+
             services.AddHttpContextAccessor();
 
             // enable the tenancy context connection

@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { useAnalytics } from "./analyticsHooks";
-import { SegmentPlugin } from "./analyticsPlugins";
+import { SegmentPlugin, HotjarPlugin } from "./analyticsPlugins";
 import { useDeploymentConfiguration } from "../api-hooks/deploymentApi";
 import { fetchConfigurationAsync } from "../api/reactConfigApi";
 import { useAuth } from "../utility/useAuth";
@@ -17,6 +17,10 @@ const Analytics = ({ children }) => {
     fetchConfigurationAsync().then((config) => {
       const plugins = [];
       plugins.push(SegmentPlugin(config.segment));
+      HotjarPlugin({
+        hjid: config.hotjar.siteId,
+        hjsv: config.hotjar.snippetVersion,
+      });
       addPlugins(plugins);
     });
   }, []);
