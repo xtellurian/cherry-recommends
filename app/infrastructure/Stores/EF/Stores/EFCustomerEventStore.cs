@@ -177,7 +177,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             return await QuerySet
                 .Where(_ => _.Timestamp > after) // filtering by this column, has an index, and therefore is performant.
-                .OrderBy(_ => _.Id) // this should be more performant than OrderBy(Created), and be mostly the same
+                .OrderByDescending(_ => _.Id) // this should be more performant than OrderBy(Created), and be mostly the same
                 .Take(32).Skip(0)
                 .ToListAsync();
         }
