@@ -15,12 +15,16 @@ namespace SignalBox.Azure
             var databaseConfig = new Config("database");
             var username = config.Get("sqlAdmin") ?? "pulumi";
             var password = config.RequireSecret("sqlPassword");
+
             var sqlServer = new Server("multiSql", new ServerArgs
             {
                 ResourceGroupName = rg.Name,
                 AdministratorLogin = username,
                 AdministratorLoginPassword = password,
                 Version = "12.0",
+            }, new CustomResourceOptions
+            {
+                Protect = string.Equals(config.Require("environment"), "Production") // protect the SQL Server
             });
 
             var tenantDb = new Database("tenants", new DatabaseArgs
@@ -29,11 +33,14 @@ namespace SignalBox.Azure
                 Location = sqlServer.Location,
                 ResourceGroupName = rg.Name,
                 ServerName = sqlServer.Name,
-                Sku = new Pulumi.AzureNative.Sql.Inputs.SkuArgs
+                Sku = new SkuArgs
                 {
                     Name = "S0",
                     Tier = "Standard",
                 }
+            }, new CustomResourceOptions
+            {
+                Protect = string.Equals(config.Require("environment"), "Production") // protect the tenants DB in Production
             });
 
             var elasticPool = new ElasticPool("pool", new ElasticPoolArgs
@@ -52,6 +59,9 @@ namespace SignalBox.Azure
                     Name = "GP_Gen5",
                     Tier = "GeneralPurpose",
                 }
+            }, new CustomResourceOptions
+            {
+                Protect = string.Equals(config.Require("environment"), "Production") // protect the pool in Production
             });
 
             var database = new Database("single", new DatabaseArgs
