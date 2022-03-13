@@ -51,7 +51,11 @@ export function setCustomerMetricAsync({ token, id, metricId, useInternalId, val
     useInternalId: any;
     value: any;
 }): Promise<any>;
-export function deleteCustomerAsync({ token, id, }: {
+export function deleteCustomerAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+export function fetchCustomerSegmentsAsync({ token, id }: {
     token: any;
     id: any;
 }): Promise<any>;

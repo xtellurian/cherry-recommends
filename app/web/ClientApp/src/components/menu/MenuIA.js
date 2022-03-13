@@ -1,5 +1,5 @@
 import React from "react";
-import { useFeatureFlag } from "../launch-darkly/hooks";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 const AuthenticatedIA = [
   {
@@ -33,6 +33,10 @@ const AuthenticatedIA = [
       {
         name: "All Businesses",
         to: "/businesses",
+      },
+      {
+        name: "All Segments",
+        to: "/segments",
       },
       {
         name: "Events Overview",
@@ -80,18 +84,27 @@ const AuthenticatedIA = [
 
 export const useAuthenticatedIA = (scopes) => {
   const [ia, setIa] = React.useState([]);
-  const enableParameters = useFeatureFlag("parameter-recommendations", false);
+  const flags = useFlags();
   React.useEffect(() => {
-    setIa(getAuthenticatedIA(scopes, enableParameters));
-  }, [scopes, enableParameters]);
+    setIa(getAuthenticatedIA(scopes, flags));
+  }, [scopes, flags]);
 
   return ia;
 };
 
-const getAuthenticatedIA = (scopes, enableParameters) => {
+const getAuthenticatedIA = (scopes, flags) => {
   let ia = AuthenticatedIA;
-  if (!enableParameters) {
+  if (!flags?.parameterRecommendations) {
     ia = ia.filter((_) => _.name != "Parameters");
+  }
+  if (!flags?.segments) {
+    ia = ia.map((_) => {
+      if (_.name === "Customers") {
+        const _items = _.items.filter((i) => i.name != "All Segments");
+        return { ..._, items: _items };
+      }
+      return _;
+    });
   }
   if (ia.filter((_) => _.name === "Admin").length > 0) {
     // already in there

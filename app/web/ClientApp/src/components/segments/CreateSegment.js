@@ -1,55 +1,67 @@
 import React from "react";
 import { useAnalytics } from "../../analytics/analyticsHooks";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Title } from "../molecules/layout";
 import { useAccessToken } from "../../api-hooks/token";
 import { createSegmentAsync } from "../../api/segmentsApi";
+import { InputGroup, TextInput } from "../molecules/TextInput";
+import { AsyncButton, ErrorCard } from "../molecules";
 
 export const CreateSegment = () => {
   const token = useAccessToken();
+  const history = useHistory();
   const { analytics } = useAnalytics();
-  const [name, setName] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
   const [segment, setSegment] = React.useState();
-  const submit = () => {
+  const [error, setError] = React.useState();
+  const handleCreate = () => {
+    setLoading(true);
     createSegmentAsync({
       payload: {
-        name,
+        name: segment.name,
       },
       token,
     })
       .then((r) => {
         analytics.track("site:segment_create_success");
-        setSegment(r);
+        history.push("/segments");
       })
       .catch((e) => {
         analytics.track("site:segment_create_failure");
-        alert("error");
-      });
+        setError(e);
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
     <React.Fragment>
-      <Title>Create a new segment</Title>
-      <div className="input-group">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Segment Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <button onClick={submit} className="btn btn-primary">
-          Create
-        </button>
-      </div>
-      {segment && (
-        <div className="text-center mt-5">
-          <p>Created segment {segment.name}</p>
-          <Link to={`/segments`}>
-            <button className="btn btn-success">Go to Segments</button>
-          </Link>
+      <div>
+        <Title>Create a new Segment</Title>
+        <hr />
+        {error && <ErrorCard error={error} />}
+        <InputGroup>
+          <TextInput
+            label="Segment Name"
+            placeholder="Enter segment name here"
+            value={segment?.name}
+            onChange={(e) =>
+              setSegment({
+                ...segment,
+                name: e.target.value,
+              })
+            }
+          />
+        </InputGroup>
+        <div className="mt-4">
+          <AsyncButton
+            loading={loading}
+            className="btn btn-primary"
+            onClick={handleCreate}
+          >
+            Create
+          </AsyncButton>
         </div>
-      )}
+      </div>
     </React.Fragment>
   );
 };

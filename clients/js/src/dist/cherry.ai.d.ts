@@ -1421,7 +1421,11 @@ declare function setCustomerMetricAsync({ token, id, metricId, useInternalId, va
     useInternalId: any;
     value: any;
 }): Promise<any>;
-declare function deleteCustomerAsync$1({ token, id, }: {
+declare function deleteCustomerAsync$1({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function fetchCustomerSegmentsAsync({ token, id }: {
     token: any;
     id: any;
 }): Promise<any>;
@@ -1433,6 +1437,7 @@ declare const customersApi_d_fetchCustomerActionAsync: typeof fetchCustomerActio
 declare const customersApi_d_createOrUpdateCustomerAsync: typeof createOrUpdateCustomerAsync;
 declare const customersApi_d_fetchCustomersActionsAsync: typeof fetchCustomersActionsAsync;
 declare const customersApi_d_setCustomerMetricAsync: typeof setCustomerMetricAsync;
+declare const customersApi_d_fetchCustomerSegmentsAsync: typeof fetchCustomerSegmentsAsync;
 declare namespace customersApi_d {
   export {
     customersApi_d_fetchCustomersAsync as fetchCustomersAsync,
@@ -1446,6 +1451,7 @@ declare namespace customersApi_d {
     customersApi_d_fetchCustomersActionsAsync as fetchCustomersActionsAsync,
     customersApi_d_setCustomerMetricAsync as setCustomerMetricAsync,
     deleteCustomerAsync$1 as deleteCustomerAsync,
+    customersApi_d_fetchCustomerSegmentsAsync as fetchCustomerSegmentsAsync,
   };
 }
 
@@ -2469,15 +2475,44 @@ declare function createSegmentAsync({ token, payload }: {
     token: any;
     payload: any;
 }): Promise<any>;
+declare function deleteSegmentAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function addCustomerAsync({ token, id, customerId }: {
+    token: any;
+    id: any;
+    customerId: any;
+}): Promise<any>;
+declare function removeCustomerAsync({ token, id, customerId }: {
+    token: any;
+    id: any;
+    customerId: any;
+}): Promise<any>;
+declare function fetchSegmentCustomersAsync({ token, page, id, searchTerm, weeksAgo, }: {
+    token: any;
+    page: any;
+    id: any;
+    searchTerm: any;
+    weeksAgo: any;
+}): Promise<any>;
 
 declare const segmentsApi_d_fetchSegmentsAsync: typeof fetchSegmentsAsync;
 declare const segmentsApi_d_fetchSegmentAsync: typeof fetchSegmentAsync;
 declare const segmentsApi_d_createSegmentAsync: typeof createSegmentAsync;
+declare const segmentsApi_d_deleteSegmentAsync: typeof deleteSegmentAsync;
+declare const segmentsApi_d_addCustomerAsync: typeof addCustomerAsync;
+declare const segmentsApi_d_removeCustomerAsync: typeof removeCustomerAsync;
+declare const segmentsApi_d_fetchSegmentCustomersAsync: typeof fetchSegmentCustomersAsync;
 declare namespace segmentsApi_d {
   export {
     segmentsApi_d_fetchSegmentsAsync as fetchSegmentsAsync,
     segmentsApi_d_fetchSegmentAsync as fetchSegmentAsync,
     segmentsApi_d_createSegmentAsync as createSegmentAsync,
+    segmentsApi_d_deleteSegmentAsync as deleteSegmentAsync,
+    segmentsApi_d_addCustomerAsync as addCustomerAsync,
+    segmentsApi_d_removeCustomerAsync as removeCustomerAsync,
+    segmentsApi_d_fetchSegmentCustomersAsync as fetchSegmentCustomersAsync,
   };
 }
 
@@ -2578,7 +2613,7 @@ declare const fetchTrackedUsersActionsAsync: ({ token, page, id, revenueOnly, }:
     id: any;
     revenueOnly: any;
 }) => Promise<any>;
-declare const deleteCustomerAsync: ({ token, id, }: {
+declare const deleteCustomerAsync: ({ token, id }: {
     token: any;
     id: any;
 }) => Promise<any>;

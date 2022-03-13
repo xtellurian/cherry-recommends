@@ -378,11 +378,17 @@ const setCustomerMetricAsync = async ({ token, id, metricId, useInternalId, valu
         body: { value },
     });
 };
-const deleteCustomerAsync$1 = async ({ token, id, }) => {
+const deleteCustomerAsync$1 = async ({ token, id }) => {
     return await executeFetch$1({
         path: `${basePath}/${id}`,
         token,
         method: "delete",
+    });
+};
+const fetchCustomerSegmentsAsync = async ({ token, id }) => {
+    return await executeFetch$1({
+        token,
+        path: `${basePath}/${id}/segments`,
     });
 };
 
@@ -398,7 +404,8 @@ var customersApi = /*#__PURE__*/Object.freeze({
     createOrUpdateCustomerAsync: createOrUpdateCustomerAsync,
     fetchCustomersActionsAsync: fetchCustomersActionsAsync,
     setCustomerMetricAsync: setCustomerMetricAsync,
-    deleteCustomerAsync: deleteCustomerAsync$1
+    deleteCustomerAsync: deleteCustomerAsync$1,
+    fetchCustomerSegmentsAsync: fetchCustomerSegmentsAsync
 });
 
 const fetchEventSummaryAsync = async ({ token }) => {
@@ -2180,12 +2187,48 @@ const createSegmentAsync = async ({ token, payload }) => {
         body: payload,
     });
 };
+const deleteSegmentAsync = async ({ token, id }) => {
+    return await executeFetch$1({
+        path: `api/Segments/${id}`,
+        token,
+        method: "delete",
+    });
+};
+const addCustomerAsync = async ({ token, id, customerId }) => {
+    return await executeFetch$1({
+        path: `api/Segments/${id}/Customers/${customerId}`,
+        token,
+        method: "post",
+    });
+};
+const removeCustomerAsync = async ({ token, id, customerId }) => {
+    return await executeFetch$1({
+        path: `api/Segments/${id}/Customers/${customerId}`,
+        token,
+        method: "delete",
+    });
+};
+const fetchSegmentCustomersAsync = async ({ token, page, id, searchTerm, weeksAgo, }) => {
+    return await executeFetch$1({
+        path: `api/Segments/${id}/Customers`,
+        token,
+        page,
+        query: {
+            "q.term": searchTerm,
+            "q.weeksAgo": weeksAgo,
+        },
+    });
+};
 
 var segmentsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchSegmentsAsync: fetchSegmentsAsync,
     fetchSegmentAsync: fetchSegmentAsync,
-    createSegmentAsync: createSegmentAsync
+    createSegmentAsync: createSegmentAsync,
+    deleteSegmentAsync: deleteSegmentAsync,
+    addCustomerAsync: addCustomerAsync,
+    removeCustomerAsync: removeCustomerAsync,
+    fetchSegmentCustomersAsync: fetchSegmentCustomersAsync
 });
 
 const fetchTouchpointsAsync = async ({ token, page }) => {

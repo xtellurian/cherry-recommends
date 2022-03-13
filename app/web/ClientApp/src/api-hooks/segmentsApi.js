@@ -1,12 +1,16 @@
 import React from "react";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
-import { fetchSegmentsAsync, fetchSegmentAsync } from "../api/segmentsApi";
+import {
+  fetchSegmentsAsync,
+  fetchSegmentAsync,
+  fetchSegmentCustomersAsync,
+} from "../api/segmentsApi";
 
 export const useSegments = () => {
   const token = useAccessToken();
   const page = usePagination();
-  const [result, setState] = React.useState();
+  const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     if (token) {
       fetchSegmentsAsync({
@@ -18,12 +22,12 @@ export const useSegments = () => {
     }
   }, [token, page]);
 
-  return { result };
+  return result;
 };
 
 export const useSegment = ({ id }) => {
   const token = useAccessToken();
-  const [segment, setState] = React.useState();
+  const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     if (token) {
       fetchSegmentAsync({
@@ -35,5 +39,28 @@ export const useSegment = ({ id }) => {
     }
   }, [token, id]);
 
-  return { segment };
+  return result;
+};
+
+export const useSegmentCustomers = (p) => {
+  const { id, trigger, searchTerm, weeksAgo } = p || {}; // ensure this works in the case of p === undefinfed
+  const token = useAccessToken();
+  const page = usePagination();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchSegmentCustomersAsync({
+        token,
+        page,
+        id,
+        searchTerm,
+        weeksAgo,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, page, trigger, searchTerm]);
+
+  return result;
 };

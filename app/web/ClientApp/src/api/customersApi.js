@@ -20,3 +20,5 @@ const headers = (token) =>
     : { ...defaultHeaders, Authorization: `Bearer ${token}` };
 
 export const setCustomerMetricAsync = customers.setCustomerMetricAsync;
+
+export const fetchCustomerSegmentsAsync = customers.fetchCustomerSegmentsAsync;
