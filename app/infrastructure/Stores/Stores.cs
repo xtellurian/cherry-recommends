@@ -147,6 +147,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IMetricGeneratorStore, EFMetricGeneratorStore>();
             services.AddScoped<IHistoricCustomerMetricStore, EFHistoricCustomerMetricStore>();
             services.AddScoped<IGlobalMetricValueStore, EFGlobalMetricValueStore>();
+            services.AddScoped<IBusinessMetricValueStore, EFBusinessMetricValueStore>();
 
             services.AddScoped<IHashedApiKeyStore, EFHashedAPIKeyStore>();
             services.AddScoped<IModelRegistrationStore, EFModelRegistrationStore>();

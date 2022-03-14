@@ -149,6 +149,8 @@ namespace SignalBox.Test.Workflows
             var mockWebhookClient = new Mock<IWebhookSenderClient>();
             var mockTelemetry = new Mock<ITelemetry>();
             var mockContext = Utility.MockStorageContext();
+            var mockAggregateLogger = Utility.MockLogger<FilterSelectAggregateWorkflow>();
+            var aggregateWorkflow = new FilterSelectAggregateWorkflow(mockAggregateLogger.Object);
 
             RecommenderTriggersWorkflows recommenderTriggerWorkflow = CreateRecommenderTriggersWorkFlows();
 
@@ -159,6 +161,7 @@ namespace SignalBox.Test.Workflows
                 mockMetricGeneratorStore.Object,
                 mockHistoricStore.Object,
                 recommenderTriggerWorkflow,
+                aggregateWorkflow,
                 null,
                 mockWebhookClient.Object,
                 dateTimeProvider,

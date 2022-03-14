@@ -28,5 +28,6 @@ namespace SignalBox.Core
         Task<long> CountEventsOfType(EventKinds kind, string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null);
         Task<long> CountEventsOfType(string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null);
         Task<Paginated<CustomerEvent>> ReadEventsForBusiness(int page, Business business);
+        Task<IEnumerable<CustomerEvent>> ReadEventsForBusiness(Business business, EventQueryOptions options = null, DateTimeOffset? since = null);
     }
 }

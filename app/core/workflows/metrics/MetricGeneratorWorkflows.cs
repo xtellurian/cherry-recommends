@@ -12,6 +12,7 @@ namespace SignalBox.Core.Workflows
         private readonly ICustomerEventStore trackedUserEventStore;
         private readonly IMetricGeneratorStore metricGeneratorStore;
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly FilterSelectAggregateWorkflow aggregateWorkflow;
 
         public MetricGeneratorWorkflows(
             ICustomerStore customerStore,
@@ -20,6 +21,7 @@ namespace SignalBox.Core.Workflows
             IMetricGeneratorStore metricGeneratorStore,
             IHistoricCustomerMetricStore customerMetricStore,
             RecommenderTriggersWorkflows triggersWorkflows,
+            FilterSelectAggregateWorkflow aggregateWorkflow,
             HubspotPushWorkflows hubspotPushWorkflows,
             IWebhookSenderClient webhookSenderClient,
             IDateTimeProvider dateTimeProvider,
@@ -31,6 +33,7 @@ namespace SignalBox.Core.Workflows
             this.trackedUserEventStore = trackedUserEventStore;
             this.metricGeneratorStore = metricGeneratorStore;
             this.dateTimeProvider = dateTimeProvider;
+            this.aggregateWorkflow = aggregateWorkflow;
         }
 
         public async Task<Paginated<MetricGenerator>> GetGenerators(int page, Metric metric)

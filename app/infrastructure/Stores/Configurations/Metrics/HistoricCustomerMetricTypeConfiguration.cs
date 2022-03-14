@@ -10,7 +10,9 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             base.Configure(builder);
             // ensure the uniqueness of a metric value
+
             builder.HasIndex(f => new { f.MetricId, f.TrackedUserId, f.Version })
+                .HasFilter($"[{nameof(HistoricCustomerMetric.TrackedUserId)}] IS NOT NULL")
                 .IsUnique();
 
             builder.Ignore(_ => _.TrackedUser);

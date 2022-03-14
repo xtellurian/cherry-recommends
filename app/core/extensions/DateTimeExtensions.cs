@@ -39,5 +39,18 @@ namespace SignalBox.Core
                 return dt.AddDays(day - dt.DayOfWeek).Date;
             }
         }
+
+        public static DateTimeOffset DateTimeSince(this DateTimeOffset dt, MetricGeneratorTimeWindow timeWindow)
+        {
+            switch (timeWindow)
+            {
+                case MetricGeneratorTimeWindow.SevenDays:
+                    return dt.AddDays(-7);
+                case MetricGeneratorTimeWindow.ThirtyDays:
+                    return dt.AddDays(-30);
+                default:
+                    return DateTimeOffset.MinValue;
+            }
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace SignalBox.Functions
     public class MetricGeneratorJobs
     {
         private readonly MetricGeneratorWorkflows customerMetricWorkflows;
+        private readonly BusinessMetricGeneratorWorkflow businessMetricWorkflow;
         private readonly AggregateCustomerMetricWorkflow aggregateCustomerMetricWorkflow;
         private readonly JoinTwoMetricsWorkflow joinTwoMetricsWorkflow;
         private readonly IEnvironmentProvider environmentProvider;
@@ -23,6 +24,7 @@ namespace SignalBox.Functions
         public MetricGeneratorJobs(MetricGeneratorWorkflows customerMetricWorkflows,
                                    AggregateCustomerMetricWorkflow aggregateCustomerMetricWorkflow,
                                    JoinTwoMetricsWorkflow joinTwoMetricsWorkflow,
+                                   BusinessMetricGeneratorWorkflow businessMetricWorkflow,
                                    IEnvironmentProvider environmentProvider,
                                    IMetricGeneratorStore metricGeneratorStore,
                                    IDateTimeProvider dateTimeProvider)
@@ -30,6 +32,7 @@ namespace SignalBox.Functions
             this.customerMetricWorkflows = customerMetricWorkflows;
             this.aggregateCustomerMetricWorkflow = aggregateCustomerMetricWorkflow;
             this.joinTwoMetricsWorkflow = joinTwoMetricsWorkflow;
+            this.businessMetricWorkflow = businessMetricWorkflow;
             this.environmentProvider = environmentProvider;
             this.metricGeneratorStore = metricGeneratorStore;
             this.dateTimeProvider = dateTimeProvider;
@@ -77,6 +80,11 @@ namespace SignalBox.Functions
             if (generator.Metric.Scope == Core.Metrics.MetricScopes.Customer)
             {
                 var summary = await customerMetricWorkflows.RunMetricGeneration(generator);
+                logger.LogInformation($"Finished RunOneGeneratorFromQueue for generator {generator.Id} with total writes: {summary.TotalWrites}");
+            }
+            else if (generator.Metric.Scope == Core.Metrics.MetricScopes.Business)
+            {
+                var summary = await businessMetricWorkflow.RunBusinessMetricGeneration(generator);
                 logger.LogInformation($"Finished RunOneGeneratorFromQueue for generator {generator.Id} with total writes: {summary.TotalWrites}");
             }
             else if (generator.Metric.Scope == Core.Metrics.MetricScopes.Global)

@@ -20,6 +20,7 @@ const valueTypeOptions = [
 
 const scopeOptions = [
   { value: "customer", label: "Customer" },
+  { value: "business", label: "Business" },
   { value: "global", label: "Global" },
 ];
 
@@ -36,6 +37,8 @@ const CreateMetric = () => {
     scope: null,
   });
   const [creating, setCreating] = React.useState(false);
+  const isCustomerOrBusiness =
+    metric.scope === "customer" || metric.scope === "business";
 
   const handleCreate = () => {
     setError(null);
@@ -114,7 +117,7 @@ const CreateMetric = () => {
           onChange={setSelectedScope}
           options={scopeOptions}
         />
-        {metric.scope === "customer" && (
+        {isCustomerOrBusiness && (
           <Select
             className="mb-1"
             placeholder="Select a metric value type"

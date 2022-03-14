@@ -206,5 +206,40 @@ namespace SignalBox.Infrastructure.EntityFramework
             var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
             return new Paginated<CustomerEvent>(result, pageCount, itemCount, page);
         }
+
+        public async Task<IEnumerable<CustomerEvent>> ReadEventsForBusiness(Business business, EventQueryOptions options = null, DateTimeOffset? since = null)
+        {
+            options ??= new EventQueryOptions();
+            options.Filter ??= _ => true;
+            since ??= DateTimeOffset.MinValue;
+
+            var query = context.CustomerEvents
+                .Join(context.Customers, evt => evt.TrackedUserId, cust => cust.Id, (customerEvent, customer) => new
+                {
+                    customerEvent,
+                    customer
+                })
+                .Join(context.Businesses, combined => combined.customer.BusinessMembership.BusinessId, biz => biz.Id, (x, business) => new
+                {
+                    customerEvent = x.customerEvent,
+                    customer = x.customer,
+                    business = business
+                })
+                .Where(_ => _.business.Id == business.Id)
+                .Where(_ => _.customerEvent.Timestamp > since)
+                .Select(_ => _.customerEvent)
+                .Where(options.Filter);
+
+            if (options.NoTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            var results = await query
+                .OrderByDescending(_ => _.Timestamp)
+                .ToListAsync();
+
+            return results;
+        }
     }
 }

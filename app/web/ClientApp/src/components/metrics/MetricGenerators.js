@@ -86,6 +86,8 @@ export const MetricGenerators = ({ metric }) => {
   const generators = useMetricGenerators({ trigger, id: metric.id });
 
   const [generatorPopupOpen, setGeneratorPopupOpen] = React.useState(false);
+  const isCustomerOrBusiness =
+    metric.scope === "customer" || metric.scope === "business";
 
   return (
     <React.Fragment>
@@ -128,7 +130,7 @@ export const MetricGenerators = ({ metric }) => {
       <BigPopup isOpen={generatorPopupOpen} setIsOpen={setGeneratorPopupOpen}>
         <div style={{ minHeight: "65vh" }}>
           {metric.loading && <Spinner />}
-          {!metric.loading && metric.scope == "customer" && (
+          {!metric.loading && isCustomerOrBusiness && (
             <CreateOrEditFilterSelectAggregateGenerator
               metric={metric}
               onCreated={(r) => {
