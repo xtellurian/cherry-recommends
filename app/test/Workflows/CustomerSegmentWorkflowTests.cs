@@ -61,7 +61,7 @@ namespace SignalBox.Test.Workflows
             var mockSegmentStore = new Mock<ISegmentStore>();
             var mockCustomerStore = new Mock<ICustomerStore>();
 
-            mockSegmentStore.Setup(_ => _.ExistsInSegment(It.Is<long>(x => x == segment.Id), It.Is<long>(x => x == customer.Id))).ReturnsAsync(existsInSegment);
+            mockSegmentStore.Setup(_ => _.CustomerExistsInSegment(It.Is<Core.Segment>(x => x == segment), It.Is<long>(x => x == customer.Id))).ReturnsAsync(existsInSegment);
             mockSegmentStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
             mockSegmentStore.Setup(_ => _.AddCustomer(It.Is<Core.Segment>(_ => _.Id == segment.Id), It.Is<Customer>(_ => _.Id == customer.Id)))
                 .ReturnsAsync(new CustomerSegment(customer, segment));
@@ -100,7 +100,7 @@ namespace SignalBox.Test.Workflows
             var mockSegmentStore = new Mock<ISegmentStore>();
             var mockCustomerStore = new Mock<ICustomerStore>();
 
-            mockSegmentStore.Setup(_ => _.ExistsInSegment(It.Is<long>(x => x == segment.Id), It.Is<long>(x => x == customer.Id))).ReturnsAsync(existsInSegment);
+            mockSegmentStore.Setup(_ => _.CustomerExistsInSegment(It.Is<Core.Segment>(x => x == segment), It.Is<long>(x => x == customer.Id))).ReturnsAsync(existsInSegment);
             mockSegmentStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
             mockSegmentStore.Setup(_ => _.RemoveCustomer(It.Is<Core.Segment>(_ => _.Id == segment.Id), It.Is<Customer>(_ => _.Id == customer.Id)))
                 .ReturnsAsync(new CustomerSegment(customer, segment));

@@ -27,6 +27,7 @@ namespace SignalBox.Core.Workflows
             IDateTimeProvider dateTimeProvider,
             IItemsRecommendationStore recommendationStore,
             IMetricStore metricStore,
+            ISegmentStore segmentStore,
             ICustomerStore customerStore,
             IBusinessStore businessStore,
             IHistoricCustomerMetricStore historicCustomerMetricStore,
@@ -34,7 +35,7 @@ namespace SignalBox.Core.Workflows
             RecommenderReportImageWorkflows reportImageWorkflows,
             IItemsRecommenderPerformanceReportStore performanceReportStore,
             IRecommendableItemStore recommendableItemStore,
-            ILogger<ItemsRecommenderPerformanceWorkflows> logger) : base(store, systemStore, metricStore, reportImageWorkflows)
+            ILogger<ItemsRecommenderPerformanceWorkflows> logger) : base(store, systemStore, metricStore, segmentStore, reportImageWorkflows)
         {
             this.dateTimeProvider = dateTimeProvider;
             this.recommendationStore = recommendationStore;

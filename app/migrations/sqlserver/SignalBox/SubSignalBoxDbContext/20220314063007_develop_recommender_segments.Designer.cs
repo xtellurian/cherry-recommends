@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220314063007_develop_recommender_segments")]
+    partial class develop_recommender_segments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1732,30 +1734,11 @@ namespace sqlserver.SignalBox
                     b.HasIndex("TrackedUserId");
 
                     b.HasIndex("MetricId", "TrackedUserId", "Version")
-                        .IsUnique()
-                        .HasFilter("[TrackedUserId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("HistoricTrackedUserFeatures");
 
                     b.HasDiscriminator().HasValue("HistoricCustomerMetric");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Metrics.BusinessMetricValue", b =>
-                {
-                    b.HasBaseType("SignalBox.Core.Metrics.MetricValueBase");
-
-                    b.Property<long>("BusinessId")
-                        .HasColumnType("bigint");
-
-                    b.HasIndex("BusinessId");
-
-                    b.HasIndex("MetricId", "BusinessId", "Version")
-                        .IsUnique()
-                        .HasFilter("[BusinessId] IS NOT NULL");
-
-                    b.ToTable("HistoricTrackedUserFeatures");
-
-                    b.HasDiscriminator().HasValue("BusinessMetricValue");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Metrics.GlobalMetricValue", b =>
@@ -2447,25 +2430,6 @@ namespace sqlserver.SignalBox
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Metric");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Metrics.BusinessMetricValue", b =>
-                {
-                    b.HasOne("SignalBox.Core.Business", "Business")
-                        .WithMany()
-                        .HasForeignKey("BusinessId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignalBox.Core.Metric", "Metric")
-                        .WithMany()
-                        .HasForeignKey("MetricId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Business");
 
                     b.Navigation("Metric");
                 });

@@ -19,14 +19,17 @@ namespace SignalBox.Web.Controllers
     {
         private readonly RecommenderInvokationWorkflowBase<T> invokationWorkflows;
         private readonly IRecommenderStore<T> recommenderStore;
+        private readonly ISegmentStore segmentStore;
         private readonly RecommenderWorkflowBase<T> workflows;
 
         protected RecommenderControllerBase(IRecommenderStore<T> store,
+                                            ISegmentStore segmentStore,
                                             RecommenderWorkflowBase<T> workflows,
                                             RecommenderInvokationWorkflowBase<T> invokationWorkflows) : base(store)
         {
             this.invokationWorkflows = invokationWorkflows;
             this.recommenderStore = store;
+            this.segmentStore = segmentStore;
             this.workflows = workflows;
         }
 
@@ -174,6 +177,37 @@ namespace SignalBox.Web.Controllers
                 }
             }
         }
-    }
 
+        [HttpGet("{id}/Segments")]
+        public async Task<IEnumerable<Core.Segment>> GetSegments(string id)
+        {
+            var recommender = await base.GetResource(id);
+
+            return await segmentStore.GetSegmentsByRecommender(recommender);
+        }
+
+        [HttpPost("{id}/Segments")]
+        public async Task<IEnumerable<RecommenderSegment>> AddSegments(string id, [FromBody] IEnumerable<long> segmentIds)
+        {
+            var recommender = await base.GetResource(id);
+
+            return await workflows.SetSegments(recommender, segmentIds);
+        }
+
+        [HttpDelete("{id}/Segments")]
+        public async Task<IEnumerable<RecommenderSegment>> RemoveSegments(string id, [FromBody] IEnumerable<long> segmentIds)
+        {
+            var recommender = await base.GetResource(id);
+
+            return await workflows.RemoveSegments(recommender, segmentIds);
+        }
+
+        [HttpDelete("{id}/Segments/{segmentId}")]
+        public async Task<IEnumerable<RecommenderSegment>> RemoveSegment(string id, long segmentId)
+        {
+            var recommender = await base.GetResource(id);
+
+            return await workflows.RemoveSegments(recommender, new long[1] { segmentId });
+        }
+    }
 }

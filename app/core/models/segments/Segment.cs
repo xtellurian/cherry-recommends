@@ -16,6 +16,8 @@ namespace SignalBox.Core
 
         [JsonIgnore]
         public ICollection<CustomerSegment> InSegment { get; set; } = new Collection<CustomerSegment>();
+        [JsonIgnore]
+        public ICollection<RecommenderSegment> RecommenderSegments { get; set; } = new Collection<RecommenderSegment>();
 
         public string? Name { get; set; }
     }
