@@ -211,3 +211,29 @@ export const fetchGeneratorsAsync = async ({ token, id }: EntityRequest) => {
     token,
   });
 };
+
+export const fetchBusinessMetricsAsync = async ({
+  token,
+  id,
+}: EntityRequest) => {
+  return await executeFetch({
+    path: `api/Businesses/${id}/Metrics`,
+    token,
+  });
+};
+
+interface BusinessMetricRequest extends CustomersMetricRequest {}
+export const fetchBusinessMetricAsync = async ({
+  token,
+  id,
+  metricId,
+  version,
+}: BusinessMetricRequest) => {
+  return await executeFetch({
+    path: `api/Businesses/${id}/Metrics/${metricId}`,
+    token,
+    query: {
+      version,
+    },
+  });
+};

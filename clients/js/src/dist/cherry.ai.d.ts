@@ -2060,6 +2060,10 @@ interface DeleteDestinationRequest extends DeleteRequest {
 }
 declare const deleteDestinationAsync: ({ token, id, destinationId, }: DeleteDestinationRequest) => Promise<any>;
 declare const fetchGeneratorsAsync: ({ token, id }: EntityRequest) => Promise<any>;
+declare const fetchBusinessMetricsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+interface BusinessMetricRequest extends CustomersMetricRequest {
+}
+declare const fetchBusinessMetricAsync: ({ token, id, metricId, version, }: BusinessMetricRequest) => Promise<any>;
 
 declare const metricsApi_d_fetchMetricsAsync: typeof fetchMetricsAsync;
 declare const metricsApi_d_fetchMetricAsync: typeof fetchMetricAsync;
@@ -2076,6 +2080,8 @@ declare const metricsApi_d_fetchMetricBinValuesNumericAsync: typeof fetchMetricB
 declare const metricsApi_d_fetchMetricBinValuesStringAsync: typeof fetchMetricBinValuesStringAsync;
 declare const metricsApi_d_deleteDestinationAsync: typeof deleteDestinationAsync;
 declare const metricsApi_d_fetchGeneratorsAsync: typeof fetchGeneratorsAsync;
+declare const metricsApi_d_fetchBusinessMetricsAsync: typeof fetchBusinessMetricsAsync;
+declare const metricsApi_d_fetchBusinessMetricAsync: typeof fetchBusinessMetricAsync;
 declare namespace metricsApi_d {
   export {
     metricsApi_d_fetchMetricsAsync as fetchMetricsAsync,
@@ -2095,6 +2101,8 @@ declare namespace metricsApi_d {
     createDestinationAsync$1 as createDestinationAsync,
     metricsApi_d_deleteDestinationAsync as deleteDestinationAsync,
     metricsApi_d_fetchGeneratorsAsync as fetchGeneratorsAsync,
+    metricsApi_d_fetchBusinessMetricsAsync as fetchBusinessMetricsAsync,
+    metricsApi_d_fetchBusinessMetricAsync as fetchBusinessMetricAsync,
   };
 }
 

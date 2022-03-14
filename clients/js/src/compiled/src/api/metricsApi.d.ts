@@ -33,4 +33,8 @@ interface DeleteDestinationRequest extends DeleteRequest {
 }
 export declare const deleteDestinationAsync: ({ token, id, destinationId, }: DeleteDestinationRequest) => Promise<any>;
 export declare const fetchGeneratorsAsync: ({ token, id }: EntityRequest) => Promise<any>;
+export declare const fetchBusinessMetricsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+interface BusinessMetricRequest extends CustomersMetricRequest {
+}
+export declare const fetchBusinessMetricAsync: ({ token, id, metricId, version, }: BusinessMetricRequest) => Promise<any>;
 export {};

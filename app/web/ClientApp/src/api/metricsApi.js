@@ -23,3 +23,5 @@ export const createDestinationAsync = metrics.createDestinationAsync;
 export const deleteDestinationAsync = metrics.deleteDestinationAsync;
 
 export const fetchGeneratorsAsync = metrics.fetchGeneratorsAsync;
+export const fetchBusinessMetricAsync = metrics.fetchBusinessMetricAsync;
+export const fetchBusinessMetricsAsync = metrics.fetchBusinessMetricsAsync;

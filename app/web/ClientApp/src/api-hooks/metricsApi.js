@@ -13,6 +13,8 @@ import {
   fetchAggregateMetricValuesStringAsync,
   fetchMetricBinValuesNumericAsync,
   fetchMetricBinValuesStringAsync,
+  fetchBusinessMetricAsync,
+  fetchBusinessMetricsAsync,
 } from "../api/metricsApi";
 
 export const useMetrics = ({ scope } = {}) => {
@@ -238,4 +240,46 @@ export const useDestinations = ({ id, trigger }) => {
 
 export const useGlobalStartingMetric = () => {
   return useMetric({ id: 100 });
+};
+
+export const useBusinessMetrics = ({ id }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({
+    loading: true,
+  });
+  React.useEffect(() => {
+    setState(loadingState);
+    if (token && id) {
+      fetchBusinessMetricsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id]);
+
+  return state;
+};
+
+export const useBusinessMetric = ({ id, metricId, version }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({
+    loading: true,
+  });
+  React.useEffect(() => {
+    setState(loadingState);
+    if (token && id && metricId) {
+      fetchBusinessMetricAsync({
+        token,
+        id,
+        metricId,
+        version,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, metricId, version]);
+
+  return state;
 };

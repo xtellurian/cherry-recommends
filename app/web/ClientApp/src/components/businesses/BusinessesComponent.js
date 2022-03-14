@@ -5,6 +5,7 @@ import { BusinessesSummary } from "./BusinessesSummary";
 import { BusinessDetail } from "./BusinessDetail";
 import { CreateBusiness } from "./CreateBusiness";
 import { EditBusinessProperties } from "./EditBusinessProperties";
+import { BusinessMetrics } from "./BusinessMetrics";
 
 export const BusinessesComponent = (props) => {
   let { path } = useRouteMatch();
@@ -26,6 +27,11 @@ export const BusinessesComponent = (props) => {
           exact
           path={`${path}/edit-properties/:id`}
           component={EditBusinessProperties}
+        />
+        <AuthorizeRoute
+          exact
+          path={`${path}/metrics/:id`}
+          component={BusinessMetrics}
         />
       </Switch>
     </React.Fragment>

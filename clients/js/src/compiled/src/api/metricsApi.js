@@ -120,3 +120,18 @@ export const fetchGeneratorsAsync = async ({ token, id }) => {
         token,
     });
 };
+export const fetchBusinessMetricsAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        path: `api/Businesses/${id}/Metrics`,
+        token,
+    });
+};
+export const fetchBusinessMetricAsync = async ({ token, id, metricId, version, }) => {
+    return await executeFetch({
+        path: `api/Businesses/${id}/Metrics/${metricId}`,
+        token,
+        query: {
+            version,
+        },
+    });
+};

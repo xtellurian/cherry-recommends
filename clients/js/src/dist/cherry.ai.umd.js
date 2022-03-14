@@ -818,6 +818,21 @@
             token,
         });
     };
+    const fetchBusinessMetricsAsync = async ({ token, id, }) => {
+        return await executeFetch({
+            path: `api/Businesses/${id}/Metrics`,
+            token,
+        });
+    };
+    const fetchBusinessMetricAsync = async ({ token, id, metricId, version, }) => {
+        return await executeFetch({
+            path: `api/Businesses/${id}/Metrics/${metricId}`,
+            token,
+            query: {
+                version,
+            },
+        });
+    };
 
     var metricsApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -837,7 +852,9 @@
         fetchMetricBinValuesStringAsync: fetchMetricBinValuesStringAsync,
         createDestinationAsync: createDestinationAsync$4,
         deleteDestinationAsync: deleteDestinationAsync,
-        fetchGeneratorsAsync: fetchGeneratorsAsync
+        fetchGeneratorsAsync: fetchGeneratorsAsync,
+        fetchBusinessMetricsAsync: fetchBusinessMetricsAsync,
+        fetchBusinessMetricAsync: fetchBusinessMetricAsync
     });
 
     const fetchMetricGeneratorsAsync = async ({ page, token, }) => {
