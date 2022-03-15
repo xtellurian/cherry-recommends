@@ -1,5 +1,7 @@
 import React from "react";
 
+import "./PageHeadings.css";
+
 export const Title = ({ children }) => {
   return <h1 className="text-capitalize">{children}</h1>;
 };
@@ -14,10 +16,12 @@ export const Subtitle = ({ children }) => {
 
 export const PageHeading = ({ title, subtitle, showHr }) => {
   return (
-    <div className="mb-3">
-      {title && <Title>{title}</Title>}
-      {subtitle && <Subtitle>{subtitle}</Subtitle>}
-      {showHr && <hr />}
+    <div className="page-heading-wrapper mb-4">
+      {title ? <div className="title text-capitalize">{title}</div> : null}
+      {subtitle ? (
+        <div className="subtitle text-capitalize">{subtitle}</div>
+      ) : null}
+      {showHr ? <hr /> : null}
     </div>
   );
 };

@@ -4,7 +4,13 @@ import { useBusiness } from "../../api-hooks/businessesApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { deleteBusinessAsync } from "../../api/businessesApi";
 import { BackButton } from "../molecules/BackButton";
-import { Subtitle, Title, ErrorCard, Spinner, EmptyList } from "../molecules";
+import {
+  Subtitle,
+  PageHeading,
+  ErrorCard,
+  Spinner,
+  EmptyList,
+} from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { Tabs, TabActivator } from "../molecules/layout/Tabs";
@@ -75,10 +81,11 @@ export const BusinessDetail = () => {
       <BackButton className="float-right" to="/businesses">
         All Businesses
       </BackButton>
-      <Title>Business</Title>
-      <Subtitle>{business.name || business.commonId}</Subtitle>
-      <hr />
-
+      <PageHeading
+        title={business.name || business.commonId || "..."}
+        subtitle="Business"
+        showHr={true}
+      />
       {business.loading && <Spinner />}
       {business.error && <ErrorCard error={business.error} />}
       {business.lastUpdated && (

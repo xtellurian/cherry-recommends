@@ -4,7 +4,13 @@ import { useCustomer } from "../../api-hooks/customersApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { deleteCustomerAsync } from "../../api/customersApi";
 import { BackButton } from "../molecules/BackButton";
-import { Subtitle, Title, ErrorCard, Spinner, EmptyList } from "../molecules";
+import {
+  PageHeading,
+  Subtitle,
+  ErrorCard,
+  Spinner,
+  EmptyList,
+} from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { Tabs, TabActivator } from "../molecules/layout/Tabs";
@@ -74,10 +80,11 @@ export const CustomerDetail = () => {
       <BackButton className="float-right" to="/customers">
         All Customers
       </BackButton>
-      <Title>Customer</Title>
-      <Subtitle>{trackedUser.name || trackedUser.customerId}</Subtitle>
-      <hr />
-
+      <PageHeading
+        title={trackedUser.name || trackedUser.customerId || "..."}
+        subtitle="Customer"
+        showHr={true}
+      />
       {trackedUser.loading && <Spinner />}
       {trackedUser.error && <ErrorCard error={trackedUser.error} />}
       {trackedUser.lastUpdated && (

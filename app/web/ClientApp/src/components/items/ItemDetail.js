@@ -6,7 +6,7 @@ import {
   updatePromotionAsync,
   setPropertiesAsync,
 } from "../../api/promotionsApi";
-import { Title, Subtitle, Spinner, ErrorCard, BackButton } from "../molecules";
+import { PageHeading, Spinner, ErrorCard, BackButton } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { PropertiesTableView } from "../molecules/PropertiesTableView";
 
@@ -52,9 +52,11 @@ export const ItemDetail = () => {
       <BackButton className="float-right" to="/promotions">
         All Promotions
       </BackButton>
-      <Title>Promotion Detail</Title>
-      <Subtitle>{item.name || "..."}</Subtitle>
-      <hr />
+      <PageHeading
+        title={item.name || "..."}
+        subtitle="Promotion Detail"
+        showHr={true}
+      />
       {item.loading && <Spinner>Loading Promotion</Spinner>}
       {item.error && <ErrorCard error={item.error} />}
       {!isDeletePopupOpen && error && (

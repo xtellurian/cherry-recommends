@@ -6,8 +6,7 @@ import { deleteMetricAsync, fetchExportCustomers } from "../../api/metricsApi";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 
 import {
-  Title,
-  Subtitle,
+  PageHeading,
   Spinner,
   ErrorCard,
   BackButton,
@@ -101,8 +100,7 @@ const MetricDetail = () => {
       >
         Export top customers
       </AsyncButton>
-      <Title>Metric</Title>
-      <Subtitle>{metric.name ? metric.name : "..."}</Subtitle>
+      <PageHeading title={metric.name || "..."} subtitle="Metric" />
       <Tabs tabs={tabs} defaultTabId={tabs[0].id} />
       <TabActivator tabId={tabs[0].id} defaultTabId={defaultTabId}>
         <div className="mt-3 mb-2">

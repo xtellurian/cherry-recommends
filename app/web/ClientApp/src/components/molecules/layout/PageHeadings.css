@@ -1,0 +1,12 @@
+.page-heading-wrapper .title {
+  font-size: 1.375rem;
+  font-weight: bold;
+}
+
+.page-heading-wrapper .subtitle {
+  font-size: 1.125rem;
+}
+
+.page-heading-wrapper hr {
+  margin-top: 2rem !important;
+}

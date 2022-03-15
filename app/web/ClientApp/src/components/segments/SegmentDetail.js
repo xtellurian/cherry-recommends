@@ -47,7 +47,7 @@ export const SegmentDetail = () => {
       <BackButton className="float-right" to="/segments">
         All Segments
       </BackButton>
-      <PageHeading title="Segment" subtitle={segment.name} />
+      <PageHeading title={segment.name || "..."} subtitle="Segment" />
       {segment.loading && <Spinner />}
       {segment.error && <ErrorCard error={segment.error} />}
       <Tabs tabs={tabs} defaultTabId={tabs[0].id} />
