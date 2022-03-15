@@ -11,42 +11,34 @@ import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { usePromotionsRecommenders } from "../../../api-hooks/promotionsRecommendersApi";
 import { ButtonGroup } from "../../molecules/buttons/ButtonGroup";
 import { RecommenderRow } from "../RecommenderRow";
+import { tabs } from "./ItemsRecommenderPrimaryNav";
 
 const ItemsRecommenderRow = ({ recommender }) => {
   const history = useHistory();
+
   const handleNavigate = (page) => {
-    history.push(
-      `/recommenders/promotions-recommenders/${page}/${recommender.id}`
-    );
+    const queryParams = new URLSearchParams(history.location.search);
+    queryParams.set("tab", page);
+
+    history.push({
+      ...history.location,
+      pathname: `/recommenders/promotions-recommenders/${page}/${recommender.id}`,
+      search: queryParams.toString(),
+    });
   };
+
   return (
     <RecommenderRow recommender={recommender}>
       <div>
         <ButtonGroup>
-          <div
-            className="btn btn-outline-primary"
-            onClick={() => handleNavigate("detail")}
-          >
-            Details
-          </div>
-          <div
-            className="btn btn-outline-primary"
-            onClick={() => handleNavigate("monitor")}
-          >
-            Monitor
-          </div>
-          <div
-            className="btn btn-outline-primary"
-            onClick={() => handleNavigate("performance")}
-          >
-            Performance
-          </div>
-          <div
-            className="btn btn-outline-primary"
-            onClick={() => handleNavigate("test")}
-          >
-            Test
-          </div>
+          {tabs.map((tab) => (
+            <div
+              className="btn btn-outline-primary"
+              onClick={() => handleNavigate(tab.id)}
+            >
+              {tab.label}
+            </div>
+          ))}
         </ButtonGroup>
       </div>
     </RecommenderRow>

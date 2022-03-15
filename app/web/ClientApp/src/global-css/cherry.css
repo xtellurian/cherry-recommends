@@ -118,3 +118,7 @@ a:hover {
 code {
   color: #e01a76;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}

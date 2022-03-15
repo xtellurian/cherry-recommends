@@ -14,7 +14,6 @@ import { Selector } from "../../molecules/selectors/Select";
 import { SettingsUtil } from "../utils/settingsUtil";
 import { ErrorCard, Spinner } from "../../molecules";
 import { LoadingPopup } from "../../molecules/popups/LoadingPopup";
-import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import { SettingRow } from "../../molecules/layout/SettingRow";
 
 export const Settings = () => {
@@ -61,38 +60,36 @@ export const Settings = () => {
   return (
     <React.Fragment>
       <LoadingPopup loading={saving} label="Saving Settings" />
-      <ItemRecommenderLayout>
-        {error && <ErrorCard error={error} />}
-        {recommender.loading && <Spinner>Loading Recommender</Spinner>}
-        {!recommender.loading && (
-          <React.Fragment>
-            <SettingsUtil
-              recommender={recommender}
-              basePath="/recommenders/promotions-recommenders"
-              updateSettings={handleUpdate}
-            />
-            <SettingRow
-              label="Baseline Promotion"
-              description="The baseline promotion should be a safe default choice. The baseline will
+      {error && <ErrorCard error={error} />}
+      {recommender.loading && <Spinner>Loading Recommender</Spinner>}
+      {!recommender.loading && (
+        <React.Fragment>
+          <SettingsUtil
+            recommender={recommender}
+            basePath="/recommenders/promotions-recommenders"
+            updateSettings={handleUpdate}
+          />
+          <SettingRow
+            label="Baseline Promotion"
+            description="The baseline promotion should be a safe default choice. The baseline will
               be used in reporting to compare the performance of promotion variations."
-            >
-              {baselineItem.loading ? (
-                <Spinner />
-              ) : (
-                <Selector
-                  isSearchable
-                  placeholder={
-                    baselineItem.name || "Choose a baseline promotion."
-                  }
-                  noOptionsMessage={(inputValue) => "No Promotions Available"}
-                  onChange={(so) => handleSetBaselineItem(so.value)}
-                  options={itemOptions}
-                />
-              )}
-            </SettingRow>
-          </React.Fragment>
-        )}
-      </ItemRecommenderLayout>
+          >
+            {baselineItem.loading ? (
+              <Spinner />
+            ) : (
+              <Selector
+                isSearchable
+                placeholder={
+                  baselineItem.name || "Choose a baseline promotion."
+                }
+                noOptionsMessage={(inputValue) => "No Promotions Available"}
+                onChange={(so) => handleSetBaselineItem(so.value)}
+                options={itemOptions}
+              />
+            )}
+          </SettingRow>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };

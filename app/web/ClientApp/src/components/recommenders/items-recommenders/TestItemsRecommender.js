@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { usePromotionsRecommender } from "../../../api-hooks/promotionsRecommendersApi";
 import { invokePromotionsRecommenderAsync } from "../../../api/promotionsRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
-import { Title, Subtitle, AsyncButton, BackButton } from "../../molecules";
+import { AsyncButton } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
 import { ConsumeRecommendationPopup } from "../utils/consumeRecommendationPopup";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
@@ -11,6 +11,8 @@ import { AsyncSelectCustomer } from "../../molecules/selectors/AsyncSelectCustom
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { AsyncSelectBusiness } from "../../molecules/selectors/AsyncSelectBusiness";
 import { Row } from "../../molecules/layout";
+import { MonitorRecommender } from "./MonitorItemsRecommender";
+import { RecommenderCard } from "../RecommenderCard";
 
 export const TestRecommender = () => {
   const { id } = useParams();
@@ -48,62 +50,67 @@ export const TestRecommender = () => {
   return (
     <React.Fragment>
       <ItemRecommenderLayout>
-        <Row className="mb-2">
-          <div className="col">
-            {recommender.targetType === "customer" ? (
-              <AsyncSelectCustomer
-                placeholder="Search for a Customer to make a recommendation for."
-                onChange={(v) => setSelectedCustomer(v.value)}
-              />
-            ) : null}
-            {recommender.targetType === "business" ? (
-              <AsyncSelectBusiness
-                placeholder="Search for a business to make a recommendation for."
-                onChange={(v) => setSelectedBusiness(v.value)}
-              />
-            ) : null}
-          </div>
-          <div className="col">
-            <AsyncButton
-              disabled={!selectedCustomer && !selectedBusiness}
-              onClick={handleInvoke}
-              className="btn btn-primary w-100"
-              loading={loading}
-            >
-              Invoke
-            </AsyncButton>
-          </div>
-        </Row>
-        {modelResponse ? (
+        <RecommenderCard title="Test">
           <Row>
             <div className="col">
-              <JsonView
-                data={modelResponse}
-                shouldExpandNode={(n) => n.includes("scoredItems")}
-              />
+              {recommender.targetType === "customer" ? (
+                <AsyncSelectCustomer
+                  placeholder="Search for a Customer to make a recommendation for."
+                  onChange={(v) => setSelectedCustomer(v.value)}
+                />
+              ) : null}
+              {recommender.targetType === "business" ? (
+                <AsyncSelectBusiness
+                  placeholder="Search for a business to make a recommendation for."
+                  onChange={(v) => setSelectedBusiness(v.value)}
+                />
+              ) : null}
             </div>
             <div className="col">
-              <button
-                disabled={recommender.targetType === "business"}
-                className="btn btn-outline-primary w-100"
-                onClick={() => setConsumePopupOpen(true)}
+              <AsyncButton
+                disabled={!selectedCustomer && !selectedBusiness}
+                onClick={handleInvoke}
+                className="btn btn-primary w-100"
+                loading={loading}
               >
-                Consume Recommendation
-              </button>
-              {recommender.targetType === "business" ? (
-                <div className="text-muted">
-                  Businesses may not consume recommendations
-                </div>
-              ) : null}
-              <ConsumeRecommendationPopup
-                recommendation={modelResponse}
-                isOpen={consumePopupOpen}
-                setIsOpen={setConsumePopupOpen}
-                onConsumed={() => setModelResponse(null)}
-              />
+                Invoke
+              </AsyncButton>
             </div>
           </Row>
-        ) : null}
+          {modelResponse ? (
+            <Row className="mt-4">
+              <div className="col">
+                <JsonView
+                  data={modelResponse}
+                  shouldExpandNode={(n) => n.includes("scoredItems")}
+                />
+              </div>
+              <div className="col">
+                <button
+                  disabled={recommender.targetType === "business"}
+                  className="btn btn-outline-primary w-100"
+                  onClick={() => setConsumePopupOpen(true)}
+                >
+                  Consume Recommendation
+                </button>
+                {recommender.targetType === "business" ? (
+                  <div className="text-muted">
+                    Businesses may not consume recommendations
+                  </div>
+                ) : null}
+                <ConsumeRecommendationPopup
+                  recommendation={modelResponse}
+                  isOpen={consumePopupOpen}
+                  setIsOpen={setConsumePopupOpen}
+                  onConsumed={() => setModelResponse(null)}
+                />
+              </div>
+            </Row>
+          ) : null}
+        </RecommenderCard>
+        <RecommenderCard title="Monitor">
+          <MonitorRecommender />
+        </RecommenderCard>
       </ItemRecommenderLayout>
     </React.Fragment>
   );

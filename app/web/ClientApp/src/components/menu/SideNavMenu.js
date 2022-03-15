@@ -90,7 +90,7 @@ export const SideNavMenu = () => {
                   to={(location) => ({ ...location, pathname: subitem.to })}
                 >
                   <SubMenuItem
-                    active={location.pathname === subitem.to}
+                    active={location.pathname.includes(subitem.to)}
                     label={subitem.name}
                   />
                 </Link>

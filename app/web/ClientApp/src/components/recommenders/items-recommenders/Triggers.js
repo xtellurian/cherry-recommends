@@ -6,7 +6,6 @@ import {
   useTrigger,
 } from "../../../api-hooks/promotionsRecommendersApi";
 import { setTriggerAsync } from "../../../api/promotionsRecommendersApi";
-import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import { Spinner } from "../../molecules";
 
 export const Triggers = () => {
@@ -26,7 +25,7 @@ export const Triggers = () => {
   };
 
   return (
-    <ItemRecommenderLayout>
+    <React.Fragment>
       {triggerCollection.loading && <Spinner />}
       {!triggerCollection.loading && (
         <TriggersUtil
@@ -37,6 +36,6 @@ export const Triggers = () => {
           setTriggerAsync={handleSetTriggerAsync}
         />
       )}
-    </ItemRecommenderLayout>
+    </React.Fragment>
   );
 };

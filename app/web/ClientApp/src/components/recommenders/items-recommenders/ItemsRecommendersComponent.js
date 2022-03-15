@@ -1,5 +1,6 @@
 import React from "react";
 import { Switch, useRouteMatch } from "react-router-dom";
+
 import AuthorizeRoute from "../../auth0/ProtectedRoute";
 import { ItemsRecommendersSummary } from "./ItemsRecommendersSummary";
 import { CreateRecommender } from "./CreateItemsRecommender";
@@ -17,9 +18,11 @@ import { LearningMetrics } from "./LearningMetrics";
 import { Arguments } from "./Arguments";
 import { Overview } from "./Overview";
 import Performance from "./ItemRecommenderPerformance";
+import { Advanced } from "./Advanced";
 
 export const ItemsRecommendersComponent = () => {
   const { path } = useRouteMatch();
+
   return (
     <React.Fragment>
       <Switch>
@@ -75,10 +78,8 @@ export const ItemsRecommendersComponent = () => {
           component={LearningMetrics}
         />
         <AuthorizeRoute path={`${path}/arguments/:id`} component={Arguments} />
-        <AuthorizeRoute
-          path={`${path}/performance/:id`}
-          component={Performance}
-        />
+        <AuthorizeRoute path={`${path}/reports/:id`} component={Performance} />
+        <AuthorizeRoute path={`${path}/advanced/:id`} component={Advanced} />
       </Switch>
     </React.Fragment>
   );

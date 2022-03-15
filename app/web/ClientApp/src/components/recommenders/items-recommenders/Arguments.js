@@ -4,7 +4,6 @@ import { usePromotionsRecommender } from "../../../api-hooks/promotionsRecommend
 import { setArgumentsAsync } from "../../../api/promotionsRecommendersApi";
 import { ErrorCard, Spinner } from "../../molecules";
 import { ArgumentsComponentUtil } from "../utils/argumentsComponent";
-import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 
 export const Arguments = () => {
   const { id } = useParams();
@@ -27,19 +26,17 @@ export const ArgumentsSection = ({ recommender, setTrigger }) => {
 
   return (
     <React.Fragment>
-      <ItemRecommenderLayout>
-        <div>
-          {error && <ErrorCard error={error} />}
-          {recommender.loading && <Spinner />}
-          {!recommender.loading && (
-            <ArgumentsComponentUtil
-              recommender={recommender}
-              basePath="/recommenders/promotions-recommenders"
-              setArgumentsAsync={handleSet}
-            />
-          )}
-        </div>
-      </ItemRecommenderLayout>
+      <div>
+        {error && <ErrorCard error={error} />}
+        {recommender.loading && <Spinner />}
+        {!recommender.loading && (
+          <ArgumentsComponentUtil
+            recommender={recommender}
+            basePath="/recommenders/promotions-recommenders"
+            setArgumentsAsync={handleSet}
+          />
+        )}
+      </div>
     </React.Fragment>
   );
 };

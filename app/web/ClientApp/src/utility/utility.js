@@ -5,12 +5,12 @@ export function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-export const useCurrentTab = () => {
-  return useQuery().get("tab");
+export const useCurrentTab = (key) => {
+  return useQuery().get(key);
 };
 
-export function useTabs(defaultTab) {
-  return useCurrentTab() || defaultTab;
+export function useTabs(defaultTab, key = "tab") {
+  return useCurrentTab(key) || defaultTab;
 }
 
 export function usePagination() {

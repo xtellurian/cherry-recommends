@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
+
 import {
   usePromotionsRecommender,
   useReportImageBlobUrl,
@@ -19,32 +20,13 @@ import { GettingStartedSection } from "./GettingStartedSection";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import { ViewReportImagePopup } from "../utils/ViewImagePopup";
 
-const tabs = [
-  { id: "detail", label: "Detail" },
-  { id: "arguments", label: "Arguments" },
-  { id: "metrics", label: "Learning Metrics" },
-];
-
-export const RecommenderDetail = () => {
-  return (
-    <ItemRecommenderLayout>
-      <RecommenderDetailSection />
-    </ItemRecommenderLayout>
-  );
-};
-const RecommenderDetailSection = () => {
+export const ItemRecommenderClone = ({ iconClassName }) => {
   const { id } = useParams();
   const token = useAccessToken();
   const history = useHistory();
-  const [reportOpen, setReportOpen] = React.useState(false);
   const [trigger, setTrigger] = React.useState();
   const recommender = usePromotionsRecommender({ id, trigger });
   const [cloneOpen, setCloneOpen] = React.useState(false);
-  const [deleteOpen, setDeleteOpen] = React.useState(false);
-  const [deleteError, setDeleteError] = React.useState();
-  const onDeleted = () => {
-    history.push("/recommenders/promotions-recommenders");
-  };
 
   const cloneAsync = (name, commonId) => {
     return createPromotionsRecommenderAsync({
@@ -59,6 +41,63 @@ const RecommenderDetailSection = () => {
 
   return (
     <React.Fragment>
+      <span
+        className={`cursor-pointer ${iconClassName}`}
+        onClick={() => setCloneOpen(true)}
+      >
+        <img
+          src="/icons/clone.svg"
+          role="img"
+          alt="Clone Icon"
+          className="mr-2"
+        />
+        Clone
+      </span>
+      <ConfirmationPopup
+        isOpen={cloneOpen}
+        setIsOpen={setCloneOpen}
+        label="Clone this recommender?"
+      >
+        <CloneRecommender
+          recommender={recommender}
+          cloneAsync={cloneAsync}
+          onCloned={(r) =>
+            history.push(`/recommenders/promotions-recommenders/detail/${r.id}`)
+          }
+        />
+      </ConfirmationPopup>
+    </React.Fragment>
+  );
+};
+
+export const ItemRecommenderDelete = ({ iconClassName }) => {
+  const { id } = useParams();
+  const token = useAccessToken();
+  const history = useHistory();
+  const [trigger, setTrigger] = React.useState();
+  const recommender = usePromotionsRecommender({ id, trigger });
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [deleteError, setDeleteError] = React.useState();
+
+  const onDeleted = () => {
+    history.push("/recommenders/promotions-recommenders");
+  };
+
+  return (
+    <React.Fragment>
+      <span
+        className={`cursor-pointer ${iconClassName}`}
+        onClick={() => setDeleteOpen(true)}
+      >
+        <img
+          src="/icons/delete.svg"
+          role="img"
+          alt="Delete Icon"
+          className="mr-2"
+        />
+        Delete
+      </span>
+
       <ConfirmationPopup
         isOpen={deleteOpen}
         setIsOpen={setDeleteOpen}
@@ -97,7 +136,26 @@ const RecommenderDetailSection = () => {
           </button>
         </div>
       </ConfirmationPopup>
+    </React.Fragment>
+  );
+};
 
+export const RecommenderDetail = () => {
+  return (
+    <ItemRecommenderLayout>
+      <RecommenderDetailSection />
+    </ItemRecommenderLayout>
+  );
+};
+
+const RecommenderDetailSection = () => {
+  const { id } = useParams();
+  const [reportOpen, setReportOpen] = React.useState(false);
+  const [trigger, setTrigger] = React.useState();
+  const recommender = usePromotionsRecommender({ id, trigger });
+
+  return (
+    <React.Fragment>
       {recommender.loading && <Spinner>Loading Recommender</Spinner>}
       {recommender.error && <ErrorCard error={recommender.error} />}
 
@@ -152,33 +210,6 @@ const RecommenderDetailSection = () => {
             >
               Show Latest Report
             </button>
-            <button
-              className="btn btn-outline-primary mr-1"
-              onClick={() => setCloneOpen(true)}
-            >
-              Clone
-            </button>
-            <button
-              className="btn btn-link mr-1"
-              onClick={() => setDeleteOpen(true)}
-            >
-              Delete
-            </button>
-            <ConfirmationPopup
-              isOpen={cloneOpen}
-              setIsOpen={setCloneOpen}
-              label="Clone this recommender?"
-            >
-              <CloneRecommender
-                recommender={recommender}
-                cloneAsync={cloneAsync}
-                onCloned={(r) =>
-                  history.push(
-                    `/recommenders/promotions-recommenders/detail/${r.id}`
-                  )
-                }
-              />
-            </ConfirmationPopup>
 
             <ViewReportImagePopup
               isOpen={reportOpen}

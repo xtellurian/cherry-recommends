@@ -1,0 +1,7 @@
+.advanced-nav-item {
+  color: var(--cherry-purple);
+}
+
+.advanced-nav-item:hover {
+  color: var(--cherry-pink);
+}

@@ -1,34 +1,45 @@
 import React from "react";
-import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
+
 import { ItemsRecommendationList } from "./RecommendationList";
 import { InvokationLogs } from "./InvokationLogs";
-import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
-
-const tabs = [
-  {
-    id: "recommendations",
-    label: "Latest Recommendations",
-  },
-  {
-    id: "invokations",
-    label: "Invokations",
-  },
-];
-
-const defaultTabId = tabs[0].id;
+import {
+  StatefulTabs,
+  TabActivator,
+} from "../../molecules/layout/StatefulTabs";
 
 export const MonitorRecommender = () => {
+  const [currentTabId, setCurrentTabId] = React.useState();
+
+  const tabs = [
+    {
+      id: "recommendations",
+      label: "Latest Recommendations",
+      render: () => <ItemsRecommendationList size="lg" />,
+    },
+    {
+      id: "invokations",
+      label: "Invokations",
+      render: () => <InvokationLogs />,
+    },
+  ];
+
+  React.useEffect(() => {
+    setCurrentTabId(tabs[0].id);
+  }, []);
+
   return (
     <React.Fragment>
-      <ItemRecommenderLayout>
-        <Tabs tabs={tabs} />
-        <TabActivator tabId="recommendations" defaultTabId={defaultTabId}>
-          <ItemsRecommendationList size="lg" />
+      <StatefulTabs
+        tabs={tabs}
+        currentTabId={currentTabId}
+        setCurrentTabId={setCurrentTabId}
+      />
+
+      {tabs.map((tab) => (
+        <TabActivator key={tab.id} currentTabId={currentTabId} tabId={tab.id}>
+          {tab?.render()}
         </TabActivator>
-        <TabActivator tabId="invokations" defaultTabId={defaultTabId}>
-          <InvokationLogs />
-        </TabActivator>
-      </ItemRecommenderLayout>
+      ))}
     </React.Fragment>
   );
 };

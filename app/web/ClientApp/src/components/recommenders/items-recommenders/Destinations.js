@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+
 import {
   usePromotionsRecommender,
   useDestinations,
@@ -12,22 +13,12 @@ import {
 import { Spinner } from "../../molecules";
 import { LoadingPopup } from "../../molecules/popups/LoadingPopup";
 import { DestinationsUtil } from "../utils/destinationsUtil";
-import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
-import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import { JsIntegrate, RESTIntegrate } from "./Integrate";
+import {
+  StatefulTabs,
+  TabActivator,
+} from "../../molecules/layout/StatefulTabs";
 
-const tabs = [
-  {
-    id: "integrated-systems",
-    label: "Integrated Systems",
-  },
-  {
-    id: "js",
-    label: "Javsascript SDK",
-  },
-  { id: "rest-API", label: "REST API" },
-];
-const defaultTabId = tabs[0].id;
 export const Destinations = () => {
   const { id } = useParams();
   const token = useAccessToken();
@@ -38,6 +29,7 @@ export const Destinations = () => {
 
   const [handlingCreate, setHandlingCreate] = React.useState(false);
   const [handlingRemove, setHandlingRemove] = React.useState(false);
+  const [currentTabId, setCurrentTabId] = React.useState();
 
   const handleCreate = (destination) => {
     setHandlingCreate(true);
@@ -46,6 +38,7 @@ export const Destinations = () => {
       .catch(setError)
       .finally(() => setHandlingCreate(false));
   };
+
   const handleRemove = (id, destinationId) => {
     setHandlingRemove(true);
     removeDestinationAsync({ id, token, destinationId })
@@ -54,11 +47,12 @@ export const Destinations = () => {
       .finally(() => setHandlingRemove(false));
   };
 
-  return (
-    <React.Fragment>
-      <ItemRecommenderLayout>
-        <Tabs tabs={tabs} defaultTabId={defaultTabId} />
-        <TabActivator tabId="integrated-systems" defaultTabId={defaultTabId}>
+  const tabs = [
+    {
+      id: "integrated-systems",
+      label: "Integrated Systems",
+      render: () => (
+        <React.Fragment>
           <LoadingPopup loading={handlingCreate} label="Creating Destination" />
           <LoadingPopup loading={handlingRemove} label="Removing Destination" />
           {destinations.loading && <Spinner />}
@@ -72,14 +66,38 @@ export const Destinations = () => {
               rootPath="/recommenders/promotions-recommenders"
             />
           )}
+        </React.Fragment>
+      ),
+    },
+    {
+      id: "js",
+      label: "Javsascript SDK",
+      render: () => <JsIntegrate id={id} />,
+    },
+    {
+      id: "rest-API",
+      label: "REST API",
+      render: () => <RESTIntegrate id={id} />,
+    },
+  ];
+
+  React.useEffect(() => {
+    setCurrentTabId(tabs[0].id);
+  }, []);
+
+  return (
+    <React.Fragment>
+      <StatefulTabs
+        tabs={tabs}
+        currentTabId={currentTabId}
+        setCurrentTabId={setCurrentTabId}
+      />
+
+      {tabs.map((tab) => (
+        <TabActivator key={tab.id} currentTabId={currentTabId} tabId={tab.id}>
+          {tab?.render()}
         </TabActivator>
-        <TabActivator tabId="js" defaultTabId={defaultTabId}>
-          <JsIntegrate id={id} />
-        </TabActivator>
-        <TabActivator tabId="rest-API" defaultTabId={defaultTabId}>
-          <RESTIntegrate id={id} />
-        </TabActivator>
-      </ItemRecommenderLayout>
+      ))}
     </React.Fragment>
   );
 };

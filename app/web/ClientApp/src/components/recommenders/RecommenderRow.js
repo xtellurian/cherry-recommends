@@ -1,16 +1,26 @@
 import React from "react";
 import { EmojiHeartEyes } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
+
 import FlexRow from "../molecules/layout/EntityFlexRow";
+import { tabs } from "./items-recommenders/ItemsRecommenderPrimaryNav";
 
 export const RecommenderRow = ({ recommender, children }) => {
+  const history = useHistory();
+  const queryParams = new URLSearchParams(history.location.search);
+  queryParams.set("tab", tabs[0].id);
+
   const subPath = recommender.baselineItemId
     ? "promotions-recommenders"
     : "parameter-set-recommenders";
 
-  const history = useHistory();
-  const handleClick = () =>
-    history.push(`/recommenders/${subPath}/detail/${recommender.id}`);
+  const handleClick = () => {
+    history.push({
+      ...history.location,
+      pathname: `/recommenders/${subPath}/detail/${recommender.id}`,
+      search: queryParams.toString(),
+    });
+  };
 
   return (
     <FlexRow

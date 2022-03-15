@@ -9,7 +9,6 @@ import { LearningMetricsUtil } from "../utils/learningMetricsUtil";
 import { Spinner } from "../../molecules";
 import { setLearningMetricsAsync } from "../../../api/promotionsRecommendersApi";
 import { useAccessToken } from "../../../api-hooks/token";
-import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 
 export const LearningMetrics = () => {
   const { id } = useParams();
@@ -27,7 +26,7 @@ export const LearningMetrics = () => {
   };
 
   return (
-    <ItemRecommenderLayout>
+    <React.Fragment>
       {(recommender.loading || learningMetrics.loading) && <Spinner />}
       {!recommender.loading && !learningMetrics.loading && (
         <LearningMetricsUtil
@@ -37,6 +36,6 @@ export const LearningMetrics = () => {
           setLearningMetrics={handleSetLearningMetrics}
         />
       )}
-    </ItemRecommenderLayout>
+    </React.Fragment>
   );
 };
