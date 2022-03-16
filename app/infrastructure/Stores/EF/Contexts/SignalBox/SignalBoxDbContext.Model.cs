@@ -7,6 +7,7 @@ using SignalBox.Core.Recommendations.Destinations;
 using SignalBox.Core.Recommenders;
 using SignalBox.Infrastructure.EntityFramework;
 using SignalBox.Core.Metrics;
+using SignalBox.Core.Segments;
 
 namespace SignalBox.Infrastructure
 {
@@ -15,13 +16,18 @@ namespace SignalBox.Infrastructure
         // core stuff
         public DbSet<Core.Environment> Environments { get; set; }
         public DbSet<RecommendableItem> RecommendableItems { get; set; }
-        public DbSet<Segment> Segments { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<CustomerSegment> CustomerSegments { get; set; }
-        public DbSet<RecommenderSegment> RecommenderSegments { get; set; }
         public DbSet<CustomerEvent> CustomerEvents { get; set; }
         public DbSet<Parameter> Parameters { get; set; }
         public DbSet<Business> Businesses { get; set; }
+
+
+        // segments
+        public DbSet<Segment> Segments { get; set; }
+        public DbSet<CustomerSegment> CustomerSegments { get; set; }
+        public DbSet<RecommenderSegment> RecommenderSegments { get; set; }
+        public DbSet<EnrolmentRule> EnrolmentRules { get; set; }
+        public DbSet<MetricEnrolmentRule> MetricEnrolmentRules { get; set; }
 
         // metrics
         public DbSet<Metric> Metrics { get; set; }
@@ -30,7 +36,7 @@ namespace SignalBox.Infrastructure
         public DbSet<HistoricCustomerMetric> HistoricCustomerMetrics { get; set; }
         public DbSet<GlobalMetricValue> GlobalMetrics { get; set; }
         public DbSet<BusinessMetricValue> BusinessMetrics { get; set; }
-        public DbSet<LatestMetricVersion> LatestFeatureVersions { get; set; } // SQL view
+        public DbSet<LatestMetric> LatestMetrics { get; set; } // SQL view
         public DbSet<MetricDailyBinValueNumeric> MetricDailyBinNumericValues { get; set; } // DbSet for executing stored procedure
         public DbSet<MetricDailyBinValueString> MetricDailyBinStringValues { get; set; } // DbSet for executing stored procedure
 

@@ -15,7 +15,7 @@ namespace SignalBox.Core
             Predicate = predicate ??= _ => true;
         }
 
-        public int Page { get; }
+        public int Page { get; } = 1;
         public Expression<Func<TEntity, bool>> Predicate { get; } = _ => true;
     }
 }

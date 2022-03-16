@@ -31,7 +31,7 @@ namespace SignalBox.Core
             Version = version;
         }
 
-        public long TrackedUserId { get; set; }
+        public long CustomerId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Customer TrackedUser => Customer;
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

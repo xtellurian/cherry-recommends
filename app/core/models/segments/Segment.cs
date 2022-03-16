@@ -20,5 +20,11 @@ namespace SignalBox.Core
         public ICollection<RecommenderSegment> RecommenderSegments { get; set; } = new Collection<RecommenderSegment>();
 
         public string? Name { get; set; }
+
+        public static Segment MoreThan10Events => new Segment
+        {
+            Id = 100,
+            Name = "More than 10 Events"
+        };
     }
 }

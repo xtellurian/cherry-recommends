@@ -9,6 +9,8 @@ namespace SignalBox.Infrastructure.EntityFramework
         public override void Configure(EntityTypeBuilder<Segment> builder)
         {
             base.Configure(builder);
+
+            builder.HasData(Segment.MoreThan10Events);
         }
     }
 }

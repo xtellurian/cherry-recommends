@@ -21,12 +21,18 @@ namespace SignalBox.Web.Controllers
     {
         private readonly ILogger<SegmentsController> logger;
         private readonly CustomerSegmentWorkflows workflow;
+        private readonly SegmentEnrolmentWorkflow enrolmentWorkflow;
         private readonly ICustomerStore customerStore;
 
-        public SegmentsController(ILogger<SegmentsController> logger, CustomerSegmentWorkflows workflow, ISegmentStore store, ICustomerStore customerStore) : base(store)
+        public SegmentsController(ILogger<SegmentsController> logger,
+                                  CustomerSegmentWorkflows workflow,
+                                  ISegmentStore store,
+                                  SegmentEnrolmentWorkflow enrolmentWorkflow,
+                                  ICustomerStore customerStore) : base(store)
         {
             this.logger = logger;
             this.workflow = workflow;
+            this.enrolmentWorkflow = enrolmentWorkflow;
             this.customerStore = customerStore;
         }
 
@@ -46,6 +52,14 @@ namespace SignalBox.Web.Controllers
             await store.Update(segment);
             await store.Context.SaveChanges();
             return segment;
+        }
+
+        /// <summary>Runs all the rules. Hidden from external. Dev only.</summary>
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost("trigger-all-rules")]
+        public virtual async Task<IEnumerable<EnrolmentReport>> TriggerRules_Hidden()
+        {
+            return await enrolmentWorkflow.RunAllEnrolmentRules();
         }
 
         /// <summary>Add a customer to a segment.</summary>

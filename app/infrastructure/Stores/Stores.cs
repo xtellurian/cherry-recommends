@@ -1,6 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SignalBox.Core;
 using SignalBox.Infrastructure.EntityFramework;
 using SignalBox.Infrastructure.Queues;
@@ -30,7 +31,10 @@ namespace SignalBox.Infrastructure
             services.AddDbContextFactory<SignalBoxDbContext>((sp, options) =>
                 {
                     var tenantProvider = sp.GetRequiredService<ITenantProvider>();
-                    Console.WriteLine($"Database Name: {tenantProvider.CurrentDatabaseName}");
+                    var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+                    var logger = loggerFactory.CreateLogger("DbFactory");
+                    logger.LogInformation("Database Name: {dbName}", tenantProvider.CurrentDatabaseName);
+                    logger.LogInformation("Azure SQL Server Username: {username}", sqlServerUserName);
                     var cs = SqlServerConnectionStringFactory.GenerateAzureSqlConnectionString(
                         serverName,
                         tenantProvider.CurrentDatabaseName,
@@ -52,7 +56,10 @@ namespace SignalBox.Infrastructure
             services.AddDbContextFactory<SignalBoxDbContext>((sp, options) =>
                 {
                     var tenantProvider = sp.GetRequiredService<ITenantProvider>();
-                    Console.WriteLine($"Database Name: {tenantProvider.CurrentDatabaseName}");
+                    var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+                    var logger = loggerFactory.CreateLogger("DbFactory");
+                    logger.LogInformation("Database Name: {dbName}", tenantProvider.CurrentDatabaseName);
+                    logger.LogInformation("Local SQL Server Username: {username}", sqlServerUserName);
                     var cs = SqlServerConnectionStringFactory.GenerateLocalSqlConnectionString(
                         tenantProvider.CurrentDatabaseName,
                         sqlServerUserName: sqlServerUserName,
@@ -122,6 +129,8 @@ namespace SignalBox.Infrastructure
             services.AddScoped<ICustomerStore, EFCustomerStore>();
 
             services.AddScoped<ISegmentStore, EFSegmentStore>();
+            services.AddScoped<IEnrolmentRuleStore, EFEnrolmentRuleStore>();
+            services.AddScoped<IMetricEnrolmentRuleStore, EFMetricEnrolmentRuleStore>();
 
             services.AddScoped<IRecommendableItemStore, EFRecommendableItemStore>();
             services.AddScoped<IParameterStore, EFParameterStore>();

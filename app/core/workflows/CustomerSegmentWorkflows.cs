@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SignalBox.Core.Workflows
 {
-    public class CustomerSegmentWorkflows : IWorkflow
+    public class CustomerSegmentWorkflows : IWorkflow, ICustomerSegmentWorkflow
     {
         private readonly ILogger<CustomerSegmentWorkflows> logger;
         private readonly ISegmentStore segmentStore;
@@ -29,11 +29,12 @@ namespace SignalBox.Core.Workflows
             return segment;
         }
 
-        public async Task AddToSegment(Segment segment, Customer customer)
+        public async Task<CustomerSegment> AddToSegment(Segment segment, Customer customer)
         {
             var customerSegment = await segmentStore.AddCustomer(segment, customer);
             logger.LogInformation("Added customer {customerId} to segment {segmentId}", customer.Id, segment.Id);
             await storageContext.SaveChanges();
+            return customerSegment;
         }
 
         public async Task RemoveFromSegment(Segment segment, Customer customer)

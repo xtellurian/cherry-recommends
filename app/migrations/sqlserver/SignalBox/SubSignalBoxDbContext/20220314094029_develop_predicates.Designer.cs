@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220314094029_develop_predicates")]
+    partial class develop_predicates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1486,50 +1488,6 @@ namespace sqlserver.SignalBox
                     b.HasIndex("EnvironmentId");
 
                     b.ToTable("Segments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 100L,
-                            Created = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "More than 10 Events"
-                        });
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Segments.EnrolmentRule", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long>("SegmentId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SegmentId");
-
-                    b.ToTable("EnrolmentRules");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("EnrolmentRule");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Tenant", b =>
@@ -1889,32 +1847,6 @@ namespace sqlserver.SignalBox
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("ParameterSetRecommender");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Segments.MetricEnrolmentRule", b =>
-                {
-                    b.HasBaseType("SignalBox.Core.Segments.EnrolmentRule");
-
-                    b.Property<long?>("MetricId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("NumericPredicate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasIndex("MetricId");
-
-                    b.HasDiscriminator().HasValue("MetricEnrolmentRule");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 100L,
-                            Created = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastUpdated = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SegmentId = 100L,
-                            MetricId = 101L,
-                            NumericPredicate = "{\"PredicateOperator\":3,\"CompareTo\":10}"
-                        });
                 });
 
             modelBuilder.Entity("ItemsRecommendationRecommendableItem", b =>
@@ -2452,17 +2384,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("Environment");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Segments.EnrolmentRule", b =>
-                {
-                    b.HasOne("SignalBox.Core.Segment", "Segment")
-                        .WithMany()
-                        .HasForeignKey("SegmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Segment");
-                });
-
             modelBuilder.Entity("SignalBox.Core.TenantMembership", b =>
                 {
                     b.HasOne("SignalBox.Core.Tenant", "Tenant")
@@ -2582,16 +2503,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("BaselineItem");
 
                     b.Navigation("TargetMetric");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Segments.MetricEnrolmentRule", b =>
-                {
-                    b.HasOne("SignalBox.Core.Metric", "Metric")
-                        .WithMany()
-                        .HasForeignKey("MetricId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Metric");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Customer", b =>

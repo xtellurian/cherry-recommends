@@ -1,11 +1,19 @@
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace SignalBox.Core
 {
     public interface IHistoricCustomerMetricStore : IEntityStore<HistoricCustomerMetric>
     {
-        // Should return the latest metric if version = null
+        /// <summary>
+        /// If version = null, returns the latest value of a customer metric.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="metric"></param>
+        /// <param name="version">If null, returns the latest value.</param>
+        /// <returns></returns>
         Task<HistoricCustomerMetric> ReadCustomerMetric(Customer customer, Metric metric, int? version = null);
         Task<bool> MetricExists(Customer customer, Metric metric, int? version = null);
         Task<int> CurrentMaximumCustomerMetricVersion(Customer customer, Metric metric);
@@ -15,5 +23,7 @@ namespace SignalBox.Core
         Task<IEnumerable<MetricDailyBinValueNumeric>> GetMetricBinValuesNumeric(Metric metric, int? binCount = 12);
         Task<IEnumerable<MetricDailyBinValueString>> GetMetricBinValuesString(Metric metric, int topKValue = 12);
         Task<IEnumerable<MetricCustomerExport>> GetMetricCustomerExports(Metric metric);
+        Task<LatestMetric> LatestCustomerMetricValue(Customer customer, Metric metric);
+        IAsyncEnumerable<LatestMetric> IterateLatest(long metricId, Expression<Func<LatestMetric, bool>> predicate = null);
     }
 }

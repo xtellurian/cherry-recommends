@@ -11,6 +11,8 @@ namespace dotnetFunctions
 {
     public class TestBoot
     {
+        private readonly IItemsRecommenderStore itemsRecommenderStore;
+
         // add all project dependencies to this ctor
         public TestBoot(
               CustomerEventsWorkflows eventWorkflow,
@@ -24,7 +26,9 @@ namespace dotnetFunctions
                         IDatabaseManager databaseManager,
                         IAuth0Service auth0
                         )
-        { }
+        {
+            this.itemsRecommenderStore = itemsRecommenderStore;
+        }
 
         // public TestBoot() { }
         [Function("TestBoot")]
@@ -36,6 +40,10 @@ namespace dotnetFunctions
 
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+
+            // check can connect to SQL Server by running a query
+            var t = itemsRecommenderStore.Query();
+            t.Wait();
 
             response.WriteString("Dependencies are OK");
             logger.LogInformation("Finished test boot process. Returning.");
