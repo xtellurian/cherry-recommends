@@ -12,6 +12,7 @@ namespace dotnetFunctions
     public class TestBoot
     {
         private readonly IItemsRecommenderStore itemsRecommenderStore;
+        private readonly ITenantProvider tenantProvider;
 
         // add all project dependencies to this ctor
         public TestBoot(
@@ -24,10 +25,12 @@ namespace dotnetFunctions
                         ITenantStore tenantStore,
                         ITenantMembershipStore membershipStore,
                         IDatabaseManager databaseManager,
-                        IAuth0Service auth0
+                        IAuth0Service auth0,
+                        ITenantProvider tenantProvider
                         )
         {
             this.itemsRecommenderStore = itemsRecommenderStore;
+            this.tenantProvider = tenantProvider;
         }
 
         // public TestBoot() { }
@@ -42,8 +45,14 @@ namespace dotnetFunctions
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
             // check can connect to SQL Server by running a query
-            var t = itemsRecommenderStore.Query();
-            t.Wait();
+            if (!string.IsNullOrEmpty(tenantProvider.CurrentDatabaseName))
+            {
+                // this only works in a single tenant environment.
+                // otherwise, we need to select a tenant to run this boot.
+                // which is a chicken-and-egg problem when you want to deploy
+                var t = itemsRecommenderStore.Query();
+                t.Wait();
+            }
 
             response.WriteString("Dependencies are OK");
             logger.LogInformation("Finished test boot process. Returning.");
