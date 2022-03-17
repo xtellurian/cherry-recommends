@@ -1,14 +1,10 @@
 namespace SignalBox.Core
 {
-    public class RunAllMetricGeneratorsQueueMessage : IQueueMessage
+    public class RunAllMetricGeneratorsQueueMessage : TenantJobMessageBase, IQueueMessage
     {
         public RunAllMetricGeneratorsQueueMessage()
         { }
-        public RunAllMetricGeneratorsQueueMessage(string tenantName)
-        {
-            TenantName = tenantName;
-        }
-
-        public string TenantName { get; set; }
+        public RunAllMetricGeneratorsQueueMessage(string tenantName) : base(tenantName)
+        { }
     }
 }

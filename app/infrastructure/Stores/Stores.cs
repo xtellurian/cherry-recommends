@@ -115,12 +115,13 @@ namespace SignalBox.Infrastructure
 
         public static IServiceCollection AddAzureStorageQueueStores(this IServiceCollection services)
         {
-            services.AddScoped<ITrackedUserEventQueueStore, TrackedUserEventQueueStore>();
-            services.AddScoped<INewTrackedUserEventQueueStore, NewTrackedUserEventQueueStore>();
             services.AddScoped<INewTenantQueueStore, NewTenantQueueStore>();
             services.AddScoped<INewTenantMembershipQueueStore, NewTenantMembershipQueueStore>();
             services.AddScoped<IRunMetricGeneratorQueueStore, RunMetricGeneratorQueueStore>();
             services.AddScoped<IRunAllMetricGeneratorsQueueStore, RunAllMetricGeneratorsQueueStore>();
+            services.AddScoped<IRunSegmentEnrolmentRuleQueueStore, RunSegmentEnrolmentRuleQueueStore>();
+
+            services.AddScoped<IQueueStores, QueueStores>();
             return services;
         }
         public static IServiceCollection AddEFStores(this IServiceCollection services)

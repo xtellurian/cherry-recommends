@@ -9,10 +9,17 @@ namespace SignalBox.Core
             SegmentId = rule.SegmentId;
             RuleId = rule.Id;
             CustomersEnrolled = 0;
+            Rule = rule;
         }
 
-        public long SegmentId { get; set; }
-        public long RuleId { get; set; }
-        public int CustomersEnrolled { get; set; }
+        public long SegmentId { get; }
+        public long RuleId { get; }
+        public EnrolmentRule Rule { get; }
+        public int CustomersEnrolled { get; private set; }
+
+        public void IncrementCustomers()
+        {
+            CustomersEnrolled += 1;
+        }
     }
 }

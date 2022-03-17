@@ -20,18 +20,24 @@ namespace SignalBox.Web.Controllers
         private readonly IMetricEnrolmentRuleStore enrolmentRuleStore;
         private readonly IMetricStore metricStore;
         private readonly ISegmentStore segmentStore;
+        private readonly IQueueStores queueStores;
+        private readonly ITenantProvider tenantProvider;
         private readonly SegmentEnrolmentWorkflow workflow;
 
         public SegmentMetricEnrolmentRulesController(ILogger<SegmentMetricEnrolmentRulesController> logger,
                                                IMetricEnrolmentRuleStore enrolmentRuleStore,
                                                IMetricStore metricStore,
                                                ISegmentStore segmentStore,
+                                               IQueueStores queueStores,
+                                               ITenantProvider tenantProvider,
                                                SegmentEnrolmentWorkflow workflow)
         {
             this.logger = logger;
             this.enrolmentRuleStore = enrolmentRuleStore;
             this.metricStore = metricStore;
             this.segmentStore = segmentStore;
+            this.queueStores = queueStores;
+            this.tenantProvider = tenantProvider;
             this.workflow = workflow;
         }
 
@@ -83,7 +89,7 @@ namespace SignalBox.Web.Controllers
             return new DeleteResponse(ruleId, $"api/Segments/{id}/MetricEnrolmentRules/{ruleId}", success);
         }
 
-        /// <summary>Deletes a Metric Enrolment Rule.</summary>
+        /// <summary>Runs the rule.</summary>
         [HttpPost("{id}/MetricEnrolmentRules/{ruleId}")]
         public async Task<EnrolmentReport> RunMetricEnrolmentRule(long id, long ruleId, bool preview = false)
         {
@@ -93,8 +99,38 @@ namespace SignalBox.Web.Controllers
             {
                 throw new BadRequestException($"Rule {rule.Id} is not assigned to Segment {segment.Id}");
             }
-            logger.LogInformation("Rule {ruleId} was manually triggered for segment {segmentId}", rule.Id, segment.Id);
+
+            logger.LogInformation("Rule {ruleId} was manually run for segment {segmentId}", rule.Id, segment.Id);
             return await workflow.RunEnrolmentRule(rule, preview);
+        }
+
+        /// <summary>Get the rule.</summary>
+        [HttpGet("{id}/MetricEnrolmentRules/{ruleId}")]
+        public async Task<EnrolmentRule> GetMetricEnrolmentRule(long id, long ruleId)
+        {
+            var segment = await segmentStore.Read(id);
+            var rule = await enrolmentRuleStore.Read(ruleId);
+            if (rule.SegmentId != segment.Id)
+            {
+                throw new BadRequestException($"Rule {rule.Id} is not assigned to Segment {segment.Id}");
+            }
+
+            return rule;
+        }
+
+        /// <summary>Triggers the enrolmnet rule to run.</summary>
+        [HttpPost("{id}/MetricEnrolmentRules/{ruleId}/Trigger")]
+        public async Task EnqueueMetricEnrolmentRule(long id, long ruleId, bool preview = false)
+        {
+            var segment = await segmentStore.Read(id);
+            var rule = await enrolmentRuleStore.Read(ruleId);
+            if (rule.SegmentId != segment.Id)
+            {
+                throw new BadRequestException($"Rule {rule.Id} is not assigned to Segment {segment.Id}");
+            }
+
+            logger.LogInformation("Rule {ruleId} was manually triggered for segment {segmentId}", rule.Id, segment.Id);
+            await queueStores.Enqueue(new RunSegmentEnrolmentRuleQueueMessage(tenantProvider.RequestedTenantName, rule.Id, segment.EnvironmentId));
         }
     }
 }

@@ -4,7 +4,7 @@ echo "> docker ps"
 docker ps
 
 THIS_DIR=$(pwd)
-DATA_DIR="$THIS_DIR/.persist"
+DATA_DIR="$THIS_DIR/.persist/sqlserver"
 
 echo "SQL Data will be persisted in $DATA_DIR"
 

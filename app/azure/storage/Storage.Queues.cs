@@ -8,20 +8,6 @@ namespace SignalBox.Azure
 
         protected void CreateQueues(ResourceGroup rg, StorageAccount storageAccount)
         {
-            var trackedUserQueue = new Queue("newTrackedUsers", new QueueArgs
-            {
-                QueueName = SignalBox.Core.Constants.AzureQueueNames.NewTrackedUsers,
-                AccountName = storageAccount.Name,
-                ResourceGroupName = rg.Name
-            });
-
-            var trackedUserEventsQueue = new Queue("trackedUserEvents", new QueueArgs
-            {
-                QueueName = SignalBox.Core.Constants.AzureQueueNames.TrackedUserEvents,
-                AccountName = storageAccount.Name,
-                ResourceGroupName = rg.Name
-            });
-
             var newTenantsQueue = new Queue("newTenantsQ", new QueueArgs
             {
                 QueueName = SignalBox.Core.Constants.AzureQueueNames.NewTenants,
@@ -46,6 +32,19 @@ namespace SignalBox.Azure
             var runSingleMetricGeneratorQueue = new Queue("runFeatGenQ", new QueueArgs
             {
                 QueueName = SignalBox.Core.Constants.AzureQueueNames.RunMetricGenerator,
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name
+            });
+            var runAllSegmentEnrolments = new Queue("runAllSegmentEnrolments", new QueueArgs
+            {
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.RunAllSegmentEnrolmentRules,
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name
+            });
+
+            var runSegmentEnrolments = new Queue("runSegmentEnrolment", new QueueArgs
+            {
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.RunSegmentEnrolmentRule,
                 AccountName = storageAccount.Name,
                 ResourceGroupName = rg.Name
             });

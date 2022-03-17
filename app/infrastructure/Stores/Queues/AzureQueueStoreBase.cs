@@ -12,7 +12,7 @@ namespace SignalBox.Infrastructure.Queues
     public abstract class AzureQueueStoreBase<T> : IQueueStore<T> where T : IQueueMessage
     {
         private QueueClient _queueClient;
-        private QueueClient queueClient
+        private QueueClient QueueClient
         {
             get
             {
@@ -20,7 +20,7 @@ namespace SignalBox.Infrastructure.Queues
                 return _queueClient;
             }
         }
-        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
+        private readonly JsonSerializerOptions serializerOptions = new();
         private readonly IOptions<AzureQueueConfig> options;
         private readonly string queueName;
 
@@ -30,7 +30,7 @@ namespace SignalBox.Infrastructure.Queues
             this.queueName = queueName;
         }
 
-        private IDictionary<string, string> GetProperties(QueueMessage qm)
+        private static IDictionary<string, string> GetProperties(QueueMessage qm)
         {
             return new Dictionary<string, string>
             {
@@ -67,7 +67,7 @@ namespace SignalBox.Infrastructure.Queues
             {
                 var stringified = JsonSerializer.Serialize(message, serializerOptions);
                 var encoded = Base64Encode(stringified);
-                var result = await queueClient.SendMessageAsync(encoded);
+                var result = await QueueClient.SendMessageAsync(encoded);
             }
             catch (System.Exception ex)
             {
@@ -79,7 +79,7 @@ namespace SignalBox.Infrastructure.Queues
         {
             try
             {
-                var retrieved = await queueClient.ReceiveMessagesAsync();
+                var retrieved = await QueueClient.ReceiveMessagesAsync();
                 return retrieved.Value
                     .Select(_ =>
                         new DequeuedMessage<T>(_.Body.ToObjectFromJson<T>(serializerOptions), GetProperties(_)));
@@ -97,7 +97,7 @@ namespace SignalBox.Infrastructure.Queues
             {
                 foreach (var m in dequeuedMessages)
                 {
-                    await queueClient.DeleteMessageAsync(m.Properties["MessageId"], m.Properties["PopReceipt"]);
+                    await QueueClient.DeleteMessageAsync(m.Properties["MessageId"], m.Properties["PopReceipt"]);
                 }
             }
             catch (System.Exception ex)

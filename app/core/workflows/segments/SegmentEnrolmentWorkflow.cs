@@ -14,6 +14,7 @@ namespace SignalBox.Core.Workflows
         private readonly ICustomerSegmentWorkflow customerSegmentWorkflow;
         private readonly ICustomerStore customerStore;
         private readonly IHistoricCustomerMetricStore historicCustomerMetricStore;
+        private readonly IDateTimeProvider dateTimeProvider;
         private readonly ILogger<SegmentEnrolmentWorkflow> logger;
 
         /// <summary>
@@ -27,12 +28,14 @@ namespace SignalBox.Core.Workflows
                                         ICustomerSegmentWorkflow customerSegmentWorkflow,
                                         ICustomerStore customerStore,
                                         IHistoricCustomerMetricStore historicCustomerMetricStore,
+                                        IDateTimeProvider dateTimeProvider,
                                         ILogger<SegmentEnrolmentWorkflow> logger)
         {
             this.enrolmentRuleStore = enrolmentRuleStore;
             this.customerSegmentWorkflow = customerSegmentWorkflow;
             this.customerStore = customerStore;
             this.historicCustomerMetricStore = historicCustomerMetricStore;
+            this.dateTimeProvider = dateTimeProvider;
             this.logger = logger;
         }
         public async Task<IEnumerable<EnrolmentReport>> RunAllEnrolmentRules()
@@ -87,10 +90,16 @@ namespace SignalBox.Core.Workflows
                             // actually add to segment if not preview
                             await customerSegmentWorkflow.AddToSegment(rule.Segment, customer);
                         }
-                        report.CustomersEnrolled += 1;
+                        report.IncrementCustomers();
                     }
                 }
             }
+            if (!preview)
+            {
+                rule.LastCompleted = dateTimeProvider.Now;
+                await enrolmentRuleStore.Context.SaveChanges();
+            }
+
             return report;
         }
     }

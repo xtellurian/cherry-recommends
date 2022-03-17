@@ -18,7 +18,7 @@ namespace SignalBox.Core
         ThirtyDays,
     }
 
-    public class MetricGenerator : Entity
+    public class MetricGenerator : Entity, IBackgroundJob
     {
         private const long totalEventsGeneratorId = 100;
         private static List<FilterSelectAggregateStep> TotalEventsGeneratorSteps => new List<FilterSelectAggregateStep>

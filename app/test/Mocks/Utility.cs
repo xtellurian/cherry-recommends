@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.Logging;
 using Moq;
 using SignalBox.Core;
@@ -17,6 +18,10 @@ namespace SignalBox.Test
         public static Mock<IStorageContext> MockStorageContext()
         {
             return new Mock<IStorageContext>();
+        }
+        public static TestDateTimeProvider DateTimeProvider(DateTimeOffset? value = null)
+        {
+            return new TestDateTimeProvider(value ?? DateTimeOffset.Now);
         }
     }
 }

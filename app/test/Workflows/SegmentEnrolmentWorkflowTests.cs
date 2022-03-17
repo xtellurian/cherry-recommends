@@ -24,6 +24,7 @@ namespace SignalBox.Test.Workflows
             var mockCustomerStore = new Mock<ICustomerStore>();
             var mockHistoricCustomerMetricStore = new Mock<IHistoricCustomerMetricStore>();
             var mockCustomerSegmentWorkflow = new Mock<ICustomerSegmentWorkflow>();
+            var dtProvider = Utility.DateTimeProvider();
 
             mockEnrolmentRuleStore.Setup(_ => _.Iterate(It.IsAny<Expression<Func<EnrolmentRule, bool>>>(), It.IsAny<IterateOrderBy>()))
                 .Returns(new List<MetricEnrolmentRule>().ToAsyncEnumerable()); // empty list
@@ -35,6 +36,7 @@ namespace SignalBox.Test.Workflows
                 mockCustomerSegmentWorkflow.Object,
                 mockCustomerStore.Object,
                 mockHistoricCustomerMetricStore.Object,
+                dtProvider,
                 mockLogger.Object);
 
 
@@ -49,9 +51,11 @@ namespace SignalBox.Test.Workflows
             // arrange
             var mockLogger = Utility.MockLogger<SegmentEnrolmentWorkflow>();
             var mockEnrolmentRuleStore = new Mock<IEnrolmentRuleStore>();
+            mockEnrolmentRuleStore.SetupContext<IEnrolmentRuleStore, EnrolmentRule>();
             var mockCustomerSegmentWorkflow = new Mock<ICustomerSegmentWorkflow>();
             var mockCustomerStore = new Mock<ICustomerStore>();
             var mockHistoricCustomerMetricStore = new Mock<IHistoricCustomerMetricStore>();
+            var dtProvider = Utility.DateTimeProvider();
             var customerToBeInSegment = new Customer("customerInSegment")
             {
                 Id = 1
@@ -102,6 +106,7 @@ namespace SignalBox.Test.Workflows
                 mockCustomerSegmentWorkflow.Object,
                 mockCustomerStore.Object,
                 mockHistoricCustomerMetricStore.Object,
+                dtProvider,
                 mockLogger.Object);
 
             await sut.RunAllEnrolmentRules();
@@ -111,6 +116,7 @@ namespace SignalBox.Test.Workflows
                 _ => _.AddToSegment(It.Is<Core.Segment>(s => s == segment), It.Is<Customer>(c => c == customerToBeInSegment)), Times.Once);
             mockCustomerSegmentWorkflow.Verify(
                 _ => _.AddToSegment(It.Is<Core.Segment>(s => s == segment), It.Is<Customer>(c => c == customerNotToBeInSegment)), Times.Never);
+            Assert.Equal(dtProvider.Value, rules.First().LastCompleted);
         }
 
     }

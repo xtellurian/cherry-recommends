@@ -333,6 +333,8 @@ app/web/ClientApp/stats.json
 ml/tutorial/*.pkl
 
 # SQL Database persistence files
-**/.persist/data/*
-**/.persist/log/*
-**/.persist/secrets/*
+**/.persist/sqlserver/data/*
+**/.persist/sqlserver/log/*
+**/.persist/sqlserver/secrets/*
+
+**/.persist/azurite/*.json
