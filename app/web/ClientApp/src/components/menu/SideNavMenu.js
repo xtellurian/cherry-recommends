@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { useLocation, Link } from "react-router-dom";
 
 import { useAuth } from "../../utility/useAuth";
@@ -21,13 +21,11 @@ const MenuItem = ({ active, label, icon }) => {
     >
       <div className="d-flex align-items-center">
         <div className="icon-wrapper mr-3">
-          {icon ? (
-            <img src={icon} alt={label} role="img" className="icon" />
-          ) : null}
+          {icon ? <img src={icon} alt={label} className="icon" /> : null}
         </div>
         {label}
       </div>
-      <img src={activeIconSrc} role="img" alt="Angle right" className="icon" />
+      <img src={activeIconSrc} alt="Angle right" className="icon" />
     </div>
   );
 };
@@ -47,27 +45,39 @@ export const SideNavMenu = () => {
   const scopes = useTokenScopes();
   const integratedSystems = useIntegratedSystems();
   const authIA = useAuthenticatedIA(scopes);
-  const authenticatedIA = authIA.map((ia) => {
-    // add integrated systems as subitems of integration menu
-    if (ia.name === "Integrations") {
-      const _integratedSystems =
-        integratedSystems?.items?.length > 0 ? integratedSystems.items : [];
 
-      const newItems = _integratedSystems.reduce((acc, curr) => {
-        return [
-          ...acc,
-          {
-            name: curr.name,
-            to: `/settings/integrations/detail/${curr.id}`,
-          },
-        ];
-      }, []);
+  const isActive = useCallback(
+    ({ hash }) => {
+      return location.hash.includes(hash);
+    },
+    [location.hash]
+  );
 
-      return { ...ia, items: newItems };
-    }
+  const authenticatedIA = useMemo(
+    () =>
+      authIA.map((ia) => {
+        // add integrated systems as subitems of integration menu
+        if (ia.name === "Integrations") {
+          const _integratedSystems =
+            integratedSystems?.items?.length > 0 ? integratedSystems.items : [];
 
-    return ia;
-  });
+          const newItems = _integratedSystems.reduce((acc, curr) => {
+            return [
+              ...acc,
+              {
+                name: curr.name,
+                to: `/settings/integrations/detail/${curr.id}`,
+              },
+            ];
+          }, []);
+
+          return { ...ia, items: newItems };
+        }
+
+        return ia;
+      }),
+    [authIA, integratedSystems.items]
+  );
 
   return (
     <nav className="sidebar disable-select bg-white box-shadow">
@@ -75,22 +85,22 @@ export const SideNavMenu = () => {
         authenticatedIA.map((item) => (
           <div key={item.name} className="border-bottom">
             <Link
-              to={location.hash === item.to.hash ? item.to.pathname : item.to}
+              to={isActive({ hash: item.to.hash }) ? item.to.pathname : item.to}
             >
               <MenuItem
-                active={location.hash === item.to.hash}
+                active={isActive({ hash: item.to.hash })}
                 label={item.name}
                 icon={item.icon}
               />
             </Link>
-            {location.hash === item.to.hash &&
+            {isActive({ hash: item.to.hash }) &&
               item.items.map((subitem) => (
                 <Link
                   key={subitem.to}
-                  to={(location) => ({ ...location, pathname: subitem.to })}
+                  to={(location) => ({ ...location, ...subitem.to })}
                 >
                   <SubMenuItem
-                    active={location.pathname.includes(subitem.to)}
+                    active={location.hash === subitem.to.hash}
                     label={subitem.name}
                   />
                 </Link>

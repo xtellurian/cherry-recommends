@@ -1,11 +1,15 @@
 import React from "react";
 import { Person } from "react-bootstrap-icons";
-import { useHistory } from "react-router-dom";
+
+import { useNavigation } from "../../utility/useNavigation";
 import FlexRow from "../molecules/layout/EntityFlexRow";
 
 export const CustomerRow = ({ customer, children }) => {
-  const history = useHistory();
-  const handleClick = () => history.push(`/customers/detail/${customer.id}`);
+  const { navigate } = useNavigation();
+
+  const handleClick = () => {
+    navigate({ pathname: `/customers/detail/${customer.id}` });
+  };
 
   return (
     <FlexRow

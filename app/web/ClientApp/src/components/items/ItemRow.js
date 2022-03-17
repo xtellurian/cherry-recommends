@@ -1,11 +1,15 @@
 import React from "react";
 import { Tag } from "react-bootstrap-icons";
-import { Link, useHistory } from "react-router-dom";
+
+import { useNavigation } from "../../utility/useNavigation";
 import FlexRow from "../molecules/layout/EntityFlexRow";
 
 export const PromotionRow = ({ promotion, children }) => {
-  const history = useHistory();
-  const handleClick = () => history.push(`/promotions/detail/${promotion.id}`);
+  const { navigate } = useNavigation();
+
+  const handleClick = () => {
+    navigate({ pathname: `/promotions/detail/${promotion.id}` });
+  };
 
   const shortenDescription = (description) => {
     if (!description || description === "") {

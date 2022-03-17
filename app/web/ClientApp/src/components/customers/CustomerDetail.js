@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useCustomer } from "../../api-hooks/customersApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { deleteCustomerAsync } from "../../api/customersApi";
@@ -10,6 +10,7 @@ import {
   ErrorCard,
   Spinner,
   EmptyList,
+  Navigation,
 } from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { CopyableField } from "../molecules/fields/CopyableField";
@@ -102,11 +103,11 @@ export const CustomerDetail = () => {
       <TabActivator tabId="properties" defaultTabId={defaultTabId}>
         <Subtitle>Properties ({numProperties})</Subtitle>
 
-        <Link to={`/customers/edit-properties/${trackedUser.id}`}>
+        <Navigation to={`/customers/edit-properties/${trackedUser.id}`}>
           <button className="btn btn-outline-primary float-right">
             Edit Properties
           </button>
-        </Link>
+        </Navigation>
         {numProperties > 0 && <JsonView data={trackedUser.properties} />}
         {numProperties === 0 && <EmptyList>User has no properties.</EmptyList>}
       </TabActivator>

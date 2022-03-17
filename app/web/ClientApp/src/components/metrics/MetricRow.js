@@ -1,11 +1,15 @@
 import React from "react";
 import { GraphUp } from "react-bootstrap-icons";
-import { useHistory } from "react-router-dom";
+
+import { useNavigation } from "../../utility/useNavigation";
 import FlexRow from "../molecules/layout/EntityFlexRow";
 
 export const MetricRow = ({ metric, children }) => {
-  const history = useHistory();
-  const handleClick = () => history.push(`/metrics/detail/${metric.id}`);
+  const { navigate } = useNavigation();
+
+  const handleClick = () => {
+    navigate({ pathname: `/metrics/detail/${metric.id}` });
+  };
 
   return (
     <FlexRow

@@ -1,83 +1,129 @@
 import React from "react";
 import { useFlags } from "launchdarkly-react-client-sdk";
 
+export const hash = {
+  admin: "#admin",
+  promotions: "#promotions",
+  customers: "#customers",
+  metrics: "#metrics",
+  parameters: "#parameters",
+  integration: "#integrations",
+};
+
+export const metricsHash = {
+  create: `${hash.metrics}_create`,
+};
+
 const AuthenticatedIA = [
   {
     name: "Promotions",
     icon: "/icons/tag.svg",
-    to: { pathname: "/promotions/", hash: "#promotions" },
+    to: { pathname: "/promotions", hash: hash.promotions },
     items: [
       {
         name: "All Promotions",
-        to: "/promotions/",
+        to: {
+          pathname: "/promotions/",
+          hash: hash.promotions,
+        },
       },
       {
         name: "Recommenders",
-        to: "/recommenders/promotions-recommenders",
+        to: {
+          pathname: "/recommenders/promotions-recommenders",
+          hash: `${hash.promotions}_recommenders`,
+        },
       },
     ],
   },
   {
     name: "Customers",
     icon: "/icons/customer.svg",
-    to: { pathname: "/customers", hash: "#customers" },
+    to: { pathname: "/customers", hash: hash.customers },
     items: [
       {
         name: "All Customers",
-        to: "/customers",
+        to: {
+          pathname: "/customers",
+          hash: hash.customers,
+        },
       },
       {
         name: "Add a Customer",
-        to: "/customers/create",
+        to: {
+          pathname: "/customers/create",
+          hash: `${hash.customers}_create`,
+        },
       },
       {
         name: "All Businesses",
-        to: "/businesses",
+        to: {
+          pathname: "/businesses",
+          hash: `${hash.customers}_businesses`,
+        },
       },
       {
         name: "All Segments",
-        to: "/segments",
+        to: {
+          pathname: "/segments",
+          hash: `${hash.customers}_segments`,
+        },
       },
       {
         name: "Events Overview",
-        to: "/dataview",
+        to: {
+          pathname: "/dataview",
+          hash: `${hash.customers}_dataview`,
+        },
       },
     ],
   },
   {
     name: "Metrics",
     icon: "/icons/graph-up.svg",
-    to: { pathname: "/metrics/", hash: "#metrics" },
+    to: { pathname: "/metrics", hash: hash.metrics },
     items: [
       {
         name: "All Metrics",
-        to: "/metrics/",
+        to: {
+          pathname: "/metrics/",
+          hash: hash.metrics,
+        },
       },
       {
         name: "Create a Metric",
-        to: "/metrics/create",
+        to: {
+          pathname: "/metrics/create",
+          hash: metricsHash.create,
+        },
       },
     ],
   },
   {
     name: "Parameters",
     icon: "/icons/beta.svg",
-    to: { pathname: "/parameters/", hash: "#parameters" },
+    to: { pathname: "/parameters", hash: hash.parameters },
     items: [
       {
         name: "All Parameters",
-        to: "/parameters/",
+        to: {
+          pathname: "/parameters/",
+          hash: hash.parameters,
+        },
       },
       {
         name: "Recommenders",
-        to: "/recommenders/parameter-set-recommenders",
+        to: {
+          pathname: "/recommenders/parameter-set-recommenders",
+          hash: `${hash.parameters}_recommenders`,
+        },
       },
     ],
   },
   {
     name: "Integrations",
     icon: "/icons/integrations.svg",
-    to: { pathname: "/settings/integrations", hash: "#integrations" },
+    to: { pathname: "/settings/integrations", hash: hash.integration },
     items: [],
   },
 ];
@@ -114,11 +160,14 @@ const getAuthenticatedIA = (scopes, flags) => {
     ia.splice(0, 0, {
       name: "Admin",
       icon: "/icons/metric.svg",
-      to: { pathname: "/", hash: "#admin" },
+      to: { pathname: "/", hash: hash.admin },
       items: [
         {
           name: "Models",
-          to: "/models",
+          to: {
+            pathname: "/models",
+            hash: `${hash.admin}_models`,
+          },
         },
       ],
     });

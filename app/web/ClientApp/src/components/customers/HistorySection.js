@@ -1,7 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useCustomerEvents } from "../../api-hooks/eventApi";
-import { Subtitle, Spinner, ErrorCard, EmptyList } from "../molecules";
+import {
+  Subtitle,
+  Spinner,
+  ErrorCard,
+  EmptyList,
+  Navigation,
+} from "../molecules";
 
 import { EventRow } from "../events/EventRow";
 
@@ -11,11 +16,11 @@ const ViewAsEvents = ({ trackedUser }) => {
   return (
     <div className="m-2">
       <div className="mb-5">
-        <Link to={`/customers/create-event/${trackedUser.id}`}>
+        <Navigation to={`/customers/create-event/${trackedUser.id}`}>
           <button className="btn btn-outline-primary float-right">
             Log New Event
           </button>
-        </Link>
+        </Navigation>
         <Subtitle>Events</Subtitle>
       </div>
       {events.error && <ErrorCard error={events.error} />}

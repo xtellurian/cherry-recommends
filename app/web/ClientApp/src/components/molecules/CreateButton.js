@@ -1,13 +1,13 @@
 import React from "react";
 import Tippy from "@tippyjs/react";
-import { Link } from "react-router-dom";
+import { Navigation } from "./Navigation";
 
 export const CreateButtonClassic = ({ to, children, className }) => {
   return (
     <div className={className}>
-      <Link to={to}>
+      <Navigation to={to}>
         <button className="btn btn-primary">{children}</button>
-      </Link>
+      </Navigation>
     </div>
   );
 };

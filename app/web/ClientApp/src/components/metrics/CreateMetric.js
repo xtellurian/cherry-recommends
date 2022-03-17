@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createMetricAsync } from "../../api/metricsApi";
@@ -12,6 +13,8 @@ import {
 } from "../molecules/TextInput";
 import Select from "../molecules/selectors/Select";
 import { useCommonId } from "../../utility/utility";
+
+import { hash } from "../menu/MenuIA";
 
 const valueTypeOptions = [
   { value: "numeric", label: "Numeric" },
@@ -73,7 +76,13 @@ const CreateMetric = () => {
 
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/metrics/">
+      <BackButton
+        className="float-right"
+        to={{
+          pathname: "/metrics/",
+          hash: hash.metrics,
+        }}
+      >
         All Metrics
       </BackButton>
       <Title>Create Metric</Title>

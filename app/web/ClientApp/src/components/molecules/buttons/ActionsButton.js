@@ -1,11 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   ButtonDropdown,
   DropdownMenu,
   DropdownToggle,
   DropdownItem,
 } from "reactstrap";
+
+import { Navigation } from "../Navigation";
 
 export const ActionsButton = ({ to, label, className, children }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -15,9 +16,9 @@ export const ActionsButton = ({ to, label, className, children }) => {
 
   return (
     <span className={className || "float-right btn-group"}>
-      <Link to={to}>
+      <Navigation to={to}>
         <button className="btn btn-primary mr-1">{label}</button>
-      </Link>
+      </Navigation>
       {children && (
         <ButtonDropdown isOpen={isOpen} toggle={toggle}>
           <DropdownToggle className="pl-2 pr-2" split color="primary" />
@@ -39,9 +40,9 @@ export const ActionItemsGroup = ({ label, children }) => {
 
 export const ActionLink = ({ to, children }) => {
   return (
-    <Link to={to}>
+    <Navigation to={to}>
       <DropdownItem>{children}</DropdownItem>
-    </Link>
+    </Navigation>
   );
 };
 

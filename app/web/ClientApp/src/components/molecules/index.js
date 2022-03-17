@@ -13,6 +13,7 @@ import {
   PageHeading,
 } from "./layout/PageHeadings";
 import { Selector } from "./selectors/Select";
+import { Navigation } from "./Navigation";
 
 export {
   AsyncButton,
@@ -29,4 +30,5 @@ export {
   PageSectionTitle,
   PageHeading,
   Selector,
+  Navigation,
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import {
   usePromotionsRecommender,
@@ -11,7 +11,13 @@ import {
 } from "../../../api/promotionsRecommendersApi";
 import { ItemRow } from "../../items/ItemRow";
 import { useAccessToken } from "../../../api-hooks/token";
-import { Subtitle, Spinner, ErrorCard, EmptyList } from "../../molecules";
+import {
+  Subtitle,
+  Spinner,
+  ErrorCard,
+  EmptyList,
+  Navigation,
+} from "../../molecules";
 import { ConfirmationPopup } from "../../molecules/popups/ConfirmationPopup";
 import { CopyableField } from "../../molecules/fields/CopyableField";
 import { EntityField } from "../../molecules/EntityField";
@@ -225,11 +231,13 @@ const RecommenderDetailSection = () => {
 
       <div className="mt-5">
         <div className="mb-4">
-          <Link to={`/recommenders/promotions-recommenders/manage-items/${id}`}>
+          <Navigation
+            to={`/recommenders/promotions-recommenders/manage-items/${id}`}
+          >
             <button className="float-right btn btn-outline-primary">
               Manage Promotions
             </button>
-          </Link>
+          </Navigation>
           <Subtitle>Associated Promotions</Subtitle>
         </div>
         {recommender.items &&

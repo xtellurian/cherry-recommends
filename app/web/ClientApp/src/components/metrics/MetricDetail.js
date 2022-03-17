@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { useMetric } from "../../api-hooks/metricsApi";
 import { deleteMetricAsync, fetchExportCustomers } from "../../api/metricsApi";
@@ -11,6 +11,7 @@ import {
   ErrorCard,
   BackButton,
   AsyncButton,
+  Navigation,
 } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { useAccessToken, useTokenScopes } from "../../api-hooks/token";
@@ -87,11 +88,11 @@ const MetricDetail = () => {
         All Metrics
       </BackButton>
       {canWrite && (
-        <Link to={`/metrics/set-value/${id}`}>
+        <Navigation to={`/metrics/set-value/${id}`}>
           <button className="btn btn-primary float-right mr-1">
             Manually Set a Metric Value
           </button>
-        </Link>
+        </Navigation>
       )}
       <AsyncButton
         loading={isExportLoading}

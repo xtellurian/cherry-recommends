@@ -1,18 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { ArrowLeft } from "react-bootstrap-icons";
+
+import { Navigation } from "./Navigation";
 
 import "./css/nav.css";
 
 export const BackButton = ({ to, children, className }) => {
   return (
     <div className={className}>
-      <Link to={to}>
+      <Navigation to={to}>
         <button className="btn btn-outline-primary">
           <ArrowLeft size={18} className="mr-2" />
           {children}
         </button>
-      </Link>
+      </Navigation>
     </div>
   );
 };
@@ -20,10 +21,10 @@ export const BackButton = ({ to, children, className }) => {
 export const PrimaryBackButton = ({ to, children, className }) => {
   return (
     <div className={className}>
-      <Link to={to} className="primary-nav-link text-decoration-none">
+      <Navigation to={to} className="primary-nav-link text-decoration-none">
         <ArrowLeft size={18} className="mr-2" />
         {children}
-      </Link>
+      </Navigation>
     </div>
   );
 };

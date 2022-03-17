@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useBusiness } from "../../api-hooks/businessesApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { deleteBusinessAsync } from "../../api/businessesApi";
@@ -10,6 +10,7 @@ import {
   ErrorCard,
   Spinner,
   EmptyList,
+  Navigation,
 } from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { CopyableField } from "../molecules/fields/CopyableField";
@@ -103,11 +104,11 @@ export const BusinessDetail = () => {
       <TabActivator tabId={tabs[0].id} defaultTabId={defaultTabId}>
         <Subtitle>Properties ({numProperties})</Subtitle>
 
-        <Link to={`/businesses/edit-properties/${business.id}`}>
+        <Navigation to={`/businesses/edit-properties/${business.id}`}>
           <button className="btn btn-outline-primary float-right">
             Edit Properties
           </button>
-        </Link>
+        </Navigation>
         {numProperties > 0 && <JsonView data={business.properties} />}
         {numProperties === 0 && (
           <EmptyList>Business has no properties.</EmptyList>
