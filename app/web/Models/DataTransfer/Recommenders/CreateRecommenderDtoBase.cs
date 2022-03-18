@@ -17,5 +17,6 @@ namespace SignalBox.Web.Dto
         public RecommenderSettingsDto? Settings { get; set; }
         public IEnumerable<CreateOrUpdateRecommenderArgument>? Arguments { get; set; }
         public string? TargetMetricId { get; set; }
+        public IEnumerable<long>? SegmentIds { get; set; }
     }
 }

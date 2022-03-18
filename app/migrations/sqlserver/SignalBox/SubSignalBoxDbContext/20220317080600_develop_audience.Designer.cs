@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220317080600_develop_audience")]
+    partial class develop_audience
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -375,9 +377,6 @@ namespace sqlserver.SignalBox
                     b.Property<long>("MetricId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("WeeklyDistinctBusinessCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("WeeklyDistinctCustomerCount")
                         .HasColumnType("int");
 
@@ -400,9 +399,6 @@ namespace sqlserver.SignalBox
 
                     b.Property<string>("StringValue")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("WeeklyDistinctBusinessCount")
-                        .HasColumnType("int");
 
                     b.Property<int>("WeeklyDistinctCustomerCount")
                         .HasColumnType("int");
@@ -578,9 +574,6 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.LatestMetric", b =>
                 {
-                    b.Property<long?>("BusinessId")
-                        .HasColumnType("bigint");
-
                     b.Property<long?>("CustomerId")
                         .HasColumnType("bigint");
 
@@ -690,9 +683,6 @@ namespace sqlserver.SignalBox
                     b.Property<double>("BinWidth")
                         .HasColumnType("float");
 
-                    b.Property<int>("BusinessCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("CustomerCount")
                         .HasColumnType("int");
 
@@ -701,9 +691,6 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.MetricDailyBinValueString", b =>
                 {
-                    b.Property<int>("BusinessCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("CustomerCount")
                         .HasColumnType("int");
 

@@ -4,6 +4,10 @@ namespace SignalBox.Core
 {
     public class EntityNotFoundException : SignalBoxException
     {
+        public EntityNotFoundException(Type t) : base($"Entity of type {t.Name} not found")
+        {
+            this._entityType = t;
+        }
         public EntityNotFoundException(Type t, string commonId, Exception ex) : base($"Entity of type {t.Name} with id {commonId} not found", ex)
         {
             this._entityType = t;

@@ -33,6 +33,7 @@ namespace SignalBox.Test.Stores
             var mockCorrelatorStore = new Mock<IRecommendationCorrelatorStore>();
             var mockItemsRecommenderStore = new Mock<IItemsRecommenderStore>();
             var mockItemsRecommendationStore = new Mock<IItemsRecommendationStore>();
+            var mockAudienceStore = new Mock<IAudienceStore>();
 
             var sut = new ItemsRecommenderInvokationWorkflows(
                 mockLogger.Object,
@@ -47,7 +48,8 @@ namespace SignalBox.Test.Stores
                 mockWebhookSenderClient.Object,
                 mockCorrelatorStore.Object,
                 mockItemsRecommenderStore.Object,
-                mockItemsRecommendationStore.Object
+                mockItemsRecommendationStore.Object,
+                mockAudienceStore.Object
             );
 
             var baseline = new RecommendableItem("item1", "Item 1", 1, 1, BenefitType.Percent, 1, PromotionType.Discount, null);

@@ -42,8 +42,5 @@ namespace SignalBox.Core.Recommenders
 
         [JsonIgnore]
         public ICollection<RecommendationDestinationBase> RecommendationDestinations { get; set; } = null!;
-
-        [JsonIgnore]
-        public ICollection<RecommenderSegment> RecommenderSegments { get; set; } = null!;
     }
 }

@@ -14,6 +14,7 @@ namespace SignalBox.Core.Workflows
         private readonly IMetricStore metricStore;
         private readonly ICategoricalOptimiserClient optimiserClient;
         private readonly IModelRegistrationStore modelRegistrationStore;
+        private readonly IAudienceStore audienceStore;
         private readonly IRecommendableItemStore itemStore;
 
         public ItemsRecommenderWorkflows(
@@ -25,6 +26,7 @@ namespace SignalBox.Core.Workflows
             IIntegratedSystemStore systemStore,
             ICategoricalOptimiserClient optimiserClient,
             IModelRegistrationStore modelRegistrationStore,
+            IAudienceStore audienceStore,
             RecommenderReportImageWorkflows reportImageWorkflows,
             IRecommendableItemStore itemStore) : base(store, systemStore, metricStore, segmentStore, reportImageWorkflows)
         {
@@ -33,6 +35,7 @@ namespace SignalBox.Core.Workflows
             this.metricStore = metricStore;
             this.optimiserClient = optimiserClient;
             this.modelRegistrationStore = modelRegistrationStore;
+            this.audienceStore = audienceStore;
             this.itemStore = itemStore;
         }
 
@@ -40,9 +43,14 @@ namespace SignalBox.Core.Workflows
         {
             await store.Load(from, _ => _.BaselineItem);
             await store.LoadMany(from, _ => _.Items);
+
+            var fromAudience = await audienceStore.GetAudience(from);
+            var segmentIds = fromAudience.Success ? fromAudience.Entity.Segments.Select(_ => _.Id) : Enumerable.Empty<long>();
+
             return await CreateItemsRecommender(common,
                                                   from.BaselineItem?.CommonId,
                                                   from.Items?.Select(_ => _.CommonId),
+                                                  segmentIds,
                                                   from.NumberOfItemsToRecommend,
                                                   from.Arguments,
                                                   from.ErrorHandling ?? new RecommenderSettings(),
@@ -63,6 +71,7 @@ namespace SignalBox.Core.Workflows
         public async Task<ItemsRecommender> CreateItemsRecommender(CreateCommonEntityModel common,
                                                                    string? baselineItemId,
                                                                    IEnumerable<string>? itemIds,
+                                                                   IEnumerable<long>? segmentIds,
                                                                    int? numberOfItemsToRecommend,
                                                                    IEnumerable<RecommenderArgument>? arguments,
                                                                    RecommenderSettings settings,
@@ -108,6 +117,20 @@ namespace SignalBox.Core.Workflows
                         NumberOfItemsToRecommend = numberOfItemsToRecommend,
                         TargetType = targetType
                     });
+            }
+
+            if (segmentIds != null && segmentIds.Any())
+            {
+                var segments = new List<Segment>();
+                foreach (var segmentId in segmentIds)
+                {
+                    segments.Add(await segmentStore.Read(segmentId));
+                }
+                if (segments.Any())
+                {
+                    var audience = new Audience(recommender, segments);
+                    await audienceStore.Create(audience);
+                }
             }
 
             if (useOptimiser)

@@ -19,6 +19,7 @@ namespace SignalBox.Core.Workflows
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IItemsRecommenderStore itemsRecommenderStore;
         private readonly IItemsRecommendationStore itemsRecommendationStore;
+        private readonly IAudienceStore audienceStore;
 
         public ItemsRecommenderInvokationWorkflows(ILogger<ItemsRecommenderInvokationWorkflows> logger,
                                     IStorageContext storageContext,
@@ -32,7 +33,8 @@ namespace SignalBox.Core.Workflows
                                     IWebhookSenderClient webhookSenderClient,
                                     IRecommendationCorrelatorStore correlatorStore,
                                     IItemsRecommenderStore itemsRecommenderStore,
-                                    IItemsRecommendationStore itemsRecommendationStore)
+                                    IItemsRecommendationStore itemsRecommendationStore,
+                                    IAudienceStore audienceStore)
                                      : base(storageContext, itemsRecommenderStore, historicMetricStore, webhookSenderClient, dateTimeProvider)
         {
             this.logger = logger;
@@ -45,6 +47,7 @@ namespace SignalBox.Core.Workflows
             this.correlatorStore = correlatorStore;
             this.itemsRecommenderStore = itemsRecommenderStore;
             this.itemsRecommendationStore = itemsRecommendationStore;
+            this.audienceStore = audienceStore;
         }
 
         public async Task<ItemsRecommendation> InvokeItemsRecommender(
@@ -98,6 +101,12 @@ namespace SignalBox.Core.Workflows
                     }
                     else
                     {
+                        var audience = await audienceStore.GetAudience(recommender);
+                        if (audience.Success && !await audienceStore.IsCustomerInAudience(context.Customer, audience.Entity))
+                        {
+                            throw new BadRequestException("Customer is not in recommender audience.");
+                        }
+
                         context.Correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
                         logger.LogInformation("Saving correlator to create Id");
                         await storageContext.SaveChanges();

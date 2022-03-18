@@ -80,6 +80,7 @@ namespace SignalBox.Test.Workflows
             var mockWebhookSenderClient = new Mock<IWebhookSenderClient>();
             var mockCorrelatorStore = new Mock<IRecommendationCorrelatorStore>();
             var mockItemsRecommendationStore = new Mock<IItemsRecommendationStore>();
+            var mockAudienceStore = new Mock<IAudienceStore>();
 
             var itemsRecommenderInvokationWorkflows = new ItemsRecommenderInvokationWorkflows(
                 mockItemsLogger.Object,
@@ -94,7 +95,8 @@ namespace SignalBox.Test.Workflows
                 mockWebhookSenderClient.Object,
                 mockCorrelatorStore.Object,
                 mockItemsRecommenderStore.Object,
-                mockItemsRecommendationStore.Object);
+                mockItemsRecommendationStore.Object,
+                mockAudienceStore.Object);
 
             var mockParameterSetLogger = Utility.MockLogger<ParameterSetRecommenderInvokationWorkflows>();
             var mockParameterRecommendationCache = new Mock<IRecommendationCache<ParameterSetRecommender, ParameterSetRecommendation>>();

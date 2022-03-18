@@ -29,8 +29,9 @@ namespace SignalBox.Web.Controllers
         public PromotionsRecommendersController(ILogger<PromotionsRecommendersController> logger,
                                                  IItemsRecommenderStore store,
                                                  ISegmentStore segmentStore,
+                                                 IAudienceStore audienceStore,
                                                  ItemsRecommenderInvokationWorkflows invokationWorkflows,
-                                                 ItemsRecommenderPerformanceWorkflows performanceWorkflows, ItemsRecommenderWorkflows workflows) : base(store, segmentStore, workflows, invokationWorkflows)
+                                                 ItemsRecommenderPerformanceWorkflows performanceWorkflows, ItemsRecommenderWorkflows workflows) : base(store, segmentStore, audienceStore, workflows, invokationWorkflows)
         {
             this.logger = logger;
             this.invokationWorkflows = invokationWorkflows;
@@ -61,7 +62,7 @@ namespace SignalBox.Web.Controllers
                 return await workflows.CloneItemsRecommender(c, from);
             }
             return await workflows.CreateItemsRecommender(c,
-                dto.GetBaselinePromotionId(), dto.ItemIds, dto.NumberOfItemsToRecommend,
+                dto.GetBaselinePromotionId(), dto.ItemIds, dto.SegmentIds, dto.NumberOfItemsToRecommend,
                 dto.Arguments.ToCoreRepresentation(),
                 dto.Settings.ToCoreRepresentation(),
                 dto.UseAutoAi ?? false,

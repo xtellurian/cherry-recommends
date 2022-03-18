@@ -130,6 +130,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<ICustomerStore, EFCustomerStore>();
 
             services.AddScoped<ISegmentStore, EFSegmentStore>();
+            services.AddScoped<IAudienceStore, EFAudienceStore>();
             services.AddScoped<IEnrolmentRuleStore, EFEnrolmentRuleStore>();
             services.AddScoped<IMetricEnrolmentRuleStore, EFMetricEnrolmentRuleStore>();
 

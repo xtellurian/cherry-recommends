@@ -25,7 +25,7 @@ namespace SignalBox.Infrastructure
         // segments
         public DbSet<Segment> Segments { get; set; }
         public DbSet<CustomerSegment> CustomerSegments { get; set; }
-        public DbSet<RecommenderSegment> RecommenderSegments { get; set; }
+        public DbSet<Audience> Audiences { get; set; }
         public DbSet<EnrolmentRule> EnrolmentRules { get; set; }
         public DbSet<MetricEnrolmentRule> MetricEnrolmentRules { get; set; }
 

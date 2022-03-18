@@ -11,7 +11,7 @@ namespace SignalBox.Core.Workflows
         protected readonly IRecommenderStore<TRecommender> store;
         protected readonly IIntegratedSystemStore systemStore;
         protected readonly IMetricStore featureStore;
-        private readonly ISegmentStore segmentStore;
+        protected readonly ISegmentStore segmentStore;
         private readonly RecommenderReportImageWorkflows imageWorkflows;
 
         protected RecommenderWorkflowBase(IRecommenderStore<TRecommender> store,
@@ -108,42 +108,6 @@ namespace SignalBox.Core.Workflows
         public async Task<byte[]> DownloadReportImage(RecommenderEntityBase recommender)
         {
             return await imageWorkflows.DownloadImage(recommender);
-        }
-
-        public async Task<IEnumerable<RecommenderSegment>> SetSegments(TRecommender recommender, IEnumerable<long> segmentIds)
-        {
-            var recommenderSegments = new List<RecommenderSegment>();
-            foreach (var segmentId in segmentIds)
-            {
-                Segment segment = await segmentStore.Read(segmentId);
-
-                if (segment != null)
-                {
-                    recommenderSegments.Add(await segmentStore.AddRecommender(segment, recommender));
-                }
-            }
-
-            await segmentStore.Context.SaveChanges();
-
-            return recommenderSegments;
-        }
-
-        public async Task<IEnumerable<RecommenderSegment>> RemoveSegments(TRecommender recommender, IEnumerable<long> segmentIds)
-        {
-            var recommenderSegments = new List<RecommenderSegment>();
-            foreach (var segmentId in segmentIds)
-            {
-                Segment segment = await segmentStore.Read(segmentId);
-
-                if (segment != null)
-                {
-                    recommenderSegments.Add(await segmentStore.RemoveRecommender(segment, recommender));
-                }
-            }
-
-            await segmentStore.Context.SaveChanges();
-
-            return recommenderSegments;
         }
     }
 }
