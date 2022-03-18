@@ -66,17 +66,18 @@ const FigureCard = ({ name, label, value, loading }) => {
 const MetricReports = ({ metric }) => {
   const aggregateMetricsNumeric = useAggregateMetricsNumeric({ id: metric.id });
 
+  const idx = aggregateMetricsNumeric?.length - 1;
   const weeklyMeanNumericValue =
     aggregateMetricsNumeric?.length &&
-    aggregateMetricsNumeric[0]?.weeklyMeanNumericValue;
+    aggregateMetricsNumeric[idx]?.weeklyMeanNumericValue;
 
   const weeklyDistinctCustomerCount =
     aggregateMetricsNumeric?.length &&
-    aggregateMetricsNumeric[0]?.weeklyDistinctCustomerCount;
+    aggregateMetricsNumeric[idx]?.weeklyDistinctCustomerCount;
 
   const weeklyDistinctBusinessCount =
     aggregateMetricsNumeric?.length &&
-    aggregateMetricsNumeric[0]?.weeklyDistinctBusinessCount;
+    aggregateMetricsNumeric[idx]?.weeklyDistinctBusinessCount;
 
   const countLabel =
     metric.scope === "business" ? "Business Count" : "Customer Count";
