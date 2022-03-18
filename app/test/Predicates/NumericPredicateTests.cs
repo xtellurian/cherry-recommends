@@ -1,7 +1,7 @@
 using Xunit;
 using SignalBox.Core.Predicates;
 
-namespace SignalBox.Test
+namespace SignalBox.Test.Predicates
 {
     public class NumericPredicateTests
     {
@@ -18,8 +18,11 @@ namespace SignalBox.Test
         }
 
         [Theory]
-        [InlineData(5, NumericPredicateOperators.GreaterThan, 5, false)]
+        [InlineData(5.1, NumericPredicateOperators.Equal, 5.1, true)]
+        [InlineData(1, NumericPredicateOperators.NotEqual, 2, true)]
+        [InlineData(1.1, NumericPredicateOperators.NotEqual, 1.1, false)]
         [InlineData(5.1, NumericPredicateOperators.GreaterThan, 4.0, true)]
+        [InlineData(5, NumericPredicateOperators.GreaterThan, 5, false)]
         [InlineData(5, NumericPredicateOperators.LessThan, 5, false)]
         [InlineData(4, NumericPredicateOperators.LessThan, 5, true)]
         [InlineData(5, NumericPredicateOperators.GreaterThanOrEqualTo, 5, true)]

@@ -3,36 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220317234242_develop_categorical_predicates")]
+    partial class develop_categorical_predicates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.15")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("AudienceSegment", b =>
-                {
-                    b.Property<long>("InAudienceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("SegmentsId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("InAudienceId", "SegmentsId");
-
-                    b.HasIndex("SegmentsId");
-
-                    b.ToTable("AudienceSegment");
-                });
 
             modelBuilder.Entity("ItemsRecommendationRecommendableItem", b =>
                 {
@@ -92,36 +79,6 @@ namespace sqlserver.SignalBox
                     b.HasIndex("ParametersId");
 
                     b.ToTable("ParameterParameterSetRecommender");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Audience", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long>("RecommenderId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RecommenderId")
-                        .IsUnique();
-
-                    b.ToTable("Audiences");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Business", b =>
@@ -375,9 +332,6 @@ namespace sqlserver.SignalBox
                     b.Property<long>("MetricId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("WeeklyDistinctBusinessCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("WeeklyDistinctCustomerCount")
                         .HasColumnType("int");
 
@@ -400,9 +354,6 @@ namespace sqlserver.SignalBox
 
                     b.Property<string>("StringValue")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("WeeklyDistinctBusinessCount")
-                        .HasColumnType("int");
 
                     b.Property<int>("WeeklyDistinctCustomerCount")
                         .HasColumnType("int");
@@ -578,9 +529,6 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.LatestMetric", b =>
                 {
-                    b.Property<long?>("BusinessId")
-                        .HasColumnType("bigint");
-
                     b.Property<long?>("CustomerId")
                         .HasColumnType("bigint");
 
@@ -690,9 +638,6 @@ namespace sqlserver.SignalBox
                     b.Property<double>("BinWidth")
                         .HasColumnType("float");
 
-                    b.Property<int>("BusinessCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("CustomerCount")
                         .HasColumnType("int");
 
@@ -701,9 +646,6 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.MetricDailyBinValueString", b =>
                 {
-                    b.Property<int>("BusinessCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("CustomerCount")
                         .HasColumnType("int");
 
@@ -1272,6 +1214,21 @@ namespace sqlserver.SignalBox
                     b.HasIndex("RecommenderId");
 
                     b.ToTable("RecommendationCorrelators");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.RecommenderSegment", b =>
+                {
+                    b.Property<long>("RecommenderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SegmentId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("RecommenderId", "SegmentId");
+
+                    b.HasIndex("SegmentId");
+
+                    b.ToTable("RecommenderSegments");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.InvokationLogEntry", b =>
@@ -1971,21 +1928,6 @@ namespace sqlserver.SignalBox
                         });
                 });
 
-            modelBuilder.Entity("AudienceSegment", b =>
-                {
-                    b.HasOne("SignalBox.Core.Audience", null)
-                        .WithMany()
-                        .HasForeignKey("InAudienceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignalBox.Core.Segment", null)
-                        .WithMany()
-                        .HasForeignKey("SegmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ItemsRecommendationRecommendableItem", b =>
                 {
                     b.HasOne("SignalBox.Core.RecommendableItem", null)
@@ -2044,17 +1986,6 @@ namespace sqlserver.SignalBox
                         .HasForeignKey("ParametersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Audience", b =>
-                {
-                    b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", "Recommender")
-                        .WithOne()
-                        .HasForeignKey("SignalBox.Core.Audience", "RecommenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Recommender");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Business", b =>
@@ -2441,6 +2372,25 @@ namespace sqlserver.SignalBox
                     b.Navigation("Recommender");
                 });
 
+            modelBuilder.Entity("SignalBox.Core.RecommenderSegment", b =>
+                {
+                    b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", "Recommender")
+                        .WithMany("RecommenderSegments")
+                        .HasForeignKey("RecommenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalBox.Core.Segment", "Segment")
+                        .WithMany("RecommenderSegments")
+                        .HasForeignKey("SegmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recommender");
+
+                    b.Navigation("Segment");
+                });
+
             modelBuilder.Entity("SignalBox.Core.Recommenders.InvokationLogEntry", b =>
                 {
                     b.HasOne("SignalBox.Core.Business", "Business")
@@ -2690,11 +2640,15 @@ namespace sqlserver.SignalBox
                     b.Navigation("RecommendationDestinations");
 
                     b.Navigation("RecommenderInvokationLogs");
+
+                    b.Navigation("RecommenderSegments");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Segment", b =>
                 {
                     b.Navigation("InSegment");
+
+                    b.Navigation("RecommenderSegments");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Tenant", b =>

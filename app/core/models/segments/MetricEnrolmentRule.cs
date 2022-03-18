@@ -8,6 +8,7 @@ namespace SignalBox.Core.Segments
         public long? MetricId { get; set; }
         public Metric? Metric { get; set; }
         public NumericPredicate? NumericPredicate { get; set; }
+        public CategoricalPredicate? CategoricalPredicate { get; set; }
 
         public static MetricEnrolmentRule MoreThan10EventsEnrolmentRule => new MetricEnrolmentRule
         {

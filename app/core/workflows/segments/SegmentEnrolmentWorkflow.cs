@@ -73,27 +73,40 @@ namespace SignalBox.Core.Workflows
                 throw new WorkflowException($"MetricId is null for rule {rule.Id}");
             }
             var report = new EnrolmentReport(rule);
+
+            // Create the the right predicate
+            Expression<Func<LatestMetric, bool>> selectPredicate;
             if (rule.NumericPredicate != null)
             {
-                Expression<Func<LatestMetric, bool>> selectPredicate =
-                    (latestMetric) => rule.NumericPredicate.ToExpression().Invoke(latestMetric.NumericValue);
+                selectPredicate = (latestMetric) => rule.NumericPredicate.ToExpression().Invoke(latestMetric.NumericValue ?? -1);
+            }
+            else if (rule.CategoricalPredicate != null)
+            {
+                selectPredicate = (latestMetric) => rule.CategoricalPredicate.ToExpression().Invoke(latestMetric.StringValue);
+            }
+            else
+            {
+                throw new WorkflowException($"Rule {rule.Id} has null Numeric and Categorical predicates");
+            }
 
-                await foreach (var latestValue in historicCustomerMetricStore.IterateLatest(rule.MetricId.Value, selectPredicate.Expand()))
+            // use the predicate to find matching values
+            await foreach (var latestValue in historicCustomerMetricStore.IterateLatest(rule.MetricId.Value, selectPredicate.Expand()))
+            {
+                if (latestValue.CustomerId.HasValue)
                 {
-                    if (latestValue.CustomerId.HasValue)
+                    // these are the latest metric values that meet the requirements.
+                    await enrolmentRuleStore.Load(rule, _ => _.Segment);
+                    var customer = await customerStore.Read(latestValue.CustomerId.Value);
+                    if (!preview)
                     {
-                        // these are the latest metric values that meet the requirements.
-                        await enrolmentRuleStore.Load(rule, _ => _.Segment);
-                        var customer = await customerStore.Read(latestValue.CustomerId.Value);
-                        if (!preview)
-                        {
-                            // actually add to segment if not preview
-                            await customerSegmentWorkflow.AddToSegment(rule.Segment, customer);
-                        }
-                        report.IncrementCustomers();
+                        // actually add to segment if not preview
+                        await customerSegmentWorkflow.AddToSegment(rule.Segment, customer);
                     }
+                    report.IncrementCustomers();
                 }
             }
+
+            // only add the customers to the segment if preview is not enabled
             if (!preview)
             {
                 rule.LastCompleted = dateTimeProvider.Now;

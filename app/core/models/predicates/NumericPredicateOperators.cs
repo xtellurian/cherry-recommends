@@ -11,7 +11,5 @@ namespace SignalBox.Core.Predicates
         LessThan,
         GreaterThanOrEqualTo,
         LessThanOrEqualTo,
-        Between,
-        NotBetween
     }
 }

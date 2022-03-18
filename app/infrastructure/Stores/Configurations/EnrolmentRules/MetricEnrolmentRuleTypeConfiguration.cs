@@ -18,6 +18,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(_ => _.NumericPredicate).HasJsonConversion();
+            builder.Property(_ => _.CategoricalPredicate).HasJsonConversion();
 
             builder.HasData(MetricEnrolmentRule.MoreThan10EventsEnrolmentRule);
         }

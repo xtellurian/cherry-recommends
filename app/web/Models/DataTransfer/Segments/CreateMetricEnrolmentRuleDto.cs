@@ -11,9 +11,13 @@ namespace SignalBox.Web.Dto
         {
             base.Validate();
             // this will need to be in validate, once there is a categorical predicate option
-            if (NumericPredicate == null)
+            if (NumericPredicate == null || CategoricalPredicate == null)
             {
-                throw new BadRequestException("NumericPredicate is required");
+                throw new BadRequestException("NumericPredicate or CategoricalPredicate is required.");
+            }
+            if (NumericPredicate != null && CategoricalPredicate != null)
+            {
+                throw new BadRequestException("NumericPredicate and CategoricalPredicate cannot both be set.");
             }
         }
 
@@ -21,5 +25,6 @@ namespace SignalBox.Web.Dto
         public long? MetricId { get; set; }
 
         public NumericPredicate? NumericPredicate { get; set; }
+        public CategoricalPredicate? CategoricalPredicate { get; set; }
     }
 }

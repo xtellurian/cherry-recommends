@@ -51,6 +51,15 @@ namespace SignalBox.Web.Controllers
             {
                 throw new BadRequestException("Metric Scope must be Customer");
             }
+            if (metric.ValueType == Core.Metrics.MetricValueType.Numeric && dto.NumericPredicate == null)
+            {
+                throw new BadRequestException($"Metric {metric.Id} is Numeric but NumericPredicate was null");
+            }
+            if (metric.ValueType == Core.Metrics.MetricValueType.Categorical && dto.CategoricalPredicate == null)
+            {
+                throw new BadRequestException($"Metric {metric.Id} is Categorical but CategoricalPredicate was null");
+            }
+
             var segment = await segmentStore.Read(id);
             logger.LogInformation("Creating a metric enrolment rule for segment {segmentId} on metric {metricId}", segment.Id, metric.Id);
             var rule = await enrolmentRuleStore.Create(new MetricEnrolmentRule
@@ -59,7 +68,8 @@ namespace SignalBox.Web.Controllers
                 MetricId = metric.Id,
                 Segment = segment,
                 SegmentId = segment.Id,
-                NumericPredicate = dto.NumericPredicate
+                NumericPredicate = dto.NumericPredicate,
+                CategoricalPredicate = dto.CategoricalPredicate,
             });
             await enrolmentRuleStore.Context.SaveChanges();
             return rule;
