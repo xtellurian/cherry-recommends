@@ -35,6 +35,11 @@ namespace SignalBox.Core.Workflows
             this.telemetry = telemetry;
         }
 
+        public IEnumerable<string> GetEventKindNames()
+        {
+            return Enum.GetNames(typeof(EventKinds));
+        }
+
         public async Task<CustomerEventSummary> GenerateSummary()
         {
             var stopwatch = new Stopwatch();
@@ -53,23 +58,30 @@ namespace SignalBox.Core.Workflows
             var summary = new CustomerEventSummary();
             foreach (var k in kinds)
             {
-                var totalOfKind = await eventStore.Count(_ => _.EventKind == k);
-                var eventTypes = await eventStore.ReadUniqueEventTypes(k);
-                var counts = new Dictionary<string, EventStats>();
-                foreach (var t in eventTypes)
-                {
-                    var instances = await eventStore.Count(_ => _.EventKind == k && _.EventType == t);
-                    var users = await eventStore.CountTrackedUsers(_ => _.EventKind == k && _.EventType == t);
-                    double fractionOfKind = (double)instances / totalOfKind;
-                    var stats = new EventStats(instances, fractionOfKind, users);
-                    counts.Add(t, stats);
-                }
-                summary.AddKind(k, counts);
+                var kindSummary = await GenerateSummaryForKind(k);
+                summary.Add(k, kindSummary);
             }
 
             stopwatch.Stop();
             telemetry.TrackMetric("DataSummaryWorkflows_GenerateSummary_ExecutionTimeSeconds", stopwatch.Elapsed.TotalSeconds);
             return summary;
+        }
+
+        public async Task<EventKindSummary> GenerateSummaryForKind(EventKinds k)
+        {
+            var totalOfKind = await eventStore.Count(_ => _.EventKind == k);
+            var eventTypes = await eventStore.ReadUniqueEventTypes(k);
+            var counts = new Dictionary<string, EventStats>();
+            foreach (var t in eventTypes)
+            {
+                var instances = await eventStore.Count(_ => _.EventKind == k && _.EventType == t);
+                var users = await eventStore.CountTrackedUsers(_ => _.EventKind == k && _.EventType == t);
+                double fractionOfKind = (double)instances / totalOfKind;
+                var stats = new EventStats(instances, fractionOfKind, users);
+                counts.Add(t, stats);
+            }
+
+            return new EventKindSummary(counts);
         }
 
         public async Task<EventCountTimeline> GenerateTimeline(EventKinds kind, string eventType)
@@ -108,16 +120,6 @@ namespace SignalBox.Core.Workflows
                 logger.LogError("Timeout querying latest events", ex);
                 throw;
             }
-            // try
-            // {
-            //     // var actionsResponse = await actionStore.Query(1, _ => _.Timestamp > timeCutoff);
-            //     // actions = actionsResponse.Items;
-            // }
-            // catch (Exception ex)
-            // {
-            //     logger.LogError("Timeout querying latest actions", ex);
-            //     throw;
-            // }
 
             try
             {

@@ -1,6 +1,13 @@
 export function fetchEventSummaryAsync({ token }: {
     token: any;
 }): Promise<any>;
+export function fetchEventKindNamesAsync({ token }: {
+    token: any;
+}): Promise<any>;
+export function fetchEventKindSummaryAsync({ token, kind }: {
+    token: any;
+    kind: any;
+}): Promise<any>;
 export function fetchEventTimelineAsync({ token, kind, eventType }: {
     token: any;
     kind: any;

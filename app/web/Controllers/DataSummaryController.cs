@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,10 +32,25 @@ namespace SignalBox.Web.Controllers
         }
 
         /// <summary>Summarises the events that have been collected.</summary>
+        [HttpGet("event-kind-names")]
+        public IEnumerable<string> EventKindNames()
+        {
+            return workflows.GetEventKindNames();
+        }
+
+        /// <summary>Summarises the events that have been collected.</summary>
         [HttpGet("events")]
         public async Task<CustomerEventSummary> EventsSummary()
         {
             return await workflows.GenerateSummary();
+        }
+
+        /// <summary>Summarises the events that have been collected.</summary>
+        [HttpGet("event-kind/{kind}")]
+        public async Task<CustomerEventKindSummary> EventKindSummary(EventKinds kind)
+        {
+            var s = await workflows.GenerateSummaryForKind(kind);
+            return new CustomerEventKindSummary(kind, s);
         }
 
         /// <summary>Summarises a timeline of event counts each month.</summary>

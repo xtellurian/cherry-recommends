@@ -418,6 +418,18 @@ const fetchEventSummaryAsync = async ({ token }) => {
         token,
     });
 };
+const fetchEventKindNamesAsync = async ({ token }) => {
+    return await executeFetch$1({
+        path: `api/datasummary/event-kind-names`,
+        token,
+    });
+};
+const fetchEventKindSummaryAsync = async ({ token, kind }) => {
+    return await executeFetch$1({
+        path: `api/datasummary/event-kind/${kind}`,
+        token,
+    });
+};
 const fetchEventTimelineAsync = async ({ token, kind, eventType }) => {
     return await executeFetch$1({
         path: `api/datasummary/events/timeline/${kind}/${eventType}`,
@@ -441,6 +453,8 @@ const fetchLatestActionsAsync = async ({ token }) => {
 var dataSummaryApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchEventSummaryAsync: fetchEventSummaryAsync,
+    fetchEventKindNamesAsync: fetchEventKindNamesAsync,
+    fetchEventKindSummaryAsync: fetchEventKindSummaryAsync,
     fetchEventTimelineAsync: fetchEventTimelineAsync,
     fetchDashboardAsync: fetchDashboardAsync,
     fetchLatestActionsAsync: fetchLatestActionsAsync

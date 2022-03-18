@@ -1,18 +1,25 @@
 import React from "react";
-import { Row, Col, Card, CardBody } from "reactstrap";
+import { Row, Col } from "reactstrap";
 import { Subtitle } from "../molecules/layout";
-import { useEventDataSummary } from "../../api-hooks/dataSummaryApi";
+import {
+  useEventKindSummary,
+  useEventKindNames,
+} from "../../api-hooks/dataSummaryApi";
 import { Spinner } from "../molecules/Spinner";
 import { JsonView } from "../molecules/JsonView";
 import { EventHistoryBarChart } from "./EventHistoryBarChart";
+import { ErrorCard } from "../molecules";
+import FlexRow from "../molecules/layout/EntityFlexRow";
 
-const SelectableCard = ({ children, onToggled, isSelected }) => {
+const SelectableCard = ({ children, onClick, isSelected }) => {
   return (
-    <div onClick={onToggled}>
-      <Card className={`${isSelected && "bg-info"}`}>
-        <CardBody>{children}</CardBody>
-      </Card>
-    </div>
+    <FlexRow
+      className={`${isSelected && "bg-active"} clickable-row`}
+      onClick={onClick}
+      style={{ cursor: "pointer" }}
+    >
+      {children}
+    </FlexRow>
   );
 };
 
@@ -20,6 +27,9 @@ const Top = () => {
   return (
     <React.Fragment>
       <Subtitle>Event Data</Subtitle>
+      <div className="text-muted">
+        Select an Event Kind and Type to continue.
+      </div>
     </React.Fragment>
   );
 };
@@ -41,42 +51,28 @@ const EmptyInfo = ({ children }) => {
 };
 
 export const ViewEventData = () => {
-  const { result } = useEventDataSummary();
-  console.info(result);
-  const [state, setState] = React.useState({
-    eventKind: null,
-    eventType: null,
-    eventTypes: null,
-    eventTypeSummary: null,
-  });
+  const [selectedKind, setSelectedKind] = React.useState();
+  const [selectedType, setSelectedType] = React.useState();
 
-  const toggleKind = (eventKind) => {
-    if (state.eventKind === eventKind) {
-      setState({});
+  const kindNames = useEventKindNames();
+  const kindSummary = useEventKindSummary({ kind: selectedKind });
+
+  const toggleKind = (k) => {
+    if (selectedKind !== k) {
+      setSelectedKind(k);
     } else {
-      setState({
-        eventKind,
-        eventTypes: result.kinds[eventKind].keys,
-      });
+      setSelectedKind();
     }
   };
-  const toggleEventType = (eventType) => {
-    if (state.eventType === eventType) {
-      setState({
-        ...state,
-        eventType: null,
-        eventTypeSummary: null,
-      });
+  const toggleEventType = (t) => {
+    if (selectedType === t) {
+      setSelectedType();
     } else {
-      setState({
-        ...state,
-        eventType,
-        eventTypeSummary: result.kinds[state.eventKind].eventTypes[eventType],
-      });
+      setSelectedType(t);
     }
   };
 
-  if (result.loading) {
+  if (kindSummary.loading) {
     return (
       <React.Fragment>
         <Top />
@@ -84,50 +80,65 @@ export const ViewEventData = () => {
       </React.Fragment>
     );
   }
+  if (kindSummary.error) {
+    return (
+      <React.Fragment>
+        <Top />
+        <ErrorCard error={kindSummary.error} />
+      </React.Fragment>
+    );
+  }
   return (
     <React.Fragment>
       <Top />
-      <Row>
+      <Row
+        className="box-shadow p-2"
+        style={{ height: "40vh", overflow: "auto" }}
+      >
         <Col>
           <ColumnTitle>Event Kinds</ColumnTitle>
-          {result.keys.map((k) => (
-            <SelectableCard
-              onToggled={() => toggleKind(k)}
-              isSelected={state.eventKind === k}
-              key={k}
-            >
-              {k}
-            </SelectableCard>
-          ))}
+          {kindNames.kinds
+            ? kindNames.kinds.map((k) => (
+                <SelectableCard
+                  onClick={() => toggleKind(k)}
+                  isSelected={selectedKind === k}
+                  key={k}
+                >
+                  {k}
+                </SelectableCard>
+              ))
+            : null}
         </Col>
         <Col>
           <ColumnTitle>Event Types</ColumnTitle>
-          {state.eventTypes &&
-            state.eventTypes.map((t) => (
+          {kindSummary.summary &&
+            kindSummary.summary.eventTypes &&
+            kindSummary.summary.keys.map((t) => (
               <SelectableCard
-                onToggled={() => toggleEventType(t)}
-                isSelected={state.eventType === t}
+                onClick={() => toggleEventType(t)}
+                isSelected={selectedType === t}
                 key={t}
               >
                 {t}
               </SelectableCard>
             ))}
-          {!state.eventKind && <EmptyInfo>Select an event kind</EmptyInfo>}
-        </Col>
-
-        <Col>
-          <ColumnTitle>Summary Statistics</ColumnTitle>
-          {state.eventTypeSummary && <JsonView data={state.eventTypeSummary} />}
-          {!state.eventTypeSummary && (
-            <EmptyInfo>Select an event type</EmptyInfo>
+          {kindSummary.summary?.keys?.length === 0 && (
+            <div className="text-muted text-center">No Event Types</div>
+          )}
+          {!selectedKind && !kindSummary && !kindSummary.loading && (
+            <EmptyInfo>Select an event kind</EmptyInfo>
           )}
         </Col>
       </Row>
       <hr />
-      <EventHistoryBarChart
-        kind={state.eventKind}
-        eventType={state.eventType}
-      />
+      <ColumnTitle>Per Month</ColumnTitle>
+      <EventHistoryBarChart kind={kindSummary.kind} eventType={selectedType} />
+      <hr />
+      <div>
+        <ColumnTitle>Raw Data</ColumnTitle>
+        {kindSummary && <JsonView data={kindSummary} />}
+        {!kindSummary && <EmptyInfo>Select an event type</EmptyInfo>}
+      </div>
     </React.Fragment>
   );
 };

@@ -2,11 +2,52 @@ import React from "react";
 import { useAccessToken } from "./token";
 import {
   fetchEventSummaryAsync,
+  fetchEventKindNamesAsync,
+  fetchEventKindSummaryAsync,
   fetchEventTimelineAsync,
   fetchDashboardAsync,
   fetchLatestActionsAsync,
 } from "../api/dataSummaryApi";
 import { useEnvironmentReducer } from "./environmentsApi";
+
+export const useEventKindNames = () => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({
+    loading: true,
+  });
+  React.useEffect(() => {
+    if (token) {
+      fetchEventKindNamesAsync({
+        token,
+      })
+        .then((kinds) => setState({ kinds }))
+        .catch((error) => setState({ error }));
+    }
+  }, [token]);
+
+  return result;
+};
+
+export const useEventKindSummary = ({ kind }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({
+    loading: true,
+  });
+  React.useEffect(() => {
+    if (token && kind) {
+      fetchEventKindSummaryAsync({
+        token,
+        kind,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    } else if (token && !kind) {
+      setState({});
+    }
+  }, [token, kind]);
+
+  return result;
+};
 
 export const useEventDataSummary = () => {
   const token = useAccessToken();

@@ -113,6 +113,14 @@ a:hover {
   background-color: var(--cherry-pink-alpha);
 }
 
+.clickable-row:active {
+  background-color: var(--cherry-pink);
+}
+
+.clickable-row.bg-active {
+  background-color: var(--cherry-pink);
+}
+
 /* archive */
 
 code {

@@ -2,25 +2,14 @@ import React from "react";
 import { useRouteMatch, Switch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { Title } from "../molecules/layout";
-import { Tabs, TabActivator } from "../molecules/layout/Tabs";
 import { ViewEventData } from "./ViewEventData";
 
-const tabs = [
-  {
-    id: "events",
-    name: "Event Data",
-  },
-];
-const defaultTab = "events";
 const DataViewHome = () => {
   return (
     <div>
-      <Title>Data View</Title>
-      <Tabs tabs={tabs} />
+      <Title>Events Overview</Title>
       <hr />
-      <TabActivator tabId="events" defaultTabId={defaultTab}>
-        <ViewEventData />
-      </TabActivator>
+      <ViewEventData />
     </div>
   );
 };

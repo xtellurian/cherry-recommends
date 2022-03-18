@@ -42,7 +42,7 @@ export const EventHistoryBarChart = ({ kind, eventType }) => {
         />
         <Tooltip labelFormatter={(t) => new Date(t).toLocaleDateString()} />
         <YAxis />
-        <Bar dataKey="count" fill="#27a2b8" />
+        <Bar dataKey="count" fill="var(--cherry-teal)" />
       </BarChart>
     </ResponsiveContainer>
   );

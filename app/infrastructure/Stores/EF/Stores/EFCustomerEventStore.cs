@@ -63,7 +63,11 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<int> CountTrackedUsers(Expression<Func<CustomerEvent, bool>> predicate = null)
         {
-            return await QuerySet.Where(predicate ?? ((x) => true)).Select(_ => _.CustomerId).Distinct().CountAsync();
+            return await QuerySet
+                .Where(predicate ?? ((x) => true))
+                .Select(_ => _.CustomerId)
+                .Distinct()
+                .CountAsync();
         }
 
         public async Task<IEnumerable<CustomerEvent>> ReadEventsForUser(Customer customer, EventQueryOptions options = null, DateTimeOffset? since = null)

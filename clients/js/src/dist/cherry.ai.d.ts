@@ -1458,6 +1458,13 @@ declare namespace customersApi_d {
 declare function fetchEventSummaryAsync({ token }: {
     token: any;
 }): Promise<any>;
+declare function fetchEventKindNamesAsync({ token }: {
+    token: any;
+}): Promise<any>;
+declare function fetchEventKindSummaryAsync({ token, kind }: {
+    token: any;
+    kind: any;
+}): Promise<any>;
 declare function fetchEventTimelineAsync({ token, kind, eventType }: {
     token: any;
     kind: any;
@@ -1472,12 +1479,16 @@ declare function fetchLatestActionsAsync({ token }: {
 }): Promise<any>;
 
 declare const dataSummaryApi_d_fetchEventSummaryAsync: typeof fetchEventSummaryAsync;
+declare const dataSummaryApi_d_fetchEventKindNamesAsync: typeof fetchEventKindNamesAsync;
+declare const dataSummaryApi_d_fetchEventKindSummaryAsync: typeof fetchEventKindSummaryAsync;
 declare const dataSummaryApi_d_fetchEventTimelineAsync: typeof fetchEventTimelineAsync;
 declare const dataSummaryApi_d_fetchDashboardAsync: typeof fetchDashboardAsync;
 declare const dataSummaryApi_d_fetchLatestActionsAsync: typeof fetchLatestActionsAsync;
 declare namespace dataSummaryApi_d {
   export {
     dataSummaryApi_d_fetchEventSummaryAsync as fetchEventSummaryAsync,
+    dataSummaryApi_d_fetchEventKindNamesAsync as fetchEventKindNamesAsync,
+    dataSummaryApi_d_fetchEventKindSummaryAsync as fetchEventKindSummaryAsync,
     dataSummaryApi_d_fetchEventTimelineAsync as fetchEventTimelineAsync,
     dataSummaryApi_d_fetchDashboardAsync as fetchDashboardAsync,
     dataSummaryApi_d_fetchLatestActionsAsync as fetchLatestActionsAsync,

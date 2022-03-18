@@ -17,5 +17,9 @@ namespace SignalBox.Core
         {
             Kinds.Add(kind, new EventKindSummary(eventTypeCounts));
         }
+        public void Add(EventKinds kind, EventKindSummary s)
+        {
+            Kinds.Add(kind, s);
+        }
     }
 }
