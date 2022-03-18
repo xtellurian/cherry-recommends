@@ -11,12 +11,12 @@ const SignupButton = () => {
   const [aboutToSignup, setAboutToSignup] = React.useState(autoSignup);
 
   const signUp = () => {
-    console.log("Attempting signup...");
+    console.debug("Attempting signup...");
     loginWithRedirect({ screen_hint })
       .then(() => {
-        console.log("Automatically signed in");
+        console.info("Automatically signed in");
       })
-      .catch((e) => console.log(e))
+      .catch((e) => console.error(e))
       .finally(setAboutToSignup(false));
   };
 

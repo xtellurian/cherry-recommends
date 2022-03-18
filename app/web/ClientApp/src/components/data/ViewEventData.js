@@ -42,7 +42,7 @@ const EmptyInfo = ({ children }) => {
 
 export const ViewEventData = () => {
   const { result } = useEventDataSummary();
-  console.log(result);
+  console.info(result);
   const [state, setState] = React.useState({
     eventKind: null,
     eventType: null,

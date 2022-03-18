@@ -10,8 +10,8 @@ export const fetchReportImageBlobUrlAsync = async ({
   id,
   useInternalId,
 }) => {
-  console.log("fetching image for recommender");
-  console.log(`api/recommenders/${recommenderApiName}/${id}/ReportImage`);
+  console.debug("fetching image for recommender");
+  console.debug(`api/recommenders/${recommenderApiName}/${id}/ReportImage`);
 
   let response;
   try {

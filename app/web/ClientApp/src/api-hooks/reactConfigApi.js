@@ -5,7 +5,7 @@ export const useAuth0Config = () => {
   const [config, setState] = React.useState();
 
   React.useEffect(() => {
-    fetchAuth0ConfigurationAsync().then(setState).catch(console.log);
+    fetchAuth0ConfigurationAsync().then(setState).catch(console.error);
   }, []);
 
   return config;

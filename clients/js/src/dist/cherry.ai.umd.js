@@ -39,8 +39,8 @@
     // type ErrorHandler = (response: Response) => Promise<any>;
     const defaultErrorResponseHandler = async (response) => {
         const json = await response.json();
-        console.log(`Server responded: ${response.statusText}`);
-        console.log(json);
+        console.error(`Server responded: ${response.statusText}`);
+        console.debug(json);
         if (response.status >= 500) {
             return { error: json };
         }
@@ -54,7 +54,7 @@
     };
     // this function is called in api.js functions.
     const handleErrorResponse = async (response) => {
-        console.log("SDK is handling an error response");
+        console.warn("SDK is handling an error response");
         return await errorResponseHandler(response);
     };
     // the below all function as handlers of a fetch promise rejected
@@ -78,12 +78,16 @@
     });
 
     const info = (message) => {
-        console.log(`INFO: ${message}`);
+        console.info(`${message}`);
     };
     const error = (error) => {
-        console.log(`ERROR: ${error}`);
+        console.error(`${error}`);
+    };
+    const debug = (message) => {
+        console.debug(`${message}`);
     };
     var logger = {
+        debug,
         info,
         error,
     };
@@ -107,7 +111,7 @@
         }
         const qs = q.toString();
         const fullUrl = `${url}?${qs}`;
-        logger.info(`Executing Fetch ${fullUrl}`);
+        logger.debug(`Fetch: ${fullUrl}`);
         let response;
         try {
             response = await fetch(fullUrl, {
@@ -354,7 +358,7 @@
     };
     const createOrUpdateCustomerAsync = async ({ token, customer, user, }) => {
         if (user) {
-            console.log("user is a deprecated property in createOrUpdateCustomerAsync(). use 'customer'.");
+            console.warn("user is a deprecated property in createOrUpdateCustomerAsync(). use 'customer'.");
         }
         return await executeFetch$1({
             path: basePath,
@@ -552,7 +556,7 @@
         setDefaultEnvironmentId: setDefaultEnvironmentId
     });
 
-    console.log("Deprecation Notice: Features are replaced by Metrics.");
+    console.warn("Deprecation Notice: Features are replaced by Metrics.");
     const fetchFeatureGeneratorsAsync = async ({ page, token }) => {
         return await executeFetch$1({
             path: "api/FeatureGenerators",
@@ -592,7 +596,7 @@
         manualTriggerFeatureGeneratorsAsync: manualTriggerFeatureGeneratorsAsync
     });
 
-    console.log("Deprecation Notice: Feature Generators are replaced by Metric Generators.");
+    console.warn("Deprecation Notice: Feature Generators are replaced by Metric Generators.");
     const fetchFeaturesAsync = async ({ token, page, searchTerm }) => {
         return await executeFetch$1({
             path: "api/Features",
@@ -1191,8 +1195,8 @@
     };
 
     const fetchReportImageBlobUrlAsync$3 = async ({ recommenderApiName, token, id, useInternalId, }) => {
-        console.log("fetching image for recommender");
-        console.log(`api/recommenders/${recommenderApiName}/${id}/ReportImage`);
+        console.debug("fetching image for recommender");
+        console.debug(`api/recommenders/${recommenderApiName}/${id}/ReportImage`);
         let response;
         try {
             response = await fetch(`api/recommenders/${recommenderApiName}/${id}/ReportImage`, {

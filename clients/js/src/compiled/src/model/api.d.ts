@@ -315,6 +315,60 @@ export interface paths {
             };
         };
     };
+    "/api/Businesses/{id}/Metrics": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["Metric"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Businesses/{id}/Metrics/{metricCommonId}": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                    metricCommonId: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                    version?: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["HistoricCustomerMetric"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
     "/api/Businesses/{id}": {
         get: {
             parameters: {
@@ -8012,7 +8066,7 @@ export interface components {
             featureCommonIds?: string[] | null;
             metricCommonIds?: string[] | null;
         };
-        MetricScopes: "customer" | "global";
+        MetricScopes: "customer" | "business" | "global";
         MetricValueType: "numeric" | "categorical";
         ModelInputDto: {
             customerId?: string | null;

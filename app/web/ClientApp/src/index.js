@@ -48,7 +48,7 @@ if (window.location.host.startsWith("hidden-cherry-secret.local.zone")) {
       );
     })
     .catch((e) => {
-      console.log(e);
+      console.error(e);
       ReactDOM.render(<FunError />, rootElement);
     });
 }

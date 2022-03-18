@@ -38,13 +38,13 @@ export const AsyncSelectItem = ({
   }
 
   const loadSelectable = (inputValue, callback) => {
-    console.log(inputValue);
+    console.debug(inputValue);
     fetchPromotionsAsync({
       token,
       searchTerm: inputValue,
     })
       .then((r) => {
-        console.log(r);
+        console.debug(r);
         const selectable = r.items.map((x) => ({
           value: x,
           label: x.name || x.commonId,
@@ -57,7 +57,7 @@ export const AsyncSelectItem = ({
         }
         callback(selectable);
       })
-      .catch((e) => console.log(e));
+      .catch((e) => console.error(e));
   };
 
   if (items.loading) {

@@ -3,9 +3,9 @@ import { useHosting, managementSubdomain } from "../../api-hooks/tenantsApi";
 
 export const TenantNotFound = ({ error }) => {
   const hosting = useHosting();
-  console.log(error);
+  console.error(error);
   const redirectToManagement = () => {
-    console.log("redirecting...");
+    console.info("redirecting...");
     window.location = `https://${managementSubdomain}.${hosting.canonicalRootDomain}?autoSignIn=true`;
   };
   // if (!hosting.loading && hosting.canonicalRootDomain) {

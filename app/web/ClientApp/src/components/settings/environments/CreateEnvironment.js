@@ -30,8 +30,8 @@ export const CreateEnvironment = () => {
       },
     })
       .then((newEnvironment) => {
-        console.log(newEnvironment);
-        console.log(
+        console.debug(newEnvironment);
+        console.info(
           `Switching environments away from ${currentEnviroment?.id}`
         );
         analytics.track("site:settings_environment_create_success");

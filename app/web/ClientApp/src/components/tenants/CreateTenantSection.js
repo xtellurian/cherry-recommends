@@ -43,7 +43,7 @@ const toFriendlyStatus = (status) => {
   } else if (status === "Created") {
     return "Maturing Trees";
   } else {
-    console.log(`Unknown status: ${status}`);
+    console.warn(`Unknown status: ${status}`);
     return "Lost Leaves";
   }
 };
@@ -73,8 +73,8 @@ export const CreateTenantSection = () => {
         .then((response) => response.text())
         .then(setTermsOfService)
         .catch((e) => {
-          console.log("Failed to fetch terms");
-          console.log(e);
+          console.error("Failed to fetch terms");
+          console.error(e);
         });
     }
   }, []);
@@ -116,12 +116,12 @@ export const CreateTenantSection = () => {
     if (nameCreated) {
       fetchStatusAsync({ token, name: nameCreated })
         .then((r) => {
-          console.log(r);
+          console.info(r);
           setStatus(r.status);
         })
         .catch(setError);
     } else {
-      console.log("Not checking status yet...");
+      console.debug("Not checking status yet...");
     }
   };
 

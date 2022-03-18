@@ -24,7 +24,7 @@ export const AsyncSelectCustomer = ({ onChange, placeholder }) => {
           r.items.map((x) => ({ value: x, label: x.name || x.commonId }))
         )
       )
-      .catch((e) => console.log(e));
+      .catch((e) => console.error(e));
   };
 
   return (

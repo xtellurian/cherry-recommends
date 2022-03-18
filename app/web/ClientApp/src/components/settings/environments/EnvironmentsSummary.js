@@ -25,9 +25,9 @@ const EnvironmentRow = ({ environment, reload }) => {
       .then(() => {
         if (environment.current) {
           setEnvironment(null);
-          console.log("reset env");
+          console.debug("reset env");
         } else {
-          console.log(`Staying on environment ${currentEnviroment?.id}`);
+          console.debug(`Staying on environment ${currentEnviroment?.id}`);
         }
         reload();
       })

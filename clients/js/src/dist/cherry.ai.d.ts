@@ -865,7 +865,7 @@ interface components {
             featureCommonIds?: string[] | null;
             metricCommonIds?: string[] | null;
         };
-        MetricScopes: "customer" | "global";
+        MetricScopes: "customer" | "business" | "global";
         MetricValueType: "numeric" | "categorical";
         ModelInputDto: {
             customerId?: string | null;

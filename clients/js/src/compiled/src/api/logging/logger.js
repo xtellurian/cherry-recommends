@@ -1,10 +1,14 @@
 const info = (message) => {
-    console.log(`INFO: ${message}`);
+    console.info(`${message}`);
 };
 const error = (error) => {
-    console.log(`ERROR: ${error}`);
+    console.error(`${error}`);
+};
+const debug = (message) => {
+    console.debug(`${message}`);
 };
 export default {
+    debug,
     info,
     error,
 };

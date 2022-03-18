@@ -23,7 +23,7 @@ export const useMetadataDirectly = (props) => {
         .then((res) => setUserMetadata(res.user_metadata))
         .catch((error) => setUserMetadata({ error }));
     } else {
-      console.log(config);
+      console.info(config);
     }
   }, [token, user, config, props.trigger]);
 

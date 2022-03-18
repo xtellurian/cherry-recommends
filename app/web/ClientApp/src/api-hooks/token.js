@@ -15,7 +15,7 @@ export const useAccessToken = () => {
         scope: "read:current_user",
       })
         .then(setAccessToken)
-        .catch(console.log);
+        .catch(console.error);
     }
   }, [isAuthenticated, config, getAccessTokenSilently]);
 
@@ -43,9 +43,9 @@ export const useAuth0AccessToken = () => {
         scope: "read:current_user_metadata",
       })
         .then(setAccessToken)
-        .catch(console.log);
+        .catch(console.error);
     } else {
-      console.log(config);
+      console.warn(config);
     }
   }, [isAuthenticated, config, getAccessTokenSilently]);
 

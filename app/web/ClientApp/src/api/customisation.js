@@ -2,8 +2,8 @@ import { errorHandling } from "cherry.ai";
 
 const customErrorResponseHandler = async (response) => {
   const json = await response.json();
-  console.log(`Server responded: ${response.statusText}`);
-  console.log(json);
+  console.error(`Server responded: ${response.statusText}`);
+  console.error(json);
 
   throw json;
 };

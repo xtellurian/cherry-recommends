@@ -31,7 +31,7 @@ export const Settings = () => {
 
   const handleUpdateError = (e) => {
     alert(e.title);
-    console.log(e);
+    console.error(e);
     setError(e);
   };
 

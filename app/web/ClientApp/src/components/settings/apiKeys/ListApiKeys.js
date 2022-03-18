@@ -70,7 +70,7 @@ export const ListApiKeys = () => {
       </React.Fragment>
     );
   }
-  console.log(result);
+  console.debug(result);
   return (
     <React.Fragment>
       <Top />

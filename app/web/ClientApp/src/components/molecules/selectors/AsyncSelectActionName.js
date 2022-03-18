@@ -31,7 +31,7 @@ export const AsyncSelectActionName = ({ onChange, placeholder }) => {
             .map((x) => ({ value: x, label: x }))
         )
       )
-      .catch((e) => console.log(e));
+      .catch((e) => console.error(e));
   };
 
   return (

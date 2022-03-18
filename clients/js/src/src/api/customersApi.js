@@ -90,7 +90,7 @@ export const createOrUpdateCustomerAsync = async ({
   user,
 }) => {
   if (user) {
-    console.log(
+    console.warn(
       "user is a deprecated property in createOrUpdateCustomerAsync(). use 'customer'."
     );
   }

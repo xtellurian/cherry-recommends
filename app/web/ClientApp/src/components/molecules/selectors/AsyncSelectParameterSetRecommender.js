@@ -42,7 +42,7 @@ export const AsyncSelectParameterSetRecommender = ({
         }
         callback(selectable);
       })
-      .catch((e) => console.log(e));
+      .catch((e) => console.error(e));
   };
 
   return (

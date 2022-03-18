@@ -21,7 +21,7 @@ export const executeFetch = async ({ token, apiKey, path, page, pageSize, body, 
     }
     const qs = q.toString();
     const fullUrl = `${url}?${qs}`;
-    logger.info(`Executing Fetch ${fullUrl}`);
+    logger.debug(`Fetch: ${fullUrl}`);
     let response;
     try {
         response = await fetch(fullUrl, {

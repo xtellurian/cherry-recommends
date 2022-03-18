@@ -25,8 +25,8 @@ const RecommendationDetail = ({ recommendation }) => {
     id: recommendation.businessId,
     useInternalId: true,
   });
-  console.log(recommendation);
-  console.log(business);
+  console.debug(recommendation);
+  console.debug(business);
   const modelInput = JSON.parse(recommendation.modelInput);
   const modelOutput = JSON.parse(recommendation.modelOutput);
   return (

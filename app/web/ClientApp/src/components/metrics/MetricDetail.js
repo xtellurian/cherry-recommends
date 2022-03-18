@@ -74,7 +74,7 @@ const MetricDetail = () => {
         saveBlob({ blob, name: fileName });
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         setExportError(e);
       })
       .finally(() => {

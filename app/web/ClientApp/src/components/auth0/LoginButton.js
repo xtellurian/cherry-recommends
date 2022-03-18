@@ -17,12 +17,12 @@ const LoginButton = () => {
     return loginWithRedirect({ appState: { returnTo: pathname } });
   };
   const signIn = () => {
-    console.log("Attempting signin...");
+    console.debug("Attempting signin...");
     loginWrapper()
       .then(() => {
-        console.log("Automatically signed in...");
+        console.info("Automatically signed in...");
       })
-      .catch((e) => console.log(e))
+      .catch((e) => console.error(e))
       .finally(setAboutToLogin(false));
   };
   if (autoSignIn && !isAuthenticated && !isLoading) {

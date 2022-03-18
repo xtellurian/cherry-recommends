@@ -10,7 +10,7 @@ let environment = null;
 try {
   environment = JSON.parse(initialEnvironmentString);
 } catch {
-  console.log("failed to parse environment information from session storage");
+  console.error("failed to parse environment information from session storage");
   sessionStorage.removeItem(ENVIRONMENT_KEY);
 }
 
@@ -23,10 +23,10 @@ if (environment && environment.id) {
 }
 
 const Reducer = (state, action) => {
-  console.log({ state, action });
+  console.debug({ state, action });
   switch (action.type) {
     case "SET_ENVIRONMENT":
-      console.log(`Setting environment id to ${action.environment?.id}`);
+      console.debug(`Setting environment id to ${action.environment?.id}`);
       setDefaultEnvironmentId(action.environment.id);
       // Save data to sessionStorage
       sessionStorage.setItem(

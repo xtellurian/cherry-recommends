@@ -25,13 +25,13 @@ const parseIntElseNull = (number) => {
   try {
     var n = parseInt(number);
     if (isNaN(n)) {
-      console.log(`Invalid integer: ${number}`);
+      console.warn(`Invalid integer: ${number}`);
       return null;
     } else {
       return n;
     }
   } catch {
-    console.log(`Invalid integer: ${number}`);
+    console.warn(`Invalid integer: ${number}`);
     return null;
   }
 };

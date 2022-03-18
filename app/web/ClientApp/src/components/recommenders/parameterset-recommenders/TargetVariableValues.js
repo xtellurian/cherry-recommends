@@ -16,7 +16,7 @@ export const TargetVariableValues = () => {
   } else if (targetVariableValues.error) {
     return <ErrorCard error={targetVariableValues.error} />;
   }
-  console.log(targetVariableValues);
+  console.info(targetVariableValues);
   return (
     <TargetVariableValuesUtility
       recommender={recommender}

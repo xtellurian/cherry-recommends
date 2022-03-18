@@ -74,7 +74,7 @@ export const uploadUserDataAsync = async ({ token, payload }) => {
 };
 export const createOrUpdateCustomerAsync = async ({ token, customer, user, }) => {
     if (user) {
-        console.log("user is a deprecated property in createOrUpdateCustomerAsync(). use 'customer'.");
+        console.warn("user is a deprecated property in createOrUpdateCustomerAsync(). use 'customer'.");
     }
     return await executeFetch({
         path: basePath,

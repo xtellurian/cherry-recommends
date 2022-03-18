@@ -130,7 +130,7 @@ export const PropertiesEditor = ({
       prop.value = value;
       setPropertyList([...propertyList]);
     } else {
-      console.log("warning: couldn't find property ID");
+      console.warn("warning: couldn't find property ID");
     }
   };
   const handleRemove = (id) => {

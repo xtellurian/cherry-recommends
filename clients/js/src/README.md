@@ -20,19 +20,11 @@ Each API resource has a corresponding import. For example
 
 ```js
 // modern js
-import { trackedUsers } from "cherry.ai";
-// or common js
-const { trackedUsers } = require("cherry.ai");
+import { customers } from "cherry.ai";
 
-trackedUsers.fetchTrackedUser({
-  // successful fetch callback
-  success: (u) => console.log(`User has common Id ${u.commonId}`),
-  // error callback with json response
-  error: (e) => console.log(e),
-  // your JWT bearer token
-  token: "Your bearer token goes here",
-  // the Id of the user
-  id: "12345",
+const customer = await customers.fetchCustomerAsync({
+  token: "Your bearer token goes here", // a security bearer token
+  id: "12345", // customer ID
 });
 ```
 

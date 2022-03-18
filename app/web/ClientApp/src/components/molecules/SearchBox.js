@@ -7,7 +7,7 @@ export const SearchBox = ({ onSearch }) => {
       if (onSearch) {
         onSearch(term);
       } else {
-        console.log("No onSearch function provided.");
+        console.info("No onSearch function provided.");
       }
     }
   };

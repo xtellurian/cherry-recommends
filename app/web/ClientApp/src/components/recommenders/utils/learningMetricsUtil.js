@@ -41,9 +41,9 @@ export const LearningMetricsUtil = ({
     setLearningMetrics(commonIds);
   };
   const handleRemove = (metric) => {
-    console.log(metric);
+    console.debug(metric);
     const newIds = commonIds.filter((_) => _ !== metric.commonId);
-    console.log(newIds);
+    console.debug(newIds);
     setLearningMetrics(newIds);
   };
   return (

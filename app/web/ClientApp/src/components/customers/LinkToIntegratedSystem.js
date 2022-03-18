@@ -57,7 +57,7 @@ export const LinkToIntegratedSystem = () => {
       user: trackedUser,
     })
       .then(() => history.push(`/customers/detail/${trackedUser.id}`))
-      .catch((e) => console.log(e));
+      .catch((e) => console.error(e));
   };
   return (
     <div>

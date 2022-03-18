@@ -96,7 +96,7 @@ export const SideNavMenu = () => {
             {isActive({ hash: item.to.hash }) &&
               item.items.map((subitem) => (
                 <Link
-                  key={subitem.to}
+                  key={subitem.name}
                   to={(location) => ({ ...location, ...subitem.to })}
                 >
                   <SubMenuItem

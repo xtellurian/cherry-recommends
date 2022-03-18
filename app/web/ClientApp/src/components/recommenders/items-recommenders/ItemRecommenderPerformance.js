@@ -39,8 +39,8 @@ const PerformanceTableRow = ({ data, itemsById }) => {
 
 const PerformanceTable = ({ reports, itemsById, targetMetric }) => {
   const targetMetricName = targetMetric.name;
-  console.log(reports);
-  console.log(itemsById);
+  console.debug(reports);
+  console.debug(itemsById);
   return (
     <Table>
       <TableHead
