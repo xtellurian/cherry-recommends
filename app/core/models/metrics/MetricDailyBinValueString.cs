@@ -8,5 +8,6 @@ namespace SignalBox.Core
         { }
         public string StringValue { get; set; }
         public int CustomerCount { get; set; }
+        public int BusinessCount { get; set; }
     }
 }

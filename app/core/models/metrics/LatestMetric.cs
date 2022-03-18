@@ -7,6 +7,7 @@ namespace SignalBox.Core
     {
         public long HistoricCustomerMetricId { get; set; }
         public long? CustomerId { get; set; }
+        public long? BusinessId { get; set; }
         public long MetricId { get; set; }
         public int MaxVersion { get; set; }
         public double? NumericValue { get; set; }

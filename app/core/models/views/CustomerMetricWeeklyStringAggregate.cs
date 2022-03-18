@@ -19,5 +19,6 @@ namespace SignalBox.Core
         /// The sum of distinct customers with a string value in a week
         /// </summary>
         public int WeeklyDistinctCustomerCount { get; set; }
+        public int WeeklyDistinctBusinessCount { get; set; }
     }
 }

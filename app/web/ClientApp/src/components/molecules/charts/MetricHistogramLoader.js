@@ -18,6 +18,11 @@ export const MetricHistogramLoader = ({ metric }) => {
     );
   }
 
+  const yAxisData =
+    metric.scope === "business"
+      ? { name: "Business Count", dataKey: "businessCount" }
+      : { name: "Customer Count", dataKey: "customerCount" };
+
   return (
     <React.Fragment>
       <Suspense fallback={<Spinner />}>
@@ -26,7 +31,7 @@ export const MetricHistogramLoader = ({ metric }) => {
             metric={metric}
             data={data}
             xAxis={{ dataKey: "binRange" }}
-            yAxis={{ name: "Customer Count", dataKey: "customerCount" }}
+            yAxis={yAxisData}
           />
         ) : null}
 
@@ -35,7 +40,7 @@ export const MetricHistogramLoader = ({ metric }) => {
             metric={metric}
             data={data}
             xAxis={{ dataKey: "stringValue" }}
-            yAxis={{ name: "Customer Count", dataKey: "customerCount" }}
+            yAxis={yAxisData}
           />
         ) : null}
       </Suspense>

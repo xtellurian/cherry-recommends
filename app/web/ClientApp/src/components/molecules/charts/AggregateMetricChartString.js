@@ -31,7 +31,7 @@ const xLabelFormatter = (payload) => {
   return `Week ending in ${valueDate.format("MMM DD")}`;
 };
 
-const renderTooptip = ({ active, payload, label }) => {
+const renderTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="amc-tooltip">
@@ -53,7 +53,7 @@ const renderTooptip = ({ active, payload, label }) => {
   return null;
 };
 
-const reduceData = (data) => {
+const reduceData = (metric, data) => {
   return data.reduce((previousValue, currentValue) => {
     const {
       stringValue,
@@ -61,17 +61,22 @@ const reduceData = (data) => {
       lastOfWeek,
       weeklyValueCount,
       weeklyDistinctCustomerCount,
+      weeklyDistinctBusinessCount,
     } = currentValue;
     const _index = previousValue.findIndex(
       (r) => r.firstOfWeek === firstOfWeek
     );
+    const weeklyCount =
+      metric.scope === "business"
+        ? weeklyDistinctBusinessCount
+        : weeklyDistinctCustomerCount;
     // For categorical metric values we should use weeklyDistinctCustomerCount
     if (_index > -1) {
       return previousValue.map((r, i) => {
         if (i === _index) {
           return {
             ...r,
-            [stringValue]: (r[stringValue] || 0) + weeklyDistinctCustomerCount,
+            [stringValue]: (r[stringValue] || 0) + weeklyCount,
           };
         }
 
@@ -83,7 +88,7 @@ const reduceData = (data) => {
         {
           firstOfWeek,
           lastOfWeek,
-          [stringValue]: weeklyDistinctCustomerCount,
+          [stringValue]: weeklyCount,
         },
       ];
     }
@@ -102,7 +107,7 @@ export default ({ metric, data }) => {
     );
   }
 
-  const _ = reduceData(data);
+  const _ = reduceData(metric, data);
   const keys = [...new Set(data.flatMap((r) => r.stringValue))];
   const lines = keys.map((k, i) => {
     return (
@@ -152,7 +157,7 @@ export default ({ metric, data }) => {
             allowDuplicatedCategory={false}
           />
           {lines}
-          <Tooltip content={renderTooptip} />
+          <Tooltip content={renderTooltip} />
           <Legend
             verticalAlign="top"
             layout="vertical"

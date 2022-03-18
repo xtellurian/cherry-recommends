@@ -74,6 +74,18 @@ const MetricReports = ({ metric }) => {
     aggregateMetricsNumeric?.length &&
     aggregateMetricsNumeric[0]?.weeklyDistinctCustomerCount;
 
+  const weeklyDistinctBusinessCount =
+    aggregateMetricsNumeric?.length &&
+    aggregateMetricsNumeric[0]?.weeklyDistinctBusinessCount;
+
+  const countLabel =
+    metric.scope === "business" ? "Business Count" : "Customer Count";
+
+  const weeklyDistinctCount =
+    metric.scope === "business"
+      ? weeklyDistinctBusinessCount
+      : weeklyDistinctCustomerCount;
+
   return (
     <React.Fragment>
       <div className="mt-3">
@@ -97,8 +109,8 @@ const MetricReports = ({ metric }) => {
               <div className="col-12 mt-4">
                 <FigureCard
                   name={metric?.name}
-                  label="Customer Count"
-                  value={weeklyDistinctCustomerCount}
+                  label={countLabel}
+                  value={weeklyDistinctCount}
                   loading={
                     aggregateMetricsNumeric && aggregateMetricsNumeric.loading
                   }

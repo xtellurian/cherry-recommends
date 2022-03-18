@@ -12,5 +12,6 @@ namespace SignalBox.Core
         public long MetricId { get; set; }
         public double WeeklyMeanNumericValue { get; set; }
         public int WeeklyDistinctCustomerCount { get; set; }
+        public int WeeklyDistinctBusinessCount { get; set; }
     }
 }

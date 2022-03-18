@@ -10,5 +10,6 @@ namespace SignalBox.Core
         public double BinWidth { get; set; }
         public string BinRange { get; set; }
         public int CustomerCount { get; set; }
+        public int BusinessCount { get; set; }
     }
 }

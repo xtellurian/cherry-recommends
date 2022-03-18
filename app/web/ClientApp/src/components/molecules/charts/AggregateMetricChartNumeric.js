@@ -28,16 +28,29 @@ const xLabelFormatter = (payload) => {
   return `Week ending in ${valueDate.format("MMM DD")}`;
 };
 
-const renderTooptip = ({ active, payload, label }) => {
+const renderTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-    const customerCount = payload[0].payload.weeklyDistinctCustomerCount || 0;
+    const customerCount =
+      payload[0].payload.weeklyDistinctCustomerCount || null;
+    const businessCount =
+      payload[0].payload.weeklyDistinctBusinessCount || null;
     return (
       <div className="amc-tooltip">
         <label className="font-weight-bold d-block mb-1">
           {xLabelFormatter(payload[0].payload)}
         </label>
-        <label className="mb-0">Customers</label>
-        <p className="text-left font-weight-bold mb-1">{customerCount}</p>
+        {businessCount && (
+          <div>
+            <label className="mb-0">Businesses</label>
+            <p className="text-left font-weight-bold mb-1">{businessCount}</p>
+          </div>
+        )}
+        {customerCount && (
+          <div>
+            <label className="mb-0">Customers</label>
+            <p className="text-left font-weight-bold mb-1">{customerCount}</p>
+          </div>
+        )}
         <label className="mb-0">Mean</label>
         <p className="text-left font-weight-bold mb-1">
           {parseFloat(payload[0].value).toFixed(2)}
@@ -104,7 +117,7 @@ export default ({ metric, data }) => {
             stroke="var(--cherry-pink)"
             activeDot={{ r: 8 }}
           />
-          <Tooltip content={renderTooptip} />
+          <Tooltip content={renderTooltip} />
         </LineChart>
       </ResponsiveContainer>
     </React.Fragment>
