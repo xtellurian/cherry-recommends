@@ -72,3 +72,5 @@ export const fetchReportImageBlobUrlAsync =
 
 export const fetchPerformanceAsync =
   promotionsRecommenders.fetchPerformanceAsync;
+
+export const fetchAudienceAsync = promotionsRecommenders.fetchAudienceAsync;

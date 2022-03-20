@@ -1781,6 +1781,12 @@
             token,
         });
     };
+    const fetchAudienceAsync = async ({ token, id, }) => {
+        return await executeFetch({
+            path: `api/recommenders/PromotionsRecommenders/${id}/Audience`,
+            token,
+        });
+    };
     const addPromotionAsync = async ({ token, id, promotion, }) => {
         return await executeFetch({
             path: `api/recommenders/PromotionsRecommenders/${id}/Promotions`,
@@ -1974,6 +1980,7 @@
         deletePromotionsRecommenderAsync: deletePromotionsRecommenderAsync,
         createPromotionsRecommenderAsync: createPromotionsRecommenderAsync,
         fetchPromotionsAsync: fetchPromotionsAsync$1,
+        fetchAudienceAsync: fetchAudienceAsync,
         addPromotionAsync: addPromotionAsync,
         removePromotionAsync: removePromotionAsync,
         setBaselinePromotionAsync: setBaselinePromotionAsync,

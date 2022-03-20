@@ -358,7 +358,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["HistoricCustomerMetric"];
+            "application/json": components["schemas"]["BusinessMetricValue"];
           };
         };
         /** Bad Request */
@@ -3994,6 +3994,29 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ParameterSetRecommenders/{id}/Audience": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Audience"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ParameterSetRecommenders/{id}": {
     get: {
       parameters: {
@@ -6620,6 +6643,52 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ItemsRecommenders/{id}/Audience": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Audience"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/Audience": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Audience"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/name": {
     post: {
       parameters: {
@@ -6851,6 +6920,155 @@ export interface paths {
       parameters: {
         query: {
           report?: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/Segments/{id}/MetricEnrolmentRules": {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        query: {
+          page?: number;
+          pageSize?: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["MetricEnrolmentRulePaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["MetricEnrolmentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateMetricEnrolmentRuleDto"];
+          "text/json": components["schemas"]["CreateMetricEnrolmentRuleDto"];
+          "application/*+json": components["schemas"]["CreateMetricEnrolmentRuleDto"];
+        };
+      };
+    };
+  };
+  "/api/Segments/{id}/MetricEnrolmentRules/{ruleId}": {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+          ruleId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["EnrolmentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: number;
+          ruleId: number;
+        };
+        query: {
+          preview?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["EnrolmentReport"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          id: number;
+          ruleId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/Segments/{id}/MetricEnrolmentRules/{ruleId}/Trigger": {
+    post: {
+      parameters: {
+        path: {
+          id: number;
+          ruleId: number;
+        };
+        query: {
+          preview?: boolean;
         };
       };
       responses: {
@@ -7278,6 +7496,14 @@ export interface components {
     };
     ApiKeyTypes: "server" | "web";
     ArgumentTypes: "numerical" | "categorical";
+    Audience: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      recommenderId?: number;
+      recommender?: components["schemas"]["RecommenderEntityBase"];
+      segments?: components["schemas"]["Segment"][] | null;
+    };
     Auth0ReactConfig: {
       defaultAudience?: string | null;
       audience?: string | null;
@@ -7335,6 +7561,21 @@ export interface components {
       business?: components["schemas"]["Business"];
       customerId?: number;
     };
+    BusinessMetricValue: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      metricId?: number;
+      feature?: components["schemas"]["Metric"];
+      metric?: components["schemas"]["Metric"];
+      numericValue?: number | null;
+      stringValue?: string | null;
+      value?: unknown | null;
+      version?: number;
+      discriminator?: string | null;
+      businessId?: number;
+      business?: components["schemas"]["Business"];
+    };
     BusinessPaginated: {
       items?: components["schemas"]["Business"][] | null;
       pagination?: components["schemas"]["PaginationInfo"];
@@ -7342,6 +7583,11 @@ export interface components {
     CategoricalParameterBounds: {
       categories?: string[] | null;
     };
+    CategoricalPredicate: {
+      predicateOperator?: components["schemas"]["CategoricalPredicateOperators"];
+      compareTo?: string | null;
+    };
+    CategoricalPredicateOperators: "none" | "equal" | "notEqual";
     CheckistItem: {
       complete?: boolean | null;
       current?: boolean | null;
@@ -7389,6 +7635,11 @@ export interface components {
       valueType: components["schemas"]["MetricValueType"];
       scope: components["schemas"]["MetricScopes"];
     };
+    CreateMetricEnrolmentRuleDto: {
+      metricId: number;
+      numericPredicate?: components["schemas"]["NumericPredicate"];
+      categoricalPredicate?: components["schemas"]["CategoricalPredicate"];
+    };
     CreateMetricGenerator: {
       featureCommonId?: string | null;
       metricCommonId: string;
@@ -7433,6 +7684,7 @@ export interface components {
         | components["schemas"]["CreateOrUpdateRecommenderArgument"][]
         | null;
       targetMetricId?: string | null;
+      segmentIds?: number[] | null;
       parameters?: string[] | null;
       bounds?: components["schemas"]["ParameterBounds"][] | null;
     };
@@ -7460,6 +7712,7 @@ export interface components {
         | components["schemas"]["CreateOrUpdateRecommenderArgument"][]
         | null;
       targetMetricId?: string | null;
+      segmentIds?: number[] | null;
       itemIds?: string[] | null;
       defaultItemId?: string | null;
       baselineItemId?: string | null;
@@ -7527,6 +7780,7 @@ export interface components {
       metricId?: number;
       weeklyMeanNumericValue?: number;
       weeklyDistinctCustomerCount?: number;
+      weeklyDistinctBusinessCount?: number;
     };
     CustomerMetricWeeklyStringAggregate: {
       firstOfWeek?: string;
@@ -7535,6 +7789,7 @@ export interface components {
       stringValue?: string | null;
       weeklyValueCount?: number;
       weeklyDistinctCustomerCount?: number;
+      weeklyDistinctBusinessCount?: number;
     };
     CustomerPaginated: {
       items?: components["schemas"]["Customer"][] | null;
@@ -7574,6 +7829,21 @@ export interface components {
     DestinationTrigger: { [key: string]: unknown };
     Empty: {
       get?: components["schemas"]["Get"];
+    };
+    EnrolmentReport: {
+      segmentId?: number;
+      ruleId?: number;
+      rule?: components["schemas"]["EnrolmentRule"];
+      customersEnrolled?: number;
+    };
+    EnrolmentRule: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      discriminator?: string | null;
+      segmentId?: number;
+      lastEnqueued?: string | null;
+      lastCompleted?: string | null;
     };
     Environment: {
       id?: number;
@@ -7681,7 +7951,7 @@ export interface components {
       value?: unknown | null;
       version?: number;
       discriminator?: string | null;
-      trackedUserId?: number;
+      customerId?: number;
       trackedUser?: components["schemas"]["Customer"];
       customer?: components["schemas"]["Customer"];
     };
@@ -7878,10 +8148,12 @@ export interface components {
       binWidth?: number;
       binRange?: string | null;
       customerCount?: number;
+      businessCount?: number;
     };
     MetricDailyBinValueString: {
       stringValue?: string | null;
       customerCount?: number;
+      businessCount?: number;
     };
     MetricDestinationBase: {
       id?: number;
@@ -7894,6 +8166,23 @@ export interface components {
       connectedSystemId?: number;
       connectedSystem?: components["schemas"]["IntegratedSystem"];
       discriminator?: string | null;
+    };
+    MetricEnrolmentRule: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      discriminator?: string | null;
+      segmentId?: number;
+      lastEnqueued?: string | null;
+      lastCompleted?: string | null;
+      metricId?: number | null;
+      metric?: components["schemas"]["Metric"];
+      numericPredicate?: components["schemas"]["NumericPredicate"];
+      categoricalPredicate?: components["schemas"]["CategoricalPredicate"];
+    };
+    MetricEnrolmentRulePaginated: {
+      items?: components["schemas"]["MetricEnrolmentRule"][] | null;
+      pagination?: components["schemas"]["PaginationInfo"];
     };
     MetricGenerator: {
       id?: number;
@@ -7983,6 +8272,18 @@ export interface components {
       min?: number;
       max?: number;
     };
+    NumericPredicate: {
+      predicateOperator?: components["schemas"]["NumericPredicateOperators"];
+      compareTo?: number;
+    };
+    NumericPredicateOperators:
+      | "none"
+      | "equal"
+      | "notEqual"
+      | "greaterThan"
+      | "lessThan"
+      | "greaterThanOrEqualTo"
+      | "lessThanOrEqualTo";
     ObjectPaginated: {
       items?: unknown[] | null;
       pagination?: components["schemas"]["PaginationInfo"];

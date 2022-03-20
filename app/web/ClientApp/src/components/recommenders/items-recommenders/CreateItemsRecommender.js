@@ -33,6 +33,8 @@ import { Container, Row } from "../../molecules/layout";
 import { AdvancedOptionsPanel } from "../../molecules/layout/AdvancedOptionsPanel";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useCommonId } from "../../../utility/utility";
+import { useSegments } from "../../../api-hooks/segmentsApi";
+import { useFeatureFlag } from "../../launch-darkly/hooks";
 
 const targetTypeOptions = [
   {
@@ -63,17 +65,27 @@ export const CreateRecommender = () => {
   const { analytics } = useAnalytics();
   const { generateCommonId } = useCommonId();
 
+  const segments = useSegments();
+  const segmentsOptions = segments.items
+    ? segments.items.map((p) => ({ label: p.name, value: `${p.id}` }))
+    : [];
+  const segmentFlag = useFeatureFlag("segments", true);
+
   const [selectedItems, setSelectedItems] = React.useState();
+  const [selectedAudiences, setSelectedAudiences] = React.useState();
   const [recommender, setRecommender] = React.useState({
     commonId: "",
     name: "",
     itemIds: null,
+    segmentIds: null,
     baselinePromotionId: "",
     numberOfItemsToRecommend: null,
     useAutoAi: true,
     targetMetricId: "",
     targetType: "customer",
   });
+
+  const forCustomer = recommender.targetType === "customer";
 
   React.useEffect(() => {
     if (startingItem.commonId) {
@@ -231,6 +243,31 @@ export const CreateRecommender = () => {
           options={targetTypeOptions}
         />
       </div>
+      {segmentFlag && (
+        <div className="mt-2 mb-2">
+          Audience
+          {!segments.loading && (
+            <Selector
+              isMulti
+              isSearchable
+              isDisabled={!forCustomer}
+              placeholder="Select segments."
+              noOptionsMessage={(inputValue) =>
+                `No segments found matching ${inputValue}`
+              }
+              defaultValue={selectedAudiences}
+              onChange={(so) => {
+                setSelectedAudiences(so);
+                setRecommender({
+                  ...recommender,
+                  segmentIds: so.map((o) => o.value),
+                });
+              }}
+              options={segmentsOptions}
+            />
+          )}
+        </div>
+      )}
 
       <AdvancedOptionsPanel>
         <SettingRow label="Use Auto-AI">

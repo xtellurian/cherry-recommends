@@ -756,7 +756,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HistoricCustomerMetric"
+                  "$ref": "#/components/schemas/BusinessMetricValue"
                 }
               }
             }
@@ -8101,6 +8101,45 @@
         }
       }
     },
+    "/api/recommenders/ParameterSetRecommenders/{id}/Audience": {
+      "get": {
+        "tags": [
+          "ParameterSetRecommenders"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Audience"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/recommenders/ParameterSetRecommenders/{id}": {
       "get": {
         "tags": [
@@ -13400,6 +13439,84 @@
         }
       }
     },
+    "/api/recommenders/ItemsRecommenders/{id}/Audience": {
+      "get": {
+        "tags": [
+          "PromotionsRecommenders"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Audience"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommenders/PromotionsRecommenders/{id}/Audience": {
+      "get": {
+        "tags": [
+          "PromotionsRecommenders"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Audience"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/recommenders/ItemsRecommenders/{id}/name": {
       "post": {
         "tags": [
@@ -13863,6 +13980,326 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Segments/{id}/MetricEnrolmentRules": {
+      "post": {
+        "tags": [
+          "SegmentMetricEnrolmentRules"
+        ],
+        "summary": "Adds a metric based enrolment rule for the Segment.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMetricEnrolmentRuleDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMetricEnrolmentRuleDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMetricEnrolmentRuleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricEnrolmentRule"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "SegmentMetricEnrolmentRules"
+        ],
+        "summary": "Gets all metric enrolment rules.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricEnrolmentRulePaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Segments/{id}/MetricEnrolmentRules/{ruleId}": {
+      "delete": {
+        "tags": [
+          "SegmentMetricEnrolmentRules"
+        ],
+        "summary": "Deletes a Metric Enrolment Rule.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "SegmentMetricEnrolmentRules"
+        ],
+        "summary": "Runs the rule.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "preview",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnrolmentReport"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "SegmentMetricEnrolmentRules"
+        ],
+        "summary": "Get the rule.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnrolmentRule"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Segments/{id}/MetricEnrolmentRules/{ruleId}/Trigger": {
+      "post": {
+        "tags": [
+          "SegmentMetricEnrolmentRules"
+        ],
+        "summary": "Triggers the enrolmnet rule to run.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "preview",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
             }
           }
         ],
@@ -14764,6 +15201,38 @@
         ],
         "type": "string"
       },
+      "Audience": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recommenderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "recommender": {
+            "$ref": "#/components/schemas/RecommenderEntityBase"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Auth0ReactConfig": {
         "type": "object",
         "properties": {
@@ -14995,6 +15464,62 @@
         },
         "additionalProperties": false
       },
+      "BusinessMetricValue": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metricId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "feature": {
+            "$ref": "#/components/schemas/Metric"
+          },
+          "metric": {
+            "$ref": "#/components/schemas/Metric"
+          },
+          "numericValue": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "stringValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "nullable": true,
+            "readOnly": true
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "discriminator": {
+            "type": "string",
+            "nullable": true
+          },
+          "businessId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "business": {
+            "$ref": "#/components/schemas/Business"
+          }
+        },
+        "additionalProperties": false
+      },
       "BusinessPaginated": {
         "type": "object",
         "properties": {
@@ -15024,6 +15549,27 @@
           }
         },
         "additionalProperties": false
+      },
+      "CategoricalPredicate": {
+        "type": "object",
+        "properties": {
+          "predicateOperator": {
+            "$ref": "#/components/schemas/CategoricalPredicateOperators"
+          },
+          "compareTo": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoricalPredicateOperators": {
+        "enum": [
+          "none",
+          "equal",
+          "notEqual"
+        ],
+        "type": "string"
       },
       "CheckistItem": {
         "type": "object",
@@ -15220,6 +15766,25 @@
         },
         "additionalProperties": false
       },
+      "CreateMetricEnrolmentRuleDto": {
+        "required": [
+          "metricId"
+        ],
+        "type": "object",
+        "properties": {
+          "metricId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "numericPredicate": {
+            "$ref": "#/components/schemas/NumericPredicate"
+          },
+          "categoricalPredicate": {
+            "$ref": "#/components/schemas/CategoricalPredicate"
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateMetricGenerator": {
         "required": [
           "generatorType",
@@ -15387,6 +15952,14 @@
             "type": "string",
             "nullable": true
           },
+          "segmentIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "nullable": true
+          },
           "parameters": {
             "type": "array",
             "items": {
@@ -15503,6 +16076,14 @@
           },
           "targetMetricId": {
             "type": "string",
+            "nullable": true
+          },
+          "segmentIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
             "nullable": true
           },
           "itemIds": {
@@ -15764,6 +16345,10 @@
           "weeklyDistinctCustomerCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "weeklyDistinctBusinessCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -15792,6 +16377,10 @@
             "format": "int32"
           },
           "weeklyDistinctCustomerCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weeklyDistinctBusinessCount": {
             "type": "integer",
             "format": "int32"
           }
@@ -15926,6 +16515,66 @@
         "properties": {
           "get": {
             "$ref": "#/components/schemas/Get"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EnrolmentReport": {
+        "type": "object",
+        "properties": {
+          "segmentId": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true
+          },
+          "ruleId": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true
+          },
+          "rule": {
+            "$ref": "#/components/schemas/EnrolmentRule"
+          },
+          "customersEnrolled": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EnrolmentRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "discriminator": {
+            "type": "string",
+            "nullable": true
+          },
+          "segmentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastEnqueued": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastCompleted": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -16316,7 +16965,7 @@
             "type": "string",
             "nullable": true
           },
-          "trackedUserId": {
+          "customerId": {
             "type": "integer",
             "format": "int64"
           },
@@ -17073,6 +17722,10 @@
           "customerCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "businessCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -17085,6 +17738,10 @@
             "nullable": true
           },
           "customerCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "businessCount": {
             "type": "integer",
             "format": "int32"
           }
@@ -17135,6 +17792,73 @@
           "discriminator": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MetricEnrolmentRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "discriminator": {
+            "type": "string",
+            "nullable": true
+          },
+          "segmentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastEnqueued": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastCompleted": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "metricId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "metric": {
+            "$ref": "#/components/schemas/Metric"
+          },
+          "numericPredicate": {
+            "$ref": "#/components/schemas/NumericPredicate"
+          },
+          "categoricalPredicate": {
+            "$ref": "#/components/schemas/CategoricalPredicate"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MetricEnrolmentRulePaginated": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MetricEnrolmentRule"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationInfo"
           }
         },
         "additionalProperties": false
@@ -17475,6 +18199,31 @@
           }
         },
         "additionalProperties": false
+      },
+      "NumericPredicate": {
+        "type": "object",
+        "properties": {
+          "predicateOperator": {
+            "$ref": "#/components/schemas/NumericPredicateOperators"
+          },
+          "compareTo": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NumericPredicateOperators": {
+        "enum": [
+          "none",
+          "equal",
+          "notEqual",
+          "greaterThan",
+          "lessThan",
+          "greaterThanOrEqualTo",
+          "lessThanOrEqualTo"
+        ],
+        "type": "string"
       },
       "ObjectPaginated": {
         "type": "object",

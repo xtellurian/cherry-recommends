@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 
 import {
+  useAudience,
   usePromotionsRecommender,
   useReportImageBlobUrl,
 } from "../../../api-hooks/promotionsRecommendersApi";
@@ -25,6 +26,8 @@ import { CloneRecommender } from "../utils/CloneRecommender";
 import { GettingStartedSection } from "./GettingStartedSection";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import { ViewReportImagePopup } from "../utils/ViewImagePopup";
+import { SegmentRow } from "../../segments/SegmentRow";
+import { useFeatureFlag } from "../../launch-darkly/hooks";
 
 export const ItemRecommenderClone = ({ iconClassName }) => {
   const { id } = useParams();
@@ -159,6 +162,13 @@ const RecommenderDetailSection = () => {
   const [reportOpen, setReportOpen] = React.useState(false);
   const [trigger, setTrigger] = React.useState();
   const recommender = usePromotionsRecommender({ id, trigger });
+  const audience = useAudience({ id, trigger });
+  const segmentFlag = useFeatureFlag("segments", true);
+
+  const targetPlurals = {
+    customer: "customers",
+    business: "businesses",
+  };
 
   return (
     <React.Fragment>
@@ -229,21 +239,41 @@ const RecommenderDetailSection = () => {
 
       <hr />
 
-      <div className="mt-5">
-        <div className="mb-4">
-          <Navigation
-            to={`/recommenders/promotions-recommenders/manage-items/${id}`}
-          >
-            <button className="float-right btn btn-outline-primary">
-              Manage Promotions
-            </button>
-          </Navigation>
-          <Subtitle>Associated Promotions</Subtitle>
+      <div className="row mb-3">
+        <div className="col">
+          <div className="mb-4">
+            <Navigation
+              to={`/recommenders/promotions-recommenders/manage-items/${id}`}
+            >
+              <button className="float-right btn btn-outline-primary">
+                Manage Promotions
+              </button>
+            </Navigation>
+            <Subtitle>Associated Promotions</Subtitle>
+          </div>
+          {recommender.items &&
+            recommender.items.map((i) => <ItemRow item={i} key={i.id} />)}
+          {recommender.items && recommender.items.length === 0 && (
+            <EmptyList>This recommender works with all promotions.</EmptyList>
+          )}
         </div>
-        {recommender.items &&
-          recommender.items.map((i) => <ItemRow item={i} key={i.id} />)}
-        {recommender.items && recommender.items.length === 0 && (
-          <EmptyList>This recommender works with all promotions.</EmptyList>
+        {segmentFlag && (
+          <div className="col">
+            <div className="mb-4">
+              <Subtitle>Associated Audience</Subtitle>
+            </div>
+            {audience.segments &&
+              audience.segments.map((i) => (
+                <SegmentRow segment={i} key={i.id} />
+              ))}
+            {(!audience.segments ||
+              (audience.segments && audience.segments.length === 0)) && (
+              <EmptyList>
+                This recommender works with all{" "}
+                {targetPlurals[recommender.targetType]}.
+              </EmptyList>
+            )}
+          </div>
         )}
       </div>
     </React.Fragment>

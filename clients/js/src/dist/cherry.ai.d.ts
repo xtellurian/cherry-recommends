@@ -195,6 +195,14 @@ interface components {
         };
         ApiKeyTypes: "server" | "web";
         ArgumentTypes: "numerical" | "categorical";
+        Audience: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            recommenderId?: number;
+            recommender?: components["schemas"]["RecommenderEntityBase"];
+            segments?: components["schemas"]["Segment"][] | null;
+        };
         Auth0ReactConfig: {
             defaultAudience?: string | null;
             audience?: string | null;
@@ -262,6 +270,21 @@ interface components {
             business?: components["schemas"]["Business"];
             customerId?: number;
         };
+        BusinessMetricValue: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            metricId?: number;
+            feature?: components["schemas"]["Metric"];
+            metric?: components["schemas"]["Metric"];
+            numericValue?: number | null;
+            stringValue?: string | null;
+            value?: unknown | null;
+            version?: number;
+            discriminator?: string | null;
+            businessId?: number;
+            business?: components["schemas"]["Business"];
+        };
         BusinessPaginated: {
             items?: components["schemas"]["Business"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
@@ -269,6 +292,11 @@ interface components {
         CategoricalParameterBounds: {
             categories?: string[] | null;
         };
+        CategoricalPredicate: {
+            predicateOperator?: components["schemas"]["CategoricalPredicateOperators"];
+            compareTo?: string | null;
+        };
+        CategoricalPredicateOperators: "none" | "equal" | "notEqual";
         CheckistItem: {
             complete?: boolean | null;
             current?: boolean | null;
@@ -316,6 +344,11 @@ interface components {
             valueType: components["schemas"]["MetricValueType"];
             scope: components["schemas"]["MetricScopes"];
         };
+        CreateMetricEnrolmentRuleDto: {
+            metricId: number;
+            numericPredicate?: components["schemas"]["NumericPredicate"];
+            categoricalPredicate?: components["schemas"]["CategoricalPredicate"];
+        };
         CreateMetricGenerator: {
             featureCommonId?: string | null;
             metricCommonId: string;
@@ -360,6 +393,7 @@ interface components {
             settings?: components["schemas"]["RecommenderSettingsDto"];
             arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
             targetMetricId?: string | null;
+            segmentIds?: number[] | null;
             parameters?: string[] | null;
             bounds?: components["schemas"]["ParameterBounds"][] | null;
         };
@@ -387,6 +421,7 @@ interface components {
             settings?: components["schemas"]["RecommenderSettingsDto"];
             arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
             targetMetricId?: string | null;
+            segmentIds?: number[] | null;
             itemIds?: string[] | null;
             defaultItemId?: string | null;
             baselineItemId?: string | null;
@@ -456,6 +491,7 @@ interface components {
             metricId?: number;
             weeklyMeanNumericValue?: number;
             weeklyDistinctCustomerCount?: number;
+            weeklyDistinctBusinessCount?: number;
         };
         CustomerMetricWeeklyStringAggregate: {
             firstOfWeek?: string;
@@ -464,6 +500,7 @@ interface components {
             stringValue?: string | null;
             weeklyValueCount?: number;
             weeklyDistinctCustomerCount?: number;
+            weeklyDistinctBusinessCount?: number;
         };
         CustomerPaginated: {
             items?: components["schemas"]["Customer"][] | null;
@@ -505,6 +542,21 @@ interface components {
         };
         Empty: {
             get?: components["schemas"]["Get"];
+        };
+        EnrolmentReport: {
+            segmentId?: number;
+            ruleId?: number;
+            rule?: components["schemas"]["EnrolmentRule"];
+            customersEnrolled?: number;
+        };
+        EnrolmentRule: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            discriminator?: string | null;
+            segmentId?: number;
+            lastEnqueued?: string | null;
+            lastCompleted?: string | null;
         };
         Environment: {
             id?: number;
@@ -611,7 +663,7 @@ interface components {
             value?: unknown | null;
             version?: number;
             discriminator?: string | null;
-            trackedUserId?: number;
+            customerId?: number;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
         };
@@ -811,10 +863,12 @@ interface components {
             binWidth?: number;
             binRange?: string | null;
             customerCount?: number;
+            businessCount?: number;
         };
         MetricDailyBinValueString: {
             stringValue?: string | null;
             customerCount?: number;
+            businessCount?: number;
         };
         MetricDestinationBase: {
             id?: number;
@@ -829,6 +883,23 @@ interface components {
             connectedSystemId?: number;
             connectedSystem?: components["schemas"]["IntegratedSystem"];
             discriminator?: string | null;
+        };
+        MetricEnrolmentRule: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            discriminator?: string | null;
+            segmentId?: number;
+            lastEnqueued?: string | null;
+            lastCompleted?: string | null;
+            metricId?: number | null;
+            metric?: components["schemas"]["Metric"];
+            numericPredicate?: components["schemas"]["NumericPredicate"];
+            categoricalPredicate?: components["schemas"]["CategoricalPredicate"];
+        };
+        MetricEnrolmentRulePaginated: {
+            items?: components["schemas"]["MetricEnrolmentRule"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
         };
         MetricGenerator: {
             id?: number;
@@ -914,6 +985,11 @@ interface components {
             min?: number;
             max?: number;
         };
+        NumericPredicate: {
+            predicateOperator?: components["schemas"]["NumericPredicateOperators"];
+            compareTo?: number;
+        };
+        NumericPredicateOperators: "none" | "equal" | "notEqual" | "greaterThan" | "lessThan" | "greaterThanOrEqualTo" | "lessThanOrEqualTo";
         ObjectPaginated: {
             items?: unknown[] | null;
             pagination?: components["schemas"]["PaginationInfo"];
@@ -1902,6 +1978,8 @@ interface CreatePromotionsRecommenderRequest extends AuthenticatedRequest {
 }
 declare const createPromotionsRecommenderAsync: ({ token, payload, useInternalId, }: CreatePromotionsRecommenderRequest) => Promise<any>;
 declare const fetchPromotionsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
+declare type Audience = components["schemas"]["Audience"];
+declare const fetchAudienceAsync: ({ token, id, }: EntityRequest) => Promise<Audience>;
 interface AddPromotionPayload {
     id: number | undefined;
     commonId: string | undefined;
@@ -1997,6 +2075,7 @@ declare const promotionsRecommendersApi_d_fetchPromotionsRecommenderAsync: typeo
 declare const promotionsRecommendersApi_d_fetchPromotionsRecommendationsAsync: typeof fetchPromotionsRecommendationsAsync;
 declare const promotionsRecommendersApi_d_deletePromotionsRecommenderAsync: typeof deletePromotionsRecommenderAsync;
 declare const promotionsRecommendersApi_d_createPromotionsRecommenderAsync: typeof createPromotionsRecommenderAsync;
+declare const promotionsRecommendersApi_d_fetchAudienceAsync: typeof fetchAudienceAsync;
 declare const promotionsRecommendersApi_d_addPromotionAsync: typeof addPromotionAsync;
 declare const promotionsRecommendersApi_d_removePromotionAsync: typeof removePromotionAsync;
 declare const promotionsRecommendersApi_d_setBaselinePromotionAsync: typeof setBaselinePromotionAsync;
@@ -2011,6 +2090,7 @@ declare namespace promotionsRecommendersApi_d {
     promotionsRecommendersApi_d_deletePromotionsRecommenderAsync as deletePromotionsRecommenderAsync,
     promotionsRecommendersApi_d_createPromotionsRecommenderAsync as createPromotionsRecommenderAsync,
     fetchPromotionsAsync$1 as fetchPromotionsAsync,
+    promotionsRecommendersApi_d_fetchAudienceAsync as fetchAudienceAsync,
     promotionsRecommendersApi_d_addPromotionAsync as addPromotionAsync,
     promotionsRecommendersApi_d_removePromotionAsync as removePromotionAsync,
     promotionsRecommendersApi_d_setBaselinePromotionAsync as setBaselinePromotionAsync,

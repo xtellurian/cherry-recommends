@@ -99,6 +99,17 @@ export const fetchPromotionsAsync = async ({ token, id }: EntityRequest) => {
   });
 };
 
+type Audience = components["schemas"]["Audience"];
+export const fetchAudienceAsync = async ({
+  token,
+  id,
+}: EntityRequest): Promise<Audience> => {
+  return await executeFetch({
+    path: `api/recommenders/PromotionsRecommenders/${id}/Audience`,
+    token,
+  });
+};
+
 interface AddPromotionPayload {
   id: number | undefined;
   commonId: string | undefined;

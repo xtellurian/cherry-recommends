@@ -57,7 +57,7 @@ namespace SignalBox.Core.Workflows
                                                   true,
                                                   from.TargetMetric?.CommonId,
                                                   from.TargetType,
-                                                  useInternalId: true);
+                                                  useInternalId: false);
         }
 
         public async Task<RecommenderStatistics> CalculateStatistics(ItemsRecommender recommender)

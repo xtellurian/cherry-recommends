@@ -14,6 +14,7 @@ import {
   fetchLearningMetricsAsync,
   fetchReportImageBlobUrlAsync,
   fetchPerformanceAsync,
+  fetchAudienceAsync,
 } from "../api/promotionsRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -268,6 +269,24 @@ export const usePerformance = ({ id, trigger }) => {
     setState({ loading: true });
     if (token) {
       fetchPerformanceAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useAudience = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchAudienceAsync({
         token,
         id,
       })

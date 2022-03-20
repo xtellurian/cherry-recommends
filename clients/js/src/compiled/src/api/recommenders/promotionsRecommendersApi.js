@@ -53,6 +53,12 @@ export const fetchPromotionsAsync = async ({ token, id }) => {
         token,
     });
 };
+export const fetchAudienceAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        path: `api/recommenders/PromotionsRecommenders/${id}/Audience`,
+        token,
+    });
+};
 export const addPromotionAsync = async ({ token, id, promotion, }) => {
     return await executeFetch({
         path: `api/recommenders/PromotionsRecommenders/${id}/Promotions`,

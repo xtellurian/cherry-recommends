@@ -12,6 +12,8 @@ interface CreatePromotionsRecommenderRequest extends AuthenticatedRequest {
 }
 export declare const createPromotionsRecommenderAsync: ({ token, payload, useInternalId, }: CreatePromotionsRecommenderRequest) => Promise<any>;
 export declare const fetchPromotionsAsync: ({ token, id }: EntityRequest) => Promise<any>;
+declare type Audience = components["schemas"]["Audience"];
+export declare const fetchAudienceAsync: ({ token, id, }: EntityRequest) => Promise<Audience>;
 interface AddPromotionPayload {
     id: number | undefined;
     commonId: string | undefined;
