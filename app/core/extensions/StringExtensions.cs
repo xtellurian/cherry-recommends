@@ -56,7 +56,7 @@ namespace SignalBox.Core
                 }
                 else if (char.IsNumber(c))
                 {
-                    return true;
+                    continue;
                 }
                 else if (symbols.Contains(c))
                 {

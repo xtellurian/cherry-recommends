@@ -32,6 +32,7 @@ namespace SignalBox.Test.Entities
         [InlineData("symbol")]
         [InlineData("quitealongcustomerid")]
         [InlineData("underscore_and-hyphen")]
+        [InlineData("allcombi-_|123")]
         public void CreateCustomer_GoodCustomerId(string customerId)
         {
             var customer = new Customer(customerId);
