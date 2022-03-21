@@ -30,7 +30,7 @@ export const AsyncSelectCustomer = ({ onChange, placeholder }) => {
   return (
     <AsyncSelector
       defaultOptions={trackedUsersSelectable}
-      placeholder={placeholder || "Search for a user."}
+      placeholder={placeholder || "Search for a Customer."}
       cacheOptions
       loadOptions={loadUsers}
       onChange={onChange}

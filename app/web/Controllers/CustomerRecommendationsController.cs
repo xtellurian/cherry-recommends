@@ -17,29 +17,28 @@ namespace SignalBox.Web.Controllers
     [Route("api/Customers")]
     public class CustomerRecommendationsController : SignalBoxControllerBase
     {
-        private readonly ILogger<CustomerRecommendationsController> logger;
         private readonly IItemsRecommendationStore itemsRecommendationStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
         private readonly ICustomerStore customerStore;
 
-        public CustomerRecommendationsController(ILogger<CustomerRecommendationsController> logger,
-                                                    IItemsRecommendationStore itemsRecommendationStore,
-                                                    IParameterSetRecommendationStore parameterSetRecommendationStore,
-                                                    ICustomerStore customerStore)
+        public CustomerRecommendationsController(IItemsRecommendationStore itemsRecommendationStore,
+                                                 IParameterSetRecommendationStore parameterSetRecommendationStore,
+                                                 ICustomerStore customerStore)
         {
-            this.logger = logger;
             this.itemsRecommendationStore = itemsRecommendationStore;
             this.parameterSetRecommendationStore = parameterSetRecommendationStore;
             this.customerStore = customerStore;
         }
 
-        /// <summary>Gets recent recommendations for a tracked user.</summary>
+        /// <summary>Gets recent recommendations for a Customer.</summary>
         [HttpGet("{id}/latest-recommendations")]
         public async Task<Paginated<object>> GetRecommendations([FromQuery] PaginateRequest p, string id, bool? useInternalId = null)
         {
             var customer = await customerStore.GetEntity(id, useInternalId);
-            var parameterSetRecommendations = await parameterSetRecommendationStore.Query(1, _ => _.CustomerId == customer.Id);
-            var itemsRecommendations = await itemsRecommendationStore.Query(new EntityStoreQueryOptions<ItemsRecommendation>(1, _ => _.CustomerId == _.CustomerId));
+            var parameterSetRecommendations = await parameterSetRecommendationStore.Query(
+                new EntityStoreQueryOptions<ParameterSetRecommendation>(p.Page, _ => _.CustomerId == customer.Id));
+            var itemsRecommendations = await itemsRecommendationStore.Query(
+                new EntityStoreQueryOptions<ItemsRecommendation>(p.Page, _ => _.CustomerId == customer.Id));
             var recommendations = new List<RecommendationEntity>();
             recommendations.AddRange(parameterSetRecommendations.Items);
             recommendations.AddRange(itemsRecommendations.Items);

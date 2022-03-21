@@ -36,6 +36,17 @@ import { useCommonId } from "../../../utility/utility";
 import { useSegments } from "../../../api-hooks/segmentsApi";
 import { useFeatureFlag } from "../../launch-darkly/hooks";
 
+const InputLabel = ({ children, required }) => {
+  return (
+    <div>
+      {children}{" "}
+      <label className="text-muted">
+        ({required ? "Required" : "Optional"})
+      </label>
+    </div>
+  );
+};
+
 const targetTypeOptions = [
   {
     value: "customer",
@@ -76,7 +87,7 @@ export const CreateRecommender = () => {
   const [recommender, setRecommender] = React.useState({
     commonId: "",
     name: "",
-    itemIds: null,
+    itemIds: [],
     segmentIds: null,
     baselinePromotionId: "",
     numberOfItemsToRecommend: null,
@@ -148,53 +159,49 @@ export const CreateRecommender = () => {
       <Title>Create Promotion Recommender</Title>
       <hr />
       {error && <ErrorCard error={error} />}
-      <Container>
-        <Row className="mb-1">
-          <InputGroup>
-            <TextInput
-              label="Display Name"
-              hint="Choose a name for this recommender."
-              validator={joinValidators([
-                createRequiredByServerValidator(error),
-                createServerErrorValidator("Name", error),
-                createLengthValidator(4),
-              ])}
-              value={recommender.name}
-              placeholder="A memorable name that you recognise later."
-              onChange={(e) =>
-                setRecommender({
-                  ...recommender,
-                  name: e.target.value,
-                })
-              }
-            />
-          </InputGroup>
-        </Row>
-        <Row className="mb-1">
-          <InputGroup>
-            <TextInput
-              label="Common Id"
-              hint="An unique ID that you'll use to reference this recommender."
-              value={recommender.commonId}
-              placeholder="A unique ID for this recommender resource."
-              validator={joinValidators([
-                createRequiredByServerValidator(error),
-                commonIdValidator,
-                createServerErrorValidator("CommonId", error),
-              ])}
-              onChange={(e) =>
-                setRecommender({
-                  ...recommender,
-                  commonId: e.target.value,
-                })
-              }
-            />
-          </InputGroup>
-        </Row>
-      </Container>
+
+      <InputGroup>
+        <TextInput
+          label="Display Name"
+          hint="Choose a name for this recommender."
+          validator={joinValidators([
+            createRequiredByServerValidator(error),
+            createServerErrorValidator("Name", error),
+            createLengthValidator(4),
+          ])}
+          value={recommender.name}
+          placeholder="A memorable name that you recognise later."
+          onChange={(e) =>
+            setRecommender({
+              ...recommender,
+              name: e.target.value,
+            })
+          }
+        />
+      </InputGroup>
+
+      <InputGroup>
+        <TextInput
+          label="Common Id"
+          hint="An unique ID that you'll use to reference this recommender."
+          value={recommender.commonId}
+          placeholder="A unique ID for this recommender resource."
+          validator={joinValidators([
+            createRequiredByServerValidator(error),
+            commonIdValidator,
+            createServerErrorValidator("CommonId", error),
+          ])}
+          onChange={(e) =>
+            setRecommender({
+              ...recommender,
+              commonId: e.target.value,
+            })
+          }
+        />
+      </InputGroup>
 
       <div className="mt-2">
-        Baseline Promotion
+        <InputLabel required>Baseline Promotion</InputLabel>
         {!startingItem.loading && (
           <Selector
             isSearchable
@@ -212,10 +219,11 @@ export const CreateRecommender = () => {
         )}
       </div>
       <div className="mt-2 mb-2">
+        <InputLabel required>Promotions</InputLabel>
         <Selector
           isMulti
           isSearchable
-          placeholder="Select promotions. Leave empty to include all."
+          placeholder="Select promotions."
           noOptionsMessage={(inputValue) =>
             `No promotions found matching ${inputValue}`
           }
@@ -231,7 +239,7 @@ export const CreateRecommender = () => {
         />
       </div>
       <div className="mt-2 mb-2">
-        <label>For Customers or Businesses</label>
+        <InputLabel required>Target</InputLabel>
         <Selector
           defaultValue={targetTypeOptions[0]}
           onChange={(o) => {
@@ -245,7 +253,8 @@ export const CreateRecommender = () => {
       </div>
       {segmentFlag && (
         <div className="mt-2 mb-2">
-          Audience
+          <InputLabel>Audience</InputLabel>
+
           {!segments.loading && (
             <Selector
               isMulti

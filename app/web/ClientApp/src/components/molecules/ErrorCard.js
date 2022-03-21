@@ -8,20 +8,26 @@ export const ErrorCard = ({ error }) => {
   }
   const validationErrorList = [];
   if (error.errors) {
-    for (const [label, errorMessage] of Object.entries(error.errors)) {
-      if (typeof errorMessage === "string") {
-        validationErrorList.push({
-          label,
-          message: errorMessage,
-        });
-      } else if (
-        errorMessage.message &&
-        typeof errorMessage.message === "string"
-      ) {
-        validationErrorList.push({
-          label,
-          message: errorMessage.message,
-        });
+    if (Array.isArray(error.errors)) {
+      for (const e of error.errors) {
+        validationErrorList.push(e);
+      }
+    } else {
+      for (const [label, errorMessage] of Object.entries(error.errors)) {
+        if (typeof errorMessage === "string") {
+          validationErrorList.push({
+            label,
+            message: errorMessage,
+          });
+        } else if (
+          errorMessage.message &&
+          typeof errorMessage.message === "string"
+        ) {
+          validationErrorList.push({
+            label,
+            message: errorMessage.message,
+          });
+        }
       }
     }
   }
@@ -33,14 +39,18 @@ export const ErrorCard = ({ error }) => {
     default:
       headerClassName = "bg-warning";
   }
+  let title = error.title ? error.title : "Error";
+  if (validationErrorList.length > 0) {
+    const extra =
+      validationErrorList[0].label ?? validationErrorList[0].message;
+    title = `${title} - ${extra}`;
+  }
+
   return (
     <React.Fragment>
-      <ExpandableCard
-        label={error.title || "Error"}
-        headerClassName={headerClassName}
-      >
+      <ExpandableCard label={title} headerClassName={headerClassName}>
         {validationErrorList.map((e) => (
-          <div key={e.label}>
+          <div key={e.label ?? e.message}>
             <strong>{e.label}:</strong>
             {e.message}
           </div>

@@ -3,7 +3,7 @@ import { EmojiHeartEyes } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
 
 import FlexRow from "../molecules/layout/EntityFlexRow";
-import { tabs } from "./items-recommenders/ItemsRecommenderPrimaryNav";
+import { tabs } from "./promotions-recommenders/ItemsRecommenderPrimaryNav";
 
 export const RecommenderRow = ({ recommender, children }) => {
   const history = useHistory();

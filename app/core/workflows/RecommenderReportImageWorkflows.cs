@@ -3,7 +3,7 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core.Workflows
 {
-    public class RecommenderReportImageWorkflows : IWorkflow
+    public class RecommenderReportImageWorkflows : IRecommenderReportImageWorkflow, IWorkflow
     {
         private readonly IRecommenderImageFileStore fileStore;
         private readonly ITenantProvider tenantProvider;

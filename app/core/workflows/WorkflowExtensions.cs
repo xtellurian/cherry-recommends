@@ -25,7 +25,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<HubspotPushWorkflows>();
             services.AddScoped<ParameterWorkflows>();
             services.AddScoped<ParameterSetRecommenderWorkflows>();
-            services.AddScoped<ItemsRecommenderWorkflows>();
+            services.AddScoped<PromotionsRecommenderWorkflows>();
             services.AddScoped<ItemsRecommenderPerformanceWorkflows>();
             services.AddScoped<BusinessWorkflows>();
             services.AddScoped<BusinessMetricGeneratorWorkflow>();
@@ -33,7 +33,6 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<SegmentEnrolmentWorkflow>();
             // images and blob reports
             services.AddScoped<ReportWorkflows>();
-            services.AddScoped<RecommenderReportImageWorkflows>();
 
             // model invokation
             services.AddScoped<GenericModelWorkflows>();
@@ -41,7 +40,6 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ItemsRecommenderInvokationWorkflows>();
             services.AddScoped<ParameterSetRecommenderInvokationWorkflows>();
 
-            services.AddScoped<RecommenderTriggersWorkflows>();
             services.AddScoped<AggregateCustomerMetricWorkflow>();
 
             // also register any interfaces that are implemented by workflows
@@ -49,6 +47,8 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ICustomerEventsWorkflow, CustomerEventsWorkflows>();
             services.AddScoped<IBusinessWorkflow, BusinessWorkflows>();
             services.AddScoped<ICustomerSegmentWorkflow, CustomerSegmentWorkflows>();
+            services.AddScoped<IRecommenderReportImageWorkflow, RecommenderReportImageWorkflows>();
+            services.AddScoped<IRecommenderMetricTriggersWorkflow, RecommenderTriggersWorkflows>();
             return services;
         }
     }

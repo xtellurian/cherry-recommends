@@ -17,7 +17,7 @@ namespace SignalBox.Core.Workflows
         public MetricWorkflows(IMetricStore metricStore,
                                    IHistoricCustomerMetricStore customerMetricStore,
                                    IIntegratedSystemStore systemStore,
-                                   RecommenderTriggersWorkflows triggersWorkflows,
+                                   IRecommenderMetricTriggersWorkflow triggersWorkflows,
                                    HubspotPushWorkflows hubspotPushWorkflows,
                                    IWebhookSenderClient webhookSenderClient,
                                    ICustomerStore trackedUserStore,

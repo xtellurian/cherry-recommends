@@ -14,13 +14,13 @@ namespace SignalBox.Core.Recommenders
         public ItemsRecommender(string commonId,
                                 string? name,
                                 RecommendableItem? baselineItem,
-                                ICollection<RecommendableItem>? items,
+                                ICollection<RecommendableItem> promotions,
                                 IEnumerable<RecommenderArgument>? arguments,
                                 RecommenderSettings? settings,
                                 Metric? targetMetric,
                                 int numberOfItemsToRecommend = 1) : base(commonId, name, arguments, settings)
         {
-            Items = items ?? new List<RecommendableItem>();
+            Items = promotions;
             BaselineItem = baselineItem;
             BaselineItemId = baselineItem?.Id;
             TargetMetric = targetMetric;

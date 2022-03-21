@@ -17,6 +17,17 @@ namespace SignalBox.Web.Dto
             }
             return id;
         }
+
+        public override void Validate()
+        {
+            base.Validate();
+            if (ItemIds.IsNullOrEmpty())
+            {
+                throw new BadRequestException("ItemIds must contain at least one promotion ID");
+            }
+        }
+
+        [Required]
         public IEnumerable<string>? ItemIds { get; set; }
         public string? DefaultItemId { get; set; } // backwards compat only
         public string? BaselineItemId { get; set; } // backwards compat only

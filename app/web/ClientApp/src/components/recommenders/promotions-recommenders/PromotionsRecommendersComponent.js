@@ -3,7 +3,7 @@ import { Switch, useRouteMatch } from "react-router-dom";
 
 import AuthorizeRoute from "../../auth0/ProtectedRoute";
 import { ItemsRecommendersSummary } from "./ItemsRecommendersSummary";
-import { CreateRecommender } from "./CreateItemsRecommender";
+import { CreateRecommender } from "./CreatePromotionsRecommender";
 import { RecommenderDetail } from "./ItemsRecommenderDetail";
 import { TestRecommender } from "./TestItemsRecommender";
 import { LinkToModel } from "./LinkToModel";
@@ -20,7 +20,7 @@ import { Overview } from "./Overview";
 import Performance from "./ItemRecommenderPerformance";
 import { Advanced } from "./Advanced";
 
-export const ItemsRecommendersComponent = () => {
+export const PromotionsRecommendersComponent = () => {
   const { path } = useRouteMatch();
 
   return (

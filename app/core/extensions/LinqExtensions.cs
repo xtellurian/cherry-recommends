@@ -4,12 +4,13 @@ using System.Linq;
 
 namespace SignalBox.Core
 {
+#nullable enable
     public static class LinqExtensions
     {
         public static IEnumerable<IEnumerable<TSource>> Batch<TSource>(
                   this IEnumerable<TSource> source, int size)
         {
-            TSource[] bucket = null;
+            TSource[]? bucket = null;
             var count = 0;
 
             foreach (var item in source)
@@ -31,7 +32,7 @@ namespace SignalBox.Core
                 yield return bucket.Take(count).ToArray();
         }
 
-        private static Random rng = new Random();
+        private static readonly Random rng = new Random();
 
         public static void Shuffle<T>(this IList<T> list)
         {
@@ -59,6 +60,11 @@ namespace SignalBox.Core
                 result[item] += 1;
             }
             return result;
+        }
+
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T>? collection)
+        {
+            return collection == null || !collection.Any();
         }
     }
 }

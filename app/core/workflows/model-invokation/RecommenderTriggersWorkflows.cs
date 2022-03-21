@@ -7,7 +7,7 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core.Workflows
 {
-    public class RecommenderTriggersWorkflows : IWorkflow
+    public class RecommenderTriggersWorkflows : IRecommenderMetricTriggersWorkflow, IWorkflow
     {
         private readonly ILogger<RecommenderTriggersWorkflows> logger;
         private readonly ITelemetry telemetry;

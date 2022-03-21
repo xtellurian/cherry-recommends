@@ -20,7 +20,7 @@ namespace SignalBox.Core.Workflows
             ICustomerEventStore trackedUserEventStore,
             IMetricGeneratorStore metricGeneratorStore,
             IHistoricCustomerMetricStore customerMetricStore,
-            RecommenderTriggersWorkflows triggersWorkflows,
+            IRecommenderMetricTriggersWorkflow triggersWorkflows,
             FilterSelectAggregateWorkflow aggregateWorkflow,
             HubspotPushWorkflows hubspotPushWorkflows,
             IWebhookSenderClient webhookSenderClient,

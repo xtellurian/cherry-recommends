@@ -24,13 +24,13 @@ export const GettingStartedSection = ({ recommender }) => {
               <NoteBox label="Use recommendations">
                 <p>
                   To use this recommender, you can send recommendations to an
-                  Integrated System, or by using the Javascript SDK.
+                  Integrated System via a channel.
                 </p>
                 <Link
-                  to={`/recommenders/promotions-recommenders/destinations/${recommender.id}`}
+                  to={`/recommenders/promotions-recommenders/advanced/${recommender.id}?tab=advanced`}
                 >
                   <button className="btn btn-outline-primary">
-                    Add a destination
+                    Add a destination channel
                   </button>
                 </Link>
               </NoteBox>

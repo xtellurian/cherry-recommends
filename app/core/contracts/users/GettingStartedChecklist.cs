@@ -20,47 +20,36 @@ namespace SignalBox.Core.Internal
                 }
             },
             {
-                20,
+                21,
                 new CheckistItem
                 {
-                    label= "Create an item",
-                    description= "Add any promotions, offers, features, or content you want to show to your customers.",
-                    actionTo= "/recommendable-items/create",
+                    label= "Create a Promotion",
+                    description= "For example, 10% off next purchase.",
+                    actionTo= "/promotions/create",
                     actionLabel= "Create",
-                    docsLink="/docs/recommenders/choose-what-to-recommend/create_items",
+                    docsLink="/docs/recommenders/choose-what-to-recommend/create_promotions",
                     complete = false,
                 }
             },
             {
-                30,
+                31,
                 new CheckistItem
                 {
                     label= "Setup a Recommender",
-                    description= "A Recommender provides the best item for each of your customers.",
-                    actionTo= "/recommenders/items-recommenders/create",
+                    description= "A Recommender provides the best promotion for every customer or business.",
+                    actionTo= "/recommenders/promotions-recommenders/create",
                     actionLabel= "Setup",
-                    docsLink="/docs/recommenders/Create/create-item-recommender",
+                    docsLink="/docs/recommenders/creating/create-promotion-recommender",
                     complete = false,
                 }
             },
-            // {
-            //     40,
-            //     new CheckistItem
-            //     {
-            //         label= "Find your Recommender in the list",
-            //         description= "Cherry can contain multiple recommenders. Try finding your recommender in the list.",
-            //         actionTo= "/recommenders/items-recommenders",
-            //         actionLabel= "Find your recommender",
-            //         complete = false
-            //     }
-            // },
             {
-                50,
+                51,
                 new CheckistItem
                 {
                     label= "Consume Recommendations",
                     description= "Ensure the recommendations are delivered to your customers and the results tracked.",
-                    actionTo= "/recommenders/items-recommenders/destinations/{recommenderId}?tab=js",
+                    actionTo= "/recommenders/promotions-recommenders/advanced/{recommenderId}?tab=advanced",
                     actionLabel= "Consume",
                     docsLink="/docs/recommenders/deploy-recommenders/consume/consume-recommendations",
                     complete = false

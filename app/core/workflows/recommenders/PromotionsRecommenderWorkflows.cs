@@ -7,9 +7,8 @@ using SignalBox.Core.Recommenders;
 #nullable enable
 namespace SignalBox.Core.Workflows
 {
-    public class ItemsRecommenderWorkflows : RecommenderWorkflowBase<ItemsRecommender>
+    public class PromotionsRecommenderWorkflows : RecommenderWorkflowBase<ItemsRecommender>
     {
-        private readonly IStorageContext storageContext;
         private readonly IItemsRecommendationStore recommendationStore;
         private readonly IMetricStore metricStore;
         private readonly ICategoricalOptimiserClient optimiserClient;
@@ -17,8 +16,7 @@ namespace SignalBox.Core.Workflows
         private readonly IAudienceStore audienceStore;
         private readonly IRecommendableItemStore itemStore;
 
-        public ItemsRecommenderWorkflows(
-            IStorageContext storageContext,
+        public PromotionsRecommenderWorkflows(
             IItemsRecommenderStore store,
             IItemsRecommendationStore recommendationStore,
             IMetricStore metricStore,
@@ -27,10 +25,9 @@ namespace SignalBox.Core.Workflows
             ICategoricalOptimiserClient optimiserClient,
             IModelRegistrationStore modelRegistrationStore,
             IAudienceStore audienceStore,
-            RecommenderReportImageWorkflows reportImageWorkflows,
+            IRecommenderReportImageWorkflow reportImageWorkflows,
             IRecommendableItemStore itemStore) : base(store, systemStore, metricStore, segmentStore, reportImageWorkflows)
         {
-            this.storageContext = storageContext;
             this.recommendationStore = recommendationStore;
             this.metricStore = metricStore;
             this.optimiserClient = optimiserClient;
@@ -80,10 +77,14 @@ namespace SignalBox.Core.Workflows
                                                                    PromotionRecommenderTargetTypes targetType,
                                                                    bool? useInternalId)
         {
-            RecommendableItem? baselineItem = null;
+            RecommendableItem baselineItem;
             if (!string.IsNullOrEmpty(baselineItemId))
             {
                 baselineItem = await itemStore.GetEntity(baselineItemId, useInternalId: useInternalId);
+            }
+            else
+            {
+                throw new BadRequestException("BaselineItem is required");
             }
 
             Metric? targetMetric = null;
@@ -92,32 +93,32 @@ namespace SignalBox.Core.Workflows
                 targetMetric = await metricStore.GetEntity(targetMetricId);
             }
 
-            ItemsRecommender recommender;
-            if (itemIds != null && itemIds.Any())
+            // link the required promotions aka items.
+            var promotions = new List<RecommendableItem>();
+            if (itemIds.IsNullOrEmpty())
             {
-                var items = new List<RecommendableItem>();
-                foreach (var id in itemIds)
-                {
-                    items.Add(await itemStore.GetEntity(id, useInternalId));
-                }
-
-                recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, baselineItem, items, arguments, settings, targetMetric)
-                    {
-                        NumberOfItemsToRecommend = numberOfItemsToRecommend,
-                        TargetType = targetType
-                    });
-
+                throw new BadRequestException("ItemIds must contain a promotion ID");
             }
             else
             {
-                recommender = await store.Create(
-                    new ItemsRecommender(common.CommonId, common.Name, baselineItem, null, arguments, settings, targetMetric)
-                    {
-                        NumberOfItemsToRecommend = numberOfItemsToRecommend,
-                        TargetType = targetType
-                    });
+                foreach (var id in itemIds!)
+                {
+                    promotions.Add(await itemStore.GetEntity(id, useInternalId));
+                }
             }
+            // add the default item if it wasn't added by the user.
+            if (!promotions.Any(_ => _.Id == baselineItem.Id))
+            {
+                promotions.Add(baselineItem);
+            }
+
+
+            ItemsRecommender recommender = await store.Create(
+                new ItemsRecommender(common.CommonId, common.Name, baselineItem, promotions, arguments, settings, targetMetric)
+                {
+                    NumberOfItemsToRecommend = numberOfItemsToRecommend,
+                    TargetType = targetType
+                });
 
             if (segmentIds != null && segmentIds.Any())
             {
@@ -140,7 +141,7 @@ namespace SignalBox.Core.Workflows
                 recommender.ModelRegistration = registration;
                 var optimiser = await optimiserClient.Create(recommender);
             }
-            await storageContext.SaveChanges();
+            await store.Context.SaveChanges();
             return recommender;
         }
 
@@ -149,7 +150,7 @@ namespace SignalBox.Core.Workflows
             var item = await itemStore.GetEntity(itemId);
             recommender.BaselineItem = item;
             await store.Update(recommender);
-            await storageContext.SaveChanges();
+            await store.Context.SaveChanges();
             return item;
         }
 
@@ -209,7 +210,7 @@ namespace SignalBox.Core.Workflows
             if (model.ModelType == ModelTypes.ItemsRecommenderV1)
             {
                 recommender.ModelRegistration = model;
-                await storageContext.SaveChanges();
+                await store.Context.SaveChanges();
                 return model;
             }
             else

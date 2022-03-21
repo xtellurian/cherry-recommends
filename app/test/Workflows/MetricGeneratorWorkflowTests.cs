@@ -52,6 +52,7 @@ namespace SignalBox.Test.Workflows
             return eventList;
         }
 
+        // @cherry - can this be deleted? 
         static RecommenderTriggersWorkflows CreateRecommenderTriggersWorkFlows()
         {
             var mockHistoricStore = new Mock<IHistoricCustomerMetricStore>();
@@ -146,7 +147,7 @@ namespace SignalBox.Test.Workflows
             var mockCustomerEventStore = new Mock<ICustomerEventStore>();
             var mockMetricGeneratorStore = new Mock<IMetricGeneratorStore>();
             var mockHistoricStore = new Mock<IHistoricCustomerMetricStore>();
-            var mockRecommenderTriggerWorkFlow = new Mock<RecommenderTriggersWorkflows>();
+            var mockRecommenderTriggerWorkflow = new Mock<IRecommenderMetricTriggersWorkflow>();
             var mockHubspotWorkflow = new Mock<HubspotPushWorkflows>();
             var mockWebhookClient = new Mock<IWebhookSenderClient>();
             var mockTelemetry = new Mock<ITelemetry>();
@@ -154,15 +155,13 @@ namespace SignalBox.Test.Workflows
             var mockAggregateLogger = Utility.MockLogger<FilterSelectAggregateWorkflow>();
             var aggregateWorkflow = new FilterSelectAggregateWorkflow(mockAggregateLogger.Object);
 
-            RecommenderTriggersWorkflows recommenderTriggerWorkflow = CreateRecommenderTriggersWorkFlows();
-
             MetricGeneratorWorkflows workflow = new MetricGeneratorWorkflows(
                 mockCustomerStore.Object,
                 mockMetricStore.Object,
                 mockCustomerEventStore.Object,
                 mockMetricGeneratorStore.Object,
                 mockHistoricStore.Object,
-                recommenderTriggerWorkflow,
+                mockRecommenderTriggerWorkflow.Object,
                 aggregateWorkflow,
                 null,
                 mockWebhookClient.Object,

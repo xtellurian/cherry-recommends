@@ -24,14 +24,16 @@ namespace SignalBox.Web.Controllers
         private readonly ILogger<PromotionsRecommendersController> logger;
         private readonly ItemsRecommenderInvokationWorkflows invokationWorkflows;
         private readonly ItemsRecommenderPerformanceWorkflows performanceWorkflows;
-        private readonly ItemsRecommenderWorkflows workflows;
+        private readonly PromotionsRecommenderWorkflows workflows;
 
         public PromotionsRecommendersController(ILogger<PromotionsRecommendersController> logger,
                                                  IItemsRecommenderStore store,
                                                  ISegmentStore segmentStore,
                                                  IAudienceStore audienceStore,
                                                  ItemsRecommenderInvokationWorkflows invokationWorkflows,
-                                                 ItemsRecommenderPerformanceWorkflows performanceWorkflows, ItemsRecommenderWorkflows workflows) : base(store, segmentStore, audienceStore, workflows, invokationWorkflows)
+                                                 ItemsRecommenderPerformanceWorkflows performanceWorkflows,
+                                                 PromotionsRecommenderWorkflows workflows)
+                                                 : base(store, segmentStore, audienceStore, workflows, invokationWorkflows)
         {
             this.logger = logger;
             this.invokationWorkflows = invokationWorkflows;

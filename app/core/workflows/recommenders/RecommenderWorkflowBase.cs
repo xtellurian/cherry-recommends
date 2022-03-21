@@ -12,13 +12,13 @@ namespace SignalBox.Core.Workflows
         protected readonly IIntegratedSystemStore systemStore;
         protected readonly IMetricStore featureStore;
         protected readonly ISegmentStore segmentStore;
-        private readonly RecommenderReportImageWorkflows imageWorkflows;
+        private readonly IRecommenderReportImageWorkflow imageWorkflows;
 
         protected RecommenderWorkflowBase(IRecommenderStore<TRecommender> store,
                                           IIntegratedSystemStore systemStore,
                                           IMetricStore featureStore,
                                           ISegmentStore segmentStore,
-                                          RecommenderReportImageWorkflows imageWorkflows)
+                                          IRecommenderReportImageWorkflow imageWorkflows)
         {
             this.store = store;
             this.systemStore = systemStore;

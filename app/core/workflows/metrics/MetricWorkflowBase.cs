@@ -9,7 +9,7 @@ namespace SignalBox.Core.Workflows
     {
         protected readonly IMetricStore metricStore;
         protected readonly IHistoricCustomerMetricStore customerMetricStore;
-        private readonly RecommenderTriggersWorkflows triggersWorkflows;
+        private readonly IRecommenderMetricTriggersWorkflow triggersWorkflows;
         private readonly HubspotPushWorkflows hubspotPushWorkflows;
         private readonly IWebhookSenderClient webhookSenderClient;
         private readonly ITelemetry telemetry;
@@ -17,7 +17,7 @@ namespace SignalBox.Core.Workflows
 
         protected MetricWorkflowBase(IMetricStore metricStore,
                                    IHistoricCustomerMetricStore customerMetricStore,
-                                   RecommenderTriggersWorkflows triggersWorkflows,
+                                   IRecommenderMetricTriggersWorkflow triggersWorkflows,
                                    HubspotPushWorkflows hubspotPushWorkflows,
                                    IWebhookSenderClient webhookSenderClient,
                                    ITelemetry telemetry,
