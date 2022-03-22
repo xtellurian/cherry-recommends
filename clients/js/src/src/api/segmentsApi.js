@@ -65,3 +65,29 @@ export const fetchSegmentCustomersAsync = async ({
     },
   });
 };
+
+export const fetchSegmentEnrolmentRulesAsync = async ({
+  token, id
+}) => {
+  return await executeFetch({
+    path:  `api/Segments/${id}/MetricEnrolmentRules`,
+    token,
+  })
+}
+
+export const addSegmentEnrolmentRuleAsync = async ({ token, id, payload }) => {
+  return await executeFetch({
+    path: `api/Segments/${id}/MetricEnrolmentRules`,
+    token,
+    method: "post",
+    body: payload
+  });
+};
+
+export const removeSegmentEnrolmentRuleAsync = async ({ token, id, ruleId }) => {
+  return await executeFetch({
+    path: `api/Segments/${id}/MetricEnrolmentRules/${ruleId}`,
+    token,
+    method: "delete",
+  });
+};

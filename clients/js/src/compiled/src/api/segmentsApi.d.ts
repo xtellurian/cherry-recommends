@@ -31,3 +31,17 @@ export function fetchSegmentCustomersAsync({ token, page, id, searchTerm, weeksA
     searchTerm: any;
     weeksAgo: any;
 }): Promise<any>;
+export function fetchSegmentEnrolmentRulesAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+export function addSegmentEnrolmentRuleAsync({ token, id, payload }: {
+    token: any;
+    id: any;
+    payload: any;
+}): Promise<any>;
+export function removeSegmentEnrolmentRuleAsync({ token, id, ruleId }: {
+    token: any;
+    id: any;
+    ruleId: any;
+}): Promise<any>;

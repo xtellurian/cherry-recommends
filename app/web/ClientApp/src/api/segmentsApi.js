@@ -13,3 +13,12 @@ export const addCustomerAsync = segments.addCustomerAsync;
 export const removeCustomerAsync = segments.removeCustomerAsync;
 
 export const fetchSegmentCustomersAsync = segments.fetchSegmentCustomersAsync;
+
+export const fetchSegmentEnrolmentRulesAsync =
+  segments.fetchSegmentEnrolmentRulesAsync;
+
+export const addSegmentEnrolmentRuleAsync =
+  segments.addSegmentEnrolmentRuleAsync;
+
+export const removeSegmentEnrolmentRuleAsync =
+  segments.removeSegmentEnrolmentRuleAsync;

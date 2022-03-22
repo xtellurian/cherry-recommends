@@ -5,6 +5,7 @@ import {
   fetchSegmentsAsync,
   fetchSegmentAsync,
   fetchSegmentCustomersAsync,
+  fetchSegmentEnrolmentRulesAsync,
 } from "../api/segmentsApi";
 
 export const useSegments = () => {
@@ -61,6 +62,23 @@ export const useSegmentCustomers = (p) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, page, trigger, searchTerm]);
+
+  return result;
+};
+
+export const useSegmentEnrolmentRules = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    if (token) {
+      fetchSegmentEnrolmentRulesAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
 
   return result;
 };

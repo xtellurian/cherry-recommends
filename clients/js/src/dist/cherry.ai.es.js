@@ -2261,6 +2261,27 @@ const fetchSegmentCustomersAsync = async ({ token, page, id, searchTerm, weeksAg
         },
     });
 };
+const fetchSegmentEnrolmentRulesAsync = async ({ token, id }) => {
+    return await executeFetch$1({
+        path: `api/Segments/${id}/MetricEnrolmentRules`,
+        token,
+    });
+};
+const addSegmentEnrolmentRuleAsync = async ({ token, id, payload }) => {
+    return await executeFetch$1({
+        path: `api/Segments/${id}/MetricEnrolmentRules`,
+        token,
+        method: "post",
+        body: payload
+    });
+};
+const removeSegmentEnrolmentRuleAsync = async ({ token, id, ruleId }) => {
+    return await executeFetch$1({
+        path: `api/Segments/${id}/MetricEnrolmentRules/${ruleId}`,
+        token,
+        method: "delete",
+    });
+};
 
 var segmentsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -2270,7 +2291,10 @@ var segmentsApi = /*#__PURE__*/Object.freeze({
     deleteSegmentAsync: deleteSegmentAsync,
     addCustomerAsync: addCustomerAsync,
     removeCustomerAsync: removeCustomerAsync,
-    fetchSegmentCustomersAsync: fetchSegmentCustomersAsync
+    fetchSegmentCustomersAsync: fetchSegmentCustomersAsync,
+    fetchSegmentEnrolmentRulesAsync: fetchSegmentEnrolmentRulesAsync,
+    addSegmentEnrolmentRuleAsync: addSegmentEnrolmentRuleAsync,
+    removeSegmentEnrolmentRuleAsync: removeSegmentEnrolmentRuleAsync
 });
 
 const fetchTouchpointsAsync = async ({ token, page }) => {

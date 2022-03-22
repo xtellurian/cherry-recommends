@@ -10,6 +10,7 @@ import { Tabs, TabActivator } from "../molecules/layout/Tabs";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { MembersSection } from "./MembersSection";
 import { PageHeading } from "../molecules/layout/PageHeadings";
+import { SegmentEnrolmentSection } from "./SegmentEnrolmentSection";
 
 const tabs = [
   // {
@@ -20,10 +21,10 @@ const tabs = [
     id: "members",
     label: "Members",
   },
-  // {
-  //   id: "enrolment",
-  //   label: "Enrolment",
-  // },
+  {
+    id: "enrolment",
+    label: "Enrolment",
+  },
 ];
 const defaultTabId = tabs[0].id;
 
@@ -59,10 +60,9 @@ export const SegmentDetail = () => {
       <TabActivator tabId={"members"} defaultTabId={defaultTabId}>
         <MembersSection segment={segment} />
       </TabActivator>
-      <TabActivator
-        tabId={"enrolment"}
-        defaultTabId={defaultTabId}
-      ></TabActivator>
+      <TabActivator tabId={"enrolment"} defaultTabId={defaultTabId}>
+        <SegmentEnrolmentSection id={id} />
+      </TabActivator>
 
       <ConfirmDeletePopup
         entity={segment}

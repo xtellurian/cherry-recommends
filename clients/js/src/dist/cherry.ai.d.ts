@@ -2595,6 +2595,20 @@ declare function fetchSegmentCustomersAsync({ token, page, id, searchTerm, weeks
     searchTerm: any;
     weeksAgo: any;
 }): Promise<any>;
+declare function fetchSegmentEnrolmentRulesAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function addSegmentEnrolmentRuleAsync({ token, id, payload }: {
+    token: any;
+    id: any;
+    payload: any;
+}): Promise<any>;
+declare function removeSegmentEnrolmentRuleAsync({ token, id, ruleId }: {
+    token: any;
+    id: any;
+    ruleId: any;
+}): Promise<any>;
 
 declare const segmentsApi_d_fetchSegmentsAsync: typeof fetchSegmentsAsync;
 declare const segmentsApi_d_fetchSegmentAsync: typeof fetchSegmentAsync;
@@ -2603,6 +2617,9 @@ declare const segmentsApi_d_deleteSegmentAsync: typeof deleteSegmentAsync;
 declare const segmentsApi_d_addCustomerAsync: typeof addCustomerAsync;
 declare const segmentsApi_d_removeCustomerAsync: typeof removeCustomerAsync;
 declare const segmentsApi_d_fetchSegmentCustomersAsync: typeof fetchSegmentCustomersAsync;
+declare const segmentsApi_d_fetchSegmentEnrolmentRulesAsync: typeof fetchSegmentEnrolmentRulesAsync;
+declare const segmentsApi_d_addSegmentEnrolmentRuleAsync: typeof addSegmentEnrolmentRuleAsync;
+declare const segmentsApi_d_removeSegmentEnrolmentRuleAsync: typeof removeSegmentEnrolmentRuleAsync;
 declare namespace segmentsApi_d {
   export {
     segmentsApi_d_fetchSegmentsAsync as fetchSegmentsAsync,
@@ -2612,6 +2629,9 @@ declare namespace segmentsApi_d {
     segmentsApi_d_addCustomerAsync as addCustomerAsync,
     segmentsApi_d_removeCustomerAsync as removeCustomerAsync,
     segmentsApi_d_fetchSegmentCustomersAsync as fetchSegmentCustomersAsync,
+    segmentsApi_d_fetchSegmentEnrolmentRulesAsync as fetchSegmentEnrolmentRulesAsync,
+    segmentsApi_d_addSegmentEnrolmentRuleAsync as addSegmentEnrolmentRuleAsync,
+    segmentsApi_d_removeSegmentEnrolmentRuleAsync as removeSegmentEnrolmentRuleAsync,
   };
 }
 
