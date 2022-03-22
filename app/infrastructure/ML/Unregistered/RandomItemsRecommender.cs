@@ -23,7 +23,7 @@ namespace SignalBox.Infrastructure
             var items = new List<RecommendableItem>();
             if (itemsRecommender.Items == null || !itemsRecommender.Items.Any())
             {
-                items.AddRange((await itemStore.Query(1)).Items);
+                items.AddRange((await itemStore.Query(new EntityStoreQueryOptions<RecommendableItem>())).Items);
             }
             else
             {

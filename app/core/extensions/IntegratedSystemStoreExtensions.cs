@@ -10,8 +10,10 @@ namespace SignalBox.Core
         /// </summary>
         public static async Task<Customer> ReadFromIntegratedSystem(this ITrackedUserSystemMapStore systemMapStore, long integratedSystemId, string externalSystemUserId)
         {
-            var systemMaps = await systemMapStore.Query(1,  // first page
-                    _ => _.UserId == externalSystemUserId && _.IntegratedSystemId == integratedSystemId);
+
+            var systemMaps = await systemMapStore.Query(
+                new EntityStoreQueryOptions<TrackedUserSystemMap>(1, _ => _.UserId == externalSystemUserId && _.IntegratedSystemId == integratedSystemId));
+
             if (systemMaps.Items.Count() > 0)
             {
                 // this may cause issues if more than one, but for now, just return the first.
@@ -32,8 +34,8 @@ namespace SignalBox.Core
         /// </summary>
         public static async Task<bool> ExistsInIntegratedSystem(this ITrackedUserSystemMapStore systemMapStore, long integratedSystemId, string externalSystemUserId)
         {
-            var systemMaps = await systemMapStore.Query(1,  // first page
-                    _ => _.UserId == externalSystemUserId && _.IntegratedSystemId == integratedSystemId);
+            var systemMaps = await systemMapStore.Query(
+                new EntityStoreQueryOptions<TrackedUserSystemMap>(1, _ => _.UserId == externalSystemUserId && _.IntegratedSystemId == integratedSystemId));// first page;
             return systemMaps.Items.Any();
         }
 
@@ -42,8 +44,9 @@ namespace SignalBox.Core
         /// </summary>
         public static async Task<TrackedUserSystemMap> FindMap(this ITrackedUserSystemMapStore systemMapStore, Customer customer, IntegratedSystem system)
         {
-            var systemMaps = await systemMapStore.Query(1,  // first page
-                    _ => _.TrackedUserId == customer.Id && _.IntegratedSystemId == system.Id);
+            var systemMaps = await systemMapStore.Query(
+                new EntityStoreQueryOptions<TrackedUserSystemMap>(1, _ => _.TrackedUserId == customer.Id && _.IntegratedSystemId == system.Id));  // first page
+
             if (systemMaps.Items.Any())
             {
                 return systemMaps.Items.First();

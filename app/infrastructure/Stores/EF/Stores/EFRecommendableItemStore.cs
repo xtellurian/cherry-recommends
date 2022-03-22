@@ -14,8 +14,9 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, environmentService, (c) => c.RecommendableItems)
         { }
 
-        public async Task<Paginated<RecommendableItem>> QueryForRecommender(long recommenderId, int page)
+        public async Task<Paginated<RecommendableItem>> QueryForRecommender(IPaginate paginate, long recommenderId)
         {
+            var pageSize = paginate.PageSize ?? DefaultPageSize;
             var itemCount = await context.ItemsRecommenders
                 .Where(_ => _.Id == recommenderId)
                 .SelectMany(_ => _.Items)
@@ -31,7 +32,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                     .SelectMany(_ => _.Items)
                     .Distinct()
                     .OrderByDescending(_ => _.LastUpdated)
-                    .Skip((page - 1) * PageSize).Take(PageSize)
+                    .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
                     .ToListAsync();
             }
             else
@@ -39,8 +40,8 @@ namespace SignalBox.Infrastructure.EntityFramework
                 results = new List<RecommendableItem>();
             }
 
-            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
-            return new Paginated<RecommendableItem>(results, pageCount, itemCount, page);
+            var pageCount = (int)Math.Ceiling((double)itemCount / pageSize);
+            return new Paginated<RecommendableItem>(results, pageCount, itemCount, paginate.SafePage);
         }
     }
 }

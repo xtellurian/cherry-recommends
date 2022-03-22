@@ -65,7 +65,7 @@ namespace SignalBox.Web.Controllers
         public async Task<Paginated<Customer>> GetAssociatedCustomers(string id, [FromQuery] PaginateRequest p)
         {
             var metric = await base.GetResource(id);
-            return await workflows.GetCustomers(metric, p.Page);
+            return await workflows.GetCustomers(p, metric);
         }
 
         /// <summary>Get's the Generators associated with the Feature.</summary>
@@ -73,7 +73,7 @@ namespace SignalBox.Web.Controllers
         public async Task<Paginated<MetricGenerator>> GetGenerators(string id, [FromQuery] PaginateRequest p)
         {
             var metric = await base.GetResource(id);
-            return await generatorWorkflows.GetGenerators(p.Page, metric);
+            return await generatorWorkflows.GetGenerators(p, metric);
         }
 
         /// <summary>Get's the latest Customer Metrics(values) for a Metric.</summary>
@@ -82,7 +82,7 @@ namespace SignalBox.Web.Controllers
         public async Task<Paginated<HistoricCustomerMetric>> GetLatestCustomerMetrics(string id, [FromQuery] PaginateRequest p)
         {
             var metric = await base.GetResource(id);
-            var customers = await workflows.GetCustomers(metric, p.Page);
+            var customers = await workflows.GetCustomers(p, metric);
             var metricValues = new List<HistoricCustomerMetric>();
             foreach (var trackedUser in customers.Items)
             {

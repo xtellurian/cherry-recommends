@@ -18,7 +18,7 @@ namespace SignalBox.Core
         Task<TProperty> Min<TProperty>(Expression<Func<CustomerEvent, bool>> predicate, Expression<Func<CustomerEvent, TProperty>> selector);
         Task<int> CountTrackedUsers(Expression<Func<CustomerEvent, bool>> predicate = null);
         Task<IEnumerable<CustomerEvent>> ReadEventsForUser(Customer user, EventQueryOptions options = null, DateTimeOffset? since = null);
-        Task<Paginated<CustomerEvent>> ReadEventsForUser(int page, Customer user, Expression<Func<CustomerEvent, bool>> predicate = null);
+        Task<Paginated<CustomerEvent>> ReadEventsForUser(IPaginate paginate, Customer user, Expression<Func<CustomerEvent, bool>> predicate = null);
         Task<IEnumerable<CustomerEvent>> ReadEventsOfKind(EventKinds kind, DateTimeOffset? since = null, DateTimeOffset? until = null);
         Task<long> CountEventsOfKind(EventKinds kind, DateTimeOffset? since = null, DateTimeOffset? until = null);
         Task<IEnumerable<CustomerEvent>> ReadEventsOfType(EventKinds kind, string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null);
@@ -27,7 +27,7 @@ namespace SignalBox.Core
         Task<IEnumerable<string>> ReadUniqueEventTypes(EventKinds kind);
         Task<long> CountEventsOfType(EventKinds kind, string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null);
         Task<long> CountEventsOfType(string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null);
-        Task<Paginated<CustomerEvent>> ReadEventsForBusiness(int page, Business business);
+        Task<Paginated<CustomerEvent>> ReadEventsForBusiness(IPaginate paginate, Business business);
         Task<IEnumerable<CustomerEvent>> ReadEventsForBusiness(Business business, EventQueryOptions options = null, DateTimeOffset? since = null);
     }
 }

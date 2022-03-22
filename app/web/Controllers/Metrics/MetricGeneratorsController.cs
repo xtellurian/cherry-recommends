@@ -40,7 +40,7 @@ namespace SignalBox.Web.Controllers
         public override async Task<Paginated<MetricGenerator>> Query([FromQuery] PaginateRequest p)
         {
             // include the feature
-            return await store.Query(p.Page, _ => _.Metric);
+            return await store.Query(_ => _.Metric, new EntityStoreQueryOptions<MetricGenerator>(p));
         }
 
         /// <summary>

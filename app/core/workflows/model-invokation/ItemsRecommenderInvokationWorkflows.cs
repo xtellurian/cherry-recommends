@@ -142,7 +142,10 @@ namespace SignalBox.Core.Workflows
                 }
                 else
                 {
-                    var allItems = await itemStore.Query(1); // this is a fudge, it will only be the top items
+                    var allItems = await itemStore.Query(new EntityStoreQueryOptions<RecommendableItem>
+                    {
+                        PageSize = 12 // this is a fudge, it will only be the top 12 items
+                    });
                     input.Items = allItems.Items;
                     logger.LogInformation($"Using all items as input, {input.Items.Count()} items");
                     invokationEntry.LogMessage($"Using all items as input, {input.Items.Count()} items");
@@ -253,7 +256,7 @@ namespace SignalBox.Core.Workflows
                 else
                 {
                     // case: no default and the model returned error
-                    var someItems = await itemStore.Query(1);
+                    var someItems = await itemStore.Query(new EntityStoreQueryOptions<RecommendableItem>());
                     var item = someItems.Items.First();
                     invokationEntry.LogMessage($"Model Error. Fallback to top item {item.CommonId}");
                     var output = new ItemsRecommenderModelOutputV1

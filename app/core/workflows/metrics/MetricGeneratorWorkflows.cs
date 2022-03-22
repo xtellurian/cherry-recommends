@@ -36,10 +36,10 @@ namespace SignalBox.Core.Workflows
             this.aggregateWorkflow = aggregateWorkflow;
         }
 
-        public async Task<Paginated<MetricGenerator>> GetGenerators(int page, Metric metric)
+        public async Task<Paginated<MetricGenerator>> GetGenerators(IPaginate paginated, Metric metric)
         {
             // need to load related entities
-            var generators = await metricGeneratorStore.Query(new EntityStoreQueryOptions<MetricGenerator>(page, _ => _.MetricId == metric.Id));
+            var generators = await metricGeneratorStore.Query(new EntityStoreQueryOptions<MetricGenerator>(paginated, _ => _.MetricId == metric.Id));
             foreach (var g in generators.Items)
             {
                 if (g.AggregateCustomerMetric?.MetricId != null)
@@ -56,18 +56,6 @@ namespace SignalBox.Core.Workflows
                 }
             }
             return generators;
-        }
-
-        public async Task<IEnumerable<MetricGeneratorRunSummary>> RunAllMetricGenerators()
-        {
-            var generators = await metricGeneratorStore.Query(1);
-            List<MetricGeneratorRunSummary> runSummaries = new List<MetricGeneratorRunSummary>();
-            foreach (var g in generators.Items)
-            {
-                runSummaries.Add(await RunMetricGeneration(g));
-            }
-
-            return runSummaries;
         }
 
         public async Task<MetricGeneratorRunSummary> RunMetricGeneration(MetricGenerator generator)

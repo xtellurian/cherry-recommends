@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
 
@@ -12,7 +13,7 @@ namespace SignalBox.Infrastructure.EntityFramework
     public abstract class EFEntityStoreBase<T> : EFStoreBase<T>, IEntityStore<T> where T : Entity
     {
         protected virtual Expression<Func<T, DateTimeOffset>> defaultOrderBy => _ => _.LastUpdated;
-        protected virtual int PageSize => 100;
+        protected virtual int DefaultPageSize => 100;
         protected EFEntityStoreBase(IDbContextProvider<SignalBoxDbContext> contextProvider, Func<SignalBoxDbContext, DbSet<T>> selector)
         : base(contextProvider, selector)
         { }
@@ -76,16 +77,23 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<Paginated<T>> Query<TProperty>(Expression<Func<T, TProperty>>? include = null, EntityStoreQueryOptions<T>? queryOptions = null)
         {
+            var predicateBuilder = PredicateBuilder.New<T>(true);
             queryOptions ??= new EntityStoreQueryOptions<T>();
-            var itemCount = await QuerySet.CountAsync(queryOptions.Predicate);
-            List<T> results;
+            if (queryOptions.Predicate != null)
+            {
+                predicateBuilder = predicateBuilder.And(queryOptions.Predicate);
+            }
 
+            var itemCount = await QuerySet.CountAsync(predicateBuilder);
+            List<T> results;
+            var pageSize = queryOptions.PageSize ?? DefaultPageSize;
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
                 var q = QuerySet
-                    .Where(queryOptions.Predicate)
+                    .Where(predicateBuilder)
                     .OrderByDescending(defaultOrderBy)
-                    .Skip((queryOptions.Page - 1) * PageSize).Take(PageSize);
+                    .Skip((queryOptions.Page - 1) * pageSize)
+                    .Take(pageSize);
 
                 if (include != null)
                 {
@@ -98,24 +106,12 @@ namespace SignalBox.Infrastructure.EntityFramework
             {
                 results = new List<T>();
             }
-            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
+            var pageCount = (int)Math.Ceiling((double)itemCount / pageSize);
             return new Paginated<T>(results, pageCount, itemCount, queryOptions.Page);
         }
-        public async Task<Paginated<T>> Query(EntityStoreQueryOptions<T>? queryOptions = null)
+        public async virtual Task<Paginated<T>> Query(EntityStoreQueryOptions<T>? queryOptions = null)
         {
             return await this.Query<object>(null, queryOptions);
-        }
-
-        public async Task<Paginated<T>> Query(int page, Expression<Func<T, bool>>? predicate = null)
-        {
-            return await Query(new EntityStoreQueryOptions<T>(page, predicate));
-        }
-
-        public async Task<Paginated<T>> Query<TProperty>(int page,
-                                                         Expression<Func<T, TProperty>> include,
-                                                         Expression<Func<T, bool>>? predicate = null)
-        {
-            return await Query<TProperty>(include, new EntityStoreQueryOptions<T>(page, predicate));
         }
 
         public virtual async Task<T> Read(long id)
@@ -214,6 +210,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         private async Task<List<T>> RunQueryWithOrderby(Expression<Func<T, bool>> predicate, long currentId, IterateOrderBy orderBy)
         {
+
             return orderBy switch
             {
                 IterateOrderBy.AscendingId =>
@@ -221,14 +218,14 @@ namespace SignalBox.Infrastructure.EntityFramework
                         .Where(predicate)
                         .Where(_ => _.Id < currentId)
                         .OrderBy(_ => _.Id) // ascending here
-                        .Take(PageSize)
+                        .Take(DefaultPageSize) // use the default page size when running an iteration
                         .ToListAsync(),
                 _ =>
                     await QuerySet
                         .Where(predicate)
                         .Where(_ => _.Id < currentId)
                         .OrderByDescending(_ => _.Id) // descending here
-                        .Take(PageSize)
+                        .Take(DefaultPageSize) // use the default page size when running an iteration
                         .ToListAsync(),
             };
         }

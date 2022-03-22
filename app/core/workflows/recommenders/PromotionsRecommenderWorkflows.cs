@@ -192,16 +192,16 @@ namespace SignalBox.Core.Workflows
             return item;
         }
 
-        public async Task<Paginated<RecommendableItem>> QueryItems(string recommenderId, int page, bool? useInternalId)
+        public async Task<Paginated<RecommendableItem>> QueryItems(IPaginate paginate, string recommenderId, bool? useInternalId)
         {
             var recommender = await store.GetEntity(recommenderId, useInternalId);
-            return await itemStore.QueryForRecommender(recommender.Id, page);
+            return await itemStore.QueryForRecommender(paginate, recommender.Id);
         }
 
-        public async Task<Paginated<ItemsRecommendation>> QueryRecommendations(string recommenderId, int page, int? pageSize, bool? useInternalId = null)
+        public async Task<Paginated<ItemsRecommendation>> QueryRecommendations(string recommenderId, IPaginate paginate, bool? useInternalId = null)
         {
             var recommender = await store.GetEntity(recommenderId, useInternalId);
-            return await recommendationStore.QueryForRecommender(page, pageSize, recommender.Id);
+            return await recommendationStore.QueryForRecommender(paginate, recommender.Id);
         }
 
         public async Task<ModelRegistration> LinkRegisteredModel(ItemsRecommender recommender, long modelId)

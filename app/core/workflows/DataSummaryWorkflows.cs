@@ -123,9 +123,17 @@ namespace SignalBox.Core.Workflows
 
             try
             {
-                var parameterSetRecommendations = await parameterSetRecommendationStore.Query(1);
+                var parameterSetRecommendations = await parameterSetRecommendationStore.Query(
+                    new EntityStoreQueryOptions<ParameterSetRecommendation>
+                    {
+                        PageSize = 10
+                    });
                 recommendations.AddRange(parameterSetRecommendations.Items);
-                var itemsRecommendations = await itemsRecommendationStore.Query(1);
+                var itemsRecommendations = await itemsRecommendationStore.Query(new EntityStoreQueryOptions<ItemsRecommendation>
+                {
+                    PageSize = 10
+                });
+
                 recommendations.AddRange(itemsRecommendations.Items);
                 recommendations.Sort((x, y) => DateTimeOffset.Compare(y.LastUpdated, x.LastUpdated));
                 recommendations = recommendations.Take(20).ToList();

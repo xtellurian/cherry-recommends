@@ -118,10 +118,10 @@ namespace SignalBox.Test.Workflows
 
             List<ItemsRecommender> recommenderList = new List<ItemsRecommender>() { itemsRecommender };
             Paginated<ItemsRecommender> paginatedItems = new Paginated<ItemsRecommender>(recommenderList, 1, 1, 1);
-            mockItemsRecommenderStore.Setup(_ => _.Query(It.IsAny<int>(), It.IsAny<Expression<Func<ItemsRecommender, bool>>>())).ReturnsAsync(paginatedItems);
+            mockItemsRecommenderStore.Setup(_ => _.Query(It.IsAny<EntityStoreQueryOptions<ItemsRecommender>>())).ReturnsAsync(paginatedItems);
 
             Paginated<ParameterSetRecommender> paginatedParameters = new Paginated<ParameterSetRecommender>(new List<ParameterSetRecommender>(), 1, 0, 1);
-            mockParameterSetRecommenderStore.Setup(_ => _.Query(It.IsAny<int>(), It.IsAny<Expression<Func<ParameterSetRecommender, bool>>>())).ReturnsAsync(paginatedParameters);
+            mockParameterSetRecommenderStore.Setup(_ => _.Query(It.IsAny<EntityStoreQueryOptions<ParameterSetRecommender>>())).ReturnsAsync(paginatedParameters);
 
             return new RecommenderTriggersWorkflows(
                 mockTriggerLogger.Object,

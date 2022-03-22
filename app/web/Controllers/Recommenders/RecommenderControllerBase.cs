@@ -48,7 +48,7 @@ namespace SignalBox.Web.Controllers
         public async Task<Paginated<InvokationLogEntry>> GetInvokationLogs(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
         {
             var recommender = await base.GetEntity(id, useInternalId);
-            return await invokationWorkflows.QueryInvokationLogs(recommender, p.Page);
+            return await invokationWorkflows.QueryInvokationLogs(p, recommender);
         }
 
         [HttpPost("{id}/ErrorHandling")]

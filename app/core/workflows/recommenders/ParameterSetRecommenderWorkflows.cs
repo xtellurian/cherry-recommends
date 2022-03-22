@@ -73,9 +73,9 @@ namespace SignalBox.Core.Workflows
             return recommender;
         }
 
-        public async Task<Paginated<ParameterSetRecommendation>> QueryRecommendations(long recommenderId, int page, int? pageSize)
+        public async Task<Paginated<ParameterSetRecommendation>> QueryRecommendations(long recommenderId, IPaginate paginate)
         {
-            return await recommendationStore.QueryForRecommender(page, pageSize, recommenderId);
+            return await recommendationStore.QueryForRecommender(paginate, recommenderId);
         }
 
         public async Task<ModelRegistration> LinkRegisteredModel(ParameterSetRecommender recommender, long modelId)

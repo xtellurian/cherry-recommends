@@ -48,20 +48,14 @@ namespace SignalBox.Core.Workflows
                                                                                                          groupName));
 
             // do this for all tracked users
-            int page = 1;
-            bool hasMore = true;
-            while (hasMore)
+            await foreach (var map in systemMapStore.Iterate(_ => _.IntegratedSystemId == system.Id))
             {
-                var mapQuery = await systemMapStore.Query(page++, _ => _.Customer, _ => _.IntegratedSystemId == system.Id);
-                foreach (var map in mapQuery.Items)
+                await systemMapStore.Load(map, _ => _.Customer);
+                if (await SetRecommendationProperty(system, recommender, map.Customer))
                 {
-                    if (await SetRecommendationProperty(system, recommender, map.Customer))
-                    {
-                        report.NumberOfContactsUpdated += 1;
-                    }
-                    report.NumberOfHubspotRequests += 1;
+                    report.NumberOfContactsUpdated += 1;
                 }
-                hasMore = mapQuery.Pagination.HasNextPage;
+                report.NumberOfHubspotRequests += 1;
             }
 
             return report;

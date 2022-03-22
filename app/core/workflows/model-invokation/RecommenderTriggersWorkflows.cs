@@ -53,15 +53,7 @@ namespace SignalBox.Core.Workflows
         private async Task<IEnumerable<ItemsRecommendation>> HandleNewMetricValueItemsRecommenders(HistoricCustomerMetric metricValue)
         {
             var recommendations = new List<ItemsRecommendation>();
-            // only query for customer target recommenders
-            var recommenders = await itemsRecommenderStore.Query(1, _ => _.TriggerCollection != null && _.TargetType == PromotionRecommenderTargetTypes.Customer);
-            logger.LogInformation($"Found {recommenders.Pagination.TotalItemCount} items recommenders with Triggers");
-            if (recommenders.Pagination.PageNumber > 1)
-            {
-                logger.LogCritical($"The Recommender Trigger workflow needs pagination support!");
-            }
-
-            foreach (var recommender in recommenders.Items)
+            await foreach (var recommender in itemsRecommenderStore.Iterate(_ => _.TriggerCollection != null && _.TargetType == PromotionRecommenderTargetTypes.Customer))
             {
                 try
                 {
@@ -73,6 +65,7 @@ namespace SignalBox.Core.Workflows
                     telemetry.TrackException(ex);
                 }
             }
+
             return recommendations;
         }
 
@@ -94,7 +87,7 @@ namespace SignalBox.Core.Workflows
         private async Task<IEnumerable<ParameterSetRecommendation>> HandleNewMetricValueParameterSetRecommenders(HistoricCustomerMetric metricValue)
         {
             var recommendations = new List<ParameterSetRecommendation>();
-            var recommenders = await parameterSetRecommenderStore.Query(1, _ => _.TriggerCollection != null);
+            var recommenders = await parameterSetRecommenderStore.Query(new EntityStoreQueryOptions<ParameterSetRecommender>(1, _ => _.TriggerCollection != null));
             logger.LogInformation($"Found {recommenders.Pagination.TotalItemCount} parameter set recommenders with Triggers");
             if (recommenders.Pagination.PageNumber > 1)
             {

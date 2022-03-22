@@ -13,10 +13,8 @@ namespace SignalBox.Core
         Task<T> Read<TProperty>(long id, Expression<Func<T, TProperty>> include);
         Task<T> Update(T entity);
         Task<int> Count(Expression<Func<T, bool>> predicate = null);
-        Task<Paginated<T>> Query(int page, Expression<Func<T, bool>> predicate = null);
-        Task<Paginated<T>> Query<TProperty>(int page, Expression<Func<T, TProperty>> include, Expression<Func<T, bool>> predicate = null);
         Task<bool> Remove(long id);
-        Task LoadMany<TProperty>(T entity, Expression<Func<T, System.Collections.Generic.IEnumerable<TProperty>>> propertyExpression) where TProperty : class;
+        Task LoadMany<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class;
         Task Load<TProperty>(T entity, Expression<Func<T, TProperty>> propertyExpression) where TProperty : class;
         IAsyncEnumerable<T> Iterate(Expression<Func<T, bool>> predicate = null, IterateOrderBy orderBy = IterateOrderBy.DescendingId);
     }

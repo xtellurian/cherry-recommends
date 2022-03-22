@@ -22,7 +22,7 @@ namespace SignalBox.Web.Controllers
         [HttpGet]
         public virtual async Task<Paginated<T>> Query([FromQuery] PaginateRequest p)
         {
-            return await store.Query(p.Page);
+            return await store.Query(p);
         }
 
         /// <summary>Returns the resource with this Id.</summary>

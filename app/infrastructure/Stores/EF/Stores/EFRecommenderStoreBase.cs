@@ -15,8 +15,9 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, environmentService, selector)
         { }
 
-        public async Task<Paginated<InvokationLogEntry>> QueryInvokationLogs(long id, int page)
+        public async Task<Paginated<InvokationLogEntry>> QueryInvokationLogs(IPaginate paginate, long id)
         {
+            var pageSize = paginate.PageSize ?? DefaultPageSize;
             var itemCount = await QuerySet
                 .Where(_ => _.Id == id)
                 .SelectMany(_ => _.RecommenderInvokationLogs)
@@ -29,15 +30,15 @@ namespace SignalBox.Infrastructure.EntityFramework
                     .Where(_ => _.Id == id)
                     .SelectMany(_ => _.RecommenderInvokationLogs)
                     .OrderByDescending(_ => _.LastUpdated)
-                    .Skip((page - 1) * PageSize).Take(PageSize)
+                    .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
                     .ToListAsync();
             }
             else
             {
                 results = new List<InvokationLogEntry>();
             }
-            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
-            return new Paginated<InvokationLogEntry>(results, pageCount, itemCount, page);
+            var pageCount = (int)Math.Ceiling((double)itemCount / pageSize);
+            return new Paginated<InvokationLogEntry>(results, pageCount, itemCount, paginate.SafePage);
         }
     }
 }

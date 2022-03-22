@@ -93,11 +93,12 @@ namespace SignalBox.Infrastructure.EntityFramework
             return results;
         }
 
-        public async Task<Paginated<CustomerEvent>> ReadEventsForUser(int page,
-                                                                         Customer customer,
-                                                                         Expression<Func<CustomerEvent, bool>> predicate = null)
+        public async Task<Paginated<CustomerEvent>> ReadEventsForUser(IPaginate paginate,
+                                                                      Customer customer,
+                                                                      Expression<Func<CustomerEvent, bool>> predicate = null)
         {
             predicate ??= _ => true; // default to all
+            var pageSize = paginate.PageSize ?? DefaultPageSize;
             Expression<Func<CustomerEvent, bool>> selectCustomer = _ => _.CustomerId == customer.CustomerId;
             var itemCount = await QuerySet.Where(selectCustomer).CountAsync(predicate);
             List<CustomerEvent> results;
@@ -108,15 +109,15 @@ namespace SignalBox.Infrastructure.EntityFramework
                     .Where(predicate)
                     .Where(selectCustomer)
                     .OrderByDescending(_ => _.Timestamp)
-                    .Skip((page - 1) * PageSize).Take(PageSize)
+                    .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
                     .ToListAsync();
             }
             else
             {
                 results = new List<CustomerEvent>();
             }
-            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
-            return new Paginated<CustomerEvent>(results, pageCount, itemCount, page);
+            var pageCount = (int)Math.Ceiling((double)itemCount / pageSize);
+            return new Paginated<CustomerEvent>(results, pageCount, itemCount, paginate.SafePage);
         }
 
         public async Task<IEnumerable<CustomerEvent>> ReadEventsOfType(string eventType, DateTimeOffset? since = null, DateTimeOffset? until = null)
@@ -186,8 +187,9 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .ToListAsync();
         }
 
-        public async Task<Paginated<CustomerEvent>> ReadEventsForBusiness(int page, Business business)
+        public async Task<Paginated<CustomerEvent>> ReadEventsForBusiness(IPaginate paginate, Business business)
         {
+            var pageSize = paginate.PageSize ?? DefaultPageSize;
             var result = await context.CustomerEvents
                 .Join(context.Customers, evt => evt.TrackedUserId, cust => cust.Id, (customerEvent, customer) => new
                 {
@@ -203,12 +205,12 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .Where(_ => _.business.Id == business.Id)
                 .Select(_ => _.customerEvent)
                 .OrderByDescending(_ => _.Timestamp)
-                .Skip((page - 1) * PageSize).Take(PageSize)
+                .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
                 .ToListAsync();
 
             int itemCount = result.Count;
-            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
-            return new Paginated<CustomerEvent>(result, pageCount, itemCount, page);
+            var pageCount = (int)Math.Ceiling((double)itemCount / pageSize);
+            return new Paginated<CustomerEvent>(result, pageCount, itemCount, paginate.SafePage);
         }
 
         public async Task<IEnumerable<CustomerEvent>> ReadEventsForBusiness(Business business, EventQueryOptions options = null, DateTimeOffset? since = null)

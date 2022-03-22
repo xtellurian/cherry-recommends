@@ -165,9 +165,12 @@ namespace SignalBox.Core.Workflows
             var contactIds = associations
                 .Where(_ => _.Type == "ticket_to_contact")
                 .Select(_ => _.Id);
-            var systemMaps = await systemMapStore.Query(1,  // first page
-                    _ => _.Customer,
-                    _ => contactIds.Contains(_.UserId) && _.IntegratedSystemId == system.Id);
+            var systemMaps = await systemMapStore.Query(
+                new EntityStoreQueryOptions<TrackedUserSystemMap>(1, _ => contactIds.Contains(_.UserId) && _.IntegratedSystemId == system.Id));
+            foreach (var map in systemMaps.Items)
+            {
+                await systemMapStore.Load(map, _ => _.Customer);
+            }
 
             return systemMaps.Items.Select(_ => _.Customer);
         }

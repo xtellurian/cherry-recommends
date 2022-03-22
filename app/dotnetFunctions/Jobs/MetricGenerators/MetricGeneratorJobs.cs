@@ -47,22 +47,18 @@ namespace SignalBox.Functions
             var logger = context.GetLogger(nameof(RunAllGeneratorsQueue));
 
             logger.LogInformation("Starting to run all metric generators.");
-
-            var generators = await metricGeneratorStore.Query(1);
-            logger.LogInformation($"Discovered {generators.Pagination.TotalItemCount} generators");
-            if (generators.Pagination.HasNextPage)
-            {
-                logger.LogWarning("Generators are being skipped due to pagination!");
-            }
             // update the last enqueued time for all generators.
-            foreach (var g in generators.Items)
+            var generators = new List<MetricGenerator>();
+            await foreach (var g in metricGeneratorStore.Iterate())
             {
                 g.LastEnqueued = dateTimeProvider.Now;
                 await metricGeneratorStore.Update(g);
                 await metricGeneratorStore.Load(g, _ => _.Metric);
+                generators.Add(g);
             }
+
             await metricGeneratorStore.Context.SaveChanges();
-            return generators.Items.Select(_ => new RunMetricGeneratorQueueMessage(message.TenantName, _.Id, _.Metric.EnvironmentId));
+            return generators.Select(_ => new RunMetricGeneratorQueueMessage(message.TenantName, _.Id, _.Metric.EnvironmentId));
         }
 
         [Function("Run_QueuedSingleMetricGeneratorForTenant")]

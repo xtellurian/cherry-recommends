@@ -9,35 +9,27 @@ namespace SignalBox.Core.Workflows
     {
         protected async Task<MetricGeneratorRunSummary> RunMonthsSinceEarliestEventGenerator(MetricGenerator generator)
         {
-            var page = 1;
-            var hasNextPage = true;
             var now = dateTimeProvider.Now;
             var totalWrites = 0;
-            while (hasNextPage)
+            await foreach (var customer in customerStore.Iterate())
             {
-                var query = await customerStore.Query(page++);
-                hasNextPage = query.Pagination.HasNextPage;
-                logger.LogInformation($"Page {query.Pagination.PageNumber} of {query.Pagination.PageCount} tracked user pages");
-                foreach (var tu in query.Items)
+                try
                 {
-                    try
-                    {
-                        var minTimestamp = await trackedUserEventStore.Min(_ => _.TrackedUserId == tu.Id, _ => _.Timestamp);
-                        var delta = CalcDeltaMonths(minTimestamp, now);
-                        await CreateMetricOnUser(tu, generator.Metric.CommonId, delta, false);
-                        totalWrites++;
-                    }
-                    catch (InvalidStorageAccessException)
-                    {
-                        logger.LogInformation($"Skipping tracked user {tu.Id} - has no min timestamp");
-                    }
-                    catch (System.Exception ex)
-                    {
-                        logger.LogError($"Something went wrong during feature gen. Page Number = {query.Pagination.PageNumber}", ex);
-                        logger.LogError(ex.GetType().ToString());
-                        logger.LogError(ex.Message);
-                        throw new WorkflowException("Error creating feature", ex);
-                    }
+                    var minTimestamp = await trackedUserEventStore.Min(_ => _.TrackedUserId == customer.Id, _ => _.Timestamp);
+                    var delta = CalcDeltaMonths(minTimestamp, now);
+                    await CreateMetricOnUser(customer, generator.Metric.CommonId, delta, false);
+                    totalWrites++;
+                }
+                catch (InvalidStorageAccessException)
+                {
+                    logger.LogInformation($"Skipping tracked user {customer.Id} - has no min timestamp");
+                }
+                catch (System.Exception ex)
+                {
+                    logger.LogError($"Something went wrong during feature gen", ex);
+                    logger.LogError(ex.GetType().ToString());
+                    logger.LogError(ex.Message);
+                    throw new WorkflowException("Error creating feature", ex);
                 }
             }
 

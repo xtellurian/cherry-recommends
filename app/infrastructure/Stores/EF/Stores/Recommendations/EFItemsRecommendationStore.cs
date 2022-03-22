@@ -32,9 +32,9 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await Set.AnyAsync(_ => _.RecommendationCorrelatorId == correlatorId);
         }
 
-        public async Task<Paginated<ItemsRecommendation>> QueryForRecommender(int page, int? pageSize, long recommenderId)
+        public async Task<Paginated<ItemsRecommendation>> QueryForRecommender(IPaginate paginate, long recommenderId)
         {
-            int actualPageSize = pageSize ?? PageSize;
+            var pageSize = paginate.PageSize ?? DefaultPageSize;
             var itemCount = await Set.CountAsync(_ => _.RecommenderId == recommenderId);
             List<ItemsRecommendation> results;
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
@@ -45,15 +45,15 @@ namespace SignalBox.Infrastructure.EntityFramework
                     .Include(_ => _.Customer)
                     .OrderByDescending(_ => _.Created)
                     .OrderByDescending(_ => _.LastUpdated)
-                    .Skip((page - 1) * actualPageSize).Take(actualPageSize)
+                    .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
                     .ToListAsync();
             }
             else
             {
                 results = new List<ItemsRecommendation>();
             }
-            var pageCount = (int)Math.Ceiling((double)itemCount / actualPageSize);
-            return new Paginated<ItemsRecommendation>(results, pageCount, itemCount, page);
+            var pageCount = (int)Math.Ceiling((double)itemCount / pageSize);
+            return new Paginated<ItemsRecommendation>(results, pageCount, itemCount, paginate.SafePage);
         }
 
         public async Task<IEnumerable<ItemsRecommendation>> RecommendationsSince(long recommenderId,

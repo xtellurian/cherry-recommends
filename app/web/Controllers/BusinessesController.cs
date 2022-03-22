@@ -91,7 +91,7 @@ namespace SignalBox.Web.Controllers
         public async Task<Paginated<CustomerEvent>> GetEvents(string id, [FromQuery] PaginateRequest p)
         {
             var business = await base.GetResource(id);
-            return await customerEventStore.ReadEventsForBusiness(p.Page, business);
+            return await customerEventStore.ReadEventsForBusiness(p, business);
         }
 
         /// <summary>Returns a list of metrics available for a business.</summary>

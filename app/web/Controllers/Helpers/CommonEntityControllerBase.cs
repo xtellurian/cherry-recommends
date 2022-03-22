@@ -27,11 +27,14 @@ namespace SignalBox.Web.Controllers
         {
             if (string.IsNullOrEmpty(q.Term))
             {
-                return await store.Query(p.Page);
+                return await store.Query(p);
             }
             else
             {
-                return await store.Query(p.Page, q.Term);
+                return await store.Query(new EntityStoreQueryOptions<T>(p)
+                {
+                    SearchTerm = q.Term
+                });
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
 
@@ -25,28 +26,39 @@ namespace SignalBox.Infrastructure.EntityFramework
                 return await base.Create(entity);
         }
 
-        public virtual async Task<Paginated<T>> Query(int page, string searchTerm)
+        public override async Task<Paginated<T>> Query(EntityStoreQueryOptions<T> queryOptions = null)
         {
+            queryOptions ??= new EntityStoreQueryOptions<T>();
+            var pageSize = queryOptions.PageSize ?? DefaultPageSize;
+            var predicateBuilder = PredicateBuilder.New<T>(true);
+            if (!string.IsNullOrEmpty(queryOptions.SearchTerm))
+            {
+                predicateBuilder = predicateBuilder.And(_ =>
+                    EF.Functions.Like(_.CommonId, $"%{queryOptions.SearchTerm}%") ||
+                    EF.Functions.Like(_.Name, $"%{queryOptions.SearchTerm}%"));
+            }
+            if (queryOptions.Predicate != null)
+            {
+                predicateBuilder = predicateBuilder.And(queryOptions.Predicate);
+            }
 
-            Expression<Func<T, bool>> predicate =
-                _ => EF.Functions.Like(_.CommonId, $"%{searchTerm}%") || EF.Functions.Like(_.Name, $"%{searchTerm}%");
-            var itemCount = await QuerySet.CountAsync(predicate);
+            var itemCount = await QuerySet.CountAsync(predicateBuilder);
             List<T> results;
 
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
                 results = await QuerySet
-                    .Where(predicate)
+                    .Where(predicateBuilder)
                     .OrderByDescending(_ => _.LastUpdated)
-                    .Skip((page - 1) * PageSize).Take(PageSize)
+                    .Skip((queryOptions.Page - 1) * pageSize).Take(pageSize)
                     .ToListAsync();
             }
             else
             {
                 results = new List<T>();
             }
-            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
-            return new Paginated<T>(results, pageCount, itemCount, page);
+            var pageCount = (int)Math.Ceiling((double)itemCount / pageSize);
+            return new Paginated<T>(results, pageCount, itemCount, queryOptions.Page);
         }
 
         public virtual async Task<T> ReadFromCommonId<TProperty>(string commonId, Expression<Func<T, TProperty>> include)

@@ -14,8 +14,9 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, environmentService, c => c.Metrics)
         { }
 
-        public async Task<Paginated<Customer>> QueryCustomers(int page, long metricId)
+        public async Task<Paginated<Customer>> QueryCustomers(IPaginate paginate, long metricId)
         {
+            var pageSize = paginate.PageSize ?? DefaultPageSize;
             var itemCount = await Set
                     .Where(_ => _.Id == metricId)
                     .SelectMany(_ => _.HistoricTrackedUserFeatures.Select(_ => _.TrackedUser))
@@ -32,15 +33,15 @@ namespace SignalBox.Infrastructure.EntityFramework
                     .OrderByDescending(_ => _.LastUpdated)
                     .Distinct()
                     .OrderByDescending(_ => _.LastUpdated)
-                    .Skip((page - 1) * PageSize).Take(PageSize)
+                    .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
                     .ToListAsync();
             }
             else
             {
                 results = new List<Customer>();
             }
-            var pageCount = (int)Math.Ceiling((double)itemCount / PageSize);
-            return new Paginated<Customer>(results, pageCount, itemCount, page);
+            var pageCount = (int)Math.Ceiling((double)itemCount / pageSize);
+            return new Paginated<Customer>(results, pageCount, itemCount, paginate.SafePage);
         }
     }
 }

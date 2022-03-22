@@ -60,7 +60,7 @@ namespace SignalBox.Web.Controllers
                 predicate = predicate != null ? predicate.And(expression) : expression;
             }
 
-            return await store.Query(p.Page, predicate);
+            return await store.Query(p, predicate);
         }
 
         /// <summary>Creates a new recommendable promotion.</summary>

@@ -29,9 +29,9 @@ namespace SignalBox.Core.Workflows
         }
 
 #nullable enable
-        public async Task<Paginated<InvokationLogEntry>> QueryInvokationLogs(RecommenderEntityBase recommender, int page)
+        public async Task<Paginated<InvokationLogEntry>> QueryInvokationLogs(IPaginate paginate, RecommenderEntityBase recommender)
         {
-            return await store.QueryInvokationLogs(recommender.Id, page);
+            return await store.QueryInvokationLogs(paginate, recommender.Id);
         }
 
         protected async Task SendToDestinations(T recommender, RecommendingContext context, RecommendationEntity recommendation)

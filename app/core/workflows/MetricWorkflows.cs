@@ -37,9 +37,9 @@ namespace SignalBox.Core.Workflows
 
         }
 
-        public async Task<Paginated<Customer>> GetCustomers(Metric metric, int page)
+        public async Task<Paginated<Customer>> GetCustomers(IPaginate paginate, Metric metric)
         {
-            return await metricStore.QueryCustomers(page, metric.Id);
+            return await metricStore.QueryCustomers(paginate, metric.Id);
         }
 
         public async Task<HistoricCustomerMetric> ReadCustomerMetric(Customer customer, string metricCommonId, int? version = null)

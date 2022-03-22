@@ -151,7 +151,7 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}/Recommendations")]
         public async Task<Paginated<ItemsRecommendation>> GetRecommendations(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
         {
-            return await workflows.QueryRecommendations(id, p.Page, p.PageSize, useInternalId);
+            return await workflows.QueryRecommendations(id, p, useInternalId);
         }
 
         /// <summary>Get the promotions associated with a recommender.</summary>
@@ -159,7 +159,7 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}/Promotions")]
         public async Task<Paginated<RecommendableItem>> GetItems(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
         {
-            return await workflows.QueryItems(id, p.Page, useInternalId);
+            return await workflows.QueryItems(p, id, useInternalId);
         }
 
         /// <summary>Get the promotions associated with a recommender.</summary>

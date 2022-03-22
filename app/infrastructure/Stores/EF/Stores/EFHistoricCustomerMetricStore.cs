@@ -50,7 +50,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                         .Where(predicate)
                         .Where(_ => _.HistoricCustomerMetricId < currentId)
                         .OrderByDescending(_ => _.HistoricCustomerMetricId) // descending here
-                        .Take(PageSize)
+                        .Take(DefaultPageSize) // use the default page size during iteration
                         .ToListAsync();
 
                 if (results.Any())

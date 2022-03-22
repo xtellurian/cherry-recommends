@@ -53,7 +53,7 @@ namespace SignalBox.Web.Controllers
         [HttpGet]
         public async Task<Paginated<ApiKeyDto>> ListApiKeyNames([FromQuery] PaginateRequest p)
         {
-            var result = await store.Query(p.Page);
+            var result = await store.Query(p);
             var x = new Paginated<ApiKeyDto>(
                 result.Items.Select(_ => new ApiKeyDto(_)),
                 result.Pagination.PageCount,

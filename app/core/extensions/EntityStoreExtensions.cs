@@ -1,7 +1,10 @@
+using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace SignalBox.Core
 {
+#nullable enable
     public static class EntityStoreExtensions
     {
         /// <summary>
@@ -31,6 +34,21 @@ namespace SignalBox.Core
                 Email = pending.Email,
                 EnvironmentId = pending.EnvironmentId,
             };
+        }
+
+        public static async Task<Paginated<T>> Query<T>(this IEntityStore<T> store,
+                                                        IPaginate paginate,
+                                                        Expression<Func<T, bool>>? predicate = null) where T : Entity
+        {
+            return await store.Query(new EntityStoreQueryOptions<T>(paginate, predicate));
+        }
+
+        public static async Task<Paginated<T>> Query<T, TProperty>(this IEntityStore<T> store,
+                                                                   IPaginate paginate,
+                                                                   Expression<Func<T, TProperty>> include,
+                                                                   Expression<Func<T, bool>>? predicate = null) where T : Entity
+        {
+            return await store.Query<TProperty>(include, new EntityStoreQueryOptions<T>(paginate, predicate));
         }
     }
 }
