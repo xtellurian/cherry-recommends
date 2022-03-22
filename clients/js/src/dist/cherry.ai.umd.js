@@ -2013,7 +2013,7 @@
     let authConfig = undefined; // caches this because it rarely change
     const fetchAuth0ConfigurationAsync = async () => {
         if (!authConfig) {
-            console.log("fetching auth0 from server...");
+            console.debug("fetching auth0 from server...");
             const result = await fetch$2(getUrl("api/reactConfig/auth0"), {
                 headers: defaultHeaders,
             });

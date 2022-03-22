@@ -9,7 +9,7 @@ let authConfig: Auth0ReactConfig = undefined; // caches this because it rarely c
 export const fetchAuth0ConfigurationAsync =
   async (): Promise<Auth0ReactConfig> => {
     if (!authConfig) {
-      console.log("fetching auth0 from server...");
+      console.debug("fetching auth0 from server...");
       const result = await fetch(getUrl("api/reactConfig/auth0"), {
         headers: defaultHeaders,
       });

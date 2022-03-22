@@ -5,7 +5,7 @@ import { useAuth } from "../../utility/useAuth";
 import { useTokenScopes } from "../../api-hooks/token";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 
-import { useAuthenticatedIA } from "./MenuIA";
+import { useAuthenticatedIA, hash as hashes } from "./MenuIA";
 
 import "./SideNavMenu.css";
 
@@ -66,7 +66,10 @@ export const SideNavMenu = () => {
               ...acc,
               {
                 name: curr.name,
-                to: `/settings/integrations/detail/${curr.id}`,
+                to: {
+                  pathname: `/settings/integrations/detail/${curr.id}`,
+                  hash: hashes.integration,
+                },
               },
             ];
           }, []);

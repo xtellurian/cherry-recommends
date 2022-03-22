@@ -21,7 +21,7 @@ const AuthenticatedIA = [
     to: { pathname: "/promotions", hash: hash.promotions },
     items: [
       {
-        name: "All Promotions",
+        name: "Promotions",
         to: {
           pathname: "/promotions/",
           hash: hash.promotions,
@@ -42,28 +42,21 @@ const AuthenticatedIA = [
     to: { pathname: "/customers", hash: hash.customers },
     items: [
       {
-        name: "All Customers",
+        name: "Customers",
         to: {
           pathname: "/customers",
           hash: hash.customers,
         },
       },
       {
-        name: "Add a Customer",
-        to: {
-          pathname: "/customers/create",
-          hash: `${hash.customers}_create`,
-        },
-      },
-      {
-        name: "All Businesses",
+        name: "Businesses",
         to: {
           pathname: "/businesses",
           hash: `${hash.customers}_businesses`,
         },
       },
       {
-        name: "All Segments",
+        name: "Segments",
         to: {
           pathname: "/segments",
           hash: `${hash.customers}_segments`,
@@ -84,17 +77,10 @@ const AuthenticatedIA = [
     to: { pathname: "/metrics", hash: hash.metrics },
     items: [
       {
-        name: "All Metrics",
+        name: "Metrics",
         to: {
           pathname: "/metrics/",
           hash: hash.metrics,
-        },
-      },
-      {
-        name: "Create a Metric",
-        to: {
-          pathname: "/metrics/create",
-          hash: metricsHash.create,
         },
       },
     ],
@@ -105,7 +91,7 @@ const AuthenticatedIA = [
     to: { pathname: "/parameters", hash: hash.parameters },
     items: [
       {
-        name: "All Parameters",
+        name: "Parameters",
         to: {
           pathname: "/parameters/",
           hash: hash.parameters,
@@ -141,12 +127,12 @@ export const useAuthenticatedIA = (scopes) => {
 const getAuthenticatedIA = (scopes, flags) => {
   let ia = AuthenticatedIA;
   if (!flags?.parameterRecommendations) {
-    ia = ia.filter((_) => _.name != "Parameters");
+    ia = ia.filter((_) => _.name !== "Parameters");
   }
   if (!flags?.segments) {
     ia = ia.map((_) => {
       if (_.name === "Customers") {
-        const _items = _.items.filter((i) => i.name != "All Segments");
+        const _items = _.items.filter((i) => i.name !== "Segments");
         return { ..._, items: _items };
       }
       return _;
