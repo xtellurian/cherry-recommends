@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useMemo } from "react";
 import { X as RemoveIcon } from "react-bootstrap-icons";
 
-import { useMetric, useMetrics } from "../../api-hooks/metricsApi";
+import { useMetrics } from "../../api-hooks/metricsApi";
 import { useMetricPredicate } from "./utilities/useMetricPredicate";
-import { Selector, Spinner } from "../molecules";
+import { Selector } from "../molecules";
 import {
   TextInput,
   numericValidator,
@@ -11,27 +11,6 @@ import {
 } from "../molecules/TextInput";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { LOGICAL_OPERATORS } from "./utilities/constants";
-
-const MetricSelector = ({ onChange }) => {
-  const metrics = useMetrics();
-
-  const metricsOptions = metrics.items
-    ? metrics.items.map((metric) => ({
-        label: metric.name,
-        value: `${metric.id}`,
-      }))
-    : [];
-
-  return (
-    <Selector
-      isSearchable
-      placeholder={metrics.loading ? "Loading..." : "Choose a metric"}
-      noOptionsMessage={(inputValue) => "No Metrics Available"}
-      options={metricsOptions}
-      onChange={onChange}
-    />
-  );
-};
 
 const Separator = ({ children }) => {
   return (
@@ -61,12 +40,16 @@ export const PredicateRow = ({
   onRemove,
   onRequestRemove,
 }) => {
-  const predicateOperatorRef = useRef(null);
+  const metrics = useMetrics();
   const { getPredicateByMetricType } = useMetricPredicate({
     id: predicate.metricId,
   });
-  const metric = useMetric({ id: predicate.metricId });
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+
+  const metric = useMemo(
+    () => metrics?.items?.find((m) => m.id === predicate.metricId) || {},
+    [metrics, predicate.metricId]
+  );
 
   const {
     compareTo,
@@ -75,9 +58,13 @@ export const PredicateRow = ({
     predicateKey,
   } = getPredicateByMetricType({ predicate });
 
-  const composeOptions = (data) => {
+  const convertObjectToOptions = (data) => {
     if (!data) return [];
     return Object.entries(data).map((d) => ({ value: d[0], label: d[1] }));
+  };
+
+  const composeValue = ({ options, value }) => {
+    return options.find((option) => option.value === value) || null;
   };
 
   const handleMetricChange = ({ value }) => {
@@ -88,15 +75,9 @@ export const PredicateRow = ({
       ...newPredicateKey,
       metricId: value,
     });
-
-    predicateOperatorRef.current.state.value = null;
   };
 
   if (readOnly) {
-    if (metric.loading) {
-      return <Spinner />;
-    }
-
     return (
       <React.Fragment>
         <div className="row">
@@ -144,20 +125,41 @@ export const PredicateRow = ({
     );
   }
 
+  const metricOptions = metrics.items
+    ? metrics.items.map((m) => ({
+        label: m.name,
+        value: `${m.id}`,
+      }))
+    : [];
+
+  const operatorOptions = convertObjectToOptions(validPredicateOperators);
+
   return (
     <React.Fragment>
       <div className="row">
         <div className="col-4 pr-0">
-          <MetricSelector onChange={handleMetricChange} />
+          <Selector
+            isSearchable
+            placeholder={metrics.loading ? "Loading..." : "Choose a metric"}
+            noOptionsMessage={(inputValue) => "No Metrics Available"}
+            options={metricOptions}
+            value={composeValue({
+              options: metricOptions,
+              value: predicate.metricId,
+            })}
+            onChange={handleMetricChange}
+          />
         </div>
         <div className="col-4 pr-0">
           <Selector
-            ref={predicateOperatorRef}
             isSearchable
             placeholder={"Choose an operator"}
             noOptionsMessage={(inputValue) => "No Operators Available"}
-            options={composeOptions(validPredicateOperators)}
-            defaultValue={predicate[predicateKey]?.predicateOperator}
+            options={operatorOptions}
+            value={composeValue({
+              options: operatorOptions,
+              value: predicate[predicateKey]?.predicateOperator,
+            })}
             onChange={({ value }) =>
               onUpdate({
                 ...predicate,
@@ -190,7 +192,7 @@ export const PredicateRow = ({
         </div>
 
         {/* <div className="ml-auto mr-3" role="group">
-          {composeOptions(LOGICAL_OPERATORS).map((operator) => (
+          {convertObjectToOptions(LOGICAL_OPERATORS).map((operator) => (
             <button
               key={operator.value}
               type="button"

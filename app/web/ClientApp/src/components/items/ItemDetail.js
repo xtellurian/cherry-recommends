@@ -9,10 +9,12 @@ import {
 import { PageHeading, Spinner, ErrorCard, BackButton } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { PropertiesTableView } from "../molecules/PropertiesTableView";
+import { BigPopup } from "../molecules/popups/BigPopup";
 
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { CommonEntityPropertyEditorPopup } from "../molecules/popups/CommonEntityPropertyEditorPopup";
 import { useAccessToken } from "../../api-hooks/token";
+import { EditItem } from "./EditItem";
 
 export const ItemDetail = () => {
   const { id } = useParams();
@@ -20,6 +22,7 @@ export const ItemDetail = () => {
   const [trigger, setTrigger] = React.useState({});
   const item = usePromotion({ id, trigger });
   const [isDeletePopupOpen, setisDeletePopupOpen] = React.useState(false);
+  const [isEditPopupOpen, setIsEditPopupOpen] = React.useState(false);
   const [isPropertyEditorPopupOpen, setIsPropertyEditorPopupOpen] =
     React.useState(false);
   const [error, setError] = React.useState();
@@ -45,9 +48,15 @@ export const ItemDetail = () => {
     <React.Fragment>
       <button
         onClick={() => setisDeletePopupOpen(true)}
-        className="float-right ml-1 btn btn-danger"
+        className="float-right ml-2 btn btn-danger"
       >
         Delete Promotion
+      </button>
+      <button
+        onClick={() => setIsEditPopupOpen(true)}
+        className="float-right ml-2 btn btn-outline-primary"
+      >
+        Edit Promotion
       </button>
       <BackButton className="float-right" to="/promotions">
         All Promotions
@@ -142,6 +151,9 @@ export const ItemDetail = () => {
           />
         </div>
       )}
+      <BigPopup isOpen={isEditPopupOpen} setIsOpen={setIsEditPopupOpen}>
+        <EditItem item={item} />
+      </BigPopup>
     </React.Fragment>
   );
 };
