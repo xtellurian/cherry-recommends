@@ -1093,6 +1093,181 @@
         }
       }
     },
+    "/api/Channels": {
+      "post": {
+        "tags": [
+          "Channels"
+        ],
+        "summary": "Creates a new Channel.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChannelDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChannelDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChannelDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelBase"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Channels"
+        ],
+        "summary": "Returned a paginated list of items for this resource.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookChannelPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Channels/{id}": {
+      "get": {
+        "tags": [
+          "Channels"
+        ],
+        "summary": "Returns the resource with this Id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookChannel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Channels"
+        ],
+        "summary": "Deletes the resource with this Id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/TrackedUsers/{id}/features": {
       "get": {
         "tags": [
@@ -3013,6 +3188,39 @@
         }
       }
     },
+    "/api/DataSummary/event-kind-names": {
+      "get": {
+        "tags": [
+          "DataSummary"
+        ],
+        "summary": "Summarises the events that have been collected.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/DataSummary/events": {
       "get": {
         "tags": [
@@ -3026,6 +3234,46 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CustomerEventSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DataSummary/event-kind/{kind}": {
+      "get": {
+        "tags": [
+          "DataSummary"
+        ],
+        "summary": "Summarises the events that have been collected.",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/EventKinds"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerEventKindSummary"
                 }
               }
             }
@@ -15036,7 +15284,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|]+$",
             "type": "string"
           },
           "name": {
@@ -15571,6 +15819,58 @@
         ],
         "type": "string"
       },
+      "ChannelBase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "environmentId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "environment": {
+            "$ref": "#/components/schemas/Environment"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "channelType": {
+            "$ref": "#/components/schemas/ChannelTypes"
+          },
+          "linkedIntegratedSystemId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "linkedIntegratedSystem": {
+            "$ref": "#/components/schemas/IntegratedSystem"
+          },
+          "discriminator": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChannelTypes": {
+        "enum": [
+          "webhook",
+          "email",
+          "web"
+        ],
+        "type": "string"
+      },
       "CheckistItem": {
         "type": "object",
         "properties": {
@@ -15658,7 +15958,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|]+$",
             "type": "string"
           },
           "name": {
@@ -15668,6 +15968,27 @@
           "description": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateChannelDto": {
+        "required": [
+          "channelType",
+          "integratedSystemId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "channelType": {
+            "$ref": "#/components/schemas/ChannelTypes"
+          },
+          "integratedSystemId": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -15750,7 +16071,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|]+$",
             "type": "string"
           },
           "name": {
@@ -15884,7 +16205,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|]+$",
             "type": "string"
           },
           "name": {
@@ -15917,7 +16238,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|]+$",
             "type": "string"
           },
           "name": {
@@ -15991,7 +16312,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|]+$",
             "type": "string"
           },
           "name": {
@@ -16043,7 +16364,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|]+$",
             "type": "string"
           },
           "name": {
@@ -16281,6 +16602,18 @@
           },
           "customer": {
             "$ref": "#/components/schemas/Customer"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerEventKindSummary": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/EventKinds"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/EventKindSummary"
           }
         },
         "additionalProperties": false
@@ -19703,6 +20036,71 @@
         "properties": {
           "gettingStartedChecklist": {
             "$ref": "#/components/schemas/GettingStartedChecklist"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WebhookChannel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "environmentId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "environment": {
+            "$ref": "#/components/schemas/Environment"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "channelType": {
+            "$ref": "#/components/schemas/ChannelTypes"
+          },
+          "linkedIntegratedSystemId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "linkedIntegratedSystem": {
+            "$ref": "#/components/schemas/IntegratedSystem"
+          },
+          "discriminator": {
+            "type": "string",
+            "nullable": true
+          },
+          "endpoint": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WebhookChannelPaginated": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookChannel"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationInfo"
           }
         },
         "additionalProperties": false

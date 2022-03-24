@@ -31,6 +31,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<BusinessMetricGeneratorWorkflow>();
             services.AddScoped<FilterSelectAggregateWorkflow>();
             services.AddScoped<SegmentEnrolmentWorkflow>();
+            services.AddScoped<ChannelWorkflow>();
             // images and blob reports
             services.AddScoped<ReportWorkflows>();
 
@@ -49,6 +50,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ICustomerSegmentWorkflow, CustomerSegmentWorkflows>();
             services.AddScoped<IRecommenderReportImageWorkflow, RecommenderReportImageWorkflows>();
             services.AddScoped<IRecommenderMetricTriggersWorkflow, RecommenderTriggersWorkflows>();
+            services.AddScoped<IChannelWorkflow, ChannelWorkflow>();
             return services;
         }
     }

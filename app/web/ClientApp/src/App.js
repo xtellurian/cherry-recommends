@@ -23,6 +23,7 @@ import Analytics from "./analytics/Analytics";
 import Identifier from "./analytics/Identifier";
 import "./global-css/cherry.css";
 import { BusinessesComponent } from "./components/businesses/BusinessesComponent";
+import { ChannelsComponent } from "./components/channels/ChannelsComponent";
 
 configure();
 const App = () => {
@@ -62,6 +63,7 @@ const App = () => {
         <AuthorizeRoute path="/dataview" component={DataViewComponent} />
         <AuthorizeRoute path="/reports" component={ReportsComponent} />
         <AuthorizeRoute path="/businesses" component={BusinessesComponent} />
+        <AuthorizeRoute path="/channels" component={ChannelsComponent} />
         <Route path="/docs/api" component={ApiDocs} />
 
         <Identifier />

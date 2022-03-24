@@ -529,6 +529,97 @@ export interface paths {
       };
     };
   };
+  "/api/Channels": {
+    get: {
+      parameters: {
+        query: {
+          page?: number;
+          pageSize?: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["WebhookChannelPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateChannelDto"];
+          "text/json": components["schemas"]["CreateChannelDto"];
+          "application/*+json": components["schemas"]["CreateChannelDto"];
+        };
+      };
+    };
+  };
+  "/api/Channels/{id}": {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["WebhookChannel"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          id: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/TrackedUsers/{id}/features": {
     get: {
       parameters: {
@@ -1431,6 +1522,24 @@ export interface paths {
       };
     };
   };
+  "/api/DataSummary/event-kind-names": {
+    get: {
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": string[];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/DataSummary/events": {
     get: {
       responses: {
@@ -1438,6 +1547,29 @@ export interface paths {
         200: {
           content: {
             "application/json": components["schemas"]["CustomerEventSummary"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/DataSummary/event-kind/{kind}": {
+    get: {
+      parameters: {
+        path: {
+          kind: components["schemas"]["EventKinds"];
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CustomerEventKindSummary"];
           };
         };
         /** Bad Request */
@@ -7588,6 +7720,19 @@ export interface components {
       compareTo?: string | null;
     };
     CategoricalPredicateOperators: "none" | "equal" | "notEqual";
+    ChannelBase: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      environmentId?: number | null;
+      environment?: components["schemas"]["Environment"];
+      name?: string | null;
+      channelType?: components["schemas"]["ChannelTypes"];
+      linkedIntegratedSystemId?: number;
+      linkedIntegratedSystem?: components["schemas"]["IntegratedSystem"];
+      discriminator?: string | null;
+    };
+    ChannelTypes: "webhook" | "email" | "web";
     CheckistItem: {
       complete?: boolean | null;
       current?: boolean | null;
@@ -7612,6 +7757,11 @@ export interface components {
       commonId: string;
       name?: string | null;
       description?: string | null;
+    };
+    CreateChannelDto: {
+      name: string;
+      channelType: components["schemas"]["ChannelTypes"];
+      integratedSystemId: number;
     };
     CreateCustomerMetric: {
       value: unknown;
@@ -7763,6 +7913,10 @@ export interface components {
       trackedUserId?: number | null;
       trackedUser?: components["schemas"]["Customer"];
       customer?: components["schemas"]["Customer"];
+    };
+    CustomerEventKindSummary: {
+      kind?: components["schemas"]["EventKinds"];
+      summary?: components["schemas"]["EventKindSummary"];
     };
     CustomerEventPaginated: {
       items?: components["schemas"]["CustomerEvent"][] | null;
@@ -8662,6 +8816,23 @@ export interface components {
     };
     UserMetadata: {
       gettingStartedChecklist?: components["schemas"]["GettingStartedChecklist"];
+    };
+    WebhookChannel: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      environmentId?: number | null;
+      environment?: components["schemas"]["Environment"];
+      name?: string | null;
+      channelType?: components["schemas"]["ChannelTypes"];
+      linkedIntegratedSystemId?: number;
+      linkedIntegratedSystem?: components["schemas"]["IntegratedSystem"];
+      discriminator?: string | null;
+      endpoint?: string | null;
+    };
+    WebhookChannelPaginated: {
+      items?: components["schemas"]["WebhookChannel"][] | null;
+      pagination?: components["schemas"]["PaginationInfo"];
     };
     WebhookReceiver: {
       id?: number;

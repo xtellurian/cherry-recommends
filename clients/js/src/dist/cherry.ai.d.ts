@@ -297,6 +297,19 @@ interface components {
             compareTo?: string | null;
         };
         CategoricalPredicateOperators: "none" | "equal" | "notEqual";
+        ChannelBase: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            name?: string | null;
+            channelType?: components["schemas"]["ChannelTypes"];
+            linkedIntegratedSystemId?: number;
+            linkedIntegratedSystem?: components["schemas"]["IntegratedSystem"];
+            discriminator?: string | null;
+        };
+        ChannelTypes: "webhook" | "email" | "web";
         CheckistItem: {
             complete?: boolean | null;
             current?: boolean | null;
@@ -321,6 +334,11 @@ interface components {
             commonId: string;
             name?: string | null;
             description?: string | null;
+        };
+        CreateChannelDto: {
+            name: string;
+            channelType: components["schemas"]["ChannelTypes"];
+            integratedSystemId: number;
         };
         CreateCustomerMetric: {
             value: unknown;
@@ -474,6 +492,10 @@ interface components {
             trackedUserId?: number | null;
             trackedUser?: components["schemas"]["Customer"];
             customer?: components["schemas"]["Customer"];
+        };
+        CustomerEventKindSummary: {
+            kind?: components["schemas"]["EventKinds"];
+            summary?: components["schemas"]["EventKindSummary"];
         };
         CustomerEventPaginated: {
             items?: components["schemas"]["CustomerEvent"][] | null;
@@ -1385,6 +1407,23 @@ interface components {
         UserMetadata: {
             gettingStartedChecklist?: components["schemas"]["GettingStartedChecklist"];
         };
+        WebhookChannel: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            name?: string | null;
+            channelType?: components["schemas"]["ChannelTypes"];
+            linkedIntegratedSystemId?: number;
+            linkedIntegratedSystem?: components["schemas"]["IntegratedSystem"];
+            discriminator?: string | null;
+            endpoint?: string | null;
+        };
+        WebhookChannelPaginated: {
+            items?: components["schemas"]["WebhookChannel"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
         WebhookReceiver: {
             id?: number;
             created?: string;
@@ -1441,6 +1480,18 @@ declare namespace businessesApi_d {
     businessesApi_d_deleteBusinessMemberAsync as deleteBusinessMemberAsync,
     businessesApi_d_addBusinessMemberAsync as addBusinessMemberAsync,
     businessesApi_d_fetchRecommendationsAsync as fetchRecommendationsAsync,
+  };
+}
+
+interface CreateChannelRequest extends AuthenticatedRequest {
+    channel: components["schemas"]["CreateChannelDto"];
+}
+declare const createChannelAsync: ({ token, channel, }: CreateChannelRequest) => Promise<any>;
+
+declare const channelsApi_d_createChannelAsync: typeof createChannelAsync;
+declare namespace channelsApi_d {
+  export {
+    channelsApi_d_createChannelAsync as createChannelAsync,
   };
 }
 
@@ -2787,4 +2838,4 @@ declare namespace errorHandling_d {
   };
 }
 
-export { actionsApi_d as actions, apiKeyApi_d as apiKeys, businessesApi_d as businesses, components, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, metricGeneratorsApi_d as metricGenerators, metricsApi_d as metrics, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, promotionsApi_d as promotions, promotionsRecommendersApi_d as promotionsRecommenders, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };
+export { actionsApi_d as actions, apiKeyApi_d as apiKeys, businessesApi_d as businesses, channelsApi_d as channels, components, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, metricGeneratorsApi_d as metricGenerators, metricsApi_d as metrics, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, promotionsApi_d as promotions, promotionsRecommendersApi_d as promotionsRecommenders, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };

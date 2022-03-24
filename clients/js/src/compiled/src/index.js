@@ -14,6 +14,7 @@ else {
 }
 import * as apiKeys from "./api/apiKeyApi";
 import * as businesses from "./api/businessesApi";
+import * as channels from "./api/channelsApi";
 import * as customers from "./api/customersApi";
 import * as dataSummary from "./api/dataSummaryApi";
 import * as deployment from "./api/deploymentApi";
@@ -43,4 +44,4 @@ import * as actions from "./api/actionsApi";
 import { setBaseUrl } from "./api/client/baseUrl";
 import { setDefaultEnvironmentId, setDefaultApiKey, } from "./api/client/headers";
 import * as errorHandling from "./utilities/errorHandling";
-export { actions, apiKeys, businesses, customers, dataSummary, deployment, events, environments, featureGenerators, features, integratedSystems, itemsRecommenders, promotionsRecommenders, metrics, metricGenerators, modelRegistrations, models, parameters, parameterSetRecommenders, profile, reactConfig, recommendableItems, promotions, reports, rewardSelectors, segments, touchpoints, trackedUsers, setBaseUrl, setDefaultEnvironmentId, setDefaultApiKey, errorHandling };
+export { actions, apiKeys, businesses, channels, customers, dataSummary, deployment, events, environments, featureGenerators, features, integratedSystems, itemsRecommenders, promotionsRecommenders, metrics, metricGenerators, modelRegistrations, models, parameters, parameterSetRecommenders, profile, reactConfig, recommendableItems, promotions, reports, rewardSelectors, segments, touchpoints, trackedUsers, setBaseUrl, setDefaultEnvironmentId, setDefaultApiKey, errorHandling };

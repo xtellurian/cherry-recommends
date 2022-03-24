@@ -34,6 +34,13 @@ const AuthenticatedIA = [
           hash: `${hash.promotions}_recommenders`,
         },
       },
+      {
+        name: "Channels",
+        to: {
+          pathname: "/channels",
+          hash: `${hash.promotions}_channels`,
+        },
+      },
     ],
   },
   {

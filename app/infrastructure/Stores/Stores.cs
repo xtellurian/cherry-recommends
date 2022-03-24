@@ -160,6 +160,10 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IGlobalMetricValueStore, EFGlobalMetricValueStore>();
             services.AddScoped<IBusinessMetricValueStore, EFBusinessMetricValueStore>();
 
+            // channels
+            services.AddScoped<IChannelStore, EFChannelStore>();
+            services.AddScoped<IWebhookChannelStore, EFWebhookChannelStore>();
+
             services.AddScoped<IHashedApiKeyStore, EFHashedAPIKeyStore>();
             services.AddScoped<IModelRegistrationStore, EFModelRegistrationStore>();
             services.AddScoped<ITrackedUserSystemMapStore, EFTrackedUserSystemMapStore>();

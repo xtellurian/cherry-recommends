@@ -261,6 +261,20 @@ var businessesApi = /*#__PURE__*/Object.freeze({
     fetchRecommendationsAsync: fetchRecommendationsAsync
 });
 
+const createChannelAsync = async ({ token, channel, }) => {
+    return await executeFetch({
+        path: "api/Channels",
+        token,
+        method: "post",
+        body: channel,
+    });
+};
+
+var channelsApi = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    createChannelAsync: createChannelAsync
+});
+
 /**
  * Returns an array with arrays of the given size.
  *
@@ -2462,4 +2476,4 @@ else {
     throw new Error("Unknown JavaScript environment: Not supported");
 }
 
-export { actionsApi as actions, apiKeyApi as apiKeys, businessesApi as businesses, customersApi as customers, dataSummaryApi as dataSummary, deploymentApi as deployment, environmentsApi as environments, errorHandling, eventsApi as events, featureGeneratorsApi as featureGenerators, featuresApi as features, integratedSystemsApi as integratedSystems, itemsRecommendersApi as itemsRecommenders, metricGeneratorsApi as metricGenerators, metricsApi as metrics, modelRegistrationsApi as modelRegistrations, index as models, parameterSetRecommendersApi as parameterSetRecommenders, parametersApi as parameters, profileApi as profile, promotionsApi as promotions, promotionsRecommendersApi as promotionsRecommenders, reactConfigApi as reactConfig, recommendableItemsApi as recommendableItems, reportsApi as reports, rewardSelectorsApi as rewardSelectors, segmentsApi as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId$1 as setDefaultEnvironmentId, touchpointsApi as touchpoints, trackedUsersApi as trackedUsers };
+export { actionsApi as actions, apiKeyApi as apiKeys, businessesApi as businesses, channelsApi as channels, customersApi as customers, dataSummaryApi as dataSummary, deploymentApi as deployment, environmentsApi as environments, errorHandling, eventsApi as events, featureGeneratorsApi as featureGenerators, featuresApi as features, integratedSystemsApi as integratedSystems, itemsRecommendersApi as itemsRecommenders, metricGeneratorsApi as metricGenerators, metricsApi as metrics, modelRegistrationsApi as modelRegistrations, index as models, parameterSetRecommendersApi as parameterSetRecommenders, parametersApi as parameters, profileApi as profile, promotionsApi as promotions, promotionsRecommendersApi as promotionsRecommenders, reactConfigApi as reactConfig, recommendableItemsApi as recommendableItems, reportsApi as reports, rewardSelectorsApi as rewardSelectors, segmentsApi as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId$1 as setDefaultEnvironmentId, touchpointsApi as touchpoints, trackedUsersApi as trackedUsers };

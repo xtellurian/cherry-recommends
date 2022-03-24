@@ -267,6 +267,20 @@
         fetchRecommendationsAsync: fetchRecommendationsAsync
     });
 
+    const createChannelAsync = async ({ token, channel, }) => {
+        return await executeFetch({
+            path: "api/Channels",
+            token,
+            method: "post",
+            body: channel,
+        });
+    };
+
+    var channelsApi = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        createChannelAsync: createChannelAsync
+    });
+
     /**
      * Returns an array with arrays of the given size.
      *
@@ -2471,6 +2485,7 @@
     exports.actions = actionsApi;
     exports.apiKeys = apiKeyApi;
     exports.businesses = businessesApi;
+    exports.channels = channelsApi;
     exports.customers = customersApi;
     exports.dataSummary = dataSummaryApi;
     exports.deployment = deploymentApi;

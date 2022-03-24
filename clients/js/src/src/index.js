@@ -13,6 +13,7 @@ if (typeof globalThis === "object") {
 
 import * as apiKeys from "./api/apiKeyApi";
 import * as businesses from "./api/businessesApi";
+import * as channels from "./api/channelsApi";
 import * as customers from "./api/customersApi";
 import * as dataSummary from "./api/dataSummaryApi";
 import * as deployment from "./api/deploymentApi";
@@ -52,6 +53,7 @@ export {
   actions,
   apiKeys,
   businesses,
+  channels,
   customers,
   dataSummary,
   deployment,
