@@ -114,6 +114,8 @@ interface PromotionsRequest extends EntitySearchRequest {
     benefitType: string | undefined;
     weeksAgo: number | undefined;
 }
+interface Channel extends Entity {
+}
 
 declare const fetchApiKeysAsync: ({ token, page }: PaginatedRequest) => Promise<any>;
 declare enum ApiKeyType {
@@ -1483,14 +1485,17 @@ declare namespace businessesApi_d {
   };
 }
 
+declare const fetchChannelsAsync: ({ token, page, }: EntitySearchRequest) => Promise<PaginateResponse<Channel>>;
 interface CreateChannelRequest extends AuthenticatedRequest {
     channel: components["schemas"]["CreateChannelDto"];
 }
 declare const createChannelAsync: ({ token, channel, }: CreateChannelRequest) => Promise<any>;
 
+declare const channelsApi_d_fetchChannelsAsync: typeof fetchChannelsAsync;
 declare const channelsApi_d_createChannelAsync: typeof createChannelAsync;
 declare namespace channelsApi_d {
   export {
+    channelsApi_d_fetchChannelsAsync as fetchChannelsAsync,
     channelsApi_d_createChannelAsync as createChannelAsync,
   };
 }

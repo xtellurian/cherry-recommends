@@ -94,4 +94,6 @@ export interface PromotionsRequest extends EntitySearchRequest {
     benefitType: string | undefined;
     weeksAgo: number | undefined;
 }
+export interface Channel extends Entity {
+}
 export {};

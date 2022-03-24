@@ -267,6 +267,13 @@
         fetchRecommendationsAsync: fetchRecommendationsAsync
     });
 
+    const fetchChannelsAsync = async ({ token, page, }) => {
+        return await executeFetch({
+            path: "api/Channels",
+            token,
+            page,
+        });
+    };
     const createChannelAsync = async ({ token, channel, }) => {
         return await executeFetch({
             path: "api/Channels",
@@ -278,6 +285,7 @@
 
     var channelsApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
+        fetchChannelsAsync: fetchChannelsAsync,
         createChannelAsync: createChannelAsync
     });
 

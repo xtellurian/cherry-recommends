@@ -9,6 +9,7 @@ import { InputGroup, TextInput } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { AsyncSelectIntegratedSystem } from "../molecules/selectors/AsyncSelectIntegratedSystem";
 import { NoteBox } from "../molecules/NoteBox";
+import { useNavigation } from "../../utility/useNavigation";
 
 export const CreateChannel = () => {
   const [newChannel, setNewChannel] = React.useState({
@@ -33,7 +34,7 @@ export const CreateChannel = () => {
   }, [selectedIntegratedSystem]);
 
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const { analytics } = useAnalytics();
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
@@ -46,7 +47,7 @@ export const CreateChannel = () => {
     })
       .then((u) => {
         analytics.track("site:channel_create_success");
-        history.push(`/channels`); // TODO: navigate to details
+        navigate({ pathname: `/channels` }); // TODO: navigate to details
       })
       .catch((e) => {
         analytics.track("site:channel_create_failure");

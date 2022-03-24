@@ -541,7 +541,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["WebhookChannelPaginated"];
+            "application/json": components["schemas"]["ChannelBasePaginated"];
           };
         };
         /** Bad Request */
@@ -587,7 +587,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["WebhookChannel"];
+            "application/json": components["schemas"]["ChannelBase"];
           };
         };
         /** Bad Request */
@@ -7731,6 +7731,12 @@ export interface components {
       linkedIntegratedSystemId?: number;
       linkedIntegratedSystem?: components["schemas"]["IntegratedSystem"];
       discriminator?: string | null;
+      lastEnqueued?: string | null;
+      lastCompleted?: string | null;
+    };
+    ChannelBasePaginated: {
+      items?: components["schemas"]["ChannelBase"][] | null;
+      pagination?: components["schemas"]["PaginationInfo"];
     };
     ChannelTypes: "webhook" | "email" | "web";
     CheckistItem: {
@@ -7863,7 +7869,7 @@ export interface components {
         | null;
       targetMetricId?: string | null;
       segmentIds?: number[] | null;
-      itemIds?: string[] | null;
+      itemIds: string[];
       defaultItemId?: string | null;
       baselineItemId?: string | null;
       baselinePromotionId?: string | null;
@@ -8816,23 +8822,6 @@ export interface components {
     };
     UserMetadata: {
       gettingStartedChecklist?: components["schemas"]["GettingStartedChecklist"];
-    };
-    WebhookChannel: {
-      id?: number;
-      created?: string;
-      lastUpdated?: string;
-      environmentId?: number | null;
-      environment?: components["schemas"]["Environment"];
-      name?: string | null;
-      channelType?: components["schemas"]["ChannelTypes"];
-      linkedIntegratedSystemId?: number;
-      linkedIntegratedSystem?: components["schemas"]["IntegratedSystem"];
-      discriminator?: string | null;
-      endpoint?: string | null;
-    };
-    WebhookChannelPaginated: {
-      items?: components["schemas"]["WebhookChannel"][] | null;
-      pagination?: components["schemas"]["PaginationInfo"];
     };
     WebhookReceiver: {
       id?: number;
