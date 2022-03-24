@@ -15,6 +15,7 @@ namespace SignalBox.Core.Workflows
         private readonly IModelRegistrationStore modelRegistrationStore;
         private readonly IAudienceStore audienceStore;
         private readonly IRecommendableItemStore itemStore;
+        private readonly IPromotionOptimiserCRUDWorkflow promotionOptimiserCRUDWorkflow;
 
         public PromotionsRecommenderWorkflows(
             IItemsRecommenderStore store,
@@ -26,7 +27,8 @@ namespace SignalBox.Core.Workflows
             IModelRegistrationStore modelRegistrationStore,
             IAudienceStore audienceStore,
             IRecommenderReportImageWorkflow reportImageWorkflows,
-            IRecommendableItemStore itemStore) : base(store, systemStore, metricStore, segmentStore, reportImageWorkflows)
+            IRecommendableItemStore itemStore,
+            IPromotionOptimiserCRUDWorkflow promotionOptimiserCRUDWorkflow) : base(store, systemStore, metricStore, segmentStore, reportImageWorkflows)
         {
             this.recommendationStore = recommendationStore;
             this.metricStore = metricStore;
@@ -34,6 +36,7 @@ namespace SignalBox.Core.Workflows
             this.modelRegistrationStore = modelRegistrationStore;
             this.audienceStore = audienceStore;
             this.itemStore = itemStore;
+            this.promotionOptimiserCRUDWorkflow = promotionOptimiserCRUDWorkflow;
         }
 
         public async Task<ItemsRecommender> CloneItemsRecommender(CreateCommonEntityModel common, ItemsRecommender from)
@@ -51,7 +54,7 @@ namespace SignalBox.Core.Workflows
                                                   from.NumberOfItemsToRecommend,
                                                   from.Arguments,
                                                   from.ErrorHandling ?? new RecommenderSettings(),
-                                                  true,
+                                                  from.UseOptimiser,
                                                   from.TargetMetric?.CommonId,
                                                   from.TargetType,
                                                   useInternalId: false);
@@ -116,7 +119,7 @@ namespace SignalBox.Core.Workflows
             ItemsRecommender recommender = await store.Create(
                 new ItemsRecommender(common.CommonId, common.Name, baselineItem, promotions, arguments, settings, targetMetric)
                 {
-                    NumberOfItemsToRecommend = numberOfItemsToRecommend,
+                    NumberOfItemsToRecommend = numberOfItemsToRecommend ?? 1,
                     TargetType = targetType
                 });
 
@@ -136,11 +139,10 @@ namespace SignalBox.Core.Workflows
 
             if (useOptimiser)
             {
-                var registration = new ModelRegistration(
-                    System.Guid.NewGuid().ToString(), ModelTypes.ItemsRecommenderV1, HostingTypes.AzureFunctions, null, null, null);
-                recommender.ModelRegistration = registration;
-                var optimiser = await optimiserClient.Create(recommender);
+                await promotionOptimiserCRUDWorkflow.Create(recommender);
+                recommender.UseOptimiser = true;
             }
+
             await store.Context.SaveChanges();
             return recommender;
         }

@@ -17,7 +17,6 @@ namespace SignalBox.Core.Workflows
         };
 
         private readonly ILogger<ParameterSetRecommenderInvokationWorkflows> logger;
-        private readonly IStorageContext storageContext;
         private readonly IRecommendationCache<ParameterSetRecommender, ParameterSetRecommendation> recommendationCache;
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
@@ -26,7 +25,6 @@ namespace SignalBox.Core.Workflows
         private readonly IRecommenderModelClientFactory modelClientFactory;
 
         public ParameterSetRecommenderInvokationWorkflows(ILogger<ParameterSetRecommenderInvokationWorkflows> logger,
-                                    IStorageContext storageContext,
                                     IDateTimeProvider dateTimeProvider,
                                     IRecommendationCache<ParameterSetRecommender, ParameterSetRecommendation> recommendationCache,
                                     IRecommendationCorrelatorStore correlatorStore,
@@ -36,10 +34,9 @@ namespace SignalBox.Core.Workflows
                                     IHistoricCustomerMetricStore historicFeatureStore,
                                     ICustomerWorkflow customerWorkflow,
                                     IRecommenderModelClientFactory modelClientFactory)
-                                     : base(storageContext, parameterSetRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider)
+                                     : base(parameterSetRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider)
         {
             this.logger = logger;
-            this.storageContext = storageContext;
             this.recommendationCache = recommendationCache;
             this.correlatorStore = correlatorStore;
             this.parameterSetRecommenderStore = parameterSetRecommenderStore;
@@ -78,7 +75,7 @@ namespace SignalBox.Core.Workflows
                 {
                     context.Correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
                     logger.LogInformation("Saving correlator to create Id");
-                    await storageContext.SaveChanges();
+                    await correlatorStore.Context.SaveChanges();
                 }
 
                 // load the metrics from the customer
@@ -124,7 +121,7 @@ namespace SignalBox.Core.Workflows
                 recommendation.SetInput(input);
                 recommendation.SetOutput(output);
                 recommendation = await parameterSetRecommendationStore.Create(recommendation);
-                await storageContext.SaveChanges();
+                await parameterSetRecommenderStore.Context.SaveChanges();
 
                 output.CorrelatorId = context.Correlator.Id;
 

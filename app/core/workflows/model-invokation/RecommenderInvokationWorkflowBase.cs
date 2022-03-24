@@ -9,19 +9,17 @@ namespace SignalBox.Core.Workflows
 {
     public abstract class RecommenderInvokationWorkflowBase<T> where T : RecommenderEntityBase
     {
-        private readonly IStorageContext storageContext;
         private readonly IRecommenderStore<T> store;
         private readonly IHistoricCustomerMetricStore customerMetricStore;
         private readonly IWebhookSenderClient webhookSender;
         private readonly IDateTimeProvider dateTimeProvider;
 
-        public RecommenderInvokationWorkflowBase(IStorageContext storageContext,
+        public RecommenderInvokationWorkflowBase(
                                                  IRecommenderStore<T> store,
                                                  IHistoricCustomerMetricStore customerMetricStore,
                                                  IWebhookSenderClient webhookSender,
                                                  IDateTimeProvider dateTimeProvider)
         {
-            this.storageContext = storageContext;
             this.store = store;
             this.customerMetricStore = customerMetricStore;
             this.webhookSender = webhookSender;
@@ -67,7 +65,7 @@ namespace SignalBox.Core.Workflows
             recommender.RecommenderInvokationLogs.Add(entry);
             if (saveOnComplete == true)
             {
-                await storageContext.SaveChanges();
+                await store.Context.SaveChanges();
             }
             return entry;
         }
@@ -92,7 +90,7 @@ namespace SignalBox.Core.Workflows
             context.InvokationLog.Status = "Complete";
             if (saveOnComplete == true)
             {
-                await storageContext.SaveChanges();
+                await store.Context.SaveChanges();
             }
             return context;
         }

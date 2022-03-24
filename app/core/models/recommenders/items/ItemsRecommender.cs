@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using SignalBox.Core.Optimisers;
 using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core.Recommenders
@@ -20,7 +21,7 @@ namespace SignalBox.Core.Recommenders
                                 Metric? targetMetric,
                                 int numberOfItemsToRecommend = 1) : base(commonId, name, arguments, settings)
         {
-            Items = promotions;
+            Items = promotions ?? throw new System.ArgumentNullException(nameof(promotions));
             BaselineItem = baselineItem;
             BaselineItemId = baselineItem?.Id;
             TargetMetric = targetMetric;
@@ -49,5 +50,7 @@ namespace SignalBox.Core.Recommenders
         public long? TargetMetricId { get; set; }
         public Metric? TargetMetric { get; set; }
         public PromotionRecommenderTargetTypes TargetType { get; set; }
+        public PromotionOptimiser? Optimiser { get; set; }
+        public bool UseOptimiser { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using SignalBox.Core.Recommenders;
 using SignalBox.Infrastructure.EntityFramework;
 using SignalBox.Core.Metrics;
 using SignalBox.Core.Segments;
+using SignalBox.Core.Optimisers;
 
 namespace SignalBox.Infrastructure
 {
@@ -64,6 +65,8 @@ namespace SignalBox.Infrastructure
         // promotion channels
         public DbSet<ChannelBase> Channels { get; set; }
         public DbSet<WebhookChannel> WebhookChannels { get; set; }
+        // optimisers
+        public DbSet<PromotionOptimiser> PromotionOptimisers { get; set; }
 
         // recommender performance reports
         // hierarchy

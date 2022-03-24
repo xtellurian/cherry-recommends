@@ -28,6 +28,8 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasMany(_ => _.Recommendations)
                 .WithOne(_ => _.Recommender)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Property(_ => _.UseOptimiser).HasDefaultValue(false);
         }
     }
 }

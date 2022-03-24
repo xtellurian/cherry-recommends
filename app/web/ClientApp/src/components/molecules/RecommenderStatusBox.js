@@ -12,25 +12,12 @@ export const RecommenderStatusBox = ({ className, recommender }) => {
         <Spinner />
       </div>
     );
-  } else if (!recommender.modelRegistrationId) {
+  } else if (recommender.useOptimiser) {
     return (
-      <NoteBox className={className} cardBodyClassName="training" label={label}>
-        Exploring for good recommendations.
-      </NoteBox>
+      <div className="float-right text-muted">Using Internal Optimiser</div>
     );
-  } else if (
-    recommender.modelRegistration &&
-    recommender.modelRegistration.hostingType === "azureFunctions"
-  ) {
-    return (
-      <NoteBox className={className} cardBodyClassName="ready" label={label}>
-        Using Cherry Auto-AI
-      </NoteBox>
-    );
+  } else if (recommender.modelRegistrationId) {
+    return <div className="float-right text-muted">Using Custom Model</div>;
   } else
-    return (
-      <NoteBox className={className} cardBodyClassName="ready" label={label}>
-        Discovered good recommendations.
-      </NoteBox>
-    );
+    return <div className="float-right text-muted">Using Random Choices</div>;
 };

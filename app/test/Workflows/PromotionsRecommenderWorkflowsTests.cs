@@ -27,6 +27,7 @@ namespace SignalBox.Test.Workflows
             var mockReportWorkflow = new Mock<IRecommenderReportImageWorkflow>();
             var mockPromoStore = new Mock<IRecommendableItemStore>()
                 .WithContext<Mock<IRecommendableItemStore>, IRecommendableItemStore, RecommendableItem>();
+            var mockPromotionOptimiserCRUDWorkflow = new Mock<IPromotionOptimiserCRUDWorkflow>();
 
             var baselinePromo = new RecommendableItem("item1", "Item 1", null, 1, BenefitType.Percent, 0.2, PromotionType.Discount, null)
                 .WithId();
@@ -48,9 +49,11 @@ namespace SignalBox.Test.Workflows
                 mockModelRegistrationStore.Object,
                 mockAudienceStore.Object,
                 mockReportWorkflow.Object,
-                mockPromoStore.Object
-
+                mockPromoStore.Object,
+                mockPromotionOptimiserCRUDWorkflow.Object
             );
+
+            var useOptimiser = false;
 
             // act
             var output = await sut.CreateItemsRecommender(
@@ -61,7 +64,7 @@ namespace SignalBox.Test.Workflows
                 numberOfItemsToRecommend: 1,
                 arguments: null,
                 settings: new RecommenderSettings(),
-                useOptimiser: false,
+                useOptimiser: useOptimiser,
                 targetMetricId: null,
                 targetType: PromotionRecommenderTargetTypes.Customer,
                 useInternalId: null
@@ -73,6 +76,9 @@ namespace SignalBox.Test.Workflows
             Assert.Equal(baselinePromo.Id, output.BaselineItemId);
             Assert.Equal(3, output.Items.Count); // 2 + baseline
             Assert.Contains(baselinePromo, output.Items);
+            Assert.Equal(useOptimiser, output.UseOptimiser);
+
+            mockPromotionOptimiserCRUDWorkflow.Verify(_ => _.Create(It.Is<ItemsRecommender>(r => r.CommonId == output.CommonId)), useOptimiser ? Times.Once : Times.Never);
         }
     }
 }

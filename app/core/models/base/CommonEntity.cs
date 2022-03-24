@@ -27,7 +27,7 @@ namespace SignalBox.Core
             }
             else if (commonId.Length < CommonIdMinLength)
             {
-                throw new CommonIdException(commonId, $"Common Id must not be at least {CommonIdMinLength} characters");
+                throw new CommonIdException(commonId, $"Common Id must be at least {CommonIdMinLength} characters");
             }
             else if (!commonId.ContainsOnlyAlphaNumeric('-', '_', '|'))
             {

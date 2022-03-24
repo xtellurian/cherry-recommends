@@ -40,6 +40,13 @@ namespace SignalBox.Test
             return mockStore;
         }
 
+        public static void SetupStoreCreate<TMock, TStore, TEntity>(this TMock mockStore)
+        where TMock : Mock<TStore>
+        where TStore : class, IEntityStore<TEntity>
+        where TEntity : Entity
+        {
+            mockStore.Setup(_ => _.Create(It.IsAny<TEntity>())).ReturnsAsync((TEntity entity) => entity);
+        }
         public static void SetupStoreRead<TMock, TStore, TEntity>(this TMock mockStore, params TEntity[] entities)
         where TMock : Mock<TStore>
         where TStore : class, IEntityStore<TEntity>

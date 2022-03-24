@@ -4,6 +4,7 @@
     "ms-python.python",
     "mtxr.sqltools-driver-sqlite",
     "cssho.vscode-svgviewer",
-    "formulahendry.dotnet-test-explorer"
+    "formulahendry.dotnet-test-explorer",
+    "aaron-bond.better-comments"
   ]
 }

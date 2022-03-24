@@ -52,87 +52,6 @@ namespace SignalBox.Test.Workflows
             return eventList;
         }
 
-        // @cherry - can this be deleted? 
-        static RecommenderTriggersWorkflows CreateRecommenderTriggersWorkFlows()
-        {
-            var mockHistoricStore = new Mock<IHistoricCustomerMetricStore>();
-            var mockItemsRecommenderStore = new Mock<IItemsRecommenderStore>();
-            var mockParameterSetRecommenderStore = new Mock<IParameterSetRecommenderStore>();
-            var mockTriggerLogger = Utility.MockLogger<RecommenderTriggersWorkflows>();
-            var mockContext = Utility.MockStorageContext();
-            var dateTimeProvider = new SystemDateTimeProvider();
-
-            ItemsRecommender itemsRecommender = new ItemsRecommender("recommender1", "recommender1", null, null, null, new RecommenderSettings(), null);
-            var invokationLogEntry = new InvokationLogEntry(itemsRecommender, DateTimeOffset.Now);
-            var recommendingContext = new RecommendingContext(invokationLogEntry, null);
-
-            List<ScoredRecommendableItem> scoredItems = new List<ScoredRecommendableItem>()
-            {
-                new ScoredRecommendableItem(new RecommendableItem("item1", "item1", 1, 1, BenefitType.Fixed, 1, PromotionType.Discount, null), 1)
-            };
-            ItemsRecommendation itemsRecommendation = new ItemsRecommendation(itemsRecommender, recommendingContext, scoredItems);
-
-            var mockItemsLogger = Utility.MockLogger<ItemsRecommenderInvokationWorkflows>();
-            var mockRecommendationCache = new Mock<IRecommendationCache<ItemsRecommender, ItemsRecommendation>>();
-            var mockModelClientFactory = new Mock<IRecommenderModelClientFactory>();
-            var mockCustomerWorkflow = new Mock<ICustomerWorkflow>();
-            var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
-            var mockItemStore = new Mock<IRecommendableItemStore>();
-            var mockWebhookSenderClient = new Mock<IWebhookSenderClient>();
-            var mockCorrelatorStore = new Mock<IRecommendationCorrelatorStore>();
-            var mockItemsRecommendationStore = new Mock<IItemsRecommendationStore>();
-            var mockAudienceStore = new Mock<IAudienceStore>();
-
-            var itemsRecommenderInvokationWorkflows = new ItemsRecommenderInvokationWorkflows(
-                mockItemsLogger.Object,
-                mockContext.Object,
-                dateTimeProvider,
-                mockRecommendationCache.Object,
-                mockModelClientFactory.Object,
-                mockCustomerWorkflow.Object,
-                mockBusinessWorkflow.Object,
-                mockHistoricStore.Object,
-                mockItemStore.Object,
-                mockWebhookSenderClient.Object,
-                mockCorrelatorStore.Object,
-                mockItemsRecommenderStore.Object,
-                mockItemsRecommendationStore.Object,
-                mockAudienceStore.Object);
-
-            var mockParameterSetLogger = Utility.MockLogger<ParameterSetRecommenderInvokationWorkflows>();
-            var mockParameterRecommendationCache = new Mock<IRecommendationCache<ParameterSetRecommender, ParameterSetRecommendation>>();
-            var mockParameterSetRecommendationStore = new Mock<IParameterSetRecommendationStore>();
-
-            var parameterSetRecommenderInvokationWorkflows = new ParameterSetRecommenderInvokationWorkflows(
-                mockParameterSetLogger.Object,
-                mockContext.Object,
-                dateTimeProvider,
-                mockParameterRecommendationCache.Object,
-                mockCorrelatorStore.Object,
-                mockParameterSetRecommenderStore.Object,
-                mockParameterSetRecommendationStore.Object,
-                mockWebhookSenderClient.Object,
-                mockHistoricStore.Object,
-                mockCustomerWorkflow.Object,
-                mockModelClientFactory.Object);
-
-            List<ItemsRecommender> recommenderList = new List<ItemsRecommender>() { itemsRecommender };
-            Paginated<ItemsRecommender> paginatedItems = new Paginated<ItemsRecommender>(recommenderList, 1, 1, 1);
-            mockItemsRecommenderStore.Setup(_ => _.Query(It.IsAny<EntityStoreQueryOptions<ItemsRecommender>>())).ReturnsAsync(paginatedItems);
-
-            Paginated<ParameterSetRecommender> paginatedParameters = new Paginated<ParameterSetRecommender>(new List<ParameterSetRecommender>(), 1, 0, 1);
-            mockParameterSetRecommenderStore.Setup(_ => _.Query(It.IsAny<EntityStoreQueryOptions<ParameterSetRecommender>>())).ReturnsAsync(paginatedParameters);
-
-            return new RecommenderTriggersWorkflows(
-                mockTriggerLogger.Object,
-                Utility.MockTelemetry().Object,
-                mockItemsRecommenderStore.Object,
-                mockParameterSetRecommenderStore.Object,
-                itemsRecommenderInvokationWorkflows,
-                parameterSetRecommenderInvokationWorkflows,
-                mockHistoricStore.Object);
-        }
-
         [Theory]
         [InlineData(AggregationTypes.Sum, null, 2)]
         [InlineData(AggregationTypes.Mean, null, 1)]
@@ -206,6 +125,5 @@ namespace SignalBox.Test.Workflows
             mockHistoricStore.Verify(_ => _.Create(It.Is<HistoricCustomerMetric>(m => m.NumericValue == expectedValue)));
             Assert.Equal(1, result.TotalWrites);
         }
-
     }
 }

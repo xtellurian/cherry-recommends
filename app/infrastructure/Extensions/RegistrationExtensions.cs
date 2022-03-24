@@ -17,6 +17,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IApiTokenFactory, Auth0ApiTokenFactory>();
             services.AddScoped<IModelClientFactory, ModelClientFactory>();
             services.AddScoped<IRecommenderModelClientFactory, RecommenderModelClientFactory>();
+            services.AddScoped<IInternalOptimiserClientFactory, InternalOptimiserClientFactory>();
             services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();
             services.AddScoped<IHubspotService, HubspotService>();
             services.AddScoped<IAuth0Service, Auth0Manager>();

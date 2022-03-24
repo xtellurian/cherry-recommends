@@ -48,6 +48,7 @@ namespace SignalBox.Web.Controllers
             var recommender = await base.GetEntity(id, useInternalId);
             await store.Load(recommender, _ => _.BaselineItem);
             await store.Load(recommender, _ => _.TargetMetric);
+            await store.Load(recommender, _ => _.Optimiser);
             await store.LoadMany(recommender, _ => _.Items);
             return recommender;
         }
@@ -57,20 +58,26 @@ namespace SignalBox.Web.Controllers
         public async Task<ItemsRecommender> Create(CreatePromotionsRecommender dto, bool? useInternalId = null)
         {
             var c = new CreateCommonEntityModel(dto.CommonId, dto.Name);
+            ItemsRecommender r;
             if (dto.CloneFromId.HasValue)
             {
                 // then clone from existing.
                 var from = await store.Read(dto.CloneFromId.Value);
-                return await workflows.CloneItemsRecommender(c, from);
+                r = await workflows.CloneItemsRecommender(c, from);
             }
-            return await workflows.CreateItemsRecommender(c,
-                dto.GetBaselinePromotionId(), dto.ItemIds, dto.SegmentIds, dto.NumberOfItemsToRecommend,
-                dto.Arguments.ToCoreRepresentation(),
-                dto.Settings.ToCoreRepresentation(),
-                dto.UseAutoAi ?? false,
-                dto.TargetMetricId,
-                dto.TargetType ?? PromotionRecommenderTargetTypes.Customer,
-                useInternalId: useInternalId);
+            else
+            {
+
+                r = await workflows.CreateItemsRecommender(c,
+                   dto.GetBaselinePromotionId(), dto.ItemIds, dto.SegmentIds, dto.NumberOfItemsToRecommend,
+                   dto.Arguments.ToCoreRepresentation(),
+                   dto.Settings.ToCoreRepresentation(),
+                   dto.UseAutoAi ?? false,
+                   dto.TargetMetricId,
+                   dto.TargetType ?? PromotionRecommenderTargetTypes.Customer,
+                   useInternalId: useInternalId);
+            }
+            return r;
         }
 
         /// <summary>Sets the baseline promotion for the recommender.</summary>

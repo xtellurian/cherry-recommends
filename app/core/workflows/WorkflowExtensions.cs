@@ -48,6 +48,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ICustomerEventsWorkflow, CustomerEventsWorkflows>();
             services.AddScoped<IBusinessWorkflow, BusinessWorkflows>();
             services.AddScoped<ICustomerSegmentWorkflow, CustomerSegmentWorkflows>();
+            services.AddScoped<IPromotionOptimiserCRUDWorkflow, PromotionOptimiserCRUDWorkflow>();
             services.AddScoped<IRecommenderReportImageWorkflow, RecommenderReportImageWorkflows>();
             services.AddScoped<IRecommenderMetricTriggersWorkflow, RecommenderTriggersWorkflows>();
             services.AddScoped<IChannelWorkflow, ChannelWorkflow>();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +11,6 @@ namespace SignalBox.Core.Workflows
     public class ItemsRecommenderInvokationWorkflows : RecommenderInvokationWorkflowBase<ItemsRecommender>, IWorkflow
     {
         private readonly ILogger<ItemsRecommenderInvokationWorkflows> logger;
-        private readonly IStorageContext storageContext;
         private readonly IRecommendationCache<ItemsRecommender, ItemsRecommendation> recommendationCache;
         private readonly IRecommenderModelClientFactory modelClientFactory;
         private readonly ICustomerWorkflow customerWorkflow;
@@ -19,10 +19,10 @@ namespace SignalBox.Core.Workflows
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IItemsRecommenderStore itemsRecommenderStore;
         private readonly IItemsRecommendationStore itemsRecommendationStore;
+        private readonly IInternalOptimiserClientFactory optimiserClientFactory;
         private readonly IAudienceStore audienceStore;
 
         public ItemsRecommenderInvokationWorkflows(ILogger<ItemsRecommenderInvokationWorkflows> logger,
-                                    IStorageContext storageContext,
                                     IDateTimeProvider dateTimeProvider,
                                     IRecommendationCache<ItemsRecommender, ItemsRecommendation> recommendationCache,
                                     IRecommenderModelClientFactory modelClientFactory,
@@ -34,11 +34,11 @@ namespace SignalBox.Core.Workflows
                                     IRecommendationCorrelatorStore correlatorStore,
                                     IItemsRecommenderStore itemsRecommenderStore,
                                     IItemsRecommendationStore itemsRecommendationStore,
-                                    IAudienceStore audienceStore)
-                                     : base(storageContext, itemsRecommenderStore, historicMetricStore, webhookSenderClient, dateTimeProvider)
+                                    IAudienceStore audienceStore,
+                                    IInternalOptimiserClientFactory optimiserClientFactory)
+                                     : base(itemsRecommenderStore, historicMetricStore, webhookSenderClient, dateTimeProvider)
         {
             this.logger = logger;
-            this.storageContext = storageContext;
             this.recommendationCache = recommendationCache;
             this.modelClientFactory = modelClientFactory;
             this.customerWorkflow = customerWorkflow;
@@ -47,6 +47,7 @@ namespace SignalBox.Core.Workflows
             this.correlatorStore = correlatorStore;
             this.itemsRecommenderStore = itemsRecommenderStore;
             this.itemsRecommendationStore = itemsRecommendationStore;
+            this.optimiserClientFactory = optimiserClientFactory;
             this.audienceStore = audienceStore;
         }
 
@@ -109,7 +110,7 @@ namespace SignalBox.Core.Workflows
 
                         context.Correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
                         logger.LogInformation("Saving correlator to create Id");
-                        await storageContext.SaveChanges();
+                        await audienceStore.Context.SaveChanges();
                     }
                 }
                 else if (recommender.TargetType == PromotionRecommenderTargetTypes.Business && input.BusinessId != null)
@@ -152,7 +153,11 @@ namespace SignalBox.Core.Workflows
                 }
 
                 IRecommenderModelClient<ItemsRecommenderModelOutputV1> client;
-                if (recommender.ModelRegistration == null)
+                if (recommender.UseOptimiser)
+                {
+                    client = await optimiserClientFactory.GetInternalOptimiserClient();
+                }
+                else if (recommender.ModelRegistration == null)
                 {
                     // load the items required for the random recommender
                     await itemsRecommenderStore.LoadMany(recommender, _ => _.Items);
