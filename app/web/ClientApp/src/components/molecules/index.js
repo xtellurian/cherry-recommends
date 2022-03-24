@@ -14,6 +14,7 @@ import {
 } from "./layout/PageHeadings";
 import { Selector } from "./selectors/Select";
 import { Navigation } from "./Navigation";
+import { Typography } from "./Typography";
 
 export {
   AsyncButton,
@@ -31,4 +32,5 @@ export {
   PageHeading,
   Selector,
   Navigation,
+  Typography,
 };
