@@ -4,6 +4,8 @@ using Pulumi;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Sql;
 using Pulumi.AzureNative.Sql.Inputs;
+using Pulumi.Random;
+using SignalBox.Core.Constants;
 
 namespace SignalBox.Azure
 {
@@ -15,6 +17,26 @@ namespace SignalBox.Azure
             var databaseConfig = new Config("database");
             var username = config.Get("sqlAdmin") ?? "pulumi";
             var password = config.RequireSecret("sqlPassword");
+            var adminusername = AzureDBUserNames.AppAdminUserName;
+            var readusername = AzureDBUserNames.AppReadUserName;
+            var adminpassword = new RandomPassword(adminusername, new RandomPasswordArgs
+            {
+                Length = 16,
+                MinLower = 2,
+                MinNumeric = 2,
+                MinSpecial = 2,
+                MinUpper = 2,
+                OverrideSpecial = "!$",
+            });
+            var readpassword = new RandomPassword(readusername, new RandomPasswordArgs
+            {
+                Length = 16,
+                MinLower = 2,
+                MinNumeric = 2,
+                MinSpecial = 2,
+                MinUpper = 2,
+                OverrideSpecial = "!$",
+            });
 
             var sqlServer = new Server("multiSql", new ServerArgs
             {
@@ -113,12 +135,20 @@ namespace SignalBox.Azure
             this.ServerName = sqlServer.Name;
             this.TenantDbName = tenantDb.Name;
             this.ResourceGroup = rg;
+            this.AdminUserName = adminusername;
+            this.AdminPassword = adminpassword.Result;
+            this.ReadUserName = readusername;
+            this.ReadPassword = readpassword.Result;
         }
 
         public ResourceGroup ResourceGroup { get; }
         public Output<string> TenantDbConnectionString { get; }
         public string UserName { get; }
         public Output<string> Password { get; }
+        public string AdminUserName { get; }
+        public Output<string> AdminPassword { get; }
+        public string ReadUserName { get; }
+        public Output<string> ReadPassword { get; }
         public Server Server { get; }
         public ElasticPool ElasticPool { get; }
         public Output<string> ServerName { get; }

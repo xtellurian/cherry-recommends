@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
 using SignalBox.Core;
+using SignalBox.Core.Constants;
 using SignalBox.Infrastructure.Models.Databases;
 
 namespace SignalBox.Infrastructure.Azure
@@ -106,6 +107,12 @@ namespace SignalBox.Infrastructure.Azure
             var options = CreateDbContextOptions(server, database, manipulateConnectionString);
             using (var context = new SignalBoxDbContext(options.Options))
             {
+                foreach (var user in AzureDBUserNames.AzureDBUserNameList)
+                {
+                    await context.Database.ExecuteSqlRawAsync("CREATE USER " + user.Key + " FROM LOGIN " + user.Key + " ;");
+                    await context.Database.ExecuteSqlRawAsync("EXEC sp_addrolemember '" + user.Value + "','" + user.Key + "';");
+                }
+
                 var applied = await context.Database.GetAppliedMigrationsAsync();
                 result.AddMigrations(true, applied);
 

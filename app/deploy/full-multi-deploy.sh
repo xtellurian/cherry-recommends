@@ -7,6 +7,7 @@ pulumi up -y
 
 cd $APP_PATH/deploy/sql-database-scripts/cloud
 Hosting__Multitenant="true" APP_PATH=$APP_PATH ./update-tenant-sql-database.sh
+APP_PATH=$APP_PATH ./create-user-sqlcmd.sh
 
 cd $APP_PATH/deploy/azure-scripts/functions
 APP_PATH=$APP_PATH ./deploy-dotnet-functions.sh

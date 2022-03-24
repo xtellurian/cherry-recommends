@@ -54,6 +54,10 @@ namespace SignalBox.Azure
             this.SqlServerName = multitenant.ServerName;
             this.SqlServerUsername = Output.Create(multitenant.UserName);
             this.SqlServerPassword = multitenant.Password;
+            this.SqlServerAdminUserName = Output.Create(multitenant.AdminUserName);
+            this.SqlServerAdminPassword = multitenant.AdminPassword;
+            this.SqlServerReadUserName = Output.Create(multitenant.ReadUserName);
+            this.SqlServerReadPassword = multitenant.ReadPassword;
             this.SynapseWorkspaceName = synapse.SynapseWorkspaceName;
             this.SynapseStorageAccountName = synapse.SynapseStorageAccountName;
             this.SynapseUsername = Output.Create(synapse.UserName);
@@ -120,6 +124,14 @@ namespace SignalBox.Azure
         public Output<string> SqlServerUsername { get; private set; }
         [Output]
         public Output<string> SqlServerPassword { get; private set; }
+        [Output]
+        public Output<string> SqlServerAdminUserName { get; private set; }
+        [Output]
+        public Output<string> SqlServerAdminPassword { get; private set; }
+        [Output]
+        public Output<string> SqlServerReadUserName { get; private set; }
+        [Output]
+        public Output<string> SqlServerReadPassword { get; private set; }
         [Output]
         public Output<string> SynapseWorkspaceName { get; set; }
         [Output]

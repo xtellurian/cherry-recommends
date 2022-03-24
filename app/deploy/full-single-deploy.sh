@@ -13,6 +13,7 @@ APP_PATH=$APP_PATH ./deploy-python-functions.sh
 
 cd $APP_PATH/deploy/sql-database-scripts/cloud
 APP_PATH=$APP_PATH ./update-sql-database.sh single
+APP_PATH=$APP_PATH ./create-user-sqlcmd.sh
 
 cd $APP_PATH/deploy/webapp
 APP_PATH=$APP_PATH ./deploy.sh
