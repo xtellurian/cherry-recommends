@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+
 import { useAccessToken } from "../../api-hooks/token";
 import { updatePromotionAsync } from "../../api/promotionsApi";
-import { ErrorCard, Subtitle } from "../molecules";
+import { useNavigation } from "../../utility/useNavigation";
+import { AsyncButton, ErrorCard, Subtitle } from "../molecules";
 import {
   InputGroup,
   TextInput,
@@ -16,8 +17,9 @@ import Select from "../molecules/selectors/Select";
 import { benefitTypeOptons, promotionTypeOptons } from "./CreateItem";
 
 export const EditItem = ({ item: currentItem }) => {
+  const { navigate } = useNavigation();
   const token = useAccessToken();
-  const history = useHistory();
+  const [loading, setLoading] = React.useState(false);
   const [error, setError] = useState();
   const [item, setItem] = useState({
     name: "",
@@ -31,6 +33,8 @@ export const EditItem = ({ item: currentItem }) => {
   });
 
   const handleSave = () => {
+    setLoading(true);
+
     const promotion = {
       ...item,
       name: item.name,
@@ -48,11 +52,12 @@ export const EditItem = ({ item: currentItem }) => {
       promotion,
     })
       .then((p) => {
-        history.push(`/promotions/detail/${p.id}`);
+        navigate(`/promotions/detail/${p.id}`);
       })
       .catch((e) => {
         setError(e);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const setSelectedBenefitType = (o) => {
@@ -200,9 +205,13 @@ export const EditItem = ({ item: currentItem }) => {
           </div>
         </div>
         <div className="mt-3 text-right">
-          <button onClick={handleSave} className="btn btn-primary w-25">
+          <AsyncButton
+            loading={loading}
+            onClick={handleSave}
+            className="btn btn-primary w-25"
+          >
             Save
-          </button>
+          </AsyncButton>
         </div>
       </div>
     </React.Fragment>
