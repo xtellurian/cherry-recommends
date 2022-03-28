@@ -3,7 +3,12 @@ cd ..
 APP_PATH=$(pwd)
 
 cd $APP_PATH/azure
+
+# addresses https://github.com/pulumi/pulumi-azure-native/discussions/1565
+az config set core.only_show_errors=true
 pulumi up -y
+az config set core.only_show_errors=false
+
 
 cd $APP_PATH/deploy
 

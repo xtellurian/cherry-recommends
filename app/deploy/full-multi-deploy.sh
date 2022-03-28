@@ -3,7 +3,11 @@ cd ..
 APP_PATH=$(pwd)
 
 cd $APP_PATH/azure
+
+# addresses https://github.com/pulumi/pulumi-azure-native/discussions/1565
+az config set core.only_show_errors=true
 pulumi up -y
+az config set core.only_show_errors=false
 
 cd $APP_PATH/deploy/sql-database-scripts/cloud
 Hosting__Multitenant="true" APP_PATH=$APP_PATH ./update-tenant-sql-database.sh
