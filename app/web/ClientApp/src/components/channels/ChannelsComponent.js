@@ -3,6 +3,7 @@ import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { ChannelsSummary } from "./ChannelsSummary";
 import { CreateChannel } from "./CreateChannel";
+import { ChannelDetail } from "./ChannelDetail";
 
 export const ChannelsComponent = (props) => {
   let { path } = useRouteMatch();
@@ -14,6 +15,11 @@ export const ChannelsComponent = (props) => {
           exact
           path={`${path}/create`}
           component={CreateChannel}
+        />
+        <AuthorizeRoute
+          exact
+          path={`${path}/detail/:id`}
+          component={ChannelDetail}
         />
       </Switch>
     </React.Fragment>

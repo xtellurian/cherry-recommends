@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -76,6 +77,20 @@ namespace SignalBox.Web.Controllers
         protected override Task<(bool, string)> CanDelete(IntegratedSystem entity)
         {
             return Task.FromResult((true, ""));
+        }
+
+        /// <summary>Returned a paginated list of items for this resource.</summary>
+        [HttpGet]
+        public override async Task<Paginated<IntegratedSystem>> Query([FromQuery] PaginateRequest p, [FromQuery] SearchEntities q)
+        {
+            if (Enum.TryParse<IntegratedSystemTypes>(q.Scope, ignoreCase: true, out var systemType))
+            {
+                return await store.Query(new EntityStoreQueryOptions<IntegratedSystem>(p.Page, _ => _.SystemType == systemType));
+            }
+            else
+            {
+                return await base.Query(p, q);
+            }
         }
     }
 }

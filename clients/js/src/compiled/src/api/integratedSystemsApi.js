@@ -1,9 +1,12 @@
 import { executeFetch } from "./client/apiClient";
-export const fetchIntegratedSystemsAsync = async ({ token, page }) => {
+export const fetchIntegratedSystemsAsync = async ({ token, page, systemType, }) => {
     return await executeFetch({
         path: "api/IntegratedSystems",
         token,
         page,
+        query: {
+            "q.scope": systemType,
+        },
     });
 };
 export const fetchIntegratedSystemAsync = async ({ token, id }) => {

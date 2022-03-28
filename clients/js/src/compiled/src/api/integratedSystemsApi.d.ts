@@ -1,6 +1,7 @@
-export function fetchIntegratedSystemsAsync({ token, page }: {
+export function fetchIntegratedSystemsAsync({ token, page, systemType, }: {
     token: any;
     page: any;
+    systemType: any;
 }): Promise<any>;
 export function fetchIntegratedSystemAsync({ token, id }: {
     token: any;

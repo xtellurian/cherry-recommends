@@ -16,6 +16,7 @@ namespace SignalBox.Web.Controllers
     {
         private readonly ILogger<ChannelsController> _logger;
         private readonly ChannelWorkflow workflow;
+        private readonly IChannelStore channelStore;
         private readonly IWebhookChannelStore webhookChannelStore;
         private readonly IIntegratedSystemStore integratedSystemStore;
 
@@ -27,6 +28,7 @@ namespace SignalBox.Web.Controllers
         {
             _logger = logger;
             this.workflow = workflow;
+            this.channelStore = channelStore;
             this.webhookChannelStore = webhookChannelStore;
             this.integratedSystemStore = integratedSystemStore;
         }
@@ -37,6 +39,24 @@ namespace SignalBox.Web.Controllers
         {
             var integratedSystem = await integratedSystemStore.Read(dto.IntegratedSystemId);
             return await workflow.CreateChannel(dto.Name, dto.ChannelType, integratedSystem);
+        }
+
+        /// <summary>Returns the resource with this Id.</summary>
+        [HttpGet("{id}")]
+        public override async Task<ChannelBase> GetResource(long id)
+        {
+            var channel = await base.GetResource(id);
+            await channelStore.Load(channel, _ => _.LinkedIntegratedSystem);
+            return channel;
+        }
+
+        /// <summary> Updates endpoint of a channel.</summary>
+        [HttpPost("{id}/endpoint")]
+        public async Task<ChannelBase> UpdateEndpoint(long id, [FromBody] string endpoint)
+        {
+            var channel = await base.GetResource(id);
+            channel = await workflow.UpdateChannelEndpoint(channel, endpoint);
+            return channel;
         }
     }
 }

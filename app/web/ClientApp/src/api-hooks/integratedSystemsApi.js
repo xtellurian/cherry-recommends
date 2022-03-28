@@ -8,7 +8,7 @@ import {
 } from "../api/integratedSystemsApi";
 import { useEnvironmentReducer } from "./environmentsApi";
 
-export const useIntegratedSystems = () => {
+export const useIntegratedSystems = ({ systemType } = {}) => {
   const token = useAccessToken();
   const page = usePagination();
   const [environment] = useEnvironmentReducer();
@@ -22,6 +22,7 @@ export const useIntegratedSystems = () => {
       fetchIntegratedSystemsAsync({
         token,
         page,
+        systemType,
       })
         .then((value) => {
           if (mounted) {
@@ -35,7 +36,7 @@ export const useIntegratedSystems = () => {
         });
     }
     return () => (mounted = false);
-  }, [token, page, environment]);
+  }, [token, page, systemType, environment]);
 
   return result;
 };

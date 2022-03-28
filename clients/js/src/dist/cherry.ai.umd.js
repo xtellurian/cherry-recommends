@@ -282,11 +282,35 @@
             body: channel,
         });
     };
+    const fetchChannelAsync = async ({ token, id, }) => {
+        return await executeFetch({
+            path: `api/Channels/${id}`,
+            token,
+        });
+    };
+    const deleteChannelAsync = async ({ token, id }) => {
+        return await executeFetch({
+            path: `api/Channels/${id}`,
+            token,
+            method: "delete",
+        });
+    };
+    const updateChannelEndpointAsync = async ({ token, id, endpoint, }) => {
+        return await executeFetch({
+            token,
+            path: `api/Channels/${id}/Endpoint`,
+            method: "post",
+            body: endpoint,
+        });
+    };
 
     var channelsApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
         fetchChannelsAsync: fetchChannelsAsync,
-        createChannelAsync: createChannelAsync
+        createChannelAsync: createChannelAsync,
+        fetchChannelAsync: fetchChannelAsync,
+        deleteChannelAsync: deleteChannelAsync,
+        updateChannelEndpointAsync: updateChannelEndpointAsync
     });
 
     /**
@@ -936,11 +960,14 @@
         manualTriggerMetricGeneratorsAsync: manualTriggerMetricGeneratorsAsync
     });
 
-    const fetchIntegratedSystemsAsync = async ({ token, page }) => {
+    const fetchIntegratedSystemsAsync = async ({ token, page, systemType, }) => {
         return await executeFetch$1({
             path: "api/IntegratedSystems",
             token,
             page,
+            query: {
+                "q.scope": systemType,
+            },
         });
     };
     const fetchIntegratedSystemAsync = async ({ token, id }) => {

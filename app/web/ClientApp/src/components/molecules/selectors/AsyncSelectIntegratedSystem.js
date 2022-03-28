@@ -8,9 +8,10 @@ export const AsyncSelectIntegratedSystem = ({
   onChange,
   placeholder,
   allowNone,
+  systemType,
 }) => {
   const token = useAccessToken();
-  const entities = useIntegratedSystems();
+  const entities = useIntegratedSystems({ systemType });
   const entitiesSelectable = entities.items
     ? entities.items.map((u) => ({
         label: u.name || u.commonId,

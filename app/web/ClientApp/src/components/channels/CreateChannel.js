@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import { useAccessToken } from "../../api-hooks/token";
 import { createChannelAsync } from "../../api/channelsApi";
 import { Title } from "../molecules/layout";
@@ -10,14 +9,21 @@ import { useAnalytics } from "../../analytics/analyticsHooks";
 import { AsyncSelectIntegratedSystem } from "../molecules/selectors/AsyncSelectIntegratedSystem";
 import { NoteBox } from "../molecules/NoteBox";
 import { useNavigation } from "../../utility/useNavigation";
+import Select from "../molecules/selectors/Select";
 
 export const CreateChannel = () => {
   const [newChannel, setNewChannel] = React.useState({
     name: "",
-    type: "",
+    type: "webhook",
     integratedSystemId: -1,
   });
 
+  const channelTypeOptions = [{ value: "webhook", label: "Webhook" }];
+  const setSelectedChannelType = (o) => {
+    setNewChannel({ ...newChannel, type: o.value });
+  };
+
+  const [systemType, setSystemType] = React.useState();
   const [selectedIntegratedSystem, setSelectedIntegratedSystem] =
     React.useState();
 
@@ -33,6 +39,14 @@ export const CreateChannel = () => {
     }
   }, [selectedIntegratedSystem]);
 
+  React.useEffect(() => {
+    if (newChannel.type === "webhook") {
+      setSystemType("custom");
+    } else {
+      setSystemType(null);
+    }
+  }, [newChannel.type]);
+
   const token = useAccessToken();
   const { navigate } = useNavigation();
   const { analytics } = useAnalytics();
@@ -47,7 +61,7 @@ export const CreateChannel = () => {
     })
       .then((u) => {
         analytics.track("site:channel_create_success");
-        navigate({ pathname: `/channels` }); // TODO: navigate to details
+        navigate({ pathname: `/channels/detail/${u.id}` });
       })
       .catch((e) => {
         analytics.track("site:channel_create_failure");
@@ -62,6 +76,9 @@ export const CreateChannel = () => {
         <Title>Add a Channel</Title>
         <hr />
         {error && <ErrorCard error={error} />}
+        <div className="text-warning">
+          Currently supports Webhook channel type only.
+        </div>
         <InputGroup className="mb-1">
           <TextInput
             label="Name"
@@ -76,26 +93,21 @@ export const CreateChannel = () => {
           />
         </InputGroup>
         <div>
+          <div>Choose a type</div>
+          <Select
+            className="mb-1"
+            placeholder="Select channel type"
+            onChange={setSelectedChannelType}
+            options={channelTypeOptions}
+            defaultValue={channelTypeOptions[0]}
+          />
+        </div>
+        <div>
           <div>Choose an integrated system</div>
           <AsyncSelectIntegratedSystem
+            systemType={systemType}
             onChange={(v) => setSelectedIntegratedSystem(v.value)}
           />
-          {selectedIntegratedSystem &&
-            selectedIntegratedSystem.systemType !== "custom" && (
-              <div className="mt-3">
-                <NoteBox label="Error" cardTitleClassName="text-danger">
-                  Unsupported Integrated System Type
-                </NoteBox>
-              </div>
-            )}
-          {selectedIntegratedSystem &&
-            selectedIntegratedSystem.systemType === "custom" && (
-              <div className="mt-3">
-                <NoteBox label="Info">
-                  You are about to create a Webhook Channel
-                </NoteBox>
-              </div>
-            )}
         </div>
         <div className="mt-4">
           <AsyncButton

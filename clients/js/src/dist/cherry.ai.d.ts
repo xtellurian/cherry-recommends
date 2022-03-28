@@ -1504,13 +1504,25 @@ interface CreateChannelRequest extends AuthenticatedRequest {
     channel: components["schemas"]["CreateChannelDto"];
 }
 declare const createChannelAsync: ({ token, channel, }: CreateChannelRequest) => Promise<any>;
+declare const fetchChannelAsync: ({ token, id, }: EntityRequest) => Promise<components["schemas"]["ChannelBase"]>;
+declare const deleteChannelAsync: ({ token, id }: DeleteRequest) => Promise<any>;
+interface UpdateChannelEnpointRequest extends EntityRequest {
+    endpoint: string;
+}
+declare const updateChannelEndpointAsync: ({ token, id, endpoint, }: UpdateChannelEnpointRequest) => Promise<any>;
 
 declare const channelsApi_d_fetchChannelsAsync: typeof fetchChannelsAsync;
 declare const channelsApi_d_createChannelAsync: typeof createChannelAsync;
+declare const channelsApi_d_fetchChannelAsync: typeof fetchChannelAsync;
+declare const channelsApi_d_deleteChannelAsync: typeof deleteChannelAsync;
+declare const channelsApi_d_updateChannelEndpointAsync: typeof updateChannelEndpointAsync;
 declare namespace channelsApi_d {
   export {
     channelsApi_d_fetchChannelsAsync as fetchChannelsAsync,
     channelsApi_d_createChannelAsync as createChannelAsync,
+    channelsApi_d_fetchChannelAsync as fetchChannelAsync,
+    channelsApi_d_deleteChannelAsync as deleteChannelAsync,
+    channelsApi_d_updateChannelEndpointAsync as updateChannelEndpointAsync,
   };
 }
 
@@ -1833,9 +1845,10 @@ declare namespace featuresApi_d {
   };
 }
 
-declare function fetchIntegratedSystemsAsync({ token, page }: {
+declare function fetchIntegratedSystemsAsync({ token, page, systemType, }: {
     token: any;
     page: any;
+    systemType: any;
 }): Promise<any>;
 declare function fetchIntegratedSystemAsync({ token, id }: {
     token: any;

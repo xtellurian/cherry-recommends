@@ -1,4 +1,6 @@
-﻿namespace SignalBox.Core
+﻿using SignalBox.Core.Integrations.Custom;
+
+namespace SignalBox.Core
 {
 
     public class WebhookChannel : ChannelBase
@@ -13,5 +15,7 @@
 
         public string Endpoint { get; set; }
 
+#nullable enable
+        public string? ApplicationSecret => (this.LinkedIntegratedSystem as CustomIntegratedSystem)?.ApplicationSecret;
     }
 }
