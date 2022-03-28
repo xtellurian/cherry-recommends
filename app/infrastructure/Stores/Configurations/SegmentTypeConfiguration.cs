@@ -4,7 +4,7 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal class SegmentTypeConfiguration : EntityTypeConfigurationBase<Segment>, IEntityTypeConfiguration<Segment>
+    internal class SegmentTypeConfiguration : EnvironmentScopedEntityTypeConfigurationBase<Segment>, IEntityTypeConfiguration<Segment>
     {
         public override void Configure(EntityTypeBuilder<Segment> builder)
         {

@@ -7,10 +7,12 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFSegmentStore : EFEntityStoreBase<Segment>, ISegmentStore
+    public class EFSegmentStore : EFEnvironmentScopedEntityStoreBase<Segment>, ISegmentStore
     {
-        public EFSegmentStore(IDbContextProvider<SignalBoxDbContext> contextProvider)
-        : base(contextProvider, (c) => c.Segments)
+        protected override bool IsEnvironmentScoped => true;
+
+        public EFSegmentStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)
+        : base(contextProvider, environmentProvider, (c) => c.Segments)
         { }
 
         public async Task<bool> CustomerExistsInSegment(Segment segment, long customerId)

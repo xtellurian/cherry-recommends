@@ -7,11 +7,13 @@ import {
   fetchSegmentCustomersAsync,
   fetchSegmentEnrolmentRulesAsync,
 } from "../api/segmentsApi";
+import { useEnvironmentReducer } from "./environmentsApi";
 
 export const useSegments = () => {
   const token = useAccessToken();
   const page = usePagination();
   const [result, setState] = React.useState({ loading: true });
+  const [environment] = useEnvironmentReducer();
   React.useEffect(() => {
     if (token) {
       fetchSegmentsAsync({
@@ -21,7 +23,7 @@ export const useSegments = () => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, page]);
+  }, [token, page, environment]);
 
   return result;
 };
