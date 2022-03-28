@@ -14,6 +14,7 @@ import { RenameEntityPopup } from "../../molecules/popups/RenameEntityPopup";
 import { ConfirmDeletePopup } from "../../molecules/popups/ConfirmDeletePopup";
 import { HubspotOverview } from "./hubspot/HubspotOverview";
 import { IntegrationIcon } from "./icons/IntegrationIcons";
+import { ShopifyOverview } from "./shopify/ShopifyOverview";
 
 export const IntegratedSystemDetail = () => {
   const token = useAccessToken();
@@ -116,6 +117,9 @@ export const IntegratedSystemDetail = () => {
       {integratedSystem.error && <ErrorCard error={integratedSystem.error} />}
       {integratedSystem.systemType === "hubspot" && (
         <HubspotOverview integratedSystem={integratedSystem} />
+      )}
+      {integratedSystem.systemType === "shopify" && (
+        <ShopifyOverview integratedSystem={integratedSystem} />
       )}
     </React.Fragment>
   );

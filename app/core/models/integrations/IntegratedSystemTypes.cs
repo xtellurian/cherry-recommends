@@ -4,6 +4,7 @@ namespace SignalBox.Core
     {
         Segment,
         Hubspot,
+        Shopify,
         Custom
     }
 }

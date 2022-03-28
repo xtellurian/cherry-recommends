@@ -20,6 +20,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IInternalOptimiserClientFactory, InternalOptimiserClientFactory>();
             services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();
             services.AddScoped<IHubspotService, HubspotService>();
+            services.AddScoped<IShopifyService, ShopifyService>();
             services.AddScoped<IAuth0Service, Auth0Manager>();
             services.AddScoped<IWebhookSenderClient, WebhookSenderClient>();
             services.AddScoped<IRecommendationCache<ItemsRecommender, ItemsRecommendation>, SimpleItemsRecommendationCache>();

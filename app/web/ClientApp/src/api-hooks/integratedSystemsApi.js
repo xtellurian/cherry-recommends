@@ -17,15 +17,24 @@ export const useIntegratedSystems = () => {
   });
 
   React.useEffect(() => {
-    setState({ loading: true });
+    let mounted = true;
     if (token) {
       fetchIntegratedSystemsAsync({
         token,
         page,
       })
-        .then(setState)
-        .catch((error) => setState({ error }));
+        .then((value) => {
+          if (mounted) {
+            setState(value);
+          }
+        })
+        .catch((error) => {
+          if (mounted) {
+            setState({ error });
+          }
+        });
     }
+    return () => (mounted = false);
   }, [token, page, environment]);
 
   return result;
@@ -38,15 +47,24 @@ export const useIntegratedSystem = ({ id, trigger }) => {
   });
 
   React.useEffect(() => {
-    setState({ loading: true });
+    let mounted = true;
     if (token && id) {
       fetchIntegratedSystemAsync({
         token,
         id,
       })
-        .then(setState)
-        .catch((error) => setState({ error }));
+        .then((value) => {
+          if (mounted) {
+            setState(value);
+          }
+        })
+        .catch((error) => {
+          if (mounted) {
+            setState({ error });
+          }
+        });
     }
+    return () => (mounted = false);
   }, [token, id, trigger]);
 
   return result;
@@ -60,16 +78,25 @@ export const useWebhookReceivers = ({ id }) => {
   });
 
   React.useEffect(() => {
-    setState({ loading: true });
+    let mounted = true;
     if (token && id) {
       fetchWebhookReceiversAsync({
         token,
         page,
         id,
       })
-        .then(setState)
-        .catch((error) => setState({ error }));
+        .then((value) => {
+          if (mounted) {
+            setState(value);
+          }
+        })
+        .catch((error) => {
+          if (mounted) {
+            setState({ error });
+          }
+        });
     }
+    return () => (mounted = false);
   }, [token, id, page]);
 
   return result;

@@ -21,7 +21,9 @@ export const Auth0ProviderWrapper = ({ auth0Config, children }) => {
       scope={auth0Config.scope}
       skipRedirectCallback={
         // this is a boolean, not just the one path
-        window.location.pathname === "/settings/integrations/hubspotconnector"
+        window.location.pathname ===
+          "/settings/integrations/hubspotconnector" ||
+        window.location.pathname === "/settings/integrations/shopifyconnector"
       }
       onRedirectCallback={onRedirectCallback}
     >

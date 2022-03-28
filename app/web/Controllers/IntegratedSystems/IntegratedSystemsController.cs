@@ -16,13 +16,16 @@ namespace SignalBox.Web.Controllers
     {
         private readonly IntegratedSystemWorkflows workflows;
         private readonly IWebhookReceiverStore webhookReceiverStore;
+        private readonly IShopifyAdminWorkflow shopifyAdminWorkflows;
 
         public IntegratedSystemsController(IntegratedSystemWorkflows workflows,
                                            IIntegratedSystemStore store,
-                                           IWebhookReceiverStore webhookReceiverStore) : base(store)
+                                           IWebhookReceiverStore webhookReceiverStore,
+                                           IShopifyAdminWorkflow shopifyAdminWorkflows) : base(store)
         {
             this.workflows = workflows;
             this.webhookReceiverStore = webhookReceiverStore;
+            this.shopifyAdminWorkflows = shopifyAdminWorkflows;
         }
 
         /// <summary>Creates a new Integrated System.</summary>
@@ -44,6 +47,30 @@ namespace SignalBox.Web.Controllers
         public async Task<IEnumerable<WebhookReceiver>> QueryWebhookReceivers(long id)
         {
             return await webhookReceiverStore.GetReceiversForIntegratedSystem(id);
+        }
+
+        /// <summary>Deletes the resource with this Id.</summary>
+        [HttpDelete("{id}")]
+        public override async Task<DeleteResponse> DeleteResource(long id)
+        {
+            var entity = await store.Read(id);
+            var (canDelete, message) = await CanDelete(entity);
+            if (canDelete)
+            {
+                if (entity.SystemType == IntegratedSystemTypes.Shopify && entity.IntegrationStatus == IntegrationStatuses.OK)
+                {
+                    // Uninstall Shopify app on entity delete 
+                    // Uninstallation should happen here and not on the Shopify admin page
+                    await shopifyAdminWorkflows.UninstallApp(entity, errorOnUninstall: true);
+                }
+                var result = await store.Remove(id);
+                await store.Context.SaveChanges();
+                return new DeleteResponse(id, Request.Path.Value, result);
+            }
+            else
+            {
+                throw new BadRequestException($"Delete error: {message}", message);
+            }
         }
 
         protected override Task<(bool, string)> CanDelete(IntegratedSystem entity)

@@ -39,6 +39,7 @@ namespace SignalBox.Azure
             var hubspotConfig = new Pulumi.Config("hubspot");
             var segmentConfig = new Pulumi.Config("segment");
             var hotjarConfig = new Pulumi.Config("hotjar");
+            var shopifyConfig = new Pulumi.Config("shopify");
             System.Console.WriteLine($"Canonical Root Domain is {canonicalRootDomain ?? "null"}");
 
             var plan = new AppServicePlan("asp", new AppServicePlanArgs
@@ -205,6 +206,10 @@ namespace SignalBox.Azure
                     
                     // launch darkly
                     {"LaunchDarkly__ClientSideId", launchDarklyConfig.Get("clientSideId") ?? ""},
+
+                    // shopify
+                    {"Shopify__AppCredentials__ApiKey", shopifyConfig.Get("apiKey") ?? ""},
+                    {"Shopify__AppCredentials__SecretKey", shopifyConfig.Get("secretKey") ?? ""},
                 }
             }, new CustomResourceOptions
             {

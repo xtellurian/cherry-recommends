@@ -30,6 +30,11 @@ namespace SignalBox.Core
             return base.Deserialize<T>(this.Cache);
         }
 
+        public void ClearCache()
+        {
+            this.Cache = string.Empty;
+        }
+
         public IntegratedSystemTypes SystemType { get; set; }
 
         public IntegrationStatuses IntegrationStatus { get; set; }

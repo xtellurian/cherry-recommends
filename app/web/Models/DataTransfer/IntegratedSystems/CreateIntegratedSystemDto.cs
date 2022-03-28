@@ -8,7 +8,7 @@ namespace SignalBox.Web.Dto
         public string Name { get; set; }
 
         [Required]
-        [RegularExpression("Segment|Hubspot|Custom", ErrorMessage = "SystemType must be one of Segment, Hubspot, Custom")]
+        [RegularExpression("Segment|Hubspot|Shopify|Custom", ErrorMessage = "SystemType must be one of Segment, Hubspot, Shopify, Custom")]
         public string SystemType { get; set; }
 
     }

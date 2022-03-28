@@ -95,6 +95,9 @@ header a {
 .input-group .btn {
   border-radius: 0px;
 }
+.btn-group > .btn {
+  min-width: 100px;
+}
 
 a {
   color: var(--cherry-purple);

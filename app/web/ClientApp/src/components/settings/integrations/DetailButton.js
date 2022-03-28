@@ -2,17 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export const DetailButton = ({ integratedSystem, className }) => {
-  if (integratedSystem.systemType === "hubspot") {
+  let link = "";
+  switch (integratedSystem.systemType) {
+    case "hubspot":
+      link = `/settings/integrations/hubspot-detail/${integratedSystem.id}`;
+      break;
+    case "custom":
+      link = `/settings/integrations/custom/${integratedSystem.id}`;
+      break;
+    default:
+      break;
+  }
+  if (link) {
     return (
-      <Link to={`/settings/integrations/hubspot-detail/${integratedSystem.id}`}>
-        <button className={`btn btn-primary ${className || ""}`}>
-          More Options
-        </button>
-      </Link>
-    );
-  } else if (integratedSystem.systemType === "custom") {
-    return (
-      <Link to={`/settings/integrations/custom/${integratedSystem.id}`}>
+      <Link to={link}>
         <button className={`btn btn-primary ${className || ""}`}>
           More Options
         </button>

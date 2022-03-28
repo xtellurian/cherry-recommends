@@ -52,6 +52,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<IRecommenderReportImageWorkflow, RecommenderReportImageWorkflows>();
             services.AddScoped<IRecommenderMetricTriggersWorkflow, RecommenderTriggersWorkflows>();
             services.AddScoped<IChannelWorkflow, ChannelWorkflow>();
+            services.AddScoped<IShopifyAdminWorkflow, ShopifyAdminWorkflows>();
             return services;
         }
     }

@@ -21,6 +21,9 @@ config:
   launch-darkly:clientSideId: 622802e7cc6fc7149d5348fd
   segment:writeKey:
     secure: AAABAEvVDNe2nl+m8tvVjPF18I7SSk3GHlNqcFnr6sBMZ05ReZpHNnsaxrNu8zvdi8fQXU3X/OviJxeua2/80w==
+  shopify:apiKey: 4bac128d16267dfbef760643c9373b09
+  shopify:secretKey:
+    secure: AAABABxQ4Lfdx/MlTM4eAuc9G1rrw1j3CUT1aIHz2bYLkZ1GobiCX+b75PNGVgrLmhRaT35uzvAjQ7zVNpvGhg==
   signalbox:environment: Development
   signalbox:login-domain: dev.login.cherry.ai
   signalbox:sqlPassword:

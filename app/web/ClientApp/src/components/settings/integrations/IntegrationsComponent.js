@@ -8,6 +8,7 @@ import { CreateWebhookReceiver } from "./CreateWebhookReceiver";
 import { HubspotConnector } from "./hubspot/HubspotConnector";
 import { HubspotIntegrationComponent } from "./hubspot/HubspotIntegrationComponent";
 import { CustomIntegrationComponent } from "./custom/CustomIntegrationComponent";
+import { ShopifyConnector } from "./shopify/ShopifyConnector";
 
 export const IntegrationsComponent = () => {
   const { path } = useRouteMatch();
@@ -39,6 +40,11 @@ export const IntegrationsComponent = () => {
         <AuthorizeRoute
           path={`${path}/hubspot-detail/:id`}
           component={HubspotIntegrationComponent}
+        />
+        <AuthorizeRoute
+          exact
+          path={`${path}/shopifyconnector`}
+          component={ShopifyConnector}
         />
         <AuthorizeRoute
           path={`${path}/custom/:id`}

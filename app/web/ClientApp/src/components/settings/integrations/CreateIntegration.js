@@ -11,7 +11,7 @@ import { NoteBox } from "../../molecules/NoteBox";
 import { TextInput, InputGroup } from "../../molecules/TextInput";
 import { IntegrationIcon } from "./icons/IntegrationIcons";
 
-const systemTypes = ["Hubspot", "Segment", "Custom"];
+const systemTypes = ["Hubspot", "Segment", "Shopify", "Custom"];
 
 export const CreateIntegration = () => {
   const history = useHistory();
