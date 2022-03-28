@@ -103,4 +103,19 @@ interface PerformanceRequest extends EntityRequest {
     reportId?: string | number | undefined;
 }
 export declare const fetchPerformanceAsync: ({ token, id, reportId, }: PerformanceRequest) => Promise<PerformanceResponse>;
+declare type PromotionOptimiser = components["schemas"]["PromotionOptimiser"];
+export declare const fetchPromotionOptimiserAsync: ({ token, useInternalId, id, }: EntityRequest) => Promise<PromotionOptimiser>;
+interface SetAllPromotionOptimiserWeightsRequest extends EntityRequest {
+    weights: components["schemas"]["UpdateWeightDto"][];
+}
+export declare const setAllPromotionOptimiserWeightsAsync: ({ token, useInternalId, id, weights, }: SetAllPromotionOptimiserWeightsRequest) => Promise<PromotionOptimiser>;
+interface SetPromotionOptimiserWeightRequest extends EntityRequest {
+    weightId: number;
+    weight: number;
+}
+export declare const setPromotionOptimiserWeightAsync: ({ token, useInternalId, id, weightId, weight, }: SetPromotionOptimiserWeightRequest) => Promise<PromotionOptimiser>;
+interface SetUseOptimiserRequest extends EntityRequest {
+    useOptimiser: boolean;
+}
+export declare const setUseOptimiserAsync: ({ token, useInternalId, id, useOptimiser, }: SetUseOptimiserRequest) => Promise<PromotionOptimiser>;
 export {};

@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import {
   usePromotionsRecommender,
   usePromotions,
-} from "../../../api-hooks/promotionsRecommendersApi";
+} from "../../../../api-hooks/promotionsRecommendersApi";
 import {
   EmptyList,
   Paginator,
@@ -11,10 +11,13 @@ import {
   Subtitle,
   Title,
   BackButton,
-} from "../../molecules";
-import { ItemRow } from "../../items/ItemRow";
-import { AddItemPopup } from "./AddItemPopup";
-import { RemoveItemPopup } from "./RemoveItemPopup";
+  PageHeading,
+  PrimaryBackButton,
+} from "../../../molecules";
+import { ItemRow } from "../../../items/ItemRow";
+import { AddItemPopup } from "../AddItemPopup";
+import { RemoveItemPopup } from "../RemoveItemPopup";
+import { ManageNav } from "./Tabs";
 
 export const ManageItems = () => {
   const { id } = useParams();
@@ -35,18 +38,19 @@ export const ManageItems = () => {
       >
         Add a Promotion
       </button>
-      <BackButton
-        className="float-right mr-1"
-        to={`/recommenders/promotions-recommenders/detail/${id}`}
+      <PrimaryBackButton
+        to={{
+          pathname: `/recommenders/promotions-recommenders/detail/${id}`,
+          search: null,
+        }}
       >
         Recommender
-      </BackButton>
-      <Title>Manage Promotions</Title>
-      <Subtitle>
-        {recommender.loading && <Spinner />}
-        {recommender.name}
-      </Subtitle>
-      <hr />
+      </PrimaryBackButton>
+      <PageHeading
+        title="Manage Promotions"
+        subtitle={recommender.name || "..."}
+      />
+      <ManageNav id={id} />
       {items.loading && <Spinner>Loading Promotions</Spinner>}
       {items.items &&
         items.items.map((i) => (

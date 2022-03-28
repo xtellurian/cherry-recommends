@@ -475,3 +475,72 @@ export const fetchPerformanceAsync = async ({
     }`,
   });
 };
+
+type PromotionOptimiser = components["schemas"]["PromotionOptimiser"];
+export const fetchPromotionOptimiserAsync = async ({
+  token,
+  useInternalId,
+  id,
+}: EntityRequest): Promise<PromotionOptimiser> => {
+  return await executeFetch({
+    token,
+    useInternalId,
+    path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/`,
+  });
+};
+
+interface SetAllPromotionOptimiserWeightsRequest extends EntityRequest {
+  weights: components["schemas"]["UpdateWeightDto"][];
+}
+export const setAllPromotionOptimiserWeightsAsync = async ({
+  token,
+  useInternalId,
+  id,
+  weights,
+}: SetAllPromotionOptimiserWeightsRequest): Promise<PromotionOptimiser> => {
+  return await executeFetch({
+    token,
+    useInternalId,
+    path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/`,
+    method: "post",
+    body: weights,
+  });
+};
+
+interface SetPromotionOptimiserWeightRequest extends EntityRequest {
+  weightId: number;
+  weight: number;
+}
+export const setPromotionOptimiserWeightAsync = async ({
+  token,
+  useInternalId,
+  id,
+  weightId,
+  weight,
+}: SetPromotionOptimiserWeightRequest): Promise<PromotionOptimiser> => {
+  return await executeFetch({
+    token,
+    useInternalId,
+    path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/${weightId}`,
+    method: "post",
+    body: { weight },
+  });
+};
+
+interface SetUseOptimiserRequest extends EntityRequest {
+  useOptimiser: boolean;
+}
+export const setUseOptimiserAsync = async ({
+  token,
+  useInternalId,
+  id,
+  useOptimiser,
+}: SetUseOptimiserRequest): Promise<PromotionOptimiser> => {
+  return await executeFetch({
+    token,
+    useInternalId,
+    path: `api/recommenders/PromotionsRecommenders/${id}/UseOptimiser`,
+    method: "post",
+    body: { useOptimiser },
+  });
+};

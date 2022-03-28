@@ -4,7 +4,6 @@ import { useHistory, useParams } from "react-router-dom";
 import {
   useAudience,
   usePromotionsRecommender,
-  useReportImageBlobUrl,
 } from "../../../api-hooks/promotionsRecommendersApi";
 import {
   deletePromotionsRecommenderAsync,
@@ -25,7 +24,7 @@ import { EntityField } from "../../molecules/EntityField";
 import { CloneRecommender } from "../utils/CloneRecommender";
 import { GettingStartedSection } from "./GettingStartedSection";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
-import { ViewReportImagePopup } from "../utils/ViewImagePopup";
+
 import { SegmentRow } from "../../segments/SegmentRow";
 import { useFeatureFlag } from "../../launch-darkly/hooks";
 
@@ -159,7 +158,7 @@ export const RecommenderDetail = () => {
 
 const RecommenderDetailSection = () => {
   const { id } = useParams();
-  const [reportOpen, setReportOpen] = React.useState(false);
+
   const [trigger, setTrigger] = React.useState();
   const recommender = usePromotionsRecommender({ id, trigger });
   const audience = useAudience({ id, trigger });
@@ -217,33 +216,16 @@ const RecommenderDetailSection = () => {
         </div>
       </div>
 
-      <div className="d-flex flex-row-reverse">
-        {!recommender.loading && !recommender.error && (
-          <React.Fragment>
-            <button
-              className="btn btn-primary mr-1"
-              onClick={() => setReportOpen(true)}
-            >
-              Show Latest Report
-            </button>
-
-            <ViewReportImagePopup
-              isOpen={reportOpen}
-              setIsOpen={setReportOpen}
-              id={id}
-              useReportImageBlobUrl={useReportImageBlobUrl}
-            />
-          </React.Fragment>
-        )}
-      </div>
-
       <hr />
 
       <div className="row mb-3">
         <div className="col">
           <div className="mb-4">
             <Navigation
-              to={`/recommenders/promotions-recommenders/manage-items/${id}`}
+              to={{
+                pathname: `/recommenders/promotions-recommenders/manage/promotions/${id}`,
+                search: null,
+              }}
             >
               <button className="float-right btn btn-outline-primary">
                 Manage Promotions

@@ -15,13 +15,16 @@ import { SettingsUtil } from "../utils/settingsUtil";
 import { ErrorCard, Spinner } from "../../molecules";
 import { LoadingPopup } from "../../molecules/popups/LoadingPopup";
 import { SettingRow } from "../../molecules/layout/SettingRow";
+import { UseOptimiserControl } from "./UseOptimiserControl";
 
-export const Settings = () => {
+export const AdvancedSettings = () => {
   const { id } = useParams();
   const [error, setError] = React.useState();
   const [saving, setSaving] = React.useState(false);
+  const [trigger, setTrigger] = React.useState({});
   const recommender = usePromotionsRecommender({
     id,
+    trigger,
   });
   const token = useAccessToken();
   const items = usePromotions();
@@ -69,6 +72,15 @@ export const Settings = () => {
             basePath="/recommenders/promotions-recommenders"
             updateSettings={handleUpdate}
           />
+          <SettingRow
+            label="Use Optimiser"
+            description="Choose whether the recommender uses the weights set internally, or whether a custom model is used instead."
+          >
+            <UseOptimiserControl
+              recommender={recommender}
+              onUpdated={setTrigger}
+            />
+          </SettingRow>
           <SettingRow
             label="Baseline Promotion"
             description="The baseline promotion should be a safe default choice. The baseline will

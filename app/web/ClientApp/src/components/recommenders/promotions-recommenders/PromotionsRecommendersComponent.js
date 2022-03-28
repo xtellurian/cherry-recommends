@@ -9,16 +9,16 @@ import { TestRecommender } from "./TestItemsRecommender";
 import { LinkToModel } from "./LinkToModel";
 import { TargetVariableValues } from "./TargetVariableValues";
 import { InvokationLogs } from "./InvokationLogs";
-import { Settings } from "./Settings";
+import { SettingsPage } from "./SettingsPage";
 import { MonitorRecommender } from "./MonitorItemsRecommender";
-import { ManageItems } from "./ManageItems";
+import { ManageItems } from "./manage/ManagePromotions";
+import { ManageComponent } from "./manage/ManageComponent";
 import { Destinations } from "./Destinations";
 import { Triggers } from "./Triggers";
 import { LearningMetrics } from "./LearningMetrics";
 import { Arguments } from "./Arguments";
 import { Overview } from "./Overview";
-import Performance from "./ItemRecommenderPerformance";
-import { Advanced } from "./Advanced";
+import Performance from "./PerformanceTable";
 
 export const PromotionsRecommendersComponent = () => {
   const { path } = useRouteMatch();
@@ -64,22 +64,25 @@ export const PromotionsRecommendersComponent = () => {
           component={MonitorRecommender}
         />
         <AuthorizeRoute
-          path={`${path}/manage-items/:id`}
+          path={`${path}/manage-promotions/:id`}
           component={ManageItems}
         />
+        <AuthorizeRoute path={`${path}/manage`} component={ManageComponent} />
         <AuthorizeRoute
           path={`${path}/destinations/:id`}
           component={Destinations}
         />
         <AuthorizeRoute path={`${path}/triggers/:id`} component={Triggers} />
-        <AuthorizeRoute path={`${path}/settings/:id`} component={Settings} />
+        <AuthorizeRoute
+          path={`${path}/settings/:id`}
+          component={SettingsPage}
+        />
         <AuthorizeRoute
           path={`${path}/learning-metrics/:id`}
           component={LearningMetrics}
         />
         <AuthorizeRoute path={`${path}/arguments/:id`} component={Arguments} />
         <AuthorizeRoute path={`${path}/reports/:id`} component={Performance} />
-        <AuthorizeRoute path={`${path}/advanced/:id`} component={Advanced} />
       </Switch>
     </React.Fragment>
   );

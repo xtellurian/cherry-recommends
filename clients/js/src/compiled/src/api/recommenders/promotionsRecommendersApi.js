@@ -243,3 +243,37 @@ export const fetchPerformanceAsync = async ({ token, id, reportId, }) => {
         path: `api/recommenders/PromotionsRecommenders/${id}/Performance/${reportId !== null && reportId !== void 0 ? reportId : "latest"}`,
     });
 };
+export const fetchPromotionOptimiserAsync = async ({ token, useInternalId, id, }) => {
+    return await executeFetch({
+        token,
+        useInternalId,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/`,
+    });
+};
+export const setAllPromotionOptimiserWeightsAsync = async ({ token, useInternalId, id, weights, }) => {
+    return await executeFetch({
+        token,
+        useInternalId,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/`,
+        method: "post",
+        body: weights,
+    });
+};
+export const setPromotionOptimiserWeightAsync = async ({ token, useInternalId, id, weightId, weight, }) => {
+    return await executeFetch({
+        token,
+        useInternalId,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/${weightId}`,
+        method: "post",
+        body: { weight },
+    });
+};
+export const setUseOptimiserAsync = async ({ token, useInternalId, id, useOptimiser, }) => {
+    return await executeFetch({
+        token,
+        useInternalId,
+        path: `api/recommenders/PromotionsRecommenders/${id}/UseOptimiser`,
+        method: "post",
+        body: { useOptimiser },
+    });
+};

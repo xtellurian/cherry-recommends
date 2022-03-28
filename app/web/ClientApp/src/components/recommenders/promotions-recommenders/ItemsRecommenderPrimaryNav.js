@@ -16,8 +16,8 @@ export const tabs = [
     label: "Reports",
   },
   {
-    id: "advanced",
-    label: "Advanced",
+    id: "settings",
+    label: "Settings",
   },
 ];
 

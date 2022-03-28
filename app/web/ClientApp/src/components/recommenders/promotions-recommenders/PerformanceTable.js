@@ -1,8 +1,12 @@
 import React from "react";
 import { useParams } from "react-router";
-import { usePerformance } from "../../../api-hooks/promotionsRecommendersApi";
+import {
+  usePerformance,
+  usePromotionsRecommender,
+  useReportImageBlobUrl,
+} from "../../../api-hooks/promotionsRecommendersApi";
 import { ErrorCard, Spinner } from "../../molecules";
-import { EntityRow } from "../../molecules/layout/EntityRow";
+import { ViewReportImagePopup } from "../utils/ViewImagePopup";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import {
   Table,
@@ -37,7 +41,7 @@ const PerformanceTableRow = ({ data, itemsById }) => {
   );
 };
 
-const PerformanceTable = ({ reports, itemsById, targetMetric }) => {
+export const PerformanceTable = ({ reports, itemsById, targetMetric }) => {
   const targetMetricName = targetMetric.name;
   console.debug(reports);
   console.debug(itemsById);
@@ -64,7 +68,9 @@ const PerformanceTable = ({ reports, itemsById, targetMetric }) => {
 
 const Performance = () => {
   const { id } = useParams();
+  const recommender = usePromotionsRecommender({ id });
   const performance = usePerformance({ id });
+  const [reportOpen, setReportOpen] = React.useState(false);
   return (
     <React.Fragment>
       <ItemRecommenderLayout>
@@ -77,6 +83,24 @@ const Performance = () => {
             itemsById={performance.itemsById}
           />
         )}
+        <div className="d-flex flex-row-reverse">
+          {!recommender.loading && !recommender.error && (
+            <React.Fragment>
+              <button
+                className="btn btn-primary"
+                onClick={() => setReportOpen(true)}
+              >
+                Show Latest Report
+              </button>
+              <ViewReportImagePopup
+                isOpen={reportOpen}
+                setIsOpen={setReportOpen}
+                id={id}
+                useReportImageBlobUrl={useReportImageBlobUrl}
+              />
+            </React.Fragment>
+          )}
+        </div>
       </ItemRecommenderLayout>
     </React.Fragment>
   );

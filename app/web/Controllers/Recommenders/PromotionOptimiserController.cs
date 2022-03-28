@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,14 +27,20 @@ namespace SignalBox.Web.Controllers
             return await optimiserCRUDWorkflow.Read(id, useInternalId);
         }
 
-        [HttpPost("Weights/{weightId}")]
-        public async Task<PromotionOptimiser> Get(string id, long weightId, [FromBody] UpdateWeightDto dto, bool? useInternalId = null)
+        [HttpPost("Weights")]
+        public async Task<PromotionOptimiser> SetAllWeights(string id, [FromBody] IEnumerable<UpdateWeightDto> dto, bool? useInternalId = null)
         {
-            if (dto.Weight == null)
+            if (dto.IsNullOrEmpty())
             {
-                throw new BadRequestException("Weight cannot be null");
+                throw new BadRequestException("Weights must not be null or empty");
             }
-            return await optimiserCRUDWorkflow.UpdateWeight(id, weightId, dto.Weight.Value, useInternalId);
+            return await optimiserCRUDWorkflow.UpdateAllWeights(id, dto, useInternalId);
+        }
+
+        [HttpPost("Weights/{weightId}")]
+        public async Task<PromotionOptimiser> SetWeight(string id, long weightId, [FromBody] UpdateWeightDto dto, bool? useInternalId = null)
+        {
+            return await optimiserCRUDWorkflow.UpdateWeight(id, weightId, dto.Weight, useInternalId);
         }
     }
 }

@@ -1993,6 +1993,40 @@
             path: `api/recommenders/PromotionsRecommenders/${id}/Performance/${reportId !== null && reportId !== void 0 ? reportId : "latest"}`,
         });
     };
+    const fetchPromotionOptimiserAsync = async ({ token, useInternalId, id, }) => {
+        return await executeFetch({
+            token,
+            useInternalId,
+            path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/`,
+        });
+    };
+    const setAllPromotionOptimiserWeightsAsync = async ({ token, useInternalId, id, weights, }) => {
+        return await executeFetch({
+            token,
+            useInternalId,
+            path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/`,
+            method: "post",
+            body: weights,
+        });
+    };
+    const setPromotionOptimiserWeightAsync = async ({ token, useInternalId, id, weightId, weight, }) => {
+        return await executeFetch({
+            token,
+            useInternalId,
+            path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/${weightId}`,
+            method: "post",
+            body: { weight },
+        });
+    };
+    const setUseOptimiserAsync = async ({ token, useInternalId, id, useOptimiser, }) => {
+        return await executeFetch({
+            token,
+            useInternalId,
+            path: `api/recommenders/PromotionsRecommenders/${id}/UseOptimiser`,
+            method: "post",
+            body: { useOptimiser },
+        });
+    };
 
     var promotionsRecommendersApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -2026,7 +2060,11 @@
         setLearningMetricsAsync: setLearningMetricsAsync,
         fetchStatisticsAsync: fetchStatisticsAsync,
         fetchReportImageBlobUrlAsync: fetchReportImageBlobUrlAsync,
-        fetchPerformanceAsync: fetchPerformanceAsync
+        fetchPerformanceAsync: fetchPerformanceAsync,
+        fetchPromotionOptimiserAsync: fetchPromotionOptimiserAsync,
+        setAllPromotionOptimiserWeightsAsync: setAllPromotionOptimiserWeightsAsync,
+        setPromotionOptimiserWeightAsync: setPromotionOptimiserWeightAsync,
+        setUseOptimiserAsync: setUseOptimiserAsync
     });
 
     var fetch$2 = fetch;

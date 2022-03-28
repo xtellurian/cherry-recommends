@@ -16,7 +16,6 @@ namespace SignalBox.Core.Optimisers
             Recommender = recommender;
         }
 
-        [JsonIgnore]
         public long RecommenderId { get; set; }
         [JsonIgnore]
         public ItemsRecommender Recommender { get; set; } = null!;

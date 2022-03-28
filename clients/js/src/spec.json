@@ -8873,6 +8873,200 @@
         }
       }
     },
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser": {
+      "get": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionOptimiser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Weights": {
+      "post": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateWeightDto"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateWeightDto"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateWeightDto"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionOptimiser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Weights/{weightId}": {
+      "post": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "weightId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWeightDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWeightDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWeightDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionOptimiser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/RecommendableItems": {
       "get": {
         "tags": [
@@ -11896,6 +12090,138 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ItemsRecommenderPerformanceReport"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommenders/ItemsRecommenders/{id}/UseOptimiser": {
+      "post": {
+        "tags": [
+          "PromotionsRecommenders"
+        ],
+        "summary": "Sets the UseOptimiser property of the Recommender.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UseOptimiserDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UseOptimiserDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UseOptimiserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemsRecommender"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommenders/PromotionsRecommenders/{id}/UseOptimiser": {
+      "post": {
+        "tags": [
+          "PromotionsRecommenders"
+        ],
+        "summary": "Sets the UseOptimiser property of the Recommender.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UseOptimiserDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UseOptimiserDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UseOptimiserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemsRecommender"
                 }
               }
             }
@@ -18034,6 +18360,12 @@
           },
           "targetType": {
             "$ref": "#/components/schemas/PromotionRecommenderTargetTypes"
+          },
+          "optimiser": {
+            "$ref": "#/components/schemas/PromotionOptimiser"
+          },
+          "useOptimiser": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -19297,6 +19629,70 @@
         },
         "additionalProperties": { }
       },
+      "PromotionOptimiser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "environmentId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "environment": {
+            "$ref": "#/components/schemas/Environment"
+          },
+          "recommenderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "weights": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromotionOptimiserWeight"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromotionOptimiserWeight": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "weight": {
+            "type": "number",
+            "format": "double"
+          },
+          "segmentId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "promotionId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "optimiserId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
       "PromotionRecommenderTargetTypes": {
         "enum": [
           "customer",
@@ -20207,6 +20603,36 @@
             "type": "object",
             "additionalProperties": { },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateWeightDto": {
+        "required": [
+          "weight"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "weight": {
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UseOptimiserDto": {
+        "required": [
+          "useOptimiser"
+        ],
+        "type": "object",
+        "properties": {
+          "useOptimiser": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

@@ -6,6 +6,8 @@ namespace SignalBox.Core
     {
         public ResourceNotFoundException() : base("Resource Not Found")
         { }
+        public ResourceNotFoundException(Exception inner) : base("Resource Not Found", inner)
+        { }
 
         public override int Status => 404;
     }

@@ -310,6 +310,12 @@ interface components {
             linkedIntegratedSystemId?: number;
             linkedIntegratedSystem?: components["schemas"]["IntegratedSystem"];
             discriminator?: string | null;
+            lastEnqueued?: string | null;
+            lastCompleted?: string | null;
+        };
+        ChannelBasePaginated: {
+            items?: components["schemas"]["ChannelBase"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
         };
         ChannelTypes: "webhook" | "email" | "web";
         CheckistItem: {
@@ -442,7 +448,7 @@ interface components {
             arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
             targetMetricId?: string | null;
             segmentIds?: number[] | null;
-            itemIds?: string[] | null;
+            itemIds: string[];
             defaultItemId?: string | null;
             baselineItemId?: string | null;
             baselinePromotionId?: string | null;
@@ -820,6 +826,8 @@ interface components {
             targetMetricId?: number | null;
             targetMetric?: components["schemas"]["Metric"];
             targetType?: components["schemas"]["PromotionRecommenderTargetTypes"];
+            optimiser?: components["schemas"]["PromotionOptimiser"];
+            useOptimiser?: boolean;
         };
         ItemsRecommenderPaginated: {
             items?: components["schemas"]["ItemsRecommender"][] | null;
@@ -1154,6 +1162,22 @@ interface components {
         } & {
             [key: string]: unknown;
         };
+        PromotionOptimiser: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            recommenderId?: number;
+            weights?: components["schemas"]["PromotionOptimiserWeight"][] | null;
+        };
+        PromotionOptimiserWeight: {
+            id?: number;
+            weight?: number;
+            segmentId?: number | null;
+            promotionId?: number;
+            optimiserId?: number;
+        };
         PromotionRecommenderTargetTypes: "customer" | "business";
         PromotionsRecommendationDto: {
             created?: string;
@@ -1396,6 +1420,13 @@ interface components {
                 [key: string]: unknown;
             } | null;
         };
+        UpdateWeightDto: {
+            id?: number;
+            weight: number;
+        };
+        UseOptimiserDto: {
+            useOptimiser: boolean;
+        };
         UserInfo: {
             email?: string | null;
             emailVerified?: boolean | null;
@@ -1408,23 +1439,6 @@ interface components {
         };
         UserMetadata: {
             gettingStartedChecklist?: components["schemas"]["GettingStartedChecklist"];
-        };
-        WebhookChannel: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            environmentId?: number | null;
-            environment?: components["schemas"]["Environment"];
-            name?: string | null;
-            channelType?: components["schemas"]["ChannelTypes"];
-            linkedIntegratedSystemId?: number;
-            linkedIntegratedSystem?: components["schemas"]["IntegratedSystem"];
-            discriminator?: string | null;
-            endpoint?: string | null;
-        };
-        WebhookChannelPaginated: {
-            items?: components["schemas"]["WebhookChannel"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
         };
         WebhookReceiver: {
             id?: number;
@@ -2125,6 +2139,21 @@ interface PerformanceRequest extends EntityRequest {
     reportId?: string | number | undefined;
 }
 declare const fetchPerformanceAsync: ({ token, id, reportId, }: PerformanceRequest) => Promise<PerformanceResponse>;
+declare type PromotionOptimiser = components["schemas"]["PromotionOptimiser"];
+declare const fetchPromotionOptimiserAsync: ({ token, useInternalId, id, }: EntityRequest) => Promise<PromotionOptimiser>;
+interface SetAllPromotionOptimiserWeightsRequest extends EntityRequest {
+    weights: components["schemas"]["UpdateWeightDto"][];
+}
+declare const setAllPromotionOptimiserWeightsAsync: ({ token, useInternalId, id, weights, }: SetAllPromotionOptimiserWeightsRequest) => Promise<PromotionOptimiser>;
+interface SetPromotionOptimiserWeightRequest extends EntityRequest {
+    weightId: number;
+    weight: number;
+}
+declare const setPromotionOptimiserWeightAsync: ({ token, useInternalId, id, weightId, weight, }: SetPromotionOptimiserWeightRequest) => Promise<PromotionOptimiser>;
+interface SetUseOptimiserRequest extends EntityRequest {
+    useOptimiser: boolean;
+}
+declare const setUseOptimiserAsync: ({ token, useInternalId, id, useOptimiser, }: SetUseOptimiserRequest) => Promise<PromotionOptimiser>;
 
 declare const promotionsRecommendersApi_d_fetchPromotionsRecommendersAsync: typeof fetchPromotionsRecommendersAsync;
 declare const promotionsRecommendersApi_d_fetchPromotionsRecommenderAsync: typeof fetchPromotionsRecommenderAsync;
@@ -2138,6 +2167,10 @@ declare const promotionsRecommendersApi_d_setBaselinePromotionAsync: typeof setB
 declare const promotionsRecommendersApi_d_getBaselinePromotionAsync: typeof getBaselinePromotionAsync;
 declare const promotionsRecommendersApi_d_invokePromotionsRecommenderAsync: typeof invokePromotionsRecommenderAsync;
 declare const promotionsRecommendersApi_d_fetchPerformanceAsync: typeof fetchPerformanceAsync;
+declare const promotionsRecommendersApi_d_fetchPromotionOptimiserAsync: typeof fetchPromotionOptimiserAsync;
+declare const promotionsRecommendersApi_d_setAllPromotionOptimiserWeightsAsync: typeof setAllPromotionOptimiserWeightsAsync;
+declare const promotionsRecommendersApi_d_setPromotionOptimiserWeightAsync: typeof setPromotionOptimiserWeightAsync;
+declare const promotionsRecommendersApi_d_setUseOptimiserAsync: typeof setUseOptimiserAsync;
 declare namespace promotionsRecommendersApi_d {
   export {
     promotionsRecommendersApi_d_fetchPromotionsRecommendersAsync as fetchPromotionsRecommendersAsync,
@@ -2171,6 +2204,10 @@ declare namespace promotionsRecommendersApi_d {
     fetchStatisticsAsync$1 as fetchStatisticsAsync,
     fetchReportImageBlobUrlAsync$1 as fetchReportImageBlobUrlAsync,
     promotionsRecommendersApi_d_fetchPerformanceAsync as fetchPerformanceAsync,
+    promotionsRecommendersApi_d_fetchPromotionOptimiserAsync as fetchPromotionOptimiserAsync,
+    promotionsRecommendersApi_d_setAllPromotionOptimiserWeightsAsync as setAllPromotionOptimiserWeightsAsync,
+    promotionsRecommendersApi_d_setPromotionOptimiserWeightAsync as setPromotionOptimiserWeightAsync,
+    promotionsRecommendersApi_d_setUseOptimiserAsync as setUseOptimiserAsync,
   };
 }
 

@@ -15,6 +15,7 @@ import {
   fetchReportImageBlobUrlAsync,
   fetchPerformanceAsync,
   fetchAudienceAsync,
+  fetchPromotionOptimiserAsync,
 } from "../api/promotionsRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -294,6 +295,24 @@ export const useAudience = ({ id, trigger }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useOptimiser = ({ id }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchPromotionOptimiserAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id]);
 
   return state;
 };

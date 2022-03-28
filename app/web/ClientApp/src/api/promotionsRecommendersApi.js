@@ -74,3 +74,11 @@ export const fetchPerformanceAsync =
   promotionsRecommenders.fetchPerformanceAsync;
 
 export const fetchAudienceAsync = promotionsRecommenders.fetchAudienceAsync;
+
+export const setUseOptimiserAsync = promotionsRecommenders.setUseOptimiserAsync;
+export const fetchPromotionOptimiserAsync =
+  promotionsRecommenders.fetchPromotionOptimiserAsync;
+export const setPromotionOptimiserWeightAsync =
+  promotionsRecommenders.setPromotionOptimiserWeightAsync;
+export const setAllPromotionOptimiserWeightsAsync =
+  promotionsRecommenders.setAllPromotionOptimiserWeightsAsync;

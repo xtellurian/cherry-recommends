@@ -34,7 +34,9 @@ export const LearningMetricsUtil = ({
   basePath,
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const commonIds = learningMetrics?.map((_) => _.commonId) || [];
+  const commonIds = learningMetrics
+    ? learningMetrics?.map((_) => _.commonId)
+    : [];
   const [newMetricOption, setNewMetricOption] = React.useState();
   const handleUpdateLearningMetrics = () => {
     commonIds.push(newMetricOption.value.commonId);

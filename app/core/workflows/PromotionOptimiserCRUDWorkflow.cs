@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SignalBox.Core.Optimisers;
@@ -46,12 +47,23 @@ namespace SignalBox.Core.Workflows
             await recommenderStore.Load(recommender, _ => _.Optimiser);
             if (recommender.Optimiser == null)
             {
-                // ? should we just create a new optimiser here?
-                throw new EntityNotFoundException(typeof(PromotionOptimiser));
+                if (recommender.UseOptimiser)
+                {
+                    return await Create(recommender);
+                }
+                else
+                {
+                    throw new BadRequestException("Cannot auto-create optimiser when Recommender has UseOptimiser=false");
+                }
             }
 
-            recommender.Optimiser.UpdateWeights(recommender);
-            await recommenderStore.Context.SaveChanges();
+            if (recommender.UseOptimiser)
+            {
+                // only update if using optimiser
+                recommender.Optimiser.UpdateWeights(recommender);
+                await recommenderStore.Context.SaveChanges();
+            }
+
             return recommender.Optimiser;
         }
 
@@ -81,6 +93,28 @@ namespace SignalBox.Core.Workflows
             var success = await store.Remove(id);
             await store.Context.SaveChanges();
             return success;
+        }
+
+        public async Task<PromotionOptimiser> UpdateAllWeights(string recommenderId, IEnumerable<IWeighted> weights, bool? useInternalId = null)
+        {
+            var optimiser = await Read(recommenderId, useInternalId);
+            optimiser.UpdateWeights(optimiser.Recommender);
+            var optimiserWeights = optimiser.Weights.ToList();
+            foreach (var w in weights)
+            {
+                if (optimiserWeights.Any(_ => _.Id == w.Id))
+                {
+                    optimiserWeights.First(_ => _.Id == w.Id).Weight = w.Weight;
+                }
+                else
+                {
+                    throw new BadRequestException($"Optimiser {optimiser.Id} does not contain weight id {w.Id}");
+                }
+            }
+
+            optimiser.Weights = optimiserWeights.Normalize().ToList();
+            await store.Context.SaveChanges();
+            return optimiser;
         }
     }
 }

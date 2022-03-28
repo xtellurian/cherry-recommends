@@ -550,7 +550,7 @@ export interface paths {
                 /** Success */
                 200: {
                     content: {
-                        "application/json": components["schemas"]["WebhookChannelPaginated"];
+                        "application/json": components["schemas"]["ChannelBasePaginated"];
                     };
                 };
                 /** Bad Request */
@@ -596,7 +596,7 @@ export interface paths {
                 /** Success */
                 200: {
                     content: {
-                        "application/json": components["schemas"]["WebhookChannel"];
+                        "application/json": components["schemas"]["ChannelBase"];
                     };
                 };
                 /** Bad Request */
@@ -4404,6 +4404,99 @@ export interface paths {
             };
         };
     };
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiser"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Weights": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiser"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateWeightDto"][];
+                    "text/json": components["schemas"]["UpdateWeightDto"][];
+                    "application/*+json": components["schemas"]["UpdateWeightDto"][];
+                };
+            };
+        };
+    };
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Weights/{weightId}": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                    weightId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiser"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateWeightDto"];
+                    "text/json": components["schemas"]["UpdateWeightDto"];
+                    "application/*+json": components["schemas"]["UpdateWeightDto"];
+                };
+            };
+        };
+    };
     "/api/RecommendableItems": {
         get: {
             parameters: {
@@ -5894,6 +5987,72 @@ export interface paths {
                     content: {
                         "application/json": components["schemas"]["ProblemDetails"];
                     };
+                };
+            };
+        };
+    };
+    "/api/recommenders/ItemsRecommenders/{id}/UseOptimiser": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ItemsRecommender"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UseOptimiserDto"];
+                    "text/json": components["schemas"]["UseOptimiserDto"];
+                    "application/*+json": components["schemas"]["UseOptimiserDto"];
+                };
+            };
+        };
+    };
+    "/api/recommenders/PromotionsRecommenders/{id}/UseOptimiser": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ItemsRecommender"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UseOptimiserDto"];
+                    "text/json": components["schemas"]["UseOptimiserDto"];
+                    "application/*+json": components["schemas"]["UseOptimiserDto"];
                 };
             };
         };
@@ -7859,6 +8018,12 @@ export interface components {
             linkedIntegratedSystemId?: number;
             linkedIntegratedSystem?: components["schemas"]["IntegratedSystem"];
             discriminator?: string | null;
+            lastEnqueued?: string | null;
+            lastCompleted?: string | null;
+        };
+        ChannelBasePaginated: {
+            items?: components["schemas"]["ChannelBase"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
         };
         ChannelTypes: "webhook" | "email" | "web";
         CheckistItem: {
@@ -7991,7 +8156,7 @@ export interface components {
             arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
             targetMetricId?: string | null;
             segmentIds?: number[] | null;
-            itemIds?: string[] | null;
+            itemIds: string[];
             defaultItemId?: string | null;
             baselineItemId?: string | null;
             baselinePromotionId?: string | null;
@@ -8369,6 +8534,8 @@ export interface components {
             targetMetricId?: number | null;
             targetMetric?: components["schemas"]["Metric"];
             targetType?: components["schemas"]["PromotionRecommenderTargetTypes"];
+            optimiser?: components["schemas"]["PromotionOptimiser"];
+            useOptimiser?: boolean;
         };
         ItemsRecommenderPaginated: {
             items?: components["schemas"]["ItemsRecommender"][] | null;
@@ -8703,6 +8870,22 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
+        PromotionOptimiser: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            recommenderId?: number;
+            weights?: components["schemas"]["PromotionOptimiserWeight"][] | null;
+        };
+        PromotionOptimiserWeight: {
+            id?: number;
+            weight?: number;
+            segmentId?: number | null;
+            promotionId?: number;
+            optimiserId?: number;
+        };
         PromotionRecommenderTargetTypes: "customer" | "business";
         PromotionsRecommendationDto: {
             created?: string;
@@ -8945,6 +9128,13 @@ export interface components {
                 [key: string]: unknown;
             } | null;
         };
+        UpdateWeightDto: {
+            id?: number;
+            weight: number;
+        };
+        UseOptimiserDto: {
+            useOptimiser: boolean;
+        };
         UserInfo: {
             email?: string | null;
             emailVerified?: boolean | null;
@@ -8957,23 +9147,6 @@ export interface components {
         };
         UserMetadata: {
             gettingStartedChecklist?: components["schemas"]["GettingStartedChecklist"];
-        };
-        WebhookChannel: {
-            id?: number;
-            created?: string;
-            lastUpdated?: string;
-            environmentId?: number | null;
-            environment?: components["schemas"]["Environment"];
-            name?: string | null;
-            channelType?: components["schemas"]["ChannelTypes"];
-            linkedIntegratedSystemId?: number;
-            linkedIntegratedSystem?: components["schemas"]["IntegratedSystem"];
-            discriminator?: string | null;
-            endpoint?: string | null;
-        };
-        WebhookChannelPaginated: {
-            items?: components["schemas"]["WebhookChannel"][] | null;
-            pagination?: components["schemas"]["PaginationInfo"];
         };
         WebhookReceiver: {
             id?: number;

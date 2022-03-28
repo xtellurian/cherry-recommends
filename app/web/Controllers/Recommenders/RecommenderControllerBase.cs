@@ -172,11 +172,15 @@ namespace SignalBox.Web.Controllers
                 System.Console.WriteLine(requestFailedEx.Message);
                 if (requestFailedEx.ErrorCode == "BlobNotFound")
                 {
-                    throw new ResourceNotFoundException();
+                    throw new ResourceNotFoundException(requestFailedEx);
+                }
+                else if (requestFailedEx.ErrorCode == "ContainerNotFound")
+                {
+                    throw new DependencyException("Container not found.", requestFailedEx);
                 }
                 else
                 {
-                    throw new WorkflowException("Error downloading report image");
+                    throw new WorkflowException("Error downloading report image.", requestFailedEx);
                 }
             }
         }

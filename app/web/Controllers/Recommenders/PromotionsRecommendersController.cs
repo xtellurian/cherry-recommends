@@ -216,6 +216,16 @@ namespace SignalBox.Web.Controllers
             }
         }
 
+        /// <summary>Sets the UseOptimiser property of the Recommender.</summary>
+        [HttpPost("{id}/UseOptimiser")]
+        public async Task<ItemsRecommender> SetUseOptimiser(string id, [FromBody] UseOptimiserDto dto, bool? useInternalId = null)
+        {
+            var recommender = await store.GetEntity(id, useInternalId);
+            recommender.UseOptimiser = dto.UseOptimiser;
+            await store.Context.SaveChanges();
+            return recommender;
+        }
+
         /// <summary>Remove a promotion association with a recommender.</summary>
         [HttpDelete("{id}/Items/{itemId}")]
         [HttpDelete("{id}/Promotions/{itemId}")]

@@ -154,6 +154,7 @@ export const TextInput = ({
   type,
   min,
   max,
+  step,
   placeholder,
   onChange,
   onReturn,
@@ -208,8 +209,8 @@ export const TextInput = ({
             )
           }
         >
-          <div className="input-group-prepend">
-            <span className="input-group-text">{label}</span>
+          <div className="input-group-prepend w-25">
+            <span className="input-group-text w-100">{label}</span>
           </div>
         </Tippy>
       )}
@@ -238,6 +239,7 @@ export const TextInput = ({
           value={value}
           min={min}
           max={max}
+          step={step}
           onChange={onChange}
           onKeyPress={handleOnKeyPress}
           onBlur={onBlur}

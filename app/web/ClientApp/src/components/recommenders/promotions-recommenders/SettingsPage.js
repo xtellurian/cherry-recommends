@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col } from "reactstrap";
 
-import { Settings } from "./Settings";
+import { AdvancedSettings } from "./AdvancedSettings";
 import { Destinations } from "./Destinations";
 import { Triggers } from "./Triggers";
 import { LearningMetrics } from "./LearningMetrics";
@@ -15,7 +15,7 @@ import {
 
 import "./Advanced.css";
 
-const AdvancedNav = ({ nav }) => {
+const SettingsNav = ({ nav }) => {
   const scrollTo = ({ element }) => {
     const yOffset = -87;
     const y =
@@ -51,19 +51,19 @@ const AdvancedNav = ({ nav }) => {
   );
 };
 
-export const Advanced = () => {
-  const targetMetricRef = React.useRef(null);
+export const SettingsPage = () => {
+  const learningMetricsRef = React.useRef(null);
   const triggersRef = React.useRef(null);
   const argumentsRef = React.useRef(null);
   const integrationsRef = React.useRef(null);
-  const toolsRef = React.useRef(null);
+  const advancedRef = React.useRef(null);
 
   const advancedMenu = [
     {
-      id: "target-metric",
-      label: "Target Metrics",
+      id: "learning-metrics",
+      label: "Learning Metrics",
       icon: "/icons/metric-2.svg",
-      ref: targetMetricRef,
+      ref: learningMetricsRef,
     },
     {
       id: "triggers",
@@ -84,20 +84,20 @@ export const Advanced = () => {
       ref: integrationsRef,
     },
     {
-      id: "tools",
-      label: "Tools",
+      id: "advanced",
+      label: "Advanced",
       icon: "/icons/settings.svg",
-      ref: toolsRef,
+      ref: advancedRef,
     },
   ];
 
   return (
     <ItemRecommenderLayout>
       <Row className="mt-4">
-        <AdvancedNav nav={advancedMenu} />
+        <SettingsNav nav={advancedMenu} />
       </Row>
 
-      <RecommenderCard ref={targetMetricRef}>
+      <RecommenderCard ref={learningMetricsRef}>
         <LearningMetrics />
       </RecommenderCard>
 
@@ -113,8 +113,8 @@ export const Advanced = () => {
         <Destinations />
       </RecommenderCard>
 
-      <RecommenderCard ref={toolsRef} title="Advanced">
-        <Settings />
+      <RecommenderCard ref={advancedRef} title="Advanced">
+        <AdvancedSettings />
       </RecommenderCard>
     </ItemRecommenderLayout>
   );
