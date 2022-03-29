@@ -15,6 +15,7 @@ import { ConfirmDeletePopup } from "../../molecules/popups/ConfirmDeletePopup";
 import { HubspotOverview } from "./hubspot/HubspotOverview";
 import { IntegrationIcon } from "./icons/IntegrationIcons";
 import { ShopifyOverview } from "./shopify/ShopifyOverview";
+import { useFeatureFlag } from "../../launch-darkly/hooks";
 
 export const IntegratedSystemDetail = () => {
   const token = useAccessToken();
@@ -22,6 +23,7 @@ export const IntegratedSystemDetail = () => {
   let { id } = useParams();
   const [trigger, setReloadTrigger] = React.useState({});
   const integratedSystem = useIntegratedSystem({ id, trigger });
+  const shopifyFlag = useFeatureFlag("shopify", true);
 
   const [renameOpen, setRenameOpen] = React.useState(false);
 
@@ -118,7 +120,7 @@ export const IntegratedSystemDetail = () => {
       {integratedSystem.systemType === "hubspot" && (
         <HubspotOverview integratedSystem={integratedSystem} />
       )}
-      {integratedSystem.systemType === "shopify" && (
+      {shopifyFlag && integratedSystem.systemType === "shopify" && (
         <ShopifyOverview integratedSystem={integratedSystem} />
       )}
     </React.Fragment>

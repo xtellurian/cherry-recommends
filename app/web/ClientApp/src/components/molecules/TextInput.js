@@ -209,7 +209,7 @@ export const TextInput = ({
             )
           }
         >
-          <div className="input-group-prepend w-25">
+          <div className="input-group-prepend min-w-25">
             <span className="input-group-text w-100">{label}</span>
           </div>
         </Tippy>
