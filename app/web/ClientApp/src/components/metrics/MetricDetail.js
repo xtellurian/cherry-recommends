@@ -1,17 +1,17 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import dayjs from "dayjs";
+
 import { useMetric } from "../../api-hooks/metricsApi";
 import { deleteMetricAsync, fetchExportCustomers } from "../../api/metricsApi";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
-
 import {
   PageHeading,
   Spinner,
   ErrorCard,
-  BackButton,
   AsyncButton,
   Navigation,
+  MoveUpHierarchyPrimaryButton,
 } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { useAccessToken, useTokenScopes } from "../../api-hooks/token";
@@ -84,9 +84,11 @@ const MetricDetail = () => {
 
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/metrics/">
-        All Metrics
-      </BackButton>
+      <MoveUpHierarchyPrimaryButton
+        to={{ pathname: "/metrics/", search: null }}
+      >
+        Back to Metrics
+      </MoveUpHierarchyPrimaryButton>
       {canWrite && (
         <Navigation to={`/metrics/set-value/${id}`}>
           <button className="btn btn-primary float-right mr-1">

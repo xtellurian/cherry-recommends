@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Title, Spinner, Paginator, ErrorCard } from "../molecules";
+
+import { Title, Spinner, Paginator, ErrorCard, Navigation } from "../molecules";
 import { SearchBox } from "../molecules/SearchBox";
 import { BusinessRow } from "./BusinessRow";
 import { useBusinesses } from "../../api-hooks/businessesApi";
@@ -8,9 +8,9 @@ import { EmptyList } from "../molecules";
 
 const CreateButton = () => {
   return (
-    <Link to="/businesses/create">
+    <Navigation to="/businesses/create">
       <button className="btn btn-primary">Create New</button>
-    </Link>
+    </Navigation>
   );
 };
 export const BusinessesSummary = () => {

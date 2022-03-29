@@ -1,18 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
 import { useCustomers } from "../../api-hooks/customersApi";
-import { Title, Spinner, Paginator, ErrorCard } from "../molecules";
+import { Title, Spinner, Paginator, ErrorCard, Navigation } from "../molecules";
 import { SearchBox } from "../molecules/SearchBox";
 import { CustomerRow } from "../customers/CustomerRow";
 import { EmptyList } from "../molecules";
 
 const CreateButton = () => {
   return (
-    <Link to="/customers/create">
+    <Navigation to="/customers/create">
       <button className="btn btn-primary">Add a Customer</button>
-    </Link>
+    </Navigation>
   );
 };
+
 export const CustomersSummary = () => {
   const [searchTerm, setSearchTerm] = React.useState("");
   const trackedUsers = useCustomers({ searchTerm });

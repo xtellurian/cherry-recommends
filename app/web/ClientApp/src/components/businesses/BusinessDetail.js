@@ -1,9 +1,9 @@
 import React from "react";
 import { useParams, useHistory } from "react-router-dom";
+
 import { useBusiness } from "../../api-hooks/businessesApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { deleteBusinessAsync } from "../../api/businessesApi";
-import { BackButton } from "../molecules/BackButton";
 import {
   Subtitle,
   PageHeading,
@@ -11,6 +11,7 @@ import {
   Spinner,
   EmptyList,
   Navigation,
+  MoveUpHierarchyPrimaryButton,
 } from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { CopyableField } from "../molecules/fields/CopyableField";
@@ -59,6 +60,11 @@ export const BusinessDetail = () => {
 
   return (
     <React.Fragment>
+      <MoveUpHierarchyPrimaryButton
+        to={{ pathname: "/businesses", search: null }}
+      >
+        Back to Businesses
+      </MoveUpHierarchyPrimaryButton>
       <ActionsButton
         className="ml-1 float-right"
         to={`/businesses/metrics/${id}`}
@@ -79,9 +85,6 @@ export const BusinessDetail = () => {
       >
         Delete Business
       </button>
-      <BackButton className="float-right" to="/businesses">
-        All Businesses
-      </BackButton>
       <PageHeading
         title={business.name || business.commonId || "..."}
         subtitle="Business"

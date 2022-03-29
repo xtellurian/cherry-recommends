@@ -6,8 +6,7 @@ import { Navigation } from "./Navigation";
 
 import "./css/nav.css";
 
-// Warning: This component was changed to MoveUpHierarchyButton, use it instead.
-export const BackButton = ({ to, children, className }) => {
+export const MoveUpHierarchyButton = ({ to, children, className }) => {
   return (
     <div className={className}>
       <Navigation to={to}>
@@ -20,14 +19,14 @@ export const BackButton = ({ to, children, className }) => {
   );
 };
 
-// Warning: This component was changed to MoveUpHierarchyPrimaryButton, use it instead.
-export const PrimaryBackButton = ({ to, children, className = "" }) => {
+export const MoveUpHierarchyPrimaryButton = ({
+  to,
+  children,
+  className = "",
+}) => {
   return (
     <div className={`mb-3 ${className}`}>
-      <Navigation
-        to={to}
-        className="d-flex align-items-center primary-nav-link text-decoration-none"
-      >
+      <Navigation to={to} className="primary-nav-link text-decoration-none">
         <ArrowLeft size={18} className="mr-2" />
         <Typography variant="h4">{children}</Typography>
       </Navigation>

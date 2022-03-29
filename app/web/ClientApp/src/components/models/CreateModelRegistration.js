@@ -1,14 +1,17 @@
 import React from "react";
-import { Title, BackButton } from "../molecules";
+
+import { MoveUpHierarchyPrimaryButton, PageHeading } from "../molecules";
 import { NoteBox } from "../molecules/NoteBox";
 import { DropdownComponent, DropdownItem } from "../molecules/Dropdown";
 import { AzureMLModelRegistration } from "./AzureMLModelRegistration";
 import { AzurePersonalizerModelRegistration } from "./AzurePersonalizerModelRegistration";
+
 const modelTypes = [
   { label: "Promotions Recommender", value: "ItemsRecommenderV1" },
   { label: "Parameter Set Recommender", value: "ParameterSetRecommenderV1" },
   { label: "Classifier", value: "SingleClassClassifier" },
 ];
+
 const hostingTypes = [
   { label: "Azure ML Container", value: "AzureMLContainerInstance" },
   { label: "Azure Personalizer", value: "AzurePersonalizer" },
@@ -20,12 +23,12 @@ export const CreateModelRegistration = () => {
 
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/models">
-        Models
-      </BackButton>
-      <Title>Register Model</Title>
-      <hr />
-      <NoteBox className="m-auto w-50" label="Warning">
+      <MoveUpHierarchyPrimaryButton to="/models">
+        Back to Models
+      </MoveUpHierarchyPrimaryButton>
+      <PageHeading title="Register Model" showHr />
+
+      <NoteBox className="mx-auto mb-4 w-50" label="Warning">
         This area is for administrators only.
       </NoteBox>
 

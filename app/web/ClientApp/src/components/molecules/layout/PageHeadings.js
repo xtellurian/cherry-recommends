@@ -17,10 +17,8 @@ export const Subtitle = ({ children }) => {
 export const PageHeading = ({ title, subtitle, showHr }) => {
   return (
     <div className="page-heading-wrapper mb-4">
-      {title ? <div className="title text-capitalize">{title}</div> : null}
-      {subtitle ? (
-        <div className="subtitle text-capitalize">{subtitle}</div>
-      ) : null}
+      <div className="title text-capitalize">{title}</div>
+      <div className="subtitle text-capitalize">{subtitle}</div>
       {showHr ? <hr /> : null}
     </div>
   );

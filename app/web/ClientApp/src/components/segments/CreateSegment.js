@@ -1,11 +1,16 @@
 import React from "react";
-import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useHistory } from "react-router-dom";
-import { Title } from "../molecules/layout";
+
+import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createSegmentAsync } from "../../api/segmentsApi";
 import { InputGroup, TextInput } from "../molecules/TextInput";
-import { AsyncButton, ErrorCard } from "../molecules";
+import {
+  AsyncButton,
+  ErrorCard,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
+} from "../molecules";
 
 export const CreateSegment = () => {
   const token = useAccessToken();
@@ -36,8 +41,10 @@ export const CreateSegment = () => {
   return (
     <React.Fragment>
       <div>
-        <Title>Create a new Segment</Title>
-        <hr />
+        <MoveUpHierarchyPrimaryButton to="/segments">
+          Back to Segments
+        </MoveUpHierarchyPrimaryButton>
+        <PageHeading title="Create a new Segment" showHr />
         {error && <ErrorCard error={error} />}
         <InputGroup>
           <TextInput

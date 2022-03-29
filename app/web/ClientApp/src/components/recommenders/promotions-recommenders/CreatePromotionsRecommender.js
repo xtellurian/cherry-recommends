@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+
 import { useAccessToken } from "../../../api-hooks/token";
 import { createPromotionsRecommenderAsync } from "../../../api/promotionsRecommendersApi";
 import {
@@ -11,11 +12,11 @@ import {
   useMetrics,
 } from "../../../api-hooks/metricsApi";
 import {
-  Title,
-  PrimaryBackButton,
   Selector,
   AsyncButton,
   ErrorCard,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
 } from "../../molecules";
 import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 import {
@@ -29,7 +30,6 @@ import {
 } from "../../molecules/TextInput";
 import { IntegerRangeSelector } from "../../molecules/selectors/IntegerRangeSelector";
 import { SettingRow } from "../../molecules/layout/SettingRow";
-import { Container, Row } from "../../molecules/layout";
 import { AdvancedOptionsPanel } from "../../molecules/layout/AdvancedOptionsPanel";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useCommonId } from "../../../utility/utility";
@@ -145,6 +145,10 @@ export const CreateRecommender = () => {
 
   return (
     <React.Fragment>
+      <MoveUpHierarchyPrimaryButton to="/recommenders/promotions-recommenders">
+        Back to Recommenders
+      </MoveUpHierarchyPrimaryButton>
+
       <AsyncButton
         className="btn btn-primary float-right"
         onClick={handleCreate}
@@ -152,12 +156,9 @@ export const CreateRecommender = () => {
       >
         Create and Save
       </AsyncButton>
-      <PrimaryBackButton to="/recommenders/promotions-recommenders">
-        All Promotion Recommenders
-      </PrimaryBackButton>
 
-      <Title>Create Promotion Recommender</Title>
-      <hr />
+      <PageHeading title="Create Promotion Recommender" showHr />
+
       {error && <ErrorCard error={error} />}
 
       <InputGroup>

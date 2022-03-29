@@ -1,30 +1,33 @@
 import React from "react";
-import { BackButton, Title, Subtitle } from "../../molecules";
 
+import { MoveUpHierarchyPrimaryButton, PageHeading } from "../../molecules";
 import { DetailButton } from "./DetailButton";
+
 export const Top = ({ integratedSystem }) => {
   if (!integratedSystem || integratedSystem.loading) {
     return (
       <React.Fragment>
-        <BackButton to="/settings/integrations" className="float-right">
-          Integrations
-        </BackButton>
-        <Title>Integrated System</Title>
-        <Subtitle>...</Subtitle>
+        <MoveUpHierarchyPrimaryButton to="/settings/integrations">
+          Back to Integrations
+        </MoveUpHierarchyPrimaryButton>
+        <PageHeading title="Integrated System" subtitle="..." />
       </React.Fragment>
     );
   }
+
   return (
     <React.Fragment>
-      <BackButton to="/settings/integrations" className="float-right">
-        Integrations
-      </BackButton>
+      <MoveUpHierarchyPrimaryButton to="/settings/integrations">
+        Back to Integrations
+      </MoveUpHierarchyPrimaryButton>
       <DetailButton
         className="float-right mr-1"
         integratedSystem={integratedSystem}
       />
-      <Title>Integrated System</Title>
-      <Subtitle>{integratedSystem.name || integratedSystem.name}</Subtitle>
+      <PageHeading
+        title={integratedSystem.name || integratedSystem.name || "..."}
+        subtitle="Integrated System"
+      />
     </React.Fragment>
   );
 };

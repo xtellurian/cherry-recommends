@@ -1,12 +1,11 @@
 import React from "react";
 import { useParams, useHistory } from "react-router-dom";
+
 import { useSegment } from "../../api-hooks/segmentsApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { deleteSegmentAsync } from "../../api/segmentsApi";
-import { BackButton } from "../molecules/BackButton";
-import { Subtitle, Title, ErrorCard, Spinner, EmptyList } from "../molecules";
+import { ErrorCard, Spinner, MoveUpHierarchyPrimaryButton } from "../molecules";
 import { Tabs, TabActivator } from "../molecules/layout/Tabs";
-
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { MembersSection } from "./MembersSection";
 import { PageHeading } from "../molecules/layout/PageHeadings";
@@ -39,15 +38,17 @@ export const SegmentDetail = () => {
 
   return (
     <React.Fragment>
+      <MoveUpHierarchyPrimaryButton
+        to={{ pathname: "/segments", search: null }}
+      >
+        Back to Segments
+      </MoveUpHierarchyPrimaryButton>
       <button
         className="btn btn-danger ml-1 float-right"
         onClick={() => setIsDeletePopupOpen(true)}
       >
         Delete Segment
       </button>
-      <BackButton className="float-right" to="/segments">
-        All Segments
-      </BackButton>
       <PageHeading title={segment.name || "..."} subtitle="Segment" />
       {segment.loading && <Spinner />}
       {segment.error && <ErrorCard error={segment.error} />}

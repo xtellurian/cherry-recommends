@@ -1,12 +1,18 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
+
 import { usePromotion } from "../../api-hooks/promotionsApi";
 import {
   deletePromotionAsync,
   updatePromotionAsync,
   setPropertiesAsync,
 } from "../../api/promotionsApi";
-import { PageHeading, Spinner, ErrorCard, BackButton } from "../molecules";
+import {
+  PageHeading,
+  Spinner,
+  ErrorCard,
+  MoveUpHierarchyPrimaryButton,
+} from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { PropertiesTableView } from "../molecules/PropertiesTableView";
 import { BigPopup } from "../molecules/popups/BigPopup";
@@ -45,7 +51,10 @@ export const ItemDetail = () => {
   };
 
   return (
-    <React.Fragment>
+    <>
+      <MoveUpHierarchyPrimaryButton to="/promotions">
+        Back to Promotions
+      </MoveUpHierarchyPrimaryButton>
       <button
         onClick={() => setisDeletePopupOpen(true)}
         className="float-right ml-2 btn btn-danger"
@@ -58,9 +67,6 @@ export const ItemDetail = () => {
       >
         Edit Promotion
       </button>
-      <BackButton className="float-right" to="/promotions">
-        All Promotions
-      </BackButton>
       <PageHeading
         title={item.name || "..."}
         subtitle="Promotion Detail"
@@ -154,6 +160,6 @@ export const ItemDetail = () => {
       <BigPopup isOpen={isEditPopupOpen} setIsOpen={setIsEditPopupOpen}>
         <EditItem item={item} />
       </BigPopup>
-    </React.Fragment>
+    </>
   );
 };

@@ -15,6 +15,10 @@ import {
 import { Selector } from "./selectors/Select";
 import { Navigation } from "./Navigation";
 import { Typography } from "./Typography";
+import {
+  MoveUpHierarchyButton,
+  MoveUpHierarchyPrimaryButton,
+} from "./MoveUpHierarchyButton";
 
 export {
   AsyncButton,
@@ -33,4 +37,6 @@ export {
   Selector,
   Navigation,
   Typography,
+  MoveUpHierarchyButton,
+  MoveUpHierarchyPrimaryButton,
 };

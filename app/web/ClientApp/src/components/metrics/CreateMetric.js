@@ -4,7 +4,12 @@ import { useHistory } from "react-router-dom";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createMetricAsync } from "../../api/metricsApi";
-import { AsyncButton, BackButton, ErrorCard, Title } from "../molecules";
+import {
+  AsyncButton,
+  ErrorCard,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
+} from "../molecules";
 import {
   InputGroup,
   TextInput,
@@ -76,17 +81,16 @@ const CreateMetric = () => {
 
   return (
     <React.Fragment>
-      <BackButton
-        className="float-right"
+      <MoveUpHierarchyPrimaryButton
         to={{
           pathname: "/metrics/",
           hash: hash.metrics,
         }}
       >
-        All Metrics
-      </BackButton>
-      <Title>Create Metric</Title>
-      <hr />
+        Back to Metrics
+      </MoveUpHierarchyPrimaryButton>
+
+      <PageHeading title="Create Metric" showHr />
 
       {error && <ErrorCard error={error} />}
 

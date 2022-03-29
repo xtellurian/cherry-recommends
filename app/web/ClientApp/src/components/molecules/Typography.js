@@ -7,9 +7,12 @@ export const Typography = ({
   variant = "h5",
   component = "span",
   className = "",
+  gutterBottom,
   ...props
 }) => {
-  const _className = `typography ${variant} ${className}`;
+  const _className = `typography ${className} ${variant} ${
+    gutterBottom ? "gutterBottom" : ""
+  }`;
 
   if (component === "div") {
     return (

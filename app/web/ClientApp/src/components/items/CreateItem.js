@@ -1,9 +1,14 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createPromotionAsync } from "../../api/promotionsApi";
-import { ErrorCard, Title, BackButton } from "../molecules";
+import {
+  ErrorCard,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
+} from "../molecules";
 import {
   InputGroup,
   TextInput,
@@ -76,11 +81,12 @@ export const CreateItem = () => {
 
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/promotions">
-        All Promotions
-      </BackButton>
-      <Title>Create Promotion</Title>
-      <hr />
+      <MoveUpHierarchyPrimaryButton to="/promotions">
+        Back to Promotions
+      </MoveUpHierarchyPrimaryButton>
+
+      <PageHeading title="Create Promotion" showHr />
+
       {error && <ErrorCard error={error} />}
       <div>
         <div className="mt-3">

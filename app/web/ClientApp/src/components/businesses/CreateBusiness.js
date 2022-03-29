@@ -1,10 +1,14 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+
 import { createBusinessAsync } from "../../api/businessesApi";
 import { useAccessToken } from "../../api-hooks/token";
-import { Title } from "../molecules/layout";
 import { ErrorCard } from "../molecules/ErrorCard";
-import { AsyncButton } from "../molecules";
+import {
+  AsyncButton,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
+} from "../molecules";
 import {
   InputGroup,
   TextInput,
@@ -53,8 +57,10 @@ export const CreateBusiness = () => {
   return (
     <React.Fragment>
       <div>
-        <Title>Add a Business</Title>
-        <hr />
+        <MoveUpHierarchyPrimaryButton to="/businesses">
+          Back to Businesses
+        </MoveUpHierarchyPrimaryButton>
+        <PageHeading title="Add a Business" showHr />
         {error && <ErrorCard error={error} />}
         <InputGroup>
           <TextInput

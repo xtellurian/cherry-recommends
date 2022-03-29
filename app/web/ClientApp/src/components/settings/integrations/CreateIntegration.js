@@ -1,15 +1,15 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createIntegratedSystemAsync } from "../../../api/integratedSystemsApi";
-import { BackButton } from "../../molecules/BackButton";
-import { Title } from "../../molecules/layout";
 import { ErrorCard } from "../../molecules/ErrorCard";
 import { AsyncButton } from "../../molecules/AsyncButton";
 import { NoteBox } from "../../molecules/NoteBox";
 import { TextInput, InputGroup } from "../../molecules/TextInput";
 import { IntegrationIcon } from "./icons/IntegrationIcons";
+import { MoveUpHierarchyPrimaryButton, PageHeading } from "../../molecules";
 
 const systemTypes = ["Hubspot", "Segment", "Shopify", "Custom"];
 
@@ -42,11 +42,10 @@ export const CreateIntegration = () => {
   };
   return (
     <React.Fragment>
-      <BackButton to="/settings/integrations" className="float-right">
-        Integrations
-      </BackButton>
-      <Title>Create new Integration</Title>
-      <hr />
+      <MoveUpHierarchyPrimaryButton to="/settings/integrations">
+        Back to Integrations
+      </MoveUpHierarchyPrimaryButton>
+      <PageHeading title="Create New Integration" showHr />
       {error && <ErrorCard error={error} />}
       <NoteBox className="m-3" label="What is an integration?">
         Integrations allow you to automatically pull data or push

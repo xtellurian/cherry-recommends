@@ -3,9 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useParams } from "react-router";
 
 import { useNavigation } from "../../../utility/useNavigation";
-
-import { PrimaryBackButton } from "../../molecules/BackButton";
-import { PageHeading } from "../../molecules";
+import { MoveUpHierarchyPrimaryButton, PageHeading } from "../../molecules";
 import { ItemsRecommenderPrimaryNav } from "./ItemsRecommenderPrimaryNav";
 import { usePromotionsRecommender } from "../../../api-hooks/promotionsRecommendersApi";
 import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
@@ -21,15 +19,15 @@ export const ItemRecommenderLayout = ({ children }) => {
 
   return (
     <>
-      <RecommenderStatusBox className="float-right" recommender={recommender} />
-      <PrimaryBackButton
+      <RecommenderStatusBox recommender={recommender} />
+      <MoveUpHierarchyPrimaryButton
         to={appendCurrentURL({
           pathname: "/recommenders/promotions-recommenders",
           search: searchParams.toString(),
         })}
       >
         Back to Recommenders
-      </PrimaryBackButton>
+      </MoveUpHierarchyPrimaryButton>
       <PageHeading
         title={recommender.name || "..."}
         subtitle="Promotion Recommender"

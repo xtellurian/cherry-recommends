@@ -1,16 +1,18 @@
 import React from "react";
+
 import {
-  BackButton,
   AsyncButton,
   ErrorCard,
   ExpandableCard,
   Subtitle,
-  Title,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
 } from "../../molecules";
 import { invokeGenericModelAsync } from "../../../api/modelsApi";
 import { JsonView } from "../../molecules/JsonView";
 import { useAccessToken } from "../../../api-hooks/token";
 import { getSampleInput } from "./sampleModelInputs";
+
 function isJson(str) {
   try {
     JSON.parse(str);
@@ -62,12 +64,14 @@ export const GenericModelTester = ({ model }) => {
   };
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/models">
-        Models
-      </BackButton>
-      <Title>Model Tester</Title>
-      <Subtitle>{model.name}</Subtitle>
-      <hr />
+      <MoveUpHierarchyPrimaryButton to="/models">
+        Back to Models
+      </MoveUpHierarchyPrimaryButton>
+      <PageHeading
+        title={model.name || "..."}
+        subtitle="Model Tester"
+        showHr={true}
+      />
       <ExpandableCard label="Model Information">
         <JsonView data={model} />
       </ExpandableCard>

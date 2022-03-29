@@ -1,12 +1,18 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+
 import { createOrUpdateCustomerAsync } from "../../api/customersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { useAccessToken } from "../../api-hooks/token";
-import { Subtitle, Title } from "../molecules/layout";
+import { Subtitle } from "../molecules/layout";
 import { ErrorCard } from "../molecules/ErrorCard";
 import { DropdownItem, DropdownComponent } from "../molecules/Dropdown";
-import { AsyncButton, ExpandableCard } from "../molecules";
+import {
+  AsyncButton,
+  ExpandableCard,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
+} from "../molecules";
 import {
   InputGroup,
   TextInput,
@@ -60,8 +66,11 @@ export const CreateCustomer = () => {
   return (
     <React.Fragment>
       <div>
-        <Title>Add a Customer</Title>
-        <hr />
+        <MoveUpHierarchyPrimaryButton to="/customers">
+          Back to Customers
+        </MoveUpHierarchyPrimaryButton>
+        <PageHeading title="Add a Customer" showHr />
+
         {error && <ErrorCard error={error} />}
         <label>Required</label>
         <InputGroup>

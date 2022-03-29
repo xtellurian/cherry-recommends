@@ -1,9 +1,9 @@
 import React from "react";
 import { useParams, useHistory } from "react-router-dom";
+
 import { useCustomer } from "../../api-hooks/customersApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { deleteCustomerAsync } from "../../api/customersApi";
-import { BackButton } from "../molecules/BackButton";
 import {
   PageHeading,
   Subtitle,
@@ -11,6 +11,7 @@ import {
   Spinner,
   EmptyList,
   Navigation,
+  MoveUpHierarchyPrimaryButton,
 } from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { CopyableField } from "../molecules/fields/CopyableField";
@@ -55,6 +56,11 @@ export const CustomerDetail = () => {
 
   return (
     <React.Fragment>
+      <MoveUpHierarchyPrimaryButton
+        to={{ pathname: "/customers", search: null }}
+      >
+        Back to Customers
+      </MoveUpHierarchyPrimaryButton>
       <ActionsButton
         className="ml-1 float-right"
         to={`/customers/metrics/${id}`}
@@ -78,9 +84,6 @@ export const CustomerDetail = () => {
       >
         Delete Customer
       </button>
-      <BackButton className="float-right" to="/customers">
-        All Customers
-      </BackButton>
       <PageHeading
         title={trackedUser.name || trackedUser.customerId || "..."}
         subtitle="Customer"

@@ -1,7 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
 import { useIntegratedSystems } from "../../../api-hooks/integratedSystemsApi";
 import { Title } from "../../molecules/layout";
+import { Navigation } from "../../molecules";
 import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { Spinner } from "../../molecules/Spinner";
 import { ErrorCard } from "../../molecules/ErrorCard";
@@ -22,9 +23,9 @@ const IntegrationRow = ({ integration }) => {
           <IntegrationIcon integration={integration} />
         </div>
         <div className="col-2 text-right">
-          <Link to={`/settings/integrations/detail/${integration.id}`}>
+          <Navigation to={`/settings/integrations/detail/${integration.id}`}>
             <button className="btn btn-outline-primary">Detail</button>
-          </Link>
+          </Navigation>
         </div>
       </div>
     </div>
