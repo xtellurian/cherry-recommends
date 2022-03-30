@@ -8,10 +8,7 @@ export const AnonymousLanding = () => {
       <div>
         <div className="text-center mt-4">
           <h1 className="display-3">Cherry Recommends</h1>
-          <p>
-            Cherry is the leading Customer Recommendation Platform for
-            subscription companies.
-          </p>
+          <p>Cherry is an all-in-one promotion management platform.</p>
         </div>
         <div className="mt-5">
           <div className="w-25 m-auto">
