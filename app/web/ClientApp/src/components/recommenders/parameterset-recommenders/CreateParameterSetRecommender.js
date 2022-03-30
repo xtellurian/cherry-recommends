@@ -3,12 +3,13 @@ import { useAccessToken } from "../../../api-hooks/token";
 import { useParameters } from "../../../api-hooks/parametersApi";
 import { createParameterSetRecommenderAsync } from "../../../api/parameterSetRecommendersApi";
 import {
-  BackButton,
   Title,
   Subtitle,
   Selector,
   ExpandableCard,
   ErrorCard,
+  AsyncButton,
+  MoveUpHierarchyPrimaryButton,
 } from "../../molecules";
 import {
   InputGroup,
@@ -20,6 +21,7 @@ import { ArgumentsEditor } from "../../molecules/ArgumentsEditor";
 import { useHistory } from "react-router-dom";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useCommonId } from "../../../utility/utility";
+import CreatePageLayout from "../../molecules/layout/CreatePageLayout";
 
 const BoundRow = ({ bound, onChange }) => {
   if (bound.categoricalBounds) {
@@ -159,7 +161,9 @@ export const CreateParameterSetRecommender = () => {
       ],
     });
   };
+  const [loading, setLoading] = React.useState(false);
   const onSave = () => {
+    setLoading(true);
     createParameterSetRecommenderAsync({
       token,
       payload: recommender,
@@ -171,7 +175,8 @@ export const CreateParameterSetRecommender = () => {
       .catch((e) => {
         analytics.track("site:parameterSetRecommender_create_failure");
         setError(e);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   React.useEffect(() => {
@@ -182,13 +187,25 @@ export const CreateParameterSetRecommender = () => {
   }, [recommender.name]);
 
   return (
-    <React.Fragment>
-      <BackButton
+    <CreatePageLayout
+      createButton={
+        <AsyncButton
+          loading={loading}
+          onClick={onSave}
+          className="btn btn-primary"
+        >
+          Create
+        </AsyncButton>
+      }
+    >
+      <MoveUpHierarchyPrimaryButton to="/recommenders/parameter-set-recommenders">
+        Parameter Set Recommenders
+      </MoveUpHierarchyPrimaryButton>
+      {/* <BackButton
         to="/recommenders/parameter-set-recommenders"
         className="float-right"
       >
-        Parameter Set Recommenders
-      </BackButton>
+      </BackButton> */}
       <Title>Create Recommender</Title>
       <Subtitle>Parameter Sets</Subtitle>
       <hr />
@@ -265,11 +282,6 @@ export const CreateParameterSetRecommender = () => {
           }
         />
       </div>
-
-      <hr />
-      <button onClick={onSave} className="btn btn-primary w-25 mt-3">
-        Save
-      </button>
-    </React.Fragment>
+    </CreatePageLayout>
   );
 };

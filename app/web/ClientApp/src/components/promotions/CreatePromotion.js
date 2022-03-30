@@ -5,6 +5,7 @@ import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createPromotionAsync } from "../../api/promotionsApi";
 import {
+  AsyncButton,
   ErrorCard,
   MoveUpHierarchyPrimaryButton,
   PageHeading,
@@ -19,6 +20,7 @@ import {
   numericValidator,
 } from "../molecules/TextInput";
 import Select from "../molecules/selectors/Select";
+import PageLayout from "../molecules/layout/CreatePageLayout";
 import { useCommonId } from "../../utility/utility";
 
 export const benefitTypeOptons = [
@@ -34,11 +36,24 @@ export const promotionTypeOptons = [
   { value: "other", label: "Other" },
 ];
 
+const CreateButton = ({ handleCreate, loading }) => {
+  return (
+    <AsyncButton
+      loading={loading}
+      onClick={handleCreate}
+      className="btn btn-primary"
+    >
+      Create
+    </AsyncButton>
+  );
+};
+
 export const CreateItem = () => {
   const token = useAccessToken();
   const history = useHistory();
   const { analytics } = useAnalytics();
   const { generateCommonId } = useCommonId();
+  const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState();
   const [item, setItem] = React.useState({
     name: "",
@@ -52,6 +67,7 @@ export const CreateItem = () => {
   });
 
   const handleCreate = () => {
+    setLoading(true);
     createPromotionAsync({
       token,
       promotion: item,
@@ -63,7 +79,8 @@ export const CreateItem = () => {
       .catch((e) => {
         analytics.track("site:item_create_failure");
         setError(e);
-      });
+      })
+      .finally(() => setLoading(false));
   };
   const setSelectedBenefitType = (o) => {
     setItem({ ...item, benefitType: o.value });
@@ -81,14 +98,18 @@ export const CreateItem = () => {
 
   return (
     <React.Fragment>
-      <MoveUpHierarchyPrimaryButton to="/promotions">
-        Back to Promotions
-      </MoveUpHierarchyPrimaryButton>
+      <PageLayout
+        createButton={
+          <CreateButton handleCreate={handleCreate} loading={loading} />
+        }
+      >
+        <MoveUpHierarchyPrimaryButton to="/promotions">
+          Back to Promotions
+        </MoveUpHierarchyPrimaryButton>
 
-      <PageHeading title="Create Promotion" showHr />
+        <PageHeading title="Create Promotion" showHr />
 
-      {error && <ErrorCard error={error} />}
-      <div>
+        {error && <ErrorCard error={error} />}
         <div className="mt-3">
           <InputGroup className="m-1">
             <TextInput
@@ -206,12 +227,7 @@ export const CreateItem = () => {
             />
           </div>
         </div>
-        <div className="mt-3 text-right">
-          <button onClick={handleCreate} className="btn btn-primary w-25">
-            Create
-          </button>
-        </div>
-      </div>
+      </PageLayout>
     </React.Fragment>
   );
 };

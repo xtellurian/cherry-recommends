@@ -10,6 +10,7 @@ import { AsyncSelectIntegratedSystem } from "../molecules/selectors/AsyncSelectI
 import { NoteBox } from "../molecules/NoteBox";
 import { useNavigation } from "../../utility/useNavigation";
 import Select from "../molecules/selectors/Select";
+import CreatePageLayout from "../molecules/layout/CreatePageLayout";
 
 export const CreateChannel = () => {
   const [newChannel, setNewChannel] = React.useState({
@@ -72,7 +73,21 @@ export const CreateChannel = () => {
 
   return (
     <React.Fragment>
-      <div>
+      <CreatePageLayout
+        createButton={
+          <AsyncButton
+            loading={loading}
+            className="btn btn-primary"
+            onClick={handleCreate}
+            disabled={
+              !selectedIntegratedSystem ||
+              selectedIntegratedSystem.systemType !== "custom"
+            }
+          >
+            Create
+          </AsyncButton>
+        }
+      >
         <Title>Add a Channel</Title>
         <hr />
         {error && <ErrorCard error={error} />}
@@ -109,20 +124,7 @@ export const CreateChannel = () => {
             onChange={(v) => setSelectedIntegratedSystem(v.value)}
           />
         </div>
-        <div className="mt-4">
-          <AsyncButton
-            loading={loading}
-            className="btn btn-primary"
-            onClick={handleCreate}
-            disabled={
-              !selectedIntegratedSystem ||
-              selectedIntegratedSystem.systemType !== "custom"
-            }
-          >
-            Create
-          </AsyncButton>
-        </div>
-      </div>
+      </CreatePageLayout>
     </React.Fragment>
   );
 };

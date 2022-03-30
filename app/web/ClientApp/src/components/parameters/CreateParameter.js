@@ -1,5 +1,12 @@
 import React from "react";
-import { Subtitle, ErrorCard, AsyncButton } from "../molecules";
+import {
+  Subtitle,
+  ErrorCard,
+  AsyncButton,
+  PageHeading,
+  MoveUpHierarchyPrimaryButton,
+  Selector,
+} from "../molecules";
 import { DropdownComponent, DropdownItem } from "../molecules/Dropdown";
 import { createParameterAsync } from "../../api/parametersApi";
 import { useAccessToken } from "../../api-hooks/token";
@@ -11,10 +18,17 @@ import {
 } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useCommonId } from "../../utility/utility";
+import CreatePageLayout from "../molecules/layout/CreatePageLayout";
+import { useHistory } from "react-router-dom";
 
-const parameterTypes = ["Numerical", "Categorical"];
-export const CreateParameterPanel = ({ onCreated }) => {
+const parameterTypeOptions = [
+  { label: "Numerical", value: "Numerical" },
+  { label: "Categorical", value: "Categorical" },
+];
+
+export const CreateParameter = () => {
   const token = useAccessToken();
+  const history = useHistory();
   const { analytics } = useAnalytics();
   const { generateCommonId } = useCommonId();
   const [error, setError] = React.useState();
@@ -24,7 +38,7 @@ export const CreateParameterPanel = ({ onCreated }) => {
     commonId: "",
     description: "",
     defaultValue: "",
-    parameterType: parameterTypes[0],
+    parameterType: "",
   });
 
   const handleCreate = () => {
@@ -36,16 +50,7 @@ export const CreateParameterPanel = ({ onCreated }) => {
     })
       .then((r) => {
         analytics.track("site:parameter_create_success");
-        setParameter({
-          name: "",
-          commonId: "",
-          description: "",
-          defaultValue: "",
-          parameterType: parameterTypes[0],
-        });
-        if (onCreated) {
-          onCreated(r);
-        }
+        history.push("/parameters");
       })
       .catch((e) => {
         analytics.track("site:parameter_create_failure");
@@ -71,10 +76,37 @@ export const CreateParameterPanel = ({ onCreated }) => {
   }, [parameter.name]);
 
   return (
-    <React.Fragment>
-      <Subtitle>Create Parameter</Subtitle>
+    <CreatePageLayout
+      createButton={
+        <AsyncButton
+          loading={loading}
+          className="btn btn-primary btn-block mt-2"
+          onClick={handleCreate}
+        >
+          Save
+        </AsyncButton>
+      }
+    >
+      <MoveUpHierarchyPrimaryButton to="/parameters">
+        Back to Parameters
+      </MoveUpHierarchyPrimaryButton>
+      <PageHeading title="Create Parameter" showHr />
+
       {error && <ErrorCard error={error} />}
       <div>
+        <div className="mb-2">
+          <Selector
+            placeholder="Select a parameter type"
+            onChange={(v) =>
+              setParameter({
+                ...parameter,
+                parameterType: v.value,
+              })
+            }
+            options={parameterTypeOptions}
+          />
+        </div>
+
         <InputGroup>
           <TextInput
             label="Name"
@@ -131,37 +163,7 @@ export const CreateParameterPanel = ({ onCreated }) => {
             }
           />
         </InputGroup>
-
-        <div className="text-center">
-          <DropdownComponent
-            title={parameter.parameterType}
-            className="w-50 text-center"
-          >
-            {parameterTypes.map((t) => (
-              <DropdownItem key={t}>
-                <div
-                  onClick={() =>
-                    setParameter({
-                      ...parameter,
-                      parameterType: t,
-                    })
-                  }
-                >
-                  {t}
-                </div>
-              </DropdownItem>
-            ))}
-          </DropdownComponent>
-        </div>
-
-        <AsyncButton
-          loading={loading}
-          className="btn btn-primary btn-block mt-2"
-          onClick={handleCreate}
-        >
-          Save
-        </AsyncButton>
       </div>
-    </React.Fragment>
+    </CreatePageLayout>
   );
 };

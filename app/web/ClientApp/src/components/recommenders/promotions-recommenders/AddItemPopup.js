@@ -4,7 +4,7 @@ import { addPromotionAsync } from "../../../api/promotionsRecommendersApi";
 import { AsyncButton, ErrorCard, Subtitle, Title } from "../../molecules";
 import { BigPopup } from "../../molecules/popups/BigPopup";
 import { AsyncSelectItem } from "../../molecules/selectors/AsyncSelectItem";
-import { ItemRow } from "../../items/ItemRow";
+import { PromotionRow } from "../../promotions/PromotionRow";
 import { useAccessToken } from "../../../api-hooks/token";
 export const AddItemPopup = ({ isOpen, setIsOpen, recommender, onAdded }) => {
   const token = useAccessToken();
@@ -46,7 +46,7 @@ export const AddItemPopup = ({ isOpen, setIsOpen, recommender, onAdded }) => {
           />
 
           <div className="mt-2">
-            {selectedItem && <ItemRow item={selectedItem} />}
+            {selectedItem && <PromotionRow promotion={selectedItem} />}
             <AsyncButton
               loading={loading}
               className="btn btn-primary btn-block"

@@ -20,6 +20,7 @@ import Select from "../molecules/selectors/Select";
 import { useCommonId } from "../../utility/utility";
 
 import { hash } from "../menu/MenuIA";
+import CreatePageLayout from "../molecules/layout/CreatePageLayout";
 
 const valueTypeOptions = [
   { value: "numeric", label: "Numeric" },
@@ -80,7 +81,17 @@ const CreateMetric = () => {
   }, [metric.name]);
 
   return (
-    <React.Fragment>
+    <CreatePageLayout
+      createButton={
+        <AsyncButton
+          loading={creating}
+          className="btn btn-primary"
+          onClick={handleCreate}
+        >
+          Create
+        </AsyncButton>
+      }
+    >
       <MoveUpHierarchyPrimaryButton
         to={{
           pathname: "/metrics/",
@@ -139,16 +150,8 @@ const CreateMetric = () => {
             defaultValue={valueTypeOptions[0]}
           />
         )}
-
-        <AsyncButton
-          loading={creating}
-          className="btn btn-primary btn-block"
-          onClick={handleCreate}
-        >
-          Create
-        </AsyncButton>
       </div>
-    </React.Fragment>
+    </CreatePageLayout>
   );
 };
 

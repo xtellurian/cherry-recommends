@@ -14,7 +14,7 @@ import {
   numericValidator,
 } from "../molecules/TextInput";
 import Select from "../molecules/selectors/Select";
-import { benefitTypeOptons, promotionTypeOptons } from "./CreateItem";
+import { benefitTypeOptons, promotionTypeOptons } from "./CreatePromotion";
 
 export const EditItem = ({ item: currentItem }) => {
   const { navigate } = useNavigation();

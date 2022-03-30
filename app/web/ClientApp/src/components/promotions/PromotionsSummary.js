@@ -4,7 +4,7 @@ import { Title, EmptyList, Spinner, ErrorCard, Paginator } from "../molecules";
 import { CreateButtonClassic } from "../molecules/CreateButton";
 import { InputGroup, TextInput } from "../molecules/TextInput";
 
-import { ItemRow } from "./ItemRow";
+import { PromotionRow } from "./PromotionRow";
 import { PromotionsFilter } from "./PromotionsFilter";
 
 export const RecommendableItemsSummary = () => {
@@ -58,7 +58,8 @@ export const RecommendableItemsSummary = () => {
           </div>
         )}
         {items.error && <ErrorCard error={items.error} />}
-        {items.items && items.items.map((p) => <ItemRow key={p.id} item={p} />)}
+        {items.items &&
+          items.items.map((p) => <PromotionRow key={p.id} promotion={p} />)}
 
         {!isEmpty && items.pagination && <Paginator {...items.pagination} />}
       </div>

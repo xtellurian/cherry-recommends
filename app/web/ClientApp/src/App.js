@@ -14,7 +14,7 @@ import { ReportsComponent } from "./components/reports/ReportsComponent";
 import MetricsComponent from "./components/metrics/MetricsComponent";
 import { ParametersComponent } from "./components/parameters/ParametersComponent";
 import { RecommendersComponent } from "./components/recommenders/RecommendersComponent";
-import { RecommendableItemsComponent } from "./components/items/RecommendableItemsComponent";
+import PromotionsComponent from "./components/promotions/PromotionsComponent";
 import { EventsComponent } from "./components/events/EventsComponent";
 import { AdminComponent } from "./components/admin/AdminComponent";
 import { TenantSettingsComponent } from "./components/tenant-settings/TenantSettingsComponent";
@@ -44,10 +44,7 @@ const App = () => {
           path="/recommenders"
           component={RecommendersComponent}
         />
-        <AuthorizeRoute
-          path="/promotions"
-          component={RecommendableItemsComponent}
-        />
+        <AuthorizeRoute path="/promotions" component={PromotionsComponent} />
         <AuthorizeRoute
           path="/models"
           component={ModelRegistrationsComponent}

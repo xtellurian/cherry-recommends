@@ -20,7 +20,7 @@ import { BigPopup } from "../molecules/popups/BigPopup";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { CommonEntityPropertyEditorPopup } from "../molecules/popups/CommonEntityPropertyEditorPopup";
 import { useAccessToken } from "../../api-hooks/token";
-import { EditItem } from "./EditItem";
+import { EditItem } from "./EditPromotion";
 
 export const ItemDetail = () => {
   const { id } = useParams();

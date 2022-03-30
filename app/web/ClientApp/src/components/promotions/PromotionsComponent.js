@@ -1,11 +1,11 @@
 import React from "react";
 import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
-import { RecommendableItemsSummary } from "./RecommendableItemsSummary";
-import { CreateItem } from "./CreateItem";
-import { ItemDetail } from "./ItemDetail";
+import { RecommendableItemsSummary } from "./PromotionsSummary";
+import { CreateItem } from "./CreatePromotion";
+import { ItemDetail } from "./PromotionDetail";
 
-export const RecommendableItemsComponent = () => {
+const PromotionsComponent = () => {
   const { path } = useRouteMatch();
   return (
     <React.Fragment>
@@ -21,3 +21,5 @@ export const RecommendableItemsComponent = () => {
     </React.Fragment>
   );
 };
+
+export default PromotionsComponent;

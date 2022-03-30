@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useOutsideClick } from "../../utility/utility";
-import { benefitTypeOptons, promotionTypeOptons } from "./CreateItem";
+import { benefitTypeOptons, promotionTypeOptons } from "./CreatePromotion";
 
 import "./PromotionsFilter.css";
 

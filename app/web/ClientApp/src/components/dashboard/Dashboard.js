@@ -5,7 +5,7 @@ import { Title, Spinner } from "../molecules";
 
 import { NoteBox } from "../molecules/NoteBox";
 import { Recommenders } from "./Recommenders";
-import { Items } from "./Items";
+import { Items } from "./Promotions";
 import { RecentActivity } from "./RecentActivity";
 
 export const Dashboard = () => {

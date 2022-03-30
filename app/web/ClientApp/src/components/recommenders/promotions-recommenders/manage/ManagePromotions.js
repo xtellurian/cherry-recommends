@@ -14,7 +14,7 @@ import {
   PageHeading,
   PrimaryBackButton,
 } from "../../../molecules";
-import { ItemRow } from "../../../items/ItemRow";
+import { PromotionRow } from "../../../promotions/PromotionRow";
 import { AddItemPopup } from "../AddItemPopup";
 import { RemoveItemPopup } from "../RemoveItemPopup";
 import { ManageNav } from "./Tabs";
@@ -54,7 +54,7 @@ export const ManageItems = () => {
       {items.loading && <Spinner>Loading Promotions</Spinner>}
       {items.items &&
         items.items.map((i) => (
-          <ItemRow key={i.id} item={i}>
+          <PromotionRow key={i.id} promotion={i}>
             <button
               onClick={() => {
                 setItemToRemove(i);
@@ -64,7 +64,7 @@ export const ManageItems = () => {
             >
               Remove Promotion
             </button>
-          </ItemRow>
+          </PromotionRow>
         ))}
 
       {items.pagination && items.pagination.totalItemCount === 0 && (

@@ -16,6 +16,7 @@ import {
 } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useCommonId } from "../../utility/utility";
+import CreatePageLayout from "../molecules/layout/CreatePageLayout";
 
 export const CreateBusiness = () => {
   const [newBusiness, setNewBusiness] = React.useState({
@@ -56,7 +57,17 @@ export const CreateBusiness = () => {
 
   return (
     <React.Fragment>
-      <div>
+      <CreatePageLayout
+        createButton={
+          <AsyncButton
+            loading={loading}
+            className="btn btn-primary"
+            onClick={handleCreate}
+          >
+            Create
+          </AsyncButton>
+        }
+      >
         <MoveUpHierarchyPrimaryButton to="/businesses">
           Back to Businesses
         </MoveUpHierarchyPrimaryButton>
@@ -102,16 +113,7 @@ export const CreateBusiness = () => {
             }
           />
         </InputGroup>
-        <div className="mt-4">
-          <AsyncButton
-            loading={loading}
-            className="btn btn-primary"
-            onClick={handleCreate}
-          >
-            Create
-          </AsyncButton>
-        </div>
-      </div>
+      </CreatePageLayout>
     </React.Fragment>
   );
 };

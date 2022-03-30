@@ -11,6 +11,7 @@ import {
   MoveUpHierarchyPrimaryButton,
   PageHeading,
 } from "../molecules";
+import CreatePageLayout from "../molecules/layout/CreatePageLayout";
 
 export const CreateSegment = () => {
   const token = useAccessToken();
@@ -40,7 +41,17 @@ export const CreateSegment = () => {
 
   return (
     <React.Fragment>
-      <div>
+      <CreatePageLayout
+        createButton={
+          <AsyncButton
+            loading={loading}
+            className="btn btn-primary"
+            onClick={handleCreate}
+          >
+            Create
+          </AsyncButton>
+        }
+      >
         <MoveUpHierarchyPrimaryButton to="/segments">
           Back to Segments
         </MoveUpHierarchyPrimaryButton>
@@ -59,16 +70,7 @@ export const CreateSegment = () => {
             }
           />
         </InputGroup>
-        <div className="mt-4">
-          <AsyncButton
-            loading={loading}
-            className="btn btn-primary"
-            onClick={handleCreate}
-          >
-            Create
-          </AsyncButton>
-        </div>
-      </div>
+      </CreatePageLayout>
     </React.Fragment>
   );
 };

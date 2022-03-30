@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { EmptyState, Spinner } from "../molecules";
-import { ItemRow } from "../items/ItemRow";
+import { PromotionRow } from "../promotions/PromotionRow";
 import { NoteBox } from "../molecules/NoteBox";
 import { EmptyStateText } from "../molecules/empty/EmptyStateText";
 
@@ -18,7 +18,8 @@ export const Items = ({ className, items }) => {
       <div className={className}>
         <NoteBox label="Promotions">
           {items.loading && <Spinner />}
-          {itemList && itemList.map((i) => <ItemRow key={i.id} item={i} />)}
+          {itemList &&
+            itemList.map((i) => <PromotionRow key={i.id} promotion={i} />)}
 
           {!items.loading && itemList.length === 0 && (
             <EmptyState>

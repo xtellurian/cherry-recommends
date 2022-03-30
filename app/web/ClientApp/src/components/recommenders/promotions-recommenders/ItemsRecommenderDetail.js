@@ -9,7 +9,7 @@ import {
   deletePromotionsRecommenderAsync,
   createPromotionsRecommenderAsync,
 } from "../../../api/promotionsRecommendersApi";
-import { ItemRow } from "../../items/ItemRow";
+import { PromotionRow } from "../../promotions/PromotionRow";
 import { useAccessToken } from "../../../api-hooks/token";
 import {
   Subtitle,
@@ -234,7 +234,9 @@ const RecommenderDetailSection = () => {
             <Subtitle>Associated Promotions</Subtitle>
           </div>
           {recommender.items &&
-            recommender.items.map((i) => <ItemRow item={i} key={i.id} />)}
+            recommender.items.map((i) => (
+              <PromotionRow promotion={i} key={i.id} />
+            ))}
           {recommender.items && recommender.items.length === 0 && (
             <EmptyList>This recommender works with all promotions.</EmptyList>
           )}

@@ -36,7 +36,3 @@ export const PromotionRow = ({ promotion, children }) => {
     </FlexRow>
   );
 };
-
-export const ItemRow = ({ item, children }) => {
-  return <PromotionRow promotion={item}>{children}</PromotionRow>;
-};

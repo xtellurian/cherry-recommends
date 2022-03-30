@@ -22,6 +22,7 @@ import {
   joinValidators,
 } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
+import CreatePageLayout from "../molecules/layout/CreatePageLayout";
 
 export const CreateCustomer = () => {
   const [newCustomer, setNewCustomer] = React.useState({
@@ -65,7 +66,17 @@ export const CreateCustomer = () => {
   };
   return (
     <React.Fragment>
-      <div>
+      <CreatePageLayout
+        createButton={
+          <AsyncButton
+            loading={loading}
+            className="btn btn-primary"
+            onClick={handleCreate}
+          >
+            Create
+          </AsyncButton>
+        }
+      >
         <MoveUpHierarchyPrimaryButton to="/customers">
           Back to Customers
         </MoveUpHierarchyPrimaryButton>
@@ -169,16 +180,7 @@ export const CreateCustomer = () => {
             </div>
           </ExpandableCard>
         </div>
-        <div className="mt-4">
-          <AsyncButton
-            loading={loading}
-            className="btn btn-primary"
-            onClick={handleCreate}
-          >
-            Create
-          </AsyncButton>
-        </div>
-      </div>
+      </CreatePageLayout>
     </React.Fragment>
   );
 };
