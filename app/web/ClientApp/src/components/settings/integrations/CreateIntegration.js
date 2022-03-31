@@ -52,8 +52,8 @@ export const CreateIntegration = () => {
       <NoteBox className="m-3" label="What is an integration?">
         Integrations allow you to automatically pull data or push
         recommendations into various external systems. Select either Segment,
-        Hubspot, or Custom below. Give your integration a name, for example:
-        'Production Segment Connection'
+        Hubspot,{shopifyFlag ? " Shopify," : ""} or Custom below. Give your
+        integration a name, for example: 'Production Segment Connection'
       </NoteBox>
 
       {!integratedSystem.systemType && (
