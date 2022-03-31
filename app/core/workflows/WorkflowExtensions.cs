@@ -7,7 +7,6 @@ namespace SignalBox.Core.Workflows
         public static IServiceCollection RegisterWorkflows(this IServiceCollection services)
         {
             services.AddScoped<ApiKeyWorkflows>();
-            services.AddScoped<IntegratedSystemWorkflows>();
             services.AddScoped<ModelRegistrationWorkflows>();
             services.AddScoped<MetricGeneratorWorkflows>();
             services.AddScoped<AggregateCustomerMetricWorkflow>();
@@ -19,7 +18,6 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<CustomerEventsWorkflows>();
             services.AddScoped<DataSummaryWorkflows>();
             services.AddScoped<WebhookWorkflows>();
-            services.AddScoped<IntegratedSystemWorkflows>();
             services.AddScoped<HubspotWorkflows>();
             services.AddScoped<HubspotEtlWorkflows>();
             services.AddScoped<HubspotPushWorkflows>();
@@ -53,6 +51,9 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<IRecommenderMetricTriggersWorkflow, RecommenderTriggersWorkflows>();
             services.AddScoped<IChannelWorkflow, ChannelWorkflow>();
             services.AddScoped<IShopifyAdminWorkflow, ShopifyAdminWorkflows>();
+            services.AddScoped<IShopifyWebhookWorkflow, ShopifyWebhookWorkflow>();
+            services.AddScoped<ISegmentWebhookWorkflow, SegmentWebhookWorkflow>();
+            services.AddScoped<IIntegratedSystemWorkflow, IntegratedSystemWorkflows>();
             return services;
         }
     }

@@ -8,6 +8,7 @@ namespace SignalBox.Core.Workflows
 {
     public class ShopifyAdminWorkflows : ShopifyWorkflowBase, IShopifyAdminWorkflow
     {
+        private readonly IIntegratedSystemWorkflow integratedSystemWorkflows;
 
         public ShopifyAdminWorkflows(
             IDateTimeProvider dateTimeProvider,
@@ -15,15 +16,24 @@ namespace SignalBox.Core.Workflows
             IShopifyService shopifyService,
             IntegratedSystemStoreCollection systemStoreCollection,
             IOptions<ShopifyAppCredentials> creds,
-            ILogger<ShopifyAdminWorkflows> logger)
+            ILogger<ShopifyAdminWorkflows> logger,
+            IIntegratedSystemWorkflow integratedSystemWorkflows)
             : base(dateTimeProvider, storageContext, shopifyService, systemStoreCollection, creds, logger)
-        { }
+        {
+            this.integratedSystemWorkflows = integratedSystemWorkflows;
+        }
 
-        public async Task Connect(IntegratedSystem system, string code, string shopifyUrl)
+        public async Task Connect(IntegratedSystem system, string code, string shopifyUrl, string webhookReceiverUrl)
         {
             await base.Authorize(system, code, shopifyUrl);
-
+            // Create webhook receiver
+            var webhookReceiver = await integratedSystemWorkflows.AddWebhookReceiver(system.Id, includeSharedSecret: false);
             // Create Shopify webhooks for event subscription
+            var receiverUrl = webhookReceiverUrl.Replace("x-endpoint-id", webhookReceiver.EndpointId);
+            string accessToken = GetAccessToken(system);
+
+            await shopifyService.CreateWebhook(shopifyUrl, accessToken, receiverUrl, "app/uninstalled");
+            await shopifyService.CreateWebhook(shopifyUrl, accessToken, receiverUrl, "orders/paid");
         }
 
         public async Task Disconnect(IntegratedSystem system)
@@ -43,6 +53,10 @@ namespace SignalBox.Core.Workflows
             system.ClearCache();
             system.CacheLastRefreshed = dateTimeProvider.Now;
             system.IntegrationStatus = IntegrationStatuses.NotConfigured;
+
+            // Remove all webhook receivers
+            await systemStoreCollection.IntegratedSystemStore.LoadMany(system, s => s.WebhookReceivers);
+            system.WebhookReceivers.Clear();
 
             await systemStoreCollection.IntegratedSystemStore.Update(system);
             await storageContext.SaveChanges();

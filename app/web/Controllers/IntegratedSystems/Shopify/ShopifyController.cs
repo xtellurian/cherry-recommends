@@ -59,7 +59,11 @@ namespace SignalBox.Web.Controllers
         public async Task<IActionResult> Connect(long id, ShopifyCode dto)
         {
             var system = await store.Read(id);
-            await shopifyAdminWorkflows.Connect(system, dto.Code, dto.ShopifyUrl);
+            string webhookReceiverUrl = Url.Link("AcceptWebhook", new
+            {
+                endpointId = "x-endpoint-id"
+            });
+            await shopifyAdminWorkflows.Connect(system, dto.Code, dto.ShopifyUrl, webhookReceiverUrl);
             return Ok(id);
         }
 

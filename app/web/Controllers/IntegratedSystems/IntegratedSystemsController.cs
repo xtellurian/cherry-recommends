@@ -15,11 +15,11 @@ namespace SignalBox.Web.Controllers
     [Route("api/[controller]")]
     public class IntegratedSystemsController : CommonEntityControllerBase<IntegratedSystem>
     {
-        private readonly IntegratedSystemWorkflows workflows;
+        private readonly IIntegratedSystemWorkflow workflows;
         private readonly IWebhookReceiverStore webhookReceiverStore;
         private readonly IShopifyAdminWorkflow shopifyAdminWorkflows;
 
-        public IntegratedSystemsController(IntegratedSystemWorkflows workflows,
+        public IntegratedSystemsController(IIntegratedSystemWorkflow workflows,
                                            IIntegratedSystemStore store,
                                            IWebhookReceiverStore webhookReceiverStore,
                                            IShopifyAdminWorkflow shopifyAdminWorkflows) : base(store)

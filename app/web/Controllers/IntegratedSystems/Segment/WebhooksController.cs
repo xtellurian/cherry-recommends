@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,17 +25,18 @@ namespace SignalBox.Web.Controllers
         }
 
         /// <summary>An endpoint for a created webhook.</summary>
-        [HttpPost("receivers/{endpointId}")]
+        [HttpPost("receivers/{endpointId}", Name = "AcceptWebhook")]
         public async Task AcceptSegmentWebhook(string endpointId)
         {
             var body = await Request.GetRawBodyStringAsync();
+            var headers = Request.Headers.Select(_ => _);
             if (Request.Headers.TryGetValue("x-signature", out var signature))
             {
-                await workflows.ProcessWebhook(endpointId, body, signature);
+                await workflows.ProcessWebhook(endpointId, body, headers, signature);
             }
             else
             {
-                await workflows.ProcessWebhook(endpointId, body, null);
+                await workflows.ProcessWebhook(endpointId, body, headers, null);
             }
         }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SignalBox.Core.Adapters.Segment
 {
-    public static class Converter
+    public static class SegmentConverter
     {
         private static IList<string> PossibleCorrelatorIdKeys => new List<string>
         {

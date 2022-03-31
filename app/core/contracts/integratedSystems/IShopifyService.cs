@@ -13,9 +13,10 @@ namespace SignalBox.Core
         Task<string> Authorize(string code, string shopifyUrl);
         Task<bool> IsAuthenticRequest(IDictionary<string, string> queryString);
         Task<bool> IsAuthenticProxyRequest(IDictionary<string, string> queryString);
-        Task<bool> IsAuthenticProxyRequest(IEnumerable<KeyValuePair<string, StringValues>> requestHeaders, Stream inputStream);
+        Task<bool> IsAuthenticWebhook(IEnumerable<KeyValuePair<string, StringValues>> requestHeaders, string requestBody);
         Task<bool> IsValidShopDomainAsync(string shopifyUrl);
         Task<ShopifyShop> GetShopInformation(string shopifyUrl, string accessToken);
         Task<bool> UninstallApp(string shopifyUrl, string accessToken);
+        Task<ShopifyWebhook> CreateWebhook(string shopifyUrl, string accessToken, string address, string topic, IEnumerable<string> fields = null, IEnumerable<string> metafieldNamespaces = null);
     }
 }

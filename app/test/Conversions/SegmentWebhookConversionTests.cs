@@ -10,23 +10,23 @@ namespace SignalBox.Test.Converters
     {
         public static IEnumerable<object[]> PageEvent()
         {
-            yield return new object[] { DataLoader.LoadSegmentWebhookJson("page"), EventKinds.PageView };
+            yield return new object[] { DataLoader.LoadFromJsonData<SegmentModel>("segmentEvents.json", "page"), EventKinds.PageView };
         }
         public static IEnumerable<object[]> IdentifyEvent()
         {
-            yield return new object[] { DataLoader.LoadSegmentWebhookJson("identify"), EventKinds.Identify };
+            yield return new object[] { DataLoader.LoadFromJsonData<SegmentModel>("segmentEvents.json", "identify"), EventKinds.Identify };
         }
         public static IEnumerable<object[]> ScreenEvent()
         {
-            yield return new object[] { DataLoader.LoadSegmentWebhookJson("screen"), EventKinds.PageView };
+            yield return new object[] { DataLoader.LoadFromJsonData<SegmentModel>("segmentEvents.json", "screen"), EventKinds.PageView };
         }
         public static IEnumerable<object[]> TrackEvent()
         {
-            yield return new object[] { DataLoader.LoadSegmentWebhookJson("track"), EventKinds.Behaviour };
+            yield return new object[] { DataLoader.LoadFromJsonData<SegmentModel>("segmentEvents.json", "track"), EventKinds.Behaviour };
         }
         public static IEnumerable<object[]> GroupEvent()
         {
-            yield return new object[] { DataLoader.LoadSegmentWebhookJson("group"), EventKinds.AddToBusiness };
+            yield return new object[] { DataLoader.LoadFromJsonData<SegmentModel>("segmentEvents.json", "group"), EventKinds.AddToBusiness };
         }
 
         [Theory]
@@ -45,7 +45,7 @@ namespace SignalBox.Test.Converters
             var mockTenantProvider = new Mock<ITenantProvider>();
             mockTenantProvider.Setup(_ => _.RequestedTenantName).Returns("tenant-name");
 
-            var e = Converter.ToCustomerEventInput(p, mockTenantProvider.Object, integratedSystem);
+            var e = SegmentConverter.ToCustomerEventInput(p, mockTenantProvider.Object, integratedSystem);
             Assert.Equal(integratedSystem.Id, e.SourceSystemId);
             Assert.Equal("tenant-name", e.TenantName);
             Assert.Equal(p.UserId, e.CustomerId);

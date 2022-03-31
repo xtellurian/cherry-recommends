@@ -4,7 +4,7 @@ using SignalBox.Core.Integrations.Custom;
 
 namespace SignalBox.Core.Workflows
 {
-    public class IntegratedSystemWorkflows
+    public class IntegratedSystemWorkflows : IIntegratedSystemWorkflow, IWorkflow
     {
         private readonly IStorageContext storageContext;
         private readonly IntegratedSystemStoreCollection systemStoreCollection;
@@ -64,9 +64,12 @@ namespace SignalBox.Core.Workflows
         public async Task<WebhookReceiver> AddWebhookReceiver(long integratedSystemId, bool? includeSharedSecret)
         {
             var system = await systemStoreCollection.IntegratedSystemStore.Read(integratedSystemId);
-            if (system.SystemType != IntegratedSystemTypes.Segment)
+            switch (system.SystemType)
             {
-                throw new BadRequestException("Only Segment webhooks are currently supported.");
+                case IntegratedSystemTypes.Segment:
+                case IntegratedSystemTypes.Shopify:
+                    break;
+                default: throw new BadRequestException("Only Segment and Shopify webhooks are currently supported.");
             }
             var endpointId = hasher.Hash(System.Guid.NewGuid().ToBase64Encoded());
             var sharedSecret = (includeSharedSecret == true) ? hasher.Hash(System.Guid.NewGuid().ToBase64Encoded()) : null;

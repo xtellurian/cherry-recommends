@@ -14,6 +14,7 @@ export const small = {
 export const big = {
   content: {
     width: "75vw",
+    maxHeight: "90vh",
     top: "50%",
     left: "50%",
     right: "auto",

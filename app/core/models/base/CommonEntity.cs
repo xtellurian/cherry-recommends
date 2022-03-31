@@ -29,9 +29,9 @@ namespace SignalBox.Core
             {
                 throw new CommonIdException(commonId, $"Common Id must be at least {CommonIdMinLength} characters");
             }
-            else if (!commonId.ContainsOnlyAlphaNumeric('-', '_', '|'))
+            else if (!commonId.ContainsOnlyAlphaNumeric('-', '_', '|', '.', '@'))
             {
-                throw new CommonIdException(commonId, $"Common Id must only contain alpha-numeric, underscore, hyphen or bar");
+                throw new CommonIdException(commonId, $"Common Id must only contain alpha-numeric, underscore, hyphen, bar, period or at sign");
             }
         }
 

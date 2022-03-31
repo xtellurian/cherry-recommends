@@ -46,9 +46,9 @@ namespace SignalBox.Infrastructure.Services
             return Task.FromResult(AuthorizationService.IsAuthenticProxyRequest(queryString, creds.SecretKey));
         }
 
-        public Task<bool> IsAuthenticProxyRequest(IEnumerable<KeyValuePair<string, StringValues>> requestHeaders, Stream inputStream)
+        public Task<bool> IsAuthenticWebhook(IEnumerable<KeyValuePair<string, StringValues>> requestHeaders, string requestBody)
         {
-            return AuthorizationService.IsAuthenticWebhook(requestHeaders, inputStream, creds.SecretKey);
+            return Task.FromResult(AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, creds.SecretKey));
         }
 
         public Task<bool> IsValidShopDomainAsync(string shopifyUrl)
@@ -57,11 +57,11 @@ namespace SignalBox.Infrastructure.Services
         }
         #endregion
 
-        public async Task<ShopifyShop> GetShopInformation(string shopifyUrl, string accessToken)
+        public async Task<Core.Adapters.Shopify.ShopifyShop> GetShopInformation(string shopifyUrl, string accessToken)
         {
             var service = new ShopService(shopifyUrl, accessToken);
             var shop = await service.GetAsync();
-            var shopifyShop = Serializer.Deserialize<ShopifyShop>(Serializer.Serialize(shop));
+            var shopifyShop = Serializer.Deserialize<Core.Adapters.Shopify.ShopifyShop>(Serializer.Serialize(shop));
 
             return shopifyShop;
         }
@@ -79,6 +79,26 @@ namespace SignalBox.Infrastructure.Services
             { }
 
             return success;
+        }
+
+        public async Task<ShopifyWebhook> CreateWebhook(string shopifyUrl, string accessToken, string address, string topic, IEnumerable<string> fields = null, IEnumerable<string> metafieldNamespaces = null)
+        {
+            var service = new WebhookService(shopifyUrl, accessToken);
+
+            Webhook webhook = new Webhook()
+            {
+                Address = address,
+                CreatedAt = DateTime.Now,
+                Fields = fields,
+                Format = "json",
+                MetafieldNamespaces = metafieldNamespaces,
+                Topic = topic,
+            };
+
+            webhook = await service.CreateAsync(webhook);
+            var shopifyWebhook = Serializer.Deserialize<ShopifyWebhook>(Serializer.Serialize(webhook));
+
+            return shopifyWebhook;
         }
     }
 }
