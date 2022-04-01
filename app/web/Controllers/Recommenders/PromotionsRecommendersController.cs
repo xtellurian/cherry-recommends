@@ -69,7 +69,7 @@ namespace SignalBox.Web.Controllers
             {
 
                 r = await workflows.CreateItemsRecommender(c,
-                   dto.GetBaselinePromotionId(), dto.ItemIds, dto.SegmentIds, dto.NumberOfItemsToRecommend,
+                   dto.GetBaselinePromotionId(), dto.ItemIds, dto.SegmentIds, dto.ChannelIds, dto.NumberOfItemsToRecommend,
                    dto.Arguments.ToCoreRepresentation(),
                    dto.Settings.ToCoreRepresentation(),
                    dto.UseAutoAi ?? false,

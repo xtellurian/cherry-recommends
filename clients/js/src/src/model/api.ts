@@ -620,6 +620,36 @@ export interface paths {
       };
     };
   };
+  "/api/Channels/{id}/endpoint": {
+    post: {
+      parameters: {
+        path: {
+          id: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": string;
+          "text/json": string;
+          "application/*+json": string;
+        };
+      };
+    };
+  };
   "/api/TrackedUsers/{id}/features": {
     get: {
       parameters: {
@@ -4149,6 +4179,81 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ParameterSetRecommenders/{id}/Channels": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddRecommenderChannelDto"];
+          "text/json": components["schemas"]["AddRecommenderChannelDto"];
+          "application/*+json": components["schemas"]["AddRecommenderChannelDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/ParameterSetRecommenders/{id}/Channels/{channelId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          channelId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommenderEntityBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ParameterSetRecommenders/{id}": {
     get: {
       parameters: {
@@ -6980,6 +7085,156 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ItemsRecommenders/{id}/Channels": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddRecommenderChannelDto"];
+          "text/json": components["schemas"]["AddRecommenderChannelDto"];
+          "application/*+json": components["schemas"]["AddRecommenderChannelDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/Channels": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddRecommenderChannelDto"];
+          "text/json": components["schemas"]["AddRecommenderChannelDto"];
+          "application/*+json": components["schemas"]["AddRecommenderChannelDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/ItemsRecommenders/{id}/Channels/{channelId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          channelId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommenderEntityBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/Channels/{channelId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          channelId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommenderEntityBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/name": {
     post: {
       parameters: {
@@ -7567,6 +7822,56 @@ export interface paths {
       };
     };
   };
+  "/api/integratedsystems/{id}/shopify/ShopInformation": {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ShopifyShop"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/integratedsystems/{id}/shopify/Install": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          shopifyUrl?: string;
+          redirectUrl?: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": string;
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/Tenants/Status/{name}": {
     get: {
       parameters: {
@@ -7752,6 +8057,10 @@ export interface components {
     AddPromotionDto: {
       id?: number | null;
       commonId?: string | null;
+    };
+    AddRecommenderChannelDto: {
+      id?: number;
+      name?: string | null;
     };
     AggregateCustomerMetric: {
       metricId?: number;
@@ -8317,7 +8626,7 @@ export interface components {
       integratedSystemId: number;
       userId: string;
     };
-    IntegratedSystemTypes: "segment" | "hubspot" | "custom";
+    IntegratedSystemTypes: "segment" | "hubspot" | "shopify" | "custom";
     IntegrationStatuses: "notConfigured" | "ok";
     InvokationLogEntry: {
       id?: number;
@@ -8922,6 +9231,62 @@ export interface components {
     SetTriggersDto: {
       featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
       metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
+    };
+    ShopifyShop: {
+      id?: number | null;
+      admin_graphql_api_id?: string | null;
+      pre_launch_enabled?: boolean | null;
+      requires_extra_payments_agreement?: boolean | null;
+      myshopify_domain?: string | null;
+      name?: string | null;
+      plan_name?: string | null;
+      plan_display_name?: string | null;
+      password_enabled?: boolean | null;
+      phone?: string | null;
+      primary_locale?: string | null;
+      province?: string | null;
+      province_code?: string | null;
+      ships_to_countries?: string | null;
+      shop_owner?: string | null;
+      source?: string | null;
+      tax_shipping?: boolean | null;
+      taxes_included?: boolean | null;
+      county_taxes?: boolean | null;
+      timezone?: string | null;
+      iana_timezone?: string | null;
+      zip?: string | null;
+      has_storefront?: boolean | null;
+      setup_required?: boolean | null;
+      weight_unit?: string | null;
+      multi_location_enabled?: boolean | null;
+      updated_at?: string | null;
+      money_with_currency_in_emails_format?: string | null;
+      money_in_emails_format?: string | null;
+      address1?: string | null;
+      address2?: string | null;
+      city?: string | null;
+      country?: string | null;
+      country_code?: string | null;
+      country_name?: string | null;
+      created_at?: string | null;
+      customer_email?: string | null;
+      currency?: string | null;
+      description?: string | null;
+      domain?: string | null;
+      email?: string | null;
+      enabled_presentment_currencies?: string[] | null;
+      google_apps_domain?: string | null;
+      google_apps_login_enabled?: string | null;
+      eligible_for_card_reader_giveaway?: boolean | null;
+      eligible_for_payments?: boolean | null;
+      checkout_api_supported?: boolean | null;
+      has_discounts?: boolean | null;
+      has_gift_cards?: boolean | null;
+      latitude?: string | null;
+      longitude?: string | null;
+      money_format?: string | null;
+      money_with_currency_format?: string | null;
+      primary_location_id?: number | null;
     };
     StatusCodeClass: {
       type?: string | null;

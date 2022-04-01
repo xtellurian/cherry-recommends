@@ -2048,6 +2048,27 @@ const setUseOptimiserAsync = async ({ token, useInternalId, id, useOptimiser, })
         body: { useOptimiser },
     });
 };
+const fetchRecommenderChannelsAsync = async ({ id, token, }) => {
+    return await executeFetch({
+        path: `api/recommenders/PromotionsRecommenders/${id}/Channels`,
+        token,
+    });
+};
+const addRecommenderChannelAsync = async ({ token, id, channel, }) => {
+    return await executeFetch({
+        path: `api/recommenders/PromotionsRecommenders/${id}/Channels`,
+        token,
+        method: "post",
+        body: channel,
+    });
+};
+const removeRecommenderChannelAsync = async ({ id, token, channelId, }) => {
+    return await executeFetch({
+        path: `api/recommenders/PromotionsRecommenders/${id}/Channels/${channelId}`,
+        token,
+        method: "delete",
+    });
+};
 
 var promotionsRecommendersApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -2085,7 +2106,10 @@ var promotionsRecommendersApi = /*#__PURE__*/Object.freeze({
     fetchPromotionOptimiserAsync: fetchPromotionOptimiserAsync,
     setAllPromotionOptimiserWeightsAsync: setAllPromotionOptimiserWeightsAsync,
     setPromotionOptimiserWeightAsync: setPromotionOptimiserWeightAsync,
-    setUseOptimiserAsync: setUseOptimiserAsync
+    setUseOptimiserAsync: setUseOptimiserAsync,
+    fetchRecommenderChannelsAsync: fetchRecommenderChannelsAsync,
+    addRecommenderChannelAsync: addRecommenderChannelAsync,
+    removeRecommenderChannelAsync: removeRecommenderChannelAsync
 });
 
 var fetch$2 = fetch;

@@ -163,6 +163,10 @@ interface components {
             id?: number | null;
             commonId?: string | null;
         };
+        AddRecommenderChannelDto: {
+            id?: number;
+            name?: string | null;
+        };
         AggregateCustomerMetric: {
             metricId?: number;
             metric?: components["schemas"]["Metric"];
@@ -739,7 +743,7 @@ interface components {
             integratedSystemId: number;
             userId: string;
         };
-        IntegratedSystemTypes: "segment" | "hubspot" | "custom";
+        IntegratedSystemTypes: "segment" | "hubspot" | "shopify" | "custom";
         IntegrationStatuses: "notConfigured" | "ok";
         InvokationLogEntry: {
             id?: number;
@@ -1353,6 +1357,62 @@ interface components {
         SetTriggersDto: {
             featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
             metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
+        };
+        ShopifyShop: {
+            id?: number | null;
+            admin_graphql_api_id?: string | null;
+            pre_launch_enabled?: boolean | null;
+            requires_extra_payments_agreement?: boolean | null;
+            myshopify_domain?: string | null;
+            name?: string | null;
+            plan_name?: string | null;
+            plan_display_name?: string | null;
+            password_enabled?: boolean | null;
+            phone?: string | null;
+            primary_locale?: string | null;
+            province?: string | null;
+            province_code?: string | null;
+            ships_to_countries?: string | null;
+            shop_owner?: string | null;
+            source?: string | null;
+            tax_shipping?: boolean | null;
+            taxes_included?: boolean | null;
+            county_taxes?: boolean | null;
+            timezone?: string | null;
+            iana_timezone?: string | null;
+            zip?: string | null;
+            has_storefront?: boolean | null;
+            setup_required?: boolean | null;
+            weight_unit?: string | null;
+            multi_location_enabled?: boolean | null;
+            updated_at?: string | null;
+            money_with_currency_in_emails_format?: string | null;
+            money_in_emails_format?: string | null;
+            address1?: string | null;
+            address2?: string | null;
+            city?: string | null;
+            country?: string | null;
+            country_code?: string | null;
+            country_name?: string | null;
+            created_at?: string | null;
+            customer_email?: string | null;
+            currency?: string | null;
+            description?: string | null;
+            domain?: string | null;
+            email?: string | null;
+            enabled_presentment_currencies?: string[] | null;
+            google_apps_domain?: string | null;
+            google_apps_login_enabled?: string | null;
+            eligible_for_card_reader_giveaway?: boolean | null;
+            eligible_for_payments?: boolean | null;
+            checkout_api_supported?: boolean | null;
+            has_discounts?: boolean | null;
+            has_gift_cards?: boolean | null;
+            latitude?: string | null;
+            longitude?: string | null;
+            money_format?: string | null;
+            money_with_currency_format?: string | null;
+            primary_location_id?: number | null;
         };
         StatusCodeClass: {
             type?: string | null;
@@ -2167,6 +2227,16 @@ interface SetUseOptimiserRequest extends EntityRequest {
     useOptimiser: boolean;
 }
 declare const setUseOptimiserAsync: ({ token, useInternalId, id, useOptimiser, }: SetUseOptimiserRequest) => Promise<PromotionOptimiser>;
+declare const fetchRecommenderChannelsAsync: ({ id, token, }: EntityRequest) => Promise<any>;
+interface AddRecommenderChannelRequest extends EntityRequest {
+    channel: components["schemas"]["AddRecommenderChannelDto"];
+}
+declare const addRecommenderChannelAsync: ({ token, id, channel, }: AddRecommenderChannelRequest) => Promise<any>;
+declare type PromotionsRecommenders = components["schemas"]["ItemsRecommender"];
+interface RemoveRecommenderChannelRequest extends EntityRequest {
+    channelId: number;
+}
+declare const removeRecommenderChannelAsync: ({ id, token, channelId, }: RemoveRecommenderChannelRequest) => Promise<PromotionsRecommenders>;
 
 declare const promotionsRecommendersApi_d_fetchPromotionsRecommendersAsync: typeof fetchPromotionsRecommendersAsync;
 declare const promotionsRecommendersApi_d_fetchPromotionsRecommenderAsync: typeof fetchPromotionsRecommenderAsync;
@@ -2184,6 +2254,9 @@ declare const promotionsRecommendersApi_d_fetchPromotionOptimiserAsync: typeof f
 declare const promotionsRecommendersApi_d_setAllPromotionOptimiserWeightsAsync: typeof setAllPromotionOptimiserWeightsAsync;
 declare const promotionsRecommendersApi_d_setPromotionOptimiserWeightAsync: typeof setPromotionOptimiserWeightAsync;
 declare const promotionsRecommendersApi_d_setUseOptimiserAsync: typeof setUseOptimiserAsync;
+declare const promotionsRecommendersApi_d_fetchRecommenderChannelsAsync: typeof fetchRecommenderChannelsAsync;
+declare const promotionsRecommendersApi_d_addRecommenderChannelAsync: typeof addRecommenderChannelAsync;
+declare const promotionsRecommendersApi_d_removeRecommenderChannelAsync: typeof removeRecommenderChannelAsync;
 declare namespace promotionsRecommendersApi_d {
   export {
     promotionsRecommendersApi_d_fetchPromotionsRecommendersAsync as fetchPromotionsRecommendersAsync,
@@ -2221,6 +2294,9 @@ declare namespace promotionsRecommendersApi_d {
     promotionsRecommendersApi_d_setAllPromotionOptimiserWeightsAsync as setAllPromotionOptimiserWeightsAsync,
     promotionsRecommendersApi_d_setPromotionOptimiserWeightAsync as setPromotionOptimiserWeightAsync,
     promotionsRecommendersApi_d_setUseOptimiserAsync as setUseOptimiserAsync,
+    promotionsRecommendersApi_d_fetchRecommenderChannelsAsync as fetchRecommenderChannelsAsync,
+    promotionsRecommendersApi_d_addRecommenderChannelAsync as addRecommenderChannelAsync,
+    promotionsRecommendersApi_d_removeRecommenderChannelAsync as removeRecommenderChannelAsync,
   };
 }
 

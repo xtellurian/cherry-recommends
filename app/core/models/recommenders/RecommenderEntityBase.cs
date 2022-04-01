@@ -8,6 +8,8 @@ namespace SignalBox.Core.Recommenders
 {
     public abstract class RecommenderEntityBase : CommonEntity, IRecommender
     {
+        public int MaxChannelCount => 3;
+
         protected RecommenderEntityBase()
         { }
 
@@ -42,5 +44,7 @@ namespace SignalBox.Core.Recommenders
 
         [JsonIgnore]
         public ICollection<RecommendationDestinationBase> RecommendationDestinations { get; set; } = null!;
+        [JsonIgnore]
+        public ICollection<ChannelBase> Channels { get; set; } = new List<ChannelBase>();
     }
 }

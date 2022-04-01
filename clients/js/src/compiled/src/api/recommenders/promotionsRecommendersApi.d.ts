@@ -118,4 +118,14 @@ interface SetUseOptimiserRequest extends EntityRequest {
     useOptimiser: boolean;
 }
 export declare const setUseOptimiserAsync: ({ token, useInternalId, id, useOptimiser, }: SetUseOptimiserRequest) => Promise<PromotionOptimiser>;
+export declare const fetchRecommenderChannelsAsync: ({ id, token, }: EntityRequest) => Promise<any>;
+interface AddRecommenderChannelRequest extends EntityRequest {
+    channel: components["schemas"]["AddRecommenderChannelDto"];
+}
+export declare const addRecommenderChannelAsync: ({ token, id, channel, }: AddRecommenderChannelRequest) => Promise<any>;
+declare type PromotionsRecommenders = components["schemas"]["ItemsRecommender"];
+interface RemoveRecommenderChannelRequest extends EntityRequest {
+    channelId: number;
+}
+export declare const removeRecommenderChannelAsync: ({ id, token, channelId, }: RemoveRecommenderChannelRequest) => Promise<PromotionsRecommenders>;
 export {};

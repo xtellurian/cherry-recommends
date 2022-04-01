@@ -82,3 +82,10 @@ export const setPromotionOptimiserWeightAsync =
   promotionsRecommenders.setPromotionOptimiserWeightAsync;
 export const setAllPromotionOptimiserWeightsAsync =
   promotionsRecommenders.setAllPromotionOptimiserWeightsAsync;
+
+export const fetchRecommenderChannelsAsync =
+  promotionsRecommenders.fetchRecommenderChannelsAsync;
+export const addRecommenderChannelAsync =
+  promotionsRecommenders.addRecommenderChannelAsync;
+export const removeRecommenderChannelAsync =
+  promotionsRecommenders.removeRecommenderChannelAsync;

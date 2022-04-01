@@ -43,6 +43,7 @@ export const ItemRecommenderClone = ({ iconClassName }) => {
         name,
         commonId,
         cloneFromId: recommender.id,
+        itemIds: recommender.items?.map((o) => `${o.id}`),
       },
     });
   };

@@ -17,5 +17,14 @@ namespace SignalBox.Infrastructure.EntityFramework
     }
 
     internal class ChannelTypeConfiguration : ChannelBaseTypeConfiguration<ChannelBase>
-    { }
+    {
+        public override void Configure(EntityTypeBuilder<ChannelBase> builder)
+        {
+            builder
+                .HasMany(r => r.Recommenders)
+                .WithMany(c => c.Channels)
+                .UsingEntity(j => j.ToTable("RecommenderChannel"));
+        }
+
+    }
 }

@@ -23,7 +23,8 @@ namespace SignalBox.Core.Workflows
             IIntegratedSystemStore systemStore,
             IModelRegistrationStore modelRegistrationStore,
             IRecommenderReportImageWorkflow reportImageWorkflows,
-            IParameterStore parameterStore) : base(store, systemStore, metricStore, segmentStore, reportImageWorkflows)
+            IParameterStore parameterStore,
+            IChannelStore channelStore) : base(store, systemStore, metricStore, segmentStore, channelStore, reportImageWorkflows)
         {
             this.storageContext = storageContext;
             this.recommendationStore = recommendationStore;

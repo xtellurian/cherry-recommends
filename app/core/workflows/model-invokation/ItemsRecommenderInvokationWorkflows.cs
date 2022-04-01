@@ -289,6 +289,9 @@ namespace SignalBox.Core.Workflows
             // send to any destinations
             await base.SendToDestinations(recommender, context, recommendation);
 
+            // send to channels
+            await base.SendToChannels(recommender, context, recommendation);
+
             await base.EndTrackInvokation(context,
                                           true,
                                           message: $"Invoked successfully for {context.Customer?.Name ?? context.Customer?.CommonId}",

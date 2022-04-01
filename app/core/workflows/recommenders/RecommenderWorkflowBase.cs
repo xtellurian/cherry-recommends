@@ -12,18 +12,21 @@ namespace SignalBox.Core.Workflows
         protected readonly IIntegratedSystemStore systemStore;
         protected readonly IMetricStore featureStore;
         protected readonly ISegmentStore segmentStore;
+        private readonly IChannelStore channelStore;
         private readonly IRecommenderReportImageWorkflow imageWorkflows;
 
         protected RecommenderWorkflowBase(IRecommenderStore<TRecommender> store,
                                           IIntegratedSystemStore systemStore,
                                           IMetricStore featureStore,
                                           ISegmentStore segmentStore,
+                                          IChannelStore channelStore,
                                           IRecommenderReportImageWorkflow imageWorkflows)
         {
             this.store = store;
             this.systemStore = systemStore;
             this.featureStore = featureStore;
             this.segmentStore = segmentStore;
+            this.channelStore = channelStore;
             this.imageWorkflows = imageWorkflows;
         }
 
@@ -108,6 +111,47 @@ namespace SignalBox.Core.Workflows
         public async Task<byte[]> DownloadReportImage(RecommenderEntityBase recommender)
         {
             return await imageWorkflows.DownloadImage(recommender);
+        }
+
+        // ------ ADD/REMOVE CHANNELS -----
+        public async Task<ChannelBase> AddChannel(TRecommender recommender, long channelId)
+        {
+            var maxChannels = 2;
+            await store.LoadMany(recommender, _ => _.Channels);
+
+            if (recommender.Channels.Count >= maxChannels)
+            {
+                throw new BadRequestException($"The maximum number of channels is {maxChannels}");
+            }
+
+            ChannelBase channel = await channelStore.Read(channelId);
+            if (channel == null)
+            {
+                throw new BadRequestException($"Channel Id {channelId} is not a valid channel");
+            }
+
+            if (recommender.Channels.Any(_ => _.Id == channelId))
+            {
+                throw new BadRequestException($"Channel Id {channelId} is already a channel of recommender Id {recommender.Id}");
+            }
+
+            recommender.Channels.Add(channel);
+            await store.Context.SaveChanges();
+            return channel;
+        }
+
+        public async Task<RecommenderEntityBase> RemoveChannel(TRecommender recommender, long channelId)
+        {
+            await store.LoadMany(recommender, _ => _.Channels);
+            var channel = recommender.Channels.FirstOrDefault(_ => _.Id == channelId);
+            if (channel == null)
+            {
+                throw new BadRequestException($"Channel Id {channelId} is not a channel of Recommender Id {recommender.Id}");
+            }
+
+            recommender.Channels.Remove(channel);
+            await store.Context.SaveChanges();
+            return recommender;
         }
     }
 }

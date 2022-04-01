@@ -55,7 +55,6 @@ export const SettingsPage = () => {
   const learningMetricsRef = React.useRef(null);
   const triggersRef = React.useRef(null);
   const argumentsRef = React.useRef(null);
-  const integrationsRef = React.useRef(null);
   const advancedRef = React.useRef(null);
 
   const advancedMenu = [
@@ -76,12 +75,6 @@ export const SettingsPage = () => {
       label: "Arguments",
       icon: "/icons/argument.svg",
       ref: argumentsRef,
-    },
-    {
-      id: "integrations",
-      label: "Integrations",
-      icon: "/icons/integration.svg",
-      ref: integrationsRef,
     },
     {
       id: "advanced",
@@ -107,10 +100,6 @@ export const SettingsPage = () => {
 
       <RecommenderCard ref={argumentsRef} title="Arguments">
         <Arguments />
-      </RecommenderCard>
-
-      <RecommenderCard ref={integrationsRef} title="Destinations">
-        <Destinations />
       </RecommenderCard>
 
       <RecommenderCard ref={advancedRef} title="Advanced">

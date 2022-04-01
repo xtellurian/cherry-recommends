@@ -18,6 +18,7 @@ import { Triggers } from "./Triggers";
 import { LearningMetrics } from "./LearningMetrics";
 import { Arguments } from "./Arguments";
 import { Overview } from "./Overview";
+import { Delivery } from "./Delivery";
 import Performance from "./PerformanceTable";
 
 export const PromotionsRecommendersComponent = () => {
@@ -68,10 +69,6 @@ export const PromotionsRecommendersComponent = () => {
           component={ManageItems}
         />
         <AuthorizeRoute path={`${path}/manage`} component={ManageComponent} />
-        <AuthorizeRoute
-          path={`${path}/destinations/:id`}
-          component={Destinations}
-        />
         <AuthorizeRoute path={`${path}/triggers/:id`} component={Triggers} />
         <AuthorizeRoute
           path={`${path}/settings/:id`}
@@ -83,6 +80,7 @@ export const PromotionsRecommendersComponent = () => {
         />
         <AuthorizeRoute path={`${path}/arguments/:id`} component={Arguments} />
         <AuthorizeRoute path={`${path}/reports/:id`} component={Performance} />
+        <AuthorizeRoute path={`${path}/delivery/:id`} component={Delivery} />
       </Switch>
     </React.Fragment>
   );

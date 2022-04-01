@@ -544,3 +544,46 @@ export const setUseOptimiserAsync = async ({
     body: { useOptimiser },
   });
 };
+
+export const fetchRecommenderChannelsAsync = async ({
+  id,
+  token,
+}: EntityRequest) => {
+  return await executeFetch({
+    path: `api/recommenders/PromotionsRecommenders/${id}/Channels`,
+    token,
+  });
+};
+
+type Channel = components["schemas"]["ChannelBase"];
+interface AddRecommenderChannelRequest extends EntityRequest {
+  channel: components["schemas"]["AddRecommenderChannelDto"];
+}
+export const addRecommenderChannelAsync = async ({
+  token,
+  id,
+  channel,
+}: AddRecommenderChannelRequest): Promise<Channel> => {
+  return await executeFetch({
+    path: `api/recommenders/PromotionsRecommenders/${id}/Channels`,
+    token,
+    method: "post",
+    body: channel,
+  });
+};
+
+type PromotionsRecommenders = components["schemas"]["ItemsRecommender"];
+interface RemoveRecommenderChannelRequest extends EntityRequest {
+  channelId: number;
+}
+export const removeRecommenderChannelAsync = async ({
+  id,
+  token,
+  channelId,
+}: RemoveRecommenderChannelRequest): Promise<PromotionsRecommenders> => {
+  return await executeFetch({
+    path: `api/recommenders/PromotionsRecommenders/${id}/Channels/${channelId}`,
+    token,
+    method: "delete",
+  });
+};

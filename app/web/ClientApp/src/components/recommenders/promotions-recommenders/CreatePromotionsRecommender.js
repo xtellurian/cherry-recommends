@@ -35,6 +35,7 @@ import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useCommonId } from "../../../utility/utility";
 import { useSegments } from "../../../api-hooks/segmentsApi";
 import { useFeatureFlag } from "../../launch-darkly/hooks";
+import { useChannels } from "../../../api-hooks/channelsApi";
 import CreatePageLayout from "../../molecules/layout/CreatePageLayout";
 
 const InputLabel = ({ children, required }) => {
@@ -83,8 +84,14 @@ export const CreateRecommender = () => {
     : [];
   const segmentFlag = useFeatureFlag("segments", true);
 
+  const channels = useChannels();
+  const channelOptions = channels.items
+    ? channels.items.map((p) => ({ label: p.name, value: `${p.id}` }))
+    : [];
+
   const [selectedItems, setSelectedItems] = React.useState();
   const [selectedAudiences, setSelectedAudiences] = React.useState();
+  const [selectedChannels, setSelectedChannels] = React.useState();
   const [recommender, setRecommender] = React.useState({
     commonId: "",
     name: "",
@@ -95,6 +102,7 @@ export const CreateRecommender = () => {
     useAutoAi: true,
     targetMetricId: "",
     targetType: "customer",
+    channelIds: null,
   });
 
   const forCustomer = recommender.targetType === "customer";
@@ -285,7 +293,30 @@ export const CreateRecommender = () => {
             )}
           </div>
         )}
+        <div className="mt-2 mb-2">
+          <InputLabel>Channels</InputLabel>
 
+          {!channels.loading && (
+            <Selector
+              isMulti
+              isSearchable
+              placeholder="Select channels - maximum of 2."
+              noOptionsMessage={(inputValue) =>
+                `No channels found matching ${inputValue}`
+              }
+              defaultValue={selectedChannels}
+              onChange={(so) => {
+                setSelectedChannels(so);
+                setRecommender({
+                  ...recommender,
+                  channelIds: so.map((o) => o.value),
+                });
+              }}
+              options={channelOptions}
+              isOptionDisabled={() => selectedChannels?.length >= 2}
+            />
+          )}
+        </div>
         <AdvancedOptionsPanel>
           <SettingRow label="Use Auto-AI">
             <div className="text-right">

@@ -35,7 +35,8 @@ namespace SignalBox.Core.Workflows
             IRecommenderReportImageWorkflow reportImageWorkflows,
             IItemsRecommenderPerformanceReportStore performanceReportStore,
             IRecommendableItemStore recommendableItemStore,
-            ILogger<ItemsRecommenderPerformanceWorkflows> logger) : base(store, systemStore, metricStore, segmentStore, reportImageWorkflows)
+            IChannelStore channelStore,
+            ILogger<ItemsRecommenderPerformanceWorkflows> logger) : base(store, systemStore, metricStore, segmentStore, channelStore, reportImageWorkflows)
         {
             this.dateTimeProvider = dateTimeProvider;
             this.recommendationStore = recommendationStore;

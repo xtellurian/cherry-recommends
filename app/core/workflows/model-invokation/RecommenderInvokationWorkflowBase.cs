@@ -55,6 +55,20 @@ namespace SignalBox.Core.Workflows
             }
         }
 
+        protected async Task SendToChannels(T recommender, RecommendingContext context, RecommendationEntity recommendation)
+        {
+            await store.LoadMany(recommender, _ => _.Channels);
+            context.LogMessage($"Discovered {recommender.Channels.Count} channels");
+            foreach (var channel in recommender.Channels)
+            {
+                if (channel is WebhookChannel webhookChannel)
+                {
+                    await webhookSender.Send(webhookChannel, recommendation);
+                    context.LogMessage($"Send to Webhook endpoint: {webhookChannel.Endpoint}");
+                }
+            }
+        }
+
         protected async Task<InvokationLogEntry> StartTrackInvokation(T recommender, IModelInput input, bool? saveOnComplete = true)
         {
             var entry = new InvokationLogEntry(recommender, dateTimeProvider.Now);

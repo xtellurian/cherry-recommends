@@ -198,5 +198,29 @@ namespace SignalBox.Web.Controllers
 
             return audience.Entity;
         }
+
+        [HttpGet("{id}/Channels")]
+        public async Task<IEnumerable<ChannelBase>> GetChannels(string id)
+        {
+            var recommender = await base.GetResource(id);
+            await store.LoadMany(recommender, _ => _.Channels);
+            return recommender.Channels;
+        }
+
+        [HttpPost("{id}/Channels/")]
+        public async Task<ChannelBase> AddChannel(string id, AddRecommenderChannelDto dto)
+        {
+            var recommender = await base.GetResource(id);
+            var result = await workflows.AddChannel(recommender, dto.Id);
+            return result;
+        }
+
+        [HttpDelete("{id}/Channels/{channelId}")]
+        public async Task<RecommenderEntityBase> RemoveChannel(string id, long channelId)
+        {
+            var recommender = await base.GetResource(id);
+            var channel = await workflows.RemoveChannel(recommender, channelId);
+            return recommender;
+        }
     }
 }

@@ -1,9 +1,10 @@
-﻿using SignalBox.Core.Integrations.Custom;
+﻿using System.Collections.Generic;
+using SignalBox.Core.Integrations.Custom;
 
 namespace SignalBox.Core
 {
 
-    public class WebhookChannel : ChannelBase
+    public class WebhookChannel : ChannelBase, IWebhookDestination
     {
         protected WebhookChannel()
         { }
@@ -14,7 +15,11 @@ namespace SignalBox.Core
         }
 
         public string Endpoint { get; set; }
-
+        public override IDictionary<string, string> Properties =>
+        new Dictionary<string, string>
+        {
+            {"endpoint", Endpoint}
+        };
 #nullable enable
         public string? ApplicationSecret => (this.LinkedIntegratedSystem as CustomIntegratedSystem)?.ApplicationSecret;
     }

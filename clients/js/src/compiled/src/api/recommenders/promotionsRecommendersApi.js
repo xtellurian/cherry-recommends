@@ -277,3 +277,24 @@ export const setUseOptimiserAsync = async ({ token, useInternalId, id, useOptimi
         body: { useOptimiser },
     });
 };
+export const fetchRecommenderChannelsAsync = async ({ id, token, }) => {
+    return await executeFetch({
+        path: `api/recommenders/PromotionsRecommenders/${id}/Channels`,
+        token,
+    });
+};
+export const addRecommenderChannelAsync = async ({ token, id, channel, }) => {
+    return await executeFetch({
+        path: `api/recommenders/PromotionsRecommenders/${id}/Channels`,
+        token,
+        method: "post",
+        body: channel,
+    });
+};
+export const removeRecommenderChannelAsync = async ({ id, token, channelId, }) => {
+    return await executeFetch({
+        path: `api/recommenders/PromotionsRecommenders/${id}/Channels/${channelId}`,
+        token,
+        method: "delete",
+    });
+};

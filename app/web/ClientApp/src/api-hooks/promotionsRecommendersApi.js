@@ -16,6 +16,7 @@ import {
   fetchPerformanceAsync,
   fetchAudienceAsync,
   fetchPromotionOptimiserAsync,
+  fetchRecommenderChannelsAsync,
 } from "../api/promotionsRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -313,6 +314,24 @@ export const useOptimiser = ({ id }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id]);
+
+  return state;
+};
+
+export const useRecommenderChannels = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchRecommenderChannelsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
 
   return state;
 };

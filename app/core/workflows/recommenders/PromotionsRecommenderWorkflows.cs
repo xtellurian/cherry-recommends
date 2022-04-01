@@ -15,6 +15,7 @@ namespace SignalBox.Core.Workflows
         private readonly IModelRegistrationStore modelRegistrationStore;
         private readonly IAudienceStore audienceStore;
         private readonly IRecommendableItemStore itemStore;
+        private readonly IChannelStore channelStore;
         private readonly IPromotionOptimiserCRUDWorkflow promotionOptimiserCRUDWorkflow;
 
         public PromotionsRecommenderWorkflows(
@@ -28,7 +29,8 @@ namespace SignalBox.Core.Workflows
             IAudienceStore audienceStore,
             IRecommenderReportImageWorkflow reportImageWorkflows,
             IRecommendableItemStore itemStore,
-            IPromotionOptimiserCRUDWorkflow promotionOptimiserCRUDWorkflow) : base(store, systemStore, metricStore, segmentStore, reportImageWorkflows)
+            IChannelStore channelStore,
+            IPromotionOptimiserCRUDWorkflow promotionOptimiserCRUDWorkflow) : base(store, systemStore, metricStore, segmentStore, channelStore, reportImageWorkflows)
         {
             this.recommendationStore = recommendationStore;
             this.metricStore = metricStore;
@@ -36,6 +38,7 @@ namespace SignalBox.Core.Workflows
             this.modelRegistrationStore = modelRegistrationStore;
             this.audienceStore = audienceStore;
             this.itemStore = itemStore;
+            this.channelStore = channelStore;
             this.promotionOptimiserCRUDWorkflow = promotionOptimiserCRUDWorkflow;
         }
 
@@ -43,14 +46,17 @@ namespace SignalBox.Core.Workflows
         {
             await store.Load(from, _ => _.BaselineItem);
             await store.LoadMany(from, _ => _.Items);
+            await store.LoadMany(from, _ => _.Channels);
 
             var fromAudience = await audienceStore.GetAudience(from);
             var segmentIds = fromAudience.Success ? fromAudience.Entity.Segments.Select(_ => _.Id) : Enumerable.Empty<long>();
+            var channelIds = from.Channels.Count > 0 ? from.Channels.Select(_ => _.Id) : Enumerable.Empty<long>();
 
             return await CreateItemsRecommender(common,
                                                   from.BaselineItem?.CommonId,
                                                   from.Items?.Select(_ => _.CommonId),
                                                   segmentIds,
+                                                  channelIds,
                                                   from.NumberOfItemsToRecommend,
                                                   from.Arguments,
                                                   from.ErrorHandling ?? new RecommenderSettings(),
@@ -72,6 +78,7 @@ namespace SignalBox.Core.Workflows
                                                                    string? baselineItemId,
                                                                    IEnumerable<string>? itemIds,
                                                                    IEnumerable<long>? segmentIds,
+                                                                   IEnumerable<long>? channelIds,
                                                                    int? numberOfItemsToRecommend,
                                                                    IEnumerable<RecommenderArgument>? arguments,
                                                                    RecommenderSettings settings,
@@ -134,6 +141,19 @@ namespace SignalBox.Core.Workflows
                 {
                     var audience = new Audience(recommender, segments);
                     await audienceStore.Create(audience);
+                }
+            }
+
+            if (channelIds != null && channelIds.Count() > recommender.MaxChannelCount)
+            {
+                throw new BadRequestException($"The maximum number of channels is {recommender.MaxChannelCount}");
+            }
+
+            if (channelIds != null && channelIds.Any())
+            {
+                foreach (var channelId in channelIds)
+                {
+                    recommender.Channels.Add(await channelStore.Read(channelId));
                 }
             }
 
