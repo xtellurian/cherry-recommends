@@ -13,7 +13,7 @@ export const Dashboard = () => {
   const items = usePromotions();
   return (
     <React.Fragment>
-      <Title>Dashboard</Title>
+      <Title data-qa="title">Dashboard</Title>
       <hr />
       <NoteBox className="mb-3" label="Number of Customers">
         {dashboard.loading && <Spinner />}

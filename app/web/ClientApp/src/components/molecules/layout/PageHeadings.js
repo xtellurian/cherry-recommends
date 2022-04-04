@@ -2,8 +2,12 @@ import React from "react";
 
 import "./PageHeadings.css";
 
-export const Title = ({ children }) => {
-  return <h1 className="text-capitalize">{children}</h1>;
+export const Title = ({ children, ...props }) => {
+  return (
+    <h1 className="text-capitalize" {...props}>
+      {children}
+    </h1>
+  );
 };
 
 export const PageSectionTitle = ({ children }) => {

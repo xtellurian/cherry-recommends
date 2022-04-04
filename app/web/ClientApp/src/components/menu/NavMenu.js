@@ -118,7 +118,9 @@ export const NavMenu = ({ children }) => {
               <ul className="navbar-nav flex-grow align-items-center">
                 {isAuthenticated && (
                   <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle nav>Settings</DropdownToggle>
+                    <DropdownToggle nav data-qa="settings">
+                      Settings
+                    </DropdownToggle>
                     <DropdownMenu right>
                       {settingsItems.map((i) => (
                         <DropdownItem key={i.name}>
@@ -134,6 +136,7 @@ export const NavMenu = ({ children }) => {
                           <div
                             className="text-dark nav-link"
                             onClick={handleLogout}
+                            data-qa="logout"
                           >
                             Logout
                           </div>

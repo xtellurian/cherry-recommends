@@ -1,15 +1,18 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import * as React from "react";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+
 import App from "./App";
 
-it("renders without crashing", async () => {
-  const div = document.createElement("div");
-  ReactDOM.render(
-    <MemoryRouter>
-      <App />
-    </MemoryRouter>,
-    div
-  );
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+describe("App", () => {
+  test("renders without crashing", async () => {
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
+
+    const element = screen.getByText("Cherry Recommends");
+    expect(element).toBeInTheDocument();
+  });
 });

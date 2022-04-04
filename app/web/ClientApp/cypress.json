@@ -1,0 +1,6 @@
+{
+  "baseUrl": "https://localhost:5001",
+  "video": false,
+  "chromeWebSecurity": false,
+  "watchForFileChanges": false
+}

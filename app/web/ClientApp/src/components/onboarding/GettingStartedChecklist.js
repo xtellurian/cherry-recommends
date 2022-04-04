@@ -171,7 +171,11 @@ export const ToggleGettingStartedChecklistButton = () => {
       <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
         <GettingStartedChecklistPopup requestClose={() => setIsOpen(false)} />
       </BigPopup>
-      <button onClick={() => setIsOpen(!isOpen)} className="btn btn-primary">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="btn btn-primary"
+        data-qa="get-started"
+      >
         Get Started
       </button>
     </>

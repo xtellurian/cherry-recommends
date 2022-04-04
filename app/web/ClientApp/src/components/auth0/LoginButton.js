@@ -11,9 +11,10 @@ const LoginButton = () => {
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
   const [aboutToLogin, setAboutToLogin] = React.useState(autoSignIn);
   const { pathname } = useLocation();
-  const { analytics } = useAnalytics();
+  const analytics = useAnalytics();
+
   const loginWrapper = () => {
-    analytics.track("site:auth0_loginButton_clicked");
+    analytics && analytics.analytics.track("site:auth0_loginButton_clicked");
     return loginWithRedirect({ appState: { returnTo: pathname } });
   };
   const signIn = () => {
@@ -33,6 +34,7 @@ const LoginButton = () => {
       loading={isLoading || aboutToLogin}
       className="btn btn-primary btn-block"
       onClick={() => loginWrapper()}
+      data-qa="login"
     >
       Log In
     </AsyncButton>

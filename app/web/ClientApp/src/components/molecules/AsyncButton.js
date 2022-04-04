@@ -6,6 +6,7 @@ export const AsyncButton = ({
   children,
   loading,
   disabled,
+  ...props
 }) => {
   return (
     <button
@@ -13,6 +14,7 @@ export const AsyncButton = ({
       className={className || "btn btn-primary"}
       type="button"
       disabled={loading || disabled}
+      {...props}
     >
       {loading && (
         <React.Fragment>
