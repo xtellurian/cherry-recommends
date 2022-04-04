@@ -338,3 +338,4 @@ ml/tutorial/*.pkl
 **/.persist/sqlserver/secrets/*
 
 **/.persist/azurite/*.json
+**/.persist/azurite/__queuestorage__/*

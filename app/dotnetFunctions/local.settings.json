@@ -1,8 +1,7 @@
 {
   "IsEncrypted": false,
   "ConnectionStrings": {
-    "Tenants-mulit": "Server=tcp:multisql0ec2e42f.database.windows.net,1433;Initial Catalog=tenants;User ID=pulumi;Password=5P*vF8UmLB;Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;",
-    "Tenants": "DataSource={AppDir}/web/tenants.db;Cache=Shared"
+    "Tenants": "Server=127.0.0.1,1433;Database=tenants;User Id=SA;Password=YourStrong@Passw0rd"
   },
 
   "Values": {
@@ -22,11 +21,12 @@
     "Auth0:M2M:ClientId": "9Fegzc582XYb9ikTA4FwJHpCtdhHZYYm",
 
     "AzureEnvironment:SubscriptionId": "ad2a181b-b804-4179-904a-012445b7d1f5",
-    "AzureEnvironment:SqlServerName": "multisql0ec2e42",
-    "AzureEnvironment:SqlServerAzureId": "/subscriptions/ad2a181b-b804-4179-904a-012445b7d1f5/resourceGroups/databases6cfa3757/providers/Microsoft.Sql/servers/multiSql0ec2e42f",
+    "AzureEnvironment:SqlServerName": "",
+    "AzureEnvironment:SqlServerAzureId": "",
     "AzureEnvironment:SqlServerUserName": "pulumi",
     "AzureEnvironment:SqlServerPassword": "",
     "AzureEnvironment:ElasticPoolName": "pool",
+
     "Sqlite:Directory": "databases",
     "Sqlite:ConnectionStringTemplate": "DataSource={AppDir}/{Directory}/{name}.db;Cache=Shared",
 

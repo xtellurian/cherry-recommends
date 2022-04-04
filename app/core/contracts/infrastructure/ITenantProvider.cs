@@ -9,7 +9,7 @@ namespace SignalBox.Core
         string? RequestedTenantName { get; }
         string? CurrentDatabaseName { get; }
 
-        Task SetTenantName(string name);
+        Task SetTenantName(string? name);
         Tenant? Current();
     }
 }
