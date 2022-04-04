@@ -11,7 +11,7 @@ export const MemberRow = ({ member, onDelete, error }) => {
       <div className="flex-shrink-0">
         <Person className="m-2" size={25} />
       </div>
-      <div className="flex-grow-1">{member.name}</div>
+      <div className="flex-grow-1">{member.name || member.commonId}</div>
       <div className="text-right">
         <button
           className="btn btn-outline-primary"
