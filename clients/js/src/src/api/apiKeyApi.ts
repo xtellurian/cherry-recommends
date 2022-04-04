@@ -3,7 +3,7 @@ import {
   PaginatedRequest,
   DeleteRequest,
 } from "../interfaces";
-import { executeFetch } from "./client/apiClientTs";
+import { executeFetch } from "./client/apiClient";
 
 export const fetchApiKeysAsync = async ({ token, page }: PaginatedRequest) => {
   return await executeFetch({

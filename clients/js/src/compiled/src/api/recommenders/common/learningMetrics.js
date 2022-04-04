@@ -1,4 +1,4 @@
-import { executeFetch } from "../../client/apiClientTs";
+import { executeFetch } from "../../client/apiClient";
 export const fetchLearningMetricsAsync = async ({ recommenderApiName, token, id, useInternalId, }) => {
     return await executeFetch({
         token,

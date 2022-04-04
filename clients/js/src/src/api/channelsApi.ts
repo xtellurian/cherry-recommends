@@ -6,7 +6,7 @@ import {
   EntityRequest,
   DeleteRequest,
 } from "../interfaces";
-import { executeFetch } from "./client/apiClientTs";
+import { executeFetch } from "./client/apiClient";
 import { components } from "../model/api";
 
 export const fetchChannelsAsync = async ({

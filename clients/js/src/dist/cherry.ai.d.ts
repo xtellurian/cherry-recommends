@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+
 declare function fetchUniqueActionNamesAsync({ token, page, term }: {
     token: any;
     page: any;
@@ -114,7 +116,7 @@ interface PromotionsRequest extends EntitySearchRequest {
     benefitType: string | undefined;
     weeksAgo: number | undefined;
 }
-interface Channel extends Entity {
+interface Channel$1 extends Entity {
 }
 
 declare const fetchApiKeysAsync: ({ token, page }: PaginatedRequest) => Promise<any>;
@@ -1559,7 +1561,7 @@ declare namespace businessesApi_d {
   };
 }
 
-declare const fetchChannelsAsync: ({ token, page, }: EntitySearchRequest) => Promise<PaginateResponse<Channel>>;
+declare const fetchChannelsAsync: ({ token, page, }: EntitySearchRequest) => Promise<PaginateResponse<Channel$1>>;
 interface CreateChannelRequest extends AuthenticatedRequest {
     channel: components["schemas"]["CreateChannelDto"];
 }
@@ -1618,9 +1620,7 @@ declare function fetchCustomerActionAsync({ token, id, category, actionName, }: 
 declare function uploadUserDataAsync$1({ token, payload }: {
     token: any;
     payload: any;
-}): Promise<any[] | {
-    error: any;
-} | undefined>;
+}): Promise<any>;
 declare function createOrUpdateCustomerAsync({ token, customer, user, }: {
     token: any;
     customer: any;
@@ -1780,7 +1780,7 @@ declare function deleteEnvironmentAsync({ token, id }: {
     token: any;
     id: any;
 }): Promise<any>;
-declare const setDefaultEnvironmentId$1: (e: any) => void;
+declare const setDefaultEnvironmentId$1: (e: number) => void;
 
 declare const environmentsApi_d_fetchEnvironmentsAsync: typeof fetchEnvironmentsAsync;
 declare const environmentsApi_d_createEnvironmentAsync: typeof createEnvironmentAsync;
@@ -2053,7 +2053,7 @@ interface SetLearningMetricsRequest$2 extends EntityRequest {
 declare const setLearningMetricsAsync$2: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest$2) => Promise<any>;
 declare type RecommenderStatistics$2 = components["schemas"]["RecommenderStatistics"];
 declare const fetchStatisticsAsync$2: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics$2>;
-declare const fetchReportImageBlobUrlAsync$2: ({ id, token, useInternalId, }: EntityRequest) => Promise<string | void>;
+declare const fetchReportImageBlobUrlAsync$2: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
 declare type PerformanceResponse$1 = components["schemas"]["ItemsRecommenderPerformanceReport"];
 interface PerformanceRequest$1 extends EntityRequest {
     reportId?: string | number | undefined;
@@ -2206,7 +2206,7 @@ interface SetLearningMetricsRequest$1 extends EntityRequest {
 declare const setLearningMetricsAsync$1: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest$1) => Promise<any>;
 declare type RecommenderStatistics$1 = components["schemas"]["RecommenderStatistics"];
 declare const fetchStatisticsAsync$1: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics$1>;
-declare const fetchReportImageBlobUrlAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<string | void>;
+declare const fetchReportImageBlobUrlAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
 declare type PerformanceResponse = components["schemas"]["ItemsRecommenderPerformanceReport"];
 interface PerformanceRequest extends EntityRequest {
     reportId?: string | number | undefined;
@@ -2228,10 +2228,11 @@ interface SetUseOptimiserRequest extends EntityRequest {
 }
 declare const setUseOptimiserAsync: ({ token, useInternalId, id, useOptimiser, }: SetUseOptimiserRequest) => Promise<PromotionOptimiser>;
 declare const fetchRecommenderChannelsAsync: ({ id, token, }: EntityRequest) => Promise<any>;
+declare type Channel = components["schemas"]["ChannelBase"];
 interface AddRecommenderChannelRequest extends EntityRequest {
     channel: components["schemas"]["AddRecommenderChannelDto"];
 }
-declare const addRecommenderChannelAsync: ({ token, id, channel, }: AddRecommenderChannelRequest) => Promise<any>;
+declare const addRecommenderChannelAsync: ({ token, id, channel, }: AddRecommenderChannelRequest) => Promise<Channel>;
 declare type PromotionsRecommenders = components["schemas"]["ItemsRecommender"];
 interface RemoveRecommenderChannelRequest extends EntityRequest {
     channelId: number;
@@ -2539,7 +2540,7 @@ interface SetLearningMetricsRequest extends EntityRequest {
 declare const setLearningMetricsAsync: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest) => Promise<any>;
 declare type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
 declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
-declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<string | void>;
+declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
 
 declare const parameterSetRecommendersApi_d_fetchParameterSetRecommendersAsync: typeof fetchParameterSetRecommendersAsync;
 declare const parameterSetRecommendersApi_d_fetchParameterSetRecommenderAsync: typeof fetchParameterSetRecommenderAsync;
@@ -2900,9 +2901,7 @@ declare const fetchTrackedUserActionAsync: ({ token, id, category, actionName, }
 declare const uploadUserDataAsync: ({ token, payload }: {
     token: any;
     payload: any;
-}) => Promise<any[] | {
-    error: any;
-} | undefined>;
+}) => Promise<any>;
 declare const createOrUpdateTrackedUserAsync: ({ token, customer, user, }: {
     token: any;
     customer: any;
@@ -2946,26 +2945,19 @@ declare namespace trackedUsersApi_d {
 
 declare const setBaseUrl: (baseUrl: string) => void;
 
-declare function setDefaultEnvironmentId(e: any): void;
-declare function setDefaultApiKey(k: any): void;
+declare const setDefaultEnvironmentId: (e: number) => void;
+declare const setDefaultApiKey: (k: string) => void;
 
-declare function setErrorResponseHandler(errorHandler: any): void;
-declare function handleErrorResponse(response: any): Promise<{
-    error: any;
-} | undefined>;
-declare function handleErrorFetch(ex: any): void;
-declare function setErrorFetchHandler(handler: any): void;
+declare type ErrorHandler = (response: AxiosResponse) => Promise<any>;
+declare const setErrorResponseHandler: (errorHandler: ErrorHandler) => void;
+declare const handleErrorResponse: ErrorHandler;
 
 declare const errorHandling_d_setErrorResponseHandler: typeof setErrorResponseHandler;
 declare const errorHandling_d_handleErrorResponse: typeof handleErrorResponse;
-declare const errorHandling_d_handleErrorFetch: typeof handleErrorFetch;
-declare const errorHandling_d_setErrorFetchHandler: typeof setErrorFetchHandler;
 declare namespace errorHandling_d {
   export {
     errorHandling_d_setErrorResponseHandler as setErrorResponseHandler,
     errorHandling_d_handleErrorResponse as handleErrorResponse,
-    errorHandling_d_handleErrorFetch as handleErrorFetch,
-    errorHandling_d_setErrorFetchHandler as setErrorFetchHandler,
   };
 }
 

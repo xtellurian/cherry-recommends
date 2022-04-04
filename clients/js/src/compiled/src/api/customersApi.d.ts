@@ -30,9 +30,7 @@ export function fetchCustomerActionAsync({ token, id, category, actionName, }: {
 export function uploadUserDataAsync({ token, payload }: {
     token: any;
     payload: any;
-}): Promise<any[] | {
-    error: any;
-} | undefined>;
+}): Promise<any>;
 export function createOrUpdateCustomerAsync({ token, customer, user, }: {
     token: any;
     customer: any;

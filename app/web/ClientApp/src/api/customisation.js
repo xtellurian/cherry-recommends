@@ -1,11 +1,10 @@
 import { errorHandling } from "cherry.ai";
 
-const customErrorResponseHandler = async (response) => {
-  const json = await response.json();
-  console.error(`Server responded: ${response.statusText}`);
-  console.error(json);
+const customErrorResponseHandler = async (axiosResponse) => {
+  console.warn(axiosResponse);
+  console.warn(`Server responded: ${axiosResponse.statusText}`);
 
-  throw json;
+  throw axiosResponse.data;
 };
 
 export const configure = () => {

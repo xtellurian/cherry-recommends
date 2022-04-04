@@ -1,13 +1,15 @@
-// type ErrorHandler = (response: Response) => Promise<any>;
 const defaultErrorResponseHandler = async (response) => {
-    const json = await response.json();
-    console.error(`Server responded: ${response.statusText}`);
-    console.debug(json);
+    console.debug(response);
+    // is not a promise
     if (response.status >= 500) {
-        return { error: json };
+        console.error(`Server responded: ${response.statusText}`);
+        console.error(response.data);
+        return { error: response.data };
     }
     else if (response.status >= 400) {
-        throw json;
+        console.warn(`Server responded: ${response.statusText}`);
+        console.warn(response.data);
+        throw response.data;
     }
 };
 let errorResponseHandler = defaultErrorResponseHandler;
@@ -16,17 +18,6 @@ export const setErrorResponseHandler = (errorHandler) => {
 };
 // this function is called in api.js functions.
 export const handleErrorResponse = async (response) => {
-    console.warn("SDK is handling an error response");
+    console.debug("SDK is handling an error response");
     return await errorResponseHandler(response);
-};
-// the below all function as handlers of a fetch promise rejected
-const defaultErrorFetchHandler = (ex) => {
-    throw ex;
-};
-let errorFetchHandler = defaultErrorFetchHandler;
-export const handleErrorFetch = (ex) => {
-    errorFetchHandler(ex);
-};
-export const setErrorFetchHandler = (handler) => {
-    errorFetchHandler = handler;
 };

@@ -6,7 +6,7 @@ import {
   EntitySearchRequest,
   PaginateResponse,
 } from "../interfaces";
-import { executeFetch } from "./client/apiClientTs";
+import { executeFetch } from "./client/apiClient";
 import { components } from "../model/api";
 
 export const fetchBusinessesAsync = async ({

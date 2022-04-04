@@ -1,6 +1,5 @@
-export function setErrorResponseHandler(errorHandler: any): void;
-export function handleErrorResponse(response: any): Promise<{
-    error: any;
-} | undefined>;
-export function handleErrorFetch(ex: any): void;
-export function setErrorFetchHandler(handler: any): void;
+import { AxiosResponse } from "axios";
+declare type ErrorHandler = (response: AxiosResponse) => Promise<any>;
+export declare const setErrorResponseHandler: (errorHandler: ErrorHandler) => void;
+export declare const handleErrorResponse: ErrorHandler;
+export {};

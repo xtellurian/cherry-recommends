@@ -1,6 +1,5 @@
-import { executeFetch } from "../../client/apiClientTs";
+import { executeFetch } from "../../client/apiClient";
 
-import { components } from "../../../model/api";
 import { EntityRequest } from "../../../interfaces";
 
 interface CommonFetchLearningMetricsRequest extends EntityRequest {

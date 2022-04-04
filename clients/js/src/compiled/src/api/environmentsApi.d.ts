@@ -10,4 +10,4 @@ export function deleteEnvironmentAsync({ token, id }: {
     token: any;
     id: any;
 }): Promise<any>;
-export const setDefaultEnvironmentId: (e: any) => void;
+export const setDefaultEnvironmentId: (e: number) => void;

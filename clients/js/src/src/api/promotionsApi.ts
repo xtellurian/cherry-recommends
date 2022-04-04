@@ -9,7 +9,7 @@ import {
     SetpropertiesRequest,
     PromotionsRequest
   } from "../interfaces";
-  import { executeFetch } from "./client/apiClientTs";
+  import { executeFetch } from "./client/apiClient";
   import { components } from "../model/api";
   
   import * as pr from "./commonEntity/propertiesApiUtil";

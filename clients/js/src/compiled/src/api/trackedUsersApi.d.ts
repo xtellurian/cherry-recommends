@@ -30,9 +30,7 @@ export const fetchTrackedUserActionAsync: ({ token, id, category, actionName, }:
 export const uploadUserDataAsync: ({ token, payload }: {
     token: any;
     payload: any;
-}) => Promise<any[] | {
-    error: any;
-} | undefined>;
+}) => Promise<any>;
 export const createOrUpdateTrackedUserAsync: ({ token, customer, user, }: {
     token: any;
     customer: any;

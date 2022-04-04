@@ -1,4 +1,4 @@
-import { executeFetch } from "./client/apiClientTs";
+import { executeFetch } from "./client/apiClient";
 import * as pr from "./commonEntity/propertiesApiUtil";
 export const fetchPromotionsAsync = async ({ token, page, searchTerm, promotionType, benefitType, weeksAgo, }) => {
     return await executeFetch({

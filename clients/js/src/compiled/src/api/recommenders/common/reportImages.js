@@ -1,20 +1,23 @@
 import { headers } from "../../client/headers";
-import { handleErrorResponse, handleErrorFetch, } from "../../../utilities/errorHandling";
+import { handleErrorResponse } from "../../../utilities/errorHandling";
+import { current } from "../../client/axiosInstance";
 export const fetchReportImageBlobUrlAsync = async ({ recommenderApiName, token, id, useInternalId, }) => {
     console.debug("fetching image for recommender");
     console.debug(`api/recommenders/${recommenderApiName}/${id}/ReportImage`);
+    const axios = current();
     let response;
     try {
-        response = await fetch(`api/recommenders/${recommenderApiName}/${id}/ReportImage`, {
-            headers: headers(token),
-            method: "get",
+        response = await axios.get(`api/recommenders/${recommenderApiName}/${id}/ReportImage`, {
+            headers: headers(token, null),
         });
     }
     catch (ex) {
-        return handleErrorFetch(ex);
+        console.error(ex);
+        throw ex;
     }
-    if (response.ok) {
-        const blob = await response.blob();
+    console.log(response);
+    if (response.status > 200 && response.status < 300) {
+        const blob = response.data;
         return URL.createObjectURL(blob);
     }
     else {

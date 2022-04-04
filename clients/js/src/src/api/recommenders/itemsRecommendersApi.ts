@@ -1,4 +1,4 @@
-import { executeFetch } from "../client/apiClientTs";
+import { executeFetch } from "../client/apiClient";
 import * as link from "./common/linkRegisteredModels";
 
 import { components } from "../../model/api";
@@ -434,7 +434,7 @@ export const fetchReportImageBlobUrlAsync = async ({
   id,
   token,
   useInternalId,
-}: EntityRequest): Promise<string | void> => {
+}: EntityRequest): Promise<any> => {
   return await ri.fetchReportImageBlobUrlAsync({
     recommenderApiName,
     id,

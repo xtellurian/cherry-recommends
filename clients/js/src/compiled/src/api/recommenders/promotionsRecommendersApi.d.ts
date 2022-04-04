@@ -97,7 +97,7 @@ interface SetLearningMetricsRequest extends EntityRequest {
 export declare const setLearningMetricsAsync: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest) => Promise<any>;
 declare type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
 export declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
-export declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<string | void>;
+export declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
 declare type PerformanceResponse = components["schemas"]["ItemsRecommenderPerformanceReport"];
 interface PerformanceRequest extends EntityRequest {
     reportId?: string | number | undefined;
@@ -119,10 +119,11 @@ interface SetUseOptimiserRequest extends EntityRequest {
 }
 export declare const setUseOptimiserAsync: ({ token, useInternalId, id, useOptimiser, }: SetUseOptimiserRequest) => Promise<PromotionOptimiser>;
 export declare const fetchRecommenderChannelsAsync: ({ id, token, }: EntityRequest) => Promise<any>;
+declare type Channel = components["schemas"]["ChannelBase"];
 interface AddRecommenderChannelRequest extends EntityRequest {
     channel: components["schemas"]["AddRecommenderChannelDto"];
 }
-export declare const addRecommenderChannelAsync: ({ token, id, channel, }: AddRecommenderChannelRequest) => Promise<any>;
+export declare const addRecommenderChannelAsync: ({ token, id, channel, }: AddRecommenderChannelRequest) => Promise<Channel>;
 declare type PromotionsRecommenders = components["schemas"]["ItemsRecommender"];
 interface RemoveRecommenderChannelRequest extends EntityRequest {
     channelId: number;

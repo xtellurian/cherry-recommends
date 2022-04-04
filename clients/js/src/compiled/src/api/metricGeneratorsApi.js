@@ -1,4 +1,4 @@
-import { executeFetch } from "./client/apiClientTs";
+import { executeFetch } from "./client/apiClient";
 export const fetchMetricGeneratorsAsync = async ({ page, token, }) => {
     return await executeFetch({
         path: "api/MetricGenerators",

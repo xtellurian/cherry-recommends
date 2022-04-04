@@ -1,4 +1,4 @@
-import { executeFetch } from "./client/apiClientTs";
+import { executeFetch } from "./client/apiClient";
 import * as pr from "./commonEntity/propertiesApiUtil";
 console.warn("Deprecation Notice: Recommendable Items are replaced by Promotions.");
 export const fetchItemsAsync = async ({ token, page, searchTerm, }) => {

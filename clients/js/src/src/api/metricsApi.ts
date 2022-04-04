@@ -6,7 +6,7 @@ import {
   PaginatedEntityRequest,
   MetricBinRequest
 } from "../interfaces";
-import { executeFetch } from "./client/apiClientTs";
+import { executeFetch } from "./client/apiClient";
 import { components } from "../model/api";
 
 interface MetricSearchRequest extends EntitySearchRequest {

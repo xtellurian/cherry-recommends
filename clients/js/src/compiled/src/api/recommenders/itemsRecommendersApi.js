@@ -1,4 +1,4 @@
-import { executeFetch } from "../client/apiClientTs";
+import { executeFetch } from "../client/apiClient";
 import * as link from "./common/linkRegisteredModels";
 import * as ar from "./common/args";
 import * as tv from "./common/targetvariables";

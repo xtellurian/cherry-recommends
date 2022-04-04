@@ -97,7 +97,7 @@ interface SetLearningMetricsRequest extends EntityRequest {
 export declare const setLearningMetricsAsync: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest) => Promise<any>;
 declare type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
 export declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
-export declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<string | void>;
+export declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
 declare type PerformanceResponse = components["schemas"]["ItemsRecommenderPerformanceReport"];
 interface PerformanceRequest extends EntityRequest {
     reportId?: string | number | undefined;

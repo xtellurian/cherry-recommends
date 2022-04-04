@@ -1,9 +1,51 @@
+import axios from 'axios';
+
 let storedBaseUrl = "";
 const setBaseUrl = (baseUrl) => {
     storedBaseUrl = baseUrl.substr(-1) === "/" ? baseUrl.slice(0, -1) : baseUrl;
 };
-const getUrl = (path) => `${storedBaseUrl}/${path}`;
+const getBaseUrl = () => storedBaseUrl;
 
+let currentInstance = null;
+let currentConfig = null;
+const defaultConfig = {
+    baseUrl: getBaseUrl(),
+};
+// sets the current config
+const initialise = (config = defaultConfig) => {
+    currentConfig = config;
+    return axios.create({
+        baseURL: config.baseUrl,
+        timeout: config.timeout,
+        headers: config.tenant ? { "x-tenant": config.tenant } : {},
+        validateStatus: function (status) {
+            // return status < 500; // Resolve only if the status code is less than 500
+            return true; // always resolve the promise
+        },
+    });
+};
+const current = (config) => {
+    // if current instance is null or undefined
+    if (!currentInstance) {
+        currentInstance = initialise(config);
+    }
+    else if (!config) {
+        currentInstance = initialise();
+    }
+    // if config isn't exactly the same object
+    else if (config !== currentConfig) {
+        if (config.baseUrl !== (currentConfig === null || currentConfig === void 0 ? void 0 : currentConfig.baseUrl) ||
+            config.tenant !== currentConfig.tenant ||
+            config.timeout !== currentConfig.timeout) {
+            // then create a new instance and config
+            currentInstance = initialise(config);
+        }
+    }
+    return currentInstance;
+};
+
+// tenant
+// environment
 let defaltEnvironmentId = null;
 const setDefaultEnvironmentId$1 = (e) => {
     defaltEnvironmentId = e;
@@ -12,7 +54,9 @@ let defaultApiKey = null;
 const setDefaultApiKey = (k) => {
     defaultApiKey = k;
 };
-const defaultHeaders$1 = { "Content-Type": "application/json" };
+const defaultHeaders$1 = {
+    "Content-Type": "application/json",
+};
 const headers = (token, apiKey) => {
     let headers = { ...defaultHeaders$1 };
     if (token) {
@@ -30,16 +74,18 @@ const headers = (token, apiKey) => {
     return headers;
 };
 
-// type ErrorHandler = (response: Response) => Promise<any>;
 const defaultErrorResponseHandler = async (response) => {
-    const json = await response.json();
-    console.error(`Server responded: ${response.statusText}`);
-    console.debug(json);
+    console.debug(response);
+    // is not a promise
     if (response.status >= 500) {
-        return { error: json };
+        console.error(`Server responded: ${response.statusText}`);
+        console.error(response.data);
+        return { error: response.data };
     }
     else if (response.status >= 400) {
-        throw json;
+        console.warn(`Server responded: ${response.statusText}`);
+        console.warn(response.data);
+        throw response.data;
     }
 };
 let errorResponseHandler = defaultErrorResponseHandler;
@@ -48,91 +94,58 @@ const setErrorResponseHandler = (errorHandler) => {
 };
 // this function is called in api.js functions.
 const handleErrorResponse = async (response) => {
-    console.warn("SDK is handling an error response");
+    console.debug("SDK is handling an error response");
     return await errorResponseHandler(response);
-};
-// the below all function as handlers of a fetch promise rejected
-const defaultErrorFetchHandler = (ex) => {
-    throw ex;
-};
-let errorFetchHandler = defaultErrorFetchHandler;
-const handleErrorFetch = (ex) => {
-    errorFetchHandler(ex);
-};
-const setErrorFetchHandler = (handler) => {
-    errorFetchHandler = handler;
 };
 
 var errorHandling = /*#__PURE__*/Object.freeze({
     __proto__: null,
     setErrorResponseHandler: setErrorResponseHandler,
-    handleErrorResponse: handleErrorResponse,
-    handleErrorFetch: handleErrorFetch,
-    setErrorFetchHandler: setErrorFetchHandler
+    handleErrorResponse: handleErrorResponse
 });
 
-const info = (message) => {
-    console.info(`${message}`);
-};
-const error = (error) => {
-    console.error(`${error}`);
-};
-const debug = (message) => {
-    console.debug(`${message}`);
-};
-var logger = {
-    debug,
-    info,
-    error,
-};
-
-const executeFetch$1 = async ({ token, apiKey, path, page, pageSize, body, method, query, }) => {
-    const url = getUrl(path);
-    const q = new URLSearchParams();
+const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, } = { method: "get", path: "/" }) => {
+    const baseUrl = getBaseUrl();
+    const client = current({ baseUrl: baseUrl });
+    const params = new URLSearchParams();
     for (const [key, value] of Object.entries(query || {})) {
         if (key && value) {
-            q.append(key, value);
+            params.append(key, value);
         }
     }
     if (page) {
-        q.append("p.page", `${page}`);
+        params.append("p.page", `${page}`);
     }
     if (pageSize) {
-        q.append("p.pageSize", `${pageSize}`);
+        params.append("p.pageSize", `${pageSize}`);
     }
     if (apiKey) {
-        q.append("apiKey", `${apiKey}`);
+        params.append("apiKey", `${apiKey}`);
     }
-    const qs = q.toString();
-    const fullUrl = `${url}?${qs}`;
-    logger.debug(`Fetch: ${fullUrl}`);
     let response;
     try {
-        response = await fetch(fullUrl, {
-            headers: headers(token),
-            method: method || "get",
-            body: JSON.stringify(body),
+        response = await client({
+            method,
+            url: path,
+            params,
+            headers: headers(token, null),
+            data: body,
         });
     }
     catch (ex) {
-        return handleErrorFetch(ex);
+        // something failed. ther server responded outside of 2xx
+        // if we always resolve the promise, then this is always true
+        console.error(ex);
+        throw ex;
     }
-    if (response.ok) {
-        var responseClone = response.clone();
-        try {
-            return await response.json();
-        }
-        catch (_a) {
-            return await responseClone;
-        }
+    // happy path
+    if (response.status <= 299) {
+        return response.data;
     }
     else {
-        logger.error("Response was not OK.");
         return await handleErrorResponse(response);
     }
 };
-
-const executeFetch = (x) => executeFetch$1(x);
 
 const fetchApiKeysAsync = async ({ token, page }) => {
     return await executeFetch({
@@ -328,7 +341,7 @@ function chunkArray(myArray, chunk_size) {
 const MAX_ARRAY = 5000;
 const basePath = "api/Customers";
 const fetchCustomersAsync = async ({ token, page, searchTerm }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: basePath,
         token,
         page,
@@ -338,7 +351,7 @@ const fetchCustomersAsync = async ({ token, page, searchTerm }) => {
     });
 };
 const updateMergePropertiesAsync$1 = async ({ token, id, properties }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         token,
         path: `${basePath}/${id}/properties`,
         method: "post",
@@ -346,7 +359,7 @@ const updateMergePropertiesAsync$1 = async ({ token, id, properties }) => {
     });
 };
 const fetchCustomerAsync = async ({ token, id, useInternalId }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `${basePath}/${id}`,
         token,
         query: {
@@ -355,19 +368,19 @@ const fetchCustomerAsync = async ({ token, id, useInternalId }) => {
     });
 };
 const fetchUniqueCustomerActionGroupsAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         token,
         path: `${basePath}/${id}/action-groups`,
     });
 };
 const fetchLatestRecommendationsAsync$1 = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         token,
         path: `${basePath}/${id}/latest-recommendations`,
     });
 };
 const fetchCustomerActionAsync = async ({ token, id, category, actionName, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `${basePath}/${id}/actions/${category}`,
         token,
         query: {
@@ -381,7 +394,7 @@ const uploadUserDataAsync$1 = async ({ token, payload }) => {
     }));
     const responses = [];
     for (const p of payloads) {
-        const response = await executeFetch$1({
+        const response = await executeFetch({
             token,
             path: basePath,
             method: "put",
@@ -400,7 +413,7 @@ const createOrUpdateCustomerAsync = async ({ token, customer, user, }) => {
     if (user) {
         console.warn("user is a deprecated property in createOrUpdateCustomerAsync(). use 'customer'.");
     }
-    return await executeFetch$1({
+    return await executeFetch({
         path: basePath,
         method: "post",
         body: customer || user,
@@ -408,7 +421,7 @@ const createOrUpdateCustomerAsync = async ({ token, customer, user, }) => {
     });
 };
 const fetchCustomersActionsAsync = async ({ token, page, id, revenueOnly, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `${basePath}/${id}/Actions`,
         token,
         page,
@@ -418,7 +431,7 @@ const fetchCustomersActionsAsync = async ({ token, page, id, revenueOnly, }) => 
     });
 };
 const setCustomerMetricAsync = async ({ token, id, metricId, useInternalId, value, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `${basePath}/${id}/Metrics/${metricId}`,
         method: "post",
         token,
@@ -429,14 +442,14 @@ const setCustomerMetricAsync = async ({ token, id, metricId, useInternalId, valu
     });
 };
 const deleteCustomerAsync$1 = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `${basePath}/${id}`,
         token,
         method: "delete",
     });
 };
 const fetchCustomerSegmentsAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         token,
         path: `${basePath}/${id}/segments`,
     });
@@ -459,38 +472,38 @@ var customersApi = /*#__PURE__*/Object.freeze({
 });
 
 const fetchEventSummaryAsync = async ({ token }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/datasummary/events",
         token,
     });
 };
 const fetchEventKindNamesAsync = async ({ token }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/datasummary/event-kind-names`,
         token,
     });
 };
 const fetchEventKindSummaryAsync = async ({ token, kind }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/datasummary/event-kind/${kind}`,
         token,
     });
 };
 const fetchEventTimelineAsync = async ({ token, kind, eventType }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/datasummary/events/timeline/${kind}/${eventType}`,
         token,
     });
 };
 const fetchDashboardAsync = async ({ token, scope }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/datasummary/dashboard",
         token,
         query: { scope },
     });
 };
 const fetchLatestActionsAsync = async ({ token }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/datasummary/actions",
         token,
     });
@@ -507,7 +520,7 @@ var dataSummaryApi = /*#__PURE__*/Object.freeze({
 });
 
 const fetchDeploymentConfigurationAsync = async ({ token }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/deployment/configuration",
         token,
     });
@@ -579,14 +592,14 @@ var eventsApi = /*#__PURE__*/Object.freeze({
 });
 
 const fetchEnvironmentsAsync = async ({ token, page }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/Environments",
         token,
         page,
     });
 };
 const createEnvironmentAsync = async ({ token, environment }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/Environments",
         token,
         method: "post",
@@ -594,7 +607,7 @@ const createEnvironmentAsync = async ({ token, environment }) => {
     });
 };
 const deleteEnvironmentAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/Environments/${id}`,
         token,
         method: "delete",
@@ -612,14 +625,14 @@ var environmentsApi = /*#__PURE__*/Object.freeze({
 
 console.warn("Deprecation Notice: Features are replaced by Metrics.");
 const fetchFeatureGeneratorsAsync = async ({ page, token }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/FeatureGenerators",
         token,
         page,
     });
 };
 const createFeatureGeneratorAsync = async ({ token, payload }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/FeatureGenerators",
         token,
         method: "post",
@@ -627,14 +640,14 @@ const createFeatureGeneratorAsync = async ({ token, payload }) => {
     });
 };
 const deleteFeatureGeneratorAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/FeatureGenerators/${id}`,
         token,
         method: "delete",
     });
 };
 const manualTriggerFeatureGeneratorsAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         token,
         path: `api/FeatureGenerators/${id}/Trigger`,
         method: "post",
@@ -652,7 +665,7 @@ var featureGeneratorsApi = /*#__PURE__*/Object.freeze({
 
 console.warn("Deprecation Notice: Feature Generators are replaced by Metric Generators.");
 const fetchFeaturesAsync = async ({ token, page, searchTerm }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/Features",
         token,
         page,
@@ -662,27 +675,27 @@ const fetchFeaturesAsync = async ({ token, page, searchTerm }) => {
     });
 };
 const fetchFeatureAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/features/${id}`,
         token,
     });
 };
 const fetchFeatureTrackedUsersAsync = async ({ token, page, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/Features/${id}/TrackedUsers`,
         token,
         page,
     });
 };
 const fetchFeatureTrackedUserFeaturesAsync = async ({ token, page, id, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/Features/${id}/TrackedUserFeatures`,
         token,
         page,
     });
 };
 const createFeatureAsync = async ({ token, feature }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/Features",
         token,
         method: "post",
@@ -690,20 +703,20 @@ const createFeatureAsync = async ({ token, feature }) => {
     });
 };
 const deleteFeatureAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/features/${id}`,
         token,
         method: "delete",
     });
 };
 const fetchTrackedUserFeaturesAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/TrackedUsers/${id}/features`,
         token,
     });
 };
 const fetchTrackedUserFeatureValuesAsync = async ({ token, id, feature, version, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/TrackedUsers/${id}/features/${feature}`,
         token,
         query: {
@@ -712,13 +725,13 @@ const fetchTrackedUserFeatureValuesAsync = async ({ token, id, feature, version,
     });
 };
 const fetchDestinationsAsync$5 = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/features/${id}/Destinations`,
         token,
     });
 };
 const createDestinationAsync$5 = async ({ token, id, destination }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/features/${id}/Destinations`,
         token,
         method: "post",
@@ -726,14 +739,14 @@ const createDestinationAsync$5 = async ({ token, id, destination }) => {
     });
 };
 const deleteDestinationAsync$1 = async ({ token, id, destinationId }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/features/${id}/Destinations/${destinationId}`,
         token,
         method: "delete",
     });
 };
 const fetchGeneratorsAsync$1 = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/features/${id}/Generators`,
         token,
     });
@@ -955,7 +968,7 @@ var metricGeneratorsApi = /*#__PURE__*/Object.freeze({
 });
 
 const fetchIntegratedSystemsAsync = async ({ token, page, systemType, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/IntegratedSystems",
         token,
         page,
@@ -965,13 +978,13 @@ const fetchIntegratedSystemsAsync = async ({ token, page, systemType, }) => {
     });
 };
 const fetchIntegratedSystemAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/IntegratedSystems/${id}`,
         token,
     });
 };
 const renameAsync = async ({ token, id, name }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/integratedSystems/${id}/name`,
         token,
         method: "post",
@@ -981,7 +994,7 @@ const renameAsync = async ({ token, id, name }) => {
     });
 };
 const createIntegratedSystemAsync = async ({ token, payload }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/IntegratedSystems",
         token,
         method: "post",
@@ -989,20 +1002,20 @@ const createIntegratedSystemAsync = async ({ token, payload }) => {
     });
 };
 const deleteIntegratedSystemAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/integratedSystems/${id}`,
         token,
         method: "delete",
     });
 };
 const fetchWebhookReceiversAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/integratedSystems/${id}/webhookreceivers`,
         token,
     });
 };
 const createWebhookReceiverAsync = async ({ token, id, useSharedSecret, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/integratedSystems/${id}/webhookreceivers`,
         token,
         method: "post",
@@ -1025,27 +1038,27 @@ var integratedSystemsApi = /*#__PURE__*/Object.freeze({
 });
 
 const fetchModelRegistrationsAsync = async ({ token, page }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/ModelRegistrations",
         token,
         page,
     });
 };
 const fetchModelRegistrationAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/ModelRegistrations/${id}`,
         token,
     });
 };
 const deleteModelRegistrationAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/ModelRegistrations/${id}`,
         token,
         method: "delete",
     });
 };
 const createModelRegistrationAsync = async ({ token, payload }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/ModelRegistrations",
         token,
         method: "post",
@@ -1053,7 +1066,7 @@ const createModelRegistrationAsync = async ({ token, payload }) => {
     });
 };
 const invokeModelAsync = async ({ token, modelId, metrics }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/ModelRegistrations/${modelId}/invoke`,
         token,
         method: "post",
@@ -1071,7 +1084,7 @@ var modelRegistrationsApi = /*#__PURE__*/Object.freeze({
 });
 
 const invokeGenericModelAsync = async ({ token, id, input }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/models/generic/${id}/invoke`,
         body: input,
         method: "post",
@@ -1085,27 +1098,27 @@ var index = /*#__PURE__*/Object.freeze({
 });
 
 const fetchParametersAsync = async ({ token, page }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/Parameters",
         token,
         page,
     });
 };
 const fetchParameterAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/parameters/${id}`,
         token,
     });
 };
 const deleteParameterAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/parameters/${id}`,
         token,
         method: "delete",
     });
 };
 const createParameterAsync = async ({ token, payload }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/Parameters",
         token,
         method: "post",
@@ -1122,13 +1135,13 @@ var parametersApi = /*#__PURE__*/Object.freeze({
 });
 
 const fetchLinkedRegisteredModelAsync$3 = async ({ recommenderApiName, token, id, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`,
         token,
     });
 };
 const createLinkedRegisteredModelAsync = async ({ recommenderApiName, token, id, modelId, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/ModelRegistration`,
         token,
         method: "post",
@@ -1137,7 +1150,7 @@ const createLinkedRegisteredModelAsync = async ({ recommenderApiName, token, id,
 };
 
 const fetchRecommenderTargetVariableValuesAsync = async ({ recommenderApiName, name, token, id, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues`,
         token,
         query: {
@@ -1146,7 +1159,7 @@ const fetchRecommenderTargetVariableValuesAsync = async ({ recommenderApiName, n
     });
 };
 const createRecommenderTargetVariableValueAsync = async ({ recommenderApiName, targetVariableValue, token, id, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/TargetVariableValues`,
         token,
         method: "post",
@@ -1155,7 +1168,7 @@ const createRecommenderTargetVariableValueAsync = async ({ recommenderApiName, t
 };
 
 const fetchRecommenderInvokationLogsAsync = async ({ recommenderApiName, token, id, page, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/InvokationLogs`,
         page,
         token,
@@ -1163,7 +1176,7 @@ const fetchRecommenderInvokationLogsAsync = async ({ recommenderApiName, token, 
 };
 
 const setArgumentsAsync$3 = async ({ recommenderApiName, token, id, args, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/Arguments`,
         token,
         method: "post",
@@ -1172,7 +1185,7 @@ const setArgumentsAsync$3 = async ({ recommenderApiName, token, id, args, }) => 
 };
 
 const setSettingsAsync$3 = async ({ recommenderApiName, token, id, settings, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/Settings`,
         token,
         method: "post",
@@ -1181,13 +1194,13 @@ const setSettingsAsync$3 = async ({ recommenderApiName, token, id, settings, }) 
 };
 
 const fetchDestinationsAsync$3 = async ({ recommenderApiName, token, id, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         token,
         path: `api/recommenders/${recommenderApiName}/${id}/Destinations`,
     });
 };
 const createDestinationAsync$3 = async ({ recommenderApiName, token, id, destination, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         token,
         path: `api/recommenders/${recommenderApiName}/${id}/Destinations`,
         method: "post",
@@ -1195,7 +1208,7 @@ const createDestinationAsync$3 = async ({ recommenderApiName, token, id, destina
     });
 };
 const removeDestinationAsync$3 = async ({ recommenderApiName, token, id, destinationId, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/Destinations/${destinationId}`,
         token,
         method: "delete",
@@ -1203,7 +1216,7 @@ const removeDestinationAsync$3 = async ({ recommenderApiName, token, id, destina
 };
 
 const setTriggerAsync$3 = async ({ recommenderApiName, token, id, trigger, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/TriggerCollection`,
         token,
         method: "post",
@@ -1211,21 +1224,21 @@ const setTriggerAsync$3 = async ({ recommenderApiName, token, id, trigger, }) =>
     });
 };
 const fetchTriggerAsync$3 = async ({ recommenderApiName, token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         token,
         path: `api/recommenders/${recommenderApiName}/${id}/TriggerCollection`,
     });
 };
 
 const fetchLearningFeaturesAsync$3 = async ({ recommenderApiName, token, id, useInternalId, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         token,
         query: { useInternalId },
         path: `api/recommenders/${recommenderApiName}/${id}/LearningFeatures`,
     });
 };
 const setLearningFeaturesAsync$3 = async ({ recommenderApiName, token, id, useInternalId, featureIds, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/LearningFeatures`,
         token,
         method: "post",
@@ -1254,18 +1267,20 @@ const setLearningMetricsAsync$3 = async ({ recommenderApiName, token, id, useInt
 const fetchReportImageBlobUrlAsync$3 = async ({ recommenderApiName, token, id, useInternalId, }) => {
     console.debug("fetching image for recommender");
     console.debug(`api/recommenders/${recommenderApiName}/${id}/ReportImage`);
+    const axios = current();
     let response;
     try {
-        response = await fetch(`api/recommenders/${recommenderApiName}/${id}/ReportImage`, {
-            headers: headers(token),
-            method: "get",
+        response = await axios.get(`api/recommenders/${recommenderApiName}/${id}/ReportImage`, {
+            headers: headers(token, null),
         });
     }
     catch (ex) {
-        return handleErrorFetch(ex);
+        console.error(ex);
+        throw ex;
     }
-    if (response.ok) {
-        const blob = await response.blob();
+    console.log(response);
+    if (response.status > 200 && response.status < 300) {
+        const blob = response.data;
         return URL.createObjectURL(blob);
     }
     else {
@@ -1492,7 +1507,7 @@ var parameterSetRecommendersApi = /*#__PURE__*/Object.freeze({
 });
 
 const setMetadataAsync = async ({ token, metadata }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/profile/metadata",
         token,
         method: "post",
@@ -1500,7 +1515,7 @@ const setMetadataAsync = async ({ token, metadata }) => {
     });
 };
 const getMetadataAsync = async ({ token }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/profile/metadata",
         token,
     });
@@ -2017,14 +2032,14 @@ const fetchPerformanceAsync = async ({ token, id, reportId, }) => {
 const fetchPromotionOptimiserAsync = async ({ token, useInternalId, id, }) => {
     return await executeFetch({
         token,
-        useInternalId,
+        query: { useInternalId },
         path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/`,
     });
 };
 const setAllPromotionOptimiserWeightsAsync = async ({ token, useInternalId, id, weights, }) => {
     return await executeFetch({
         token,
-        useInternalId,
+        query: { useInternalId },
         path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/`,
         method: "post",
         body: weights,
@@ -2033,7 +2048,7 @@ const setAllPromotionOptimiserWeightsAsync = async ({ token, useInternalId, id, 
 const setPromotionOptimiserWeightAsync = async ({ token, useInternalId, id, weightId, weight, }) => {
     return await executeFetch({
         token,
-        useInternalId,
+        query: { useInternalId },
         path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/${weightId}`,
         method: "post",
         body: { weight },
@@ -2042,7 +2057,7 @@ const setPromotionOptimiserWeightAsync = async ({ token, useInternalId, id, weig
 const setUseOptimiserAsync = async ({ token, useInternalId, id, useOptimiser, }) => {
     return await executeFetch({
         token,
-        useInternalId,
+        query: { useInternalId },
         path: `api/recommenders/PromotionsRecommenders/${id}/UseOptimiser`,
         method: "post",
         body: { useOptimiser },
@@ -2112,17 +2127,17 @@ var promotionsRecommendersApi = /*#__PURE__*/Object.freeze({
     removeRecommenderChannelAsync: removeRecommenderChannelAsync
 });
 
-var fetch$2 = fetch;
-
 const defaultHeaders = { "Content-Type": "application/json" };
 let authConfig = undefined; // caches this because it rarely change
 const fetchAuth0ConfigurationAsync = async () => {
     if (!authConfig) {
         console.debug("fetching auth0 from server...");
-        const result = await fetch$2(getUrl("api/reactConfig/auth0"), {
+        const axios = current();
+        const result = await axios.get("api/reactConfig/auth0", {
             headers: defaultHeaders,
         });
-        authConfig = await result.json();
+        authConfig = result.data;
+        console.log("authConfig");
         console.log(authConfig);
     }
     return authConfig;
@@ -2131,10 +2146,12 @@ let config = undefined;
 const fetchConfigurationAsync = async () => {
     if (!config) {
         console.log("fetching configuration from server...");
-        const result = await fetch$2(getUrl("api/reactConfig"), {
+        const axios = current();
+        const result = await axios.get("api/reactConfig", {
             headers: defaultHeaders,
         });
-        config = await result.json();
+        config = result.data;
+        console.log("config");
         console.log(config);
     }
     return config;
@@ -2147,13 +2164,13 @@ var reactConfigApi = /*#__PURE__*/Object.freeze({
 });
 
 const getPropertiesAsync$2 = async ({ api, token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/${api}/${id}/Properties`,
         token,
     });
 };
 const setPropertiesAsync$2 = async ({ api, token, id, properties }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/${api}/${id}/Properties`,
         token,
         method: "post",
@@ -2298,13 +2315,13 @@ var promotionsApi = /*#__PURE__*/Object.freeze({
 });
 
 const fetchReportsAsync = async ({ token }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/Reports",
         token,
     });
 };
 const downloadReportAsync = async ({ token, reportName }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/reports/download",
         token,
         query: {
@@ -2320,20 +2337,20 @@ var reportsApi = /*#__PURE__*/Object.freeze({
 });
 
 const fetchSegmentsAsync = async ({ token, page }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/Segments",
         token,
         page,
     });
 };
 const fetchSegmentAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/segments/${id}`,
         token,
     });
 };
 const createSegmentAsync = async ({ token, payload }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/Segments",
         token,
         method: "post",
@@ -2341,28 +2358,28 @@ const createSegmentAsync = async ({ token, payload }) => {
     });
 };
 const deleteSegmentAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/Segments/${id}`,
         token,
         method: "delete",
     });
 };
 const addCustomerAsync = async ({ token, id, customerId }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/Segments/${id}/Customers/${customerId}`,
         token,
         method: "post",
     });
 };
 const removeCustomerAsync = async ({ token, id, customerId }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/Segments/${id}/Customers/${customerId}`,
         token,
         method: "delete",
     });
 };
 const fetchSegmentCustomersAsync = async ({ token, page, id, searchTerm, weeksAgo, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/Segments/${id}/Customers`,
         token,
         page,
@@ -2373,13 +2390,13 @@ const fetchSegmentCustomersAsync = async ({ token, page, id, searchTerm, weeksAg
     });
 };
 const fetchSegmentEnrolmentRulesAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/Segments/${id}/MetricEnrolmentRules`,
         token,
     });
 };
 const addSegmentEnrolmentRuleAsync = async ({ token, id, payload }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/Segments/${id}/MetricEnrolmentRules`,
         token,
         method: "post",
@@ -2387,7 +2404,7 @@ const addSegmentEnrolmentRuleAsync = async ({ token, id, payload }) => {
     });
 };
 const removeSegmentEnrolmentRuleAsync = async ({ token, id, ruleId }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/Segments/${id}/MetricEnrolmentRules/${ruleId}`,
         token,
         method: "delete",
@@ -2409,20 +2426,20 @@ var segmentsApi = /*#__PURE__*/Object.freeze({
 });
 
 const fetchTouchpointsAsync = async ({ token, page }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/Touchpoints",
         token,
         page,
     });
 };
 const fetchTouchpointAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/touchpoints/${id}`,
         token,
     });
 };
 const createTouchpointMetadataAsync = async ({ token, payload }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/Touchpoints",
         token,
         method: "post",
@@ -2430,19 +2447,19 @@ const createTouchpointMetadataAsync = async ({ token, payload }) => {
     });
 };
 const fetchTrackedUserTouchpointsAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/trackedusers/${id}/touchpoints`,
         token,
     });
 };
 const fetchTrackedUsersInTouchpointAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/touchpoints/${id}/trackedusers`,
         token,
     });
 };
 const createTrackedUserTouchpointAsync = async ({ token, id, touchpointCommonId, payload, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/trackedusers/${id}/touchpoints/${touchpointCommonId}`,
         token,
         method: "post",
@@ -2450,7 +2467,7 @@ const createTrackedUserTouchpointAsync = async ({ token, id, touchpointCommonId,
     });
 };
 const fetchTrackedUserTouchpointValuesAsync = async ({ token, id, touchpointCommonId, }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/trackedusers/${id}/touchpoints/${touchpointCommonId}`,
         token,
     });
@@ -2494,28 +2511,28 @@ var trackedUsersApi = /*#__PURE__*/Object.freeze({
 });
 
 const fetchRewardSelectorsAsync = async ({ token, page }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/RewardSelectors",
         token,
         page,
     });
 };
 const fetchRewardSelectorAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/RewardSelectors/${id}`,
         token,
         page,
     });
 };
 const deleteRewardSelectorAsync = async ({ token, id }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: `api/RewardSelectors/${id}`,
         token,
         method: "delete",
     });
 };
 const createRewardSelectorAsync = async ({ token, entity }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/RewardSelectors",
         token,
         method: "post",
@@ -2532,7 +2549,7 @@ var rewardSelectorsApi = /*#__PURE__*/Object.freeze({
 });
 
 const fetchUniqueActionNamesAsync = async ({ token, page, term }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/actions/distinct-groups",
         token,
         page,
@@ -2542,7 +2559,7 @@ const fetchUniqueActionNamesAsync = async ({ token, page, term }) => {
     });
 };
 const fetchDistinctGroupsAsync = async ({ token, page, term }) => {
-    return await executeFetch$1({
+    return await executeFetch({
         path: "api/actions/distinct-groups",
         token,
         page,
@@ -2559,14 +2576,14 @@ var actionsApi = /*#__PURE__*/Object.freeze({
 });
 
 // fix missing fetch is node environments
-const fetch$1 = require("node-fetch");
+const fetch = require("node-fetch");
 if (typeof globalThis === "object") {
     // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis
-    globalThis.fetch = fetch$1;
+    globalThis.fetch = fetch;
 }
 else if (typeof global === "object") {
     // For Node <12
-    global.fetch = fetch$1;
+    global.fetch = fetch;
 }
 else {
     // Everything else is not supported

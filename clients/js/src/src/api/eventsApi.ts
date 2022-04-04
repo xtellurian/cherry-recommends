@@ -3,7 +3,7 @@ import {
   CustomerEvent,
   EntityRequest,
 } from "../interfaces";
-import { executeFetch } from "./client/apiClientTs";
+import { executeFetch } from "./client/apiClient";
 
 export const Custom = "Custom";
 export const Behaviour = "Behaviour";

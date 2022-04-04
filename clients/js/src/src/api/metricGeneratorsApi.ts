@@ -4,7 +4,7 @@ import {
   EntityRequest,
   PaginatedRequest,
 } from "../interfaces";
-import { executeFetch } from "./client/apiClientTs";
+import { executeFetch } from "./client/apiClient";
 import { components } from "../model/api";
 
 export const fetchMetricGeneratorsAsync = async ({

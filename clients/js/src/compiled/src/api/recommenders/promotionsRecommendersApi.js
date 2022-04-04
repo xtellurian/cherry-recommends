@@ -1,4 +1,4 @@
-import { executeFetch } from "../client/apiClientTs";
+import { executeFetch } from "../client/apiClient";
 import * as link from "./common/linkRegisteredModels";
 import * as ar from "./common/args";
 import * as tv from "./common/targetvariables";
@@ -246,14 +246,14 @@ export const fetchPerformanceAsync = async ({ token, id, reportId, }) => {
 export const fetchPromotionOptimiserAsync = async ({ token, useInternalId, id, }) => {
     return await executeFetch({
         token,
-        useInternalId,
+        query: { useInternalId },
         path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/`,
     });
 };
 export const setAllPromotionOptimiserWeightsAsync = async ({ token, useInternalId, id, weights, }) => {
     return await executeFetch({
         token,
-        useInternalId,
+        query: { useInternalId },
         path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/`,
         method: "post",
         body: weights,
@@ -262,7 +262,7 @@ export const setAllPromotionOptimiserWeightsAsync = async ({ token, useInternalI
 export const setPromotionOptimiserWeightAsync = async ({ token, useInternalId, id, weightId, weight, }) => {
     return await executeFetch({
         token,
-        useInternalId,
+        query: { useInternalId },
         path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/${weightId}`,
         method: "post",
         body: { weight },
@@ -271,7 +271,7 @@ export const setPromotionOptimiserWeightAsync = async ({ token, useInternalId, i
 export const setUseOptimiserAsync = async ({ token, useInternalId, id, useOptimiser, }) => {
     return await executeFetch({
         token,
-        useInternalId,
+        query: { useInternalId },
         path: `api/recommenders/PromotionsRecommenders/${id}/UseOptimiser`,
         method: "post",
         body: { useOptimiser },

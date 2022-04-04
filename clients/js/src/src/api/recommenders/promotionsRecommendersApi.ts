@@ -1,4 +1,4 @@
-import { executeFetch } from "../client/apiClientTs";
+import { executeFetch } from "../client/apiClient";
 import * as link from "./common/linkRegisteredModels";
 
 import { components } from "../../model/api";
@@ -448,7 +448,7 @@ export const fetchReportImageBlobUrlAsync = async ({
   id,
   token,
   useInternalId,
-}: EntityRequest): Promise<string | void> => {
+}: EntityRequest): Promise<any> => {
   return await ri.fetchReportImageBlobUrlAsync({
     recommenderApiName,
     id,
@@ -484,7 +484,7 @@ export const fetchPromotionOptimiserAsync = async ({
 }: EntityRequest): Promise<PromotionOptimiser> => {
   return await executeFetch({
     token,
-    useInternalId,
+    query: { useInternalId },
     path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/`,
   });
 };
@@ -500,7 +500,7 @@ export const setAllPromotionOptimiserWeightsAsync = async ({
 }: SetAllPromotionOptimiserWeightsRequest): Promise<PromotionOptimiser> => {
   return await executeFetch({
     token,
-    useInternalId,
+    query: { useInternalId },
     path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/`,
     method: "post",
     body: weights,
@@ -520,7 +520,7 @@ export const setPromotionOptimiserWeightAsync = async ({
 }: SetPromotionOptimiserWeightRequest): Promise<PromotionOptimiser> => {
   return await executeFetch({
     token,
-    useInternalId,
+    query: { useInternalId },
     path: `api/recommenders/PromotionsRecommenders/${id}/Optimiser/Weights/${weightId}`,
     method: "post",
     body: { weight },
@@ -538,7 +538,7 @@ export const setUseOptimiserAsync = async ({
 }: SetUseOptimiserRequest): Promise<PromotionOptimiser> => {
   return await executeFetch({
     token,
-    useInternalId,
+    query: { useInternalId },
     path: `api/recommenders/PromotionsRecommenders/${id}/UseOptimiser`,
     method: "post",
     body: { useOptimiser },
