@@ -9,7 +9,7 @@ namespace sqlserver.SignalBox.SubSignalBoxDbContext
             // migrate RecommenderDestinations to Channels
             migrationBuilder.Sql(
                 @"
-                INSERT INTO [signalbox].[dbo].Channels (Name, LinkedIntegratedSystemId, ChannelType, Discriminator, Endpoint, Created, LastUpdated, EnvironmentId)
+                INSERT INTO [dbo].Channels (Name, LinkedIntegratedSystemId, ChannelType, Discriminator, Endpoint, Created, LastUpdated, EnvironmentId)
                 SELECT Discriminator
                     ,[ConnectedSystemId]
                     ,'Webhook'
@@ -18,33 +18,33 @@ namespace sqlserver.SignalBox.SubSignalBoxDbContext
                     ,[Created]
                     ,[LastUpdated]
                     ,[EnvironmentId]
-                FROM [signalbox].[dbo].[RecommendationDestinations]
+                FROM [dbo].[RecommendationDestinations]
                 where Discriminator='WebhookDestination'"
             );
 
             // add RecommenderChannel relationship
             migrationBuilder.Sql(
                 @"
-                INSERT INTO [signalbox].[dbo].[RecommenderChannel] (RecommendersId, ChannelsId)
+                INSERT INTO [dbo].[RecommenderChannel] (RecommendersId, ChannelsId)
                 SELECT RecommenderId, c.Id
-                FROM [signalbox].[dbo].[RecommendationDestinations] p
-                JOIN [signalbox].[dbo].[Channels] c ON c.Endpoint = p.WebhookDestination_Endpoint"
+                FROM [dbo].[RecommendationDestinations] p
+                JOIN [dbo].[Channels] c ON c.Endpoint = p.WebhookDestination_Endpoint"
             );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(
-                @"DELETE from [signalbox].[dbo].Channels
+                @"DELETE from [dbo].Channels
                 Where Name='WebhookDestination'"
             );
 
             migrationBuilder.Sql(
                 @"
-                DELETE FROM [signalbox].[dbo].[RecommenderChannel]
+                DELETE FROM [dbo].[RecommenderChannel]
                 SELECT RecommenderId, c.Id
-                FROM [signalbox].[dbo].[RecommendationDestinations] p
-                JOIN [signalbox].[dbo].[Channels] c ON c.Endpoint = p.WebhookDestination_Endpoint"
+                FROM [dbo].[RecommendationDestinations] p
+                JOIN [dbo].[Channels] c ON c.Endpoint = p.WebhookDestination_Endpoint"
             );
         }
     }
