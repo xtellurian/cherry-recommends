@@ -1,36 +1,53 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import { Subtitle, Spinner, EmptyList, Paginator } from "../molecules";
 import { BigPopup } from "../molecules/popups/BigPopup";
 import { SearchBox } from "../molecules/SearchBox";
-import { MemberRow } from "./MemberRow";
+import { MemberRow } from "../molecules/MemberRow";
 import { useBusinessMembers } from "../../api-hooks/businessesApi";
 import { SearchCustomer } from "../molecules/SearchCustomer";
 import { addBusinessMemberAsync } from "../../api/businessesApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { useAnalytics } from "../../analytics/analyticsHooks";
+import { deleteBusinessMemberAsync } from "../../api/businessesApi";
 
 export const MembersSection = ({ business }) => {
   const token = useAccessToken();
-  const history = useHistory();
   const { analytics } = useAnalytics();
 
   const [error, setError] = React.useState();
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [trigger, setTrigger] = React.useState({});
   const [isEditMembersPopupOpen, setEditMembersPopupOpen] =
     React.useState(false);
 
-  const members = useBusinessMembers({ id: business.id, searchTerm });
+  const members = useBusinessMembers({ id: business.id, searchTerm, trigger });
   const numMembers = members?.items?.length;
 
   const handleAddCustomer = (customer) => {
     addBusinessMemberAsync({ token, id: business.id, customer })
       .then(() => {
         analytics.track("site:business_addMember_success");
-        history.push(`/businesses/detail/${business.id}?tab=members`);
+        setEditMembersPopupOpen(false);
+        setTrigger(customer);
       })
       .catch((e) => {
         analytics.track("site:business_addMember_failure");
+        setError(e);
+      });
+  };
+
+  const handleRemoveCustomer = (customerId) => {
+    deleteBusinessMemberAsync({
+      id: business.id,
+      token,
+      customerId,
+    })
+      .then(() => {
+        analytics.track("site:business_removeCustomer_success");
+        setTrigger(customerId);
+      })
+      .catch((e) => {
+        analytics.track("site:business_removeCustomer_failure");
         setError(e);
       });
   };
@@ -50,7 +67,7 @@ export const MembersSection = ({ business }) => {
       <div className="mt-3">
         {members.items &&
           members.items.map((u) => (
-            <MemberRow key={u.id} businessId={business.id} member={u} />
+            <MemberRow key={u.id} member={u} onDelete={handleRemoveCustomer} />
           ))}
       </div>
       <Paginator {...members.pagination} />

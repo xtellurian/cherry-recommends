@@ -48,7 +48,7 @@ export const useBusiness = ({ id }) => {
   return result;
 };
 
-export const useBusinessMembers = ({ id, searchTerm }) => {
+export const useBusinessMembers = ({ id, searchTerm, trigger }) => {
   const token = useAccessToken();
   const page = usePagination();
   const [environment] = useEnvironmentReducer();
@@ -65,7 +65,7 @@ export const useBusinessMembers = ({ id, searchTerm }) => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, id, page, searchTerm, environment]);
+  }, [token, id, page, searchTerm, environment, trigger]);
 
   return result;
 };

@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useSegmentCustomers } from "../../api-hooks/segmentsApi";
 import { useAccessToken } from "../../api-hooks/token";
@@ -9,27 +8,28 @@ import { Subtitle } from "../molecules/layout";
 import { Spinner } from "../molecules/Spinner";
 import { BigPopup } from "../molecules/popups/BigPopup";
 import { SearchBox } from "../molecules/SearchBox";
-import { MemberRow } from "./MemberRow";
+import { MemberRow } from "../molecules/MemberRow";
 import { SearchCustomer } from "../molecules/SearchCustomer";
 
 export const MembersSection = ({ segment }) => {
   const token = useAccessToken();
-  const history = useHistory();
   const { analytics } = useAnalytics();
 
   const [error, setError] = React.useState();
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [trigger, setTrigger] = React.useState({});
   const [isEditMembersPopupOpen, setEditMembersPopupOpen] =
     React.useState(false);
 
-  const members = useSegmentCustomers({ id: segment.id, searchTerm });
+  const members = useSegmentCustomers({ id: segment.id, searchTerm, trigger });
   const numMembers = members?.items?.length;
 
   const handleAddCustomer = (customer) => {
     addCustomerAsync({ token, id: segment.id, customerId: customer.id })
       .then(() => {
         analytics.track("site:segment_addCustomer_success");
-        history.push(`/segments/detail/${segment.id}?tab=members`);
+        setEditMembersPopupOpen(false);
+        setTrigger(customer);
       })
       .catch((e) => {
         analytics.track("site:segment_addCustomer_failure");
@@ -40,7 +40,7 @@ export const MembersSection = ({ segment }) => {
     removeCustomerAsync({ token, id: segment.id, customerId })
       .then(() => {
         analytics.track("site:segment_removeCustomer_success");
-        history.push(`/segments/detail/${segment.id}?tab=members`);
+        setTrigger(customerId);
       })
       .catch((e) => {
         analytics.track("site:segment_removeCustomer_failure");
