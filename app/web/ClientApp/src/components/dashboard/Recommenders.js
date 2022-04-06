@@ -1,16 +1,10 @@
 import React from "react";
-import Tippy from "@tippyjs/react";
 import { usePromotionsRecommenders } from "../../api-hooks/promotionsRecommendersApi";
 import { useParameterSetRecommenders } from "../../api-hooks/parameterSetRecommendersApi";
-import { EmptyState, Spinner } from "../molecules";
+import { EmptyState, Navigation, Spinner } from "../molecules";
 import { NoteBox } from "../molecules/NoteBox";
-import { Link } from "react-router-dom";
 import { EmptyStateText } from "../molecules/empty/EmptyStateText";
 import { RecommenderRow } from "../recommenders/RecommenderRow";
-
-const Tooltip = ({ children }) => {
-  return <div className="bg-light border rounded p-3">{children}</div>;
-};
 
 const MAX_LIST_LENGTH = 5;
 export const Recommenders = ({ className, hasItems }) => {
@@ -55,23 +49,18 @@ export const Recommenders = ({ className, hasItems }) => {
               <EmptyStateText>
                 You haven't created any recommenders.
               </EmptyStateText>
-              <Tippy
-                content={
-                  !hasItems && <Tooltip>First create some promotions</Tooltip>
-                }
-              >
-                <Link to="/recommenders/promotions-recommenders/create">
-                  <button disabled={!hasItems} className="btn btn-primary">
-                    Create a Recommender
-                  </button>
-                </Link>
-              </Tippy>
+
+              <Navigation to="/recommenders/promotions-recommenders/create">
+                <button disabled={!hasItems} className="btn btn-primary">
+                  Create a Recommender
+                </button>
+              </Navigation>
             </EmptyState>
           )}
           <div className="text-center text-muted">
-            <Link to="/recommenders/promotions-recommenders">
+            <Navigation to="/recommenders/promotions-recommenders">
               <button className="btn btn-link btn-sm">View More</button>
-            </Link>
+            </Navigation>
           </div>
         </NoteBox>
       </div>

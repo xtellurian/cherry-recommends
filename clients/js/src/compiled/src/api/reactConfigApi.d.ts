@@ -3,4 +3,6 @@ declare type Auth0ReactConfig = components["schemas"]["Auth0ReactConfig"] | unde
 export declare const fetchAuth0ConfigurationAsync: () => Promise<Auth0ReactConfig>;
 declare type ReactConfig = components["schemas"]["ReactConfig"] | undefined;
 export declare const fetchConfigurationAsync: () => Promise<ReactConfig>;
+declare type Hosting = components["schemas"]["Hosting"];
+export declare const fetchHostingAsync: () => Promise<Hosting>;
 export {};

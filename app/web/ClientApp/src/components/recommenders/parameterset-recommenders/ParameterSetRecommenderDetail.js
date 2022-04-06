@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   useParameterSetRecommender,
   useReportImageBlobUrl,
@@ -18,6 +18,7 @@ import { CloneRecommender } from "../utils/CloneRecommender";
 import { ParameterRow } from "../../parameters/ParameterRow";
 import { ParameterSetRecommenderLayout } from "./ParameterSetRecommenderLayout";
 import { ViewReportImagePopup } from "../utils/ViewImagePopup";
+import { useNavigation } from "../../../utility/useNavigation";
 
 const tabs = [
   { id: "detail", label: "Detail" },
@@ -27,7 +28,7 @@ const tabs = [
 export const ParameterSetRecommenderDetail = () => {
   const { id } = useParams();
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const [reportOpen, setReportOpen] = React.useState(false);
   const [trigger, setTrigger] = React.useState();
   const recommender = useParameterSetRecommender({ id, trigger });
@@ -35,7 +36,7 @@ export const ParameterSetRecommenderDetail = () => {
   const [cloneOpen, setCloneOpen] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState();
   const onDeleted = () => {
-    history.push("/recommenders/parameter-set-recommenders");
+    navigate("/recommenders/parameter-set-recommenders");
   };
 
   const cloneAsync = (name, commonId) => {
@@ -147,7 +148,7 @@ export const ParameterSetRecommenderDetail = () => {
                   recommender={recommender}
                   cloneAsync={cloneAsync}
                   onCloned={(r) =>
-                    history.push(
+                    navigate(
                       `/recommenders/parameter-set-recommenders/detail/${r.id}`
                     )
                   }

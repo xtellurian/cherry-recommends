@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Navigation } from "../../molecules";
 
 export const DetailButton = ({ integratedSystem, className }) => {
   let link = "";
@@ -15,11 +15,11 @@ export const DetailButton = ({ integratedSystem, className }) => {
   }
   if (link) {
     return (
-      <Link to={link}>
+      <Navigation to={link}>
         <button className={`btn btn-primary ${className || ""}`}>
           More Options
         </button>
-      </Link>
+      </Navigation>
     );
   } else {
     return <React.Fragment />;

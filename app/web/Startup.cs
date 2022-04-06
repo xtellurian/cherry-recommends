@@ -27,6 +27,10 @@ using SignalBox.Core.Security;
 using SignalBox.Infrastructure.Models;
 using SignalBox.Core.Serialization;
 using SignalBox.Core.Optimisers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using System.Linq;
+using Microsoft.AspNetCore.Routing;
 
 namespace SignalBox.Web
 {
@@ -96,7 +100,8 @@ namespace SignalBox.Web
                 {
                     throw new NotImplementedException($"Provider {provider} is unknown");
                 }
-                services.AddSingleton<ITenantResolutionStrategy, SubdomainTenantResolutionStrategy>();
+                // allow multiple methods to resolve the tenant
+                services.AddSingleton<ITenantResolutionStrategy, MultiMethodTenantResolutionStrategy>();
             }
             else
             {
@@ -348,7 +353,7 @@ namespace SignalBox.Web
             {
                 // log the errors to the logging system
                 var logger = context.RequestServices.GetService<ILogger<ProblemDetailsMiddleware>>();
-                logger.LogError($"{problemDetails.Title} | {problemDetails.Status} | {problemDetails.Detail}");
+                logger.LogError("{title} | {status} | {detail}", problemDetails.Title, problemDetails.Status, problemDetails.Detail);
             };
 
             options.Map<SignalBoxException>(_ =>

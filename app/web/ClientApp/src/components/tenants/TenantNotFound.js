@@ -1,29 +1,18 @@
 import React from "react";
-import { useHosting, managementSubdomain } from "../../api-hooks/tenantsApi";
+import { Link } from "react-router-dom";
+import { Navigation } from "../molecules";
 
 export const TenantNotFound = ({ error }) => {
-  const hosting = useHosting();
   console.error(error);
-  const redirectToManagement = () => {
-    console.info("redirecting...");
-    window.location = `https://${managementSubdomain}.${hosting.canonicalRootDomain}?autoSignIn=true`;
-  };
-  // if (!hosting.loading && hosting.canonicalRootDomain) {
-  //   setTimeout(redirectToManagement, 5000);
-  // }
 
   return (
     <div className="text-center">
       <h3>Tenant Not Found</h3>
       <hr />
       <p>{error.title}</p>
-
-      <button
-        className="btn btn-outline-primary"
-        onClick={redirectToManagement}
-      >
-        View All
-      </button>
+      <Navigation to="/" escapeTenant={true}>
+        <button className="btn btn-outline-primary">Home</button>
+      </Navigation>
     </div>
   );
 };

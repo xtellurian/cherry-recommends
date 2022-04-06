@@ -6,9 +6,10 @@ using SignalBox.Infrastructure.Models;
 
 namespace SignalBox.Web.Services
 {
+#nullable enable
     public class SubdomainTenantResolutionStrategy : ITenantResolutionStrategy
     {
-        private Hosting hosting;
+        private readonly Hosting hosting;
 
         public SubdomainTenantResolutionStrategy(IOptions<Hosting> options)
         {
@@ -17,7 +18,7 @@ namespace SignalBox.Web.Services
 
         public bool IsMultitenant => true;
 
-        public Task<string> ResolveName(HttpRequestModel request)
+        public Task<string?> ResolveName(HttpRequestModel request)
         {
             if (hosting.Multitenant)
             {
@@ -25,24 +26,24 @@ namespace SignalBox.Web.Services
                 {
                     if (!host.Contains(hosting.CanonicalRootDomain))
                     {
-                        throw new BadRequestException($"Host: {host} does not contain canonical root domain {hosting.CanonicalRootDomain}");
+                        return Task.FromResult<string?>(null);
                     }
-                    var sub = host.Replace(this.hosting.CanonicalRootDomain, "").Trim().Trim('.');
-                    return Task.FromResult(sub);
+                    string? sub = host.Replace(this.hosting.CanonicalRootDomain, "").Trim().Trim('.');
+                    return Task.FromResult<string?>(sub);
                 }
                 else if (request.Headers.TryGetValue("host", out var hostLower))
                 {
-                    var sub = hostLower.Split('.').First();
-                    return Task.FromResult(sub);
+                    string? sub = hostLower.Split('.').First();
+                    return Task.FromResult<string?>(sub);
                 }
                 else
                 {
-                    throw new BadRequestException("Host header not found");
+                    return Task.FromResult<string?>(null);
                 }
             }
             else
             {
-                return null;
+                return Task.FromResult<string?>(null);
             }
         }
     }

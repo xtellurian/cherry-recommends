@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
   useAudience,
@@ -27,11 +27,12 @@ import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 
 import { SegmentRow } from "../../segments/SegmentRow";
 import { useFeatureFlag } from "../../launch-darkly/hooks";
+import { useNavigation } from "../../../utility/useNavigation";
 
 export const ItemRecommenderClone = ({ iconClassName }) => {
   const { id } = useParams();
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const [trigger, setTrigger] = React.useState();
   const recommender = usePromotionsRecommender({ id, trigger });
   const [cloneOpen, setCloneOpen] = React.useState(false);
@@ -71,7 +72,7 @@ export const ItemRecommenderClone = ({ iconClassName }) => {
           recommender={recommender}
           cloneAsync={cloneAsync}
           onCloned={(r) =>
-            history.push(`/recommenders/promotions-recommenders/detail/${r.id}`)
+            navigate(`/recommenders/promotions-recommenders/detail/${r.id}`)
           }
         />
       </ConfirmationPopup>
@@ -82,14 +83,14 @@ export const ItemRecommenderClone = ({ iconClassName }) => {
 export const ItemRecommenderDelete = ({ iconClassName }) => {
   const { id } = useParams();
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const [trigger, setTrigger] = React.useState();
   const recommender = usePromotionsRecommender({ id, trigger });
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState();
 
   const onDeleted = () => {
-    history.push("/recommenders/promotions-recommenders");
+    navigate("/recommenders/promotions-recommenders");
   };
 
   return (

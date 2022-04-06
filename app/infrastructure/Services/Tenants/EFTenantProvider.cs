@@ -25,12 +25,19 @@ namespace SignalBox.Infrastructure.Services
             return current;
         }
 
-        public async Task SetTenantName(string name)
+        public async Task SetTenantName(string? name)
         {
             this.name = name;
-            if (await tenantStore.TenantExists(name))
+            if (!string.IsNullOrEmpty(name))
             {
-                this.current = await tenantStore.ReadFromName(this.name);
+                if (await tenantStore.TenantExists(name))
+                {
+                    this.current = await tenantStore.ReadFromName(this.name);
+                }
+                else
+                {
+                    throw new TenantNotFoundException(name);
+                }
             }
         }
     }

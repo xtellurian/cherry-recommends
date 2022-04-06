@@ -1,11 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   Dropdown,
   DropdownMenu,
   DropdownToggle,
   DropdownItem,
 } from "reactstrap";
+import { Navigation } from "../Navigation";
 
 export const MoreOptionsDropdown = ({ to, label, className, children }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -36,9 +36,9 @@ export const OptionItemsGroup = ({ label, children }) => {
 
 export const OptionLink = ({ to, children }) => {
   return (
-    <Link to={to}>
+    <Navigation to={to}>
       <DropdownItem>{children}</DropdownItem>
-    </Link>
+    </Navigation>
   );
 };
 

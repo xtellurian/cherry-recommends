@@ -1,24 +1,4 @@
-import { AxiosResponse } from 'axios';
-
-declare function fetchUniqueActionNamesAsync({ token, page, term }: {
-    token: any;
-    page: any;
-    term: any;
-}): Promise<any>;
-declare function fetchDistinctGroupsAsync({ token, page, term }: {
-    token: any;
-    page: any;
-    term: any;
-}): Promise<any>;
-
-declare const actionsApi_d_fetchUniqueActionNamesAsync: typeof fetchUniqueActionNamesAsync;
-declare const actionsApi_d_fetchDistinctGroupsAsync: typeof fetchDistinctGroupsAsync;
-declare namespace actionsApi_d {
-  export {
-    actionsApi_d_fetchUniqueActionNamesAsync as fetchUniqueActionNamesAsync,
-    actionsApi_d_fetchDistinctGroupsAsync as fetchDistinctGroupsAsync,
-  };
-}
+import { AxiosInstance, AxiosResponse } from 'axios';
 
 interface AuthenticatedRequest {
     token: string;
@@ -1588,6 +1568,20 @@ declare namespace channelsApi_d {
   };
 }
 
+interface InitialiseAxiosConfig {
+    baseUrl: string;
+    tenant?: string | null;
+    timeout?: number;
+}
+declare const current: (config?: InitialiseAxiosConfig | undefined) => AxiosInstance;
+
+declare const axiosInstance_d_current: typeof current;
+declare namespace axiosInstance_d {
+  export {
+    axiosInstance_d_current as current,
+  };
+}
+
 declare function fetchCustomersAsync({ token, page, searchTerm }: {
     token: any;
     page: any;
@@ -1905,6 +1899,106 @@ declare namespace featuresApi_d {
   };
 }
 
+interface MetricSearchRequest extends EntitySearchRequest {
+    scope?: components["schemas"]["MetricScopes"];
+}
+declare const fetchMetricsAsync: ({ token, page, scope, searchTerm, }: MetricSearchRequest) => Promise<components["schemas"]["MetricPaginated"]>;
+declare const fetchMetricAsync: ({ token, id, }: EntityRequest) => Promise<components["schemas"]["Metric"]>;
+declare const fetchMetricCustomersAsync: ({ token, page, id, }: PaginatedEntityRequest) => Promise<any>;
+declare const fetchMetricCustomerMetricsAsync: ({ token, page, id, }: PaginatedEntityRequest) => Promise<any>;
+interface CreateMetricRequest extends AuthenticatedRequest {
+    metric: components["schemas"]["CreateMetric"];
+}
+declare const createMetricAsync: ({ token, metric, }: CreateMetricRequest) => Promise<any>;
+declare const deleteMetricAsync: ({ token, id }: DeleteRequest) => Promise<any>;
+declare const fetchCustomersMetricsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+interface CustomersMetricRequest extends EntityRequest {
+    metricId: string | number;
+    version?: number | undefined;
+}
+declare const fetchCustomersMetricAsync: ({ token, id, metricId, version, }: CustomersMetricRequest) => Promise<any>;
+declare const fetchAggregateMetricValuesNumericAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+declare const fetchAggregateMetricValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+declare const fetchDestinationsAsync$3: ({ token, id }: EntityRequest) => Promise<any>;
+declare const fetchExportCustomers: ({ token, id }: EntityRequest) => Promise<any>;
+declare const fetchMetricBinValuesNumericAsync: ({ token, id, binCount, }: MetricBinRequest) => Promise<any>;
+declare const fetchMetricBinValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+interface CreateMetricDestinationRequest extends EntityRequest {
+    destination: components["schemas"]["CreateDestinationDto"];
+}
+declare const createDestinationAsync$3: ({ token, id, destination, }: CreateMetricDestinationRequest) => Promise<any>;
+interface DeleteDestinationRequest extends DeleteRequest {
+    destinationId: number;
+}
+declare const deleteDestinationAsync: ({ token, id, destinationId, }: DeleteDestinationRequest) => Promise<any>;
+declare const fetchGeneratorsAsync: ({ token, id }: EntityRequest) => Promise<any>;
+declare const fetchBusinessMetricsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+interface BusinessMetricRequest extends CustomersMetricRequest {
+}
+declare const fetchBusinessMetricAsync: ({ token, id, metricId, version, }: BusinessMetricRequest) => Promise<any>;
+
+declare const metricsApi_d_fetchMetricsAsync: typeof fetchMetricsAsync;
+declare const metricsApi_d_fetchMetricAsync: typeof fetchMetricAsync;
+declare const metricsApi_d_fetchMetricCustomersAsync: typeof fetchMetricCustomersAsync;
+declare const metricsApi_d_fetchMetricCustomerMetricsAsync: typeof fetchMetricCustomerMetricsAsync;
+declare const metricsApi_d_createMetricAsync: typeof createMetricAsync;
+declare const metricsApi_d_deleteMetricAsync: typeof deleteMetricAsync;
+declare const metricsApi_d_fetchCustomersMetricsAsync: typeof fetchCustomersMetricsAsync;
+declare const metricsApi_d_fetchCustomersMetricAsync: typeof fetchCustomersMetricAsync;
+declare const metricsApi_d_fetchAggregateMetricValuesNumericAsync: typeof fetchAggregateMetricValuesNumericAsync;
+declare const metricsApi_d_fetchAggregateMetricValuesStringAsync: typeof fetchAggregateMetricValuesStringAsync;
+declare const metricsApi_d_fetchExportCustomers: typeof fetchExportCustomers;
+declare const metricsApi_d_fetchMetricBinValuesNumericAsync: typeof fetchMetricBinValuesNumericAsync;
+declare const metricsApi_d_fetchMetricBinValuesStringAsync: typeof fetchMetricBinValuesStringAsync;
+declare const metricsApi_d_deleteDestinationAsync: typeof deleteDestinationAsync;
+declare const metricsApi_d_fetchGeneratorsAsync: typeof fetchGeneratorsAsync;
+declare const metricsApi_d_fetchBusinessMetricsAsync: typeof fetchBusinessMetricsAsync;
+declare const metricsApi_d_fetchBusinessMetricAsync: typeof fetchBusinessMetricAsync;
+declare namespace metricsApi_d {
+  export {
+    metricsApi_d_fetchMetricsAsync as fetchMetricsAsync,
+    metricsApi_d_fetchMetricAsync as fetchMetricAsync,
+    metricsApi_d_fetchMetricCustomersAsync as fetchMetricCustomersAsync,
+    metricsApi_d_fetchMetricCustomerMetricsAsync as fetchMetricCustomerMetricsAsync,
+    metricsApi_d_createMetricAsync as createMetricAsync,
+    metricsApi_d_deleteMetricAsync as deleteMetricAsync,
+    metricsApi_d_fetchCustomersMetricsAsync as fetchCustomersMetricsAsync,
+    metricsApi_d_fetchCustomersMetricAsync as fetchCustomersMetricAsync,
+    metricsApi_d_fetchAggregateMetricValuesNumericAsync as fetchAggregateMetricValuesNumericAsync,
+    metricsApi_d_fetchAggregateMetricValuesStringAsync as fetchAggregateMetricValuesStringAsync,
+    fetchDestinationsAsync$3 as fetchDestinationsAsync,
+    metricsApi_d_fetchExportCustomers as fetchExportCustomers,
+    metricsApi_d_fetchMetricBinValuesNumericAsync as fetchMetricBinValuesNumericAsync,
+    metricsApi_d_fetchMetricBinValuesStringAsync as fetchMetricBinValuesStringAsync,
+    createDestinationAsync$3 as createDestinationAsync,
+    metricsApi_d_deleteDestinationAsync as deleteDestinationAsync,
+    metricsApi_d_fetchGeneratorsAsync as fetchGeneratorsAsync,
+    metricsApi_d_fetchBusinessMetricsAsync as fetchBusinessMetricsAsync,
+    metricsApi_d_fetchBusinessMetricAsync as fetchBusinessMetricAsync,
+  };
+}
+
+declare const fetchMetricGeneratorsAsync: ({ page, token, }: PaginatedRequest) => Promise<any>;
+interface CreateMetricGeneratorRequest extends AuthenticatedRequest {
+    generator: components["schemas"]["CreateMetricGenerator"];
+}
+declare const createMetricGeneratorAsync: ({ token, generator, }: CreateMetricGeneratorRequest) => Promise<any>;
+declare const deleteMetricGeneratorAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
+declare const manualTriggerMetricGeneratorsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+
+declare const metricGeneratorsApi_d_fetchMetricGeneratorsAsync: typeof fetchMetricGeneratorsAsync;
+declare const metricGeneratorsApi_d_createMetricGeneratorAsync: typeof createMetricGeneratorAsync;
+declare const metricGeneratorsApi_d_deleteMetricGeneratorAsync: typeof deleteMetricGeneratorAsync;
+declare const metricGeneratorsApi_d_manualTriggerMetricGeneratorsAsync: typeof manualTriggerMetricGeneratorsAsync;
+declare namespace metricGeneratorsApi_d {
+  export {
+    metricGeneratorsApi_d_fetchMetricGeneratorsAsync as fetchMetricGeneratorsAsync,
+    metricGeneratorsApi_d_createMetricGeneratorAsync as createMetricGeneratorAsync,
+    metricGeneratorsApi_d_deleteMetricGeneratorAsync as deleteMetricGeneratorAsync,
+    metricGeneratorsApi_d_manualTriggerMetricGeneratorsAsync as manualTriggerMetricGeneratorsAsync,
+  };
+}
+
 declare function fetchIntegratedSystemsAsync({ token, page, systemType, }: {
     token: any;
     page: any;
@@ -1953,451 +2047,6 @@ declare namespace integratedSystemsApi_d {
     integratedSystemsApi_d_deleteIntegratedSystemAsync as deleteIntegratedSystemAsync,
     integratedSystemsApi_d_fetchWebhookReceiversAsync as fetchWebhookReceiversAsync,
     integratedSystemsApi_d_createWebhookReceiverAsync as createWebhookReceiverAsync,
-  };
-}
-
-declare const fetchItemsRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
-declare const fetchItemsRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-interface ItemsRecommendationsRequest extends PaginatedEntityRequest {
-    page: number;
-}
-declare const fetchItemsRecommendationsAsync: ({ token, page, pageSize, id, }: ItemsRecommendationsRequest) => Promise<any>;
-declare const deleteItemsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
-interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
-    payload: components["schemas"]["CreatePromotionsRecommender"];
-}
-declare const createItemsRecommenderAsync: ({ token, payload, useInternalId, }: CreateItemsRecommenderRequest) => Promise<any>;
-declare const fetchItemsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
-interface AddItemPayload {
-    id: number | undefined;
-    commonId: string | undefined;
-}
-interface AddItemRequest extends EntityRequest {
-    item: AddItemPayload;
-}
-declare const addItemAsync: ({ token, id, item }: AddItemRequest) => Promise<any>;
-interface RemoveItemRequest extends EntityRequest {
-    itemId: string | number;
-}
-declare const removeItemAsync: ({ token, id, itemId, }: RemoveItemRequest) => Promise<any>;
-interface SetBaselineItemRequest extends EntityRequest {
-    itemId: string | number;
-}
-declare const setBaselineItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
-declare const setDefaultItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
-declare const getBaselineItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
-declare const getDefaultItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
-declare type LinkRegisteredModelRequest$2 = EntityRequest & components["schemas"]["LinkModel"];
-declare const createLinkRegisteredModelAsync$2: ({ token, id, modelId, }: LinkRegisteredModelRequest$2) => Promise<any>;
-declare const fetchLinkedRegisteredModelAsync$2: ({ token, id, }: EntityRequest) => Promise<any>;
-interface InvokeItemRecommenderRequest extends EntityRequest {
-    input: ModelInput;
-}
-declare const invokeItemsRecommenderAsync: ({ token, id, input, }: InvokeItemRecommenderRequest) => Promise<ItemsRecommendation>;
-interface FetchInvokationLogsRequest$1 extends EntityRequest {
-    page: number;
-}
-declare const fetchInvokationLogsAsync$2: ({ id, token, page, }: FetchInvokationLogsRequest$1) => Promise<any>;
-declare const fetchTargetVariablesAsync$2: ({ id, token, name }: any) => Promise<any>;
-declare const createTargetVariableAsync$2: ({ id, token, targetVariableValue, }: any) => Promise<any>;
-interface RecommenderSettings$1 {
-    requireConsumptionEvent: boolean;
-    throwOnBadInput: boolean;
-    recommendationCacheTime: string;
-}
-interface SetSettingsRequest$2 extends EntityRequest {
-    settings: RecommenderSettings$1;
-}
-declare const setSettingsAsync$2: ({ id, token, settings, }: SetSettingsRequest$2) => Promise<any>;
-interface Argument$1 {
-    commonId: string;
-    argumentType: "Numerical" | "Categorical";
-    defaultValue: string | number;
-    isRequired: boolean;
-}
-interface SetArgumentsRequest$2 extends EntityRequest {
-    args: Argument$1[];
-}
-declare const setArgumentsAsync$2: ({ id, token, args, }: SetArgumentsRequest$2) => Promise<any>;
-declare const fetchDestinationsAsync$3: ({ id, token }: EntityRequest) => Promise<any>;
-interface Destination$1 {
-    destinationType: "Webhook" | "SegmentSourceFunction" | "HubspotContactProperty";
-    endpoint: string;
-    integratedSystemId: number;
-}
-interface CreateDestinationRequest$2 extends EntityRequest {
-    destination: Destination$1;
-}
-declare const createDestinationAsync$3: ({ id, token, destination, }: CreateDestinationRequest$2) => Promise<any>;
-interface RemoveDestinationRequest$2 extends EntityRequest {
-    destinationId: number;
-}
-declare const removeDestinationAsync$2: ({ id, token, destinationId, }: RemoveDestinationRequest$2) => Promise<any>;
-declare const fetchTriggerAsync$2: ({ id, token }: EntityRequest) => Promise<any>;
-interface Trigger$1 {
-    featuresChanged: any;
-}
-interface SetTriggerRequest$2 extends EntityRequest {
-    trigger: Trigger$1;
-}
-declare const setTriggerAsync$2: ({ id, token, trigger, }: SetTriggerRequest$2) => Promise<any>;
-declare const fetchLearningFeaturesAsync$2: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
-interface SetLearningFeaturesRequest$2 extends EntityRequest {
-    featureIds: string[];
-}
-declare const setLearningFeaturesAsync$2: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest$2) => Promise<any>;
-declare const fetchLearningMetricsAsync$2: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
-interface SetLearningMetricsRequest$2 extends EntityRequest {
-    metricIds: string[];
-}
-declare const setLearningMetricsAsync$2: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest$2) => Promise<any>;
-declare type RecommenderStatistics$2 = components["schemas"]["RecommenderStatistics"];
-declare const fetchStatisticsAsync$2: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics$2>;
-declare const fetchReportImageBlobUrlAsync$2: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
-declare type PerformanceResponse$1 = components["schemas"]["ItemsRecommenderPerformanceReport"];
-interface PerformanceRequest$1 extends EntityRequest {
-    reportId?: string | number | undefined;
-}
-declare const fetchPerformanceAsync$1: ({ token, id, reportId, }: PerformanceRequest$1) => Promise<PerformanceResponse$1>;
-
-declare const itemsRecommendersApi_d_fetchItemsRecommendersAsync: typeof fetchItemsRecommendersAsync;
-declare const itemsRecommendersApi_d_fetchItemsRecommenderAsync: typeof fetchItemsRecommenderAsync;
-declare const itemsRecommendersApi_d_fetchItemsRecommendationsAsync: typeof fetchItemsRecommendationsAsync;
-declare const itemsRecommendersApi_d_deleteItemsRecommenderAsync: typeof deleteItemsRecommenderAsync;
-declare const itemsRecommendersApi_d_createItemsRecommenderAsync: typeof createItemsRecommenderAsync;
-declare const itemsRecommendersApi_d_addItemAsync: typeof addItemAsync;
-declare const itemsRecommendersApi_d_removeItemAsync: typeof removeItemAsync;
-declare const itemsRecommendersApi_d_setBaselineItemAsync: typeof setBaselineItemAsync;
-declare const itemsRecommendersApi_d_setDefaultItemAsync: typeof setDefaultItemAsync;
-declare const itemsRecommendersApi_d_getBaselineItemAsync: typeof getBaselineItemAsync;
-declare const itemsRecommendersApi_d_getDefaultItemAsync: typeof getDefaultItemAsync;
-declare const itemsRecommendersApi_d_invokeItemsRecommenderAsync: typeof invokeItemsRecommenderAsync;
-declare namespace itemsRecommendersApi_d {
-  export {
-    itemsRecommendersApi_d_fetchItemsRecommendersAsync as fetchItemsRecommendersAsync,
-    itemsRecommendersApi_d_fetchItemsRecommenderAsync as fetchItemsRecommenderAsync,
-    itemsRecommendersApi_d_fetchItemsRecommendationsAsync as fetchItemsRecommendationsAsync,
-    itemsRecommendersApi_d_deleteItemsRecommenderAsync as deleteItemsRecommenderAsync,
-    itemsRecommendersApi_d_createItemsRecommenderAsync as createItemsRecommenderAsync,
-    fetchItemsAsync$1 as fetchItemsAsync,
-    itemsRecommendersApi_d_addItemAsync as addItemAsync,
-    itemsRecommendersApi_d_removeItemAsync as removeItemAsync,
-    itemsRecommendersApi_d_setBaselineItemAsync as setBaselineItemAsync,
-    itemsRecommendersApi_d_setDefaultItemAsync as setDefaultItemAsync,
-    itemsRecommendersApi_d_getBaselineItemAsync as getBaselineItemAsync,
-    itemsRecommendersApi_d_getDefaultItemAsync as getDefaultItemAsync,
-    createLinkRegisteredModelAsync$2 as createLinkRegisteredModelAsync,
-    fetchLinkedRegisteredModelAsync$2 as fetchLinkedRegisteredModelAsync,
-    itemsRecommendersApi_d_invokeItemsRecommenderAsync as invokeItemsRecommenderAsync,
-    fetchInvokationLogsAsync$2 as fetchInvokationLogsAsync,
-    fetchTargetVariablesAsync$2 as fetchTargetVariablesAsync,
-    createTargetVariableAsync$2 as createTargetVariableAsync,
-    setSettingsAsync$2 as setSettingsAsync,
-    setArgumentsAsync$2 as setArgumentsAsync,
-    fetchDestinationsAsync$3 as fetchDestinationsAsync,
-    createDestinationAsync$3 as createDestinationAsync,
-    removeDestinationAsync$2 as removeDestinationAsync,
-    fetchTriggerAsync$2 as fetchTriggerAsync,
-    setTriggerAsync$2 as setTriggerAsync,
-    fetchLearningFeaturesAsync$2 as fetchLearningFeaturesAsync,
-    setLearningFeaturesAsync$2 as setLearningFeaturesAsync,
-    fetchLearningMetricsAsync$2 as fetchLearningMetricsAsync,
-    setLearningMetricsAsync$2 as setLearningMetricsAsync,
-    fetchStatisticsAsync$2 as fetchStatisticsAsync,
-    fetchReportImageBlobUrlAsync$2 as fetchReportImageBlobUrlAsync,
-    fetchPerformanceAsync$1 as fetchPerformanceAsync,
-  };
-}
-
-declare const fetchPromotionsRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
-declare const fetchPromotionsRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-interface PromotionsRecommendationsRequest extends PaginatedEntityRequest {
-    page: number;
-}
-declare const fetchPromotionsRecommendationsAsync: ({ token, page, pageSize, id, }: PromotionsRecommendationsRequest) => Promise<any>;
-declare const deletePromotionsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
-interface CreatePromotionsRecommenderRequest extends AuthenticatedRequest {
-    payload: components["schemas"]["CreatePromotionsRecommender"];
-}
-declare const createPromotionsRecommenderAsync: ({ token, payload, useInternalId, }: CreatePromotionsRecommenderRequest) => Promise<any>;
-declare const fetchPromotionsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
-declare type Audience = components["schemas"]["Audience"];
-declare const fetchAudienceAsync: ({ token, id, }: EntityRequest) => Promise<Audience>;
-interface AddPromotionPayload {
-    id: number | undefined;
-    commonId: string | undefined;
-}
-interface AddPromotionRequest extends EntityRequest {
-    promotion: AddPromotionPayload;
-}
-declare const addPromotionAsync: ({ token, id, promotion, }: AddPromotionRequest) => Promise<any>;
-interface RemovePromotionRequest extends EntityRequest {
-    promotionId: string | number;
-}
-declare const removePromotionAsync: ({ token, id, promotionId, }: RemovePromotionRequest) => Promise<any>;
-interface SetBaselinePromotionRequest extends EntityRequest {
-    promotionId: string | number;
-}
-declare const setBaselinePromotionAsync: ({ token, id, promotionId, }: SetBaselinePromotionRequest) => Promise<any>;
-declare const getBaselinePromotionAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-declare type LinkRegisteredModelRequest$1 = EntityRequest & components["schemas"]["LinkModel"];
-declare const createLinkRegisteredModelAsync$1: ({ token, id, modelId, }: LinkRegisteredModelRequest$1) => Promise<any>;
-declare const fetchLinkedRegisteredModelAsync$1: ({ token, id, }: EntityRequest) => Promise<any>;
-interface InvokePromotionRecommenderRequest extends EntityRequest {
-    input: ModelInput;
-}
-declare const invokePromotionsRecommenderAsync: ({ token, id, input, }: InvokePromotionRecommenderRequest) => Promise<PromotionsRecommendation>;
-interface FetchInvokationLogsRequest extends EntityRequest {
-    page: number;
-}
-declare const fetchInvokationLogsAsync$1: ({ id, token, page, }: FetchInvokationLogsRequest) => Promise<any>;
-declare const fetchTargetVariablesAsync$1: ({ id, token, name }: any) => Promise<any>;
-declare const createTargetVariableAsync$1: ({ id, token, targetVariableValue, }: any) => Promise<any>;
-interface RecommenderSettings {
-    requireConsumptionEvent: boolean;
-    throwOnBadInput: boolean;
-    recommendationCacheTime: string;
-}
-interface SetSettingsRequest$1 extends EntityRequest {
-    settings: RecommenderSettings;
-}
-declare const setSettingsAsync$1: ({ id, token, settings, }: SetSettingsRequest$1) => Promise<any>;
-interface Argument {
-    commonId: string;
-    argumentType: "Numerical" | "Categorical";
-    defaultValue: string | number;
-    isRequired: boolean;
-}
-interface SetArgumentsRequest$1 extends EntityRequest {
-    args: Argument[];
-}
-declare const setArgumentsAsync$1: ({ id, token, args, }: SetArgumentsRequest$1) => Promise<any>;
-declare const fetchDestinationsAsync$2: ({ id, token }: EntityRequest) => Promise<any>;
-interface Destination {
-    destinationType: "Webhook" | "SegmentSourceFunction" | "HubspotContactProperty";
-    endpoint: string;
-    integratedSystemId: number;
-}
-interface CreateDestinationRequest$1 extends EntityRequest {
-    destination: Destination;
-}
-declare const createDestinationAsync$2: ({ id, token, destination, }: CreateDestinationRequest$1) => Promise<any>;
-interface RemoveDestinationRequest$1 extends EntityRequest {
-    destinationId: number;
-}
-declare const removeDestinationAsync$1: ({ id, token, destinationId, }: RemoveDestinationRequest$1) => Promise<any>;
-declare const fetchTriggerAsync$1: ({ id, token }: EntityRequest) => Promise<any>;
-interface Trigger {
-    featuresChanged: any;
-}
-interface SetTriggerRequest$1 extends EntityRequest {
-    trigger: Trigger;
-}
-declare const setTriggerAsync$1: ({ id, token, trigger, }: SetTriggerRequest$1) => Promise<any>;
-declare const fetchLearningFeaturesAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
-interface SetLearningFeaturesRequest$1 extends EntityRequest {
-    featureIds: string[];
-}
-declare const setLearningFeaturesAsync$1: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest$1) => Promise<any>;
-declare const fetchLearningMetricsAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
-interface SetLearningMetricsRequest$1 extends EntityRequest {
-    metricIds: string[];
-}
-declare const setLearningMetricsAsync$1: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest$1) => Promise<any>;
-declare type RecommenderStatistics$1 = components["schemas"]["RecommenderStatistics"];
-declare const fetchStatisticsAsync$1: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics$1>;
-declare const fetchReportImageBlobUrlAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
-declare type PerformanceResponse = components["schemas"]["ItemsRecommenderPerformanceReport"];
-interface PerformanceRequest extends EntityRequest {
-    reportId?: string | number | undefined;
-}
-declare const fetchPerformanceAsync: ({ token, id, reportId, }: PerformanceRequest) => Promise<PerformanceResponse>;
-declare type PromotionOptimiser = components["schemas"]["PromotionOptimiser"];
-declare const fetchPromotionOptimiserAsync: ({ token, useInternalId, id, }: EntityRequest) => Promise<PromotionOptimiser>;
-interface SetAllPromotionOptimiserWeightsRequest extends EntityRequest {
-    weights: components["schemas"]["UpdateWeightDto"][];
-}
-declare const setAllPromotionOptimiserWeightsAsync: ({ token, useInternalId, id, weights, }: SetAllPromotionOptimiserWeightsRequest) => Promise<PromotionOptimiser>;
-interface SetPromotionOptimiserWeightRequest extends EntityRequest {
-    weightId: number;
-    weight: number;
-}
-declare const setPromotionOptimiserWeightAsync: ({ token, useInternalId, id, weightId, weight, }: SetPromotionOptimiserWeightRequest) => Promise<PromotionOptimiser>;
-interface SetUseOptimiserRequest extends EntityRequest {
-    useOptimiser: boolean;
-}
-declare const setUseOptimiserAsync: ({ token, useInternalId, id, useOptimiser, }: SetUseOptimiserRequest) => Promise<PromotionOptimiser>;
-declare const fetchRecommenderChannelsAsync: ({ id, token, }: EntityRequest) => Promise<any>;
-declare type Channel = components["schemas"]["ChannelBase"];
-interface AddRecommenderChannelRequest extends EntityRequest {
-    channel: components["schemas"]["AddRecommenderChannelDto"];
-}
-declare const addRecommenderChannelAsync: ({ token, id, channel, }: AddRecommenderChannelRequest) => Promise<Channel>;
-declare type PromotionsRecommenders = components["schemas"]["ItemsRecommender"];
-interface RemoveRecommenderChannelRequest extends EntityRequest {
-    channelId: number;
-}
-declare const removeRecommenderChannelAsync: ({ id, token, channelId, }: RemoveRecommenderChannelRequest) => Promise<PromotionsRecommenders>;
-
-declare const promotionsRecommendersApi_d_fetchPromotionsRecommendersAsync: typeof fetchPromotionsRecommendersAsync;
-declare const promotionsRecommendersApi_d_fetchPromotionsRecommenderAsync: typeof fetchPromotionsRecommenderAsync;
-declare const promotionsRecommendersApi_d_fetchPromotionsRecommendationsAsync: typeof fetchPromotionsRecommendationsAsync;
-declare const promotionsRecommendersApi_d_deletePromotionsRecommenderAsync: typeof deletePromotionsRecommenderAsync;
-declare const promotionsRecommendersApi_d_createPromotionsRecommenderAsync: typeof createPromotionsRecommenderAsync;
-declare const promotionsRecommendersApi_d_fetchAudienceAsync: typeof fetchAudienceAsync;
-declare const promotionsRecommendersApi_d_addPromotionAsync: typeof addPromotionAsync;
-declare const promotionsRecommendersApi_d_removePromotionAsync: typeof removePromotionAsync;
-declare const promotionsRecommendersApi_d_setBaselinePromotionAsync: typeof setBaselinePromotionAsync;
-declare const promotionsRecommendersApi_d_getBaselinePromotionAsync: typeof getBaselinePromotionAsync;
-declare const promotionsRecommendersApi_d_invokePromotionsRecommenderAsync: typeof invokePromotionsRecommenderAsync;
-declare const promotionsRecommendersApi_d_fetchPerformanceAsync: typeof fetchPerformanceAsync;
-declare const promotionsRecommendersApi_d_fetchPromotionOptimiserAsync: typeof fetchPromotionOptimiserAsync;
-declare const promotionsRecommendersApi_d_setAllPromotionOptimiserWeightsAsync: typeof setAllPromotionOptimiserWeightsAsync;
-declare const promotionsRecommendersApi_d_setPromotionOptimiserWeightAsync: typeof setPromotionOptimiserWeightAsync;
-declare const promotionsRecommendersApi_d_setUseOptimiserAsync: typeof setUseOptimiserAsync;
-declare const promotionsRecommendersApi_d_fetchRecommenderChannelsAsync: typeof fetchRecommenderChannelsAsync;
-declare const promotionsRecommendersApi_d_addRecommenderChannelAsync: typeof addRecommenderChannelAsync;
-declare const promotionsRecommendersApi_d_removeRecommenderChannelAsync: typeof removeRecommenderChannelAsync;
-declare namespace promotionsRecommendersApi_d {
-  export {
-    promotionsRecommendersApi_d_fetchPromotionsRecommendersAsync as fetchPromotionsRecommendersAsync,
-    promotionsRecommendersApi_d_fetchPromotionsRecommenderAsync as fetchPromotionsRecommenderAsync,
-    promotionsRecommendersApi_d_fetchPromotionsRecommendationsAsync as fetchPromotionsRecommendationsAsync,
-    promotionsRecommendersApi_d_deletePromotionsRecommenderAsync as deletePromotionsRecommenderAsync,
-    promotionsRecommendersApi_d_createPromotionsRecommenderAsync as createPromotionsRecommenderAsync,
-    fetchPromotionsAsync$1 as fetchPromotionsAsync,
-    promotionsRecommendersApi_d_fetchAudienceAsync as fetchAudienceAsync,
-    promotionsRecommendersApi_d_addPromotionAsync as addPromotionAsync,
-    promotionsRecommendersApi_d_removePromotionAsync as removePromotionAsync,
-    promotionsRecommendersApi_d_setBaselinePromotionAsync as setBaselinePromotionAsync,
-    promotionsRecommendersApi_d_getBaselinePromotionAsync as getBaselinePromotionAsync,
-    createLinkRegisteredModelAsync$1 as createLinkRegisteredModelAsync,
-    fetchLinkedRegisteredModelAsync$1 as fetchLinkedRegisteredModelAsync,
-    promotionsRecommendersApi_d_invokePromotionsRecommenderAsync as invokePromotionsRecommenderAsync,
-    fetchInvokationLogsAsync$1 as fetchInvokationLogsAsync,
-    fetchTargetVariablesAsync$1 as fetchTargetVariablesAsync,
-    createTargetVariableAsync$1 as createTargetVariableAsync,
-    setSettingsAsync$1 as setSettingsAsync,
-    setArgumentsAsync$1 as setArgumentsAsync,
-    fetchDestinationsAsync$2 as fetchDestinationsAsync,
-    createDestinationAsync$2 as createDestinationAsync,
-    removeDestinationAsync$1 as removeDestinationAsync,
-    fetchTriggerAsync$1 as fetchTriggerAsync,
-    setTriggerAsync$1 as setTriggerAsync,
-    fetchLearningFeaturesAsync$1 as fetchLearningFeaturesAsync,
-    setLearningFeaturesAsync$1 as setLearningFeaturesAsync,
-    fetchLearningMetricsAsync$1 as fetchLearningMetricsAsync,
-    setLearningMetricsAsync$1 as setLearningMetricsAsync,
-    fetchStatisticsAsync$1 as fetchStatisticsAsync,
-    fetchReportImageBlobUrlAsync$1 as fetchReportImageBlobUrlAsync,
-    promotionsRecommendersApi_d_fetchPerformanceAsync as fetchPerformanceAsync,
-    promotionsRecommendersApi_d_fetchPromotionOptimiserAsync as fetchPromotionOptimiserAsync,
-    promotionsRecommendersApi_d_setAllPromotionOptimiserWeightsAsync as setAllPromotionOptimiserWeightsAsync,
-    promotionsRecommendersApi_d_setPromotionOptimiserWeightAsync as setPromotionOptimiserWeightAsync,
-    promotionsRecommendersApi_d_setUseOptimiserAsync as setUseOptimiserAsync,
-    promotionsRecommendersApi_d_fetchRecommenderChannelsAsync as fetchRecommenderChannelsAsync,
-    promotionsRecommendersApi_d_addRecommenderChannelAsync as addRecommenderChannelAsync,
-    promotionsRecommendersApi_d_removeRecommenderChannelAsync as removeRecommenderChannelAsync,
-  };
-}
-
-interface MetricSearchRequest extends EntitySearchRequest {
-    scope?: components["schemas"]["MetricScopes"];
-}
-declare const fetchMetricsAsync: ({ token, page, scope, searchTerm, }: MetricSearchRequest) => Promise<components["schemas"]["MetricPaginated"]>;
-declare const fetchMetricAsync: ({ token, id, }: EntityRequest) => Promise<components["schemas"]["Metric"]>;
-declare const fetchMetricCustomersAsync: ({ token, page, id, }: PaginatedEntityRequest) => Promise<any>;
-declare const fetchMetricCustomerMetricsAsync: ({ token, page, id, }: PaginatedEntityRequest) => Promise<any>;
-interface CreateMetricRequest extends AuthenticatedRequest {
-    metric: components["schemas"]["CreateMetric"];
-}
-declare const createMetricAsync: ({ token, metric, }: CreateMetricRequest) => Promise<any>;
-declare const deleteMetricAsync: ({ token, id }: DeleteRequest) => Promise<any>;
-declare const fetchCustomersMetricsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-interface CustomersMetricRequest extends EntityRequest {
-    metricId: string | number;
-    version?: number | undefined;
-}
-declare const fetchCustomersMetricAsync: ({ token, id, metricId, version, }: CustomersMetricRequest) => Promise<any>;
-declare const fetchAggregateMetricValuesNumericAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-declare const fetchAggregateMetricValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-declare const fetchDestinationsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
-declare const fetchExportCustomers: ({ token, id }: EntityRequest) => Promise<any>;
-declare const fetchMetricBinValuesNumericAsync: ({ token, id, binCount, }: MetricBinRequest) => Promise<any>;
-declare const fetchMetricBinValuesStringAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-interface CreateMetricDestinationRequest extends EntityRequest {
-    destination: components["schemas"]["CreateDestinationDto"];
-}
-declare const createDestinationAsync$1: ({ token, id, destination, }: CreateMetricDestinationRequest) => Promise<any>;
-interface DeleteDestinationRequest extends DeleteRequest {
-    destinationId: number;
-}
-declare const deleteDestinationAsync: ({ token, id, destinationId, }: DeleteDestinationRequest) => Promise<any>;
-declare const fetchGeneratorsAsync: ({ token, id }: EntityRequest) => Promise<any>;
-declare const fetchBusinessMetricsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-interface BusinessMetricRequest extends CustomersMetricRequest {
-}
-declare const fetchBusinessMetricAsync: ({ token, id, metricId, version, }: BusinessMetricRequest) => Promise<any>;
-
-declare const metricsApi_d_fetchMetricsAsync: typeof fetchMetricsAsync;
-declare const metricsApi_d_fetchMetricAsync: typeof fetchMetricAsync;
-declare const metricsApi_d_fetchMetricCustomersAsync: typeof fetchMetricCustomersAsync;
-declare const metricsApi_d_fetchMetricCustomerMetricsAsync: typeof fetchMetricCustomerMetricsAsync;
-declare const metricsApi_d_createMetricAsync: typeof createMetricAsync;
-declare const metricsApi_d_deleteMetricAsync: typeof deleteMetricAsync;
-declare const metricsApi_d_fetchCustomersMetricsAsync: typeof fetchCustomersMetricsAsync;
-declare const metricsApi_d_fetchCustomersMetricAsync: typeof fetchCustomersMetricAsync;
-declare const metricsApi_d_fetchAggregateMetricValuesNumericAsync: typeof fetchAggregateMetricValuesNumericAsync;
-declare const metricsApi_d_fetchAggregateMetricValuesStringAsync: typeof fetchAggregateMetricValuesStringAsync;
-declare const metricsApi_d_fetchExportCustomers: typeof fetchExportCustomers;
-declare const metricsApi_d_fetchMetricBinValuesNumericAsync: typeof fetchMetricBinValuesNumericAsync;
-declare const metricsApi_d_fetchMetricBinValuesStringAsync: typeof fetchMetricBinValuesStringAsync;
-declare const metricsApi_d_deleteDestinationAsync: typeof deleteDestinationAsync;
-declare const metricsApi_d_fetchGeneratorsAsync: typeof fetchGeneratorsAsync;
-declare const metricsApi_d_fetchBusinessMetricsAsync: typeof fetchBusinessMetricsAsync;
-declare const metricsApi_d_fetchBusinessMetricAsync: typeof fetchBusinessMetricAsync;
-declare namespace metricsApi_d {
-  export {
-    metricsApi_d_fetchMetricsAsync as fetchMetricsAsync,
-    metricsApi_d_fetchMetricAsync as fetchMetricAsync,
-    metricsApi_d_fetchMetricCustomersAsync as fetchMetricCustomersAsync,
-    metricsApi_d_fetchMetricCustomerMetricsAsync as fetchMetricCustomerMetricsAsync,
-    metricsApi_d_createMetricAsync as createMetricAsync,
-    metricsApi_d_deleteMetricAsync as deleteMetricAsync,
-    metricsApi_d_fetchCustomersMetricsAsync as fetchCustomersMetricsAsync,
-    metricsApi_d_fetchCustomersMetricAsync as fetchCustomersMetricAsync,
-    metricsApi_d_fetchAggregateMetricValuesNumericAsync as fetchAggregateMetricValuesNumericAsync,
-    metricsApi_d_fetchAggregateMetricValuesStringAsync as fetchAggregateMetricValuesStringAsync,
-    fetchDestinationsAsync$1 as fetchDestinationsAsync,
-    metricsApi_d_fetchExportCustomers as fetchExportCustomers,
-    metricsApi_d_fetchMetricBinValuesNumericAsync as fetchMetricBinValuesNumericAsync,
-    metricsApi_d_fetchMetricBinValuesStringAsync as fetchMetricBinValuesStringAsync,
-    createDestinationAsync$1 as createDestinationAsync,
-    metricsApi_d_deleteDestinationAsync as deleteDestinationAsync,
-    metricsApi_d_fetchGeneratorsAsync as fetchGeneratorsAsync,
-    metricsApi_d_fetchBusinessMetricsAsync as fetchBusinessMetricsAsync,
-    metricsApi_d_fetchBusinessMetricAsync as fetchBusinessMetricAsync,
-  };
-}
-
-declare const fetchMetricGeneratorsAsync: ({ page, token, }: PaginatedRequest) => Promise<any>;
-interface CreateMetricGeneratorRequest extends AuthenticatedRequest {
-    generator: components["schemas"]["CreateMetricGenerator"];
-}
-declare const createMetricGeneratorAsync: ({ token, generator, }: CreateMetricGeneratorRequest) => Promise<any>;
-declare const deleteMetricGeneratorAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
-declare const manualTriggerMetricGeneratorsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-
-declare const metricGeneratorsApi_d_fetchMetricGeneratorsAsync: typeof fetchMetricGeneratorsAsync;
-declare const metricGeneratorsApi_d_createMetricGeneratorAsync: typeof createMetricGeneratorAsync;
-declare const metricGeneratorsApi_d_deleteMetricGeneratorAsync: typeof deleteMetricGeneratorAsync;
-declare const metricGeneratorsApi_d_manualTriggerMetricGeneratorsAsync: typeof manualTriggerMetricGeneratorsAsync;
-declare namespace metricGeneratorsApi_d {
-  export {
-    metricGeneratorsApi_d_fetchMetricGeneratorsAsync as fetchMetricGeneratorsAsync,
-    metricGeneratorsApi_d_createMetricGeneratorAsync as createMetricGeneratorAsync,
-    metricGeneratorsApi_d_deleteMetricGeneratorAsync as deleteMetricGeneratorAsync,
-    metricGeneratorsApi_d_manualTriggerMetricGeneratorsAsync as manualTriggerMetricGeneratorsAsync,
   };
 }
 
@@ -2496,76 +2145,58 @@ interface CreateParameterSetRecommenderRequest extends AuthenticatedRequest {
 declare const createParameterSetRecommenderAsync: ({ token, payload, }: CreateParameterSetRecommenderRequest) => Promise<any>;
 declare const deleteParameterSetRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 declare const fetchParameterSetRecommendationsAsync: ({ token, page, pageSize, id, }: PaginatedEntityRequest) => Promise<any>;
-declare type LinkRegisteredModelRequest = EntityRequest & components["schemas"]["LinkModel"];
-declare const createLinkRegisteredModelAsync: ({ token, id, modelId, }: LinkRegisteredModelRequest) => Promise<any>;
-declare const fetchLinkedRegisteredModelAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+declare type LinkRegisteredModelRequest$2 = EntityRequest & components["schemas"]["LinkModel"];
+declare const createLinkRegisteredModelAsync$2: ({ token, id, modelId, }: LinkRegisteredModelRequest$2) => Promise<any>;
+declare const fetchLinkedRegisteredModelAsync$2: ({ token, id, }: EntityRequest) => Promise<any>;
 interface InvokeParameterSetRecommenderRequest extends EntityRequest {
     input: components["schemas"]["ModelInputDto"];
 }
 declare const invokeParameterSetRecommenderAsync: ({ token, id, input, }: InvokeParameterSetRecommenderRequest) => Promise<any>;
-declare const fetchInvokationLogsAsync: ({ id, token, page, }: PaginatedEntityRequest) => Promise<any>;
-declare const fetchTargetVariablesAsync: ({ id, token, name }: any) => Promise<any>;
-declare const createTargetVariableAsync: ({ id, token, targetVariableValue, }: any) => Promise<any>;
-interface SetSettingsRequest extends EntityRequest {
+declare const fetchInvokationLogsAsync$2: ({ id, token, page, }: PaginatedEntityRequest) => Promise<any>;
+declare const fetchTargetVariablesAsync$2: ({ id, token, name }: any) => Promise<any>;
+declare const createTargetVariableAsync$2: ({ id, token, targetVariableValue, }: any) => Promise<any>;
+interface SetSettingsRequest$2 extends EntityRequest {
     settings: components["schemas"]["RecommenderSettingsDto"];
 }
-declare const setSettingsAsync: ({ id, token, settings, }: SetSettingsRequest) => Promise<any>;
-interface SetArgumentsRequest extends EntityRequest {
+declare const setSettingsAsync$2: ({ id, token, settings, }: SetSettingsRequest$2) => Promise<any>;
+interface SetArgumentsRequest$2 extends EntityRequest {
     args: components["schemas"]["CreateOrUpdateRecommenderArgument"][];
 }
-declare const setArgumentsAsync: ({ id, token, args, }: SetArgumentsRequest) => Promise<any>;
-declare const fetchDestinationsAsync: ({ id, token }: EntityRequest) => Promise<any>;
-interface CreateDestinationRequest extends EntityRequest {
+declare const setArgumentsAsync$2: ({ id, token, args, }: SetArgumentsRequest$2) => Promise<any>;
+declare const fetchDestinationsAsync$2: ({ id, token }: EntityRequest) => Promise<any>;
+interface CreateDestinationRequest$2 extends EntityRequest {
     destination: components["schemas"]["CreateDestinationDto"];
 }
-declare const createDestinationAsync: ({ id, token, destination, }: CreateDestinationRequest) => Promise<any>;
-interface RemoveDestinationRequest extends EntityRequest {
+declare const createDestinationAsync$2: ({ id, token, destination, }: CreateDestinationRequest$2) => Promise<any>;
+interface RemoveDestinationRequest$2 extends EntityRequest {
     destinationId: string | number;
 }
-declare const removeDestinationAsync: ({ id, token, destinationId, }: RemoveDestinationRequest) => Promise<any>;
-declare const fetchTriggerAsync: ({ id, token }: EntityRequest) => Promise<any>;
-interface SetTriggerRequest extends EntityRequest {
+declare const removeDestinationAsync$2: ({ id, token, destinationId, }: RemoveDestinationRequest$2) => Promise<any>;
+declare const fetchTriggerAsync$2: ({ id, token }: EntityRequest) => Promise<any>;
+interface SetTriggerRequest$2 extends EntityRequest {
     trigger: components["schemas"]["SetTriggersDto"];
 }
-declare const setTriggerAsync: ({ id, token, trigger, }: SetTriggerRequest) => Promise<any>;
-declare const fetchLearningFeaturesAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
-interface SetLearningFeaturesRequest extends EntityRequest {
+declare const setTriggerAsync$2: ({ id, token, trigger, }: SetTriggerRequest$2) => Promise<any>;
+declare const fetchLearningFeaturesAsync$2: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+interface SetLearningFeaturesRequest$2 extends EntityRequest {
     featureIds: string[] | number[];
 }
-declare const setLearningFeaturesAsync: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest) => Promise<any>;
-declare const fetchLearningMetricsAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
-interface SetLearningMetricsRequest extends EntityRequest {
+declare const setLearningFeaturesAsync$2: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest$2) => Promise<any>;
+declare const fetchLearningMetricsAsync$2: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+interface SetLearningMetricsRequest$2 extends EntityRequest {
     metricIds: string[];
 }
-declare const setLearningMetricsAsync: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest) => Promise<any>;
-declare type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
-declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
-declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+declare const setLearningMetricsAsync$2: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest$2) => Promise<any>;
+declare type RecommenderStatistics$2 = components["schemas"]["RecommenderStatistics"];
+declare const fetchStatisticsAsync$2: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics$2>;
+declare const fetchReportImageBlobUrlAsync$2: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
 
 declare const parameterSetRecommendersApi_d_fetchParameterSetRecommendersAsync: typeof fetchParameterSetRecommendersAsync;
 declare const parameterSetRecommendersApi_d_fetchParameterSetRecommenderAsync: typeof fetchParameterSetRecommenderAsync;
 declare const parameterSetRecommendersApi_d_createParameterSetRecommenderAsync: typeof createParameterSetRecommenderAsync;
 declare const parameterSetRecommendersApi_d_deleteParameterSetRecommenderAsync: typeof deleteParameterSetRecommenderAsync;
 declare const parameterSetRecommendersApi_d_fetchParameterSetRecommendationsAsync: typeof fetchParameterSetRecommendationsAsync;
-declare const parameterSetRecommendersApi_d_createLinkRegisteredModelAsync: typeof createLinkRegisteredModelAsync;
-declare const parameterSetRecommendersApi_d_fetchLinkedRegisteredModelAsync: typeof fetchLinkedRegisteredModelAsync;
 declare const parameterSetRecommendersApi_d_invokeParameterSetRecommenderAsync: typeof invokeParameterSetRecommenderAsync;
-declare const parameterSetRecommendersApi_d_fetchInvokationLogsAsync: typeof fetchInvokationLogsAsync;
-declare const parameterSetRecommendersApi_d_fetchTargetVariablesAsync: typeof fetchTargetVariablesAsync;
-declare const parameterSetRecommendersApi_d_createTargetVariableAsync: typeof createTargetVariableAsync;
-declare const parameterSetRecommendersApi_d_setSettingsAsync: typeof setSettingsAsync;
-declare const parameterSetRecommendersApi_d_setArgumentsAsync: typeof setArgumentsAsync;
-declare const parameterSetRecommendersApi_d_fetchDestinationsAsync: typeof fetchDestinationsAsync;
-declare const parameterSetRecommendersApi_d_createDestinationAsync: typeof createDestinationAsync;
-declare const parameterSetRecommendersApi_d_removeDestinationAsync: typeof removeDestinationAsync;
-declare const parameterSetRecommendersApi_d_fetchTriggerAsync: typeof fetchTriggerAsync;
-declare const parameterSetRecommendersApi_d_setTriggerAsync: typeof setTriggerAsync;
-declare const parameterSetRecommendersApi_d_fetchLearningFeaturesAsync: typeof fetchLearningFeaturesAsync;
-declare const parameterSetRecommendersApi_d_setLearningFeaturesAsync: typeof setLearningFeaturesAsync;
-declare const parameterSetRecommendersApi_d_fetchLearningMetricsAsync: typeof fetchLearningMetricsAsync;
-declare const parameterSetRecommendersApi_d_setLearningMetricsAsync: typeof setLearningMetricsAsync;
-declare const parameterSetRecommendersApi_d_fetchStatisticsAsync: typeof fetchStatisticsAsync;
-declare const parameterSetRecommendersApi_d_fetchReportImageBlobUrlAsync: typeof fetchReportImageBlobUrlAsync;
 declare namespace parameterSetRecommendersApi_d {
   export {
     parameterSetRecommendersApi_d_fetchParameterSetRecommendersAsync as fetchParameterSetRecommendersAsync,
@@ -2573,25 +2204,25 @@ declare namespace parameterSetRecommendersApi_d {
     parameterSetRecommendersApi_d_createParameterSetRecommenderAsync as createParameterSetRecommenderAsync,
     parameterSetRecommendersApi_d_deleteParameterSetRecommenderAsync as deleteParameterSetRecommenderAsync,
     parameterSetRecommendersApi_d_fetchParameterSetRecommendationsAsync as fetchParameterSetRecommendationsAsync,
-    parameterSetRecommendersApi_d_createLinkRegisteredModelAsync as createLinkRegisteredModelAsync,
-    parameterSetRecommendersApi_d_fetchLinkedRegisteredModelAsync as fetchLinkedRegisteredModelAsync,
+    createLinkRegisteredModelAsync$2 as createLinkRegisteredModelAsync,
+    fetchLinkedRegisteredModelAsync$2 as fetchLinkedRegisteredModelAsync,
     parameterSetRecommendersApi_d_invokeParameterSetRecommenderAsync as invokeParameterSetRecommenderAsync,
-    parameterSetRecommendersApi_d_fetchInvokationLogsAsync as fetchInvokationLogsAsync,
-    parameterSetRecommendersApi_d_fetchTargetVariablesAsync as fetchTargetVariablesAsync,
-    parameterSetRecommendersApi_d_createTargetVariableAsync as createTargetVariableAsync,
-    parameterSetRecommendersApi_d_setSettingsAsync as setSettingsAsync,
-    parameterSetRecommendersApi_d_setArgumentsAsync as setArgumentsAsync,
-    parameterSetRecommendersApi_d_fetchDestinationsAsync as fetchDestinationsAsync,
-    parameterSetRecommendersApi_d_createDestinationAsync as createDestinationAsync,
-    parameterSetRecommendersApi_d_removeDestinationAsync as removeDestinationAsync,
-    parameterSetRecommendersApi_d_fetchTriggerAsync as fetchTriggerAsync,
-    parameterSetRecommendersApi_d_setTriggerAsync as setTriggerAsync,
-    parameterSetRecommendersApi_d_fetchLearningFeaturesAsync as fetchLearningFeaturesAsync,
-    parameterSetRecommendersApi_d_setLearningFeaturesAsync as setLearningFeaturesAsync,
-    parameterSetRecommendersApi_d_fetchLearningMetricsAsync as fetchLearningMetricsAsync,
-    parameterSetRecommendersApi_d_setLearningMetricsAsync as setLearningMetricsAsync,
-    parameterSetRecommendersApi_d_fetchStatisticsAsync as fetchStatisticsAsync,
-    parameterSetRecommendersApi_d_fetchReportImageBlobUrlAsync as fetchReportImageBlobUrlAsync,
+    fetchInvokationLogsAsync$2 as fetchInvokationLogsAsync,
+    fetchTargetVariablesAsync$2 as fetchTargetVariablesAsync,
+    createTargetVariableAsync$2 as createTargetVariableAsync,
+    setSettingsAsync$2 as setSettingsAsync,
+    setArgumentsAsync$2 as setArgumentsAsync,
+    fetchDestinationsAsync$2 as fetchDestinationsAsync,
+    createDestinationAsync$2 as createDestinationAsync,
+    removeDestinationAsync$2 as removeDestinationAsync,
+    fetchTriggerAsync$2 as fetchTriggerAsync,
+    setTriggerAsync$2 as setTriggerAsync,
+    fetchLearningFeaturesAsync$2 as fetchLearningFeaturesAsync,
+    setLearningFeaturesAsync$2 as setLearningFeaturesAsync,
+    fetchLearningMetricsAsync$2 as fetchLearningMetricsAsync,
+    setLearningMetricsAsync$2 as setLearningMetricsAsync,
+    fetchStatisticsAsync$2 as fetchStatisticsAsync,
+    fetchReportImageBlobUrlAsync$2 as fetchReportImageBlobUrlAsync,
   };
 }
 
@@ -2612,10 +2243,375 @@ declare namespace profileApi_d {
   };
 }
 
+declare const fetchItemsRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
+declare const fetchItemsRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+interface ItemsRecommendationsRequest extends PaginatedEntityRequest {
+    page: number;
+}
+declare const fetchItemsRecommendationsAsync: ({ token, page, pageSize, id, }: ItemsRecommendationsRequest) => Promise<any>;
+declare const deleteItemsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
+interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
+    payload: components["schemas"]["CreatePromotionsRecommender"];
+}
+declare const createItemsRecommenderAsync: ({ token, payload, useInternalId, }: CreateItemsRecommenderRequest) => Promise<any>;
+declare const fetchItemsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
+interface AddItemPayload {
+    id: number | undefined;
+    commonId: string | undefined;
+}
+interface AddItemRequest extends EntityRequest {
+    item: AddItemPayload;
+}
+declare const addItemAsync: ({ token, id, item }: AddItemRequest) => Promise<any>;
+interface RemoveItemRequest extends EntityRequest {
+    itemId: string | number;
+}
+declare const removeItemAsync: ({ token, id, itemId, }: RemoveItemRequest) => Promise<any>;
+interface SetBaselineItemRequest extends EntityRequest {
+    itemId: string | number;
+}
+declare const setBaselineItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
+declare const setDefaultItemAsync: ({ token, id, itemId, }: SetBaselineItemRequest) => Promise<any>;
+declare const getBaselineItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
+declare const getDefaultItemAsync: ({ token, id }: EntityRequest) => Promise<any>;
+declare type LinkRegisteredModelRequest$1 = EntityRequest & components["schemas"]["LinkModel"];
+declare const createLinkRegisteredModelAsync$1: ({ token, id, modelId, }: LinkRegisteredModelRequest$1) => Promise<any>;
+declare const fetchLinkedRegisteredModelAsync$1: ({ token, id, }: EntityRequest) => Promise<any>;
+interface InvokeItemRecommenderRequest extends EntityRequest {
+    input: ModelInput;
+}
+declare const invokeItemsRecommenderAsync: ({ token, id, input, }: InvokeItemRecommenderRequest) => Promise<ItemsRecommendation>;
+interface FetchInvokationLogsRequest$1 extends EntityRequest {
+    page: number;
+}
+declare const fetchInvokationLogsAsync$1: ({ id, token, page, }: FetchInvokationLogsRequest$1) => Promise<any>;
+declare const fetchTargetVariablesAsync$1: ({ id, token, name }: any) => Promise<any>;
+declare const createTargetVariableAsync$1: ({ id, token, targetVariableValue, }: any) => Promise<any>;
+interface RecommenderSettings$1 {
+    requireConsumptionEvent: boolean;
+    throwOnBadInput: boolean;
+    recommendationCacheTime: string;
+}
+interface SetSettingsRequest$1 extends EntityRequest {
+    settings: RecommenderSettings$1;
+}
+declare const setSettingsAsync$1: ({ id, token, settings, }: SetSettingsRequest$1) => Promise<any>;
+interface Argument$1 {
+    commonId: string;
+    argumentType: "Numerical" | "Categorical";
+    defaultValue: string | number;
+    isRequired: boolean;
+}
+interface SetArgumentsRequest$1 extends EntityRequest {
+    args: Argument$1[];
+}
+declare const setArgumentsAsync$1: ({ id, token, args, }: SetArgumentsRequest$1) => Promise<any>;
+declare const fetchDestinationsAsync$1: ({ id, token }: EntityRequest) => Promise<any>;
+interface Destination$1 {
+    destinationType: "Webhook" | "SegmentSourceFunction" | "HubspotContactProperty";
+    endpoint: string;
+    integratedSystemId: number;
+}
+interface CreateDestinationRequest$1 extends EntityRequest {
+    destination: Destination$1;
+}
+declare const createDestinationAsync$1: ({ id, token, destination, }: CreateDestinationRequest$1) => Promise<any>;
+interface RemoveDestinationRequest$1 extends EntityRequest {
+    destinationId: number;
+}
+declare const removeDestinationAsync$1: ({ id, token, destinationId, }: RemoveDestinationRequest$1) => Promise<any>;
+declare const fetchTriggerAsync$1: ({ id, token }: EntityRequest) => Promise<any>;
+interface Trigger$1 {
+    featuresChanged: any;
+}
+interface SetTriggerRequest$1 extends EntityRequest {
+    trigger: Trigger$1;
+}
+declare const setTriggerAsync$1: ({ id, token, trigger, }: SetTriggerRequest$1) => Promise<any>;
+declare const fetchLearningFeaturesAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+interface SetLearningFeaturesRequest$1 extends EntityRequest {
+    featureIds: string[];
+}
+declare const setLearningFeaturesAsync$1: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest$1) => Promise<any>;
+declare const fetchLearningMetricsAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+interface SetLearningMetricsRequest$1 extends EntityRequest {
+    metricIds: string[];
+}
+declare const setLearningMetricsAsync$1: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest$1) => Promise<any>;
+declare type RecommenderStatistics$1 = components["schemas"]["RecommenderStatistics"];
+declare const fetchStatisticsAsync$1: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics$1>;
+declare const fetchReportImageBlobUrlAsync$1: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+declare type PerformanceResponse$1 = components["schemas"]["ItemsRecommenderPerformanceReport"];
+interface PerformanceRequest$1 extends EntityRequest {
+    reportId?: string | number | undefined;
+}
+declare const fetchPerformanceAsync$1: ({ token, id, reportId, }: PerformanceRequest$1) => Promise<PerformanceResponse$1>;
+
+declare const itemsRecommendersApi_d_fetchItemsRecommendersAsync: typeof fetchItemsRecommendersAsync;
+declare const itemsRecommendersApi_d_fetchItemsRecommenderAsync: typeof fetchItemsRecommenderAsync;
+declare const itemsRecommendersApi_d_fetchItemsRecommendationsAsync: typeof fetchItemsRecommendationsAsync;
+declare const itemsRecommendersApi_d_deleteItemsRecommenderAsync: typeof deleteItemsRecommenderAsync;
+declare const itemsRecommendersApi_d_createItemsRecommenderAsync: typeof createItemsRecommenderAsync;
+declare const itemsRecommendersApi_d_addItemAsync: typeof addItemAsync;
+declare const itemsRecommendersApi_d_removeItemAsync: typeof removeItemAsync;
+declare const itemsRecommendersApi_d_setBaselineItemAsync: typeof setBaselineItemAsync;
+declare const itemsRecommendersApi_d_setDefaultItemAsync: typeof setDefaultItemAsync;
+declare const itemsRecommendersApi_d_getBaselineItemAsync: typeof getBaselineItemAsync;
+declare const itemsRecommendersApi_d_getDefaultItemAsync: typeof getDefaultItemAsync;
+declare const itemsRecommendersApi_d_invokeItemsRecommenderAsync: typeof invokeItemsRecommenderAsync;
+declare namespace itemsRecommendersApi_d {
+  export {
+    itemsRecommendersApi_d_fetchItemsRecommendersAsync as fetchItemsRecommendersAsync,
+    itemsRecommendersApi_d_fetchItemsRecommenderAsync as fetchItemsRecommenderAsync,
+    itemsRecommendersApi_d_fetchItemsRecommendationsAsync as fetchItemsRecommendationsAsync,
+    itemsRecommendersApi_d_deleteItemsRecommenderAsync as deleteItemsRecommenderAsync,
+    itemsRecommendersApi_d_createItemsRecommenderAsync as createItemsRecommenderAsync,
+    fetchItemsAsync$1 as fetchItemsAsync,
+    itemsRecommendersApi_d_addItemAsync as addItemAsync,
+    itemsRecommendersApi_d_removeItemAsync as removeItemAsync,
+    itemsRecommendersApi_d_setBaselineItemAsync as setBaselineItemAsync,
+    itemsRecommendersApi_d_setDefaultItemAsync as setDefaultItemAsync,
+    itemsRecommendersApi_d_getBaselineItemAsync as getBaselineItemAsync,
+    itemsRecommendersApi_d_getDefaultItemAsync as getDefaultItemAsync,
+    createLinkRegisteredModelAsync$1 as createLinkRegisteredModelAsync,
+    fetchLinkedRegisteredModelAsync$1 as fetchLinkedRegisteredModelAsync,
+    itemsRecommendersApi_d_invokeItemsRecommenderAsync as invokeItemsRecommenderAsync,
+    fetchInvokationLogsAsync$1 as fetchInvokationLogsAsync,
+    fetchTargetVariablesAsync$1 as fetchTargetVariablesAsync,
+    createTargetVariableAsync$1 as createTargetVariableAsync,
+    setSettingsAsync$1 as setSettingsAsync,
+    setArgumentsAsync$1 as setArgumentsAsync,
+    fetchDestinationsAsync$1 as fetchDestinationsAsync,
+    createDestinationAsync$1 as createDestinationAsync,
+    removeDestinationAsync$1 as removeDestinationAsync,
+    fetchTriggerAsync$1 as fetchTriggerAsync,
+    setTriggerAsync$1 as setTriggerAsync,
+    fetchLearningFeaturesAsync$1 as fetchLearningFeaturesAsync,
+    setLearningFeaturesAsync$1 as setLearningFeaturesAsync,
+    fetchLearningMetricsAsync$1 as fetchLearningMetricsAsync,
+    setLearningMetricsAsync$1 as setLearningMetricsAsync,
+    fetchStatisticsAsync$1 as fetchStatisticsAsync,
+    fetchReportImageBlobUrlAsync$1 as fetchReportImageBlobUrlAsync,
+    fetchPerformanceAsync$1 as fetchPerformanceAsync,
+  };
+}
+
+declare const fetchPromotionsRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
+declare const fetchPromotionsRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+interface PromotionsRecommendationsRequest extends PaginatedEntityRequest {
+    page: number;
+}
+declare const fetchPromotionsRecommendationsAsync: ({ token, page, pageSize, id, }: PromotionsRecommendationsRequest) => Promise<any>;
+declare const deletePromotionsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
+interface CreatePromotionsRecommenderRequest extends AuthenticatedRequest {
+    payload: components["schemas"]["CreatePromotionsRecommender"];
+}
+declare const createPromotionsRecommenderAsync: ({ token, payload, useInternalId, }: CreatePromotionsRecommenderRequest) => Promise<any>;
+declare const fetchPromotionsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
+declare type Audience = components["schemas"]["Audience"];
+declare const fetchAudienceAsync: ({ token, id, }: EntityRequest) => Promise<Audience>;
+interface AddPromotionPayload {
+    id: number | undefined;
+    commonId: string | undefined;
+}
+interface AddPromotionRequest extends EntityRequest {
+    promotion: AddPromotionPayload;
+}
+declare const addPromotionAsync: ({ token, id, promotion, }: AddPromotionRequest) => Promise<any>;
+interface RemovePromotionRequest extends EntityRequest {
+    promotionId: string | number;
+}
+declare const removePromotionAsync: ({ token, id, promotionId, }: RemovePromotionRequest) => Promise<any>;
+interface SetBaselinePromotionRequest extends EntityRequest {
+    promotionId: string | number;
+}
+declare const setBaselinePromotionAsync: ({ token, id, promotionId, }: SetBaselinePromotionRequest) => Promise<any>;
+declare const getBaselinePromotionAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+declare type LinkRegisteredModelRequest = EntityRequest & components["schemas"]["LinkModel"];
+declare const createLinkRegisteredModelAsync: ({ token, id, modelId, }: LinkRegisteredModelRequest) => Promise<any>;
+declare const fetchLinkedRegisteredModelAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+interface InvokePromotionRecommenderRequest extends EntityRequest {
+    input: ModelInput;
+}
+declare const invokePromotionsRecommenderAsync: ({ token, id, input, }: InvokePromotionRecommenderRequest) => Promise<PromotionsRecommendation>;
+interface FetchInvokationLogsRequest extends EntityRequest {
+    page: number;
+}
+declare const fetchInvokationLogsAsync: ({ id, token, page, }: FetchInvokationLogsRequest) => Promise<any>;
+declare const fetchTargetVariablesAsync: ({ id, token, name }: any) => Promise<any>;
+declare const createTargetVariableAsync: ({ id, token, targetVariableValue, }: any) => Promise<any>;
+interface RecommenderSettings {
+    requireConsumptionEvent: boolean;
+    throwOnBadInput: boolean;
+    recommendationCacheTime: string;
+}
+interface SetSettingsRequest extends EntityRequest {
+    settings: RecommenderSettings;
+}
+declare const setSettingsAsync: ({ id, token, settings, }: SetSettingsRequest) => Promise<any>;
+interface Argument {
+    commonId: string;
+    argumentType: "Numerical" | "Categorical";
+    defaultValue: string | number;
+    isRequired: boolean;
+}
+interface SetArgumentsRequest extends EntityRequest {
+    args: Argument[];
+}
+declare const setArgumentsAsync: ({ id, token, args, }: SetArgumentsRequest) => Promise<any>;
+declare const fetchDestinationsAsync: ({ id, token }: EntityRequest) => Promise<any>;
+interface Destination {
+    destinationType: "Webhook" | "SegmentSourceFunction" | "HubspotContactProperty";
+    endpoint: string;
+    integratedSystemId: number;
+}
+interface CreateDestinationRequest extends EntityRequest {
+    destination: Destination;
+}
+declare const createDestinationAsync: ({ id, token, destination, }: CreateDestinationRequest) => Promise<any>;
+interface RemoveDestinationRequest extends EntityRequest {
+    destinationId: number;
+}
+declare const removeDestinationAsync: ({ id, token, destinationId, }: RemoveDestinationRequest) => Promise<any>;
+declare const fetchTriggerAsync: ({ id, token }: EntityRequest) => Promise<any>;
+interface Trigger {
+    featuresChanged: any;
+}
+interface SetTriggerRequest extends EntityRequest {
+    trigger: Trigger;
+}
+declare const setTriggerAsync: ({ id, token, trigger, }: SetTriggerRequest) => Promise<any>;
+declare const fetchLearningFeaturesAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+interface SetLearningFeaturesRequest extends EntityRequest {
+    featureIds: string[];
+}
+declare const setLearningFeaturesAsync: ({ id, token, featureIds, useInternalId, }: SetLearningFeaturesRequest) => Promise<any>;
+declare const fetchLearningMetricsAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+interface SetLearningMetricsRequest extends EntityRequest {
+    metricIds: string[];
+}
+declare const setLearningMetricsAsync: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest) => Promise<any>;
+declare type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
+declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
+declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
+declare type PerformanceResponse = components["schemas"]["ItemsRecommenderPerformanceReport"];
+interface PerformanceRequest extends EntityRequest {
+    reportId?: string | number | undefined;
+}
+declare const fetchPerformanceAsync: ({ token, id, reportId, }: PerformanceRequest) => Promise<PerformanceResponse>;
+declare type PromotionOptimiser = components["schemas"]["PromotionOptimiser"];
+declare const fetchPromotionOptimiserAsync: ({ token, useInternalId, id, }: EntityRequest) => Promise<PromotionOptimiser>;
+interface SetAllPromotionOptimiserWeightsRequest extends EntityRequest {
+    weights: components["schemas"]["UpdateWeightDto"][];
+}
+declare const setAllPromotionOptimiserWeightsAsync: ({ token, useInternalId, id, weights, }: SetAllPromotionOptimiserWeightsRequest) => Promise<PromotionOptimiser>;
+interface SetPromotionOptimiserWeightRequest extends EntityRequest {
+    weightId: number;
+    weight: number;
+}
+declare const setPromotionOptimiserWeightAsync: ({ token, useInternalId, id, weightId, weight, }: SetPromotionOptimiserWeightRequest) => Promise<PromotionOptimiser>;
+interface SetUseOptimiserRequest extends EntityRequest {
+    useOptimiser: boolean;
+}
+declare const setUseOptimiserAsync: ({ token, useInternalId, id, useOptimiser, }: SetUseOptimiserRequest) => Promise<PromotionOptimiser>;
+declare const fetchRecommenderChannelsAsync: ({ id, token, }: EntityRequest) => Promise<any>;
+declare type Channel = components["schemas"]["ChannelBase"];
+interface AddRecommenderChannelRequest extends EntityRequest {
+    channel: components["schemas"]["AddRecommenderChannelDto"];
+}
+declare const addRecommenderChannelAsync: ({ token, id, channel, }: AddRecommenderChannelRequest) => Promise<Channel>;
+declare type PromotionsRecommenders = components["schemas"]["ItemsRecommender"];
+interface RemoveRecommenderChannelRequest extends EntityRequest {
+    channelId: number;
+}
+declare const removeRecommenderChannelAsync: ({ id, token, channelId, }: RemoveRecommenderChannelRequest) => Promise<PromotionsRecommenders>;
+
+declare const promotionsRecommendersApi_d_fetchPromotionsRecommendersAsync: typeof fetchPromotionsRecommendersAsync;
+declare const promotionsRecommendersApi_d_fetchPromotionsRecommenderAsync: typeof fetchPromotionsRecommenderAsync;
+declare const promotionsRecommendersApi_d_fetchPromotionsRecommendationsAsync: typeof fetchPromotionsRecommendationsAsync;
+declare const promotionsRecommendersApi_d_deletePromotionsRecommenderAsync: typeof deletePromotionsRecommenderAsync;
+declare const promotionsRecommendersApi_d_createPromotionsRecommenderAsync: typeof createPromotionsRecommenderAsync;
+declare const promotionsRecommendersApi_d_fetchAudienceAsync: typeof fetchAudienceAsync;
+declare const promotionsRecommendersApi_d_addPromotionAsync: typeof addPromotionAsync;
+declare const promotionsRecommendersApi_d_removePromotionAsync: typeof removePromotionAsync;
+declare const promotionsRecommendersApi_d_setBaselinePromotionAsync: typeof setBaselinePromotionAsync;
+declare const promotionsRecommendersApi_d_getBaselinePromotionAsync: typeof getBaselinePromotionAsync;
+declare const promotionsRecommendersApi_d_createLinkRegisteredModelAsync: typeof createLinkRegisteredModelAsync;
+declare const promotionsRecommendersApi_d_fetchLinkedRegisteredModelAsync: typeof fetchLinkedRegisteredModelAsync;
+declare const promotionsRecommendersApi_d_invokePromotionsRecommenderAsync: typeof invokePromotionsRecommenderAsync;
+declare const promotionsRecommendersApi_d_fetchInvokationLogsAsync: typeof fetchInvokationLogsAsync;
+declare const promotionsRecommendersApi_d_fetchTargetVariablesAsync: typeof fetchTargetVariablesAsync;
+declare const promotionsRecommendersApi_d_createTargetVariableAsync: typeof createTargetVariableAsync;
+declare const promotionsRecommendersApi_d_setSettingsAsync: typeof setSettingsAsync;
+declare const promotionsRecommendersApi_d_setArgumentsAsync: typeof setArgumentsAsync;
+declare const promotionsRecommendersApi_d_fetchDestinationsAsync: typeof fetchDestinationsAsync;
+declare const promotionsRecommendersApi_d_createDestinationAsync: typeof createDestinationAsync;
+declare const promotionsRecommendersApi_d_removeDestinationAsync: typeof removeDestinationAsync;
+declare const promotionsRecommendersApi_d_fetchTriggerAsync: typeof fetchTriggerAsync;
+declare const promotionsRecommendersApi_d_setTriggerAsync: typeof setTriggerAsync;
+declare const promotionsRecommendersApi_d_fetchLearningFeaturesAsync: typeof fetchLearningFeaturesAsync;
+declare const promotionsRecommendersApi_d_setLearningFeaturesAsync: typeof setLearningFeaturesAsync;
+declare const promotionsRecommendersApi_d_fetchLearningMetricsAsync: typeof fetchLearningMetricsAsync;
+declare const promotionsRecommendersApi_d_setLearningMetricsAsync: typeof setLearningMetricsAsync;
+declare const promotionsRecommendersApi_d_fetchStatisticsAsync: typeof fetchStatisticsAsync;
+declare const promotionsRecommendersApi_d_fetchReportImageBlobUrlAsync: typeof fetchReportImageBlobUrlAsync;
+declare const promotionsRecommendersApi_d_fetchPerformanceAsync: typeof fetchPerformanceAsync;
+declare const promotionsRecommendersApi_d_fetchPromotionOptimiserAsync: typeof fetchPromotionOptimiserAsync;
+declare const promotionsRecommendersApi_d_setAllPromotionOptimiserWeightsAsync: typeof setAllPromotionOptimiserWeightsAsync;
+declare const promotionsRecommendersApi_d_setPromotionOptimiserWeightAsync: typeof setPromotionOptimiserWeightAsync;
+declare const promotionsRecommendersApi_d_setUseOptimiserAsync: typeof setUseOptimiserAsync;
+declare const promotionsRecommendersApi_d_fetchRecommenderChannelsAsync: typeof fetchRecommenderChannelsAsync;
+declare const promotionsRecommendersApi_d_addRecommenderChannelAsync: typeof addRecommenderChannelAsync;
+declare const promotionsRecommendersApi_d_removeRecommenderChannelAsync: typeof removeRecommenderChannelAsync;
+declare namespace promotionsRecommendersApi_d {
+  export {
+    promotionsRecommendersApi_d_fetchPromotionsRecommendersAsync as fetchPromotionsRecommendersAsync,
+    promotionsRecommendersApi_d_fetchPromotionsRecommenderAsync as fetchPromotionsRecommenderAsync,
+    promotionsRecommendersApi_d_fetchPromotionsRecommendationsAsync as fetchPromotionsRecommendationsAsync,
+    promotionsRecommendersApi_d_deletePromotionsRecommenderAsync as deletePromotionsRecommenderAsync,
+    promotionsRecommendersApi_d_createPromotionsRecommenderAsync as createPromotionsRecommenderAsync,
+    fetchPromotionsAsync$1 as fetchPromotionsAsync,
+    promotionsRecommendersApi_d_fetchAudienceAsync as fetchAudienceAsync,
+    promotionsRecommendersApi_d_addPromotionAsync as addPromotionAsync,
+    promotionsRecommendersApi_d_removePromotionAsync as removePromotionAsync,
+    promotionsRecommendersApi_d_setBaselinePromotionAsync as setBaselinePromotionAsync,
+    promotionsRecommendersApi_d_getBaselinePromotionAsync as getBaselinePromotionAsync,
+    promotionsRecommendersApi_d_createLinkRegisteredModelAsync as createLinkRegisteredModelAsync,
+    promotionsRecommendersApi_d_fetchLinkedRegisteredModelAsync as fetchLinkedRegisteredModelAsync,
+    promotionsRecommendersApi_d_invokePromotionsRecommenderAsync as invokePromotionsRecommenderAsync,
+    promotionsRecommendersApi_d_fetchInvokationLogsAsync as fetchInvokationLogsAsync,
+    promotionsRecommendersApi_d_fetchTargetVariablesAsync as fetchTargetVariablesAsync,
+    promotionsRecommendersApi_d_createTargetVariableAsync as createTargetVariableAsync,
+    promotionsRecommendersApi_d_setSettingsAsync as setSettingsAsync,
+    promotionsRecommendersApi_d_setArgumentsAsync as setArgumentsAsync,
+    promotionsRecommendersApi_d_fetchDestinationsAsync as fetchDestinationsAsync,
+    promotionsRecommendersApi_d_createDestinationAsync as createDestinationAsync,
+    promotionsRecommendersApi_d_removeDestinationAsync as removeDestinationAsync,
+    promotionsRecommendersApi_d_fetchTriggerAsync as fetchTriggerAsync,
+    promotionsRecommendersApi_d_setTriggerAsync as setTriggerAsync,
+    promotionsRecommendersApi_d_fetchLearningFeaturesAsync as fetchLearningFeaturesAsync,
+    promotionsRecommendersApi_d_setLearningFeaturesAsync as setLearningFeaturesAsync,
+    promotionsRecommendersApi_d_fetchLearningMetricsAsync as fetchLearningMetricsAsync,
+    promotionsRecommendersApi_d_setLearningMetricsAsync as setLearningMetricsAsync,
+    promotionsRecommendersApi_d_fetchStatisticsAsync as fetchStatisticsAsync,
+    promotionsRecommendersApi_d_fetchReportImageBlobUrlAsync as fetchReportImageBlobUrlAsync,
+    promotionsRecommendersApi_d_fetchPerformanceAsync as fetchPerformanceAsync,
+    promotionsRecommendersApi_d_fetchPromotionOptimiserAsync as fetchPromotionOptimiserAsync,
+    promotionsRecommendersApi_d_setAllPromotionOptimiserWeightsAsync as setAllPromotionOptimiserWeightsAsync,
+    promotionsRecommendersApi_d_setPromotionOptimiserWeightAsync as setPromotionOptimiserWeightAsync,
+    promotionsRecommendersApi_d_setUseOptimiserAsync as setUseOptimiserAsync,
+    promotionsRecommendersApi_d_fetchRecommenderChannelsAsync as fetchRecommenderChannelsAsync,
+    promotionsRecommendersApi_d_addRecommenderChannelAsync as addRecommenderChannelAsync,
+    promotionsRecommendersApi_d_removeRecommenderChannelAsync as removeRecommenderChannelAsync,
+  };
+}
+
 declare type Auth0ReactConfig = components["schemas"]["Auth0ReactConfig"] | undefined;
 declare const fetchAuth0ConfigurationAsync: () => Promise<Auth0ReactConfig>;
 declare type ReactConfig = components["schemas"]["ReactConfig"] | undefined;
 declare const fetchConfigurationAsync: () => Promise<ReactConfig>;
+declare type Hosting = components["schemas"]["Hosting"];
+declare const fetchHostingAsync$1: () => Promise<Hosting>;
 
 declare const reactConfigApi_d_fetchAuth0ConfigurationAsync: typeof fetchAuth0ConfigurationAsync;
 declare const reactConfigApi_d_fetchConfigurationAsync: typeof fetchConfigurationAsync;
@@ -2623,6 +2619,7 @@ declare namespace reactConfigApi_d {
   export {
     reactConfigApi_d_fetchAuth0ConfigurationAsync as fetchAuth0ConfigurationAsync,
     reactConfigApi_d_fetchConfigurationAsync as fetchConfigurationAsync,
+    fetchHostingAsync$1 as fetchHostingAsync,
   };
 }
 
@@ -2712,36 +2709,6 @@ declare namespace reportsApi_d {
   export {
     reportsApi_d_fetchReportsAsync as fetchReportsAsync,
     reportsApi_d_downloadReportAsync as downloadReportAsync,
-  };
-}
-
-declare function fetchRewardSelectorsAsync({ token, page }: {
-    token: any;
-    page: any;
-}): Promise<any>;
-declare function fetchRewardSelectorAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function deleteRewardSelectorAsync({ token, id }: {
-    token: any;
-    id: any;
-}): Promise<any>;
-declare function createRewardSelectorAsync({ token, entity }: {
-    token: any;
-    entity: any;
-}): Promise<any>;
-
-declare const rewardSelectorsApi_d_fetchRewardSelectorsAsync: typeof fetchRewardSelectorsAsync;
-declare const rewardSelectorsApi_d_fetchRewardSelectorAsync: typeof fetchRewardSelectorAsync;
-declare const rewardSelectorsApi_d_deleteRewardSelectorAsync: typeof deleteRewardSelectorAsync;
-declare const rewardSelectorsApi_d_createRewardSelectorAsync: typeof createRewardSelectorAsync;
-declare namespace rewardSelectorsApi_d {
-  export {
-    rewardSelectorsApi_d_fetchRewardSelectorsAsync as fetchRewardSelectorsAsync,
-    rewardSelectorsApi_d_fetchRewardSelectorAsync as fetchRewardSelectorAsync,
-    rewardSelectorsApi_d_deleteRewardSelectorAsync as deleteRewardSelectorAsync,
-    rewardSelectorsApi_d_createRewardSelectorAsync as createRewardSelectorAsync,
   };
 }
 
@@ -2943,8 +2910,61 @@ declare namespace trackedUsersApi_d {
   };
 }
 
+declare type Tenant = components["schemas"]["Tenant"];
+declare const fetchCurrentTenantAsync: ({ token, }: AuthenticatedRequest) => Promise<Tenant>;
+declare const fetchHostingAsync: ({ token }: AuthenticatedRequest) => Promise<any>;
+declare const fetchCurrentTenantMembershipsAsync: ({ token, }: AuthenticatedRequest) => Promise<any>;
+interface CreateTenantMembershipRequest extends AuthenticatedRequest {
+    email: string;
+}
+declare const createTenantMembershipAsync: ({ token, email, }: CreateTenantMembershipRequest) => Promise<any>;
+
+declare const tenantsApi_d_fetchCurrentTenantAsync: typeof fetchCurrentTenantAsync;
+declare const tenantsApi_d_fetchHostingAsync: typeof fetchHostingAsync;
+declare const tenantsApi_d_fetchCurrentTenantMembershipsAsync: typeof fetchCurrentTenantMembershipsAsync;
+declare const tenantsApi_d_createTenantMembershipAsync: typeof createTenantMembershipAsync;
+declare namespace tenantsApi_d {
+  export {
+    tenantsApi_d_fetchCurrentTenantAsync as fetchCurrentTenantAsync,
+    tenantsApi_d_fetchHostingAsync as fetchHostingAsync,
+    tenantsApi_d_fetchCurrentTenantMembershipsAsync as fetchCurrentTenantMembershipsAsync,
+    tenantsApi_d_createTenantMembershipAsync as createTenantMembershipAsync,
+  };
+}
+
+declare function fetchRewardSelectorsAsync({ token, page }: {
+    token: any;
+    page: any;
+}): Promise<any>;
+declare function fetchRewardSelectorAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function deleteRewardSelectorAsync({ token, id }: {
+    token: any;
+    id: any;
+}): Promise<any>;
+declare function createRewardSelectorAsync({ token, entity }: {
+    token: any;
+    entity: any;
+}): Promise<any>;
+
+declare const rewardSelectorsApi_d_fetchRewardSelectorsAsync: typeof fetchRewardSelectorsAsync;
+declare const rewardSelectorsApi_d_fetchRewardSelectorAsync: typeof fetchRewardSelectorAsync;
+declare const rewardSelectorsApi_d_deleteRewardSelectorAsync: typeof deleteRewardSelectorAsync;
+declare const rewardSelectorsApi_d_createRewardSelectorAsync: typeof createRewardSelectorAsync;
+declare namespace rewardSelectorsApi_d {
+  export {
+    rewardSelectorsApi_d_fetchRewardSelectorsAsync as fetchRewardSelectorsAsync,
+    rewardSelectorsApi_d_fetchRewardSelectorAsync as fetchRewardSelectorAsync,
+    rewardSelectorsApi_d_deleteRewardSelectorAsync as deleteRewardSelectorAsync,
+    rewardSelectorsApi_d_createRewardSelectorAsync as createRewardSelectorAsync,
+  };
+}
+
 declare const setBaseUrl: (baseUrl: string) => void;
 
+declare const setTenant: (tenant: string) => void;
 declare const setDefaultEnvironmentId: (e: number) => void;
 declare const setDefaultApiKey: (k: string) => void;
 
@@ -2961,4 +2981,4 @@ declare namespace errorHandling_d {
   };
 }
 
-export { actionsApi_d as actions, apiKeyApi_d as apiKeys, businessesApi_d as businesses, channelsApi_d as channels, components, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, metricGeneratorsApi_d as metricGenerators, metricsApi_d as metrics, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, promotionsApi_d as promotions, promotionsRecommendersApi_d as promotionsRecommenders, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };
+export { apiKeyApi_d as apiKeys, axiosInstance_d as axiosInstance, businessesApi_d as businesses, channelsApi_d as channels, components, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, metricGeneratorsApi_d as metricGenerators, metricsApi_d as metrics, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, promotionsApi_d as promotions, promotionsRecommendersApi_d as promotionsRecommenders, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, setTenant, tenantsApi_d as tenants, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };

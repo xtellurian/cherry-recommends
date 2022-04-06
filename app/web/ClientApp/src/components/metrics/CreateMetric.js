@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
@@ -21,6 +20,7 @@ import { useCommonId } from "../../utility/utility";
 
 import { hash } from "../menu/MenuIA";
 import CreatePageLayout from "../molecules/layout/CreatePageLayout";
+import { useNavigation } from "../../utility/useNavigation";
 
 const valueTypeOptions = [
   { value: "numeric", label: "Numeric" },
@@ -35,7 +35,7 @@ const scopeOptions = [
 
 const CreateMetric = () => {
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const { analytics } = useAnalytics();
   const { generateCommonId } = useCommonId();
   const [error, setError] = React.useState();
@@ -58,7 +58,7 @@ const CreateMetric = () => {
     })
       .then((r) => {
         analytics.track("site:metric_create_success");
-        history.push(`/metrics/detail/${r.id}`);
+        navigate(`/metrics/detail/${r.id}`);
       })
       .catch((e) => {
         analytics.track("site:metric_create_failure");

@@ -1,13 +1,11 @@
 import React from "react";
 import {
-  Subtitle,
   ErrorCard,
   AsyncButton,
   PageHeading,
   MoveUpHierarchyPrimaryButton,
   Selector,
 } from "../molecules";
-import { DropdownComponent, DropdownItem } from "../molecules/Dropdown";
 import { createParameterAsync } from "../../api/parametersApi";
 import { useAccessToken } from "../../api-hooks/token";
 import {
@@ -19,7 +17,7 @@ import {
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useCommonId } from "../../utility/utility";
 import CreatePageLayout from "../molecules/layout/CreatePageLayout";
-import { useHistory } from "react-router-dom";
+import { useNavigation } from "../../utility/useNavigation";
 
 const parameterTypeOptions = [
   { label: "Numerical", value: "Numerical" },
@@ -28,7 +26,7 @@ const parameterTypeOptions = [
 
 export const CreateParameter = () => {
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const { analytics } = useAnalytics();
   const { generateCommonId } = useCommonId();
   const [error, setError] = React.useState();
@@ -50,7 +48,7 @@ export const CreateParameter = () => {
     })
       .then((r) => {
         analytics.track("site:parameter_create_success");
-        history.push("/parameters");
+        navigate("/parameters");
       })
       .catch((e) => {
         analytics.track("site:parameter_create_failure");

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ExpandableCard } from "../molecules/ExpandableCard";
+import { Navigation } from "../molecules";
 export const GetStarted = () => {
   return (
     <div>
@@ -12,13 +13,13 @@ export const GetStarted = () => {
         <ul>
           <li>
             Start tracking your users by{" "}
-            <Link to="/settings/integrations/create">
+            <Navigation to="/settings/integrations/create">
               creating a data integration
-            </Link>{" "}
+            </Navigation>{" "}
             or{" "}
-            <Link to="/customers/upload">
+            <Navigation to="/customers/upload">
               uploading a .csv file with customer information.
-            </Link>
+            </Navigation>
           </li>
         </ul>
       </ExpandableCard>
@@ -30,7 +31,7 @@ export const GetStarted = () => {
           </li>
           <li>
             For example, define parameters to optimise in the{" "}
-            <Link to="/parameters">Parameter catalog</Link>
+            <Navigation to="/parameters">Parameter catalog</Navigation>
           </li>
         </ul>
       </ExpandableCard>
@@ -38,9 +39,9 @@ export const GetStarted = () => {
         <ul>
           <li>
             If you created a Parameter Catalogue, you can now setup a{" "}
-            <Link to="/recommenders/parameter-set-recommenders/create">
+            <Navigation to="/recommenders/parameter-set-recommenders/create">
               Parameter Set Recommender.
-            </Link>
+            </Navigation>
           </li>
         </ul>
       </ExpandableCard>

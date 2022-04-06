@@ -46,9 +46,9 @@ namespace SignalBox.Web
             var tenantProvider = context.RequestServices.GetService<ITenantProvider>();
             var logger = context.RequestServices.GetService<ILogger<ApiKeyMiddleware>>();
             var ApiKeyAttributeObject = endpoint?.Metadata?.GetMetadata<AllowApiKeyAttribute>();
-            if (ApiKeyAttributeObject is AllowApiKeyAttribute attribute)
+            if (endpoint != null && ApiKeyAttributeObject is AllowApiKeyAttribute attribute)
             {
-                logger.LogInformation("Endpoint allows ApiKey");
+                logger.LogDebug("Endpoint {endpoint} allows ApiKey", endpoint.DisplayName);
                 // load the API key store
                 if (!context.User.Identity.IsAuthenticated && TryGetApiKey(context, out var key))
                 {
@@ -66,9 +66,9 @@ namespace SignalBox.Web
                     }
                 }
             }
-            else
+            else if (endpoint != null)
             {
-                logger.LogInformation("Endpoint denies ApiKey");
+                logger.LogDebug("Endpoint {endpoint} denies ApiKey", endpoint.DisplayName);
             }
 
             await _next(context);

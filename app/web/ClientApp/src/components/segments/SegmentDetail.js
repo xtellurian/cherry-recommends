@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { useSegment } from "../../api-hooks/segmentsApi";
 import { useAccessToken } from "../../api-hooks/token";
@@ -10,6 +10,7 @@ import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { MembersSection } from "./MembersSection";
 import { PageHeading } from "../molecules/layout/PageHeadings";
 import { SegmentEnrolmentSection } from "./SegmentEnrolmentSection";
+import { useNavigation } from "../../utility/useNavigation";
 
 const tabs = [
   // {
@@ -29,7 +30,7 @@ const defaultTabId = tabs[0].id;
 
 export const SegmentDetail = () => {
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const { id } = useParams();
   const segment = useSegment({ id });
 
@@ -72,7 +73,7 @@ export const SegmentDetail = () => {
         setOpen={setIsDeletePopupOpen}
         handleDelete={() =>
           deleteSegmentAsync({ id, token })
-            .then(() => history.push("/segments"))
+            .then(() => navigate("/segments"))
             .catch(setError)
         }
       />

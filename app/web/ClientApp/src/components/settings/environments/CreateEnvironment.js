@@ -1,9 +1,9 @@
 import React from "react";
-import { useHistory } from "react-router";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useEnvironmentReducer } from "../../../api-hooks/environmentsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createEnvironmentAsync } from "../../../api/environmentsApi";
+import { useNavigation } from "../../../utility/useNavigation";
 import { Title, AsyncButton, BackButton } from "../../molecules";
 import {
   TextInput,
@@ -14,7 +14,7 @@ import {
 } from "../../molecules/TextInput";
 
 export const CreateEnvironment = () => {
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const token = useAccessToken();
   const { analytics } = useAnalytics();
   const [loading, setLoading] = React.useState(false);
@@ -36,7 +36,7 @@ export const CreateEnvironment = () => {
         );
         analytics.track("site:settings_environment_create_success");
         setEnvironment(newEnvironment);
-        history.push("/settings/environments");
+        navigate("/settings/environments");
       })
       // .then(() => {
       //   // return setTimeout(() => window.location.reload(), 50);

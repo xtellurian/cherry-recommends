@@ -21,6 +21,14 @@ namespace SignalBox.Infrastructure.Services
             {
                 if (tenant != null)
                 {
+                    // Type[string]:"permissions"
+                    // Value[string]:"tenant:xxxxxxxx"
+                    // for when the roles are added automatically when token dialect = access_token_authz
+                    var permissions = principal.Claims.Where(_ => _.Type == "permissions");
+                    if (permissions.Any(p => p.Value == tenant.AccessScope()))
+                    {
+                        return Task.FromResult(true);
+                    }
                     var scopes = principal.Claims.First(_ => _.Type == "scope").Value.Split(' ');
                     return Task.FromResult(scopes.Any(_ => _ == tenant.AccessScope()));
                 }

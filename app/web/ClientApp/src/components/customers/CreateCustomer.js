@@ -1,6 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
-
 import { createOrUpdateCustomerAsync } from "../../api/customersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { useAccessToken } from "../../api-hooks/token";
@@ -23,6 +21,7 @@ import {
 } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import CreatePageLayout from "../molecules/layout/CreatePageLayout";
+import { useNavigation } from "../../utility/useNavigation";
 
 export const CreateCustomer = () => {
   const [newCustomer, setNewCustomer] = React.useState({
@@ -40,7 +39,7 @@ export const CreateCustomer = () => {
     });
 
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const integratedSystems = useIntegratedSystems();
@@ -56,7 +55,7 @@ export const CreateCustomer = () => {
     })
       .then((u) => {
         analytics.track("site:customer_create_success");
-        history.push(`/customers/detail/${u.id}`);
+        navigate(`/customers/detail/${u.id}`);
       })
       .catch((e) => {
         analytics.track("site:customer_create_failure");

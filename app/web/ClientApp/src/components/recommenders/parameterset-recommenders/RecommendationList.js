@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Link45deg } from "react-bootstrap-icons";
 import {
   useParameterSetRecommender,
@@ -11,6 +11,7 @@ import {
   EmptyList,
   ExpandableCard,
   Paginator,
+  Navigation,
 } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
 import { DateTimeField } from "../../molecules/DateTimeField";
@@ -41,11 +42,11 @@ const RecommendationRow = ({ recommendation, size }) => {
     <React.Fragment>
       <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
         {recommendation.customer && (
-          <Link to={`/customers/detail/${recommendation.customer.id}`}>
+          <Navigation to={`/customers/detail/${recommendation.customer.id}`}>
             <button className="btn btn-primary float-right">
               View Customer <Link45deg />
             </button>
-          </Link>
+          </Navigation>
         )}
         <DateTimeField label="Created On" date={recommendation.created} />
         {label}

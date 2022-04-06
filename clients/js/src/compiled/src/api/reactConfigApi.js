@@ -1,4 +1,5 @@
 import { current } from "./client/axiosInstance";
+import { executeFetch } from "./client/apiClient";
 const defaultHeaders = { "Content-Type": "application/json" };
 let authConfig = undefined; // caches this because it rarely change
 export const fetchAuth0ConfigurationAsync = async () => {
@@ -27,4 +28,10 @@ export const fetchConfigurationAsync = async () => {
         console.log(config);
     }
     return config;
+};
+export const fetchHostingAsync = async () => {
+    return await executeFetch({
+        path: "api/reactConfig/hosting",
+        method: "get",
+    });
 };

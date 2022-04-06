@@ -1,9 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { EmptyState, Spinner } from "../molecules";
 import { PromotionRow } from "../promotions/PromotionRow";
 import { NoteBox } from "../molecules/NoteBox";
 import { EmptyStateText } from "../molecules/empty/EmptyStateText";
+import { Navigation } from "../molecules";
 
 const MAX_LIST_LENGTH = 5;
 export const Items = ({ className, items }) => {
@@ -26,15 +26,15 @@ export const Items = ({ className, items }) => {
               <EmptyStateText>
                 You haven't created any promotions.
               </EmptyStateText>
-              <Link to="/promotions/create">
+              <Navigation to="/promotions/create">
                 <button className="btn btn-primary">Create a Promotion</button>
-              </Link>
+              </Navigation>
             </EmptyState>
           )}
           <div className="text-center text-muted">
-            <Link to="/promotions">
+            <Navigation to="/promotions">
               <button className="btn btn-link btn-sm">View More</button>
-            </Link>
+            </Navigation>
           </div>
         </NoteBox>
       </div>

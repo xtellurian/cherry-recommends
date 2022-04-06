@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 
 import { createBusinessAsync } from "../../api/businessesApi";
 import { useAccessToken } from "../../api-hooks/token";
@@ -17,6 +16,7 @@ import {
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useCommonId } from "../../utility/utility";
 import CreatePageLayout from "../molecules/layout/CreatePageLayout";
+import { useNavigation } from "../../utility/useNavigation";
 
 export const CreateBusiness = () => {
   const [newBusiness, setNewBusiness] = React.useState({
@@ -26,7 +26,7 @@ export const CreateBusiness = () => {
   });
 
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation;
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const { generateCommonId } = useCommonId();
@@ -39,7 +39,7 @@ export const CreateBusiness = () => {
     })
       .then((u) => {
         analytics.track("site:business_create_success");
-        history.push(`/businesses/detail/${u.id}`);
+        navigate(`/businesses/detail/${u.id}`);
       })
       .catch((e) => {
         analytics.track("site:business_create_failure");

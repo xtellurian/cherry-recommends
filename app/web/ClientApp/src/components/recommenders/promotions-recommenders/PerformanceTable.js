@@ -5,7 +5,7 @@ import {
   usePromotionsRecommender,
   useReportImageBlobUrl,
 } from "../../../api-hooks/promotionsRecommendersApi";
-import { ErrorCard, Spinner } from "../../molecules";
+import { ErrorCard, Navigation, Spinner } from "../../molecules";
 import { ViewReportImagePopup } from "../utils/ViewImagePopup";
 import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import {
@@ -15,7 +15,6 @@ import {
   TableRow,
   Cell,
 } from "../../molecules/Table";
-import { Link } from "react-router-dom";
 
 const PerformanceTableRow = ({ data, itemsById }) => {
   const item = itemsById[data.itemId];
@@ -27,7 +26,9 @@ const PerformanceTableRow = ({ data, itemsById }) => {
   return (
     <TableRow>
       <Cell>
-        <Link to={`/promotions/detail/${data.itemId}`}>{item.name}</Link>
+        <Navigation to={`/promotions/detail/${data.itemId}`}>
+          {item.name}
+        </Navigation>
       </Cell>
       <Cell>{data.targetMetricSum}</Cell>
       <Cell>{data.customerCount}</Cell>

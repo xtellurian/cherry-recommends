@@ -1,10 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Title } from "../../molecules/layout";
 import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { Spinner } from "../../molecules/Spinner";
 import { ErrorCard } from "../../molecules/ErrorCard";
-import { EmptyList } from "../../molecules";
+import { EmptyList, Navigation } from "../../molecules";
 import { Paginator } from "../../molecules/Paginator";
 import { useParameterSetRecommenders } from "../../../api-hooks/parameterSetRecommendersApi";
 import { EntityRow } from "../../molecules/layout/EntityRow";
@@ -16,11 +15,11 @@ const ParameterSetRecommenderRow = ({ recommender }) => {
         <h5>{recommender.name}</h5>
       </div>
       <div className="col-3">
-        <Link
+        <Navigation
           to={`/recommenders/parameter-set-recommenders/detail/${recommender.id}`}
         >
           <button className="btn btn-outline-primary btn-block">Detail</button>
-        </Link>
+        </Navigation>
       </div>
     </EntityRow>
   );

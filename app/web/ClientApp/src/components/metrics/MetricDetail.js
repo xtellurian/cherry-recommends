@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { useMetric } from "../../api-hooks/metricsApi";
@@ -22,6 +22,7 @@ import { saveBlob } from "../../utility/utility";
 import { TabActivator, Tabs } from "../molecules/layout/Tabs";
 import MetricReports from "./MetricReports";
 import { SectionHeading } from "../molecules/layout";
+import { useNavigation } from "../../utility/useNavigation";
 
 const tabs = [
   {
@@ -46,14 +47,14 @@ const defaultTabId = tabs[0].id;
 const MetricDetail = () => {
   const { id } = useParams();
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const metric = useMetric({ id });
 
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState();
   const handleDelete = () => {
     deleteMetricAsync({ id, token })
-      .then(() => history.push("/metrics"))
+      .then(() => navigate("/metrics"))
       .catch(setDeleteError);
   };
 

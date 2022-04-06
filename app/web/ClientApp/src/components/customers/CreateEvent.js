@@ -1,6 +1,6 @@
 import React from "react";
 import dayjs from "dayjs";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { createEventsAsync } from "../../api/eventsApi";
 import { useCustomer } from "../../api-hooks/customersApi";
 import {
@@ -20,6 +20,7 @@ import {
 import { PropertiesEditor } from "../molecules/PropertiesEditor";
 import { useAccessToken } from "../../api-hooks/token";
 import { EventKindSelect } from "../molecules/selectors/EventKindSelect";
+import { useNavigation } from "../../utility/useNavigation";
 
 const parseIntElseNull = (number) => {
   try {
@@ -37,7 +38,7 @@ const parseIntElseNull = (number) => {
 };
 export const CreateEvent = () => {
   const { id } = useParams();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const token = useAccessToken();
   const trackedUser = useCustomer({ id });
   const [payload, setPayload] = React.useState({
@@ -82,7 +83,7 @@ export const CreateEvent = () => {
       token,
       events: [tempPayload],
     })
-      .then((_) => history.push(`/customers/detail/${id}?tab=history`))
+      .then((_) => navigate(`/customers/detail/${id}?tab=history`))
       .catch(setError)
       .finally(() => setLoading(false));
   };

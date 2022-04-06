@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
 import {
   BackButton,
@@ -7,6 +7,7 @@ import {
   Title,
   Spinner,
   ErrorCard,
+  Navigation,
 } from "../../molecules";
 import { CodeView } from "../../molecules/CodeView";
 import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
@@ -133,11 +134,11 @@ export const IntegrateParameterSetRecommender = () => {
                 <h5>To connect this recommender to your Hubspot CRM card:</h5>
                 <ol class="list-group list-group-numbered">
                   <li class="list-group-item">
-                    <Link to="/settings/integrations">
+                    <Navigation to="/settings/integrations">
                       <button className="btn btn-primary mr-3">
                         View Integrations
                       </button>
-                    </Link>
+                    </Navigation>
                     Click the button below to view your existing integrations.
                   </li>
 

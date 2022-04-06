@@ -9,7 +9,7 @@
     "APPINSIGHTS_INSTRUMENTATIONKEY": "none",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "Hosting:Multitenant": "false",
+    "Hosting:Multitenant": "true",
     "Hosting:SingleTenantDatabaseName": "signalbox",
 
     "Auth0:Management:DefaultAudience": "https://localhost:5001",

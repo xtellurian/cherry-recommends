@@ -18,10 +18,10 @@ import {
 } from "../../molecules/TextInput";
 import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 import { ArgumentsEditor } from "../../molecules/ArgumentsEditor";
-import { useHistory } from "react-router-dom";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useCommonId } from "../../../utility/utility";
 import CreatePageLayout from "../../molecules/layout/CreatePageLayout";
+import { useNavigation } from "../../../utility/useNavigation";
 
 const BoundRow = ({ bound, onChange }) => {
   if (bound.categoricalBounds) {
@@ -92,7 +92,7 @@ const BoundRow = ({ bound, onChange }) => {
 };
 export const CreateParameterSetRecommender = () => {
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const [parameterToAdd, setParameterToAdd] = React.useState();
   const [availableParameters, setAvailableParameters] = React.useState([]);
   const [args, setArgs] = React.useState({});
@@ -170,7 +170,7 @@ export const CreateParameterSetRecommender = () => {
     })
       .then((r) => {
         analytics.track("site:parameterSetRecommender_create_success");
-        history.push(`/recommenders/parameter-set-recommenders/detail/${r.id}`);
+        navigate(`/recommenders/parameter-set-recommenders/detail/${r.id}`);
       })
       .catch((e) => {
         analytics.track("site:parameterSetRecommender_create_failure");

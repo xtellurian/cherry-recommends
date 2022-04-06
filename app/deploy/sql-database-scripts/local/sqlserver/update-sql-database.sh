@@ -1,9 +1,17 @@
 set -e
 
 CONTEXT=SignalBoxDbContext
-DATABASE=signalbox
+
+DATABASE=$1
+
+if [ -z "$DATABASE" ]
+then
+      echo "Setting DATABASE=signalbox"
+      DATABASE=signalbox
+fi
+
+echo "Using Database = $DATABASE"
 CS="Server=127.0.0.1,1433;Database=$DATABASE;User Id=SA;Password=YourStrong@Passw0rd"
-# CS="Server=tcp:$SERVER.database.windows.net,1433;Initial Catalog=$DATABASE;User ID=$USER;Password=$PW;Min Pool Size=0;Max Pool Size=30;Persist Security Info=False;";
 
 if [ -z "$APP_PATH" ]
 then

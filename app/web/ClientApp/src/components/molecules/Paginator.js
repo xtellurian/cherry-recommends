@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "../../utility/utility";
+import { Navigation } from "./Navigation";
 
 const PageLink = ({ page, children }) => {
   const loc = useLocation();
@@ -10,9 +10,9 @@ const PageLink = ({ page, children }) => {
   const to = `${loc.pathname}?${qs.toString()}`;
 
   return (
-    <Link className="page-link" to={to}>
+    <Navigation className="page-link" to={to}>
       {children}
-    </Link>
+    </Navigation>
   );
 };
 

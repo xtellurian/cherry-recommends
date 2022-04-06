@@ -22,9 +22,6 @@ export const CustomersSummary = () => {
     <div>
       <div className="float-right">
         <CreateButton />
-        {/* <Link to="/customers/upload">
-          <button className="btn btn-outline-primary ml-1">Upload CSV</button>
-        </Link> */}
       </div>
       <Title>Customers</Title>
       <hr />

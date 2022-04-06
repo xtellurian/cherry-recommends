@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { useBusiness } from "../../api-hooks/businessesApi";
 import { useAccessToken } from "../../api-hooks/token";
@@ -26,6 +26,7 @@ import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { MembersSection } from "./MembersSection";
 import { BusinessEventsSection } from "./BusinessEventsSection";
 import { Recommendations } from "./Recommendations";
+import { useNavigation } from "../../utility/useNavigation";
 
 const tabs = [
   {
@@ -49,7 +50,7 @@ const defaultTabId = tabs[0].id;
 
 export const BusinessDetail = () => {
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const { id } = useParams();
   const business = useBusiness({ id });
 
@@ -135,7 +136,7 @@ export const BusinessDetail = () => {
         setOpen={setIsDeletePopupOpen}
         handleDelete={() =>
           deleteBusinessAsync({ id, token })
-            .then(() => history.push("/businesses"))
+            .then(() => navigate("/businesses"))
             .catch(setError)
         }
       />

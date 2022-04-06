@@ -12,7 +12,7 @@ export const TenantsComponent = () => {
         <AuthorizeRoute exact path={`${path}`} component={ManagementPage} />
         <AuthorizeRoute
           exact
-          path={`${path}create-tenant`}
+          path={`${path}/create-tenant`}
           component={CreateTenantSection}
         />
       </Switch>

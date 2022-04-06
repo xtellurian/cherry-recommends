@@ -1,6 +1,7 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useTabs, useQuery } from "../../../utility/utility";
+import { Navigation } from "../Navigation";
 
 const QueryStringTabListItem = ({ active, tab, basePath }) => {
   const location = useLocation();
@@ -9,7 +10,7 @@ const QueryStringTabListItem = ({ active, tab, basePath }) => {
 
   return (
     <li className="nav-item">
-      <Link
+      <Navigation
         className={`nav-link ${active && "active"}`}
         aria-current="page"
         to={{
@@ -19,7 +20,7 @@ const QueryStringTabListItem = ({ active, tab, basePath }) => {
         }}
       >
         {tab.label || tab.name || tab.id}
-      </Link>
+      </Navigation>
     </li>
   );
 };

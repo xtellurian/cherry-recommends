@@ -1,29 +1,30 @@
 import React from "react";
-import { Switch, Link, useRouteMatch } from "react-router-dom";
+import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { ApiKeyComponent } from "./apiKeys/ApiKeyComponent";
 import { IntegrationsComponent } from "./integrations/IntegrationsComponent";
 import { DeploymentInfo } from "./deployment/DeploymentInfo";
 import { EnvironmentsComponent } from "./environments/EnvironmentsComponent";
+import { Navigation } from "../molecules";
 
 const SettingsHome = () => {
   const { path } = useRouteMatch();
   return (
     <React.Fragment>
       <div>
-        <Link to={`${path}/api-keys`}>
+        <Navigation to={`${path}/api-keys`}>
           <button className="btn btn-outline-primary">API Keys</button>
-        </Link>
+        </Navigation>
       </div>
       <div>
-        <Link to={`${path}/integrations`}>
+        <Navigation to={`${path}/integrations`}>
           <button className="btn btn-outline-primary">Integrations</button>
-        </Link>
+        </Navigation>
       </div>
       <div>
-        <Link to={`${path}/environments`}>
+        <Navigation to={`${path}/environments`}>
           <button className="btn btn-outline-primary">Environments</button>
-        </Link>
+        </Navigation>
       </div>
     </React.Fragment>
   );

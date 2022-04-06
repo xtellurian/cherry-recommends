@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useAccessToken } from "../../../api-hooks/token";
@@ -11,11 +10,12 @@ import { TextInput, InputGroup } from "../../molecules/TextInput";
 import { IntegrationIcon } from "./icons/IntegrationIcons";
 import { MoveUpHierarchyPrimaryButton, PageHeading } from "../../molecules";
 import { useFeatureFlag } from "../../launch-darkly/hooks";
+import { useNavigation } from "../../../utility/useNavigation";
 
 const systemTypes = ["Hubspot", "Segment", "Shopify", "Custom"];
 
 export const CreateIntegration = () => {
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const token = useAccessToken();
   const { analytics } = useAnalytics();
   const shopifyFlag = useFeatureFlag("shopify", true);
@@ -34,7 +34,7 @@ export const CreateIntegration = () => {
     })
       .then((s) => {
         analytics.track("site:settings_integration_create_success");
-        history.push(`/settings/integrations/detail/${s.id}`);
+        navigate(`/settings/integrations/detail/${s.id}`);
       })
       .catch((e) => {
         analytics.track("site:settings_integration_create_failure");

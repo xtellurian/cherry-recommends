@@ -52,7 +52,17 @@
         return currentInstance;
     };
 
+    var axiosInstance = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        current: current
+    });
+
     // tenant
+    let storedTenant = null;
+    const setTenant = (tenant) => {
+        console.debug(`Setting tenant: ${tenant}`);
+        storedTenant = tenant;
+    };
     // environment
     let defaltEnvironmentId = null;
     const setDefaultEnvironmentId$1 = (e) => {
@@ -67,6 +77,9 @@
     };
     const headers = (token, apiKey) => {
         let headers = { ...defaultHeaders$1 };
+        if (storedTenant) {
+            headers["x-tenant"] = storedTenant;
+        }
         if (token) {
             headers.Authorization = `Bearer ${token}`;
         }
@@ -2164,11 +2177,18 @@
         }
         return config;
     };
+    const fetchHostingAsync$1 = async () => {
+        return await executeFetch({
+            path: "api/reactConfig/hosting",
+            method: "get",
+        });
+    };
 
     var reactConfigApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
         fetchAuth0ConfigurationAsync: fetchAuth0ConfigurationAsync,
-        fetchConfigurationAsync: fetchConfigurationAsync
+        fetchConfigurationAsync: fetchConfigurationAsync,
+        fetchHostingAsync: fetchHostingAsync$1
     });
 
     const getPropertiesAsync$2 = async ({ api, token, id }) => {
@@ -2261,8 +2281,8 @@
             query: {
                 "q.term": searchTerm,
                 "q.weeksAgo": weeksAgo,
-                "promotionType": promotionType,
-                "benefitType": benefitType,
+                promotionType: promotionType,
+                benefitType: benefitType,
             },
         });
     };
@@ -2518,6 +2538,44 @@
         deleteCustomerAsync: deleteCustomerAsync
     });
 
+    const fetchCurrentTenantAsync = async ({ token, }) => {
+        return await executeFetch({
+            path: "api/tenants/current",
+            token,
+            method: "get",
+        });
+    };
+    const fetchHostingAsync = async ({ token }) => {
+        return await executeFetch({
+            path: "api/tenants/hosting",
+            token,
+            method: "get",
+        });
+    };
+    const fetchCurrentTenantMembershipsAsync = async ({ token, }) => {
+        return await executeFetch({
+            path: "api/tenants/current/memberships",
+            token,
+            method: "get",
+        });
+    };
+    const createTenantMembershipAsync = async ({ token, email, }) => {
+        return await executeFetch({
+            path: "api/tenants/current/memberships",
+            token,
+            method: "post",
+            body: { email },
+        });
+    };
+
+    var tenantsApi = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        fetchCurrentTenantAsync: fetchCurrentTenantAsync,
+        fetchHostingAsync: fetchHostingAsync,
+        fetchCurrentTenantMembershipsAsync: fetchCurrentTenantMembershipsAsync,
+        createTenantMembershipAsync: createTenantMembershipAsync
+    });
+
     const fetchRewardSelectorsAsync = async ({ token, page }) => {
         return await executeFetch({
             path: "api/RewardSelectors",
@@ -2556,50 +2614,8 @@
         createRewardSelectorAsync: createRewardSelectorAsync
     });
 
-    const fetchUniqueActionNamesAsync = async ({ token, page, term }) => {
-        return await executeFetch({
-            path: "api/actions/distinct-groups",
-            token,
-            page,
-            query: {
-                term,
-            },
-        });
-    };
-    const fetchDistinctGroupsAsync = async ({ token, page, term }) => {
-        return await executeFetch({
-            path: "api/actions/distinct-groups",
-            token,
-            page,
-            query: {
-                term,
-            },
-        });
-    };
-
-    var actionsApi = /*#__PURE__*/Object.freeze({
-        __proto__: null,
-        fetchUniqueActionNamesAsync: fetchUniqueActionNamesAsync,
-        fetchDistinctGroupsAsync: fetchDistinctGroupsAsync
-    });
-
-    // fix missing fetch is node environments
-    const fetch = require("node-fetch");
-    if (typeof globalThis === "object") {
-        // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis
-        globalThis.fetch = fetch;
-    }
-    else if (typeof global === "object") {
-        // For Node <12
-        global.fetch = fetch;
-    }
-    else {
-        // Everything else is not supported
-        throw new Error("Unknown JavaScript environment: Not supported");
-    }
-
-    exports.actions = actionsApi;
     exports.apiKeys = apiKeyApi;
+    exports.axiosInstance = axiosInstance;
     exports.businesses = businessesApi;
     exports.channels = channelsApi;
     exports.customers = customersApi;
@@ -2629,6 +2645,8 @@
     exports.setBaseUrl = setBaseUrl;
     exports.setDefaultApiKey = setDefaultApiKey;
     exports.setDefaultEnvironmentId = setDefaultEnvironmentId$1;
+    exports.setTenant = setTenant;
+    exports.tenants = tenantsApi;
     exports.touchpoints = touchpointsApi;
     exports.trackedUsers = trackedUsersApi;
 

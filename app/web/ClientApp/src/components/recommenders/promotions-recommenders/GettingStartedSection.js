@@ -1,9 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   useDestinations,
   usePromotionsRecommendations,
 } from "../../../api-hooks/promotionsRecommendersApi";
+import { Navigation } from "../../molecules";
 import { NoteBox } from "../../molecules/NoteBox";
 
 export const GettingStartedSection = ({ recommender }) => {
@@ -26,13 +26,13 @@ export const GettingStartedSection = ({ recommender }) => {
                   To use this recommender, you can send recommendations to an
                   Integrated System via a channel.
                 </p>
-                <Link
+                <Navigation
                   to={`/recommenders/promotions-recommenders/advanced/${recommender.id}?tab=advanced`}
                 >
                   <button className="btn btn-outline-primary">
                     Add a destination channel
                   </button>
-                </Link>
+                </Navigation>
               </NoteBox>
             </div>
           )}

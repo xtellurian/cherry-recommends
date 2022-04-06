@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
@@ -22,6 +21,7 @@ import {
 import Select from "../molecules/selectors/Select";
 import PageLayout from "../molecules/layout/CreatePageLayout";
 import { useCommonId } from "../../utility/utility";
+import { useNavigation } from "../../utility/useNavigation";
 
 export const benefitTypeOptons = [
   { value: "percent", label: "%" },
@@ -50,7 +50,7 @@ const CreateButton = ({ handleCreate, loading }) => {
 
 export const CreateItem = () => {
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const { analytics } = useAnalytics();
   const { generateCommonId } = useCommonId();
   const [loading, setLoading] = React.useState(false);
@@ -74,7 +74,7 @@ export const CreateItem = () => {
     })
       .then((p) => {
         analytics.track("site:item_create_success");
-        history.push(`/promotions/detail/${p.id}`);
+        navigate(`/promotions/detail/${p.id}`);
       })
       .catch((e) => {
         analytics.track("site:item_create_failure");

@@ -1,11 +1,11 @@
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
-import { useHosting, useMemberships } from "../../api-hooks/tenantsApi";
-import { Spinner, Title, Subtitle } from "../molecules";
+import { Redirect, useRouteMatch } from "react-router-dom";
+import { useMemberships } from "../../api-hooks/tenantsApi";
+import { Spinner, Title, Subtitle, Navigation } from "../molecules";
 import { EntityRow } from "../molecules/layout/EntityRow";
 
-const MembershipRow = ({ tenant, hosting }) => {
-  const link = `https://${tenant.name}.${hosting.canonicalRootDomain}?autoSignIn=true`;
+const MembershipRow = ({ tenant }) => {
+  const link = `https://${window.location.host}/${tenant.name}?autoSignIn=true`;
   return (
     <EntityRow>
       <div className="col-6">
@@ -23,12 +23,11 @@ const MembershipRow = ({ tenant, hosting }) => {
 };
 export const ManagementPage = () => {
   const memberships = useMemberships();
-  const hosting = useHosting();
-
-  if (!memberships.loading && !hosting.loading && memberships.length === 0) {
+  const { path } = useRouteMatch();
+  if (!memberships.loading && memberships.length === 0) {
     return (
       <React.Fragment>
-        <Redirect to="create-tenant" />
+        <Redirect to={`${path}/create-tenant`} />
       </React.Fragment>
     );
   }
@@ -36,16 +35,16 @@ export const ManagementPage = () => {
   return (
     <div className="container">
       <div className="m-2">
-        <div className="text-center">
-          <Title className="display-3">Four 2</Title>
+        <div className="text-center mt-5 mb-5">
+          <Title className="display-5">🍒 Cherry 🍒</Title>
         </div>
 
         <div className="mb-5">
-          <Link to="create-tenant">
+          <Navigation to={`${path}/create-tenant`}>
             <button className="btn btn-primary float-right">
               Create a new Tenant
             </button>
-          </Link>
+          </Navigation>
           <Subtitle>Tenant Management</Subtitle>
         </div>
         <hr />
@@ -57,16 +56,14 @@ export const ManagementPage = () => {
           <div className="text-center pt-5">
             <h4>Error</h4>
             <p>{memberships.error.title}</p>
-            <a href="mailto:rian@four2.ai">
+            <a href="mailto:rian@cherry.ai">
               <button className="btn btn-outline-danger">Report Issue</button>
             </a>
           </div>
         )}
         <div className="m-3">
           {memberships.length > 0 &&
-            memberships.map((m) => (
-              <MembershipRow key={m.name} tenant={m} hosting={hosting} />
-            ))}
+            memberships.map((m) => <MembershipRow key={m.name} tenant={m} />)}
         </div>
       </div>
     </div>

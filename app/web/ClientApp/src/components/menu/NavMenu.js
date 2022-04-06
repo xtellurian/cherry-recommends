@@ -15,7 +15,6 @@ import {
 import { Link } from "react-router-dom";
 import { useAuth } from "../../utility/useAuth";
 import { settingsItems } from "./MenuIA";
-import { useTokenScopes } from "../../api-hooks/token";
 import { LoadingPopup } from "../molecules/popups/LoadingPopup";
 import {
   useEnvironmentReducer,
@@ -26,6 +25,7 @@ import { ToggleGettingStartedChecklistButton } from "../onboarding/GettingStarte
 
 import { SideNavMenu } from "./SideNavMenu";
 import "./NavMenu.css";
+import { Navigation } from "../molecules";
 
 const DropdownMenuItem = ({ section }) => {
   return (
@@ -37,7 +37,7 @@ const DropdownMenuItem = ({ section }) => {
         {section.items.map((item) => (
           <DropdownItem key={item.to}>
             <NavItem>
-              <NavLink tag={Link} className="text-dark" to={item.to}>
+              <NavLink tag={Navigation} className="text-dark" to={item.to}>
                 {item.name}
               </NavLink>
             </NavItem>
@@ -51,7 +51,7 @@ const DropdownMenuItem = ({ section }) => {
 const SingleMenuItem = ({ item }) => {
   return (
     <NavItem>
-      <NavLink tag={Link} className="text-dark" to={item.to}>
+      <NavLink tag={Navigation} className="text-dark" to={item.to}>
         {item.name}
       </NavLink>
     </NavItem>
@@ -76,8 +76,6 @@ export const NavMenu = ({ children }) => {
   const handleLogout = () => {
     logout({ returnTo });
   };
-
-  var scopes = useTokenScopes();
 
   const toggleNavbar = () => {
     setState({
@@ -125,7 +123,11 @@ export const NavMenu = ({ children }) => {
                       {settingsItems.map((i) => (
                         <DropdownItem key={i.name}>
                           <NavItem>
-                            <NavLink tag={Link} className="text-dark" to={i.to}>
+                            <NavLink
+                              tag={Navigation}
+                              className="text-dark"
+                              to={i.to}
+                            >
                               {i.name}
                             </NavLink>
                           </NavItem>
@@ -172,7 +174,7 @@ export const NavMenu = ({ children }) => {
                       <DropdownItem>
                         <NavItem>
                           <NavLink
-                            tag={Link}
+                            tag={Navigation}
                             className="text-dark"
                             to="/settings/environments"
                           >
@@ -183,7 +185,7 @@ export const NavMenu = ({ children }) => {
                       <DropdownItem>
                         <NavItem>
                           <NavLink
-                            tag={Link}
+                            tag={Navigation}
                             className="text-dark"
                             to="/settings/environments/create"
                           >

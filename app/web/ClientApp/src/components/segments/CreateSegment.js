@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
@@ -12,10 +11,11 @@ import {
   PageHeading,
 } from "../molecules";
 import CreatePageLayout from "../molecules/layout/CreatePageLayout";
+import { useNavigation } from "../../utility/useNavigation";
 
 export const CreateSegment = () => {
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const { analytics } = useAnalytics();
   const [loading, setLoading] = React.useState(false);
   const [segment, setSegment] = React.useState();
@@ -30,7 +30,7 @@ export const CreateSegment = () => {
     })
       .then((r) => {
         analytics.track("site:segment_create_success");
-        history.push("/segments");
+        navigate("/segments");
       })
       .catch((e) => {
         analytics.track("site:segment_create_failure");

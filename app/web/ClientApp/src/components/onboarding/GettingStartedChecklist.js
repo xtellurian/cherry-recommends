@@ -1,10 +1,9 @@
 import React from "react";
 import { BigPopup } from "../molecules/popups/BigPopup";
-import { AsyncButton, ErrorCard, Spinner } from "../molecules";
+import { AsyncButton, ErrorCard, Navigation, Spinner } from "../molecules";
 import { CircleFill, CheckCircle } from "react-bootstrap-icons";
 import { useMetadata } from "../../api-hooks/profileApi";
 import { setMetadataAsync } from "../../api/profileApi";
-import { Link } from "react-router-dom";
 import { useAccessToken } from "../../api-hooks/token";
 import { usePromotionsRecommenders } from "../../api-hooks/promotionsRecommendersApi";
 
@@ -58,7 +57,7 @@ const GettingStartedStep = ({
 
         <div className="mt-3">
           <div className="text-right">
-            <Link
+            <Navigation
               to={step.actionTo.replace(
                 "{recommenderId}",
                 defaultRecommenderId
@@ -74,7 +73,7 @@ const GettingStartedStep = ({
               >
                 {step.actionLabel}
               </AsyncButton>
-            </Link>
+            </Navigation>
           </div>
         </div>
       </div>

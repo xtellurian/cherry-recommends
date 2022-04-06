@@ -1,7 +1,7 @@
 import React from "react";
 import "./FunError.css";
 
-export const FunError = () => {
+export const FunError = ({ error }) => {
   return (
     <div className="fun-error">
       <svg
@@ -369,7 +369,7 @@ export const FunError = () => {
       </svg>
       <div className="col">
         <h1>Uh Oh</h1>
-        <p>We have a configuration problem...</p>
+        <p>{error ? `${error}` : "We have a configuration problem..."}</p>
       </div>
     </div>
   );

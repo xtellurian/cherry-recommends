@@ -1,58 +1,15 @@
+import { tenants } from "cherry.ai";
 const defaultHeaders = { "Content-Type": "application/json" };
 const headers = (token) =>
   !token
     ? defaultHeaders
     : { ...defaultHeaders, Authorization: `Bearer ${token}` };
 
-export const fetchCurrentTenantAsync = async ({ token }) => {
-  const url = "api/tenants/current";
-  const response = await fetch(url, {
-    headers: headers(token),
-  });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
-
-export const fetchCurrentTenantMembershipsAsync = async ({ token }) => {
-  const url = "api/tenants/current/memberships";
-  const response = await fetch(url, {
-    headers: headers(token),
-  });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
-
-export const createTenantMembershipAsync = async ({ token, email }) => {
-  const url = "api/tenants/current/memberships";
-  const response = await fetch(url, {
-    headers: headers(token),
-    method: "post",
-    body: JSON.stringify({ email }),
-  });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
-
-export const fetchHostingAsync = async ({ token }) => {
-  const url = "api/tenants/hosting";
-  const response = await fetch(url, {
-    headers: headers(token),
-  });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw await response.json();
-  }
-};
+export const fetchCurrentTenantAsync = tenants.fetchCurrentTenantAsync;
+export const fetchHostingAsync = tenants.fetchHostingAsync;
+export const fetchCurrentTenantMembershipsAsync =
+  tenants.fetchCurrentTenantMembershipsAsync;
+export const createTenantMembershipAsync = tenants.createTenantMembershipAsync;
 
 export const fetchStatusAsync = async ({ token, name }) => {
   const url = `api/tenants/status/${name}`;

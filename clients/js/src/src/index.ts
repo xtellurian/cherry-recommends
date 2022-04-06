@@ -1,19 +1,7 @@
-// fix missing fetch is node environments
-const fetch = require("node-fetch");
-if (typeof globalThis === "object") {
-  // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis
-  globalThis.fetch = fetch;
-} else if (typeof global === "object") {
-  // For Node <12
-  global.fetch = fetch;
-} else {
-  // Everything else is not supported
-  throw new Error("Unknown JavaScript environment: Not supported");
-}
-
 import * as apiKeys from "./api/apiKeyApi";
 import * as businesses from "./api/businessesApi";
 import * as channels from "./api/channelsApi";
+import * as axiosInstance from "./api/client/axiosInstance";
 import * as customers from "./api/customersApi";
 import * as dataSummary from "./api/dataSummaryApi";
 import * as deployment from "./api/deploymentApi";
@@ -38,20 +26,21 @@ import * as reports from "./api/reportsApi";
 import * as segments from "./api/segmentsApi";
 import * as touchpoints from "./api/touchpointsApi";
 import * as trackedUsers from "./api/trackedUsersApi";
+import * as tenants from "./api/tenantsApi";
 import * as rewardSelectors from "./api/rewardSelectorsApi";
-import * as actions from "./api/actionsApi";
 import { components } from "./model/api";
 
 import { setBaseUrl } from "./api/client/baseUrl";
 import {
   setDefaultEnvironmentId,
   setDefaultApiKey,
+  setTenant,
 } from "./api/client/headers";
 import * as errorHandling from "./utilities/errorHandling";
 
 export {
-  actions,
   apiKeys,
+  axiosInstance,
   businesses,
   channels,
   customers,
@@ -77,11 +66,13 @@ export {
   reports,
   rewardSelectors,
   segments,
+  tenants,
   touchpoints,
   trackedUsers,
   setBaseUrl,
   setDefaultEnvironmentId,
   setDefaultApiKey,
+  setTenant,
   errorHandling,
-  components
+  components,
 };

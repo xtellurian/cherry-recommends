@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, useRouteMatch } from "react-router-dom";
+import { useRouteMatch } from "react-router-dom";
+import { Navigation } from "../Navigation";
 
 import "../css/nav.css";
 
@@ -20,9 +21,12 @@ export const NavListItem = ({ to, children }) => {
 
   return (
     <li className="list-group-item primary-nav-item" style={{ border: "none" }}>
-      <Link className={`primary-nav-link ${active ? "active" : ""}`} to={to}>
+      <Navigation
+        className={`primary-nav-link ${active ? "active" : ""}`}
+        to={to}
+      >
         {children}
-      </Link>
+      </Navigation>
     </li>
   );
 };

@@ -3,7 +3,6 @@ import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createTenantAsync, fetchStatusAsync } from "../../api/tenantsApi";
 import { useInterval } from "../../utility/useInterval";
-import { useHosting } from "../../api-hooks/tenantsApi";
 import { AsyncButton, ErrorCard, Spinner, Title } from "../molecules";
 import { BigPopup } from "../molecules/popups/BigPopup";
 import { Markdown } from "../molecules/Markdown";
@@ -21,12 +20,13 @@ import {
 
 import { PersonalizationCarousel } from "./PersonalizationCarousel";
 import { Progress } from "../molecules/Progress";
+import { useNavigation } from "../../utility/useNavigation";
 
 const nameRequirements = [
   "At least 4 characters",
   "Lowercase letters and numbers only",
   "No special characters, except underscore or hyphen",
-  "Must start with a letter",
+  "Must start with a letter, not a number or symbol",
 ];
 
 const termsVersion = "v1";
@@ -57,7 +57,6 @@ export const CreateTenantSection = () => {
   const [termsPopupOpen, setTermsPopupOpen] = React.useState(false);
   const [termsOfService, setTermsOfService] = React.useState();
   const [serverDryRun, setServerDryRun] = React.useState();
-  const hosting = useHosting();
   const { analytics } = useAnalytics();
 
   const [tenant, setTenant] = React.useState({
@@ -126,10 +125,10 @@ export const CreateTenantSection = () => {
   };
 
   useInterval(() => updateStatus(), 5000);
-
+  const { navigate } = useNavigation();
   React.useEffect(() => {
     if (status === "Created") {
-      window.location = `https://${nameCreated}.${hosting.canonicalRootDomain}?autoSignIn=true`;
+      navigate({ pathname: `/${nameCreated}` });
     }
   }, [status]);
 
@@ -191,7 +190,7 @@ export const CreateTenantSection = () => {
         <div className="text-center">
           <Title>Create a new Tenant</Title>
           <span className="text-bold">
-            Your tenant is the home of all your customers' data
+            Your tenant is the home for all your business' promotions.
           </span>
         </div>
         <div className="w-50 m-auto">
@@ -224,7 +223,7 @@ export const CreateTenantSection = () => {
               {isLongEnoughName && (
                 <small>
                   Your tenant will be available at{" "}
-                  {`https://${tenant.name}.${hosting.canonicalRootDomain}`}
+                  {`https://${window.location.host}/${tenant.name}`}
                 </small>
               )}
               {!isLongEnoughName && <small>.</small>}

@@ -12,6 +12,7 @@ import App from "./App";
 import { AnalyticsProvider } from "./analytics/analyticsHooks";
 import { getStartupConfigAsync } from "./utility/startupConfig";
 import LaunchDarklyConfigurator from "./components/launch-darkly/LaunchDarklyConfigurator";
+import { HostingProvider } from "./components/tenants/HostingProvider";
 
 //import registerServiceWorker from './registerServiceWorker';
 Modal.setAppElement("#root");
@@ -27,20 +28,22 @@ if (window.location.host.startsWith("hidden-cherry-secret.local.zone")) {
 } else {
   getStartupConfigAsync()
     .then((x) => new Promise((resolve) => setTimeout(() => resolve(x), 500))) // ensure you wait half a second for the loading screen
-    .then(({ auth0, LDProvider }) => {
+    .then(({ auth0, LDProvider, hosting }) => {
       ReactDOM.render(
         <>
           <BrowserRouter basename={baseUrl}>
             <AnalyticsProvider>
-              <Auth0ProviderWrapper auth0Config={auth0}>
-                <LDProvider>
-                  <LaunchDarklyConfigurator>
-                    <EnvironmentStore>
-                      <App />
-                    </EnvironmentStore>
-                  </LaunchDarklyConfigurator>
-                </LDProvider>
-              </Auth0ProviderWrapper>
+              <HostingProvider>
+                <Auth0ProviderWrapper auth0Config={auth0}>
+                  <LDProvider>
+                    <LaunchDarklyConfigurator>
+                      <EnvironmentStore>
+                        <App multitenant={hosting.multitenant} />
+                      </EnvironmentStore>
+                    </LaunchDarklyConfigurator>
+                  </LDProvider>
+                </Auth0ProviderWrapper>
+              </HostingProvider>
             </AnalyticsProvider>
           </BrowserRouter>
         </>,

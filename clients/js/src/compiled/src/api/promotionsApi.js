@@ -8,8 +8,8 @@ export const fetchPromotionsAsync = async ({ token, page, searchTerm, promotionT
         query: {
             "q.term": searchTerm,
             "q.weeksAgo": weeksAgo,
-            "promotionType": promotionType,
-            "benefitType": benefitType,
+            promotionType: promotionType,
+            benefitType: benefitType,
         },
     });
 };

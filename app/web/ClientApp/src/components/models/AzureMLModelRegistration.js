@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import { ErrorCard, AsyncButton } from "../molecules";
 import {
   TextInput,
@@ -8,9 +7,10 @@ import {
 } from "../molecules/TextInput";
 import { useAccessToken } from "../../api-hooks/token";
 import { createModelRegistrationAsync } from "../../api/modelRegistrationsApi";
+import { useNavigation } from "../../utility/useNavigation";
 
 export const AzureMLModelRegistration = ({ hostingType, modelType }) => {
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const token = useAccessToken();
   const [error, setError] = React.useState();
   const [modelRegistration, setModelRegistration] = React.useState({
@@ -29,7 +29,7 @@ export const AzureMLModelRegistration = ({ hostingType, modelType }) => {
       payload: modelRegistration,
       token,
     })
-      .then((m) => history.push(`/models/test/${m.id}`))
+      .then((m) => navigate(`/models/test/${m.id}`))
       .catch(setError)
       .finally(() => setLoading(false));
   };

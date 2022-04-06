@@ -1,11 +1,17 @@
 import React from "react";
-import { useHistory, Link } from "react-router-dom";
 import { useModelRegistrations } from "../../../api-hooks/modelRegistrationsApi";
 import { BackButton } from "../../molecules/BackButton";
-import { Title, Spinner, ErrorCard, Selector } from "../../molecules";
+import {
+  Title,
+  Spinner,
+  ErrorCard,
+  Selector,
+  Navigation,
+} from "../../molecules";
 import { NoteBox } from "../../molecules/NoteBox";
 import { CopyableField } from "../../molecules/fields/CopyableField";
 import { useAccessToken } from "../../../api-hooks/token";
+import { useNavigation } from "../../../utility/useNavigation";
 
 const LinkedModelInfo = ({ linkedModel }) => {
   return (
@@ -13,9 +19,9 @@ const LinkedModelInfo = ({ linkedModel }) => {
       <div className="card-header">Currently Linked</div>
       <div className="card-body">
         <CopyableField label="Model Name" value={linkedModel.name} />
-        <Link to={`/models/test/${linkedModel.id}`}>
+        <Navigation to={`/models/test/${linkedModel.id}`}>
           <button className="btn btn-secondary float-right">Test Model</button>
-        </Link>
+        </Navigation>
       </div>
     </div>
   );
@@ -26,7 +32,7 @@ export const LinkToModelUtility = ({
   createLinkRegisteredModelAsync,
   rootPath,
 }) => {
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const token = useAccessToken();
 
   const [error, setError] = React.useState();
@@ -50,7 +56,7 @@ export const LinkToModelUtility = ({
       id: recommender.id,
       modelId: selectedModel.id,
     })
-      .then(() => history.push(`${rootPath}/detail/${recommender.id}`))
+      .then(() => navigate(`${rootPath}/detail/${recommender.id}`))
       .catch(setError);
   };
   return (

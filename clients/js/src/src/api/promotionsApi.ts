@@ -1,111 +1,110 @@
 import {
-    AuthenticatedRequest,
-    DeleteRequest,
-    DeleteResponse,
-    EntityRequest,
-    EntitySearchRequest,
-    PaginateResponse,
-    Promotion,
-    SetpropertiesRequest,
-    PromotionsRequest
-  } from "../interfaces";
-  import { executeFetch } from "./client/apiClient";
-  import { components } from "../model/api";
-  
-  import * as pr from "./commonEntity/propertiesApiUtil";
-  
-  export const fetchPromotionsAsync = async ({
+  AuthenticatedRequest,
+  DeleteRequest,
+  DeleteResponse,
+  EntityRequest,
+  EntitySearchRequest,
+  PaginateResponse,
+  Promotion,
+  SetpropertiesRequest,
+  PromotionsRequest,
+} from "../interfaces";
+import { executeFetch } from "./client/apiClient";
+import { components } from "../model/api";
+
+import * as pr from "./commonEntity/propertiesApiUtil";
+
+export const fetchPromotionsAsync = async ({
+  token,
+  page,
+  searchTerm,
+  promotionType,
+  benefitType,
+  weeksAgo,
+}: PromotionsRequest): Promise<PaginateResponse<Promotion>> => {
+  return await executeFetch({
+    path: "api/Promotions",
     token,
     page,
-    searchTerm,
-    promotionType,
-    benefitType,
-    weeksAgo,
-  }: PromotionsRequest): Promise<PaginateResponse<Promotion>> => {
-    return await executeFetch({
-      path: "api/Promotions",
-      token,
-      page,
-      query: {
-        "q.term": searchTerm,
-        "q.weeksAgo": weeksAgo,  
-        "promotionType": promotionType,
-        "benefitType": benefitType,
-      },
-    });
-  };
-  
-  export const fetchPromotionAsync = async ({ token, id }: EntityRequest) => {
-    return await executeFetch({
-      path: `api/Promotions/${id}`,
-      token,
-    });
-  };
-  
-  interface CreatePromotionRequest extends AuthenticatedRequest {
-    promotion: components["schemas"]["CreatePromotionDto"];
-  }
-  export const createPromotionAsync = async ({
+    query: {
+      "q.term": searchTerm,
+      "q.weeksAgo": weeksAgo,
+      promotionType: promotionType,
+      benefitType: benefitType,
+    },
+  });
+};
+
+export const fetchPromotionAsync = async ({ token, id }: EntityRequest) => {
+  return await executeFetch({
+    path: `api/Promotions/${id}`,
     token,
-    promotion,
-  }: CreatePromotionRequest): Promise<Promotion> => {
-    return await executeFetch({
-      path: "api/Promotions",
-      token,
-      method: "post",
-      body: promotion,
-    });
+  });
+};
+
+interface CreatePromotionRequest extends AuthenticatedRequest {
+  promotion: components["schemas"]["CreatePromotionDto"];
+}
+export const createPromotionAsync = async ({
+  token,
+  promotion,
+}: CreatePromotionRequest): Promise<Promotion> => {
+  return await executeFetch({
+    path: "api/Promotions",
+    token,
+    method: "post",
+    body: promotion,
+  });
+};
+
+interface UpdatePromotionRequest extends EntityRequest {
+  promotion: {
+    name: string;
+    description: string;
+    properties: any;
   };
-  
-  interface UpdatePromotionRequest extends EntityRequest {
-    promotion: {
-      name: string;
-      description: string;
-      properties: any;
-    };
-  }
-  export const updatePromotionAsync = async ({
+}
+export const updatePromotionAsync = async ({
+  token,
+  id,
+  promotion,
+}: UpdatePromotionRequest): Promise<Promotion> => {
+  return await executeFetch({
+    path: `api/Promotions/${id}`,
+    token,
+    method: "post",
+    body: promotion,
+  });
+};
+
+export const deletePromotionAsync = async ({
+  token,
+  id,
+}: DeleteRequest): Promise<DeleteResponse> => {
+  return await executeFetch({
+    path: `api/Promotions/${id}`,
+    token,
+    method: "delete",
+  });
+};
+
+export const getPropertiesAsync = async ({ token, id }: EntityRequest) => {
+  return await pr.getPropertiesAsync({
     token,
     id,
-    promotion,
-  }: UpdatePromotionRequest): Promise<Promotion> => {
-    return await executeFetch({
-      path: `api/Promotions/${id}`,
-      token,
-      method: "post",
-      body: promotion,
-    });
-  };
-  
-  export const deletePromotionAsync = async ({
-    token,
-    id,
-  }: DeleteRequest): Promise<DeleteResponse> => {
-    return await executeFetch({
-      path: `api/Promotions/${id}`,
-      token,
-      method: "delete",
-    });
-  };
-  
-  export const getPropertiesAsync = async ({ token, id }: EntityRequest) => {
-    return await pr.getPropertiesAsync({
-      token,
-      id,
-      api: "Promotions",
-    });
-  };
-  
-  export const setPropertiesAsync = async ({
+    api: "Promotions",
+  });
+};
+
+export const setPropertiesAsync = async ({
+  token,
+  id,
+  properties,
+}: SetpropertiesRequest) => {
+  return await pr.setPropertiesAsync({
     token,
     id,
     properties,
-  }: SetpropertiesRequest) => {
-    return await pr.setPropertiesAsync({
-      token,
-      id,
-      properties,
-      api: "Promotions",
-    });
-  };
-  
+    api: "Promotions",
+  });
+};

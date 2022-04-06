@@ -44,7 +44,17 @@ const current = (config) => {
     return currentInstance;
 };
 
+var axiosInstance = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    current: current
+});
+
 // tenant
+let storedTenant = null;
+const setTenant = (tenant) => {
+    console.debug(`Setting tenant: ${tenant}`);
+    storedTenant = tenant;
+};
 // environment
 let defaltEnvironmentId = null;
 const setDefaultEnvironmentId$1 = (e) => {
@@ -59,6 +69,9 @@ const defaultHeaders$1 = {
 };
 const headers = (token, apiKey) => {
     let headers = { ...defaultHeaders$1 };
+    if (storedTenant) {
+        headers["x-tenant"] = storedTenant;
+    }
     if (token) {
         headers.Authorization = `Bearer ${token}`;
     }
@@ -2156,11 +2169,18 @@ const fetchConfigurationAsync = async () => {
     }
     return config;
 };
+const fetchHostingAsync$1 = async () => {
+    return await executeFetch({
+        path: "api/reactConfig/hosting",
+        method: "get",
+    });
+};
 
 var reactConfigApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchAuth0ConfigurationAsync: fetchAuth0ConfigurationAsync,
-    fetchConfigurationAsync: fetchConfigurationAsync
+    fetchConfigurationAsync: fetchConfigurationAsync,
+    fetchHostingAsync: fetchHostingAsync$1
 });
 
 const getPropertiesAsync$2 = async ({ api, token, id }) => {
@@ -2253,8 +2273,8 @@ const fetchPromotionsAsync = async ({ token, page, searchTerm, promotionType, be
         query: {
             "q.term": searchTerm,
             "q.weeksAgo": weeksAgo,
-            "promotionType": promotionType,
-            "benefitType": benefitType,
+            promotionType: promotionType,
+            benefitType: benefitType,
         },
     });
 };
@@ -2510,6 +2530,44 @@ var trackedUsersApi = /*#__PURE__*/Object.freeze({
     deleteCustomerAsync: deleteCustomerAsync
 });
 
+const fetchCurrentTenantAsync = async ({ token, }) => {
+    return await executeFetch({
+        path: "api/tenants/current",
+        token,
+        method: "get",
+    });
+};
+const fetchHostingAsync = async ({ token }) => {
+    return await executeFetch({
+        path: "api/tenants/hosting",
+        token,
+        method: "get",
+    });
+};
+const fetchCurrentTenantMembershipsAsync = async ({ token, }) => {
+    return await executeFetch({
+        path: "api/tenants/current/memberships",
+        token,
+        method: "get",
+    });
+};
+const createTenantMembershipAsync = async ({ token, email, }) => {
+    return await executeFetch({
+        path: "api/tenants/current/memberships",
+        token,
+        method: "post",
+        body: { email },
+    });
+};
+
+var tenantsApi = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    fetchCurrentTenantAsync: fetchCurrentTenantAsync,
+    fetchHostingAsync: fetchHostingAsync,
+    fetchCurrentTenantMembershipsAsync: fetchCurrentTenantMembershipsAsync,
+    createTenantMembershipAsync: createTenantMembershipAsync
+});
+
 const fetchRewardSelectorsAsync = async ({ token, page }) => {
     return await executeFetch({
         path: "api/RewardSelectors",
@@ -2548,46 +2606,4 @@ var rewardSelectorsApi = /*#__PURE__*/Object.freeze({
     createRewardSelectorAsync: createRewardSelectorAsync
 });
 
-const fetchUniqueActionNamesAsync = async ({ token, page, term }) => {
-    return await executeFetch({
-        path: "api/actions/distinct-groups",
-        token,
-        page,
-        query: {
-            term,
-        },
-    });
-};
-const fetchDistinctGroupsAsync = async ({ token, page, term }) => {
-    return await executeFetch({
-        path: "api/actions/distinct-groups",
-        token,
-        page,
-        query: {
-            term,
-        },
-    });
-};
-
-var actionsApi = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    fetchUniqueActionNamesAsync: fetchUniqueActionNamesAsync,
-    fetchDistinctGroupsAsync: fetchDistinctGroupsAsync
-});
-
-// fix missing fetch is node environments
-const fetch = require("node-fetch");
-if (typeof globalThis === "object") {
-    // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis
-    globalThis.fetch = fetch;
-}
-else if (typeof global === "object") {
-    // For Node <12
-    global.fetch = fetch;
-}
-else {
-    // Everything else is not supported
-    throw new Error("Unknown JavaScript environment: Not supported");
-}
-
-export { actionsApi as actions, apiKeyApi as apiKeys, businessesApi as businesses, channelsApi as channels, customersApi as customers, dataSummaryApi as dataSummary, deploymentApi as deployment, environmentsApi as environments, errorHandling, eventsApi as events, featureGeneratorsApi as featureGenerators, featuresApi as features, integratedSystemsApi as integratedSystems, itemsRecommendersApi as itemsRecommenders, metricGeneratorsApi as metricGenerators, metricsApi as metrics, modelRegistrationsApi as modelRegistrations, index as models, parameterSetRecommendersApi as parameterSetRecommenders, parametersApi as parameters, profileApi as profile, promotionsApi as promotions, promotionsRecommendersApi as promotionsRecommenders, reactConfigApi as reactConfig, recommendableItemsApi as recommendableItems, reportsApi as reports, rewardSelectorsApi as rewardSelectors, segmentsApi as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId$1 as setDefaultEnvironmentId, touchpointsApi as touchpoints, trackedUsersApi as trackedUsers };
+export { apiKeyApi as apiKeys, axiosInstance, businessesApi as businesses, channelsApi as channels, customersApi as customers, dataSummaryApi as dataSummary, deploymentApi as deployment, environmentsApi as environments, errorHandling, eventsApi as events, featureGeneratorsApi as featureGenerators, featuresApi as features, integratedSystemsApi as integratedSystems, itemsRecommendersApi as itemsRecommenders, metricGeneratorsApi as metricGenerators, metricsApi as metrics, modelRegistrationsApi as modelRegistrations, index as models, parameterSetRecommendersApi as parameterSetRecommenders, parametersApi as parameters, profileApi as profile, promotionsApi as promotions, promotionsRecommendersApi as promotionsRecommenders, reactConfigApi as reactConfig, recommendableItemsApi as recommendableItems, reportsApi as reports, rewardSelectorsApi as rewardSelectors, segmentsApi as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId$1 as setDefaultEnvironmentId, setTenant, tenantsApi as tenants, touchpointsApi as touchpoints, trackedUsersApi as trackedUsers };

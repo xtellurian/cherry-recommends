@@ -54,9 +54,8 @@ namespace SignalBox.Functions
                             services.UseSqlServer<MultiTenantDbContext>(configuration.GetConnectionString("Tenants"));
                             var azEnv = new SignalBoxAzureEnvironment();
                             configuration.GetSection("AzureEnvironment").Bind(azEnv);
-                            var localEnv = new SqlServerCredentials();
+                            var localEnv = new LocalSqlCredentials();
                             configuration.GetSection("LocalSql").Bind(localEnv);
-
                             if (!string.IsNullOrEmpty(azEnv.SqlServerPassword))
                             {
                                 services.UseMultitenantAzureSqlServer(
@@ -128,12 +127,17 @@ namespace SignalBox.Functions
                     }
                     else if (provider == "sqlserver")
                     {
-                        if (string.IsNullOrEmpty(azureEnvironmentConfigSection.GetValue<string>("SqlServerAzureId")))
+                        if (!string.IsNullOrEmpty(azureEnvironmentConfigSection.GetValue<string>("SqlServerAzureId")))
                         {
-                            throw new NullReferenceException("SqlServerAzureId is null");
+                            services.Configure<SignalBoxAzureEnvironment>(azureEnvironmentConfigSection);
+                            services.AddScoped<IDatabaseManager, AzureSqlDatabaseManager>();
                         }
-                        services.Configure<SignalBoxAzureEnvironment>(azureEnvironmentConfigSection);
-                        services.AddScoped<IDatabaseManager, AzureSqlDatabaseManager>();
+                        else
+                        {
+                            // need a local database manager
+                            services.Configure<LocalSqlCredentials>(configuration.GetSection("LocalSql"));
+                            services.AddScoped<IDatabaseManager, LocalSqlDatabaseManager>();
+                        }
                     }
                     else
                     {

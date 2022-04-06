@@ -8,7 +8,7 @@ import { Title } from "../../../molecules/layout";
 import { Spinner } from "../../../molecules/Spinner";
 import { ErrorCard } from "../../../molecules/ErrorCard";
 import { BackButton } from "../../../molecules/BackButton";
-import { Link } from "react-router-dom";
+import { Navigation } from "../../../molecules";
 
 const basePath = `${window.location.protocol}//${window.location.host}`;
 const redirectUri = `${basePath}/settings/integrations/hubspotconnector`;
@@ -45,11 +45,13 @@ const SystemStateView = ({ integratedSystem }) => {
         <div className="card-body text-center bg-success">
           Integration Status: {integratedSystem.integrationStatus}
           <div>
-            <Link to={`/settings/integrations/detail/${integratedSystem.id}`}>
+            <Navigation
+              to={`/settings/integrations/detail/${integratedSystem.id}`}
+            >
               <button className="btn btn-primary btn-block">
                 View Integration
               </button>
-            </Link>
+            </Navigation>
           </div>
         </div>
       </div>

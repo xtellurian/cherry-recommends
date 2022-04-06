@@ -1,6 +1,6 @@
-import { getUrl } from "./client/baseUrl";
 import { components } from "../model/api";
 import { current } from "./client/axiosInstance";
+import { executeFetch } from "./client/apiClient";
 
 const defaultHeaders = { "Content-Type": "application/json" };
 
@@ -36,4 +36,12 @@ export const fetchConfigurationAsync = async (): Promise<ReactConfig> => {
     console.log(config);
   }
   return config;
+};
+
+type Hosting = components["schemas"]["Hosting"];
+export const fetchHostingAsync = async (): Promise<Hosting> => {
+  return await executeFetch({
+    path: "api/reactConfig/hosting",
+    method: "get",
+  });
 };

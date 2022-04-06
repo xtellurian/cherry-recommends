@@ -49,6 +49,10 @@ namespace SignalBox.Core
 
         public static void ValidateName(string n)
         {
+            if (n.StartsWith('_'))
+            {
+                throw new BadRequestException($"Tenant names must not start with an underscore.");
+            }
             if (!n.ContainsOnlyLowercaseAlphaNumeric('-', '_'))
             {
                 throw new BadRequestException($"Value {n} has an invalid character. It should be lowercase alpha-numeric, underscore or dash.");

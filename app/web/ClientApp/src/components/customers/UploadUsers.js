@@ -5,6 +5,7 @@ import { uploadUserDataAsync } from "../../api/customersApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { ToggleSwitch } from "../molecules/ToggleSwitch";
 import { Spinner } from "../molecules/Spinner";
+import { Navigation } from "../molecules";
 
 export const UploadTrackedUserComponent = () => {
   const token = useAccessToken();
@@ -85,9 +86,9 @@ export const UploadTrackedUserComponent = () => {
   if (processState.complete) {
     return (
       <div className="process-complete">
-        <Link to="/customers">
+        <Navigation to="/customers">
           <button className="btn btn-primary">Go to Customers</button>
-        </Link>
+        </Navigation>
       </div>
     );
   } else if (processState.loading) {

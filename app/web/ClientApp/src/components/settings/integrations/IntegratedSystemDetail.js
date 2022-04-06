@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Check } from "react-bootstrap-icons";
 import {
   renameAsync,
@@ -16,10 +16,11 @@ import { HubspotOverview } from "./hubspot/HubspotOverview";
 import { IntegrationIcon } from "./icons/IntegrationIcons";
 import { ShopifyOverview } from "./shopify/ShopifyOverview";
 import { useFeatureFlag } from "../../launch-darkly/hooks";
+import { useNavigation } from "../../../utility/useNavigation";
 
 export const IntegratedSystemDetail = () => {
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   let { id } = useParams();
   const [trigger, setReloadTrigger] = React.useState({});
   const integratedSystem = useIntegratedSystem({ id, trigger });
@@ -33,7 +34,7 @@ export const IntegratedSystemDetail = () => {
   const handleDelete = () => {
     deleteIntegratedSystemAsync({ id, token })
       .then(setDeleteOpen(false))
-      .then(() => history.push("/settings/integrations"))
+      .then(() => navigate("/settings/integrations"))
       .catch(setDeleteError);
   };
 

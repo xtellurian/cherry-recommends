@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useRouteMatch } from "react-router-dom";
 import { useCustomer } from "../../api-hooks/customersApi";
 import { createOrUpdateCustomerAsync } from "../../api/customersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
@@ -7,6 +7,7 @@ import { JsonView } from "../molecules/JsonView";
 import { Title, BackButton, Spinner } from "../molecules";
 import { Selector } from "../molecules/selectors/Select";
 import { useAccessToken } from "../../api-hooks/token";
+import { useNavigation } from "../../utility/useNavigation";
 
 const Top = ({ id }) => {
   return (
@@ -25,7 +26,7 @@ export const LinkToIntegratedSystem = () => {
   const trackedUser = useCustomer({ id });
   const integratedSystems = useIntegratedSystems();
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const [options, setOptions] = React.useState({ loading: true });
   React.useEffect(() => {
     if (!integratedSystems.loading) {
@@ -56,7 +57,7 @@ export const LinkToIntegratedSystem = () => {
       token,
       user: trackedUser,
     })
-      .then(() => history.push(`/customers/detail/${trackedUser.id}`))
+      .then(() => navigate(`/customers/detail/${trackedUser.id}`))
       .catch((e) => console.error(e));
   };
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Navigation } from "./Navigation";
 import { Spinner } from "./Spinner";
 
 export const EntityField = ({ label, entity, to }) => {
@@ -19,11 +19,11 @@ export const EntityField = ({ label, entity, to }) => {
             aria-label={label}
             disabled
           />
-          <Link to={to}>
+          <Navigation to={to}>
             <button className="btn btn-outline-secondary" type="button">
               View
             </button>
-          </Link>
+          </Navigation>
         </React.Fragment>
       )}
     </div>

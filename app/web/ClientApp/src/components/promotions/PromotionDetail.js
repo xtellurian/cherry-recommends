@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { usePromotion } from "../../api-hooks/promotionsApi";
 import {
@@ -21,6 +21,7 @@ import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { CommonEntityPropertyEditorPopup } from "../molecules/popups/CommonEntityPropertyEditorPopup";
 import { useAccessToken } from "../../api-hooks/token";
 import { EditItem } from "./EditPromotion";
+import { useNavigation } from "../../utility/useNavigation";
 
 export const ItemDetail = () => {
   const { id } = useParams();
@@ -32,7 +33,7 @@ export const ItemDetail = () => {
   const [isPropertyEditorPopupOpen, setIsPropertyEditorPopupOpen] =
     React.useState(false);
   const [error, setError] = React.useState();
-  const history = useHistory();
+  const { navigate } = useNavigation();
 
   const handleSetAsync = async (properties) => {
     await setPropertiesAsync({ token, id, properties });
@@ -142,7 +143,7 @@ export const ItemDetail = () => {
             setOpen={setisDeletePopupOpen}
             handleDelete={() =>
               deletePromotionAsync({ id: item.id, token })
-                .then(() => history.push("/promotions"))
+                .then(() => navigate("/promotions"))
                 .catch(setError)
             }
           />

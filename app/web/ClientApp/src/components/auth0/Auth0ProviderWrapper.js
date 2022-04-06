@@ -3,6 +3,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 
 export const Auth0ProviderWrapper = ({ auth0Config, children }) => {
+  // TODO: make this work for the new multi-tenant callbacks
   const history = useHistory();
   const onRedirectCallback = (appState) => {
     history.push(

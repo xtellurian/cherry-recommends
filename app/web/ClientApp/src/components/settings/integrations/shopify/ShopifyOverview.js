@@ -1,10 +1,15 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
 import { useAnalytics } from "../../../../analytics/analyticsHooks";
 import { useShopInformation } from "../../../../api-hooks/shopifyApi";
 import { useAccessToken } from "../../../../api-hooks/token";
 import { shopifyDisconnectAsync } from "../../../../api/shopifyApi";
-import { AsyncButton, ErrorCard, Spinner } from "../../../molecules";
+import { useNavigation } from "../../../../utility/useNavigation";
+import {
+  AsyncButton,
+  ErrorCard,
+  Navigation,
+  Spinner,
+} from "../../../molecules";
 import { ConfirmationPopup } from "../../../molecules/popups/ConfirmationPopup";
 
 const ShopDetails = ({ shop }) => {
@@ -29,7 +34,7 @@ export const ShopifyOverview = ({ integratedSystem }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const { analytics } = useAnalytics();
   const token = useAccessToken();
   const shop = useShopInformation({ id: integratedSystem.id });
@@ -51,7 +56,7 @@ export const ShopifyOverview = ({ integratedSystem }) => {
     shopifyDisconnectAsync({ token, id: integratedSystem.id })
       .then(() => {
         analytics.track("site:settings_integration_shopify_disconnect_success");
-        history.push(history.location);
+        navigate("/");
       })
       .catch((e) => {
         analytics.track("site:settings_integration_shopify_disconnect_failure");
@@ -91,11 +96,11 @@ export const ShopifyOverview = ({ integratedSystem }) => {
         <div className="col">
           <ErrorCard error={error} />
           {!isIntegrated && (
-            <Link
+            <Navigation
               to={`/settings/integrations/shopifyconnector?state=${integratedSystem.id}`}
             >
               <button className="btn btn-primary">Connect to Shopify</button>
-            </Link>
+            </Navigation>
           )}
           {isIntegrated && (
             <button className="btn btn-primary" onClick={() => setIsOpen(true)}>

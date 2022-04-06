@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { updateMergePropertiesAsync } from "../../api/customersApi";
 import { useCustomer } from "../../api-hooks/customersApi";
 import {
@@ -12,10 +12,11 @@ import {
 } from "../molecules";
 import { PropertiesEditor } from "../molecules/PropertiesEditor";
 import { useAccessToken } from "../../api-hooks/token";
+import { useNavigation } from "../../utility/useNavigation";
 
 export const EditProperties = () => {
   const { id } = useParams();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const token = useAccessToken();
   const trackedUser = useCustomer({ id });
   const [saving, setSaving] = React.useState(false);
@@ -25,7 +26,7 @@ export const EditProperties = () => {
     setError(null);
     setSaving(true);
     updateMergePropertiesAsync({ token, id, properties })
-      .then(() => history.push(`/customers/detail/${id}`))
+      .then(() => navigate(`/customers/detail/${id}`))
       .catch(setError)
       .finally(() => setSaving(false));
   };

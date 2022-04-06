@@ -8,6 +8,7 @@ import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { useAuthenticatedIA, hash as hashes } from "./MenuIA";
 
 import "./SideNavMenu.css";
+import { Navigation } from "../molecules";
 
 const MenuItem = ({ active, label, icon }) => {
   const activeClassName = active ? "active border-bottom-0" : "";
@@ -87,7 +88,7 @@ export const SideNavMenu = () => {
       {isAuthenticated &&
         authenticatedIA.map((item) => (
           <div key={item.name} className="border-bottom">
-            <Link
+            <Navigation
               to={isActive({ hash: item.to.hash }) ? item.to.pathname : item.to}
             >
               <MenuItem
@@ -95,18 +96,15 @@ export const SideNavMenu = () => {
                 label={item.name}
                 icon={item.icon}
               />
-            </Link>
+            </Navigation>
             {isActive({ hash: item.to.hash }) &&
               item.items.map((subitem) => (
-                <Link
-                  key={subitem.name}
-                  to={(location) => ({ ...location, ...subitem.to })}
-                >
+                <Navigation key={subitem.name} to={subitem.to}>
                   <SubMenuItem
                     active={location.hash === subitem.to.hash}
                     label={subitem.name}
                   />
-                </Link>
+                </Navigation>
               ))}
           </div>
         ))}

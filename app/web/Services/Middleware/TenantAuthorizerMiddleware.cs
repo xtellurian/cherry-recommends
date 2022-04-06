@@ -21,12 +21,13 @@ namespace SignalBox.Web.Services
         {
             var endpoint = context.GetEndpoint();
             var isAllowAnonymous = endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() is object;
+            var isAllowTenantNull = endpoint?.Metadata?.GetMetadata<AllowTenantNullAttribute>() is not null;
 
             var tenantProvider = context.RequestServices.GetRequiredService<ITenantProvider>();
             var resolver = context.RequestServices.GetRequiredService<ITenantResolutionStrategy>();
 
             // only try to authorize the request if the server is multitenant and the request isnt anonymous
-            if (context.Request.Path.StartsWithSegments("/api") && !isAllowAnonymous && resolver?.IsMultitenant == true)
+            if (!isAllowTenantNull && context.Request.Path.StartsWithSegments("/api") && !isAllowAnonymous && resolver?.IsMultitenant == true)
             {
                 var tenant = tenantProvider.Current();
                 var authorizor = context.RequestServices.GetRequiredService<ITenantAuthorizationStrategy>();

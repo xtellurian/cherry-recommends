@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 
 import { useAccessToken } from "../../../api-hooks/token";
 import { createPromotionsRecommenderAsync } from "../../../api/promotionsRecommendersApi";
@@ -37,6 +36,7 @@ import { useSegments } from "../../../api-hooks/segmentsApi";
 import { useFeatureFlag } from "../../launch-darkly/hooks";
 import { useChannels } from "../../../api-hooks/channelsApi";
 import CreatePageLayout from "../../molecules/layout/CreatePageLayout";
+import { useNavigation } from "../../../utility/useNavigation";
 
 const InputLabel = ({ children, required }) => {
   return (
@@ -61,7 +61,7 @@ const targetTypeOptions = [
 ];
 export const CreateRecommender = () => {
   const token = useAccessToken();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const [error, setError] = React.useState();
   const items = usePromotions();
   const itemsOptions = items.items
@@ -136,7 +136,7 @@ export const CreateRecommender = () => {
     })
       .then((r) => {
         analytics.track("site:itemsRecommender_create_success");
-        history.push(`/recommenders/promotions-recommenders/detail/${r.id}`);
+        navigate(`/recommenders/promotions-recommenders/detail/${r.id}`);
       })
       .catch((e) => {
         analytics.track("site:itemsRecommender_create_failure");

@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { updateBusinessPropertiesAsync } from "../../api/businessesApi";
 import { useBusiness } from "../../api-hooks/businessesApi";
 import {
@@ -12,10 +12,11 @@ import {
 } from "../molecules";
 import { PropertiesEditor } from "../molecules/PropertiesEditor";
 import { useAccessToken } from "../../api-hooks/token";
+import { useNavigation } from "../../utility/useNavigation";
 
 export const EditBusinessProperties = () => {
   const { id } = useParams();
-  const history = useHistory();
+  const { navigate } = useNavigation();
   const token = useAccessToken();
   const business = useBusiness({ id });
   const [saving, setSaving] = React.useState(false);
@@ -26,7 +27,7 @@ export const EditBusinessProperties = () => {
     setError(null);
     setSaving(true);
     updateBusinessPropertiesAsync({ token, id, properties })
-      .then(() => history.push(`/businesses/detail/${id}`))
+      .then(() => navigate(`/businesses/detail/${id}`))
       .catch(setError)
       .finally(() => setSaving(false));
   };

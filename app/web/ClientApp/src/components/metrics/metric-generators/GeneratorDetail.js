@@ -1,13 +1,11 @@
 import React from "react";
 import { useAccessToken } from "../../../api-hooks/token";
 import { manualTriggerMetricGeneratorsAsync } from "../../../api/metricGeneratorsApi";
-import { AsyncButton, ErrorCard } from "../../molecules";
+import { AsyncButton, ErrorCard, Navigation } from "../../molecules";
 import { ButtonGroup } from "../../molecules/buttons/ButtonGroup";
 import { SectionHeading } from "../../molecules/layout";
 import EntityRow from "../../molecules/layout/EntityFlexRow";
 import { DateTimeField } from "../../molecules/DateTimeField";
-import { Link } from "react-router-dom";
-import { CopyableField } from "../../molecules/fields/CopyableField";
 
 const GeneratorTypeDisplay = ({ generator }) => {
   const labels = {
@@ -64,9 +62,11 @@ const AggregateCustomerMetricInfo = ({ aggregateCustomerMetric }) => {
         <div>Aggregating another metric</div>
         <div>
           Calculating the {aggregateCustomerMetric.aggregationType} of{" "}
-          <Link to={`/metrics/detail/${aggregateCustomerMetric.metricId}`}>
+          <Navigation
+            to={`/metrics/detail/${aggregateCustomerMetric.metricId}`}
+          >
             {aggregateCustomerMetric.metric?.name}
-          </Link>
+          </Navigation>
           {aggregateCustomerMetric.categoricalValue &&
             `, by counting the value '${aggregateCustomerMetric.categoricalValue}'`}
         </div>
@@ -81,13 +81,13 @@ const JoinTwoMetrics = ({ joinTwoMetrics }) => {
         <div>Joining 2 Metrics</div>
         <div>
           Dividing{" "}
-          <Link to={`/metrics/detail/${joinTwoMetrics.metric1Id}`}>
+          <Navigation to={`/metrics/detail/${joinTwoMetrics.metric1Id}`}>
             {joinTwoMetrics.metric1?.name}
-          </Link>
+          </Navigation>
           {" by "}
-          <Link to={`/metrics/detail/${joinTwoMetrics.metric2Id}`}>
+          <Navigation to={`/metrics/detail/${joinTwoMetrics.metric2Id}`}>
             {joinTwoMetrics.metric2?.name}
-          </Link>
+          </Navigation>
         </div>
       </EntityRow>
     </>
