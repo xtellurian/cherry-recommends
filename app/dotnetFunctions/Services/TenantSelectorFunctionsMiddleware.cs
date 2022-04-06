@@ -53,8 +53,12 @@ namespace SignalBox.Functions
                         if (dic.ContainsKey("tenant"))
                         {
                             var tenantName = dic["tenant"];
-                            logger.LogInformation($"Setting tenant to {tenantName} from query string");
-                            await tenantProvider.SetTenantName(tenantName);
+                            if (!string.IsNullOrEmpty(tenantName) && tenantName != "*")
+                            {
+                                // we use star as a wildcard, so don't set it.
+                                logger.LogInformation($"Setting tenant to {tenantName} from query string");
+                                await tenantProvider.SetTenantName(tenantName);
+                            }
                         }
                     }
                 }
@@ -68,8 +72,11 @@ namespace SignalBox.Functions
             if (tenantNameObj != null)
             {
                 var tenantName = tenantNameObj.ToString();
-                logger.LogInformation($"Setting Tenant Name to {tenantName}");
-                await tenantProvider.SetTenantName(tenantNameObj?.ToString());
+                if (!string.IsNullOrEmpty(tenantName) && tenantName != "*")
+                {
+                    logger.LogInformation($"Setting Tenant Name to {tenantName}");
+                    await tenantProvider.SetTenantName(tenantNameObj?.ToString());
+                }
             }
         }
     }
