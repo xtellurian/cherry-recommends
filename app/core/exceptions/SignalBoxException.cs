@@ -8,7 +8,7 @@ namespace SignalBox.Core
         private string? _title;
         protected int? _status;
 
-        protected SignalBoxException(string title)
+        protected SignalBoxException(string title) : base(title)
         {
             this._title = title;
         }

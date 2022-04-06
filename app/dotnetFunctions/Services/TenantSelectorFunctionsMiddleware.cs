@@ -63,10 +63,12 @@ namespace SignalBox.Functions
             await next(context);
         }
 
-        private static async Task HandleTenantNameObj(ITenantProvider tenantProvider, object tenantNameObj)
+        private async Task HandleTenantNameObj(ITenantProvider tenantProvider, object tenantNameObj)
         {
             if (tenantNameObj != null)
             {
+                var tenantName = tenantNameObj.ToString();
+                logger.LogInformation($"Setting Tenant Name to {tenantName}");
                 await tenantProvider.SetTenantName(tenantNameObj?.ToString());
             }
         }
