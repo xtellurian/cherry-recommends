@@ -2754,7 +2754,7 @@ declare function addSegmentEnrolmentRuleAsync({ token, id, payload }: {
     id: any;
     payload: any;
 }): Promise<any>;
-declare function removeSegmentEnrolmentRuleAsync({ token, id, ruleId }: {
+declare function removeSegmentEnrolmentRuleAsync({ token, id, ruleId, }: {
     token: any;
     id: any;
     ruleId: any;

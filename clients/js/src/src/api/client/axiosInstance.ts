@@ -25,7 +25,7 @@ const initialise = (
     headers: config.tenant ? { "x-tenant": config.tenant } : {},
     validateStatus: function (status) {
       // return status < 500; // Resolve only if the status code is less than 500
-      return true // always resolve the promise
+      return true; // always resolve the promise
     },
   });
 };

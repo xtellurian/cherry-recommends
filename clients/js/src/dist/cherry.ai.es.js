@@ -64,11 +64,11 @@ let defaultApiKey = null;
 const setDefaultApiKey = (k) => {
     defaultApiKey = k;
 };
-const defaultHeaders$1 = {
+const defaultHeaders = {
     "Content-Type": "application/json",
 };
 const headers = (token, apiKey) => {
-    let headers = { ...defaultHeaders$1 };
+    let headers = { ...defaultHeaders };
     if (storedTenant) {
         headers["x-tenant"] = storedTenant;
     }
@@ -156,6 +156,7 @@ const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method,
         return response.data;
     }
     else {
+        console.debug(response);
         return await handleErrorResponse(response);
     }
 };
@@ -2140,32 +2141,24 @@ var promotionsRecommendersApi = /*#__PURE__*/Object.freeze({
     removeRecommenderChannelAsync: removeRecommenderChannelAsync
 });
 
-const defaultHeaders = { "Content-Type": "application/json" };
 let authConfig = undefined; // caches this because it rarely change
 const fetchAuth0ConfigurationAsync = async () => {
     if (!authConfig) {
-        console.debug("fetching auth0 from server...");
-        const axios = current();
-        const result = await axios.get("api/reactConfig/auth0", {
-            headers: defaultHeaders,
+        const result = await executeFetch({
+            path: "api/reactConfig/auth0",
         });
-        authConfig = result.data;
-        console.log("authConfig");
-        console.log(authConfig);
+        authConfig = result;
     }
     return authConfig;
 };
 let config = undefined;
 const fetchConfigurationAsync = async () => {
     if (!config) {
-        console.log("fetching configuration from server...");
-        const axios = current();
-        const result = await axios.get("api/reactConfig", {
-            headers: defaultHeaders,
+        const result = await executeFetch({
+            token: "",
+            path: "api/reactConfig",
         });
-        config = result.data;
-        console.log("config");
-        console.log(config);
+        config = result;
     }
     return config;
 };
@@ -2420,10 +2413,10 @@ const addSegmentEnrolmentRuleAsync = async ({ token, id, payload }) => {
         path: `api/Segments/${id}/MetricEnrolmentRules`,
         token,
         method: "post",
-        body: payload
+        body: payload,
     });
 };
-const removeSegmentEnrolmentRuleAsync = async ({ token, id, ruleId }) => {
+const removeSegmentEnrolmentRuleAsync = async ({ token, id, ruleId, }) => {
     return await executeFetch({
         path: `api/Segments/${id}/MetricEnrolmentRules/${ruleId}`,
         token,

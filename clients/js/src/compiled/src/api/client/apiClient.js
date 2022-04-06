@@ -41,6 +41,7 @@ export const executeFetch = async ({ token, apiKey, path, page, pageSize, body, 
         return response.data;
     }
     else {
+        console.debug(response);
         return await handleErrorResponse(response);
     }
 };

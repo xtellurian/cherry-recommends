@@ -98,8 +98,8 @@ export interface MetricBinRequest extends EntityRequest {
 }
 
 export interface PromotionsRequest extends EntitySearchRequest {
-  promotionType: string | undefined,
-  benefitType: string | undefined,
+  promotionType: string | undefined;
+  benefitType: string | undefined;
   weeksAgo: number | undefined;
 }
 

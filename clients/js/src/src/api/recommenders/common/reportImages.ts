@@ -3,7 +3,10 @@ import { handleErrorResponse } from "../../../utilities/errorHandling";
 import { current } from "../../client/axiosInstance";
 
 interface ReportImageRequest {
-  recommenderApiName: "PromotionsRecommenders" | "ParameterSetRecommenders" | "ItemsRecommenders";
+  recommenderApiName:
+    | "PromotionsRecommenders"
+    | "ParameterSetRecommenders"
+    | "ItemsRecommenders";
   token: string;
   id: string | number;
   useInternalId?: boolean;

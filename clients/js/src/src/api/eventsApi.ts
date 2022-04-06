@@ -76,7 +76,7 @@ export const createRecommendationConsumedEventAsync = async ({
 
 export const fetchBusinessEventsAsync = async ({
   token,
-  id,  
+  id,
 }: EntityRequest) => {
   return await executeFetch({
     path: `api/Businesses/${id}/events`,

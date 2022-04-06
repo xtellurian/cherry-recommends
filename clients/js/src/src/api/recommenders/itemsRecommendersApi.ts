@@ -25,7 +25,9 @@ import {
 
 const recommenderApiName = "ItemsRecommenders";
 
-console.warn("Deprecation Notice: Items Recommenders are replaced by Promotions Recommenders.")
+console.warn(
+  "Deprecation Notice: Items Recommenders are replaced by Promotions Recommenders."
+);
 export const fetchItemsRecommendersAsync = async ({
   token,
   page,

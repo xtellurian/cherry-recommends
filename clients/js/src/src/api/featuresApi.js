@@ -1,6 +1,8 @@
 import { executeFetch } from "./client/apiClient";
 
-console.warn("Deprecation Notice: Feature Generators are replaced by Metric Generators.")
+console.warn(
+  "Deprecation Notice: Feature Generators are replaced by Metric Generators."
+);
 export const fetchFeaturesAsync = async ({ token, page, searchTerm }) => {
   return await executeFetch({
     path: "api/Features",

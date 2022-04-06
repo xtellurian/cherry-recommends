@@ -40,7 +40,7 @@ export function addSegmentEnrolmentRuleAsync({ token, id, payload }: {
     id: any;
     payload: any;
 }): Promise<any>;
-export function removeSegmentEnrolmentRuleAsync({ token, id, ruleId }: {
+export function removeSegmentEnrolmentRuleAsync({ token, id, ruleId, }: {
     token: any;
     id: any;
     ruleId: any;

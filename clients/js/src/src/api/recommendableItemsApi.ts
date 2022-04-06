@@ -13,7 +13,9 @@ import { components } from "../model/api";
 
 import * as pr from "./commonEntity/propertiesApiUtil";
 
-console.warn("Deprecation Notice: Recommendable Items are replaced by Promotions.")
+console.warn(
+  "Deprecation Notice: Recommendable Items are replaced by Promotions."
+);
 export const fetchItemsAsync = async ({
   token,
   page,

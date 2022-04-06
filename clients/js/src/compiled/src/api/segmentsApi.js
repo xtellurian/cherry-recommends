@@ -63,10 +63,10 @@ export const addSegmentEnrolmentRuleAsync = async ({ token, id, payload }) => {
         path: `api/Segments/${id}/MetricEnrolmentRules`,
         token,
         method: "post",
-        body: payload
+        body: payload,
     });
 };
-export const removeSegmentEnrolmentRuleAsync = async ({ token, id, ruleId }) => {
+export const removeSegmentEnrolmentRuleAsync = async ({ token, id, ruleId, }) => {
     return await executeFetch({
         path: `api/Segments/${id}/MetricEnrolmentRules/${ruleId}`,
         token,

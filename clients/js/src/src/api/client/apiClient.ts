@@ -61,6 +61,7 @@ export const executeFetch = async (
   if (response.status <= 299) {
     return response.data;
   } else {
+    console.debug(response);
     return await handleErrorResponse(response);
   }
 };

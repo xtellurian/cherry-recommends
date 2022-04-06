@@ -4,7 +4,7 @@ import {
   EntityRequest,
   EntitySearchRequest,
   PaginatedEntityRequest,
-  MetricBinRequest
+  MetricBinRequest,
 } from "../interfaces";
 import { executeFetch } from "./client/apiClient";
 import { components } from "../model/api";
