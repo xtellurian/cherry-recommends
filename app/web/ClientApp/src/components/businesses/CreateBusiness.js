@@ -26,7 +26,7 @@ export const CreateBusiness = () => {
   });
 
   const token = useAccessToken();
-  const { navigate } = useNavigation;
+  const { navigate } = useNavigation();
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const { generateCommonId } = useCommonId();
