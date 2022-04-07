@@ -1,8 +1,14 @@
 const defaultHeaders = { "Content-Type": "application/json" };
-const headers = (token) =>
-  !token
-    ? defaultHeaders
-    : { ...defaultHeaders, Authorization: `Bearer ${token}` };
+const headers = (token, tenant) => {
+  let _headers = defaultHeaders;
+  if (token) {
+    _headers = { ..._headers, Authorization: `Bearer ${token}` };
+  }
+  if (tenant) {
+    _headers = { ..._headers, "x-tenant": tenant };
+  }
+  return _headers;
+};
 
 export const fetchShopifyAppInformationAsync = async ({ token }) => {
   const url = "/api/shopifyappinfo";
@@ -16,10 +22,10 @@ export const fetchShopifyAppInformationAsync = async ({ token }) => {
   }
 };
 
-export const fetchShopInformationAsync = async ({ token, id }) => {
+export const fetchShopInformationAsync = async ({ token, tenant, id }) => {
   const url = `api/integratedsystems/${id}/shopify/ShopInformation`;
   const response = await fetch(url, {
-    headers: headers(token),
+    headers: headers(token, tenant),
   });
   if (response.ok) {
     return await response.json();
@@ -30,13 +36,14 @@ export const fetchShopInformationAsync = async ({ token, id }) => {
 
 export const fetchShopifyInstallUrlAsync = async ({
   token,
+  tenant,
   id,
   shopifyUrl,
   redirectUrl,
 }) => {
   const url = `api/integratedsystems/${id}/shopify/Install?shopifyUrl=${shopifyUrl}&redirectUrl=${redirectUrl}`;
   const response = await fetch(url, {
-    headers: headers(token),
+    headers: headers(token, tenant),
   });
   if (response.ok) {
     return await response.json();
@@ -45,10 +52,10 @@ export const fetchShopifyInstallUrlAsync = async ({
   }
 };
 
-export const shopifyConnectAsync = async ({ token, id, code }) => {
+export const shopifyConnectAsync = async ({ token, tenant, id, code }) => {
   const url = `api/integratedsystems/${id}/shopify/Connect`;
   const response = await fetch(url, {
-    headers: headers(token),
+    headers: headers(token, tenant),
     method: "post",
     body: JSON.stringify(code),
   });
@@ -59,10 +66,10 @@ export const shopifyConnectAsync = async ({ token, id, code }) => {
   }
 };
 
-export const shopifyDisconnectAsync = async ({ token, id }) => {
+export const shopifyDisconnectAsync = async ({ token, tenant, id }) => {
   const url = `api/integratedsystems/${id}/shopify/Disconnect`;
   const response = await fetch(url, {
-    headers: headers(token),
+    headers: headers(token, tenant),
     method: "post",
   });
   if (response.ok) {

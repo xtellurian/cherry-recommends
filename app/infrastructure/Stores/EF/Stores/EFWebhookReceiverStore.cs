@@ -19,16 +19,15 @@ namespace SignalBox.Infrastructure.EntityFramework
             return integratedSystem.WebhookReceivers;
         }
 
-        public async Task<WebhookReceiver> ReadFromEndpointId(string endpointId)
+        public async Task<EntityResult<WebhookReceiver>> ReadFromEndpointId(string endpointId)
         {
-            // todo: make this a better error when not exist, rather than 500
             // use Set not QuerySet because we don't know the environment yet.
-            var endpoint = await Set.Include(_ => _.IntegratedSystem).FirstAsync(_ => _.EndpointId == endpointId);
-            if (endpoint.EnvironmentId.HasValue)
+            var endpoint = await Set.Include(_ => _.IntegratedSystem).FirstOrDefaultAsync(_ => _.EndpointId == endpointId);
+            if (endpoint?.EnvironmentId.HasValue ?? false)
             {
                 environmentProvider.SetOverride(endpoint.EnvironmentId.Value);
             }
-            return endpoint;
+            return new EntityResult<WebhookReceiver>(endpoint);
         }
     }
 }

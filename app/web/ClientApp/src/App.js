@@ -10,6 +10,7 @@ import "./global-css/cherry.css";
 import ManagementApp from "./ManagementApp";
 import MultiTenantHome from "./MultiTenantHome";
 import { AnonymousSwitcher } from "./components/anonymous/AnonymousSwitcher";
+import { ConnectComponent } from "./components/connect/ConnectComponent";
 
 configure();
 const App = ({ multitenant }) => {
@@ -19,6 +20,9 @@ const App = ({ multitenant }) => {
   if (!multitenant) {
     return (
       <AnonymousSwitcher>
+        <Route path="/_connect">
+          <ConnectComponent />
+        </Route>
         <InTenantApp multitenant={false} />;
       </AnonymousSwitcher>
     );
@@ -28,6 +32,9 @@ const App = ({ multitenant }) => {
         <Switch>
           <Route path="/_manage">
             <ManagementApp />
+          </Route>
+          <Route path="/_connect">
+            <ConnectComponent />
           </Route>
           <Route path="/" exact>
             <MultiTenantHome />

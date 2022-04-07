@@ -11,6 +11,7 @@ import {
   Spinner,
 } from "../../../molecules";
 import { ConfirmationPopup } from "../../../molecules/popups/ConfirmationPopup";
+import { useTenantName } from "../../../tenants/PathTenantProvider";
 
 const ShopDetails = ({ shop }) => {
   return (
@@ -38,6 +39,7 @@ export const ShopifyOverview = ({ integratedSystem }) => {
   const { analytics } = useAnalytics();
   const token = useAccessToken();
   const shop = useShopInformation({ id: integratedSystem.id });
+  const tenant = useTenantName();
 
   const isIntegrated = integratedSystem.integrationStatus === "ok";
 
@@ -51,18 +53,29 @@ export const ShopifyOverview = ({ integratedSystem }) => {
     }
   };
 
-  const handleDisconnect = () => {
-    setLoading(true);
-    shopifyDisconnectAsync({ token, id: integratedSystem.id })
-      .then(() => {
-        analytics.track("site:settings_integration_shopify_disconnect_success");
-        navigate("/");
+  const handleDisconnect = React.useCallback(() => {
+    if (token && tenant) {
+      setLoading(true);
+      shopifyDisconnectAsync({
+        token,
+        tenant: tenant?.tenantName,
+        id: integratedSystem.id,
       })
-      .catch((e) => {
-        analytics.track("site:settings_integration_shopify_disconnect_failure");
-        setError(e);
-      });
-  };
+        .then(() => {
+          analytics.track(
+            "site:settings_integration_shopify_disconnect_success"
+          );
+          navigate(`/settings/integrations/detail/${integratedSystem.id}`);
+        })
+        .catch((e) => {
+          analytics.track(
+            "site:settings_integration_shopify_disconnect_failure"
+          );
+          setError(e);
+          setLoading(false);
+        });
+    }
+  }, [token, tenant]);
 
   return (
     <React.Fragment>
@@ -97,7 +110,7 @@ export const ShopifyOverview = ({ integratedSystem }) => {
           <ErrorCard error={error} />
           {!isIntegrated && (
             <Navigation
-              to={`/settings/integrations/shopifyconnector?state=${integratedSystem.id}`}
+              to={`/settings/integrations/shopifyconnector/${integratedSystem.id}`}
             >
               <button className="btn btn-primary">Connect to Shopify</button>
             </Navigation>

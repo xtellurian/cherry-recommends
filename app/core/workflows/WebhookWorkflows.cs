@@ -34,18 +34,24 @@ namespace SignalBox.Core.Workflows
         public async Task ProcessWebhook(string endpointId, string webhookBody, IEnumerable<KeyValuePair<string, StringValues>> headers, string signature)
         {
             var receiver = await receiverStore.ReadFromEndpointId(endpointId);
+
+            if (!receiver.Success)
+            {
+                return;
+            }
+
             EventLoggingResponse eventLoggingResponse;
 
-            switch (receiver.IntegratedSystem.SystemType)
+            switch (receiver.Entity.IntegratedSystem.SystemType)
             {
                 case IntegratedSystemTypes.Segment:
-                    eventLoggingResponse = await segmentWebhookWorkflow.ProcessWebhookRequest(receiver, headers, webhookBody, signature);
+                    eventLoggingResponse = await segmentWebhookWorkflow.ProcessWebhookRequest(receiver.Entity, headers, webhookBody, signature);
                     break;
                 case IntegratedSystemTypes.Shopify:
-                    eventLoggingResponse = await shopifyWebhookWorkflow.ProcessWebhookRequest(receiver, headers, webhookBody, signature);
+                    eventLoggingResponse = await shopifyWebhookWorkflow.ProcessWebhookRequest(receiver.Entity, headers, webhookBody, signature);
                     break;
                 default:
-                    logger.LogCritical($"Unprocessable Webhook type: {receiver.IntegratedSystem.SystemType}");
+                    logger.LogCritical($"Unprocessable Webhook type: {receiver.Entity.IntegratedSystem.SystemType}");
                     throw new ArgumentException("Unprocessable Webhook type");
             }
 

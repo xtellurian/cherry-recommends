@@ -3,10 +3,11 @@ using SignalBox.Core.Adapters.Shopify;
 
 namespace SignalBox.Core
 {
+#nullable enable
     public interface IShopifyAdminWorkflow : IShopifyWorkflowBase
     {
         Task Connect(IntegratedSystem system, string code, string shopifyUrl, string webhookReceiverUrl);
         Task Disconnect(IntegratedSystem system);
-        Task<ShopifyShop> GetShopInformation(IntegratedSystem system);
+        Task<ShopifyShop?> GetShopInformation(IntegratedSystem system);
     }
 }

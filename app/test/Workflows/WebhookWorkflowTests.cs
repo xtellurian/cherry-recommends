@@ -50,11 +50,12 @@ namespace SignalBox.Test.Workflows
             var serialized = Serializer.Serialize(groupEvent);
             var endpointId = Guid.NewGuid().ToString();
             var integratedSystem = new IntegratedSystem("segment-test", "Segment", IntegratedSystemTypes.Segment);
+            var webhookReceiver = new WebhookReceiver(endpointId, integratedSystem);
             var mockLogger = Utility.MockLogger<WebhookWorkflows>();
             var mockWebhookReceiverStore = new Mock<IWebhookReceiverStore>();
             var mockTenantProvider = new Mock<ITenantProvider>();
             mockWebhookReceiverStore.Setup(_ => _.ReadFromEndpointId(It.Is<string>(e => e == endpointId)))
-                .ReturnsAsync(new WebhookReceiver(endpointId, integratedSystem));
+                .ReturnsAsync(new EntityResult<WebhookReceiver>(webhookReceiver));
             var mockCustomerEventsWorkflows = new Mock<ICustomerEventsWorkflow>();
             mockCustomerEventsWorkflows.Setup(
                 _ => _.Ingest(It.Is<IEnumerable<CustomerEventInput>>(x => x.First().Kind == expectedKind)))
@@ -86,11 +87,12 @@ namespace SignalBox.Test.Workflows
             var serialized = Serializer.Serialize(model);
             var endpointId = Guid.NewGuid().ToString();
             var integratedSystem = new IntegratedSystem("segment-test", "Segment", IntegratedSystemTypes.Segment);
+            var webhookReceiver = new WebhookReceiver(endpointId, integratedSystem);
             var mockLogger = Utility.MockLogger<WebhookWorkflows>();
             var mockWebhookReceiverStore = new Mock<IWebhookReceiverStore>();
             var mockTenantProvider = new Mock<ITenantProvider>();
             mockWebhookReceiverStore.Setup(_ => _.ReadFromEndpointId(It.Is<string>(e => e == endpointId)))
-                .ReturnsAsync(new WebhookReceiver(endpointId, integratedSystem));
+                .ReturnsAsync(new EntityResult<WebhookReceiver>(webhookReceiver));
             var mockCustomerEventsWorkflows = new Mock<ICustomerEventsWorkflow>();
             mockCustomerEventsWorkflows.Setup(
                 _ => _.Ingest(It.Is<IEnumerable<CustomerEventInput>>(x => x.Count() == 1)))
@@ -117,11 +119,12 @@ namespace SignalBox.Test.Workflows
             var serialized = Serializer.Serialize(model);
             var endpointId = Guid.NewGuid().ToString();
             var integratedSystem = new IntegratedSystem("shopify-test", "Shopify", IntegratedSystemTypes.Shopify);
+            var webhookReceiver = new WebhookReceiver(endpointId, integratedSystem);
             var mockLogger = Utility.MockLogger<WebhookWorkflows>();
             var mockWebhookReceiverStore = new Mock<IWebhookReceiverStore>();
             var mockTenantProvider = new Mock<ITenantProvider>();
             mockWebhookReceiverStore.Setup(_ => _.ReadFromEndpointId(It.Is<string>(e => e == endpointId)))
-                .ReturnsAsync(new WebhookReceiver(endpointId, integratedSystem));
+                .ReturnsAsync(new EntityResult<WebhookReceiver>(webhookReceiver));
             var mockCustomerEventsWorkflows = new Mock<ICustomerEventsWorkflow>();
             mockCustomerEventsWorkflows.Setup(
                 _ => _.Ingest(It.Is<IEnumerable<CustomerEventInput>>(x => x.Count() == 1)))

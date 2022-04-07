@@ -10,11 +10,13 @@ namespace SignalBox.Web.Services
     {
         private readonly SubdomainTenantResolutionStrategy subdomainStrategy;
         private readonly HttpHeaderTenantResolutionStrategy headerStrategy;
+        private readonly QueryTenantResolutionStrategy queryStrategy;
 
         public MultiMethodTenantResolutionStrategy(IOptions<Hosting> options)
         {
             this.subdomainStrategy = new SubdomainTenantResolutionStrategy(options);
             this.headerStrategy = new HttpHeaderTenantResolutionStrategy(options);
+            this.queryStrategy = new QueryTenantResolutionStrategy(options);
         }
 
         public bool IsMultitenant => true;
@@ -25,6 +27,10 @@ namespace SignalBox.Web.Services
             if (string.IsNullOrEmpty(name))
             {
                 name = await headerStrategy.ResolveName(request);
+            }
+            if (string.IsNullOrEmpty(name))
+            {
+                name = await queryStrategy.ResolveName(request);
             }
 
             // default return null

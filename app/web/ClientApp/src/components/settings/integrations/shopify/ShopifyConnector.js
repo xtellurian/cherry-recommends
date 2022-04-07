@@ -13,7 +13,9 @@ import {
 import { useShopifyAppInformation } from "../../../../api-hooks/shopifyApi";
 import { InputGroup, TextInput } from "../../../molecules/TextInput";
 import { useAnalytics } from "../../../../analytics/analyticsHooks";
-import { Navigation } from "../../../molecules";
+import { useParams } from "react-router-dom";
+import { useTenantName } from "../../../tenants/PathTenantProvider";
+import { useNavigation } from "../../../../utility/useNavigation";
 
 const basePath = `${window.location.protocol}//${window.location.host}`;
 
@@ -39,23 +41,34 @@ const ProgressView = ({ stage }) => {
     </div>
   );
 };
-const SystemStateView = ({ integratedSystem }) => {
-  if (integratedSystem.loading) {
+const SystemStateView = ({ integratedSystem, force, stateObject }) => {
+  const { navigate } = useNavigation();
+  if (integratedSystem.loading && !force) {
     return <Spinner>Loading System Details</Spinner>;
   }
-  if (integratedSystem.integrationStatus === "ok") {
+  if (integratedSystem.integrationStatus === "ok" || force) {
     return (
       <div className="card w-50 m-auto">
         <div className="card-body text-center bg-success">
-          Integration Status: {integratedSystem.integrationStatus}
+          Integration Status: {integratedSystem.integrationStatus ?? "ok"}
           <div>
-            <Navigation
-              to={`/settings/integrations/detail/${integratedSystem.id}`}
+            <button
+              className="btn btn-primary btn-block"
+              onClick={() => {
+                if (force) {
+                  const prefix = stateObject?.tenant
+                    ? `/${stateObject?.tenant}`
+                    : "";
+                  window.location.href = `${basePath}${prefix}/settings/integrations/detail/${stateObject?.id}`;
+                } else {
+                  navigate(
+                    `/settings/integrations/detail/${integratedSystem.id}`
+                  );
+                }
+              }}
             >
-              <button className="btn btn-primary btn-block">
-                View Integration
-              </button>
-            </Navigation>
+              View Integration
+            </button>
           </div>
         </div>
       </div>
@@ -72,40 +85,47 @@ const SystemStateView = ({ integratedSystem }) => {
 };
 
 export const ShopifyConnector = () => {
+  const { id } = useParams();
   const query = useQuery();
-  const id = query.get("state");
+  const state = query.get("state");
   const code = query.get("code");
   const shopifyUrl = query.get("shop");
 
   const defaultTrigger = 0;
   const defaultStage = code && shopifyUrl ? stages[2] : stages[0];
 
+  const [useId, setUseId] = React.useState();
   const [trigger, setTrigger] = React.useState(defaultTrigger);
   const [stage, setStage] = React.useState(defaultStage);
   const [error, setError] = React.useState();
   const [inputShopifyUrl, setInputShopifyUrl] = React.useState("");
   const [connectAnalytics, setConnectAnalytics] = React.useState();
+  const [stateObject, setStateObject] = React.useState();
+  const [force, setForce] = React.useState(false);
 
   const token = useAccessToken();
-  const integratedSystem = useIntegratedSystem({ id, trigger });
+  const { tenantName } = useTenantName();
+  const integratedSystem = useIntegratedSystem({
+    id: useId,
+    trigger: `${tenantName}${trigger}`,
+  });
   const { analytics } = useAnalytics();
   const { loading } = useShopifyAppInformation();
 
-  const redirectUri = encodeURI(
-    `${basePath}/settings/integrations/shopifyconnector`
-  );
+  const redirectUri = encodeURI(`${basePath}/_connect/shopify/callback`);
   const initialLoad = trigger === defaultTrigger && stage === defaultStage; // important to prevent multiple api calls
   const showConnect = stage === stages[0] || stage === stages[1];
   React.useEffect(() => {
     let mounted = true;
-    if (code && shopifyUrl && token && initialLoad) {
+    if (stateObject && code && shopifyUrl && token && initialLoad) {
       shopifyConnectAsync({
         code: {
           code,
           shopifyUrl,
         },
-        id: id,
+        id: stateObject?.id,
         token,
+        tenant: stateObject?.tenant,
       })
         .then(() => {
           if (mounted) {
@@ -114,6 +134,9 @@ export const ShopifyConnector = () => {
             setConnectAnalytics(
               "site:settings_integration_shopify_connect_success"
             );
+            if (stateObject?.tenant) {
+              setForce(true);
+            }
           }
         })
         .catch((e) => {
@@ -126,7 +149,7 @@ export const ShopifyConnector = () => {
         });
     }
     return () => (mounted = false);
-  }, [code, shopifyUrl, token, id, trigger, initialLoad]);
+  }, [stateObject, code, shopifyUrl, token, trigger, initialLoad]);
 
   // Move analytics.track away from shopifyConnectAsync to prevent multiple API calls
   React.useEffect(() => {
@@ -141,12 +164,24 @@ export const ShopifyConnector = () => {
     }
   }, [integratedSystem.integrationStatus]);
 
+  // // Parse state to object
+  React.useEffect(() => {
+    if (state) {
+      const so = JSON.parse(state);
+      setStateObject(so);
+      setUseId(so.id);
+    } else if (id) {
+      setUseId(id);
+    }
+  }, [state, id]);
+
   const handleInstall = () => {
     fetchShopifyInstallUrlAsync({
       token,
       id,
       shopifyUrl: inputShopifyUrl,
       redirectUrl: redirectUri,
+      tenant: tenantName,
     })
       .then((v) => {
         window.open(v, "_blank");
@@ -161,7 +196,11 @@ export const ShopifyConnector = () => {
       <Top />
       {loading && <Spinner>Loading Shopify App Information</Spinner>}
       {error && <ErrorCard error={error} />}
-      <SystemStateView integratedSystem={integratedSystem} />
+      <SystemStateView
+        integratedSystem={integratedSystem}
+        force={force}
+        stateObject={stateObject}
+      />
       <ProgressView stage={stage} />
       {showConnect && (
         <React.Fragment>

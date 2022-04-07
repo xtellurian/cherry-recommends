@@ -65,12 +65,14 @@ namespace SignalBox.Core.Workflows
 
         private async Task<EventLoggingResponse> OnAppUninstalled(IntegratedSystem system, string body)
         {
-            var shopifyEvent = JsonSerializer.Deserialize<ShopifyShop>(body);
             try
             {
-                await integratedSystemStore.Remove(system.Id);
-                await storageContext.SaveChanges();
-                logger.LogInformation("Shopify app uninstalled. Integrated system id={integratedSystemId} removed", system.Id);
+                if (await integratedSystemStore.Exists(system.Id))
+                {
+                    await integratedSystemStore.Remove(system.Id);
+                    await storageContext.SaveChanges();
+                    logger.LogInformation("Shopify app uninstalled. Integrated system id={integratedSystemId} removed", system.Id);
+                }
             }
             catch (Exception)
             {

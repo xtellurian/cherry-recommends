@@ -1,9 +1,12 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
 using SignalBox.Core.Adapters.Shopify;
+using SignalBox.Core.Serialization;
 using SignalBox.Web.Dto;
 
 namespace SignalBox.Web.Controllers
@@ -17,14 +20,17 @@ namespace SignalBox.Web.Controllers
         private readonly ILogger<ShopifyController> logger;
         private readonly IShopifyAdminWorkflow shopifyAdminWorkflows;
         private readonly IIntegratedSystemStore store;
+        private readonly ITenantProvider tenantProvider;
 
         public ShopifyController(ILogger<ShopifyController> logger,
                                  IShopifyAdminWorkflow shopifyAdminWorkflows,
-                                 IIntegratedSystemStore store)
+                                 IIntegratedSystemStore store,
+                                 ITenantProvider tenantProvider)
         {
             this.logger = logger;
             this.shopifyAdminWorkflows = shopifyAdminWorkflows;
             this.store = store;
+            this.tenantProvider = tenantProvider;
         }
 
         /// <summary>Retrieve Shopify app information.</summary>
@@ -38,17 +44,29 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Retrieve Shopify shop information.</summary>
         [HttpGet("ShopInformation")]
-        public async Task<ShopifyShop> GetShopInformation(long id)
+        public async Task<IActionResult> GetShopInformation(long id)
         {
             var system = await store.Read(id);
-            return await shopifyAdminWorkflows.GetShopInformation(system);
+            var shop = await shopifyAdminWorkflows.GetShopInformation(system);
+
+            if (shop == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(shop);
         }
 
         /// <summary>Generate Shopify app installation link.</summary>
         [HttpGet("Install")]
         public async Task<string> GetAuthorizationUrl(string id, string shopifyUrl, string redirectUrl)
         {
-            var uri = await shopifyAdminWorkflows.BuildAuthorizationUrl(shopifyUrl, redirectUrl, state: id);
+            var tenant = tenantProvider.Current();
+            string state = Serializer.Serialize(new { id, tenant = tenant?.Name }, new JsonSerializerOptions()
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            });
+            var uri = await shopifyAdminWorkflows.BuildAuthorizationUrl(shopifyUrl, redirectUrl, state);
 
             return uri.ToString();
         }
@@ -58,11 +76,16 @@ namespace SignalBox.Web.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> Connect(long id, ShopifyCode dto)
         {
+            var tenant = tenantProvider.Current();
             var system = await store.Read(id);
             string webhookReceiverUrl = Url.Link("AcceptWebhook", new
             {
                 endpointId = "x-endpoint-id"
             });
+            if (tenant != null)
+            {
+                webhookReceiverUrl += $"?x-tenant={tenant.Name}";
+            }
             await shopifyAdminWorkflows.Connect(system, dto.Code, dto.ShopifyUrl, webhookReceiverUrl);
             return Ok(id);
         }

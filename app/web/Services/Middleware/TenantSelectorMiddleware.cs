@@ -24,12 +24,14 @@ namespace SignalBox.Web.Services
 
             var routeData = context.GetRouteData();
             var routeDataDict = routeData.Values.ToDictionary(_ => _.Key, _ => _.Value.ToString());
+            var queryDict = context.Request.Query.ToDictionary(_ => _.Key, _ => _.Value.ToString());
             var tenantProvider = context.RequestServices.GetRequiredService<ITenantProvider>();
             var resolver = context.RequestServices.GetRequiredService<ITenantResolutionStrategy>();
 
             var requestModel = new HttpRequestModel(context.Request.Path.Value.ToString(),
                 context.Request.Headers.ToDictionary(_ => _.Key, _ => _.Value.ToString()),
-                routeDataDict);
+                routeDataDict,
+                queryDict);
 
             var name = await resolver.ResolveName(requestModel);
             await tenantProvider.SetTenantName(name);

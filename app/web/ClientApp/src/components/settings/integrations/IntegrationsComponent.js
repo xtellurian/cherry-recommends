@@ -46,7 +46,7 @@ export const IntegrationsComponent = () => {
         {shopifyFlag && (
           <AuthorizeRoute
             exact
-            path={`${path}/shopifyconnector`}
+            path={`${path}/shopifyconnector/:id`}
             component={ShopifyConnector}
           />
         )}

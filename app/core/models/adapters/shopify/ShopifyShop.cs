@@ -129,13 +129,13 @@ namespace SignalBox.Core.Adapters.Shopify
         /// Geographic coordinate specifying the north/south location of a shop.
         /// </summary>
         [JsonPropertyName("latitude")]
-        public string Latitude { get; set; }
+        public object Latitude { get; set; }
 
         /// <summary>
         /// Geographic coordinate specifying the east/west location of a shop.
         /// </summary>
         [JsonPropertyName("longitude")]
-        public string Longitude { get; set; }
+        public object Longitude { get; set; }
 
         /// <summary>
         /// A string representing the way currency is formatted when the currency isn't specified.

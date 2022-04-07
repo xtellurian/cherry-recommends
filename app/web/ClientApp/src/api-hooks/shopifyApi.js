@@ -4,6 +4,7 @@ import {
   fetchShopifyAppInformationAsync,
   fetchShopInformationAsync,
 } from "../api/shopifyApi";
+import { useTenantName } from "../components/tenants/PathTenantProvider";
 
 export const useShopifyAppInformation = () => {
   const token = useAccessToken();
@@ -35,13 +36,15 @@ export const useShopifyAppInformation = () => {
 
 export const useShopInformation = ({ id, trigger }) => {
   const token = useAccessToken();
+  const tenant = useTenantName();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     let mounted = true;
-    if (token && id) {
+    if (token && tenant && id) {
       fetchShopInformationAsync({
         id,
         token,
+        tenant: tenant?.tenantName,
       })
         .then((value) => {
           if (mounted) {
@@ -55,7 +58,7 @@ export const useShopInformation = ({ id, trigger }) => {
         });
     }
     return () => (mounted = false);
-  }, [token, id, trigger]);
+  }, [token, tenant, id, trigger]);
 
   return result;
 };

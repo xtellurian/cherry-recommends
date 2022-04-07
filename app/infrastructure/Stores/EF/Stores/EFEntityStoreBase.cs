@@ -157,6 +157,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             {
                 entity.LastUpdated = System.DateTimeOffset.Now;
             }
+            context.Entry(entity).State = EntityState.Modified;
             entity = await QuerySet.SingleAsync(_ => _.Id == entity.Id);
             return entity;
         }

@@ -4,6 +4,7 @@ import { AsyncButton } from "../molecules";
 import { useQuery } from "../../utility/utility";
 import { useLocation } from "react-router-dom";
 import { useAnalytics } from "../../analytics/analyticsHooks";
+import { isSpecialPath } from "./Auth0ProviderWrapper";
 
 const LoginButton = () => {
   const query = useQuery();
@@ -15,7 +16,12 @@ const LoginButton = () => {
 
   const loginWrapper = () => {
     analytics && analytics.analytics.track("site:auth0_loginButton_clicked");
-    return loginWithRedirect({ appState: { returnTo: pathname } });
+    let returnTo = pathname;
+    if (isSpecialPath()) {
+      // special paths should retain query parameters
+      returnTo = returnTo + window.location.search;
+    }
+    return loginWithRedirect({ appState: { returnTo: returnTo } });
   };
   const signIn = () => {
     console.debug("Attempting signin...");

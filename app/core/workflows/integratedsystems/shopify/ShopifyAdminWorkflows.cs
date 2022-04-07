@@ -6,6 +6,7 @@ using SignalBox.Core.Integrations;
 
 namespace SignalBox.Core.Workflows
 {
+#nullable enable
     public class ShopifyAdminWorkflows : ShopifyWorkflowBase, IShopifyAdminWorkflow
     {
         private readonly IIntegratedSystemWorkflow integratedSystemWorkflows;
@@ -62,8 +63,15 @@ namespace SignalBox.Core.Workflows
             await storageContext.SaveChanges();
         }
 
-        public async Task<ShopifyShop> GetShopInformation(IntegratedSystem system)
+        public async Task<ShopifyShop?> GetShopInformation(IntegratedSystem system)
         {
+            SystemTypeGuard(system);
+
+            if (system.IntegrationStatus == IntegrationStatuses.NotConfigured)
+            {
+                return null;
+            }
+
             string shopifyUrl = GetShopifyUrl(system);
             string accessToken = GetAccessToken(system);
             return await shopifyService.GetShopInformation(shopifyUrl, accessToken);
