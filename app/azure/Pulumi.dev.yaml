@@ -20,7 +20,10 @@ config:
   hubspot:clientId: 05e9c9c1-dcc7-4415-b6ed-fc772f26de66
   hubspot:clientSecret:
     secure: AAABANXrxA8MZFDrLOhvp3dTdtYr4z7hiY2whrZdhdtpY3MmAG2Jh3rQCcARr/F+cZLsOAZHYzicvNkAkYVa/+r7kys=
-    launch-darkly:clientSideId: 622802e7cc6fc7149d5348fd
+  launch-darkly:clientSideId: 622802e7cc6fc7149d5348fd
+  shopify:apiKey: c8580690f84c7537e86a22bf9e7d35d5
+  shopify:secretKey:
+    secure: AAABAAnXb6CpXmIu8C2QiALhDz76zQDGPG8rCNo6fBIPhzDKluk8tEd/Kgx+vaRVaHygGE778y19vOUpw9ziGA==
   signalbox:environment: Development
   signalbox:login-domain: dev.login.cherry.ai
   signalbox:sqlPassword:
