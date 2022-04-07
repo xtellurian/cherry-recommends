@@ -9,7 +9,7 @@ namespace SignalBox.Infrastructure.Models.Databases
         public Tenant Tenant { get; set; }
         public List<MigrationInfo> Migrations { get; set; }
         public string Auth0RoleId { get; set; }
-        public System.Exception Exception { get; set; }
+        public string ExceptionMessage { get; set; }
 
         protected MigrationResult() { }
         public MigrationResult(Tenant tenant)
@@ -22,7 +22,7 @@ namespace SignalBox.Infrastructure.Models.Databases
         {
             Tenant = tenant;
             Migrations = new List<MigrationInfo>();
-            Exception = exception;
+            ExceptionMessage = exception.Message;
         }
 
         public void AddMigration(bool isApplied, string name)
