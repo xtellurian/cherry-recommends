@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Identity;
@@ -60,8 +61,7 @@ namespace SignalBox.Infrastructure.Azure
             catch (Exception ex)
             {
                 telemetry.TrackDependency("Azure", azure.SubscriptionId, "Connect", startTime, stopwatch.Elapsed, false);
-                logger.LogCritical("Failed to initialize IAzure");
-                logger.LogCritical(ex.Message);
+                logger.LogCritical("Failed to initialize IAzure: {message}", ex.Message);
                 throw;
             }
         }
@@ -76,13 +76,13 @@ namespace SignalBox.Infrastructure.Azure
                 throw new NullReferenceException("Database name cannot be null or empty");
             }
 
-            logger.LogInformation($"Creating SQL Database {tenant.DatabaseName} for tenant {tenant.Name}");
+            logger.LogInformation("Creating SQL Database {databaseName} for tenant {tenantName}", tenant.DatabaseName, tenant.Name);
             var server = await azure.SqlServers.GetByIdAsync(this.azureEnv.SqlServerAzureId);
             if (server == null)
             {
                 throw new System.NullReferenceException("Sql Server not found");
             }
-            logger.LogInformation($"Using Azure Sql Server: {server.Name}");
+            logger.LogInformation("Using Azure Sql Server: {serverName}", server.Name);
 
             var database = await server.Databases
                             .Define(tenant.DatabaseName)
@@ -109,8 +109,14 @@ namespace SignalBox.Infrastructure.Azure
             {
                 foreach (var user in AzureDBUserNames.AzureDBUserNameList)
                 {
-                    await context.Database.ExecuteSqlRawAsync("CREATE USER " + user.Key + " FROM LOGIN " + user.Key + " ;");
-                    await context.Database.ExecuteSqlRawAsync("EXEC sp_addrolemember '" + user.Value + "','" + user.Key + "';");
+                    // related to: deploy/sql-database-scripts/cloud/create-db-principal.sql
+                    StringBuilder query = new();
+                    query.AppendLine($"IF NOT EXISTS (SELECT name FROM sys.database_principals WHERE name='{user.Key}')");
+                    query.AppendLine("BEGIN");
+                    query.AppendLine($"CREATE USER {user.Key} FROM LOGIN {user.Key} ;");
+                    query.AppendLine($"EXEC sp_addrolemember '{user.Value}','{user.Key}' ;");
+                    query.AppendLine("END");
+                    await context.Database.ExecuteSqlRawAsync(query.ToString());
                 }
 
                 var applied = await context.Database.GetAppliedMigrationsAsync();
@@ -119,10 +125,10 @@ namespace SignalBox.Infrastructure.Azure
                 var pending = await context.Database.GetPendingMigrationsAsync();
                 result.AddMigrations(false, pending);
 
-                logger.LogInformation($"Migrating database. There are {pending.Count()} pending migrations and {applied.Count()} applied.");
+                logger.LogInformation("Migrating database. There are {pending} pending migrations and {applied} applied.", pending.Count(), applied.Count());
                 await context.Database.MigrateAsync();
             }
-            logger.LogInformation($"Migrated database {database.Name}");
+            logger.LogInformation("Migrated database {databaseName}", database.Name);
 
             stopwatch.Stop();
             telemetry.TrackDependency("AzureSql", "MigrateDatabase", "SignalBoxDbContext, db=" + database.Name, startTime, stopwatch.Elapsed, true);
@@ -148,14 +154,14 @@ namespace SignalBox.Infrastructure.Azure
                 throw new NullReferenceException("Database name cannot be null or empty");
             }
             var result = new MigrationResult(tenant);
-            logger.LogInformation($"Migrating SQL Database {tenant.DatabaseName} for tenant {tenant.Name}");
+            logger.LogInformation("Migrating SQL Database {databaseName} for tenant {tenantName}", tenant.DatabaseName, tenant.Name);
 
             var server = await azure.SqlServers.GetByIdAsync(this.azureEnv.SqlServerAzureId);
             if (server == null)
             {
                 throw new System.NullReferenceException("Sql Server not found");
             }
-            logger.LogInformation($"Using Azure Sql Server: {server.Name}");
+            logger.LogInformation("Using Azure Sql Server: {serverName}", server.Name);
 
             var database = await server.Databases.GetAsync(tenant.DatabaseName);
             if (database == null)
@@ -178,7 +184,7 @@ namespace SignalBox.Infrastructure.Azure
             {
                 throw new System.NullReferenceException("Sql Server not found");
             }
-            logger.LogInformation($"Using Azure Sql Server: {server.Name}");
+            logger.LogInformation("Using Azure Sql Server: {serverName}", server.Name);
 
             var database = await server.Databases.GetAsync(tenant.DatabaseName);
             if (database == null)
