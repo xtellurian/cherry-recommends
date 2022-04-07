@@ -9,12 +9,20 @@ namespace SignalBox.Infrastructure.Models.Databases
         public Tenant Tenant { get; set; }
         public List<MigrationInfo> Migrations { get; set; }
         public string Auth0RoleId { get; set; }
+        public System.Exception Exception { get; set; }
 
         protected MigrationResult() { }
         public MigrationResult(Tenant tenant)
         {
             Tenant = tenant;
             Migrations = new List<MigrationInfo>();
+        }
+
+        public MigrationResult(Tenant tenant, System.Exception exception)
+        {
+            Tenant = tenant;
+            Migrations = new List<MigrationInfo>();
+            Exception = exception;
         }
 
         public void AddMigration(bool isApplied, string name)

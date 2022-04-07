@@ -280,9 +280,11 @@ namespace SignalBox.Functions
                         catch (System.Exception ex)
                         {
                             telemetry.TrackException(ex);
-                            logger.LogCritical("Error migrating tenant {Name} with database {DatabaseName}. Message: ", t.Name, t.DatabaseName, ex.Message);
+                            logger.LogCritical("Error migrating tenant {Name} with database {DatabaseName}. Message: {message}", t.Name, t.DatabaseName, ex.Message);
+                            results.Add(new MigrationResult(t, ex));
                         }
                     }
+
                     return results;
                 }
                 else if (await tenantStore.TenantExists(tenantName))
