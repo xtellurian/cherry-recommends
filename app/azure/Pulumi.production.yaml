@@ -17,8 +17,8 @@ config:
   azure-synapse:enable: "true"
   azure-synapse:sqlPassword:
     secure: AAABAMCoCQ8kDUX9lbWcvPd5L/Z0oLKjB9wV4mRzObU7DXDfJlmVDFU8w8w=
-  database:poolCapacity: 4
-  database:poolMaxCapacityPerDatabase: 2
+  database:poolCapacity: "4"
+  database:poolMaxCapacityPerDatabase: "2"
   hotjar:siteId: "2866573"
   hotjar:snippetVersion: "6"
   hubspot:appId: todo
@@ -27,6 +27,9 @@ config:
   network:cherrySubdomain: app
   segment:writeKey:
     secure: AAABABXraw8QiY789EJ85SfK33gTwd+l+sAeQ3NJUswsJTaBvCkV2D2P90iH2JRKpmoekebIEm3fNMFO+6LWHA==
+  shopify:apiKey: 346ceb57f5c3edb62cf3f4fb78d59e7b
+  shopify:secretKey:
+    secure: AAABAPkCVx8SlrkhHCqLJj1Vr87SXmPXHja7qeHN+qWhvR5/N/PbYSSyy/Vqs5ZFNz7Iio7I1gXn/ujVuoxOKA==
   signalbox:environment: Production
   signalbox:login-domain: login.cherry.ai
   signalbox:sqlPassword:
