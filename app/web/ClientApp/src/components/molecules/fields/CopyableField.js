@@ -1,3 +1,4 @@
+import Tippy from "@tippyjs/react";
 import React from "react";
 import { EditPropertyPopup } from "../popups/EditPropertyPopup";
 
@@ -10,6 +11,7 @@ export const CopyableField = ({
   max,
   isEditable,
   onValueEdited,
+  tooltip,
 }) => {
   const [editing, setEditing] = React.useState(false);
 
@@ -36,36 +38,46 @@ export const CopyableField = ({
         isOpen={editing}
         onSetValue={(v) => onValueEdited(v)}
       />
-      <div className="input-group mb-3">
-        <div className="input-group-prepend ml-1">
-          <span className="input-group-text">{label}</span>
-        </div>
-        <input
-          type={displayType}
-          value={value || ""} // dont allow uncontrolled
-          className="form-control"
-          aria-label={label}
-          disabled
-        />
+      <Tippy
+        content={
+          tooltip && (
+            <div className="bg-light text-center border border-primary rounded p-1">
+              {tooltip}
+            </div>
+          )
+        }
+      >
+        <div className="input-group mb-3">
+          <div className="input-group-prepend ml-1">
+            <span className="input-group-text">{label}</span>
+          </div>
+          <input
+            type={displayType}
+            value={value || ""} // dont allow uncontrolled
+            className="form-control"
+            aria-label={label}
+            disabled
+          />
 
-        {isEditable && (
+          {isEditable && (
+            <button
+              className="btn btn-outline-secondary"
+              type="button"
+              onClick={toggleEdit}
+            >
+              Edit
+            </button>
+          )}
+
           <button
             className="btn btn-outline-secondary"
             type="button"
-            onClick={toggleEdit}
+            onClick={() => navigator.clipboard.writeText(value)}
           >
-            Edit
+            Copy
           </button>
-        )}
-
-        <button
-          className="btn btn-outline-secondary"
-          type="button"
-          onClick={() => navigator.clipboard.writeText(value)}
-        >
-          Copy
-        </button>
-      </div>
+        </div>
+      </Tippy>
     </React.Fragment>
   );
 };

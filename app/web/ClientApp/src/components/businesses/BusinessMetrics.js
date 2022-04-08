@@ -15,6 +15,7 @@ import {
   ErrorCard,
 } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
+import { toDate } from "../../utility/utility";
 
 const MetricValues = ({ businessId, metric }) => {
   const values = useBusinessMetric({
@@ -27,9 +28,15 @@ const MetricValues = ({ businessId, metric }) => {
     return <ErrorCard error={values.error} />;
   } else {
     const valueType = values.numericValue ? "Numeric" : "String";
+    const dateValue = toDate(values.created);
     return (
       <div>
         <CopyableField label="Metric Common Id" value={metric.commonId} />
+        <CopyableField
+          label="Date Created"
+          value={dateValue.toLocaleString()}
+          tooltip="Date created in local timezone"
+        />
         <CopyableField label="Current Version" value={values.version} />
         <CopyableField label="Current Value" value={`${values.value}`} />
         <CopyableField label="Value Type" value={valueType} />
@@ -39,9 +46,11 @@ const MetricValues = ({ businessId, metric }) => {
 };
 const MetricValuesRow = ({ businessId, metric }) => {
   return (
-    <ExpandableCard label={metric.name}>
-      <MetricValues businessId={businessId} metric={metric} />
-    </ExpandableCard>
+    <div className="mb-2">
+      <ExpandableCard label={metric.name}>
+        <MetricValues businessId={businessId} metric={metric} />
+      </ExpandableCard>
+    </div>
   );
 };
 
