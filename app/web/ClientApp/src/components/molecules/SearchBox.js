@@ -1,17 +1,7 @@
 import React from "react";
+import { DebounceInput } from "react-debounce-input";
 
 export const SearchBox = ({ onSearch }) => {
-  const [term, setTerm] = React.useState("");
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      if (onSearch) {
-        onSearch(term);
-      } else {
-        console.info("No onSearch function provided.");
-      }
-    }
-  };
-
   return (
     <div className="input-group input-group-lg mb-1">
       <div className="input-group-prepend">
@@ -20,15 +10,14 @@ export const SearchBox = ({ onSearch }) => {
         </span>
       </div>
 
-      <input
-        type="text"
-        placeholder="Press Enter to search"
-        value={term}
-        onChange={(_) => setTerm(_.target.value)}
+      <DebounceInput
         className="form-control"
         aria-label="Large"
         aria-describedby="inputGroup-sizing-sm"
-        onKeyDown={handleKeyDown}
+        placeholder="Type text to search"
+        minLength={1}
+        debounceTimeout={500}
+        onChange={(event) => onSearch(event.target.value)}
       />
     </div>
   );

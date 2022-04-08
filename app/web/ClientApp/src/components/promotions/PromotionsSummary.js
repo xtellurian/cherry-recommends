@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { usePromotions } from "../../api-hooks/promotionsApi";
-import { Title, EmptyList, Spinner, ErrorCard, Paginator } from "../molecules";
+import { Title, Spinner, ErrorCard, Paginator } from "../molecules";
 import { CreateButtonClassic } from "../molecules/CreateButton";
-import { InputGroup, TextInput } from "../molecules/TextInput";
-
 import { PromotionRow } from "./PromotionRow";
 import { PromotionsFilter } from "./PromotionsFilter";
+import { SearchBox } from "../molecules/SearchBox";
 
 export const RecommendableItemsSummary = () => {
   const [trigger, setTrigger] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [filters, setFilters] = useState({
     searchTerm: "",
@@ -26,8 +26,13 @@ export const RecommendableItemsSummary = () => {
   });
 
   const onSearch = (value) => {
+    setSearchTerm(value);
     setTrigger({ ...filters, searchTerm: value });
   };
+
+  React.useEffect(() => {
+    setTrigger({ ...filters, searchTerm: searchTerm });
+  }, [filters]);
 
   const isEmpty = items.items && items.items.length === 0;
 
@@ -39,13 +44,7 @@ export const RecommendableItemsSummary = () => {
       <Title>Promotion Catalogue</Title>
       <hr />
 
-      <InputGroup>
-        <TextInput
-          label="Search"
-          placeholder="Press Enter to search"
-          onReturn={onSearch}
-        />
-      </InputGroup>
+      <SearchBox onSearch={onSearch} />
 
       <PromotionsFilter filters={filters} setFilters={setFilters} />
 

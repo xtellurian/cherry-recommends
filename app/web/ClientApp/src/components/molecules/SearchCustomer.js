@@ -46,7 +46,7 @@ export const SearchCustomer = ({ subtitle, onAddCustomer, error }) => {
             <AddCustomerRow key={u.id} customer={u} onAdd={onAddCustomer} />
           ))}
       </div>
-      {customers.items?.length && <Paginator {...customers.pagination} />}
+      {customers.items?.length > 0 && <Paginator {...customers.pagination} />}
     </React.Fragment>
   );
 };
