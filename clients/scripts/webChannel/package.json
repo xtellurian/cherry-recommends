@@ -1,0 +1,34 @@
+{
+  "name": "@cherry.ai/web-channel-script",
+  "version": "0.1.0dev1",
+  "description": "Web channel script for Cherry Recommends",
+  "main": "dist/channel.browser.js",
+  "scripts": {
+    "rollup": "rollup -c",
+    "build": "rimraf dist && rollup -c rollup.config.js"
+  },
+  "keywords": [
+    "Four2",
+    "Cherry",
+    "Cherry AI",
+    "Cherry Recommends",
+    "Recommender",
+    "Promotions",
+    "Promotion Recommender",
+    "Product Recommender",
+    "SignalBox"
+  ],
+  "author": "Rian Finnegan",
+  "license": "MIT",
+  "readme": "README.md",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.3",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.51.0"
+  },
+  "dependencies": {
+    "cherry.ai": "^1.2.2"
+  }
+}
