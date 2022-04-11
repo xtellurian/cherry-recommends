@@ -27,7 +27,7 @@ export const GettingStartedSection = ({ recommender }) => {
                   Integrated System via a channel.
                 </p>
                 <Navigation
-                  to={`/recommenders/promotions-recommenders/advanced/${recommender.id}?tab=advanced`}
+                  to={`/recommenders/promotions-recommenders/delivery/${recommender.id}?tab=delivery`}
                 >
                   <button className="btn btn-outline-primary">
                     Add a destination channel
