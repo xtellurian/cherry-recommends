@@ -17,17 +17,25 @@ import { IntegrationIcon } from "./icons/IntegrationIcons";
 import { ShopifyOverview } from "./shopify/ShopifyOverview";
 import { useFeatureFlag } from "../../launch-darkly/hooks";
 import { useNavigation } from "../../../utility/useNavigation";
+import {
+  useEnvironmentReducer,
+  useEnvironments,
+} from "../../../api-hooks/environmentsApi";
+import { useQuery } from "../../../utility/utility";
 
 export const IntegratedSystemDetail = () => {
   const token = useAccessToken();
   const { navigate } = useNavigation();
   let { id } = useParams();
+  const query = useQuery();
+  const environmentId = query.get("environmentId");
+  const environments = useEnvironments();
+  const [currentEnvironment, setEnvironment] = useEnvironmentReducer();
   const [trigger, setReloadTrigger] = React.useState({});
   const integratedSystem = useIntegratedSystem({ id, trigger });
   const shopifyFlag = useFeatureFlag("shopify", true);
 
   const [renameOpen, setRenameOpen] = React.useState(false);
-
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [deleteError, setDeleteError] = React.useState();
 
@@ -37,6 +45,25 @@ export const IntegratedSystemDetail = () => {
       .then(() => navigate("/settings/integrations"))
       .catch(setDeleteError);
   };
+
+  React.useEffect(() => {
+    if (
+      !isNaN(environmentId) &&
+      !environments.loading &&
+      (!currentEnvironment ||
+        (currentEnvironment && currentEnvironment.id !== ~~environmentId))
+    ) {
+      const environment = environments.items.find(
+        (e) => e.id === ~~environmentId
+      );
+      if (environment) {
+        setEnvironment(environment);
+        setReloadTrigger(environment);
+      } else {
+        console.warn("Environment not found!");
+      }
+    }
+  }, [environments, currentEnvironment, environmentId]);
 
   return (
     <React.Fragment>

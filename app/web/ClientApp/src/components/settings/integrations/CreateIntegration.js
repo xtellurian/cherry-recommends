@@ -9,16 +9,14 @@ import { NoteBox } from "../../molecules/NoteBox";
 import { TextInput, InputGroup } from "../../molecules/TextInput";
 import { IntegrationIcon } from "./icons/IntegrationIcons";
 import { MoveUpHierarchyPrimaryButton, PageHeading } from "../../molecules";
-import { useFeatureFlag } from "../../launch-darkly/hooks";
 import { useNavigation } from "../../../utility/useNavigation";
 
-const systemTypes = ["Hubspot", "Segment", "Shopify", "Custom"];
+const systemTypes = ["Hubspot", "Segment", "Custom"];
 
 export const CreateIntegration = () => {
   const { navigate } = useNavigation();
   const token = useAccessToken();
   const { analytics } = useAnalytics();
-  const shopifyFlag = useFeatureFlag("shopify", true);
   const [integratedSystem, setIntegratedSystem] = React.useState({
     name: "",
     systemType: "",
@@ -52,40 +50,36 @@ export const CreateIntegration = () => {
       <NoteBox className="m-3" label="What is an integration?">
         Integrations allow you to automatically pull data or push
         recommendations into various external systems. Select either Segment,
-        Hubspot,{shopifyFlag ? " Shopify," : ""} or Custom below. Give your
-        integration a name, for example: 'Production Segment Connection'
+        Hubspot, or Custom below. Give your integration a name, for example:
+        'Production Segment Connection'
       </NoteBox>
 
       {!integratedSystem.systemType && (
         <div className="m-5">
-          {systemTypes
-            .filter((v) => {
-              return !(!shopifyFlag && v.toLowerCase() === "shopify");
-            })
-            .map((t) => (
-              <div
-                onClick={() =>
-                  setIntegratedSystem({
-                    ...integratedSystem,
-                    systemType: t,
-                  })
-                }
-                key={t}
-                className="p-3 mb-3 shadow bg-body rounded"
-                style={{ cursor: "pointer" }}
-              >
-                <div className="row justify-content-center">
-                  <div className="col-3 text-center">
-                    <h5>{t}</h5>
-                  </div>
-                  <div className="col-2">
-                    <div style={{ maxWidth: "50px" }}>
-                      <IntegrationIcon systemType={t} />
-                    </div>
+          {systemTypes.map((t) => (
+            <div
+              onClick={() =>
+                setIntegratedSystem({
+                  ...integratedSystem,
+                  systemType: t,
+                })
+              }
+              key={t}
+              className="p-3 mb-3 shadow bg-body rounded"
+              style={{ cursor: "pointer" }}
+            >
+              <div className="row justify-content-center">
+                <div className="col-3 text-center">
+                  <h5>{t}</h5>
+                </div>
+                <div className="col-2">
+                  <div style={{ maxWidth: "50px" }}>
+                    <IntegrationIcon systemType={t} />
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
       )}
 

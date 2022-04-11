@@ -45,17 +45,26 @@ export const useEnvironments = (props) => {
 
   const [environment] = useEnvironmentReducer();
   React.useEffect(() => {
-    setState({ loading: true });
+    let mounted = true;
     if (token) {
       fetchEnvironmentsAsync({
         token,
         page,
       })
-        .then(addDefault)
-        .then((s) => addCurrentBool(s, environment?.id))
-        .then(setState)
-        .catch((error) => setState({ error }));
+        .then((s) => {
+          if (mounted) {
+            addDefault(s);
+            const environments = addCurrentBool(s, environment?.id);
+            setState(environments);
+          }
+        })
+        .catch((error) => {
+          if (mounted) {
+            setState({ error });
+          }
+        });
     }
+    return () => (mounted = false);
   }, [token, page, environment, props?.trigger]);
 
   return result;

@@ -8,12 +8,9 @@ import { CreateWebhookReceiver } from "./CreateWebhookReceiver";
 import { HubspotConnector } from "./hubspot/HubspotConnector";
 import { HubspotIntegrationComponent } from "./hubspot/HubspotIntegrationComponent";
 import { CustomIntegrationComponent } from "./custom/CustomIntegrationComponent";
-import { ShopifyConnector } from "./shopify/ShopifyConnector";
-import { useFeatureFlag } from "../../launch-darkly/hooks";
 
 export const IntegrationsComponent = () => {
   const { path } = useRouteMatch();
-  const shopifyFlag = useFeatureFlag("shopify", true);
   return (
     <React.Fragment>
       <Switch>
@@ -43,13 +40,6 @@ export const IntegrationsComponent = () => {
           path={`${path}/hubspot-detail/:id`}
           component={HubspotIntegrationComponent}
         />
-        {shopifyFlag && (
-          <AuthorizeRoute
-            exact
-            path={`${path}/shopifyconnector/:id`}
-            component={ShopifyConnector}
-          />
-        )}
         <AuthorizeRoute
           path={`${path}/custom/:id`}
           component={CustomIntegrationComponent}

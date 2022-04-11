@@ -73,7 +73,11 @@ namespace SignalBox.Core.Workflows
             }
             var endpointId = hasher.Hash(System.Guid.NewGuid().ToBase64Encoded());
             var sharedSecret = (includeSharedSecret == true) ? hasher.Hash(System.Guid.NewGuid().ToBase64Encoded()) : null;
-            var webhookReceiver = await webhookReceiverStore.Create(new WebhookReceiver(endpointId, system, sharedSecret));
+            var webhookReceiver = new WebhookReceiver(endpointId, system, sharedSecret)
+            {
+                EnvironmentId = system.EnvironmentId
+            };
+            webhookReceiver = await webhookReceiverStore.Create(webhookReceiver);
             await storageContext.SaveChanges();
             return webhookReceiver;
         }

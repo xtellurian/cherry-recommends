@@ -6,7 +6,7 @@ namespace SignalBox.Core
 #nullable enable
     public interface IShopifyAdminWorkflow : IShopifyWorkflowBase
     {
-        Task Connect(IntegratedSystem system, string code, string shopifyUrl, string webhookReceiverUrl);
+        Task<IntegratedSystem> Connect(string code, string shop, string webhookReceiverUrl, long? environmentId);
         Task Disconnect(IntegratedSystem system);
         Task<ShopifyShop?> GetShopInformation(IntegratedSystem system);
     }

@@ -4,12 +4,16 @@ import { useHistory } from "react-router-dom";
 
 export const specialPaths = [
   "/settings/integrations/hubspotconnector",
+  "/settings/integrations/detail",
   "/_connect/shopify/callback",
+  "/_connect/shopify/install",
 ];
 
 export const isSpecialPath = (path) => {
   const targetPath = path ?? window.location.pathname;
-  return specialPaths.includes(targetPath);
+  // Use includes to match multi-tenant paths
+  var match = specialPaths.find((_) => targetPath.includes(_));
+  return !!match;
 };
 
 export const Auth0ProviderWrapper = ({ auth0Config, children }) => {

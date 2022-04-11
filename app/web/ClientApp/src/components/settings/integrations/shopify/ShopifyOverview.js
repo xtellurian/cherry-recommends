@@ -1,15 +1,11 @@
 import React from "react";
 import { useAnalytics } from "../../../../analytics/analyticsHooks";
+import { useEnvironmentReducer } from "../../../../api-hooks/environmentsApi";
 import { useShopInformation } from "../../../../api-hooks/shopifyApi";
 import { useAccessToken } from "../../../../api-hooks/token";
 import { shopifyDisconnectAsync } from "../../../../api/shopifyApi";
 import { useNavigation } from "../../../../utility/useNavigation";
-import {
-  AsyncButton,
-  ErrorCard,
-  Navigation,
-  Spinner,
-} from "../../../molecules";
+import { AsyncButton, ErrorCard, Spinner } from "../../../molecules";
 import { ConfirmationPopup } from "../../../molecules/popups/ConfirmationPopup";
 import { useTenantName } from "../../../tenants/PathTenantProvider";
 
@@ -40,6 +36,7 @@ export const ShopifyOverview = ({ integratedSystem }) => {
   const token = useAccessToken();
   const shop = useShopInformation({ id: integratedSystem.id });
   const tenant = useTenantName();
+  const [environment] = useEnvironmentReducer();
 
   const isIntegrated = integratedSystem.integrationStatus === "ok";
 
@@ -53,13 +50,14 @@ export const ShopifyOverview = ({ integratedSystem }) => {
     }
   };
 
-  const handleDisconnect = React.useCallback(() => {
+  const handleDisconnect = () => {
     if (token && tenant) {
       setLoading(true);
       shopifyDisconnectAsync({
         token,
         tenant: tenant?.tenantName,
         id: integratedSystem.id,
+        environment: environment?.id,
       })
         .then(() => {
           analytics.track(
@@ -75,7 +73,7 @@ export const ShopifyOverview = ({ integratedSystem }) => {
           setLoading(false);
         });
     }
-  }, [token, tenant]);
+  };
 
   return (
     <React.Fragment>
@@ -108,13 +106,6 @@ export const ShopifyOverview = ({ integratedSystem }) => {
         <div className="col">{renderShopDetails()}</div>
         <div className="col">
           <ErrorCard error={error} />
-          {!isIntegrated && (
-            <Navigation
-              to={`/settings/integrations/shopifyconnector/${integratedSystem.id}`}
-            >
-              <button className="btn btn-primary">Connect to Shopify</button>
-            </Navigation>
-          )}
           {isIntegrated && (
             <button className="btn btn-primary" onClick={() => setIsOpen(true)}>
               Disconnect from Shopify
