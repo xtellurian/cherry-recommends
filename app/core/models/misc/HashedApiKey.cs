@@ -10,7 +10,7 @@ namespace SignalBox.Core
             this.AlgorithmName = algorithmName;
             this.ApiKeyType = apiKeyType;
             this.HashedKey = hashedKey;
-            this.Scope = scope;
+            this.Scope = scope?.Trim(); // ensure there is no leading / trailing whitespace.
             this.Name = name;
         }
         public string Name { get; set; }
