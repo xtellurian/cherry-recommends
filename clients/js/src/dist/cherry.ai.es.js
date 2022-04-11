@@ -545,9 +545,6 @@ var deploymentApi = /*#__PURE__*/Object.freeze({
     fetchDeploymentConfigurationAsync: fetchDeploymentConfigurationAsync
 });
 
-const Custom = "Custom";
-const Behaviour = "Behaviour";
-const ConsumeRecommendation = "ConsumeRecommendation";
 const fetchEventAsync = async ({ id, token }) => {
     return await executeFetch({
         token,
@@ -563,10 +560,12 @@ const createEventsAsync = async ({ apiKey, token, events, }) => {
         body: events,
     });
 };
-const fetchCustomersEventsAsync = async ({ token, id, useInternalId, }) => {
+const fetchCustomersEventsAsync = async ({ token, id, page, pageSize, useInternalId, }) => {
     return await executeFetch({
         path: `api/Customers/${id}/events`,
         token,
+        page,
+        pageSize,
         query: {
             useInternalId,
         },
@@ -574,14 +573,15 @@ const fetchCustomersEventsAsync = async ({ token, id, useInternalId, }) => {
 };
 const fetchTrackedUsersEventsAsync = fetchCustomersEventsAsync;
 // useful extension methods to create certain event kinds
-const createRecommendationConsumedEventAsync = async ({ token, commonUserId, customerId, correlatorId, }) => {
+const createRecommendationConsumedEventAsync = async ({ token, commonUserId, customerId, correlatorId, properties, }) => {
     const payload = {
         commonUserId,
         customerId,
         eventId: `recommendation-${correlatorId}-${new Date().getTime()}`,
         recommendationCorrelatorId: correlatorId,
-        kind: ConsumeRecommendation,
+        kind: "consumeRecommendation",
         eventType: "generated",
+        properties,
     };
     return await createEventsAsync({ token, events: [payload] });
 };
@@ -594,9 +594,6 @@ const fetchBusinessEventsAsync = async ({ token, id, }) => {
 
 var eventsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    Custom: Custom,
-    Behaviour: Behaviour,
-    ConsumeRecommendation: ConsumeRecommendation,
     fetchEventAsync: fetchEventAsync,
     createEventsAsync: createEventsAsync,
     fetchCustomersEventsAsync: fetchCustomersEventsAsync,

@@ -1,7 +1,4 @@
 import { executeFetch } from "./client/apiClient";
-export const Custom = "Custom";
-export const Behaviour = "Behaviour";
-export const ConsumeRecommendation = "ConsumeRecommendation";
 export const fetchEventAsync = async ({ id, token }) => {
     return await executeFetch({
         token,
@@ -17,10 +14,12 @@ export const createEventsAsync = async ({ apiKey, token, events, }) => {
         body: events,
     });
 };
-export const fetchCustomersEventsAsync = async ({ token, id, useInternalId, }) => {
+export const fetchCustomersEventsAsync = async ({ token, id, page, pageSize, useInternalId, }) => {
     return await executeFetch({
         path: `api/Customers/${id}/events`,
         token,
+        page,
+        pageSize,
         query: {
             useInternalId,
         },
@@ -28,14 +27,15 @@ export const fetchCustomersEventsAsync = async ({ token, id, useInternalId, }) =
 };
 export const fetchTrackedUsersEventsAsync = fetchCustomersEventsAsync;
 // useful extension methods to create certain event kinds
-export const createRecommendationConsumedEventAsync = async ({ token, commonUserId, customerId, correlatorId, }) => {
+export const createRecommendationConsumedEventAsync = async ({ token, commonUserId, customerId, correlatorId, properties, }) => {
     const payload = {
         commonUserId,
         customerId,
         eventId: `recommendation-${correlatorId}-${new Date().getTime()}`,
         recommendationCorrelatorId: correlatorId,
-        kind: ConsumeRecommendation,
+        kind: "consumeRecommendation",
         eventType: "generated",
+        properties,
     };
     return await createEventsAsync({ token, events: [payload] });
 };

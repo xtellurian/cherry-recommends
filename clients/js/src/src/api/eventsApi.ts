@@ -1,13 +1,7 @@
-import {
-  AuthenticatedRequest,
-  CustomerEvent,
-  EntityRequest,
-} from "../interfaces";
+import { EntityRequest, PaginatedEntityRequest } from "../interfaces";
 import { executeFetch } from "./client/apiClient";
 
-export const Custom = "Custom";
-export const Behaviour = "Behaviour";
-export const ConsumeRecommendation = "ConsumeRecommendation";
+import { components } from "../model/api";
 
 export const fetchEventAsync = async ({ id, token }: EntityRequest) => {
   return await executeFetch({
@@ -16,16 +10,18 @@ export const fetchEventAsync = async ({ id, token }: EntityRequest) => {
   });
 };
 
+type EventDto = components["schemas"]["EventDto"];
+type EventLoggingResponse = components["schemas"]["EventLoggingResponse"];
 interface CreateEventRequest {
   apiKey?: string | undefined;
   token?: string | undefined;
-  events: CustomerEvent[];
+  events: EventDto[];
 }
 export const createEventsAsync = async ({
   apiKey,
   token,
   events,
-}: CreateEventRequest) => {
+}: CreateEventRequest): Promise<EventLoggingResponse> => {
   return await executeFetch({
     path: "api/events",
     method: "post",
@@ -35,14 +31,19 @@ export const createEventsAsync = async ({
   });
 };
 
+type CustomerEventPaginated = components["schemas"]["CustomerEventPaginated"];
 export const fetchCustomersEventsAsync = async ({
   token,
   id,
+  page,
+  pageSize,
   useInternalId,
-}: EntityRequest) => {
+}: PaginatedEntityRequest): Promise<CustomerEventPaginated> => {
   return await executeFetch({
     path: `api/Customers/${id}/events`,
     token,
+    page,
+    pageSize,
     query: {
       useInternalId,
     },
@@ -52,9 +53,15 @@ export const fetchTrackedUsersEventsAsync = fetchCustomersEventsAsync;
 
 interface CreateRecommendationConsumedRequest {
   token: string;
-  commonUserId: string | undefined;
+  commonUserId?: string | undefined;
   customerId: string;
   correlatorId: number;
+  properties:
+    | {
+        [key: string]: unknown;
+      }
+    | null
+    | undefined;
 }
 // useful extension methods to create certain event kinds
 export const createRecommendationConsumedEventAsync = async ({
@@ -62,14 +69,16 @@ export const createRecommendationConsumedEventAsync = async ({
   commonUserId,
   customerId,
   correlatorId,
+  properties,
 }: CreateRecommendationConsumedRequest) => {
-  const payload: CustomerEvent = {
+  const payload: EventDto = {
     commonUserId,
     customerId,
     eventId: `recommendation-${correlatorId}-${new Date().getTime()}`,
     recommendationCorrelatorId: correlatorId,
-    kind: ConsumeRecommendation,
+    kind: "consumeRecommendation",
     eventType: "generated",
+    properties,
   };
   return await createEventsAsync({ token, events: [payload] });
 };

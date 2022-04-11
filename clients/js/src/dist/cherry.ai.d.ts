@@ -56,17 +56,6 @@ interface RecommendableItem extends CommonEntity {
 }
 interface Promotion extends RecommendableItem {
 }
-interface CustomerEvent {
-    commonUserId?: string | undefined;
-    customerId: string;
-    eventId: string;
-    timestamp?: string | undefined;
-    recommendationCorrelatorId?: number | undefined | null;
-    sourceSystemId?: number | null | undefined;
-    kind: "Custom" | "Behaviour" | "ConsumeRecommendation";
-    eventType: string;
-    properties?: any | null | undefined;
-}
 interface Customer extends CommonEntity {
 }
 interface ScoredItem {
@@ -1718,30 +1707,33 @@ declare namespace deploymentApi_d {
   };
 }
 
-declare const Custom = "Custom";
-declare const Behaviour = "Behaviour";
-declare const ConsumeRecommendation = "ConsumeRecommendation";
 declare const fetchEventAsync: ({ id, token }: EntityRequest) => Promise<any>;
+declare type EventDto = components["schemas"]["EventDto"];
+declare type EventLoggingResponse = components["schemas"]["EventLoggingResponse"];
 interface CreateEventRequest {
     apiKey?: string | undefined;
     token?: string | undefined;
-    events: CustomerEvent[];
+    events: EventDto[];
 }
-declare const createEventsAsync: ({ apiKey, token, events, }: CreateEventRequest) => Promise<any>;
-declare const fetchCustomersEventsAsync: ({ token, id, useInternalId, }: EntityRequest) => Promise<any>;
-declare const fetchTrackedUsersEventsAsync: ({ token, id, useInternalId, }: EntityRequest) => Promise<any>;
+declare const createEventsAsync: ({ apiKey, token, events, }: CreateEventRequest) => Promise<EventLoggingResponse>;
+declare type CustomerEventPaginated = components["schemas"]["CustomerEventPaginated"];
+declare const fetchCustomersEventsAsync: ({ token, id, page, pageSize, useInternalId, }: PaginatedEntityRequest) => Promise<CustomerEventPaginated>;
+declare const fetchTrackedUsersEventsAsync: ({ token, id, page, pageSize, useInternalId, }: PaginatedEntityRequest) => Promise<CustomerEventPaginated>;
 interface CreateRecommendationConsumedRequest {
     token: string;
-    commonUserId: string | undefined;
+    commonUserId?: string | undefined;
     customerId: string;
     correlatorId: number;
+    properties: {
+        [key: string]: unknown;
+    } | null | undefined;
 }
-declare const createRecommendationConsumedEventAsync: ({ token, commonUserId, customerId, correlatorId, }: CreateRecommendationConsumedRequest) => Promise<any>;
+declare const createRecommendationConsumedEventAsync: ({ token, commonUserId, customerId, correlatorId, properties, }: CreateRecommendationConsumedRequest) => Promise<{
+    eventsProcessed?: number | undefined;
+    eventsEnqueued?: number | undefined;
+}>;
 declare const fetchBusinessEventsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 
-declare const eventsApi_d_Custom: typeof Custom;
-declare const eventsApi_d_Behaviour: typeof Behaviour;
-declare const eventsApi_d_ConsumeRecommendation: typeof ConsumeRecommendation;
 declare const eventsApi_d_fetchEventAsync: typeof fetchEventAsync;
 declare const eventsApi_d_createEventsAsync: typeof createEventsAsync;
 declare const eventsApi_d_fetchCustomersEventsAsync: typeof fetchCustomersEventsAsync;
@@ -1750,9 +1742,6 @@ declare const eventsApi_d_createRecommendationConsumedEventAsync: typeof createR
 declare const eventsApi_d_fetchBusinessEventsAsync: typeof fetchBusinessEventsAsync;
 declare namespace eventsApi_d {
   export {
-    eventsApi_d_Custom as Custom,
-    eventsApi_d_Behaviour as Behaviour,
-    eventsApi_d_ConsumeRecommendation as ConsumeRecommendation,
     eventsApi_d_fetchEventAsync as fetchEventAsync,
     eventsApi_d_createEventsAsync as createEventsAsync,
     eventsApi_d_fetchCustomersEventsAsync as fetchCustomersEventsAsync,
