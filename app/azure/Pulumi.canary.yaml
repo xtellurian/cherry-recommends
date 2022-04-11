@@ -23,6 +23,9 @@ config:
   network:cherrySubdomain: canary
   segment:writeKey:
     secure: AAABALR/oWB+tGefHknu+aBwFKjaEDep6p9mHYiVMs+cYLELG+6uzMqVc/huxgEPB5TsTHRatcq5NeP65MIs3Q==
+  shopify:apiKey: 4575a64c10075d06efeccdde842fadd8
+  shopify:secretKey:
+    secure: AAABAJc1GuNzarRSysx4UfHW5lhSKnpDPtHnqdnNqFX6I3LVkS7VPobW7r1IK7pC5T6JxuAWSxNTYevSAjbBXw==
   signalbox:environment: Production
   signalbox:login-domain: canary.login.cherry.ai
   signalbox:sqlPassword:
