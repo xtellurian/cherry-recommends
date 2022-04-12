@@ -97,7 +97,7 @@ export const useEventTimeline = ({ kind, eventType }) => {
       fetchEventTimelineAsync({
         token,
         kind,
-        eventType,
+        eventType: encodeURIComponent(eventType),
       })
         .then(setState)
         .catch((error) => setState({ error }));

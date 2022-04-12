@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -57,7 +58,7 @@ namespace SignalBox.Web.Controllers
         [HttpGet("events/timeline/{kind}/{eventType}")]
         public async Task<EventCountTimeline> EventTimeline(EventKinds kind, string eventType)
         {
-            return await workflows.GenerateTimeline(kind, eventType);
+            return await workflows.GenerateTimeline(kind, HttpUtility.UrlDecode(eventType));
         }
     }
 }

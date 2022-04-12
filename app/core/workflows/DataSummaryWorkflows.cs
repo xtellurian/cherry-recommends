@@ -94,7 +94,7 @@ namespace SignalBox.Core.Workflows
             while (start.TruncateToMonthStart() < end.AddMonths(1).TruncateToMonthStart())
             {
                 var count = await eventStore.Count(_ =>
-                    _.Timestamp > start &&
+                    _.Timestamp >= start &&
                     _.Timestamp < start.AddMonths(1) &&
                     _.EventType == eventType &&
                     _.EventKind == kind);
