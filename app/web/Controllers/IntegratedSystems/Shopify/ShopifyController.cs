@@ -60,18 +60,29 @@ namespace SignalBox.Web.Controllers
             return Ok(shop);
         }
 
-        /// <summary>Generate Shopify app installation link.</summary>
-        [HttpGet("Install")]
-        public async Task<string> GetAuthorizationUrl(string id, string shopifyUrl, string redirectUrl)
+        /// <summary>Redirects to the Shopify app installation.</summary>
+        [HttpGet("/api/shopify/install")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAuthorizationUrl(string shop)
         {
-            var tenant = tenantProvider.Current();
-            string state = Serializer.Serialize(new { id, tenant = tenant?.Name }, new JsonSerializerOptions()
-            {
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            });
-            var uri = await shopifyAdminWorkflows.BuildAuthorizationUrl(shopifyUrl, redirectUrl, state);
+            var queryString = Request.Query
+                .ToDictionary(_ => _.Key, _ => _.Value.ToString());
 
-            return uri.ToString();
+            if (!await shopifyService.IsAuthenticRequest(queryString))
+            {
+                return BadRequest("Invalid Shopify request.");
+            }
+
+            if (Request.Headers.TryGetValue("Host", out var host))
+            {
+                var redirectUrl = $"{Request.Scheme}://{host}/_connect/shopify/callback";
+                var state = string.Empty;
+                var url = await shopifyAdminWorkflows.BuildAuthorizationUrl(shop, redirectUrl, state);
+
+                return Redirect(url.ToString());
+            }
+
+            return BadRequest();
         }
 
         /// <summary>Generate Shopify app installation link.</summary>
