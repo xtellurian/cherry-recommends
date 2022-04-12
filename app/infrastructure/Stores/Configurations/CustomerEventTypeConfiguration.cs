@@ -14,6 +14,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder.Property(_ => _.EventKind).HasConversion<string>();
             builder.HasIndex(_ => new { _.EventId, _.EnvironmentId }).IsUnique();
             builder.HasIndex(_ => _.Timestamp);
+            builder.HasIndex(_ => new { _.TrackedUserId, _.EnvironmentId, _.Timestamp });
             builder.Property(_ => _.Properties).HasJsonConversion();
             builder.Property(_ => _.CustomerId).HasColumnName("CommonUserId");
             // migrate so that customer is the main property

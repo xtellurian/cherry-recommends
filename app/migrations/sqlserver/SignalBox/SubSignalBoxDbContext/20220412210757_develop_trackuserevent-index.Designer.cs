@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220412210757_develop_trackuserevent-index")]
+    partial class develop_trackusereventindex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1908,33 +1910,12 @@ namespace sqlserver.SignalBox
                     b.HasBaseType("SignalBox.Core.IntegratedSystem");
 
                     b.Property<string>("ApplicationId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ApplicationId");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ApplicationSecret")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ApplicationSecret");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("CustomIntegratedSystem");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Integrations.Website.WebsiteIntegratedSystem", b =>
-                {
-                    b.HasBaseType("SignalBox.Core.IntegratedSystem");
-
-                    b.Property<string>("ApplicationId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ApplicationId");
-
-                    b.Property<string>("ApplicationSecret")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ApplicationSecret");
-
-                    b.HasDiscriminator().HasValue("WebsiteIntegratedSystem");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Metrics.Destinations.HubspotContactPropertyMetricDestination", b =>
