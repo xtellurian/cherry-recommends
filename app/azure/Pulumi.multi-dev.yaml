@@ -26,7 +26,7 @@ config:
     secure: AAABAHC4chfR87geNdfQ8S7Mr6TGqSXeOxpdmnk2BOilZ+lmUbvKw3bAjDRTVkGySVuPoxBbW1O3dNbRbDnomA==
   shopify:apiKey: 6c0da936f2fa7b325c2f51603150ba7c
   shopify:secretKey:
-    secure: AAABAIuBzyIiyZRq0umDCDrZZUW5iusAQaECe1s35pVhI7Frfs0XgC7FDXfTIctTJFNgb8Z+5xZmNRhbkzriYg==
+    secure: AAABABp/v6OxgB8kzcqw0ZNQLqKz1NYL2BDNTz5gUOnMyOD6Mdfzs+CFJaSRsDfnv8Rksr9z4/7/v+ooHa2KqA==
   signalbox:environment: Development
   signalbox:login-domain: dev.login.cherry.ai
   signalbox:sqlPassword:
