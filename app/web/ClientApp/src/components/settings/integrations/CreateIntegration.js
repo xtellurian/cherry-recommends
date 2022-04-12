@@ -11,7 +11,7 @@ import { IntegrationIcon } from "./icons/IntegrationIcons";
 import { MoveUpHierarchyPrimaryButton, PageHeading } from "../../molecules";
 import { useNavigation } from "../../../utility/useNavigation";
 
-const systemTypes = ["Hubspot", "Segment", "Custom"];
+const systemTypes = ["Hubspot", "Segment", "Custom", "Website"];
 
 export const CreateIntegration = () => {
   const { navigate } = useNavigation();
@@ -50,8 +50,8 @@ export const CreateIntegration = () => {
       <NoteBox className="m-3" label="What is an integration?">
         Integrations allow you to automatically pull data or push
         recommendations into various external systems. Select either Segment,
-        Hubspot, or Custom below. Give your integration a name, for example:
-        'Production Segment Connection'
+        Hubspot, Custom or Website below. Give your integration a name, for
+        example: 'Production Segment Connection'
       </NoteBox>
 
       {!integratedSystem.systemType && (

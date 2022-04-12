@@ -175,7 +175,7 @@ namespace SignalBox.Infrastructure
             // integrated systems
             services.AddScoped<IIntegratedSystemStore, EFIntegratedSystemStore>();
             services.AddScoped<ICustomIntegratedSystemStore, EFCustomIntegratedSystemStore>();
-
+            services.AddScoped<IWebsiteIntegratedSystemStore, EFWebsiteIntegratedSystemStore>();
 
             services.AddScoped<IStorageContext, EFStorageContext>();
             services.RegisterCollections();

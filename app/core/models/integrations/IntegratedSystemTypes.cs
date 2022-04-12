@@ -5,6 +5,7 @@ namespace SignalBox.Core
         Segment,
         Hubspot,
         Shopify,
-        Custom
+        Custom,
+        Website
     }
 }

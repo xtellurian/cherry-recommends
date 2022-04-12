@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using SignalBox.Core.Integrations.Custom;
+using SignalBox.Core.Integrations.Website;
 
 namespace SignalBox.Core.Workflows
 {
@@ -36,6 +37,12 @@ namespace SignalBox.Core.Workflows
                 if (systemType == IntegratedSystemTypes.Custom)
                 {
                     var system = await systemStoreCollection.CustomIntegratedSystemStore.Create(new CustomIntegratedSystem($"New-{Guid.NewGuid()}".ToString(), name));
+                    await storageContext.SaveChanges();
+                    return system;
+                }
+                else if (systemType == IntegratedSystemTypes.Website)
+                {
+                    var system = await systemStoreCollection.WebsiteIntegratedSystemStore.Create(new WebsiteIntegratedSystem($"New-{Guid.NewGuid()}".ToString(), name));
                     await storageContext.SaveChanges();
                     return system;
                 }

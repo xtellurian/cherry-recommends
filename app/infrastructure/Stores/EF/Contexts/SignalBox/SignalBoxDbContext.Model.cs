@@ -9,6 +9,7 @@ using SignalBox.Infrastructure.EntityFramework;
 using SignalBox.Core.Metrics;
 using SignalBox.Core.Segments;
 using SignalBox.Core.Optimisers;
+using SignalBox.Core.Integrations.Website;
 
 namespace SignalBox.Infrastructure
 {
@@ -76,6 +77,7 @@ namespace SignalBox.Infrastructure
         // integrated systems
         public DbSet<IntegratedSystem> IntegratedSystems { get; set; }
         public DbSet<CustomIntegratedSystem> CustomIntegratedSystems { get; set; }
+        public DbSet<WebsiteIntegratedSystem> WebsiteIntegratedSystems { get; set; }
 
         // system stuff
         public DbSet<HashedApiKey> ApiKeys { get; set; }
