@@ -1291,16 +1291,15 @@
         try {
             response = await axios.get(`api/recommenders/${recommenderApiName}/${id}/ReportImage`, {
                 headers: headers(token, null),
+                responseType: "blob", // required for axios to understand response
             });
         }
         catch (ex) {
             console.error(ex);
             throw ex;
         }
-        console.log(response);
-        if (response.status > 200 && response.status < 300) {
-            const blob = response.data;
-            return URL.createObjectURL(blob);
+        if (response.status >= 200 && response.status < 300) {
+            return URL.createObjectURL(response.data);
         }
         else {
             handleErrorResponse(response);

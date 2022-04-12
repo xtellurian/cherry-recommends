@@ -22,7 +22,9 @@ export const ViewReportImagePopup = ({
       <div className="text-center">
         <div className="m-2">
           {reportImgBlob.loading && <Spinner>Loading Image</Spinner>}
-          {reportImgBlob.url && <img src={reportImgBlob.url} />}
+          {reportImgBlob.url && (
+            <img className="img-fluid" src={reportImgBlob.url} />
+          )}
           {!reportImgBlob.loading && !reportImgBlob.url && (
             <EmptyState>Report has not been generated.</EmptyState>
           )}
