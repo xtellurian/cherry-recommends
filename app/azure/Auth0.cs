@@ -83,7 +83,7 @@ namespace SignalBox.Azure
             };
             var defaultLoginUri = string.IsNullOrEmpty(canonicalRootDomain)
                 ? Output.Format($"https://{webApp.DefaultHostName}")
-                : Output.Create($"https://manage.{canonicalRootDomain}");
+                : Output.Create($"https://{canonicalRootDomain}");
 
             if (!string.IsNullOrEmpty(canonicalRootDomain))
             {
