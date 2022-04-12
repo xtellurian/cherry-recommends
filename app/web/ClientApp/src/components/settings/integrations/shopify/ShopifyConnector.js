@@ -155,12 +155,12 @@ export const ShopifyConnector = () => {
   }, [data.force]);
 
   const handleSelectTenant = () => {
-    const qs = window.location.search;
+    const qsParams = new URLSearchParams(window.location.search);
     shopifyConnectAsync({
       data,
       token,
       tenant: data.tenant,
-      qs,
+      qs: qsParams.toString(),
     })
       .then((v) => {
         setStage(stages[3]);

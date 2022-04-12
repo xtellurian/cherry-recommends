@@ -61,7 +61,7 @@ export const fetchShopifyInstallUrlAsync = async ({
 };
 
 export const fetchShopifyAuthorizeUrlAsync = async ({ qs }) => {
-  const url = `/api/authorizeurl${qs}`;
+  const url = `/api/authorizeurl?${qs}`;
   const response = await fetch(url, {});
   if (response.ok) {
     return await response.json();
@@ -71,7 +71,7 @@ export const fetchShopifyAuthorizeUrlAsync = async ({ qs }) => {
 };
 
 export const shopifyConnectAsync = async ({ token, tenant, data, qs }) => {
-  const url = `api/shopify/connect${qs}`;
+  const url = `api/shopify/connect?${qs}`;
   const response = await fetch(url, {
     headers: headers(token, tenant),
     method: "post",

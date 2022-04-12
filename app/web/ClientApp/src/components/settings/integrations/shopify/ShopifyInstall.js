@@ -11,9 +11,10 @@ export const ShopifyInstall = () => {
 
   React.useEffect(() => {
     const redirectUrl = encodeURI(`${baseUrl}/_connect/shopify/callback`);
-    const qs = `${window.location.search}&redirectUrl=${redirectUrl}`;
+    const qsParams = new URLSearchParams(window.location.search);
+    qsParams.set("redirectUrl", redirectUrl);
 
-    fetchShopifyAuthorizeUrlAsync({ qs })
+    fetchShopifyAuthorizeUrlAsync({ qs: qsParams.toString() })
       .then((url) => {
         window.location.href = url;
       })
