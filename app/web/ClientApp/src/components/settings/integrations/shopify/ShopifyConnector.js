@@ -45,9 +45,10 @@ const SystemStateView = ({ integratedSystem, tenant }) => {
                   const prefix = tenant ? `/${tenant}` : "";
                   window.location.href = `${baseUrl}${prefix}/settings/integrations/detail/${integratedSystem?.id}?environmentId=${integratedSystem?.environmentId}`;
                 } else {
-                  navigate(
-                    `/settings/integrations/detail/${integratedSystem?.id}`
-                  );
+                  navigate({
+                    pathname: `/settings/integrations/detail/${integratedSystem?.id}`,
+                    search: null,
+                  });
                 }
               }}
             >
@@ -93,8 +94,7 @@ export const ShopifyConnector = () => {
   const memberships = useMemberships();
   const environments = useEnvironments({ trigger: data.tenant });
 
-  const loading =
-    hosting.loading || memberships.loading || environments.loading;
+  const loading = !hosting || memberships.loading || environments.loading;
   const showConnect = !loading && stage === stages[2];
   const showSelectTenant = memberships.length >= 1;
 
@@ -127,7 +127,7 @@ export const ShopifyConnector = () => {
   }, [environments]);
 
   React.useEffect(() => {
-    if (!memberships.loading && !environments.loading) {
+    if (hosting && !memberships.loading && !environments.loading) {
       // Single tenant and single environment scenario
       if (
         hosting.multitenant &&
