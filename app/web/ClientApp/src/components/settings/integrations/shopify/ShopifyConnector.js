@@ -41,15 +41,11 @@ const SystemStateView = ({ integratedSystem, tenant }) => {
             <button
               className="btn btn-primary btn-block"
               onClick={() => {
-                if (tenant) {
-                  const prefix = tenant ? `/${tenant}` : "";
-                  window.location.href = `${baseUrl}${prefix}/settings/integrations/detail/${integratedSystem?.id}?environmentId=${integratedSystem?.environmentId}`;
-                } else {
-                  navigate({
-                    pathname: `/settings/integrations/detail/${integratedSystem?.id}`,
-                    search: null,
-                  });
-                }
+                const tenantPath = tenant ? `/${tenant}` : "";
+                const environmentQuery = integratedSystem?.environmentId
+                  ? `?environmentId=${integratedSystem?.environmentId}`
+                  : "";
+                window.location.href = `${baseUrl}${tenantPath}/settings/integrations/detail/${integratedSystem?.id}${environmentQuery}`;
               }}
             >
               View Integration
@@ -95,7 +91,11 @@ export const ShopifyConnector = () => {
   const environments = useEnvironments({ trigger: data.tenant });
 
   const loading = !hosting || memberships.loading || environments.loading;
-  const showConnect = !loading && stage === stages[2];
+  const singleOption =
+    memberships.length === 1 &&
+    environments.items &&
+    environments.items.length <= 1;
+  const showConnect = !singleOption && stage === stages[2];
   const showSelectTenant = memberships.length >= 1;
 
   React.useEffect(() => {
@@ -132,6 +132,7 @@ export const ShopifyConnector = () => {
       if (
         hosting.multitenant &&
         memberships.length === 1 &&
+        environments.items &&
         environments.items.length <= 1
       ) {
         setData({
@@ -139,7 +140,11 @@ export const ShopifyConnector = () => {
           tenant: memberships[0].name,
           force: true,
         });
-      } else if (!hosting.multitenant) {
+      } else if (
+        !hosting.multitenant &&
+        environments.items &&
+        environments.items.length <= 1
+      ) {
         setData({
           ...data,
           force: true,
@@ -150,11 +155,11 @@ export const ShopifyConnector = () => {
 
   React.useEffect(() => {
     if (data.force) {
-      handleSelectTenant();
+      handleConnect();
     }
   }, [data.force]);
 
-  const handleSelectTenant = () => {
+  const handleConnect = () => {
     const qsParams = new URLSearchParams(window.location.search);
     shopifyConnectAsync({
       data,
@@ -194,7 +199,7 @@ export const ShopifyConnector = () => {
   const isConnectDisabled =
     memberships.loading ||
     environments.loading ||
-    (memberships.length >= 1 && !data.tenant);
+    (hosting && hosting.multitenant && memberships.length >= 1 && !data.tenant);
 
   return (
     <React.Fragment>
@@ -213,7 +218,6 @@ export const ShopifyConnector = () => {
       )}
       {showConnect && (
         <React.Fragment>
-          {}
           {showSelectTenant && (
             <div className="mt-2 mb-2 col-6 offset-3">
               <InputLabel required>Tenant</InputLabel>
@@ -236,7 +240,7 @@ export const ShopifyConnector = () => {
           <div className="text-center m-3">
             <button
               disabled={isConnectDisabled}
-              onClick={handleSelectTenant}
+              onClick={handleConnect}
               className="btn btn-primary"
             >
               Connect

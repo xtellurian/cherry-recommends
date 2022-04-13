@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useRouteMatch } from "react-router-dom";
 import { Check } from "react-bootstrap-icons";
 import {
   renameAsync,
@@ -26,6 +26,7 @@ import { useQuery } from "../../../utility/utility";
 export const IntegratedSystemDetail = () => {
   const token = useAccessToken();
   const { navigate } = useNavigation();
+  const { path } = useRouteMatch();
   let { id } = useParams();
   const query = useQuery();
   const environmentId = query.get("environmentId");
@@ -48,8 +49,10 @@ export const IntegratedSystemDetail = () => {
 
   React.useEffect(() => {
     if (
+      environmentId &&
       !isNaN(environmentId) &&
       !environments.loading &&
+      environments.items &&
       (!currentEnvironment ||
         (currentEnvironment && currentEnvironment.id !== ~~environmentId))
     ) {
@@ -58,12 +61,22 @@ export const IntegratedSystemDetail = () => {
       );
       if (environment) {
         setEnvironment(environment);
-        setReloadTrigger(environment);
       } else {
         console.warn("Environment not found!");
       }
     }
   }, [environments, currentEnvironment, environmentId]);
+
+  React.useEffect(() => {
+    // Remove environmentId from the url
+    if (currentEnvironment && path && environmentId) {
+      console.debug("Navigation to", path);
+      navigate({
+        pathnmame: path,
+        search: null,
+      });
+    }
+  }, [currentEnvironment, path, environmentId]);
 
   return (
     <React.Fragment>
