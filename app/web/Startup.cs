@@ -147,19 +147,19 @@ namespace SignalBox.Web
             services.AddScoped<IQueueMessagesFileStore, AzureBlobQueueMessagesFileStore>();
 
             // Configure file storage type
-            var fileSource = Configuration.GetSection("ReportFileHosting").GetValue<string>("Source");
-            if (fileSource == "local")
+            var reportFileSource = Configuration.GetSection("ReportFileHosting").GetValue<string>("Source");
+            if (reportFileSource == "local")
             {
                 services.AddScoped<IReportFileStore, LocalFileStore>();
             }
-            else if (fileSource == "blob")
+            else if (reportFileSource == "blob")
             {
                 services.Configure<ReportFileHosting>(Configuration.GetSection("ReportFileHosting"));
                 services.AddScoped<IReportFileStore, AzureBlobReportFileStore>();
             }
             else
             {
-                throw new NotImplementedException($"File Source {fileSource} is unknown");
+                throw new NotImplementedException($"Report File Source {reportFileSource} is unknown. Multitenant = {useMulti}. Provider = {provider}");
             }
 
             // Configure recommender reporting file storage type
@@ -175,7 +175,7 @@ namespace SignalBox.Web
             }
             else
             {
-                throw new NotImplementedException($"File Source {recommenderFileSource} is unknown");
+                throw new NotImplementedException($"Recommender Img File Source {recommenderFileSource} is unknown");
             }
 
             services.Configure<DeploymentInformation>(Configuration.GetSection("Deployment"));

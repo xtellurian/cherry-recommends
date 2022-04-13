@@ -339,3 +339,4 @@ ml/tutorial/*.pkl
 
 **/.persist/azurite/*.json
 **/.persist/azurite/__queuestorage__/*
+**/.persist/azurite/__blobstorage__/*

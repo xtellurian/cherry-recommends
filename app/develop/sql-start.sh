@@ -1,7 +1,6 @@
-set -e
+#!/bin/bash
 
-echo "> docker ps"
-docker ps
+set -e
 
 THIS_DIR=$(pwd)
 DATA_DIR="$THIS_DIR/.persist/sqlserver"

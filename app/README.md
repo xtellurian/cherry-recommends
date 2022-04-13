@@ -13,7 +13,14 @@ The important applications models are:
 
 ## Multitenants
 
-Multitenanting is achieved via subdomains, i.e. {tenant}.ourdomain.com or {tenant}.local.zone:5001
+Multitenanting can be  achieved via 
+* subdomains, i.e. {tenant}.ourdomain.com or {tenant}.local.zone:5001
+* paths (frontend only)
+* header (x-tenant)
+* query string
+
+
+### Local Dev Subdomains
 
 To run locally, you need to setup the DNS routing properly.
 
@@ -63,11 +70,22 @@ The final linking of certificates should be done in the Azure Portal.
 
 ## Development
 
-There is a SQLite database in the `/web` directory.
+The development dependencies can be run from the `/develop` directory.
 
-The defualt user/pass is 
+* Azure Storage (docker azurite)
+* SQL Server (docker sql server)
+
+## Tests
+
+### Dotnet tests
 
 ```
-test@test.com
-Password1!
+dotnet test
+```
+
+### Frontend (React JS) tests
+
+```
+cd web/ClientApp
+npm test
 ```

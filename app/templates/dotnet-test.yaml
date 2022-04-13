@@ -8,10 +8,10 @@ steps:
     displayName: Dotnet build solution
     workingDirectory: app
 
+  # Dotnet format
   - script: dotnet format whitespace --verify-no-changes
     displayName: Check C# format whitespace
     workingDirectory: app
-
   - script: dotnet format style --verify-no-changes
     displayName: Check C# format style
     workingDirectory: app
@@ -40,6 +40,16 @@ steps:
       summaryFileLocation: "$(Agent.TempDirectory)/**/coverage.cobertura.xml"
 
   - script: npx prettier --check .
-    condition: eq(variables['Build.Reason'], 'PullRequest') # only run pretty check if in PR
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest')) # only run pretty check if in PR
     displayName: Check Prettier - /ClientApp
     workingDirectory: app/web/ClientApp/
+
+  - script: npm run build
+    displayName: npm run build
+    workingDirectory: app/web/ClientApp/
+
+  - script: npm test
+    displayName: npm test
+    workingDirectory: app/web/ClientApp/
+
+# todo: run the cypress tests. maybe on windows? certificates on linux is a pain

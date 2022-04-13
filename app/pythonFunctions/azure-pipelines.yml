@@ -5,8 +5,6 @@ trigger:
   branches:
     include:
       - main
-      - develop/*
-      - migrate_afs
   paths:
     exclude:
       - docs/*

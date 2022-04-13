@@ -1,4 +1,7 @@
 import dts from "rollup-plugin-dts";
+import rollupNodeResolve from "@rollup/plugin-node-resolve";
+import rollupJson from "@rollup/plugin-json";
+import commonjs from "@rollup/plugin-commonjs";
 
 const umdRollup = {
   input: "compiled/src/index.js",
@@ -7,6 +10,13 @@ const umdRollup = {
     format: "umd",
     name: "cherry.ai",
   },
+  plugins: [
+    commonjs({
+      include: "node_modules/axios/**",
+    }),
+    rollupNodeResolve({ preferBuiltins: true, browser: true }),
+    rollupJson(),
+  ],
 };
 
 const esRollup = {
@@ -16,6 +26,13 @@ const esRollup = {
     format: "es",
     name: "cherry.ai",
   },
+  plugins: [
+    commonjs({
+      include: "node_modules/axios/**",
+    }),
+    rollupNodeResolve({ preferBuiltins: true, browser: true }),
+    rollupJson(),
+  ],
 };
 
 const dtsRollup = {

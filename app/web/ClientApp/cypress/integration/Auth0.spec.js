@@ -1,7 +1,15 @@
 describe("Auth0", () => {
   beforeEach(() => {
     cy.visit("/");
-    cy.login(Cypress.env("auth_username"), Cypress.env("auth_password"));
+    const username = Cypress.env("auth_username");
+    const password = Cypress.env("auth_password");
+    if (!username) {
+      throw new Error("auth_username is required");
+    }
+    if (!password) {
+      throw new Error("auth_password is required");
+    }
+    cy.login(username, password);
   });
 
   it("should successfully login", () => {

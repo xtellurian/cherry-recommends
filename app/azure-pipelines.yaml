@@ -27,6 +27,8 @@ stages:
       - job: run_tests
         displayName: Run Tests
         continueOnError: false
+        variables:
+          - group: Auth0_Dev_Login # required for cypress tests
         steps:
           - template: templates/dotnet-test.yaml
 
