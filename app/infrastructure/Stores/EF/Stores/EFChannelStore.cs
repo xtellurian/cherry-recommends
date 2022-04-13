@@ -3,10 +3,11 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFChannelStore : EFEntityStoreBase<ChannelBase>, IChannelStore
+    public class EFChannelStore : EFEnvironmentScopedEntityStoreBase<ChannelBase>, IChannelStore
     {
-        public EFChannelStore(IDbContextProvider<SignalBoxDbContext> contextProvider)
-        : base(contextProvider, (c) => c.Channels)
+        protected override bool IsEnvironmentScoped => true;
+        public EFChannelStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)
+        : base(contextProvider, environmentProvider, (c) => c.Channels)
         { }
     }
 }

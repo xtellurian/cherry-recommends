@@ -3,10 +3,11 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    public class EFWebhookChannelStore : EFEntityStoreBase<WebhookChannel>, IWebhookChannelStore
+    public class EFWebhookChannelStore : EFEnvironmentScopedEntityStoreBase<WebhookChannel>, IWebhookChannelStore
     {
-        public EFWebhookChannelStore(IDbContextProvider<SignalBoxDbContext> contextProvider)
-        : base(contextProvider, (c) => c.WebhookChannels)
+        protected override bool IsEnvironmentScoped => true;
+        public EFWebhookChannelStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IEnvironmentProvider environmentProvider)
+        : base(contextProvider, environmentProvider, (c) => c.WebhookChannels)
         { }
     }
 }

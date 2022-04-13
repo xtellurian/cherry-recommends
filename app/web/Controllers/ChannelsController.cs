@@ -17,19 +17,16 @@ namespace SignalBox.Web.Controllers
         private readonly ILogger<ChannelsController> _logger;
         private readonly ChannelWorkflow workflow;
         private readonly IChannelStore channelStore;
-        private readonly IWebhookChannelStore webhookChannelStore;
         private readonly IIntegratedSystemStore integratedSystemStore;
 
         public ChannelsController(ILogger<ChannelsController> logger,
                                     IChannelStore channelStore,
-                                    IWebhookChannelStore webhookChannelStore,
                                     IIntegratedSystemStore integratedSystemStore,
                                     ChannelWorkflow workflow) : base(channelStore)
         {
             _logger = logger;
             this.workflow = workflow;
             this.channelStore = channelStore;
-            this.webhookChannelStore = webhookChannelStore;
             this.integratedSystemStore = integratedSystemStore;
         }
 
