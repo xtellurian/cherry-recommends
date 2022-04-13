@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -34,18 +33,7 @@ namespace SignalBox.Core.Workflows
 
         public async Task<ChannelBase> UpdateChannelEndpoint(ChannelBase channel, string endpoint)
         {
-            if (channel is WebhookChannel)
-            {
-                return await UpdateWebhookChannelEndpoint(channel as WebhookChannel, endpoint);
-            }
-            else if (channel is WebChannel)
-            {
-                return await UpdateWebChannelEndpoint(channel as WebChannel, endpoint);
-            }
-            else
-            {
-                throw new BadRequestException($"Channel type {channel.ChannelType} not supported");
-            }
+            return await UpdateChannelProperties(channel, endpoint);
         }
 
         private async Task<WebhookChannel> CreateWebhookChannel(string name, IntegratedSystem integratedSystem)
@@ -67,6 +55,22 @@ namespace SignalBox.Core.Workflows
             return channel;
         }
 
+        public async Task<ChannelBase> UpdateChannelProperties(ChannelBase channel, string endpoint, bool? popupAskForEmail = null)
+        {
+            if (channel is WebhookChannel)
+            {
+                return await UpdateWebhookChannelEndpoint(channel as WebhookChannel, endpoint);
+            }
+            else if (channel is WebChannel)
+            {
+                return await UpdateWebChannelProperties(channel as WebChannel, endpoint, popupAskForEmail);
+            }
+            else
+            {
+                throw new BadRequestException($"Channel type {channel.ChannelType} not supported");
+            }
+        }
+
         private async Task<WebChannel> CreateWebChannel(string name, IntegratedSystem integratedSystem)
         {
             if (integratedSystem.SystemType != IntegratedSystemTypes.Website)
@@ -79,9 +83,10 @@ namespace SignalBox.Core.Workflows
             return channel;
         }
 
-        private async Task<WebChannel> UpdateWebChannelEndpoint(WebChannel channel, string endpoint)
+        private async Task<WebChannel> UpdateWebChannelProperties(WebChannel channel, string endpoint, bool? popupAskForEmail = null)
         {
             channel.Endpoint = endpoint;
+            channel.PopupAskForEmail = popupAskForEmail ?? channel.PopupAskForEmail;
             await webChannelStore.Context.SaveChanges();
             return channel;
         }

@@ -15,8 +15,8 @@ namespace SignalBox.Core
         }
 
         public string Endpoint { get; set; }
-        public override IDictionary<string, string> Properties =>
-        new Dictionary<string, string>
+        public override IDictionary<string, object> Properties =>
+        new Dictionary<string, object>
         {
             {"endpoint", Endpoint}
         };

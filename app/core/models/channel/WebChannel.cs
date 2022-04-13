@@ -15,10 +15,12 @@ namespace SignalBox.Core
         }
 
         public string Endpoint { get; set; }
-        public override IDictionary<string, string> Properties =>
-        new Dictionary<string, string>
+        public bool PopupAskForEmail { get; set; }
+        public override IDictionary<string, object> Properties =>
+        new Dictionary<string, object>
         {
-            {"endpoint", Endpoint}
+            {"endpoint", Endpoint},
+            {"popupAskForEmail", PopupAskForEmail}
         };
 #nullable enable
         public string? ApplicationSecret => (this.LinkedIntegratedSystem as WebsiteIntegratedSystem)?.ApplicationSecret;
