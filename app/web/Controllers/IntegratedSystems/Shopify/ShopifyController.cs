@@ -70,7 +70,7 @@ namespace SignalBox.Web.Controllers
 
             if (!await shopifyService.IsAuthenticRequest(queryString))
             {
-                return BadRequest("Invalid Shopify request.");
+                throw new SecurityException("Invalid Shopify request.");
             }
 
             if (Request.Headers.TryGetValue("Host", out var host))
@@ -96,7 +96,7 @@ namespace SignalBox.Web.Controllers
 
             if (!await shopifyService.IsAuthenticRequest(queryString))
             {
-                return BadRequest("Invalid Shopify request.");
+                throw new SecurityException("Invalid Shopify request.");
             }
 
             string state = ""; // Optional
@@ -105,10 +105,7 @@ namespace SignalBox.Web.Controllers
             return Ok(uri.ToString());
         }
 
-        /// <summary>
-        // Establish Shopify connection by creating a new integrated system. 
-        // Call this after a successful Shopify app installation.
-        // </summary>
+        /// <summary>Establish Shopify connection by creating a new integrated system. Call this after a successful Shopify app installation.</summary>
         [HttpPost("/api/shopify/connect")]
         public async Task<IActionResult> Connect(ShopifyConnectDto dto)
         {

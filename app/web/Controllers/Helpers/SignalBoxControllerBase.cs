@@ -7,6 +7,7 @@ namespace SignalBox.Web.Controllers
     [ApiController]
     [Produces("application/json")]
     [SegmentAnalytics]
+    [TypeFilter(typeof(SecurityExceptionFilter), IsReusable = true)]
     public class SignalBoxControllerBase : ControllerBase
     {
         protected async Task<Customer> LoadCustomer(ICustomerStore customerStore,

@@ -24,6 +24,7 @@ namespace SignalBox.Azure
                                         Auth0 auth0)
         {
             var hubspotConfig = new Pulumi.Config("hubspot");
+            var shopifyConfig = new Pulumi.Config("shopify");
 
             var dotnetFunctionApp = new WebApp("dotnetjobs", new WebAppArgs
             {
@@ -88,6 +89,15 @@ namespace SignalBox.Azure
                         new NameValuePairArgs{
                             Name = "HubSpot__AppCredentials__Scope",
                             Value = hubspotConfig.Get("scope") ?? "contacts oauth tickets",
+                        },
+                        // shopify 
+                        new NameValuePairArgs{
+                            Name = "Shopify__AppCredentials__ApiKey",
+                            Value = shopifyConfig.Get("apiKey") ?? "",
+                        },
+                        new NameValuePairArgs{
+                            Name = "Shopify__AppCredentials__SecretKey",
+                            Value = shopifyConfig.Get("secretKey") ?? "",
                         },
                         // auth0
                         new NameValuePairArgs{
