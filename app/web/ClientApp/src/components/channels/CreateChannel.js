@@ -7,7 +7,6 @@ import { AsyncButton } from "../molecules";
 import { InputGroup, TextInput } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { AsyncSelectIntegratedSystem } from "../molecules/selectors/AsyncSelectIntegratedSystem";
-import { NoteBox } from "../molecules/NoteBox";
 import { useNavigation } from "../../utility/useNavigation";
 import Select from "../molecules/selectors/Select";
 import CreatePageLayout from "../molecules/layout/CreatePageLayout";

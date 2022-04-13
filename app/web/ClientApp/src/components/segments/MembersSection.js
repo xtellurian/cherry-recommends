@@ -10,7 +10,6 @@ import { BigPopup } from "../molecules/popups/BigPopup";
 import { SearchBox } from "../molecules/SearchBox";
 import { MemberRow } from "../molecules/MemberRow";
 import { SearchCustomer } from "../molecules/SearchCustomer";
-import { useNavigation } from "../../utility/useNavigation";
 
 export const MembersSection = ({ segment }) => {
   const token = useAccessToken();

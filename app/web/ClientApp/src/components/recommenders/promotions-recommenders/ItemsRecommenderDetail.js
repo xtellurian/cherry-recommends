@@ -28,6 +28,7 @@ import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
 import { SegmentRow } from "../../segments/SegmentRow";
 import { useFeatureFlag } from "../../launch-darkly/hooks";
 import { useNavigation } from "../../../utility/useNavigation";
+import { useTenantName } from "../../tenants/PathTenantProvider";
 
 export const ItemRecommenderClone = ({ iconClassName }) => {
   const { id } = useParams();
@@ -165,6 +166,8 @@ const RecommenderDetailSection = () => {
   const recommender = usePromotionsRecommender({ id, trigger });
   const audience = useAudience({ id, trigger });
   const segmentFlag = useFeatureFlag("segments", true);
+  const { tenantName } = useTenantName();
+  const tenantParam = tenantName !== "" ? `?x-tenant=${tenantName}` : "";
 
   const targetPlurals = {
     customer: "customers",
@@ -196,7 +199,7 @@ const RecommenderDetailSection = () => {
           {recommender.id && (
             <CopyableField
               label="Invokation URL"
-              value={`${window.location.protocol}//${window.location.host}/api/Recommenders/ItemsRecommenders/${recommender.id}/invoke`}
+              value={`${window.location.protocol}//${window.location.host}/api/Recommenders/ItemsRecommenders/${recommender.id}/invoke${tenantParam}`}
             />
           )}
 

@@ -19,6 +19,7 @@ import { ParameterRow } from "../../parameters/ParameterRow";
 import { ParameterSetRecommenderLayout } from "./ParameterSetRecommenderLayout";
 import { ViewReportImagePopup } from "../utils/ViewImagePopup";
 import { useNavigation } from "../../../utility/useNavigation";
+import { useTenantName } from "../../tenants/PathTenantProvider";
 
 const tabs = [
   { id: "detail", label: "Detail" },
@@ -49,6 +50,9 @@ export const ParameterSetRecommenderDetail = () => {
       },
     });
   };
+
+  const { tenantName } = useTenantName();
+  const tenantParam = tenantName !== "" ? `?x-tenant=${tenantName}` : "";
 
   return (
     <React.Fragment>
@@ -103,7 +107,7 @@ export const ParameterSetRecommenderDetail = () => {
             {recommender.id && (
               <CopyableField
                 label="Invokation URL"
-                value={`${window.location.protocol}//${window.location.host}/api/Recommenders/ParameterSetRecommenders/${recommender.id}/invoke`}
+                value={`${window.location.protocol}//${window.location.host}/api/Recommenders/ParameterSetRecommenders/${recommender.id}/invoke${tenantParam}`}
               />
             )}
 
