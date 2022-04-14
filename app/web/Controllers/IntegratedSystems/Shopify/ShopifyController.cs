@@ -14,6 +14,7 @@ namespace SignalBox.Web.Controllers
     [Authorize]
     [ApiController]
     [ApiVersion("0.1")]
+    [ContentSecurityPolicy("frame-ancestors 'none'")] // https://shopify.dev/apps/store/security/iframe-protection
     [Route("api/integratedsystems/{id}/shopify")]
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ShopifyController : SignalBoxControllerBase
