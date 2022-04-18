@@ -9,7 +9,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         public override void Configure(EntityTypeBuilder<TenantMembership> builder)
         {
             base.Configure(builder);
-            builder.HasIndex(_ => new { UserId = _.UserId, TenantId = _.TenantId }).IsUnique();
+            builder.HasIndex(_ => new { _.UserId, _.TenantId }).IsUnique();
         }
     }
 }

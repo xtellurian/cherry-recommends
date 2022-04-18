@@ -4342,9 +4342,16 @@
           method: "get",
       });
   };
-  const fetchHostingAsync = async ({ token }) => {
+  const fetchAccountAsync = async ({ token, id, }) => {
       return await executeFetch({
-          path: "api/tenants/hosting",
+          path: `api/Tenants/${id}/Account`,
+          token,
+          method: "get",
+      });
+  };
+  const fetchHostingAsync = async ({ token, }) => {
+      return await executeFetch({
+          path: "api/Tenants/Hosting",
           token,
           method: "get",
       });
@@ -4368,6 +4375,7 @@
   var tenantsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchCurrentTenantAsync: fetchCurrentTenantAsync,
+    fetchAccountAsync: fetchAccountAsync,
     fetchHostingAsync: fetchHostingAsync,
     fetchCurrentTenantMembershipsAsync: fetchCurrentTenantMembershipsAsync,
     createTenantMembershipAsync: createTenantMembershipAsync

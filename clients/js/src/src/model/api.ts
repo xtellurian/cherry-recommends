@@ -157,6 +157,29 @@ export interface paths {
       };
     };
   };
+  "/api/Tenants/{id}/Account": {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["BillingAccount"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/Businesses": {
     get: {
       parameters: {
@@ -646,6 +669,36 @@ export interface paths {
           "application/json": string;
           "text/json": string;
           "application/*+json": string;
+        };
+      };
+    };
+  };
+  "/api/Channels/{id}/properties": {
+    post: {
+      parameters: {
+        path: {
+          id: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UpdateChannelPropertiesDto"];
+          "text/json": components["schemas"]["UpdateChannelPropertiesDto"];
+          "application/*+json": components["schemas"]["UpdateChannelPropertiesDto"];
         };
       };
     };
@@ -7423,6 +7476,26 @@ export interface paths {
       };
     };
   };
+  "/api/ReactConfig/hosting": {
+    get: {
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["Hosting"];
+            "application/json": components["schemas"]["Hosting"];
+            "text/json": components["schemas"]["Hosting"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/ReactConfig": {
     get: {
       responses: {
@@ -7822,56 +7895,6 @@ export interface paths {
       };
     };
   };
-  "/api/integratedsystems/{id}/shopify/ShopInformation": {
-    get: {
-      parameters: {
-        path: {
-          id: number;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": components["schemas"]["ShopifyShop"];
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
-  "/api/integratedsystems/{id}/shopify/Install": {
-    get: {
-      parameters: {
-        path: {
-          id: string;
-        };
-        query: {
-          shopifyUrl?: string;
-          redirectUrl?: string;
-        };
-      };
-      responses: {
-        /** Success */
-        200: {
-          content: {
-            "application/json": string;
-          };
-        };
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
-  };
   "/api/Tenants/Status/{name}": {
     get: {
       parameters: {
@@ -8027,23 +8050,7 @@ export interface paths {
     };
   };
   "/api/Webhooks/receivers/{endpointId}": {
-    post: {
-      parameters: {
-        path: {
-          endpointId: string;
-        };
-      };
-      responses: {
-        /** Success */
-        200: unknown;
-        /** Bad Request */
-        400: {
-          content: {
-            "application/json": components["schemas"]["ProblemDetails"];
-          };
-        };
-      };
-    };
+    post: operations["AcceptWebhook"];
   };
 }
 
@@ -8060,7 +8067,6 @@ export interface components {
     };
     AddRecommenderChannelDto: {
       id?: number;
-      name?: string | null;
     };
     AggregateCustomerMetric: {
       metricId?: number;
@@ -8145,6 +8151,13 @@ export interface components {
       type?: string | null;
     };
     BenefitType: "percent" | "fixed";
+    BillingAccount: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      tenants?: components["schemas"]["Tenant"][] | null;
+      planType?: components["schemas"]["PlanTypes"];
+    };
     Business: {
       id?: number;
       created?: string;
@@ -8201,6 +8214,7 @@ export interface components {
       discriminator?: string | null;
       lastEnqueued?: string | null;
       lastCompleted?: string | null;
+      properties?: { [key: string]: unknown } | null;
     };
     ChannelBasePaginated: {
       items?: components["schemas"]["ChannelBase"][] | null;
@@ -8309,6 +8323,7 @@ export interface components {
         | null;
       targetMetricId?: string | null;
       segmentIds?: number[] | null;
+      channelIds?: number[] | null;
       parameters?: string[] | null;
       bounds?: components["schemas"]["ParameterBounds"][] | null;
     };
@@ -8337,6 +8352,7 @@ export interface components {
         | null;
       targetMetricId?: string | null;
       segmentIds?: number[] | null;
+      channelIds?: number[] | null;
       itemIds: string[];
       defaultItemId?: string | null;
       baselineItemId?: string | null;
@@ -8626,7 +8642,12 @@ export interface components {
       integratedSystemId: number;
       userId: string;
     };
-    IntegratedSystemTypes: "segment" | "hubspot" | "shopify" | "custom";
+    IntegratedSystemTypes:
+      | "segment"
+      | "hubspot"
+      | "shopify"
+      | "custom"
+      | "website";
     IntegrationStatuses: "notConfigured" | "ok";
     InvokationLogEntry: {
       id?: number;
@@ -8697,6 +8718,7 @@ export interface components {
       name?: string | null;
       commonId?: string | null;
       properties?: { [key: string]: unknown } | null;
+      maxChannelCount?: number;
       errorHandling?: components["schemas"]["RecommenderErrorHandling"];
       settings?: components["schemas"]["RecommenderSettings"];
       arguments?: components["schemas"]["RecommenderArgument"][] | null;
@@ -9002,6 +9024,7 @@ export interface components {
       name?: string | null;
       commonId?: string | null;
       properties?: { [key: string]: unknown } | null;
+      maxChannelCount?: number;
       errorHandling?: components["schemas"]["RecommenderErrorHandling"];
       settings?: components["schemas"]["RecommenderSettings"];
       arguments?: components["schemas"]["RecommenderArgument"][] | null;
@@ -9028,6 +9051,7 @@ export interface components {
       businessCount?: number | null;
       recommendationCount?: number;
     };
+    PlanTypes: "none" | "freeTrial" | "usage" | "performance" | "enterprise";
     Post: {
       operationId?: string | null;
       description?: string | null;
@@ -9141,6 +9165,7 @@ export interface components {
       name?: string | null;
       commonId?: string | null;
       properties?: { [key: string]: unknown } | null;
+      maxChannelCount?: number;
       errorHandling?: components["schemas"]["RecommenderErrorHandling"];
       settings?: components["schemas"]["RecommenderSettings"];
       arguments?: components["schemas"]["RecommenderArgument"][] | null;
@@ -9232,62 +9257,6 @@ export interface components {
       featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
       metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
     };
-    ShopifyShop: {
-      id?: number | null;
-      admin_graphql_api_id?: string | null;
-      pre_launch_enabled?: boolean | null;
-      requires_extra_payments_agreement?: boolean | null;
-      myshopify_domain?: string | null;
-      name?: string | null;
-      plan_name?: string | null;
-      plan_display_name?: string | null;
-      password_enabled?: boolean | null;
-      phone?: string | null;
-      primary_locale?: string | null;
-      province?: string | null;
-      province_code?: string | null;
-      ships_to_countries?: string | null;
-      shop_owner?: string | null;
-      source?: string | null;
-      tax_shipping?: boolean | null;
-      taxes_included?: boolean | null;
-      county_taxes?: boolean | null;
-      timezone?: string | null;
-      iana_timezone?: string | null;
-      zip?: string | null;
-      has_storefront?: boolean | null;
-      setup_required?: boolean | null;
-      weight_unit?: string | null;
-      multi_location_enabled?: boolean | null;
-      updated_at?: string | null;
-      money_with_currency_in_emails_format?: string | null;
-      money_in_emails_format?: string | null;
-      address1?: string | null;
-      address2?: string | null;
-      city?: string | null;
-      country?: string | null;
-      country_code?: string | null;
-      country_name?: string | null;
-      created_at?: string | null;
-      customer_email?: string | null;
-      currency?: string | null;
-      description?: string | null;
-      domain?: string | null;
-      email?: string | null;
-      enabled_presentment_currencies?: string[] | null;
-      google_apps_domain?: string | null;
-      google_apps_login_enabled?: string | null;
-      eligible_for_card_reader_giveaway?: boolean | null;
-      eligible_for_payments?: boolean | null;
-      checkout_api_supported?: boolean | null;
-      has_discounts?: boolean | null;
-      has_gift_cards?: boolean | null;
-      latitude?: string | null;
-      longitude?: string | null;
-      money_format?: string | null;
-      money_with_currency_format?: string | null;
-      primary_location_id?: number | null;
-    };
     StatusCodeClass: {
       type?: string | null;
       format?: string | null;
@@ -9342,6 +9311,10 @@ export interface components {
       featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
       metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
     };
+    UpdateChannelPropertiesDto: {
+      endpoint?: string | null;
+      popupAskForEmail?: boolean | null;
+    };
     UpdatePromotionDto: {
       name: string;
       directCost: number;
@@ -9384,6 +9357,24 @@ export interface components {
   };
 }
 
-export interface operations {}
+export interface operations {
+  AcceptWebhook: {
+    parameters: {
+      path: {
+        endpointId: string;
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+      /** Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["ProblemDetails"];
+        };
+      };
+    };
+  };
+}
 
 export interface external {}

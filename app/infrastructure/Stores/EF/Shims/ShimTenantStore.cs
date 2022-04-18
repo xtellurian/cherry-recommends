@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using SignalBox.Core;
 
@@ -8,7 +10,7 @@ namespace SignalBox.Infrastructure.Shims
     {
         public Task<Tenant> Create(Tenant tenant)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<IEnumerable<Tenant>> List()
@@ -16,9 +18,19 @@ namespace SignalBox.Infrastructure.Shims
             return Task.FromResult<IEnumerable<Tenant>>(new List<Tenant>());
         }
 
+        public Task Load<TProperty>(Tenant entity, Expression<Func<Tenant, TProperty>> propertyExpression) where TProperty : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Tenant> Read(long id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Tenant> ReadFromName(string name)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task SaveChanges()

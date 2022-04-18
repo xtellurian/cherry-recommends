@@ -23,7 +23,6 @@ namespace SignalBox.Web.Controllers
         private readonly ITenantStore tenantStore;
         private readonly INewTenantQueueStore newTenantQueue;
         private readonly INewTenantMembershipQueueStore newTenantMembersQueue;
-        private readonly ITenantAuthorizationStrategy tenantAuthorizationStrategy;
         private readonly ITenantMembershipStore membershipStore;
         private readonly IAuth0Service auth0Service;
         private readonly ILogger<TenantsController> logger;
@@ -32,7 +31,6 @@ namespace SignalBox.Web.Controllers
         public TenantsController(ITenantProvider tenantProvider,
                                  ITenantStore tenantStore,
                                  INewTenantQueueStore newTenantQueue,
-                                 ITenantAuthorizationStrategy tenantAuthorizationStrategy,
                                  ITenantMembershipStore membershipStore,
                                  INewTenantMembershipQueueStore newTenantMembersQueue,
                                  IAuth0Service auth0Service,
@@ -42,7 +40,6 @@ namespace SignalBox.Web.Controllers
             this.tenantProvider = tenantProvider;
             this.tenantStore = tenantStore;
             this.newTenantQueue = newTenantQueue;
-            this.tenantAuthorizationStrategy = tenantAuthorizationStrategy;
             this.membershipStore = membershipStore;
             this.newTenantMembersQueue = newTenantMembersQueue;
             this.auth0Service = auth0Service;
@@ -130,7 +127,7 @@ namespace SignalBox.Web.Controllers
                 catch (DependencyException dex)
                 {
                     // in case Auth0 doesn't recognise the membership
-                    logger.LogWarning(dex.Message);
+                    logger.LogWarning("Exception message: {message}", dex.Message);
                     dtos.Add(new UserInfo
                     {
                         Email = "Unknown Member",

@@ -4,6 +4,7 @@ import {
   fetchCurrentTenantAsync,
   fetchMembershipsAsync,
   fetchCurrentTenantMembershipsAsync,
+  fetchAccountAsync,
 } from "../api/tenantsApi";
 
 export const useCurrentTenant = () => {
@@ -39,6 +40,26 @@ export const useCurrentTenantMemberships = () => {
         .catch((error) => setState({ error }));
     }
   }, [token]);
+  return result;
+};
+
+export const useTenantAccount = () => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+
+  const tenant = useCurrentTenant();
+
+  React.useEffect(() => {
+    if (token && tenant.id) {
+      setState({ loading: true });
+      fetchAccountAsync({
+        token,
+        id: tenant.id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, tenant]);
   return result;
 };
 

@@ -5,6 +5,7 @@ import { EditPropertyPopup } from "../popups/EditPropertyPopup";
 export const CopyableField = ({
   label,
   value,
+  inputClassName,
   isSecret,
   isNumeric,
   min,
@@ -54,7 +55,7 @@ export const CopyableField = ({
           <input
             type={displayType}
             value={value || ""} // dont allow uncontrolled
-            className="form-control"
+            className={`form-control ${inputClassName || ""}`}
             aria-label={label}
             disabled
           />

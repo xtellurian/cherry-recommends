@@ -16,7 +16,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .WithMany(_ => _.AcceptedTerms);
 
             builder
-                .HasIndex(_ => new { Version = _.Version, AcceptedByUserId = _.AcceptedByUserId })
+                .HasIndex(_ => new { _.Version, _.AcceptedByUserId })
                 .IsUnique();
         }
     }

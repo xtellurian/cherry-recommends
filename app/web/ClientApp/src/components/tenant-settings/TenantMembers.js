@@ -2,34 +2,36 @@ import React from "react";
 import { PersonCircle } from "react-bootstrap-icons";
 import { useCurrentTenantMemberships } from "../../api-hooks/tenantsApi";
 import { ErrorCard, Spinner } from "../molecules";
-import { EntityRow } from "../molecules/layout/EntityRow";
+import { CardSection, Label } from "../molecules/layout/CardSection";
+import EntityRow from "../molecules/layout/EntityFlexRow";
 
 const MembershipRow = ({ membership }) => {
   return (
     <EntityRow>
-      <div className="col-1">
+      <div>
         <PersonCircle />
+        <span className="text-bold ml-5">{membership.email}</span>
       </div>
-      <div className="col">{membership.email}</div>
-      <div className="col-3 text-right">
-        {membership.emailVerified ? "Member" : "Pending"}
-      </div>
+      <div>{membership.emailVerified ? "Member" : "Pending"}</div>
     </EntityRow>
   );
 };
-export const TenantMembersSection = () => {
+export const TenantMembersSection = ({ children }) => {
   const memberships = useCurrentTenantMemberships();
   return (
     <>
-      <div>
-        <h5>Team</h5>
-        {memberships.loading && <Spinner />}
-        {memberships.error && <ErrorCard error={memberships.error} />}
-        {memberships.items &&
-          memberships.items.map((m) => (
-            <MembershipRow key={m.userId} membership={m} />
-          ))}
-      </div>
+      <CardSection>
+        <div>
+          <Label>Team</Label>
+          {memberships.loading && <Spinner />}
+          {memberships.error && <ErrorCard error={memberships.error} />}
+          {memberships.items &&
+            memberships.items.map((m) => (
+              <MembershipRow key={m.userId} membership={m} />
+            ))}
+        </div>
+        {children}
+      </CardSection>
     </>
   );
 };

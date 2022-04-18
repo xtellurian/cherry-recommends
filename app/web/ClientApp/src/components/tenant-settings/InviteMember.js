@@ -39,32 +39,28 @@ export const InviteMemberSection = ({ onNewMemberAdded }) => {
   };
   return (
     <>
-      <EntityRow>
-        <div className="col">
-          <h5>Add Member</h5>
-          {error && <ErrorCard error={error} />}
-          <InputGroup>
-            <TextInput
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="wendy@example.com"
-              validator={joinValidators([
-                emailValidator,
-                createRequiredByServerValidator(error),
-              ])}
-              onReturn={handleInvite}
-            />
-            <AsyncButton
-              loading={loading}
-              disabled={email.length < 3}
-              className="btn btn-primary"
-              onClick={handleInvite}
-            >
-              Invite
-            </AsyncButton>
-          </InputGroup>
-        </div>
-      </EntityRow>
+      <h6>Add a Team Member</h6>
+      {error && <ErrorCard error={error} />}
+      <InputGroup>
+        <TextInput
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="wendy@example.com"
+          validator={joinValidators([
+            emailValidator,
+            createRequiredByServerValidator(error),
+          ])}
+          onReturn={handleInvite}
+        />
+        <AsyncButton
+          loading={loading}
+          disabled={email.length < 3}
+          className="btn btn-primary"
+          onClick={handleInvite}
+        >
+          Invite
+        </AsyncButton>
+      </InputGroup>
     </>
   );
 };

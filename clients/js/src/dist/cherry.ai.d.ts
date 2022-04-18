@@ -136,7 +136,6 @@ interface components {
         };
         AddRecommenderChannelDto: {
             id?: number;
-            name?: string | null;
         };
         AggregateCustomerMetric: {
             metricId?: number;
@@ -229,6 +228,13 @@ interface components {
             type?: string | null;
         };
         BenefitType: "percent" | "fixed";
+        BillingAccount: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            tenants?: components["schemas"]["Tenant"][] | null;
+            planType?: components["schemas"]["PlanTypes"];
+        };
         Business: {
             id?: number;
             created?: string;
@@ -287,6 +293,9 @@ interface components {
             discriminator?: string | null;
             lastEnqueued?: string | null;
             lastCompleted?: string | null;
+            properties?: {
+                [key: string]: unknown;
+            } | null;
         };
         ChannelBasePaginated: {
             items?: components["schemas"]["ChannelBase"][] | null;
@@ -395,6 +404,7 @@ interface components {
             arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
             targetMetricId?: string | null;
             segmentIds?: number[] | null;
+            channelIds?: number[] | null;
             parameters?: string[] | null;
             bounds?: components["schemas"]["ParameterBounds"][] | null;
         };
@@ -423,6 +433,7 @@ interface components {
             arguments?: components["schemas"]["CreateOrUpdateRecommenderArgument"][] | null;
             targetMetricId?: string | null;
             segmentIds?: number[] | null;
+            channelIds?: number[] | null;
             itemIds: string[];
             defaultItemId?: string | null;
             baselineItemId?: string | null;
@@ -714,7 +725,7 @@ interface components {
             integratedSystemId: number;
             userId: string;
         };
-        IntegratedSystemTypes: "segment" | "hubspot" | "shopify" | "custom";
+        IntegratedSystemTypes: "segment" | "hubspot" | "shopify" | "custom" | "website";
         IntegrationStatuses: "notConfigured" | "ok";
         InvokationLogEntry: {
             id?: number;
@@ -787,6 +798,7 @@ interface components {
             properties?: {
                 [key: string]: unknown;
             } | null;
+            maxChannelCount?: number;
             errorHandling?: components["schemas"]["RecommenderErrorHandling"];
             settings?: components["schemas"]["RecommenderSettings"];
             arguments?: components["schemas"]["RecommenderArgument"][] | null;
@@ -1091,6 +1103,7 @@ interface components {
             properties?: {
                 [key: string]: unknown;
             } | null;
+            maxChannelCount?: number;
             errorHandling?: components["schemas"]["RecommenderErrorHandling"];
             settings?: components["schemas"]["RecommenderSettings"];
             arguments?: components["schemas"]["RecommenderArgument"][] | null;
@@ -1117,6 +1130,7 @@ interface components {
             businessCount?: number | null;
             recommendationCount?: number;
         };
+        PlanTypes: "none" | "freeTrial" | "usage" | "performance" | "enterprise";
         Post: {
             operationId?: string | null;
             description?: string | null;
@@ -1238,6 +1252,7 @@ interface components {
             properties?: {
                 [key: string]: unknown;
             } | null;
+            maxChannelCount?: number;
             errorHandling?: components["schemas"]["RecommenderErrorHandling"];
             settings?: components["schemas"]["RecommenderSettings"];
             arguments?: components["schemas"]["RecommenderArgument"][] | null;
@@ -1329,62 +1344,6 @@ interface components {
             featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
             metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
-        ShopifyShop: {
-            id?: number | null;
-            admin_graphql_api_id?: string | null;
-            pre_launch_enabled?: boolean | null;
-            requires_extra_payments_agreement?: boolean | null;
-            myshopify_domain?: string | null;
-            name?: string | null;
-            plan_name?: string | null;
-            plan_display_name?: string | null;
-            password_enabled?: boolean | null;
-            phone?: string | null;
-            primary_locale?: string | null;
-            province?: string | null;
-            province_code?: string | null;
-            ships_to_countries?: string | null;
-            shop_owner?: string | null;
-            source?: string | null;
-            tax_shipping?: boolean | null;
-            taxes_included?: boolean | null;
-            county_taxes?: boolean | null;
-            timezone?: string | null;
-            iana_timezone?: string | null;
-            zip?: string | null;
-            has_storefront?: boolean | null;
-            setup_required?: boolean | null;
-            weight_unit?: string | null;
-            multi_location_enabled?: boolean | null;
-            updated_at?: string | null;
-            money_with_currency_in_emails_format?: string | null;
-            money_in_emails_format?: string | null;
-            address1?: string | null;
-            address2?: string | null;
-            city?: string | null;
-            country?: string | null;
-            country_code?: string | null;
-            country_name?: string | null;
-            created_at?: string | null;
-            customer_email?: string | null;
-            currency?: string | null;
-            description?: string | null;
-            domain?: string | null;
-            email?: string | null;
-            enabled_presentment_currencies?: string[] | null;
-            google_apps_domain?: string | null;
-            google_apps_login_enabled?: string | null;
-            eligible_for_card_reader_giveaway?: boolean | null;
-            eligible_for_payments?: boolean | null;
-            checkout_api_supported?: boolean | null;
-            has_discounts?: boolean | null;
-            has_gift_cards?: boolean | null;
-            latitude?: string | null;
-            longitude?: string | null;
-            money_format?: string | null;
-            money_with_currency_format?: string | null;
-            primary_location_id?: number | null;
-        };
         StatusCodeClass: {
             type?: string | null;
             format?: string | null;
@@ -1438,6 +1397,10 @@ interface components {
         TriggerCollection: {
             featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
             metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
+        };
+        UpdateChannelPropertiesDto: {
+            endpoint?: string | null;
+            popupAskForEmail?: boolean | null;
         };
         UpdatePromotionDto: {
             name: string;
@@ -2599,8 +2562,8 @@ declare type Auth0ReactConfig = components["schemas"]["Auth0ReactConfig"] | unde
 declare const fetchAuth0ConfigurationAsync: () => Promise<Auth0ReactConfig>;
 declare type ReactConfig = components["schemas"]["ReactConfig"] | undefined;
 declare const fetchConfigurationAsync: () => Promise<ReactConfig>;
-declare type Hosting = components["schemas"]["Hosting"];
-declare const fetchHostingAsync$1: () => Promise<Hosting>;
+declare type Hosting$1 = components["schemas"]["Hosting"];
+declare const fetchHostingAsync$1: () => Promise<Hosting$1>;
 
 declare const reactConfigApi_d_fetchAuth0ConfigurationAsync: typeof fetchAuth0ConfigurationAsync;
 declare const reactConfigApi_d_fetchConfigurationAsync: typeof fetchConfigurationAsync;
@@ -2900,21 +2863,27 @@ declare namespace trackedUsersApi_d {
 }
 
 declare type Tenant = components["schemas"]["Tenant"];
+declare type BillingAccount = components["schemas"]["BillingAccount"];
+declare type PaginatedMemberships = components["schemas"]["UserInfoPaginated"];
+declare type Hosting = components["schemas"]["Hosting"];
 declare const fetchCurrentTenantAsync: ({ token, }: AuthenticatedRequest) => Promise<Tenant>;
-declare const fetchHostingAsync: ({ token }: AuthenticatedRequest) => Promise<any>;
-declare const fetchCurrentTenantMembershipsAsync: ({ token, }: AuthenticatedRequest) => Promise<any>;
+declare const fetchAccountAsync: ({ token, id, }: EntityRequest) => Promise<BillingAccount>;
+declare const fetchHostingAsync: ({ token, }: AuthenticatedRequest) => Promise<Hosting>;
+declare const fetchCurrentTenantMembershipsAsync: ({ token, }: AuthenticatedRequest) => Promise<PaginatedMemberships>;
 interface CreateTenantMembershipRequest extends AuthenticatedRequest {
     email: string;
 }
 declare const createTenantMembershipAsync: ({ token, email, }: CreateTenantMembershipRequest) => Promise<any>;
 
 declare const tenantsApi_d_fetchCurrentTenantAsync: typeof fetchCurrentTenantAsync;
+declare const tenantsApi_d_fetchAccountAsync: typeof fetchAccountAsync;
 declare const tenantsApi_d_fetchHostingAsync: typeof fetchHostingAsync;
 declare const tenantsApi_d_fetchCurrentTenantMembershipsAsync: typeof fetchCurrentTenantMembershipsAsync;
 declare const tenantsApi_d_createTenantMembershipAsync: typeof createTenantMembershipAsync;
 declare namespace tenantsApi_d {
   export {
     tenantsApi_d_fetchCurrentTenantAsync as fetchCurrentTenantAsync,
+    tenantsApi_d_fetchAccountAsync as fetchAccountAsync,
     tenantsApi_d_fetchHostingAsync as fetchHostingAsync,
     tenantsApi_d_fetchCurrentTenantMembershipsAsync as fetchCurrentTenantMembershipsAsync,
     tenantsApi_d_createTenantMembershipAsync as createTenantMembershipAsync,

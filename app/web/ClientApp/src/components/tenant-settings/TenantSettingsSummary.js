@@ -4,6 +4,7 @@ import { BigPopup } from "../molecules/popups/BigPopup";
 import { TenantMembersSection } from "./TenantMembers";
 import { InviteMemberSection } from "./InviteMember";
 import { CopyableField } from "../molecules/fields/CopyableField";
+import { TenantBillingSection } from "./TenantBillingSection";
 
 export const TenantSettingsSummary = () => {
   const [loading, setLoading] = React.useState(false);
@@ -26,10 +27,17 @@ export const TenantSettingsSummary = () => {
       <div>
         <Title> Tenant Settings </Title>
         <hr />
-        <div className="mb-4">
-          <InviteMemberSection onNewMemberAdded={handleNewMembderAdded} />
-        </div>
-        {!loading && <TenantMembersSection />}
+
+        {loading ? <Spinner /> : <TenantBillingSection />}
+        {loading ? (
+          <Spinner />
+        ) : (
+          <TenantMembersSection>
+            <div className="mt-4">
+              <InviteMemberSection onNewMemberAdded={handleNewMembderAdded} />
+            </div>
+          </TenantMembersSection>
+        )}
         {loading && <Spinner />}
       </div>
 

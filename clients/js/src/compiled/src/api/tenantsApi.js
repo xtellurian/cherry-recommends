@@ -6,9 +6,16 @@ export const fetchCurrentTenantAsync = async ({ token, }) => {
         method: "get",
     });
 };
-export const fetchHostingAsync = async ({ token }) => {
+export const fetchAccountAsync = async ({ token, id, }) => {
     return await executeFetch({
-        path: "api/tenants/hosting",
+        path: `api/Tenants/${id}/Account`,
+        token,
+        method: "get",
+    });
+};
+export const fetchHostingAsync = async ({ token, }) => {
+    return await executeFetch({
+        path: "api/Tenants/Hosting",
         token,
         method: "get",
     });

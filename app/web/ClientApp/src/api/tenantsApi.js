@@ -10,6 +10,7 @@ export const fetchHostingAsync = tenants.fetchHostingAsync;
 export const fetchCurrentTenantMembershipsAsync =
   tenants.fetchCurrentTenantMembershipsAsync;
 export const createTenantMembershipAsync = tenants.createTenantMembershipAsync;
+export const fetchAccountAsync = tenants.fetchAccountAsync;
 
 export const fetchStatusAsync = async ({ token, name }) => {
   const url = `api/tenants/status/${name}`;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using SignalBox.Core.Accounts;
 
 #nullable enable
 namespace SignalBox.Core
@@ -84,5 +85,9 @@ namespace SignalBox.Core
 
         [JsonIgnore]
         public ICollection<TenantTermsOfServiceAcceptance>? AcceptedTerms { get; set; }
+        [JsonIgnore]
+        public long? AccountId { get; set; }
+        [JsonIgnore]
+        public BillingAccount? Account { get; set; }
     }
 }

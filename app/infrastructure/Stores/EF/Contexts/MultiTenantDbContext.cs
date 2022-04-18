@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
+using SignalBox.Core.Accounts;
 using SignalBox.Infrastructure.EntityFramework;
 
 namespace SignalBox.Infrastructure
@@ -16,6 +17,7 @@ namespace SignalBox.Infrastructure
 
             // configure the multitenant types
             new TenantTypeConfiguration().Configure(modelBuilder.Entity<Tenant>());
+            new BillingAccountTypeConfiguration().Configure(modelBuilder.Entity<BillingAccount>());
         }
 
         public DbSet<Tenant> Tenants { get; set; }

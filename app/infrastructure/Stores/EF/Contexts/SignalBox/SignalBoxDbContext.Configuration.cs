@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Core;
+using SignalBox.Core.Accounts;
 using SignalBox.Infrastructure.EntityFramework;
 
 namespace SignalBox.Infrastructure
@@ -23,6 +24,7 @@ namespace SignalBox.Infrastructure
             modelBuilder.Entity<Tenant>().Metadata.SetIsTableExcludedFromMigrations(true);
             modelBuilder.Entity<TenantMembership>().Metadata.SetIsTableExcludedFromMigrations(true);
             modelBuilder.Entity<TenantTermsOfServiceAcceptance>().Metadata.SetIsTableExcludedFromMigrations(true);
+            modelBuilder.Entity<BillingAccount>().Metadata.SetIsTableExcludedFromMigrations(true);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
