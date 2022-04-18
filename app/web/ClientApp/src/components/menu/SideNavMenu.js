@@ -1,16 +1,16 @@
 import React, { useCallback, useMemo } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { useAuth } from "../../utility/useAuth";
 import { useTokenScopes } from "../../api-hooks/token";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
-
 import { useAuthenticatedIA, hash as hashes } from "./MenuIA";
 
-import "./SideNavMenu.css";
 import { Navigation } from "../molecules";
 
-const MenuItem = ({ active, label, icon }) => {
+import "./SideNavMenu.css";
+
+const MenuItem = ({ active, label, icon, activeIcon = true }) => {
   const activeClassName = active ? "active border-bottom-0" : "";
   const activeIconSrc = active
     ? "/icons/angle-down.svg"
@@ -26,7 +26,9 @@ const MenuItem = ({ active, label, icon }) => {
         </div>
         {label}
       </div>
-      <img src={activeIconSrc} alt="Angle right" className="icon" />
+      {activeIcon ? (
+        <img src={activeIconSrc} alt="Angle right" className="icon" />
+      ) : null}
     </div>
   );
 };
@@ -85,29 +87,33 @@ export const SideNavMenu = () => {
 
   return (
     <nav className="sidebar disable-select bg-white box-shadow">
-      {isAuthenticated &&
-        authenticatedIA.map((item) => (
-          <div key={item.name} className="border-bottom">
-            <Navigation
-              to={isActive({ hash: item.to.hash }) ? item.to.pathname : item.to}
-            >
-              <MenuItem
-                active={isActive({ hash: item.to.hash })}
-                label={item.name}
-                icon={item.icon}
-              />
-            </Navigation>
-            {isActive({ hash: item.to.hash }) &&
-              item.items.map((subitem) => (
-                <Navigation key={subitem.name} to={subitem.to}>
-                  <SubMenuItem
-                    active={location.hash === subitem.to.hash}
-                    label={subitem.name}
-                  />
-                </Navigation>
-              ))}
-          </div>
-        ))}
+      {isAuthenticated
+        ? authenticatedIA.map((item) => (
+            <div key={item.name} className="border-bottom">
+              <Navigation
+                to={
+                  isActive({ hash: item.to.hash }) ? item.to.pathname : item.to
+                }
+              >
+                <MenuItem
+                  active={isActive({ hash: item.to.hash })}
+                  label={item.name}
+                  icon={item.icon}
+                  activeIcon={item.activeIcon}
+                />
+              </Navigation>
+              {isActive({ hash: item.to.hash }) &&
+                item.items.map((subitem) => (
+                  <Navigation key={subitem.name} to={subitem.to}>
+                    <SubMenuItem
+                      active={location.hash === subitem.to.hash}
+                      label={subitem.name}
+                    />
+                  </Navigation>
+                ))}
+            </div>
+          ))
+        : null}
     </nav>
   );
 };

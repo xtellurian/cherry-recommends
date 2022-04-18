@@ -1,4 +1,5 @@
 import React from "react";
+
 import { BigPopup } from "../molecules/popups/BigPopup";
 import { AsyncButton, ErrorCard, Navigation, Spinner } from "../molecules";
 import { CircleFill, CheckCircle } from "react-bootstrap-icons";
@@ -65,7 +66,7 @@ const GettingStartedStep = ({
             >
               <AsyncButton
                 onClick={() => {
-                  requestClose();
+                  if (requestClose === "function") requestClose();
                   setComplete(index, step);
                 }}
                 className="btn btn-outline-primary"
@@ -80,7 +81,8 @@ const GettingStartedStep = ({
     </div>
   );
 };
-const GettingStartedChecklistPopup = ({ requestClose }) => {
+
+export const GettingStartedChecklistComponent = ({ requestClose }) => {
   const token = useAccessToken();
   const [trigger, setTrigger] = React.useState({});
   const [error, setError] = React.useState();
@@ -165,10 +167,13 @@ const GettingStartedChecklistPopup = ({ requestClose }) => {
 
 export const ToggleGettingStartedChecklistButton = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+
   return (
     <>
       <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
-        <GettingStartedChecklistPopup requestClose={() => setIsOpen(false)} />
+        <GettingStartedChecklistComponent
+          requestClose={() => setIsOpen(false)}
+        />
       </BigPopup>
       <button
         onClick={() => setIsOpen(!isOpen)}

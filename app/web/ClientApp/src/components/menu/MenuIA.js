@@ -2,6 +2,7 @@ import React from "react";
 import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const hash = {
+  gettingStarted: "#gettingStarted",
   admin: "#admin",
   promotions: "#promotions",
   customers: "#customers",
@@ -15,6 +16,13 @@ export const metricsHash = {
 };
 
 const AuthenticatedIA = [
+  {
+    name: "Get Started",
+    icon: "/icons/rocket.svg",
+    to: { pathname: "/getting-started", hash: hash.gettingStarted },
+    activeIcon: false,
+    items: [],
+  },
   {
     name: "Promotions",
     icon: "/icons/tag.svg",
@@ -150,7 +158,7 @@ const getAuthenticatedIA = (scopes, flags) => {
     return ia;
   }
   if (scopes.includes("write:metrics")) {
-    ia.splice(0, 0, {
+    ia.splice(1, 0, {
       name: "Admin",
       icon: "/icons/metric.svg",
       to: { pathname: "/", hash: hash.admin },

@@ -24,6 +24,7 @@ import Identifier from "./analytics/Identifier";
 import "./global-css/cherry.css";
 import { BusinessesComponent } from "./components/businesses/BusinessesComponent";
 import { ChannelsComponent } from "./components/channels/ChannelsComponent";
+import { GettingStartedChecklistComponent } from "./components/onboarding/GettingStartedChecklist";
 
 const InTenantApp = ({ multitenant }) => {
   const { params } = useRouteMatch();
@@ -103,6 +104,10 @@ const InTenantApp = ({ multitenant }) => {
         <AuthorizeRoute
           path={`${routePrefix}/channels`}
           component={ChannelsComponent}
+        />
+        <AuthorizeRoute
+          path={`${routePrefix}/getting-started`}
+          component={GettingStartedChecklistComponent}
         />
         <Route path={`${routePrefix}/docs/api`} component={ApiDocs} />
 

@@ -196,10 +196,6 @@ export const NavMenu = ({ children }) => {
                     </DropdownMenu>
                   </UncontrolledDropdown>
                 )}
-
-                <div className="ml-md-4 py-md-0 py-2">
-                  <ToggleGettingStartedChecklistButton />
-                </div>
               </ul>
             </Collapse>
           </Container>

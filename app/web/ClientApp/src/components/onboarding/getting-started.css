@@ -2,6 +2,7 @@
   border-left: 2px solid var(--cherry-dark-pink);
   padding-bottom: 30px;
 }
+
 .getting-started-step div {
   padding-left: 20px;
 }
@@ -9,6 +10,7 @@
 .step-complete {
   color: var(--cherry-dark-pink);
 }
+
 .step-incomplete {
   color: var(--cherry-dark-pink);
 }
@@ -23,6 +25,7 @@
 .step-done-button {
   color: var(--cherry-purple);
 }
+
 .step-done-button:hover {
   color: var(--cherry-purple);
 }
