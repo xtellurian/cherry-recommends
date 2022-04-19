@@ -102,8 +102,6 @@ export const NavMenu = ({ children }) => {
                 className="img-fluid nav-logo"
                 alt="The Cherry Recommends Logo"
                 src="/images/cherry-logo-colour-white-pink.svg"
-                // src="/images/Four2_logo_white_background.png"
-                // src="https://docshostcce3f6dc.blob.core.windows.net/content/images/Four2_logo_white_background.png"
               />
             </NavbarBrand>
 

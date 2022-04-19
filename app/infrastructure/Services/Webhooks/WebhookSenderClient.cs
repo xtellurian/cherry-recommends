@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
-using SignalBox.Core.Integrations.Custom;
 using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommendations.Destinations;
 using SignalBox.Infrastructure.Dto;
@@ -16,7 +15,7 @@ namespace SignalBox.Infrastructure.Webhooks
         private readonly IHasher hasher;
         private readonly IIntegratedSystemStore systemStore;
         private readonly ILogger<WebhookSenderClient> logger;
-        private JsonSerializerOptions jOptions = new JsonSerializerOptions
+        private readonly JsonSerializerOptions jOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
@@ -59,8 +58,6 @@ namespace SignalBox.Infrastructure.Webhooks
             {
                 throw new WorkflowException($"Cannot find connected integrated system id = {destination.ConnectedSystemId}");
             }
-            var customIntegratedSystem = (CustomIntegratedSystem)connectedSystem;
-
 
             if (recommendation is ParameterSetRecommendation psRec)
             {
@@ -84,7 +81,7 @@ namespace SignalBox.Infrastructure.Webhooks
             var connectedSystem = destination.ConnectedSystem;
             if (connectedSystem == null)
             {
-                connectedSystem = await systemStore.Read(destination.ConnectedSystemId);
+                _ = await systemStore.Read(destination.ConnectedSystemId);
             }
 
             if (recommendation is ParameterSetRecommendation psRec)
@@ -119,7 +116,7 @@ namespace SignalBox.Infrastructure.Webhooks
 
         private async Task HttpPostToDestination(IWebhookDestination destination, string serialized, string? sigHeader = null)
         {
-            logger.LogInformation($"Posting to destination {destination.Endpoint}");
+            logger.LogInformation("Posting to destination {endpoint}", destination.Endpoint);
             try
             {
                 var content = new StringContent(serialized, System.Text.Encoding.UTF8, "application/json");
@@ -131,7 +128,7 @@ namespace SignalBox.Infrastructure.Webhooks
             }
             catch (System.Exception ex)
             {
-                logger.LogError("Error sending to endpoint " + ex.Message);
+                logger.LogError("Error sending to endpoint: message: {message}", ex.Message);
                 throw new RecommenderInvokationException("Error sending to endpoint", ex.Message, ex);
             }
         }

@@ -24,7 +24,6 @@ namespace SignalBox.Web.Controllers
     public class HubspotMetricValueCrmCardsController : HubspotConnectorControllerBase
     {
         private readonly ILogger<HubspotMetricValueCrmCardsController> logger;
-        private readonly IHasher hasher;
         private readonly ITelemetry telemetry;
         private readonly HubspotWorkflows hubspotWorkflows;
         private readonly IIntegratedSystemStore integratedSystemStore;
@@ -33,10 +32,7 @@ namespace SignalBox.Web.Controllers
         private readonly IItemsRecommenderStore itemsRecommenderStore;
         private readonly ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation;
         private readonly ItemsRecommenderInvokationWorkflows itemsRecommenderInvokation;
-        private readonly IMetricStore metricStore;
         private readonly IHistoricCustomerMetricStore customerMetricStore;
-        private readonly HubspotAppCredentials credentials;
-        private readonly DeploymentInformation deploymentOptions;
 
         public HubspotMetricValueCrmCardsController(ILogger<HubspotMetricValueCrmCardsController> logger,
                                          IOptions<DeploymentInformation> deploymentOptions,
@@ -50,12 +46,10 @@ namespace SignalBox.Web.Controllers
                                          IItemsRecommenderStore itemsRecommenderStore,
                                          ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation,
                                          ItemsRecommenderInvokationWorkflows itemsRecommenderInvokation,
-                                         IMetricStore metricStore,
                                          IHistoricCustomerMetricStore customerMetricStore)
                                           : base(logger, deploymentOptions, hasher, hubspotOptions)
         {
             this.logger = logger;
-            this.hasher = hasher;
             this.telemetry = telemetry;
             this.hubspotWorkflows = hubspotWorkflows;
             this.integratedSystemStore = integratedSystemStore;
@@ -64,10 +58,7 @@ namespace SignalBox.Web.Controllers
             this.itemsRecommenderStore = itemsRecommenderStore;
             this.parameterSetRecommenderInvokation = parameterSetRecommenderInvokation;
             this.itemsRecommenderInvokation = itemsRecommenderInvokation;
-            this.metricStore = metricStore;
             this.customerMetricStore = customerMetricStore;
-            this.credentials = hubspotOptions.Value;
-            this.deploymentOptions = deploymentOptions.Value;
         }
 
 
@@ -98,15 +89,12 @@ namespace SignalBox.Web.Controllers
                 throw new ConfigurationException($"Hubspot Integrated s ystem with portalId={portalId} does not exist");
             }
 
-            switch (associatedObjectType)
+            return associatedObjectType switch
             {
-                case "CONTACT":
-                    return await HandleContact(portalId, associatedObjectId);
-                case "TICKET":
-                    return await HandleTicket(portalId, associatedObjectId);
-                default:
-                    return DefaultCardResponse($"Unknown Object Type: {associatedObjectType}");
-            }
+                "CONTACT" => await HandleContact(portalId, associatedObjectId),
+                "TICKET" => await HandleTicket(portalId, associatedObjectId),
+                _ => DefaultCardResponse($"Unknown Object Type: {associatedObjectType}"),
+            };
         }
 
         private async Task<HubspotCrmCardResponse> HandleTicket(string portalId, string ticketId)
@@ -114,23 +102,23 @@ namespace SignalBox.Web.Controllers
             try
             {
                 var integratedSystem = await integratedSystemStore.ReadFromCommonId(portalId);
-                var trackedUsers = await hubspotWorkflows.GetAssociatedTrackedUsersFromTicket(portalId, ticketId);
-                if (trackedUsers.Any())
+                var customers = await hubspotWorkflows.GetAssociatedTrackedUsersFromTicket(portalId, ticketId);
+                if (customers.Any())
                 {
-                    var tu = trackedUsers.First();
-                    logger.LogInformation($"Found a Customer {tu.CommonId} for ticket {ticketId}");
-                    return await HubspotUserMetricsResponse(tu,
+                    var customer = customers.First();
+                    logger.LogInformation("Found a Customer {commonId} for ticket {ticketId}", customer.CustomerId, ticketId);
+                    return await HubspotUserMetricsResponse(customer,
                         integratedSystem.GetCache<HubspotCache>()?.MetricCrmCardBehaviour);
                 }
                 else
                 {
-                    logger.LogWarning($"No tracked users associated with ticket {ticketId}");
+                    logger.LogWarning("No Customers associated with ticket {ticketId}", ticketId);
                     return DefaultCardResponse("No Tracked User linked to this ticket.");
                 }
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed to access Hubspot analysis for ticketId {ticketId}", ex);
+                logger.LogError("Failed to access Hubspot analysis for ticketId {ticketId}. Message: {message}", ticketId, ex.Message);
                 return DefaultCardResponse("Analysis unavailable");
             }
         }
@@ -200,15 +188,6 @@ namespace SignalBox.Web.Controllers
                     response.AddRecommendation(baseUrl, recommendation);
                 }
 
-                // not working
-                // response.PrimaryAction = new IframeAction
-                // {
-                //     Height = 600,
-                //     Width = 1200,
-                //     Label = "View in Four2",
-                //     Uri = $"{baseUrl.TrimEnd('/')}/tracked-users/detail/{trackedUser.Id}",
-                // };
-
                 return response;
             }
             else
@@ -243,7 +222,7 @@ namespace SignalBox.Web.Controllers
             }
         }
 
-        private HubspotCrmCardResponse DefaultCardResponse(string title) => new HubspotCrmCardResponse
+        private static HubspotCrmCardResponse DefaultCardResponse(string title) => new()
         {
             // the default response. All responses need an objectId and title
             Results = new List<Dictionary<string, object>>

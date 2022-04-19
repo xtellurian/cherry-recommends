@@ -97,7 +97,7 @@ export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
           <SettingRow
             label="Recommendation Cache Time"
             description="By default, a new recommendation will be generated every time this recommender is invoked.
-            Setting this value causes Four2 to cache a recommendation for this time period."
+            Setting this value causes Cherry to cache a recommendation for this time period."
           >
             <TimespanSelector
               initialValue={settings.recommendationCacheTime}

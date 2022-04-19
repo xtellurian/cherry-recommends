@@ -38,7 +38,7 @@ namespace SignalBox.Core.Workflows
             await base.CheckAndRefreshCredentials(system);
 
             var report = new HubspotDataPushReport(system.CommonId);
-            var groupName = "four2";
+            var groupName = "four2"; // public API
             await hubspotService.EnsureContactPropertyGroupCreated(system, new HubspotContactPropertyGroup(groupName, "Four2"));
             var property = await hubspotService.EnsureContactPropertyCreated(system, new HubspotContactProperty(recommender.CommonId,
                                                                                                          recommender.Name,

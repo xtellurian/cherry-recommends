@@ -255,54 +255,6 @@ namespace SignalBox.Infrastructure.Services
             }
 
         }
-
-        public async Task CreateCard(IntegratedSystem system)
-        {
-            AuthorizeHttpClient(system);
-            var crmExtensionsClient = new CrmExtensionsClient(httpClient);
-
-            try
-            {
-                var response = await crmExtensionsClient.CrmV3ExtensionsCardsPostAsync(int.Parse(creds.AppId), new CardCreateRequest
-                {
-                    Title = "Four2 Card Title - PET",
-                    Fetch = new CardFetchBody
-                    {
-                        ObjectTypes = new List<CardObjectTypeBody>
-                    {
-                        new CardObjectTypeBody
-                        {
-                            Name = CardObjectTypeBodyName.Contacts,
-                            PropertiesToSend = new List<string>
-                            {
-                                "email"
-                            }
-                        }
-                    },
-                        TargetUrl = "https://34491bc3e563.ngrok.io/api/hubspotintegratedsystems/1/cardcards/touchpintname"
-                    },
-                    Display = new CardDisplayBody
-                    {
-                        Properties = new List<CardDisplayProperty>
-                    {
-                        new CardDisplayProperty
-                        {
-                            DataType = CardDisplayPropertyDataType.STRING,
-                            Name = "petName",
-                            Label = "Pet Name"
-                        }
-                    }
-                    }
-                });
-
-                logger.LogInformation("Created a card!");
-            }
-            catch (Exception ex)
-            {
-                logger.LogCritical("oops", ex);
-            }
-        }
-
     }
 }
 

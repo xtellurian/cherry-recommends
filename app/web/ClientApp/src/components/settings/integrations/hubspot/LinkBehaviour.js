@@ -151,7 +151,7 @@ export const HubspotLinkBehaviour = ({ integratedSystem }) => {
         </SettingRow>
         <SettingRow
           label="Common User ID Property Name"
-          description="Which Hubspot Property should we use as the Four2 Common User ID? Click the button to use Object ID"
+          description="Which Hubspot Property should we use as the Cherry Customer ID? Click the button to use Object ID"
         >
           <button
             className="btn btn-outline-info btn-block"
