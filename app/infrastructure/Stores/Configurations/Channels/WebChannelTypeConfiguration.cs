@@ -9,9 +9,6 @@ namespace SignalBox.Infrastructure.EntityFramework
         public override void Configure(EntityTypeBuilder<WebChannel> builder)
         {
             base.Configure(builder);
-
-            builder.Property(_ => _.Endpoint) // shared column as WebhookChannel
-                .HasColumnName("Endpoint");
         }
     }
 }

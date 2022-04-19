@@ -33,7 +33,14 @@ namespace SignalBox.Core.Workflows
 
         public async Task<ChannelBase> UpdateChannelEndpoint(ChannelBase channel, string endpoint)
         {
-            return await UpdateChannelProperties(channel, endpoint);
+            if (channel is WebhookChannel webhookChannel)
+            {
+                return await UpdateWebhookChannelEndpoint(webhookChannel, endpoint);
+            }
+            else
+            {
+                throw new BadRequestException($"Channel type {channel.ChannelType} does not have endpoint");
+            }
         }
 
         private async Task<WebhookChannel> CreateWebhookChannel(string name, IntegratedSystem integratedSystem)
@@ -55,15 +62,11 @@ namespace SignalBox.Core.Workflows
             return channel;
         }
 
-        public async Task<ChannelBase> UpdateChannelProperties(ChannelBase channel, string endpoint, bool? popupAskForEmail = null)
+        public async Task<ChannelBase> UpdateWebChannelProperties(ChannelBase channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, long? recommenderId = null)
         {
-            if (channel is WebhookChannel)
+            if (channel is WebChannel webChannel)
             {
-                return await UpdateWebhookChannelEndpoint(channel as WebhookChannel, endpoint);
-            }
-            else if (channel is WebChannel)
-            {
-                return await UpdateWebChannelProperties(channel as WebChannel, endpoint, popupAskForEmail);
+                return await UpdateWebChannelProperties(webChannel, host, popupAskForEmail, popupDelay, recommenderId);
             }
             else
             {
@@ -83,10 +86,12 @@ namespace SignalBox.Core.Workflows
             return channel;
         }
 
-        private async Task<WebChannel> UpdateWebChannelProperties(WebChannel channel, string endpoint, bool? popupAskForEmail = null)
+        private async Task<WebChannel> UpdateWebChannelProperties(WebChannel channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, long? recommenderId = null)
         {
-            channel.Endpoint = endpoint;
+            channel.Host = host;
             channel.PopupAskForEmail = popupAskForEmail ?? channel.PopupAskForEmail;
+            channel.PopupDelay = popupDelay ?? channel.PopupDelay;
+            channel.RecommenderIdToInvoke = recommenderId ?? channel.RecommenderIdToInvoke;
             await webChannelStore.Context.SaveChanges();
             return channel;
         }

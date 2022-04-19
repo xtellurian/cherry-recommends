@@ -84,12 +84,12 @@ namespace SignalBox.Test.Workflows
         }
 
         [Theory]
-        [InlineData("https://mychannel.endpoint.com", true, true)]
-        [InlineData("https://mychannel.endpoint.com", false, false)]
-        [InlineData("https://mychannel.endpoint.com", null, false)]
-        [InlineData("", false, false)]
-        [InlineData(null, false, false)]
-        public async Task UpdateChannelPropertiesTest(string endpoint, bool? popupAskForEmail, bool? expectedPopupFlag)
+        [InlineData("https://mychannel.endpoint.com", true)]
+        [InlineData("https://mychannel.endpoint.com", false)]
+        [InlineData("https://mychannel.endpoint.com", null)]
+        [InlineData("", false)]
+        [InlineData(null, false)]
+        public async Task UpdateChannelPropertiesTest(string host, bool? popupAskForEmail)
         {
             var mockWebhookChannelStore = new Mock<IWebhookChannelStore>();
             var mockWebChannelStore = new Mock<IWebChannelStore>();
@@ -101,11 +101,11 @@ namespace SignalBox.Test.Workflows
             var integratedSystem = new IntegratedSystem("abc", "Test", IntegratedSystemTypes.Website);
             WebChannel channel = new WebChannel("myChannel", integratedSystem);
 
-            var ret = await workflow.UpdateChannelProperties(channel, endpoint, popupAskForEmail);
+            var ret = await workflow.UpdateWebChannelProperties(channel, host, popupAskForEmail);
 
             mockWebChannelStore.Verify(_ => _.Context.SaveChanges(), Times.Once);
-            Assert.Equal(endpoint, channel.Endpoint);
-            Assert.Equal(expectedPopupFlag, channel.PopupAskForEmail);
+            Assert.Equal(host, channel.Host);
+            Assert.Equal(popupAskForEmail, channel.PopupAskForEmail);
         }
     }
 }

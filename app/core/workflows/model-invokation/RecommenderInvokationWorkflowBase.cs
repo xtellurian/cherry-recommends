@@ -74,11 +74,6 @@ namespace SignalBox.Core.Workflows
                     await webhookSender.Send(webhookChannel, recommendation);
                     context.LogMessage($"Send to Webhook endpoint: {webhookChannel.Endpoint}");
                 }
-                else if (channel is WebChannel webChannel)
-                {
-                    await webhookSender.Send(webChannel, recommendation);
-                    context.LogMessage($"Send to Web endpoint: {webChannel.Endpoint}");
-                }
             }
         }
 

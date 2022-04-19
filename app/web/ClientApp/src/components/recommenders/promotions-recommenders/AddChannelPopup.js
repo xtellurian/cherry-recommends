@@ -51,8 +51,7 @@ export const AddChannelPopup = ({
             isMulti={false}
             onChange={(v) => setSelectedItem(v.value)}
           />
-          {(selectedItem?.channelType === "webhook" ||
-            selectedItem?.channelType === "web") && (
+          {selectedItem?.channelType === "webhook" && (
             <div className="mt-3">
               <CopyableField
                 label="Endpoint"

@@ -44,6 +44,7 @@ namespace SignalBox.Web.Controllers
         {
             var channel = await base.GetResource(id);
             await channelStore.Load(channel, _ => _.LinkedIntegratedSystem);
+            await channelStore.LoadMany(channel, _ => _.Recommenders);
             return channel;
         }
 
@@ -57,11 +58,11 @@ namespace SignalBox.Web.Controllers
         }
 
         /// <summary> Updates properties of a channel.</summary>
-        [HttpPost("{id}/properties")]
-        public async Task<ChannelBase> UpdateProperties(long id, [FromBody] UpdateChannelPropertiesDto dto)
+        [HttpPost("{id}/WebProperties")]
+        public async Task<ChannelBase> UpdateProperties(long id, [FromBody] UpdateWebChannelPropertiesDto dto)
         {
             var channel = await base.GetResource(id);
-            channel = await workflow.UpdateChannelProperties(channel, dto.Endpoint, dto.PopupAskForEmail);
+            channel = await workflow.UpdateWebChannelProperties(channel, dto.Host, dto.PopupAskForEmail, dto.PopupDelay, dto.RecommenderIdToInvoke);
             return channel;
         }
     }

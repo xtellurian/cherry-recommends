@@ -28,7 +28,7 @@ namespace SignalBox.Core
         public DateTimeOffset? LastEnqueued { get; set; }
         public DateTimeOffset? LastCompleted { get; set; }
         public abstract IDictionary<string, object>? Properties { get; }
-        [JsonIgnore]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ICollection<RecommenderEntityBase> Recommenders { get; set; } = new List<RecommenderEntityBase>();
     }
 }
