@@ -149,3 +149,12 @@ code {
 .min-w-100 {
   min-width: 100%;
 }
+
+/* tooltip */
+
+.cherry-tooltip {
+  background-color: var(--cherry-teal);
+  border-radius: 20px;
+  border-color: var(--cherry-purple);
+  padding: 4px 10px 4px 10px;
+}

@@ -10,7 +10,7 @@ namespace SignalBox.Web
         {
             if (writeNull == true)
             {
-                return default(T);
+                return default;
             }
             else return defaultValue;
         }
@@ -18,6 +18,7 @@ namespace SignalBox.Web
         {
             return new RecommenderSettings
             {
+                Enabled = dto?.Enabled ?? current?.Enabled ?? true, // default to true
                 RecommendationCacheTime = dto?.RecommendationCacheTime ?? DefaultIfNull(current?.RecommendationCacheTime, writeNulls),
                 RequireConsumptionEvent = dto?.RequireConsumptionEvent ?? DefaultIfNull(current?.RequireConsumptionEvent, writeNulls),
                 ThrowOnBadInput = dto?.ThrowOnBadInput ?? DefaultIfNull(current?.ThrowOnBadInput, writeNulls)

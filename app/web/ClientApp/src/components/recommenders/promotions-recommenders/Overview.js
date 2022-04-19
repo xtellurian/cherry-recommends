@@ -1,5 +1,5 @@
 import React from "react";
-import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
+import { PromotionRecommenderLayout } from "./PromotionRecommenderLayout";
 import { CardSection, Label } from "../../molecules/layout/CardSection";
 import { Row, Col } from "../../molecules/layout/Grid";
 import { ItemsRecommendationList } from "./RecommendationList";
@@ -37,7 +37,7 @@ export const Overview = () => {
   const statistics = useStatistics({ id });
   return (
     <React.Fragment>
-      <ItemRecommenderLayout>
+      <PromotionRecommenderLayout>
         <Row>
           <Col columnClass="col-lg-6">
             <div className="container">
@@ -62,7 +62,7 @@ export const Overview = () => {
             <ResultsChart />
           </Col>
         </Row>
-      </ItemRecommenderLayout>
+      </PromotionRecommenderLayout>
     </React.Fragment>
   );
 };

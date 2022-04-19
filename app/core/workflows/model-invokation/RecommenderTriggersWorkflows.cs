@@ -55,6 +55,11 @@ namespace SignalBox.Core.Workflows
             var recommendations = new List<ItemsRecommendation>();
             await foreach (var recommender in itemsRecommenderStore.Iterate(_ => _.TriggerCollection != null && _.TargetType == PromotionRecommenderTargetTypes.Customer))
             {
+                if (recommender?.Settings?.Enabled == false)
+                {
+                    logger.LogInformation($"Skipping trigger for recommender {recommender.Id}. Recommender is disabled");
+                    continue;
+                }
                 try
                 {
                     await InvokeItemsRecommenderCustomerMetricsChangedTrigger(recommender, metricValue, recommendations);
@@ -96,6 +101,11 @@ namespace SignalBox.Core.Workflows
 
             foreach (var recommender in recommenders.Items)
             {
+                if (recommender?.Settings?.Enabled == false)
+                {
+                    logger.LogInformation($"Skipping trigger for recommender {recommender.Id}. Recommender is disabled");
+                    continue;
+                }
                 try
                 {
                     await InvokeParameterSetRecommenderMetricsChangedTrigger(recommender, metricValue, recommendations);

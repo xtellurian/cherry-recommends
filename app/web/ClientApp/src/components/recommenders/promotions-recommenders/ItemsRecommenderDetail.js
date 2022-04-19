@@ -23,7 +23,7 @@ import { CopyableField } from "../../molecules/fields/CopyableField";
 import { EntityField } from "../../molecules/EntityField";
 import { CloneRecommender } from "../utils/CloneRecommender";
 import { GettingStartedSection } from "./GettingStartedSection";
-import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
+import { PromotionRecommenderLayout } from "./PromotionRecommenderLayout";
 
 import { SegmentRow } from "../../segments/SegmentRow";
 import { useFeatureFlag } from "../../launch-darkly/hooks";
@@ -153,9 +153,9 @@ export const ItemRecommenderDelete = ({ iconClassName }) => {
 
 export const RecommenderDetail = () => {
   return (
-    <ItemRecommenderLayout>
+    <PromotionRecommenderLayout>
       <RecommenderDetailSection />
-    </ItemRecommenderLayout>
+    </PromotionRecommenderLayout>
   );
 };
 

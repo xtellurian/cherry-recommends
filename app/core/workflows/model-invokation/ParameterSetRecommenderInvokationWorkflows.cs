@@ -50,6 +50,7 @@ namespace SignalBox.Core.Workflows
             ParameterSetRecommenderModelInputV1 input,
             string? trigger = null)
         {
+            ThrowIfDisabled(recommender);
             // use the correlator to begin with because need to pass an event ID into some models
             await parameterSetRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             await parameterSetRecommenderStore.LoadMany(recommender, _ => _.Parameters);

@@ -32,6 +32,14 @@ namespace SignalBox.Core.Workflows
             return await store.QueryInvokationLogs(paginate, recommender.Id);
         }
 
+        protected void ThrowIfDisabled(T recommender)
+        {
+            if (recommender?.Settings?.Enabled == false)
+            {
+                throw new RecommenderInvokationException($"Recommender {recommender.Id} Disabled", "The recommender settings are preventing invokation.");
+            }
+        }
+
         protected async Task SendToDestinations(T recommender, RecommendingContext context, RecommendationEntity recommendation)
         {
             await store.LoadMany(recommender, _ => _.RecommendationDestinations);

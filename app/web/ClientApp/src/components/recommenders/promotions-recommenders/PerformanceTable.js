@@ -7,7 +7,7 @@ import {
 } from "../../../api-hooks/promotionsRecommendersApi";
 import { ErrorCard, Navigation, Spinner } from "../../molecules";
 import { ViewReportImagePopup } from "../utils/ViewImagePopup";
-import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
+import { PromotionRecommenderLayout } from "./PromotionRecommenderLayout";
 import {
   Table,
   TableBody,
@@ -74,7 +74,7 @@ const Performance = () => {
   const [reportOpen, setReportOpen] = React.useState(false);
   return (
     <React.Fragment>
-      <ItemRecommenderLayout>
+      <PromotionRecommenderLayout>
         {performance.error && <ErrorCard error={performance.error} />}
         {performance.loading && <Spinner />}
         {performance.performanceByItem && (
@@ -102,7 +102,7 @@ const Performance = () => {
             </React.Fragment>
           )}
         </div>
-      </ItemRecommenderLayout>
+      </PromotionRecommenderLayout>
     </React.Fragment>
   );
 };

@@ -6,7 +6,7 @@ import { useAccessToken } from "../../../api-hooks/token";
 import { AsyncButton } from "../../molecules";
 import { JsonView } from "../../molecules/JsonView";
 import { ConsumeRecommendationPopup } from "../utils/consumeRecommendationPopup";
-import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
+import { PromotionRecommenderLayout } from "./PromotionRecommenderLayout";
 import { AsyncSelectCustomer } from "../../molecules/selectors/AsyncSelectCustomer";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { AsyncSelectBusiness } from "../../molecules/selectors/AsyncSelectBusiness";
@@ -49,7 +49,7 @@ export const TestRecommender = () => {
 
   return (
     <React.Fragment>
-      <ItemRecommenderLayout>
+      <PromotionRecommenderLayout>
         <RecommenderCard title="Test">
           <Row>
             <div className="col">
@@ -111,7 +111,7 @@ export const TestRecommender = () => {
         <RecommenderCard title="Monitor">
           <MonitorRecommender />
         </RecommenderCard>
-      </ItemRecommenderLayout>
+      </PromotionRecommenderLayout>
     </React.Fragment>
   );
 };

@@ -33,12 +33,6 @@ export const createTargetVariableAsync =
 export const fetchInvokationLogsAsync =
   parameterSetRecommenders.fetchInvokationLogsAsync;
 
-export const updateErrorHandlingAsync =
-  parameterSetRecommenders.updateErrorHandlingAsync;
-
-export const fetchRecommenderTrackedUserActionsAsync =
-  parameterSetRecommenders.fetchRecommenderTrackedUserActionsAsync;
-
 export const setArgumentsAsync = parameterSetRecommenders.setArgumentsAsync;
 export const setSettingsAsync = parameterSetRecommenders.setSettingsAsync;
 

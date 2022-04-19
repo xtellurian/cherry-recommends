@@ -6,7 +6,7 @@ import { Destinations } from "./Destinations";
 import { Triggers } from "./Triggers";
 import { LearningMetrics } from "./LearningMetrics";
 import { Arguments } from "./Arguments";
-import { ItemRecommenderLayout } from "./ItemRecommenderLayout";
+import { PromotionRecommenderLayout } from "./PromotionRecommenderLayout";
 import { RecommenderCard } from "../RecommenderCard";
 import {
   ItemRecommenderClone,
@@ -85,7 +85,7 @@ export const SettingsPage = () => {
   ];
 
   return (
-    <ItemRecommenderLayout>
+    <PromotionRecommenderLayout>
       <Row className="mt-4">
         <SettingsNav nav={advancedMenu} />
       </Row>
@@ -105,6 +105,6 @@ export const SettingsPage = () => {
       <RecommenderCard ref={advancedRef} title="Advanced">
         <AdvancedSettings />
       </RecommenderCard>
-    </ItemRecommenderLayout>
+    </PromotionRecommenderLayout>
   );
 };
