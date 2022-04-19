@@ -8,50 +8,52 @@ namespace SignalBox.Core.Internal
         private static Dictionary<int, CheckistItem> InitialChecklist => new Dictionary<int, CheckistItem>
         {
             {
-                10,
+                11,
                 new CheckistItem
                 {
-                    label= "Connect Cherry",
-                    description= "Integrate Cherry to your application.",
+                    label= "Connect Cherry to your Stack",
+                    description= "Choose an integration from the Cherry App Library.",
                     actionTo= "/settings/integrations/create",
                     actionLabel= "Connect",
-                    docsLink="/docs/integrations/sources/segment",
+                    docsLink="/docs/integrations/library",
                     complete = false
                 }
             },
             {
-                21,
+                22,
                 new CheckistItem
                 {
                     label= "Create a Promotion",
                     description= "For example, 10% off next purchase.",
                     actionTo= "/promotions/create",
-                    actionLabel= "Create",
-                    docsLink="/docs/recommenders/choose-what-to-recommend/create_promotions",
+                    actionLabel= "Create Promotion",
+                    docsLink="/docs/guides/create_promotions",
                     complete = false,
                 }
             },
             {
-                31,
+                32,
                 new CheckistItem
                 {
-                    label= "Setup a Recommender",
-                    description= "A Recommender provides the best promotion for every customer or business.",
+                    label= "Create a Recommender",
+                    description= "A Promotion Recommender chooses the best promotion for every customer. "
+                     + "For example, a recommender can choose the best promotion for returning customers to your landing pages.",
                     actionTo= "/recommenders/promotions-recommenders/create",
                     actionLabel= "Setup",
-                    docsLink="/docs/recommenders/creating/create-promotion-recommender",
+                    docsLink="/docs/guides/create_promotion_recommender",
                     complete = false,
                 }
             },
             {
-                51,
+                52,
                 new CheckistItem
                 {
-                    label= "Consume Recommendations",
-                    description= "Ensure the recommendations are delivered to your customers and the results tracked.",
-                    actionTo= "/recommenders/promotions-recommenders/advanced/{recommenderId}?tab=advanced",
-                    actionLabel= "Consume",
-                    docsLink="/docs/recommenders/deploy-recommenders/consume/consume-recommendations",
+                    label= "Deliver Promotions via Channels",
+                    description= "Recommendations are delivered to Customers via Channels. "
+                        + "Channels may be your website, an email campaign, or backend systems.",
+                    actionTo= "/channels/create",
+                    actionLabel= "Deliver",
+                    docsLink="/docs/integrations/library",
                     complete = false
                 }
             },

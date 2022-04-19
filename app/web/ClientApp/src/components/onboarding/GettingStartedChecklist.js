@@ -46,7 +46,7 @@ const GettingStartedStep = ({
 
       <div>
         <h4>{step.label}</h4>
-        {`${step.description} `}
+        <p className="w-75">{`${step.description}`}</p>
 
         <a
           target="_blank"

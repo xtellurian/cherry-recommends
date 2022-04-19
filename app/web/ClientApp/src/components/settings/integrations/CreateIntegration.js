@@ -11,8 +11,65 @@ import { IntegrationIcon } from "./icons/IntegrationIcons";
 import { MoveUpHierarchyPrimaryButton, PageHeading } from "../../molecules";
 import { useNavigation } from "../../../utility/useNavigation";
 
-const systemTypes = ["Hubspot", "Segment", "Custom", "Website"];
+const systemTypes = ["Shopify", "Hubspot", "Segment", "Custom", "Website"];
 
+const ShopifyNextSteps = () => {
+  return (
+    <React.Fragment>
+      <div>
+        <p>
+          The Cherry Shopify app is currently under review. It will become
+          available on the Shopify App Store shortly.
+        </p>
+        <a href="https://apps.shopify.com/">
+          <button className="btn btn-primary">View on Shopify App Store</button>
+        </a>
+      </div>
+    </React.Fragment>
+  );
+};
+
+const GenericNextSteps = ({
+  handleCreate,
+  integratedSystem,
+  setIntegratedSystem,
+  creating = { creating },
+}) => {
+  return (
+    <React.Fragment>
+      <div className="row justify-content-center align-items-center">
+        <div className="col-3 text-capitalize">
+          <h3>{integratedSystem.systemType}</h3>
+        </div>
+        <div className="col-2">
+          <IntegrationIcon systemType={integratedSystem.systemType} />
+        </div>
+      </div>
+      <InputGroup className="mt-2 mb-2">
+        <TextInput
+          placeholder="System Name"
+          label="What name should we give the external system?"
+          value={integratedSystem.name}
+          onChange={(e) =>
+            setIntegratedSystem({
+              ...integratedSystem,
+              name: e.target.value,
+            })
+          }
+        />
+      </InputGroup>
+
+      <AsyncButton
+        loading={creating}
+        disabled={!integratedSystem.name || integratedSystem.name.length < 3}
+        className="btn btn-primary btn-block mt-3"
+        onClick={handleCreate}
+      >
+        Create
+      </AsyncButton>
+    </React.Fragment>
+  );
+};
 export const CreateIntegration = () => {
   const { navigate } = useNavigation();
   const token = useAccessToken();
@@ -47,12 +104,6 @@ export const CreateIntegration = () => {
       </MoveUpHierarchyPrimaryButton>
       <PageHeading title="Create New Integration" showHr />
       {error && <ErrorCard error={error} />}
-      <NoteBox className="m-3" label="What is an integration?">
-        Integrations allow you to automatically pull data or push
-        recommendations into various external systems. Select either Segment,
-        Hubspot, Custom or Website below. Give your integration a name, for
-        example: 'Production Segment Connection'
-      </NoteBox>
 
       {!integratedSystem.systemType && (
         <div className="m-5">
@@ -83,42 +134,17 @@ export const CreateIntegration = () => {
         </div>
       )}
 
-      {integratedSystem.systemType && (
-        <React.Fragment>
-          <div className="row justify-content-center align-items-center">
-            <div className="col-3 text-capitalize">
-              <h3>{integratedSystem.systemType}</h3>
-            </div>
-            <div className="col-2">
-              <IntegrationIcon systemType={integratedSystem.systemType} />
-            </div>
-          </div>
-          <InputGroup className="mt-2 mb-2">
-            <TextInput
-              placeholder="System Name"
-              label="What name should we give the external system?"
-              value={integratedSystem.name}
-              onChange={(e) =>
-                setIntegratedSystem({
-                  ...integratedSystem,
-                  name: e.target.value,
-                })
-              }
-            />
-          </InputGroup>
-
-          <AsyncButton
-            loading={creating}
-            disabled={
-              !integratedSystem.name || integratedSystem.name.length < 3
-            }
-            className="btn btn-primary btn-block mt-3"
-            onClick={handleCreate}
-          >
-            Create
-          </AsyncButton>
-        </React.Fragment>
-      )}
+      {integratedSystem.systemType &&
+        integratedSystem.systemType !== "Shopify" && (
+          <GenericNextSteps
+            handleCreate={handleCreate}
+            integratedSystem={integratedSystem}
+            setIntegratedSystem={setIntegratedSystem}
+            creating={creating}
+          />
+        )}
+      {integratedSystem.systemType &&
+        integratedSystem.systemType === "Shopify" && <ShopifyNextSteps />}
     </React.Fragment>
   );
 };
