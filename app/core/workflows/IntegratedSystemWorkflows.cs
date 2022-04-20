@@ -50,6 +50,12 @@ namespace SignalBox.Core.Workflows
                 {
                     var system = await systemStoreCollection.IntegratedSystemStore.Create(new IntegratedSystem($"New-{Guid.NewGuid()}".ToString(), name, systemType));
                     await storageContext.SaveChanges();
+
+                    if (system.SystemType == IntegratedSystemTypes.Segment)
+                    {
+                        await AddWebhookReceiver(system, true); // automatically add a webhook receiver for Sopify
+                    }
+
                     return system;
                 }
             }
@@ -59,7 +65,7 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        public async Task<TrackedUserSystemMap> LinkTrackedUserToSystem(string systemUserId, long integratedSystemId, string commonUserId)
+        public async Task<TrackedUserSystemMap> LinkCustomerToSystem(string systemUserId, long integratedSystemId, string commonUserId)
         {
             var system = await systemStoreCollection.IntegratedSystemStore.Read(integratedSystemId);
             var customer = await customerStore.ReadFromCommonId(commonUserId);
@@ -71,6 +77,11 @@ namespace SignalBox.Core.Workflows
         public async Task<WebhookReceiver> AddWebhookReceiver(long integratedSystemId, bool? includeSharedSecret)
         {
             var system = await systemStoreCollection.IntegratedSystemStore.Read(integratedSystemId);
+            return await AddWebhookReceiver(system, includeSharedSecret);
+        }
+
+        private async Task<WebhookReceiver> AddWebhookReceiver(IntegratedSystem system, bool? includeSharedSecret)
+        {
             switch (system.SystemType)
             {
                 case IntegratedSystemTypes.Segment:

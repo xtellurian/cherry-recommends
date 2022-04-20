@@ -71,7 +71,7 @@ export const useIntegratedSystem = ({ id, trigger }) => {
   return result;
 };
 
-export const useWebhookReceivers = ({ id }) => {
+export const useWebhookReceivers = ({ id, trigger }) => {
   const token = useAccessToken();
   const page = usePagination();
   const [result, setState] = React.useState({
@@ -98,7 +98,7 @@ export const useWebhookReceivers = ({ id }) => {
         });
     }
     return () => (mounted = false);
-  }, [token, id, page]);
+  }, [token, id, page, trigger]);
 
   return result;
 };

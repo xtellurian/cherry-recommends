@@ -22,6 +22,7 @@ import {
   useEnvironments,
 } from "../../../api-hooks/environmentsApi";
 import { useQuery } from "../../../utility/utility";
+import { LinkToDocs } from "./docs/LinkToDocs";
 
 export const IntegratedSystemDetail = () => {
   const token = useAccessToken();
@@ -115,8 +116,8 @@ export const IntegratedSystemDetail = () => {
         </React.Fragment>
       )}
       {!integratedSystem.loading && !integratedSystem.error && (
-        <div className="row justify-content-center">
-          <div className="col-4">
+        <div className="d-flex justify-content-around">
+          <div>
             <Subtitle>Information</Subtitle>
             <div>
               Name: {integratedSystem.name}{" "}
@@ -138,8 +139,11 @@ export const IntegratedSystemDetail = () => {
               </button>
             </div>
           </div>
-          <div className="col-2">
+          <div className="d-flex flex-column">
             <IntegrationIcon integration={integratedSystem} />
+            <div>
+              <LinkToDocs>Learn More</LinkToDocs>
+            </div>
           </div>
         </div>
       )}
