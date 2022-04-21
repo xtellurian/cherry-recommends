@@ -2134,6 +2134,14 @@ const updateChannelEndpointAsync = async ({ token, id, endpoint, }) => {
         body: endpoint,
     });
 };
+const updateChannelPropertiesAsync = async ({ token, id, properties, }) => {
+    return await executeFetch({
+        token,
+        path: `api/Channels/${id}/WebProperties`,
+        method: "post",
+        body: properties,
+    });
+};
 
 var channelsApi = /*#__PURE__*/Object.freeze({
   __proto__: null,
@@ -2141,7 +2149,8 @@ var channelsApi = /*#__PURE__*/Object.freeze({
   createChannelAsync: createChannelAsync,
   fetchChannelAsync: fetchChannelAsync,
   deleteChannelAsync: deleteChannelAsync,
-  updateChannelEndpointAsync: updateChannelEndpointAsync
+  updateChannelEndpointAsync: updateChannelEndpointAsync,
+  updateChannelPropertiesAsync: updateChannelPropertiesAsync
 });
 
 /**

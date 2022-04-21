@@ -30,13 +30,23 @@ namespace SignalBox.Core
         /// Recommender Id to invoke for popup offering promotions
         /// </summary>
         public long? RecommenderIdToInvoke { get; set; }
+        /// <summary>
+        /// Popup header
+        /// </summary>
+        public string PopupHeader { get; set; }
+        /// <summary>
+        /// Popup subheader
+        /// </summary>
+        public string PopupSubheader { get; set; }
         public override IDictionary<string, object> Properties =>
         new Dictionary<string, object>
         {
             {"host", Host},
             {"popupAskForEmail", PopupAskForEmail},
             {"popupDelay", PopupDelay},
-            {"recommenderIdToInvoke", RecommenderIdToInvoke}
+            {"recommenderIdToInvoke", RecommenderIdToInvoke},
+            {"popupHeader", PopupHeader},
+            {"popupSubheader", PopupSubheader}
         };
 
 #nullable enable

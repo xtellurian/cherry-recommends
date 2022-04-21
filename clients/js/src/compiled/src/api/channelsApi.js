@@ -35,3 +35,11 @@ export const updateChannelEndpointAsync = async ({ token, id, endpoint, }) => {
         body: endpoint,
     });
 };
+export const updateChannelPropertiesAsync = async ({ token, id, properties, }) => {
+    return await executeFetch({
+        token,
+        path: `api/Channels/${id}/WebProperties`,
+        method: "post",
+        body: properties,
+    });
+};

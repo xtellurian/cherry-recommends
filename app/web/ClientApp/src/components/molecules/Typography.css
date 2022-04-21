@@ -1,6 +1,6 @@
 .typography {
   font-family: Nunito;
-  color: var(--cherry-purple);
+  color: var(--cherry-black);
   margin-bottom: 0;
 }
 
@@ -25,7 +25,6 @@
 
 .typography.h5 {
   font-size: 14px;
-  color: var(--cherry-black);
 }
 
 .typography.h6 {

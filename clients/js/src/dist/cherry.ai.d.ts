@@ -1504,12 +1504,23 @@ interface UpdateChannelEnpointRequest extends EntityRequest {
     endpoint: string;
 }
 declare const updateChannelEndpointAsync: ({ token, id, endpoint, }: UpdateChannelEnpointRequest) => Promise<any>;
+interface UpdateChannelPropertiesRequest extends EntityRequest {
+    properties: {
+        popupAskForEmail: boolean;
+        popupDelay: number;
+        popupHeader: string;
+        popupSubheader: string;
+        recommenderId: number;
+    };
+}
+declare const updateChannelPropertiesAsync: ({ token, id, properties, }: UpdateChannelPropertiesRequest) => Promise<any>;
 
 declare const channelsApi_d_fetchChannelsAsync: typeof fetchChannelsAsync;
 declare const channelsApi_d_createChannelAsync: typeof createChannelAsync;
 declare const channelsApi_d_fetchChannelAsync: typeof fetchChannelAsync;
 declare const channelsApi_d_deleteChannelAsync: typeof deleteChannelAsync;
 declare const channelsApi_d_updateChannelEndpointAsync: typeof updateChannelEndpointAsync;
+declare const channelsApi_d_updateChannelPropertiesAsync: typeof updateChannelPropertiesAsync;
 declare namespace channelsApi_d {
   export {
     channelsApi_d_fetchChannelsAsync as fetchChannelsAsync,
@@ -1517,6 +1528,7 @@ declare namespace channelsApi_d {
     channelsApi_d_fetchChannelAsync as fetchChannelAsync,
     channelsApi_d_deleteChannelAsync as deleteChannelAsync,
     channelsApi_d_updateChannelEndpointAsync as updateChannelEndpointAsync,
+    channelsApi_d_updateChannelPropertiesAsync as updateChannelPropertiesAsync,
   };
 }
 

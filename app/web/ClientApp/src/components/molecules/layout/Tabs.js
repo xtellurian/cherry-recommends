@@ -30,7 +30,7 @@ export const Tabs = ({ tabs, defaultTabId }) => {
   const { pathname: currentPathname } = useLocation();
 
   return (
-    <ul className="nav nav-tabs nav-fill mb-2">
+    <ul className="nav nav-tabs nav-fill mb-4">
       {tabs.map((t) => (
         <QueryStringTabListItem
           key={t.id}

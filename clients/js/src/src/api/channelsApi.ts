@@ -68,3 +68,25 @@ export const updateChannelEndpointAsync = async ({
     body: endpoint,
   });
 };
+
+interface UpdateChannelPropertiesRequest extends EntityRequest {
+  properties: {
+    popupAskForEmail: boolean,
+    popupDelay: number,
+    popupHeader: string,
+    popupSubheader: string,
+    recommenderId: number
+  };
+}
+export const updateChannelPropertiesAsync = async ({
+  token,
+  id,
+  properties,
+}: UpdateChannelPropertiesRequest) => {
+  return await executeFetch({
+    token,
+    path: `api/Channels/${id}/WebProperties`,
+    method: "post",
+    body: properties,
+  });
+};

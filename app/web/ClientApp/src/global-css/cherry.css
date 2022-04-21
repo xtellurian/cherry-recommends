@@ -9,6 +9,7 @@
 
   --cherry-purple-alpha: rgba(40, 9, 56, 0.1);
   --cherry-pink-alpha: rgba(229, 0, 138, 0.1);
+  --cherry-black-alpha: rgba(0, 0, 0, 0.1);
 
   --navbar-height: 67px; /* 768 and up */
   --sidebar-width: 15rem; /* 768 and up */

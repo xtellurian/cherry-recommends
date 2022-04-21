@@ -5,6 +5,7 @@ import { fetchIntegratedSystemsAsync } from "../../../api/integratedSystemsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 
 export const AsyncSelectIntegratedSystem = ({
+  value,
   onChange,
   placeholder,
   allowNone,
@@ -34,8 +35,14 @@ export const AsyncSelectIntegratedSystem = ({
       .catch((e) => console.error(e));
   };
 
+  const newValue =
+    value !== undefined
+      ? entitiesSelectable?.find((el) => el?.value?.id === value?.id) || null
+      : undefined;
+
   return (
     <AsyncSelector
+      value={newValue}
       defaultOptions={entitiesSelectable}
       placeholder={placeholder || "Search..."}
       cacheOptions

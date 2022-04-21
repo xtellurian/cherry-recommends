@@ -11,4 +11,14 @@ interface UpdateChannelEnpointRequest extends EntityRequest {
     endpoint: string;
 }
 export declare const updateChannelEndpointAsync: ({ token, id, endpoint, }: UpdateChannelEnpointRequest) => Promise<any>;
+interface UpdateChannelPropertiesRequest extends EntityRequest {
+    properties: {
+        popupAskForEmail: boolean;
+        popupDelay: number;
+        popupHeader: string;
+        popupSubheader: string;
+        recommenderId: number;
+    };
+}
+export declare const updateChannelPropertiesAsync: ({ token, id, properties, }: UpdateChannelPropertiesRequest) => Promise<any>;
 export {};

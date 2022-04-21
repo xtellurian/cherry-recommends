@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useAccessToken } from "../../api-hooks/token";
 import { createChannelAsync } from "../../api/channelsApi";
 import { Title } from "../molecules/layout";
@@ -11,52 +11,39 @@ import { useNavigation } from "../../utility/useNavigation";
 import Select from "../molecules/selectors/Select";
 import CreatePageLayout from "../molecules/layout/CreatePageLayout";
 
+const channelTypeOptions = [
+  { value: "webhook", label: "Webhook" },
+  { value: "web", label: "Web" },
+];
+
+const defaultChannel = {
+  name: "",
+  channelType: "webhook",
+  integratedSystemId: -1,
+};
+
 export const CreateChannel = () => {
-  const [newChannel, setNewChannel] = React.useState({
-    name: "",
-    type: "webhook",
-    integratedSystemId: -1,
-  });
-
-  const channelTypeOptions = [{ value: "webhook", label: "Webhook" }];
-  const setSelectedChannelType = (o) => {
-    setNewChannel({ ...newChannel, type: o.value });
-  };
-
-  const [systemType, setSystemType] = React.useState();
-  const [selectedIntegratedSystem, setSelectedIntegratedSystem] =
-    React.useState();
-
-  React.useEffect(() => {
-    if (selectedIntegratedSystem) {
-      if (selectedIntegratedSystem.systemType === "custom") {
-        setNewChannel({
-          ...newChannel,
-          type: "webhook",
-          integratedSystemId: selectedIntegratedSystem.id,
-        });
-      }
-    }
-  }, [selectedIntegratedSystem]);
-
-  React.useEffect(() => {
-    if (newChannel.type === "webhook") {
-      setSystemType("custom");
-    } else {
-      setSystemType(null);
-    }
-  }, [newChannel.type]);
-
   const token = useAccessToken();
   const { navigate } = useNavigation();
   const { analytics } = useAnalytics();
-  const [error, setError] = React.useState();
-  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
+  const [newChannel, setNewChannel] = useState(defaultChannel);
+  const [systemType, setSystemType] = useState(null);
+  const [selectedIntegratedSystem, setSelectedIntegratedSystem] =
+    useState(null);
+
+  const setSelectedChannelType = (o) => {
+    setNewChannel({ ...newChannel, channelType: o.value });
+  };
 
   const handleCreate = () => {
     setLoading(true);
     createChannelAsync({
-      channel: newChannel,
+      channel: {
+        ...newChannel,
+        integratedSystemId: selectedIntegratedSystem.id,
+      },
       token,
     })
       .then((u) => {
@@ -70,6 +57,16 @@ export const CreateChannel = () => {
       .finally(() => setLoading(false));
   };
 
+  useEffect(() => {
+    const channelSystemTypes = {
+      webhook: "custom",
+      web: "website",
+    };
+
+    setSelectedIntegratedSystem(null); // clears the selected integrated system when channelType changes
+    setSystemType(channelSystemTypes[newChannel.channelType] || null);
+  }, [newChannel.channelType]);
+
   return (
     <React.Fragment>
       <CreatePageLayout
@@ -79,8 +76,9 @@ export const CreateChannel = () => {
             className="btn btn-primary"
             onClick={handleCreate}
             disabled={
-              !selectedIntegratedSystem ||
-              selectedIntegratedSystem.systemType !== "custom"
+              !newChannel.name ||
+              !newChannel.channelType ||
+              !selectedIntegratedSystem
             }
           >
             Create
@@ -91,7 +89,7 @@ export const CreateChannel = () => {
         <hr />
         {error && <ErrorCard error={error} />}
         <div className="text-warning">
-          Currently supports Webhook channel type only.
+          Currently supports Webhook and Web channel types.
         </div>
         <InputGroup className="mb-1">
           <TextInput
@@ -119,6 +117,7 @@ export const CreateChannel = () => {
         <div>
           <div>Choose an integrated system</div>
           <AsyncSelectIntegratedSystem
+            value={selectedIntegratedSystem}
             systemType={systemType}
             onChange={(v) => setSelectedIntegratedSystem(v.value)}
           />
