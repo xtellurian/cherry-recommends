@@ -50,10 +50,21 @@ header a {
   transition: all 0.3s ease 0s;
   border-radius: 20px;
 }
+
 .btn-primary {
   color: var(--cherry-white);
   background-color: var(--cherry-dark-pink);
   border-color: var(--cherry-dark-pink);
+}
+.btn-primary:not(:disabled):not(.disabled):active {
+  color: #fff;
+  background-color: var(--cherry-teal);
+  border-color: var(--cherry-dark-teal);
+}
+.show > .btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: var(--cherry-teal);
+  border-color: var(--cherry-dark-teal);
 }
 .btn-outline-primary {
   color: var(--cherry-dark-pink);
@@ -97,7 +108,7 @@ header a {
   border-radius: 0px;
 }
 .btn-group > .btn {
-  min-width: 100px;
+  min-width: 50px;
 }
 
 a {
