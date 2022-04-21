@@ -12,7 +12,7 @@ namespace SignalBox.Core.Workflows
         private readonly IRecommenderStore<T> store;
         private readonly IHistoricCustomerMetricStore customerMetricStore;
         private readonly IWebhookSenderClient webhookSender;
-        private readonly IDateTimeProvider dateTimeProvider;
+        protected readonly IDateTimeProvider dateTimeProvider;
 
         public RecommenderInvokationWorkflowBase(
                                                  IRecommenderStore<T> store,

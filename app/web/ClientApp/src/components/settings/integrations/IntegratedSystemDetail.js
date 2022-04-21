@@ -21,7 +21,7 @@ import {
   useEnvironmentReducer,
   useEnvironments,
 } from "../../../api-hooks/environmentsApi";
-import { useQuery } from "../../../utility/utility";
+import { generateRandomHexColor, useQuery } from "../../../utility/utility";
 import { LinkToDocs } from "./docs/LinkToDocs";
 
 export const IntegratedSystemDetail = () => {
@@ -46,6 +46,10 @@ export const IntegratedSystemDetail = () => {
       .then(setDeleteOpen(false))
       .then(() => navigate("/settings/integrations"))
       .catch(setDeleteError);
+  };
+
+  const handleReload = () => {
+    setReloadTrigger(generateRandomHexColor());
   };
 
   React.useEffect(() => {
@@ -166,7 +170,10 @@ export const IntegratedSystemDetail = () => {
         <HubspotOverview integratedSystem={integratedSystem} />
       )}
       {shopifyFlag && integratedSystem.systemType === "shopify" && (
-        <ShopifyOverview integratedSystem={integratedSystem} />
+        <ShopifyOverview
+          integratedSystem={integratedSystem}
+          onReload={handleReload}
+        />
       )}
     </React.Fragment>
   );

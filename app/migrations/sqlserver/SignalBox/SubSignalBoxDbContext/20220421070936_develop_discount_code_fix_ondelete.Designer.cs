@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220421070936_develop_discount_code_fix_ondelete")]
+    partial class develop_discount_code_fix_ondelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2015,12 +2017,6 @@ namespace sqlserver.SignalBox
 
                     b.Property<int?>("PopupDelay")
                         .HasColumnType("int");
-
-                    b.Property<string>("PopupHeader")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PopupSubheader")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("RecommenderIdToInvoke")
                         .HasColumnType("bigint");

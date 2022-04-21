@@ -17,12 +17,14 @@ export const joinValidators = (validators) => {
   };
 };
 
-var commonIdFormat = /[!$%*+\\[\]{};':",.\/?]+/;
+var commonIdFormat = /^[a-zA-Z0-9_\-|.@]+$/;
 export const commonIdFormatValidator = (value) => {
   if (!value || value.length === 0) {
     return [];
-  } else if (value && commonIdFormat.test(value)) {
-    return ["Must not contain special characters"];
+  } else if (value && !commonIdFormat.test(value)) {
+    return [
+      "Must only contain alpha-numeric, underscore, hyphen, bar, period or at sign",
+    ];
   } else {
     return [];
   }

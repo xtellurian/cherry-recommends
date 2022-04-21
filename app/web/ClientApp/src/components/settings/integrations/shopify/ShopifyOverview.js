@@ -3,10 +3,13 @@ import { useAnalytics } from "../../../../analytics/analyticsHooks";
 import { useEnvironmentReducer } from "../../../../api-hooks/environmentsApi";
 import { useShopInformation } from "../../../../api-hooks/shopifyApi";
 import { useAccessToken } from "../../../../api-hooks/token";
+import { setIsDCGeneratorAsync } from "../../../../api/integratedSystemsApi";
 import { shopifyDisconnectAsync } from "../../../../api/shopifyApi";
-import { useNavigation } from "../../../../utility/useNavigation";
 import { AsyncButton, ErrorCard, Spinner } from "../../../molecules";
+import { AdvancedOptionsPanel } from "../../../molecules/layout/AdvancedOptionsPanel";
+import { SettingRow } from "../../../molecules/layout/SettingRow";
 import { ConfirmationPopup } from "../../../molecules/popups/ConfirmationPopup";
+import { ToggleSwitch } from "../../../molecules/ToggleSwitch";
 import { useTenantName } from "../../../tenants/PathTenantProvider";
 
 const ShopDetails = ({ shop }) => {
@@ -26,12 +29,11 @@ const ShopDetails = ({ shop }) => {
   );
 };
 
-export const ShopifyOverview = ({ integratedSystem }) => {
+export const ShopifyOverview = ({ integratedSystem, onReload }) => {
   const [error, setError] = React.useState();
   const [isOpen, setIsOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  const { navigate } = useNavigation();
   const { analytics } = useAnalytics();
   const token = useAccessToken();
   const shop = useShopInformation({ id: integratedSystem.id });
@@ -63,16 +65,37 @@ export const ShopifyOverview = ({ integratedSystem }) => {
           analytics.track(
             "site:settings_integration_shopify_disconnect_success"
           );
-          navigate(`/settings/integrations/detail/${integratedSystem.id}`);
+          if (onReload) {
+            onReload();
+          }
         })
         .catch((e) => {
           analytics.track(
             "site:settings_integration_shopify_disconnect_failure"
           );
           setError(e);
+        })
+        .finally(() => {
           setLoading(false);
+          setIsOpen(false);
         });
     }
+  };
+
+  const handleToggleDCGenerator = (checked) => {
+    setIsDCGeneratorAsync({
+      id: integratedSystem.id,
+      token,
+      value: checked,
+    })
+      .then(() => {
+        if (onReload) {
+          onReload();
+        }
+      })
+      .catch((e) => {
+        setError(e);
+      });
   };
 
   return (
@@ -111,6 +134,26 @@ export const ShopifyOverview = ({ integratedSystem }) => {
               Disconnect from Shopify
             </button>
           )}
+        </div>
+      </div>
+      <div className="row">
+        <div className="col">
+          <AdvancedOptionsPanel>
+            {integratedSystem.loading && <Spinner />}
+            {!integratedSystem.loading && !integratedSystem.error && (
+              <SettingRow
+                label="Discount Code Generator"
+                description="When enabled, promotions recommender invokations will generate discount codes in Shopify. 
+                  Only one discount code per promotion can be generated within a single day."
+              >
+                <ToggleSwitch
+                  id="isDiscountCodeGenerator"
+                  checked={integratedSystem.isDiscountCodeGenerator}
+                  onChange={handleToggleDCGenerator}
+                />
+              </SettingRow>
+            )}
+          </AdvancedOptionsPanel>
         </div>
       </div>
     </React.Fragment>

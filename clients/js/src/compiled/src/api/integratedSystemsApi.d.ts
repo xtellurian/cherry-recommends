@@ -29,3 +29,8 @@ export function createWebhookReceiverAsync({ token, id, useSharedSecret, }: {
     id: any;
     useSharedSecret: any;
 }): Promise<any>;
+export function setIsDCGeneratorAsync({ token, id, value }: {
+    token: any;
+    id: any;
+    value: any;
+}): Promise<any>;

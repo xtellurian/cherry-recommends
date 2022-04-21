@@ -113,7 +113,7 @@ namespace SignalBox.Core.Adapters.Shopify
         /// Applicable discount codes that can be applied to the order.
         /// </summary>
         [JsonPropertyName("discount_codes")]
-        public IEnumerable<DiscountCode> DiscountCodes { get; set; }
+        public IEnumerable<ShopifyDiscountCode> DiscountCodes { get; set; }
 
         /// <summary>
         /// An ordered list of amounts allocated by discount applications. Each discount allocation is associated to a particular discount application.

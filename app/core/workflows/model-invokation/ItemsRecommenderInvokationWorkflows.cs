@@ -19,8 +19,9 @@ namespace SignalBox.Core.Workflows
         private readonly IRecommendationCorrelatorStore correlatorStore;
         private readonly IItemsRecommenderStore itemsRecommenderStore;
         private readonly IItemsRecommendationStore itemsRecommendationStore;
-        private readonly IInternalOptimiserClientFactory optimiserClientFactory;
         private readonly IAudienceStore audienceStore;
+        private readonly IInternalOptimiserClientFactory optimiserClientFactory;
+        private readonly IDiscountCodeWorkflow discountCodeWorkflow;
 
         public ItemsRecommenderInvokationWorkflows(ILogger<ItemsRecommenderInvokationWorkflows> logger,
                                     IDateTimeProvider dateTimeProvider,
@@ -35,7 +36,8 @@ namespace SignalBox.Core.Workflows
                                     IItemsRecommenderStore itemsRecommenderStore,
                                     IItemsRecommendationStore itemsRecommendationStore,
                                     IAudienceStore audienceStore,
-                                    IInternalOptimiserClientFactory optimiserClientFactory)
+                                    IInternalOptimiserClientFactory optimiserClientFactory,
+                                    IDiscountCodeWorkflow discountCodeWorkflow)
                                      : base(itemsRecommenderStore, historicMetricStore, webhookSenderClient, dateTimeProvider)
         {
             this.logger = logger;
@@ -47,8 +49,9 @@ namespace SignalBox.Core.Workflows
             this.correlatorStore = correlatorStore;
             this.itemsRecommenderStore = itemsRecommenderStore;
             this.itemsRecommendationStore = itemsRecommendationStore;
-            this.optimiserClientFactory = optimiserClientFactory;
             this.audienceStore = audienceStore;
+            this.optimiserClientFactory = optimiserClientFactory;
+            this.discountCodeWorkflow = discountCodeWorkflow;
         }
 
         public async Task<ItemsRecommendation> InvokeItemsRecommender(
@@ -97,6 +100,7 @@ namespace SignalBox.Core.Workflows
                         // ensure to load the items
                         await itemsRecommendationStore.LoadMany(rec, _ => _.Items);
                         await itemsRecommendationStore.Load(rec, _ => _.RecommendationCorrelator);
+                        await itemsRecommendationStore.LoadMany(rec, _ => _.DiscountCodes);
                         context.Correlator = rec.RecommendationCorrelator;
                         await base.EndTrackInvokation(context, true, "Completed using cached recommendation");
                         return rec;
@@ -128,8 +132,6 @@ namespace SignalBox.Core.Workflows
                 {
                     throw new BadRequestException("Failed invokation - unknown target.");
                 }
-
-
 
                 // load the metrics for the invokation
                 input.Metrics = await base.GetMetrics(recommender, context);
@@ -212,6 +214,8 @@ namespace SignalBox.Core.Workflows
                         throw new ModelInvokationException("The model did not return a valid item." +
                          $"ItemCommonId: {scoredItem.ItemCommonId}, CommonId: {scoredItem.CommonId}, ItemId: {scoredItem.ItemId}, Score: {scoredItem.Score}");
                     }
+
+                    scoredItem.DiscountCodes = await discountCodeWorkflow.GenerateDiscountCodes(scoredItem.Item);
                 }
 
                 return await HandleRecommendation(recommender, context, input, output);

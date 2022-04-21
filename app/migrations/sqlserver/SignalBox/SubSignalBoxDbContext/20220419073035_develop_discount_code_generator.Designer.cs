@@ -3,20 +3,22 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220419073035_develop_discount_code_generator")]
+    partial class develop_discount_code_generator
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.16")
+                .HasAnnotation("ProductVersion", "5.0.15")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("AudienceSegment", b =>
@@ -47,21 +49,6 @@ namespace sqlserver.SignalBox
                     b.HasIndex("RecommendersId");
 
                     b.ToTable("RecommenderChannel");
-                });
-
-            modelBuilder.Entity("DiscountCodeIntegratedSystem", b =>
-                {
-                    b.Property<long>("GeneratedAtId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("GeneratedDiscountCodesId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("GeneratedAtId", "GeneratedDiscountCodesId");
-
-                    b.HasIndex("GeneratedDiscountCodesId");
-
-                    b.ToTable("DiscountCodeIntegratedSystem");
                 });
 
             modelBuilder.Entity("DiscountCodeItemsRecommendation", b =>
@@ -137,34 +124,6 @@ namespace sqlserver.SignalBox
                     b.HasIndex("ParametersId");
 
                     b.ToTable("ParameterParameterSetRecommender");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Accounts.BillingAccount", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("PlanType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BillingAccount", t => t.ExcludeFromMigrations());
                 });
 
             modelBuilder.Entity("SignalBox.Core.Audience", b =>
@@ -1802,9 +1761,6 @@ namespace sqlserver.SignalBox
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("AccountId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -1827,8 +1783,6 @@ namespace sqlserver.SignalBox
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
 
                     b.HasIndex("DatabaseName")
                         .IsUnique();
@@ -2007,23 +1961,13 @@ namespace sqlserver.SignalBox
                 {
                     b.HasBaseType("SignalBox.Core.ChannelBase");
 
-                    b.Property<string>("Host")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Endpoint")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Endpoint");
 
-                    b.Property<bool?>("PopupAskForEmail")
+                    b.Property<bool>("PopupAskForEmail")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("PopupDelay")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PopupHeader")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PopupSubheader")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("RecommenderIdToInvoke")
-                        .HasColumnType("bigint");
 
                     b.ToTable("Channels");
 
@@ -2035,7 +1979,9 @@ namespace sqlserver.SignalBox
                     b.HasBaseType("SignalBox.Core.ChannelBase");
 
                     b.Property<string>("Endpoint")
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Endpoint");
 
                     b.ToTable("Channels");
 
@@ -2281,21 +2227,6 @@ namespace sqlserver.SignalBox
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DiscountCodeIntegratedSystem", b =>
-                {
-                    b.HasOne("SignalBox.Core.IntegratedSystem", null)
-                        .WithMany()
-                        .HasForeignKey("GeneratedAtId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignalBox.Core.DiscountCode", null)
-                        .WithMany()
-                        .HasForeignKey("GeneratedDiscountCodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DiscountCodeItemsRecommendation", b =>
                 {
                     b.HasOne("SignalBox.Core.DiscountCode", null)
@@ -2509,7 +2440,7 @@ namespace sqlserver.SignalBox
                     b.HasOne("SignalBox.Core.RecommendableItem", "Promotion")
                         .WithMany()
                         .HasForeignKey("PromotionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Environment");
@@ -2954,16 +2885,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("Segment");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Tenant", b =>
-                {
-                    b.HasOne("SignalBox.Core.Accounts.BillingAccount", "Account")
-                        .WithMany("Tenants")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Account");
-                });
-
             modelBuilder.Entity("SignalBox.Core.TenantMembership", b =>
                 {
                     b.HasOne("SignalBox.Core.Tenant", "Tenant")
@@ -3093,11 +3014,6 @@ namespace sqlserver.SignalBox
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Metric");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Accounts.BillingAccount", b =>
-                {
-                    b.Navigation("Tenants");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Customer", b =>

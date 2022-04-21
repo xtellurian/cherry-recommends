@@ -70,5 +70,24 @@ namespace SignalBox.Core
             // default to true, since no char violated the rule
             return true;
         }
+
+        /// <summary>Converts string to alpha numeric with an optional allowed characters.</summary>
+        public static string ToAlphaNumeric(this string self,
+                                        params char[] allowedCharacters)
+        {
+            return new string(Array.FindAll(self.ToCharArray(),
+                                            c => char.IsLetterOrDigit(c) ||
+                                            allowedCharacters.Contains(c)));
+        }
+
+        private static Random random = new Random();
+
+        /// <summary>Generates a random string with specified length. Not safe for anything security related.</summary>
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
     }
 }

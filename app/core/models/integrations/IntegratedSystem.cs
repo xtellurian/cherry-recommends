@@ -52,5 +52,8 @@ namespace SignalBox.Core
         [JsonIgnore]
         public string Cache { get; set; }
         public string Discriminator { get; set; }
+        public bool IsDiscountCodeGenerator { get; set; }
+        [JsonIgnore]
+        public ICollection<DiscountCode> GeneratedDiscountCodes { get; set; }
     }
 }

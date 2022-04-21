@@ -37,6 +37,8 @@ namespace SignalBox.Infrastructure.EntityFramework
             builder
                 .Property(_ => _.Properties)
                 .HasJsonConversion();
+
+            builder.Property(_ => _.IsDiscountCodeGenerator).HasDefaultValue(false);
         }
     }
 

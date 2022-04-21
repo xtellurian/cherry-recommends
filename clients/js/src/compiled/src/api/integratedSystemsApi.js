@@ -57,3 +57,11 @@ export const createWebhookReceiverAsync = async ({ token, id, useSharedSecret, }
         },
     });
 };
+export const setIsDCGeneratorAsync = async ({ token, id, value }) => {
+    return await executeFetch({
+        path: `api/integratedSystems/${id}/dcgenerator`,
+        token,
+        method: "post",
+        body: value,
+    });
+};

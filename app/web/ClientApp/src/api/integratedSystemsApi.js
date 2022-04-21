@@ -19,3 +19,5 @@ export const createWebhookReceiverAsync =
   integratedSystems.createWebhookReceiverAsync;
 
 export const renameAsync = integratedSystems.renameAsync;
+
+export const setIsDCGeneratorAsync = integratedSystems.setIsDCGeneratorAsync;

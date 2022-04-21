@@ -1994,6 +1994,32 @@ export interface paths {
       };
     };
   };
+  "/api/IntegratedSystems/{id}/dcgenerator": {
+    post: {
+      parameters: {
+        path: {
+          id: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": boolean;
+          "text/json": boolean;
+          "application/*+json": boolean;
+        };
+      };
+    };
+  };
   "/api/IntegratedSystems/{id}/name": {
     post: {
       parameters: {
@@ -8471,6 +8497,17 @@ export interface components {
       success?: boolean;
     };
     DestinationTrigger: { [key: string]: unknown };
+    DiscountCode: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      environmentId?: number | null;
+      environment?: components["schemas"]["Environment"];
+      code?: string | null;
+      startsAt?: string | null;
+      endsAt?: string | null;
+      promotionId?: number;
+    };
     Empty: {
       get?: components["schemas"]["Get"];
     };
@@ -8633,6 +8670,7 @@ export interface components {
       integrationStatus?: components["schemas"]["IntegrationStatuses"];
       tokenResponseUpdated?: string | null;
       discriminator?: string | null;
+      isDiscountCodeGenerator?: boolean;
     };
     IntegratedSystemPaginated: {
       items?: components["schemas"]["IntegratedSystem"][] | null;
@@ -9212,6 +9250,7 @@ export interface components {
       itemCommonId?: string | null;
       commonId?: string | null;
       item?: components["schemas"]["RecommendableItem"];
+      discountCodes?: components["schemas"]["DiscountCode"][] | null;
       score?: number | null;
     };
     SecurityDefinitions: {

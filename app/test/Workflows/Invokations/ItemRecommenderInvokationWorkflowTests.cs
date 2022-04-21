@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using SignalBox.Core;
@@ -35,6 +36,7 @@ namespace SignalBox.Test.Stores
             var mockItemsRecommendationStore = new Mock<IItemsRecommendationStore>();
             var mockAudienceStore = new Mock<IAudienceStore>();
             var mockInternalOptimiserClientFactory = new Mock<IInternalOptimiserClientFactory>();
+            var mockDiscountCodeWorkflow = new Mock<IDiscountCodeWorkflow>();
 
             var sut = new ItemsRecommenderInvokationWorkflows(
                 mockLogger.Object,
@@ -50,7 +52,8 @@ namespace SignalBox.Test.Stores
                 mockItemsRecommenderStore.Object,
                 mockItemsRecommendationStore.Object,
                 mockAudienceStore.Object,
-                mockInternalOptimiserClientFactory.Object
+                mockInternalOptimiserClientFactory.Object,
+                mockDiscountCodeWorkflow.Object
             );
 
             var baseline = new RecommendableItem("item1", "Item 1", 1, 1, BenefitType.Percent, 1, PromotionType.Discount, null);
@@ -87,6 +90,7 @@ namespace SignalBox.Test.Stores
             var mockItemsRecommendationStore = new Mock<IItemsRecommendationStore>();
             var mockAudienceStore = new Mock<IAudienceStore>();
             var mockInternalOptimiserClientFactory = new Mock<IInternalOptimiserClientFactory>();
+            var mockDiscountCodeWorkflow = new Mock<IDiscountCodeWorkflow>();
 
             var sut = new ItemsRecommenderInvokationWorkflows(
                 mockLogger.Object,
@@ -102,7 +106,8 @@ namespace SignalBox.Test.Stores
                 mockItemsRecommenderStore.Object,
                 mockItemsRecommendationStore.Object,
                 mockAudienceStore.Object,
-                mockInternalOptimiserClientFactory.Object
+                mockInternalOptimiserClientFactory.Object,
+                mockDiscountCodeWorkflow.Object
             );
 
             var baseline = new RecommendableItem("item1", "Item 1", 1, 1, BenefitType.Percent, 1, PromotionType.Discount, null);

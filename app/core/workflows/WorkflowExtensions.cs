@@ -54,6 +54,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<IShopifyWebhookWorkflow, ShopifyWebhookWorkflow>();
             services.AddScoped<ISegmentWebhookWorkflow, SegmentWebhookWorkflow>();
             services.AddScoped<IIntegratedSystemWorkflow, IntegratedSystemWorkflows>();
+            services.AddScoped<IDiscountCodeWorkflow, DiscountCodeWorkflows>();
             return services;
         }
     }

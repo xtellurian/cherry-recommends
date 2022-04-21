@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -9,7 +9,6 @@ using ShopifySharp;
 using SignalBox.Core;
 using SignalBox.Core.Adapters.Shopify;
 using SignalBox.Core.Integrations;
-using SignalBox.Core.Serialization;
 
 /// <summary>Uses the ShopifySharp library. Github: https://github.com/nozzlegear/ShopifySharp</summary>
 namespace SignalBox.Infrastructure.Services
@@ -57,13 +56,12 @@ namespace SignalBox.Infrastructure.Services
         }
         #endregion
 
-        public async Task<Core.Adapters.Shopify.ShopifyShop> GetShopInformation(string shopifyUrl, string accessToken)
+        public async Task<ShopifyShop> GetShopInformation(string shopifyUrl, string accessToken)
         {
             var service = new ShopService(shopifyUrl, accessToken);
-            var shop = await service.GetAsync();
-            var shopifyShop = Serializer.Deserialize<Core.Adapters.Shopify.ShopifyShop>(Serializer.Serialize(shop));
+            var _ = await service.GetAsync();
 
-            return shopifyShop;
+            return _.ToCoreRepresentation();
         }
 
         public async Task<bool> UninstallApp(string shopifyUrl, string accessToken)
@@ -84,8 +82,7 @@ namespace SignalBox.Infrastructure.Services
         public async Task<ShopifyWebhook> CreateWebhook(string shopifyUrl, string accessToken, string address, string topic, IEnumerable<string> fields = null, IEnumerable<string> metafieldNamespaces = null)
         {
             var service = new WebhookService(shopifyUrl, accessToken);
-
-            Webhook webhook = new Webhook()
+            var _ = new Webhook()
             {
                 Address = address,
                 CreatedAt = DateTime.Now,
@@ -94,11 +91,43 @@ namespace SignalBox.Infrastructure.Services
                 MetafieldNamespaces = metafieldNamespaces,
                 Topic = topic,
             };
+            _ = await service.CreateAsync(_);
 
-            webhook = await service.CreateAsync(webhook);
-            var shopifyWebhook = Serializer.Deserialize<ShopifyWebhook>(Serializer.Serialize(webhook));
+            return _.ToCoreRepresentation();
+        }
 
-            return shopifyWebhook;
+        public async Task<ShopifyPriceRule> CreatePriceRule(string shopifyUrl, string accessToken, ShopifyPriceRule priceRule)
+        {
+            var service = new PriceRuleService(shopifyUrl, accessToken);
+            var _ = priceRule.ToShopifySharpRepresentation();
+            _ = await service.CreateAsync(_);
+
+            return _.ToCoreRepresentation();
+        }
+
+        public async Task<IEnumerable<ShopifyPriceRule>> GetPriceRules(string shopifyUrl, string accessToken)
+        {
+            var service = new PriceRuleService(shopifyUrl, accessToken);
+            var entities = await service.ListAsync();
+
+            return entities.Items.Select(_ => _.ToCoreRepresentation());
+        }
+
+        public async Task<ShopifyPriceRule> GetPriceRule(string shopifyUrl, string accessToken, long priceRuleId)
+        {
+            var service = new PriceRuleService(shopifyUrl, accessToken);
+            var _ = await service.GetAsync(priceRuleId);
+
+            return _.ToCoreRepresentation();
+        }
+
+        public async Task<ShopifyPriceRuleDiscountCode> CreateDiscountCode(string shopifyUrl, string accessToken, long priceRuleId, ShopifyPriceRuleDiscountCode discountCode)
+        {
+            var service = new DiscountCodeService(shopifyUrl, accessToken);
+            var _ = discountCode.ToShopifySharpRepresentation();
+            _ = await service.CreateAsync(priceRuleId, _);
+
+            return _.ToCoreRepresentation();
         }
     }
 }

@@ -63,6 +63,9 @@ namespace SignalBox.Infrastructure
         public DbSet<ParameterSetRecommendation> ParameterSetRecommendations { get; set; }
         public DbSet<ItemsRecommendation> ItemsRecommendations { get; set; }
 
+        // discount codes
+        public DbSet<DiscountCode> DiscountCodes { get; set; }
+
         // promotion channels
         public DbSet<ChannelBase> Channels { get; set; }
         public DbSet<WebhookChannel> WebhookChannels { get; set; }

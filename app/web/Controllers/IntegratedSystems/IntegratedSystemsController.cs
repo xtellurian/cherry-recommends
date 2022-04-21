@@ -92,5 +92,14 @@ namespace SignalBox.Web.Controllers
                 return await base.Query(p, q);
             }
         }
+
+        /// <summary>Toggle for the determining if the system can be used as a discount code generator.</summary>
+        [HttpPost("{id}/dcgenerator")]
+        public async Task<IActionResult> SetIsDiscountCodeGenerator(long id, [FromBody] bool value)
+        {
+            await workflows.SetIsDiscountCodeGenerator(id, value);
+
+            return NoContent();
+        }
     }
 }

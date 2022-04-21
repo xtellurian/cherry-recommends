@@ -2861,6 +2861,14 @@
           },
       });
   };
+  const setIsDCGeneratorAsync = async ({ token, id, value }) => {
+      return await executeFetch({
+          path: `api/integratedSystems/${id}/dcgenerator`,
+          token,
+          method: "post",
+          body: value,
+      });
+  };
 
   var integratedSystemsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -2870,7 +2878,8 @@
     createIntegratedSystemAsync: createIntegratedSystemAsync,
     deleteIntegratedSystemAsync: deleteIntegratedSystemAsync,
     fetchWebhookReceiversAsync: fetchWebhookReceiversAsync,
-    createWebhookReceiverAsync: createWebhookReceiverAsync
+    createWebhookReceiverAsync: createWebhookReceiverAsync,
+    setIsDCGeneratorAsync: setIsDCGeneratorAsync
   });
 
   const fetchModelRegistrationsAsync = async ({ token, page }) => {

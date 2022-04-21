@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace SignalBox.Core.Adapters.Shopify
 {
-    public class DiscountCode : ShopifyObjectBase
+    public class ShopifyDiscountCode : ShopifyObjectBase
     {
         /// <summary>
         /// The amount of the discount.

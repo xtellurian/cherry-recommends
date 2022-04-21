@@ -178,6 +178,9 @@ namespace SignalBox.Infrastructure
             services.AddScoped<ICustomIntegratedSystemStore, EFCustomIntegratedSystemStore>();
             services.AddScoped<IWebsiteIntegratedSystemStore, EFWebsiteIntegratedSystemStore>();
 
+            // discount codes
+            services.AddScoped<IDiscountCodeStore, EFDiscountCodeStore>();
+
             services.AddScoped<IStorageContext, EFStorageContext>();
             services.RegisterCollections();
 

@@ -4160,6 +4160,58 @@
         }
       }
     },
+    "/api/IntegratedSystems/{id}/dcgenerator": {
+      "post": {
+        "tags": [
+          "IntegratedSystems"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/IntegratedSystems/{id}/name": {
       "post": {
         "tags": [
@@ -16440,7 +16492,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-|]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|.@]+$",
             "type": "string"
           },
           "name": {
@@ -17185,7 +17237,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-|]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|.@]+$",
             "type": "string"
           },
           "name": {
@@ -17298,7 +17350,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-|]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|.@]+$",
             "type": "string"
           },
           "name": {
@@ -17432,7 +17484,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-|]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|.@]+$",
             "type": "string"
           },
           "name": {
@@ -17465,7 +17517,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-|]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|.@]+$",
             "type": "string"
           },
           "name": {
@@ -17547,7 +17599,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-|]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|.@]+$",
             "type": "string"
           },
           "name": {
@@ -17600,7 +17652,7 @@
           "commonId": {
             "maxLength": 99,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\-|]+$",
+            "pattern": "^[a-zA-Z0-9_\\-|.@]+$",
             "type": "string"
           },
           "name": {
@@ -18084,6 +18136,50 @@
       },
       "DestinationTrigger": {
         "type": "object",
+        "additionalProperties": false
+      },
+      "DiscountCode": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "environmentId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "environment": {
+            "$ref": "#/components/schemas/Environment"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "promotionId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
         "additionalProperties": false
       },
       "Empty": {
@@ -18674,6 +18770,9 @@
           "discriminator": {
             "type": "string",
             "nullable": true
+          },
+          "isDiscountCodeGenerator": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -20903,6 +21002,13 @@
           },
           "item": {
             "$ref": "#/components/schemas/RecommendableItem"
+          },
+          "discountCodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscountCode"
+            },
+            "nullable": true
           },
           "score": {
             "type": "number",

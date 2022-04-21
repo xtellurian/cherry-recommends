@@ -99,5 +99,13 @@ namespace SignalBox.Core.Workflows
             await storageContext.SaveChanges();
             return webhookReceiver;
         }
+
+        public async Task SetIsDiscountCodeGenerator(long integratedSystemId, bool value)
+        {
+            var system = await systemStoreCollection.IntegratedSystemStore.Read(integratedSystemId);
+            system.IsDiscountCodeGenerator = value;
+            await systemStoreCollection.IntegratedSystemStore.Update(system);
+            await storageContext.SaveChanges();
+        }
     }
 }

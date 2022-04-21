@@ -6,7 +6,7 @@ using SignalBox.Core.Integrations;
 
 namespace SignalBox.Core.Workflows
 {
-    public abstract class ShopifyWorkflowBase : IWorkflow
+    public abstract class ShopifyWorkflowBase : IShopifyWorkflowBase
     {
         protected readonly IDateTimeProvider dateTimeProvider;
         protected readonly IStorageContext storageContext;
@@ -94,7 +94,7 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        protected string GetShopifyUrl(IntegratedSystem system)
+        public string GetShopifyUrl(IntegratedSystem system)
         {
             var cache = system.GetCache<ShopifyCache>();
             var shopifyUrl = cache.StoreCredentials.ShopifyUrl;
@@ -107,7 +107,7 @@ namespace SignalBox.Core.Workflows
             return shopifyUrl;
         }
 
-        protected string GetAccessToken(IntegratedSystem system)
+        public string GetAccessToken(IntegratedSystem system)
         {
             var cache = system.GetCache<ShopifyCache>();
             var accessToken = cache.StoreCredentials.AccessToken;

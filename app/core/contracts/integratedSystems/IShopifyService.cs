@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
 using SignalBox.Core.Adapters.Shopify;
@@ -18,5 +17,9 @@ namespace SignalBox.Core
         Task<ShopifyShop> GetShopInformation(string shopifyUrl, string accessToken);
         Task<bool> UninstallApp(string shopifyUrl, string accessToken);
         Task<ShopifyWebhook> CreateWebhook(string shopifyUrl, string accessToken, string address, string topic, IEnumerable<string> fields = null, IEnumerable<string> metafieldNamespaces = null);
+        Task<ShopifyPriceRule> CreatePriceRule(string shopifyUrl, string accessToken, ShopifyPriceRule priceRule);
+        Task<IEnumerable<ShopifyPriceRule>> GetPriceRules(string shopifyUrl, string accessToken);
+        Task<ShopifyPriceRule> GetPriceRule(string shopifyUrl, string accessToken, long priceRuleId);
+        Task<ShopifyPriceRuleDiscountCode> CreateDiscountCode(string shopifyUrl, string accessToken, long priceRuleId, ShopifyPriceRuleDiscountCode discountCode);
     }
 }

@@ -556,6 +556,17 @@ interface components {
         DestinationTrigger: {
             [key: string]: unknown;
         };
+        DiscountCode: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            code?: string | null;
+            startsAt?: string | null;
+            endsAt?: string | null;
+            promotionId?: number;
+        };
         Empty: {
             get?: components["schemas"]["Get"];
         };
@@ -716,6 +727,7 @@ interface components {
             integrationStatus?: components["schemas"]["IntegrationStatuses"];
             tokenResponseUpdated?: string | null;
             discriminator?: string | null;
+            isDiscountCodeGenerator?: boolean;
         };
         IntegratedSystemPaginated: {
             items?: components["schemas"]["IntegratedSystem"][] | null;
@@ -1299,6 +1311,7 @@ interface components {
             itemCommonId?: string | null;
             commonId?: string | null;
             item?: components["schemas"]["RecommendableItem"];
+            discountCodes?: components["schemas"]["DiscountCode"][] | null;
             score?: number | null;
         };
         SecurityDefinitions: {
@@ -1994,6 +2007,11 @@ declare function createWebhookReceiverAsync({ token, id, useSharedSecret, }: {
     id: any;
     useSharedSecret: any;
 }): Promise<any>;
+declare function setIsDCGeneratorAsync({ token, id, value }: {
+    token: any;
+    id: any;
+    value: any;
+}): Promise<any>;
 
 declare const integratedSystemsApi_d_fetchIntegratedSystemsAsync: typeof fetchIntegratedSystemsAsync;
 declare const integratedSystemsApi_d_fetchIntegratedSystemAsync: typeof fetchIntegratedSystemAsync;
@@ -2002,6 +2020,7 @@ declare const integratedSystemsApi_d_createIntegratedSystemAsync: typeof createI
 declare const integratedSystemsApi_d_deleteIntegratedSystemAsync: typeof deleteIntegratedSystemAsync;
 declare const integratedSystemsApi_d_fetchWebhookReceiversAsync: typeof fetchWebhookReceiversAsync;
 declare const integratedSystemsApi_d_createWebhookReceiverAsync: typeof createWebhookReceiverAsync;
+declare const integratedSystemsApi_d_setIsDCGeneratorAsync: typeof setIsDCGeneratorAsync;
 declare namespace integratedSystemsApi_d {
   export {
     integratedSystemsApi_d_fetchIntegratedSystemsAsync as fetchIntegratedSystemsAsync,
@@ -2011,6 +2030,7 @@ declare namespace integratedSystemsApi_d {
     integratedSystemsApi_d_deleteIntegratedSystemAsync as deleteIntegratedSystemAsync,
     integratedSystemsApi_d_fetchWebhookReceiversAsync as fetchWebhookReceiversAsync,
     integratedSystemsApi_d_createWebhookReceiverAsync as createWebhookReceiverAsync,
+    integratedSystemsApi_d_setIsDCGeneratorAsync as setIsDCGeneratorAsync,
   };
 }
 
