@@ -9,6 +9,7 @@ export const hash = {
   metrics: "#metrics",
   parameters: "#parameters",
   integration: "#integrations",
+  promotionsRecommenders: "#promotions_recommenders",
 };
 
 export const metricsHash = {

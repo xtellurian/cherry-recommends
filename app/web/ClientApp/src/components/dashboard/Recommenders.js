@@ -5,6 +5,7 @@ import { EmptyState, Navigation, Spinner } from "../molecules";
 import { NoteBox } from "../molecules/NoteBox";
 import { EmptyStateText } from "../molecules/empty/EmptyStateText";
 import { RecommenderRow } from "../recommenders/RecommenderRow";
+import { hash } from "../menu/MenuIA";
 
 const MAX_LIST_LENGTH = 5;
 export const Recommenders = ({ className, hasItems }) => {
@@ -50,7 +51,12 @@ export const Recommenders = ({ className, hasItems }) => {
                 You haven't created any recommenders.
               </EmptyStateText>
 
-              <Navigation to="/recommenders/promotions-recommenders/create">
+              <Navigation
+                to={{
+                  pathname: "/recommenders/promotions-recommenders/create",
+                  hash: hash.promotionsRecommenders,
+                }}
+              >
                 <button disabled={!hasItems} className="btn btn-primary">
                   Create a Recommender
                 </button>
@@ -58,7 +64,12 @@ export const Recommenders = ({ className, hasItems }) => {
             </EmptyState>
           )}
           <div className="text-center text-muted">
-            <Navigation to="/recommenders/promotions-recommenders">
+            <Navigation
+              to={{
+                pathname: "/recommenders/promotions-recommenders",
+                hash: hash.promotionsRecommenders,
+              }}
+            >
               <button className="btn btn-link btn-sm">View More</button>
             </Navigation>
           </div>

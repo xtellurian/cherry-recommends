@@ -4,6 +4,7 @@ import { PromotionRow } from "../promotions/PromotionRow";
 import { NoteBox } from "../molecules/NoteBox";
 import { EmptyStateText } from "../molecules/empty/EmptyStateText";
 import { Navigation } from "../molecules";
+import { hash } from "../menu/MenuIA";
 
 const MAX_LIST_LENGTH = 5;
 export const Items = ({ className, items }) => {
@@ -26,13 +27,23 @@ export const Items = ({ className, items }) => {
               <EmptyStateText>
                 You haven't created any promotions.
               </EmptyStateText>
-              <Navigation to="/promotions/create">
+              <Navigation
+                to={{
+                  pathname: "/promotions/create",
+                  hash: hash.promotions,
+                }}
+              >
                 <button className="btn btn-primary">Create a Promotion</button>
               </Navigation>
             </EmptyState>
           )}
           <div className="text-center text-muted">
-            <Navigation to="/promotions">
+            <Navigation
+              to={{
+                pathname: "/promotions",
+                hash: hash.promotions,
+              }}
+            >
               <button className="btn btn-link btn-sm">View More</button>
             </Navigation>
           </div>
