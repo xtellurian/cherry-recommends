@@ -101,6 +101,7 @@ namespace SignalBox.Core.Workflows
                         await itemsRecommendationStore.LoadMany(rec, _ => _.Items);
                         await itemsRecommendationStore.Load(rec, _ => _.RecommendationCorrelator);
                         await itemsRecommendationStore.LoadMany(rec, _ => _.DiscountCodes);
+                        await discountCodeWorkflow.LoadGeneratedAt(rec.DiscountCodes);
                         context.Correlator = rec.RecommendationCorrelator;
                         await base.EndTrackInvokation(context, true, "Completed using cached recommendation");
                         return rec;

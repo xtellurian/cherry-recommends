@@ -15,14 +15,14 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public Task<EntityResult<DiscountCode>> GetFromCode(string code)
         {
-            var entity = QuerySet.Include(_ => _.Promotion).FirstOrDefault(_ => _.Code == code);
+            var entity = QuerySet.FirstOrDefault(_ => _.Code == code);
 
             return Task.FromResult(new EntityResult<DiscountCode>(entity));
         }
 
         public Task<EntityResult<DiscountCode>> GetLatestByPromotion(RecommendableItem promotion)
         {
-            var entity = QuerySet.Include(_ => _.Promotion).OrderByDescending(_ => _.Created).FirstOrDefault(_ => _.PromotionId == promotion.Id);
+            var entity = QuerySet.OrderByDescending(_ => _.Created).FirstOrDefault(_ => _.PromotionId == promotion.Id);
 
             return Task.FromResult(new EntityResult<DiscountCode>(entity));
         }

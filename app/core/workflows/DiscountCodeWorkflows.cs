@@ -57,6 +57,7 @@ namespace SignalBox.Core.Workflows
                         result.Entity.IsActiveByDate(dateTimeProvider.Now))
                     {
                         discountCode = result.Entity;
+                        await discountCodeStore.LoadMany(discountCode, _ => _.GeneratedAt);
                     }
                 }
                 else
@@ -78,6 +79,14 @@ namespace SignalBox.Core.Workflows
             }
 
             return discountCodes;
+        }
+
+        public async Task LoadGeneratedAt(IEnumerable<DiscountCode> discountCodes)
+        {
+            foreach (var discountCode in discountCodes)
+            {
+                await discountCodeStore.LoadMany(discountCode, _ => _.GeneratedAt);
+            }
         }
     }
 }

@@ -28,7 +28,6 @@ namespace SignalBox.Core
         public RecommendableItem Promotion { get; set; }
         [JsonIgnore]
         public ICollection<ItemsRecommendation> Recommendations { get; set; }
-        [JsonIgnore]
         public ICollection<IntegratedSystem> GeneratedAt { get; set; } = new List<IntegratedSystem>();
 
         public bool WasCreatedOnDate(DateTimeOffset createdDate)

@@ -6,5 +6,6 @@ namespace SignalBox.Core
     public interface IDiscountCodeWorkflow
     {
         Task<IEnumerable<DiscountCode>> GenerateDiscountCodes(RecommendableItem promotion);
+        Task LoadGeneratedAt(IEnumerable<DiscountCode> discountCodes);
     }
 }
