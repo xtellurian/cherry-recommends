@@ -55,6 +55,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ISegmentWebhookWorkflow, SegmentWebhookWorkflow>();
             services.AddScoped<IIntegratedSystemWorkflow, IntegratedSystemWorkflows>();
             services.AddScoped<IDiscountCodeWorkflow, DiscountCodeWorkflows>();
+            services.AddScoped<IKlaviyoSystemWorkflow, KlaviyoSystemWorkflow>();
             return services;
         }
     }

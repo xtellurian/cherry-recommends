@@ -6,6 +6,8 @@ const segmentIcon =
   "https://docshostcce3f6dc.blob.core.windows.net/content/images/Segment-Favicon.png";
 const shopifyIcon =
   "https://docshostcce3f6dc.blob.core.windows.net/content/images/Shopify-Bag.png";
+const klaviyoIcon =
+  "https://docshostcce3f6dc.blob.core.windows.net/content/images/Klaviyo-Icon.png";
 
 export const IntegrationIcon = ({ integration, systemType }) => {
   if (!systemType) {
@@ -22,12 +24,20 @@ export const IntegrationIcon = ({ integration, systemType }) => {
     case "shopify":
       src = shopifyIcon;
       break;
+    case "klaviyo":
+      src = klaviyoIcon;
+      break;
     default:
       break;
   }
   if (src) {
     return (
-      <img src={src} className="img-thumbnail" alt={`${systemType} Icon`}></img>
+      <img
+        src={src}
+        className="img-thumbnail"
+        alt={`${systemType} Icon`}
+        style={{ maxHeight: "200px" }}
+      ></img>
     );
   } else if (systemType?.toLowerCase() === "custom") {
     return <PlusCircleDotted size={50} />;

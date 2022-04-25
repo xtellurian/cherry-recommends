@@ -6,6 +6,7 @@ namespace SignalBox.Core
         Hubspot,
         Shopify,
         Custom,
-        Website
+        Website,
+        Klaviyo
     }
 }

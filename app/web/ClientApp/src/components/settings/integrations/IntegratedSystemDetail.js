@@ -23,6 +23,7 @@ import {
 } from "../../../api-hooks/environmentsApi";
 import { generateRandomHexColor, useQuery } from "../../../utility/utility";
 import { LinkToDocs } from "./docs/LinkToDocs";
+import { KlaviyoConfiguration } from "./klaviyo/KlaviyoConfiguration";
 
 export const IntegratedSystemDetail = () => {
   const token = useAccessToken();
@@ -174,6 +175,9 @@ export const IntegratedSystemDetail = () => {
           integratedSystem={integratedSystem}
           onReload={handleReload}
         />
+      )}
+      {integratedSystem.systemType === "klaviyo" && (
+        <KlaviyoConfiguration integratedSystem={integratedSystem} />
       )}
     </React.Fragment>
   );

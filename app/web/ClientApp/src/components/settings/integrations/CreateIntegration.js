@@ -5,13 +5,19 @@ import { useAccessToken } from "../../../api-hooks/token";
 import { createIntegratedSystemAsync } from "../../../api/integratedSystemsApi";
 import { ErrorCard } from "../../molecules/ErrorCard";
 import { AsyncButton } from "../../molecules/AsyncButton";
-import { NoteBox } from "../../molecules/NoteBox";
 import { TextInput, InputGroup } from "../../molecules/TextInput";
 import { IntegrationIcon } from "./icons/IntegrationIcons";
 import { MoveUpHierarchyPrimaryButton, PageHeading } from "../../molecules";
 import { useNavigation } from "../../../utility/useNavigation";
 
-const systemTypes = ["Shopify", "Hubspot", "Segment", "Custom", "Website"];
+const systemTypes = [
+  "Shopify",
+  "Hubspot",
+  "Segment",
+  "Klaviyo",
+  "Custom",
+  "Website",
+];
 
 const ShopifyNextSteps = () => {
   return (
