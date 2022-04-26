@@ -101,3 +101,20 @@ export const shopifyDisconnectAsync = async ({
     throw await response.json();
   }
 };
+
+export const fetchIntegratedSystemAsync = async ({
+  token,
+  tenant,
+  id,
+  environment,
+}) => {
+  const url = `api/integratedsystems/${id}/shopify`;
+  const response = await fetch(url, {
+    headers: headers(token, tenant, environment),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};

@@ -21,5 +21,7 @@ namespace SignalBox.Core
         Task<IEnumerable<ShopifyPriceRule>> GetPriceRules(string shopifyUrl, string accessToken);
         Task<ShopifyPriceRule> GetPriceRule(string shopifyUrl, string accessToken, long priceRuleId);
         Task<ShopifyPriceRuleDiscountCode> CreateDiscountCode(string shopifyUrl, string accessToken, long priceRuleId, ShopifyPriceRuleDiscountCode discountCode);
+        Task<ShopifyRecurringCharge> CreateRecurringCharge(string shopifyUrl, string accessToken, ShopifyRecurringCharge recurringCharge);
+        Task<IEnumerable<ShopifyRecurringCharge>> ListRecurringCharges(string shopifyUrl, string accessToken);
     }
 }

@@ -3,7 +3,10 @@ import { useAccessToken } from "../../../../api-hooks/token";
 import { useQuery } from "../../../../utility/utility";
 import { Title } from "../../../molecules/layout";
 import { ErrorCard } from "../../../molecules/ErrorCard";
-import { shopifyConnectAsync } from "../../../../api/shopifyApi";
+import {
+  fetchIntegratedSystemAsync,
+  shopifyConnectAsync,
+} from "../../../../api/shopifyApi";
 import { useAnalytics } from "../../../../analytics/analyticsHooks";
 import { useNavigation } from "../../../../utility/useNavigation";
 import { Selector } from "../../../molecules";
@@ -69,6 +72,10 @@ export const ShopifyConnector = () => {
   const query = useQuery();
   const code = query.get("code");
   const shop = query.get("shop");
+  const xId = query.get("x-id");
+  const xTenant = query.get("x-tenant");
+  const xEnvironment = query.get("x-environment");
+  const chargeId = query.get("charge_id");
 
   const defaultStage = code && shop ? stages[2] : stages[0];
 
@@ -127,7 +134,7 @@ export const ShopifyConnector = () => {
   }, [environments]);
 
   React.useEffect(() => {
-    if (hosting && !memberships.loading && !environments.loading) {
+    if (!xId && hosting && !memberships.loading && !environments.loading) {
       // Single tenant and single environment scenario
       if (
         hosting.multitenant &&
@@ -151,13 +158,30 @@ export const ShopifyConnector = () => {
         });
       }
     }
-  }, [memberships, environments, hosting]);
+  }, [memberships, environments, hosting, xId]);
 
   React.useEffect(() => {
-    if (data.force) {
+    if (data.force && token) {
       handleConnect();
     }
-  }, [data.force]);
+  }, [data.force, token]);
+
+  React.useEffect(() => {
+    if (token && xId) {
+      fetchIntegratedSystemAsync({
+        token: token,
+        id: xId,
+        tenant: xTenant,
+        environment: xEnvironment,
+      })
+        .then((v) => {
+          setStage(stages[3]);
+          setIntegratedSystem(v);
+          setError();
+        })
+        .catch((e) => setError(e));
+    }
+  }, [token, xId, xTenant, xEnvironment]);
 
   const handleConnect = () => {
     const qsParams = new URLSearchParams(window.location.search);
@@ -168,10 +192,14 @@ export const ShopifyConnector = () => {
       qs: qsParams.toString(),
     })
       .then((v) => {
-        setStage(stages[3]);
-        setIntegratedSystem(v);
-        setError();
         analytics.track("site:settings_integration_shopify_connect_success");
+        if (v.chargeConfirmationUrl) {
+          window.location.href = v.chargeConfirmationUrl;
+        } else {
+          setStage(stages[3]);
+          setIntegratedSystem(v.integratedSystem);
+          setError();
+        }
       })
       .catch((e) => {
         analytics.track("site:settings_integration_shopify_connect_failure");
@@ -208,7 +236,7 @@ export const ShopifyConnector = () => {
       {<ErrorCard error={error} />}
       <SystemStateView
         integratedSystem={integratedSystem}
-        tenant={data.tenant}
+        tenant={data.tenant ?? xTenant}
       />
       <ProgressView stage={stage} />
       {loading && (

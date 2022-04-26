@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GraphQL;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.SystemTextJson;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
@@ -81,19 +84,51 @@ namespace SignalBox.Infrastructure.Services
 
         public async Task<ShopifyWebhook> CreateWebhook(string shopifyUrl, string accessToken, string address, string topic, IEnumerable<string> fields = null, IEnumerable<string> metafieldNamespaces = null)
         {
-            var service = new WebhookService(shopifyUrl, accessToken);
-            var _ = new Webhook()
+            using (var client = new GraphQLHttpClient($"https://{shopifyUrl}/admin/api/2022-04/graphql.json", new SystemTextJsonSerializer()))
             {
-                Address = address,
-                CreatedAt = DateTime.Now,
-                Fields = fields,
-                Format = "json",
-                MetafieldNamespaces = metafieldNamespaces,
-                Topic = topic,
-            };
-            _ = await service.CreateAsync(_);
+                client.HttpClient.DefaultRequestHeaders.Add("X-Shopify-Access-Token", accessToken);
 
-            return _.ToCoreRepresentation();
+                var request = new GraphQLRequest
+                {
+                    Query = @"
+                        mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
+                            webhookSubscriptionCreate(topic: $topic, webhookSubscription: $webhookSubscription) {
+                                userErrors {
+                                    field
+                                    message
+                                }
+                                webhookSubscription {
+                                    id: legacyResourceId
+                                    admin_graphql_api_id: id
+                                    topic
+                                    format
+                                    createdAt
+                                    updatedAt
+                                    endpoint {
+                                        ... on WebhookHttpEndpoint {
+                                            callbackUrl
+                                        }
+                                    }
+                                }
+                            }
+                        }",
+                    Variables = new
+                    {
+                        topic = topic,
+                        webhookSubscription = new
+                        {
+                            callbackUrl = address,
+                            format = "JSON"
+                        }
+                    },
+                    OperationName = "webhookSubscriptionCreate"
+                };
+
+                var response = await client.SendMutationAsync<ShopifyWebhookCreateResponse>(request);
+                HandleErrors(response.Data, response.Errors);
+
+                return response.Data.Mutation.WebhookSubscription;
+            }
         }
 
         public async Task<ShopifyPriceRule> CreatePriceRule(string shopifyUrl, string accessToken, ShopifyPriceRule priceRule)
@@ -128,6 +163,34 @@ namespace SignalBox.Infrastructure.Services
             _ = await service.CreateAsync(priceRuleId, _);
 
             return _.ToCoreRepresentation();
+        }
+
+        public async Task<ShopifyRecurringCharge> CreateRecurringCharge(string shopifyUrl, string accessToken, ShopifyRecurringCharge recurringCharge)
+        {
+            var service = new RecurringChargeService(shopifyUrl, accessToken);
+            var charge = recurringCharge.ToShopifySharpRepresentation();
+            charge = await service.CreateAsync(charge);
+            return charge.ToCoreRepresentation();
+        }
+
+        public async Task<IEnumerable<ShopifyRecurringCharge>> ListRecurringCharges(string shopifyUrl, string accessToken)
+        {
+            var service = new RecurringChargeService(shopifyUrl, accessToken);
+            var entities = await service.ListAsync();
+            return entities.Select(_ => _.ToCoreRepresentation());
+        }
+
+        private void HandleErrors<T>(IMutationResponse<T> response, GraphQLError[] errors)
+            where T : IMutationResponseData
+        {
+            if (errors != null && errors.Any())
+            {
+                throw new BadRequestException(errors[0].Message);
+            }
+            if (response.Mutation.UserErrors.Any())
+            {
+                throw new BadRequestException(response.Mutation.UserErrors[0].Message);
+            }
         }
     }
 }

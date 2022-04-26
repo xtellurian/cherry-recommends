@@ -196,6 +196,7 @@ namespace SignalBox.Web
             services.Configure<Auth0M2MClient>(Configuration.GetSection("Auth0").GetSection("M2M"));
             services.Configure<HubspotAppCredentials>(Configuration.GetSection("HubSpot").GetSection("AppCredentials"));
             services.Configure<ShopifyAppCredentials>(Configuration.GetSection("Shopify").GetSection("AppCredentials"));
+            services.Configure<ShopifyBilling>(Configuration.GetSection("Shopify").GetSection("Billing"));
             services.Configure<Hosting>(Configuration.GetSection("Hosting"));
             services.Configure<PythonAzureFunctionsConnectionOptions>(Configuration.GetSection("PythonFunctions"));
             services.Configure<DotnetAzureFunctionsConnectionOptions>(Configuration.GetSection("DotnetFunctions"));

@@ -265,5 +265,54 @@ namespace SignalBox.Infrastructure
                 UsageCount = _.UsageCount
             };
         }
+
+        // recurring charges
+        public static ShopifyRecurringCharge ToCoreRepresentation(this RecurringCharge _)
+        {
+            return new ShopifyRecurringCharge
+            {
+                Id = _.Id,
+                ActivatedOn = _.ActivatedOn,
+                AdminGraphQLAPIId = _.AdminGraphQLAPIId,
+                BillingOn = _.BillingOn,
+                CreatedAt = _.CreatedAt,
+                CancelledOn = _.CancelledOn,
+                CappedAmount = _.CappedAmount,
+                ConfirmationUrl = _.ConfirmationUrl,
+                Name = _.Name,
+                Price = _.Price,
+                ReturnUrl = _.ReturnUrl,
+                Status = _.Status,
+                Terms = _.Terms,
+                Test = _.Test,
+                TrialDays = _.TrialDays,
+                TrialEndsOn = _.TrialEndsOn,
+                UpdatedAt = _.UpdatedAt,
+            };
+        }
+
+        public static RecurringCharge ToShopifySharpRepresentation(this ShopifyRecurringCharge _)
+        {
+            return new RecurringCharge
+            {
+                Id = _.Id,
+                ActivatedOn = _.ActivatedOn,
+                AdminGraphQLAPIId = _.AdminGraphQLAPIId,
+                BillingOn = _.BillingOn,
+                CreatedAt = _.CreatedAt,
+                CancelledOn = _.CancelledOn,
+                CappedAmount = _.CappedAmount,
+                ConfirmationUrl = _.ConfirmationUrl,
+                Name = _.Name,
+                Price = _.Price,
+                ReturnUrl = _.ReturnUrl,
+                Status = _.Status,
+                Terms = _.Terms,
+                Test = _.Test,
+                TrialDays = _.TrialDays,
+                TrialEndsOn = _.TrialEndsOn,
+                UpdatedAt = _.UpdatedAt,
+            };
+        }
     }
 }

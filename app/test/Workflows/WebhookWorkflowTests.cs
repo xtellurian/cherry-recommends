@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using SignalBox.Core;
@@ -118,7 +119,10 @@ namespace SignalBox.Test.Workflows
             // arrange
             var serialized = Serializer.Serialize(model);
             var endpointId = Guid.NewGuid().ToString();
-            var integratedSystem = new IntegratedSystem("shopify-test", "Shopify", IntegratedSystemTypes.Shopify);
+            var integratedSystem = new IntegratedSystem("shopify-test", "Shopify", IntegratedSystemTypes.Shopify)
+            {
+                IntegrationStatus = IntegrationStatuses.OK
+            };
             var webhookReceiver = new WebhookReceiver(endpointId, integratedSystem);
             var mockLogger = Utility.MockLogger<WebhookWorkflows>();
             var mockWebhookReceiverStore = new Mock<IWebhookReceiverStore>();
@@ -138,7 +142,8 @@ namespace SignalBox.Test.Workflows
             var mockIntegratedSystemStore = new Mock<IIntegratedSystemStore>();
             mockIntegratedSystemStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
             var mockShopifyAdminWorkflow = new Mock<IShopifyAdminWorkflow>();
-            var mockShopifyWebhookWorkflow = new ShopifyWebhookWorkflow(mockStorageContext.Object, mockShopifyService.Object, Utility.MockLogger<ShopifyWebhookWorkflow>().Object, mockIntegratedSystemStore.Object, mockCustomerEventsWorkflows.Object, mockTenantProvider.Object, mockShopifyAdminWorkflow.Object);
+            var mockBillingInfo = new Mock<IOptions<Core.Integrations.ShopifyBilling>>();
+            var mockShopifyWebhookWorkflow = new ShopifyWebhookWorkflow(mockStorageContext.Object, mockShopifyService.Object, Utility.MockLogger<ShopifyWebhookWorkflow>().Object, mockIntegratedSystemStore.Object, mockCustomerEventsWorkflows.Object, mockTenantProvider.Object, mockShopifyAdminWorkflow.Object, mockBillingInfo.Object);
             var sut = new WebhookWorkflows(mockLogger.Object, mockTenantProvider.Object, mockWebhookReceiverStore.Object, mockCustomerEventsWorkflows.Object, segmentWebhookWorkflow.Object, mockShopifyWebhookWorkflow);
             var mockHeaders = new Dictionary<string, StringValues>()
             {

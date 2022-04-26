@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ namespace SignalBox.Core.Workflows
 #nullable enable
     public class ShopifyAdminWorkflows : ShopifyWorkflowBase, IShopifyAdminWorkflow
     {
+        private readonly ShopifyBilling billingInfo;
         private readonly IIntegratedSystemWorkflow integratedSystemWorkflows;
         private readonly IEnvironmentProvider environmentProvider;
 
@@ -19,11 +21,13 @@ namespace SignalBox.Core.Workflows
             IShopifyService shopifyService,
             IntegratedSystemStoreCollection systemStoreCollection,
             IOptions<ShopifyAppCredentials> creds,
+            IOptions<ShopifyBilling> billingInfo,
             ILogger<ShopifyAdminWorkflows> logger,
             IIntegratedSystemWorkflow integratedSystemWorkflows,
             IEnvironmentProvider environmentProvider)
             : base(dateTimeProvider, storageContext, shopifyService, systemStoreCollection, creds, logger)
         {
+            this.billingInfo = billingInfo.Value;
             this.integratedSystemWorkflows = integratedSystemWorkflows;
             this.environmentProvider = environmentProvider;
         }
@@ -36,7 +40,7 @@ namespace SignalBox.Core.Workflows
                 environmentProvider.SetOverride(environmentId);
             }
 
-            IntegratedSystem system = null!;
+            IntegratedSystem system;
             // Read or create integrated system
             if (await systemStoreCollection.IntegratedSystemStore.ExistsFromCommonId(shop))
             {
@@ -67,15 +71,15 @@ namespace SignalBox.Core.Workflows
                 var receiverUrl = webhookReceiverUrl.Replace("x-endpoint-id", webhookReceiver.EndpointId);
                 string accessToken = GetAccessToken(system);
                 // Create webhooks
-                await shopifyService.CreateWebhook(shop, accessToken, receiverUrl, "app/uninstalled");
-                await shopifyService.CreateWebhook(shop, accessToken, receiverUrl, "orders/paid");
+                await shopifyService.CreateWebhook(shop, accessToken, receiverUrl, "APP_UNINSTALLED");
+                await shopifyService.CreateWebhook(shop, accessToken, receiverUrl, "ORDERS_PAID");
+                await shopifyService.CreateWebhook(shop, accessToken, receiverUrl, "APP_SUBSCRIPTIONS_UPDATE");
+                logger.LogInformation("Created webhooks for shop {shop}", shop);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Shopify connect failed. Reverting changes.");
                 await base.UninstallApp(system, errorOnUninstall: false);
-                await systemStoreCollection.IntegratedSystemStore.Remove(system.Id);
-                await storageContext.SaveChanges();
 
                 throw new WorkflowException("Shopify connect failed. Please retry the app installation.");
             }
@@ -107,6 +111,37 @@ namespace SignalBox.Core.Workflows
 
             await systemStoreCollection.IntegratedSystemStore.Update(system);
             await storageContext.SaveChanges();
+        }
+
+        public async Task<ShopifyRecurringCharge?> ChargeBilling(IntegratedSystem system, string returnUrl)
+        {
+            SystemTypeGuard(system);
+
+            if (system.IntegrationStatus == IntegrationStatuses.NotConfigured)
+            {
+                return null;
+            }
+
+            string shop = GetShopifyUrl(system);
+            string accessToken = GetAccessToken(system);
+
+            var charges = await shopifyService.ListRecurringCharges(shop, accessToken);
+
+            // Charge already exists
+            if (charges.Any(_ => _.Name == billingInfo.Name && _.Status.ToLower() == "active"))
+            {
+                return null;
+            }
+
+            // Name should be unique per app charge
+            var charge = new ShopifyRecurringCharge(billingInfo.Name, billingInfo.Price, billingInfo.Test, billingInfo.TrialDays)
+            {
+                ReturnUrl = returnUrl
+            };
+            charge = await shopifyService.CreateRecurringCharge(shop, accessToken, charge);
+            logger.LogInformation("Created recurring app charge for shop {shop}", shop);
+
+            return charge;
         }
 
         public async Task<ShopifyShop?> GetShopInformation(IntegratedSystem system)

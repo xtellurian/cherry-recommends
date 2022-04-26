@@ -1,12 +1,10 @@
+using System;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
-using SignalBox.Core.Serialization;
 using SignalBox.Web.Dto;
 
 namespace SignalBox.Web.Controllers
@@ -86,30 +84,12 @@ namespace SignalBox.Web.Controllers
             return BadRequest();
         }
 
-        /// <summary>Generate Shopify app installation link.</summary>
-        [HttpGet("/api/authorizeurl")]
-        [AllowAnonymous]
-        public async Task<IActionResult> AuthorizeUrl(string shop, string redirectUrl)
-        {
-            var queryString = Request.Query
-                .Where(_ => _.Key != "redirectUrl")
-                .ToDictionary(_ => _.Key, _ => _.Value.ToString());
-
-            if (!await shopifyService.IsAuthenticRequest(queryString))
-            {
-                throw new SecurityException("Invalid Shopify request.");
-            }
-
-            string state = ""; // Optional
-            var uri = await shopifyAdminWorkflows.BuildAuthorizationUrl(shop, redirectUrl, state);
-
-            return Ok(uri.ToString());
-        }
-
         /// <summary>Establish Shopify connection by creating a new integrated system. Call this after a successful Shopify app installation.</summary>
         [HttpPost("/api/shopify/connect")]
         public async Task<IActionResult> Connect(ShopifyConnectDto dto)
         {
+            var response = new ShopifyConnectSuccessDto();
+
             var queryString = Request.Query
                 .ToDictionary(_ => _.Key, _ => _.Value.ToString());
 
@@ -128,7 +108,25 @@ namespace SignalBox.Web.Controllers
                 webhookReceiverUrl += $"?x-tenant={tenant.Name}";
             }
             var system = await shopifyAdminWorkflows.Connect(dto.Code, dto.Shop, webhookReceiverUrl, dto.EnvironmentId);
-            return Ok(system);
+
+            var returnUrl = $"{Request.Scheme}://{Request.Host}/_connect/shopify/callback?x-id={system.Id}";
+            if (tenant != null)
+            {
+                returnUrl += $"&x-tenant={tenant.Name}";
+            }
+            if (dto.EnvironmentId.HasValue)
+            {
+                returnUrl += $"&x-environment={dto.EnvironmentId.Value}";
+            }
+            var charge = await shopifyAdminWorkflows.ChargeBilling(system, returnUrl);
+
+            response.IntegratedSystem = system;
+            if (charge != null && !string.IsNullOrEmpty(charge.ConfirmationUrl))
+            {
+                response.ChargeConfirmationUrl = charge.ConfirmationUrl;
+            }
+
+            return Ok(response);
         }
 
         /// <summary>Disconnect Shopify connection. Uninstalls app and clears the access token.</summary>
@@ -138,6 +136,13 @@ namespace SignalBox.Web.Controllers
             var system = await store.Read(id);
             await shopifyAdminWorkflows.Disconnect(system);
             return Ok(id);
+        }
+
+        [HttpGet]
+        public async Task<IntegratedSystem> Get(long id)
+        {
+            var system = await store.Read(id);
+            return system;
         }
     }
 }
