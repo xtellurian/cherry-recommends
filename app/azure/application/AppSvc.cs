@@ -210,6 +210,7 @@ namespace SignalBox.Azure
                     // shopify
                     {"Shopify__AppCredentials__ApiKey", shopifyConfig.Get("apiKey") ?? ""},
                     {"Shopify__AppCredentials__SecretKey", shopifyConfig.Get("secretKey") ?? ""},
+                    {"Shopify__Billing__Test", shopifyConfig.Get("billing_test") ?? "false"},
                 }
             }, new CustomResourceOptions
             {

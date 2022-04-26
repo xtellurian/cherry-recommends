@@ -25,6 +25,7 @@ config:
   segment:writeKey:
     secure: AAABAHC4chfR87geNdfQ8S7Mr6TGqSXeOxpdmnk2BOilZ+lmUbvKw3bAjDRTVkGySVuPoxBbW1O3dNbRbDnomA==
   shopify:apiKey: 6c0da936f2fa7b325c2f51603150ba7c
+  shopify:billing_test: "true"
   shopify:secretKey:
     secure: AAABABp/v6OxgB8kzcqw0ZNQLqKz1NYL2BDNTz5gUOnMyOD6Mdfzs+CFJaSRsDfnv8Rksr9z4/7/v+ooHa2KqA==
   signalbox:environment: Development
