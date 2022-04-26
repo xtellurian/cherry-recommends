@@ -25,17 +25,29 @@ export const useNavigation = () => {
   const { tenantName } = useTenantName();
 
   const appendCurrentURL = useCallback(
-    (to) => {
+    (to, withQueryParams) => {
       if (typeof to === "string") {
-        return {
+        to = {
           ...history.location,
           pathname: to,
         };
       }
 
+      const search = new URLSearchParams(history.location.search);
+      const newSearch = new URLSearchParams();
+      if (withQueryParams && Array.isArray(withQueryParams)) {
+        for (const p of withQueryParams) {
+          const val = search.get(p);
+          if (val) {
+            newSearch.set(p, val);
+          }
+        }
+      }
+
       if (typeof to === "object" && to !== null) {
         return {
           ...history.location,
+          search: newSearch.toString(),
           ...to,
         };
       }

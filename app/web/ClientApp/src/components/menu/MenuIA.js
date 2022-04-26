@@ -20,19 +20,20 @@ const AuthenticatedIA = [
   {
     name: "Get Started",
     icon: "/icons/rocket.svg",
-    to: { pathname: "/getting-started", hash: hash.gettingStarted },
+    to: { pathname: "/getting-started", search: "", hash: hash.gettingStarted },
     activeIcon: false,
     items: [],
   },
   {
     name: "Promotions",
     icon: "/icons/tag.svg",
-    to: { pathname: "/promotions", hash: hash.promotions },
+    to: { pathname: "/promotions", search: "", hash: hash.promotions },
     items: [
       {
         name: "Promotions",
         to: {
           pathname: "/promotions/",
+          search: "",
           hash: hash.promotions,
         },
       },
@@ -40,6 +41,7 @@ const AuthenticatedIA = [
         name: "Recommenders",
         to: {
           pathname: "/recommenders/promotions-recommenders",
+          search: "",
           hash: `${hash.promotions}_recommenders`,
         },
       },
@@ -47,6 +49,7 @@ const AuthenticatedIA = [
         name: "Channels",
         to: {
           pathname: "/channels",
+          search: "",
           hash: `${hash.promotions}_channels`,
         },
       },
@@ -55,12 +58,13 @@ const AuthenticatedIA = [
   {
     name: "Customers",
     icon: "/icons/customer.svg",
-    to: { pathname: "/customers", hash: hash.customers },
+    to: { pathname: "/customers", search: "", hash: hash.customers },
     items: [
       {
         name: "Customers",
         to: {
           pathname: "/customers",
+          search: "",
           hash: hash.customers,
         },
       },
@@ -68,6 +72,7 @@ const AuthenticatedIA = [
         name: "Businesses",
         to: {
           pathname: "/businesses",
+          search: "",
           hash: `${hash.customers}_businesses`,
         },
       },
@@ -75,6 +80,7 @@ const AuthenticatedIA = [
         name: "Segments",
         to: {
           pathname: "/segments",
+          search: "",
           hash: `${hash.customers}_segments`,
         },
       },
@@ -82,6 +88,7 @@ const AuthenticatedIA = [
         name: "Events Overview",
         to: {
           pathname: "/dataview",
+          search: "",
           hash: `${hash.customers}_dataview`,
         },
       },
@@ -90,12 +97,13 @@ const AuthenticatedIA = [
   {
     name: "Metrics",
     icon: "/icons/graph-up.svg",
-    to: { pathname: "/metrics", hash: hash.metrics },
+    to: { pathname: "/metrics", search: "", hash: hash.metrics },
     items: [
       {
         name: "Metrics",
         to: {
           pathname: "/metrics/",
+          search: "",
           hash: hash.metrics,
         },
       },
@@ -104,12 +112,13 @@ const AuthenticatedIA = [
   {
     name: "Parameters",
     icon: "/icons/beta.svg",
-    to: { pathname: "/parameters", hash: hash.parameters },
+    to: { pathname: "/parameters", search: "", hash: hash.parameters },
     items: [
       {
         name: "Parameters",
         to: {
           pathname: "/parameters/",
+          search: "",
           hash: hash.parameters,
         },
       },
@@ -117,6 +126,7 @@ const AuthenticatedIA = [
         name: "Recommenders",
         to: {
           pathname: "/recommenders/parameter-set-recommenders",
+          search: "",
           hash: `${hash.parameters}_recommenders`,
         },
       },
@@ -125,7 +135,11 @@ const AuthenticatedIA = [
   {
     name: "Integrations",
     icon: "/icons/integrations.svg",
-    to: { pathname: "/settings/integrations", hash: hash.integration },
+    to: {
+      pathname: "/settings/integrations",
+      search: "",
+      hash: hash.integration,
+    },
     items: [],
   },
 ];
