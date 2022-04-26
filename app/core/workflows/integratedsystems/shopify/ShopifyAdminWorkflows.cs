@@ -91,7 +91,7 @@ namespace SignalBox.Core.Workflows
         {
             SystemTypeGuard(system);
 
-            if (system.IntegrationStatus == IntegrationStatuses.NotConfigured)
+            if (string.IsNullOrEmpty(system.Cache))
             {
                 return;
             }
@@ -116,11 +116,6 @@ namespace SignalBox.Core.Workflows
         public async Task<ShopifyRecurringCharge?> ChargeBilling(IntegratedSystem system, string returnUrl)
         {
             SystemTypeGuard(system);
-
-            if (system.IntegrationStatus == IntegrationStatuses.NotConfigured)
-            {
-                return null;
-            }
 
             string shop = GetShopifyUrl(system);
             string accessToken = GetAccessToken(system);

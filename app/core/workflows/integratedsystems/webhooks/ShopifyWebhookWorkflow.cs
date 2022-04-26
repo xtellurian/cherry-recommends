@@ -53,11 +53,6 @@ namespace SignalBox.Core.Workflows
 
             EventLoggingResponse eventLoggingResponse = new EventLoggingResponse();
 
-            if (receiver.IntegratedSystem.IntegrationStatus != IntegrationStatuses.OK)
-            {
-                return eventLoggingResponse;
-            }
-
             switch (topic)
             {
                 case "app/uninstalled":
@@ -99,6 +94,11 @@ namespace SignalBox.Core.Workflows
 
         private async Task<EventLoggingResponse> OnOrdersPayment(IntegratedSystem system, string body, string webhookId, string topic)
         {
+            if (system.IntegrationStatus != IntegrationStatuses.OK)
+            {
+                return new EventLoggingResponse();
+            }
+
             var shopifyEvent = JsonSerializer.Deserialize<ShopifyOrder>(body);
             var customerEventInput = shopifyEvent.ToCustomerEventInput(webhookId, topic, tenantProvider, system);
             var res = await eventsWorkflows.Ingest(new List<CustomerEventInput> { customerEventInput });
@@ -113,6 +113,13 @@ namespace SignalBox.Core.Workflows
             if (shopifyEvent?.AppSubscription?.Name == billingInfo.Name && shopifyEvent?.AppSubscription?.Status == "DECLINED")
             {
                 await shopifyAdminWorkflow.Disconnect(system);
+            }
+            if (shopifyEvent?.AppSubscription?.Name == billingInfo.Name && shopifyEvent?.AppSubscription?.Status == "ACTIVE" &&
+                system.IntegrationStatus != IntegrationStatuses.OK)
+            {
+                system.IntegrationStatus = IntegrationStatuses.OK;
+                await integratedSystemStore.Update(system);
+                await integratedSystemStore.Context.SaveChanges();
             }
 
             var res = await eventsWorkflows.Ingest(new List<CustomerEventInput> { });

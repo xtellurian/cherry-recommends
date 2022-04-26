@@ -48,7 +48,11 @@ const SystemStateView = ({ integratedSystem, tenant }) => {
                 const environmentQuery = integratedSystem?.environmentId
                   ? `?environmentId=${integratedSystem?.environmentId}`
                   : "";
-                window.location.href = `${baseUrl}${tenantPath}/settings/integrations/detail/${integratedSystem?.id}${environmentQuery}`;
+                navigate({
+                  pathname: `${tenantPath}/settings/integrations/detail/${integratedSystem?.id}`,
+                  search: environmentQuery,
+                  state: { fromDashboard: false },
+                });
               }}
             >
               View Integration
@@ -75,7 +79,6 @@ export const ShopifyConnector = () => {
   const xId = query.get("x-id");
   const xTenant = query.get("x-tenant");
   const xEnvironment = query.get("x-environment");
-  const chargeId = query.get("charge_id");
 
   const defaultStage = code && shop ? stages[2] : stages[0];
 
@@ -99,12 +102,14 @@ export const ShopifyConnector = () => {
 
   const loading = !hosting || memberships.loading || environments.loading;
   const singleOption =
+    hosting &&
+    !hosting.multitenant &&
     memberships.length === 1 &&
     environments.items &&
     environments.items.length <= 1;
   const showConnect = !singleOption && stage === stages[2];
-  const showSelectTenant = memberships.length >= 1;
-
+  const showSelectTenant = memberships.length >= 1 && data.tenant;
+  console.debug("showSelectTenant", showSelectTenant);
   React.useEffect(() => {
     if (integratedSystem?.integrationStatus === "ok" && stage !== stages[3]) {
       setStage(stages[3]);
@@ -136,17 +141,14 @@ export const ShopifyConnector = () => {
   React.useEffect(() => {
     if (!xId && hosting && !memberships.loading && !environments.loading) {
       // Single tenant and single environment scenario
-      if (
-        hosting.multitenant &&
-        memberships.length === 1 &&
-        environments.items &&
-        environments.items.length <= 1
-      ) {
+      if (hosting.multitenant && memberships.length === 1 && !data.tenant) {
         setData({
           ...data,
           tenant: memberships[0].name,
-          force: true,
         });
+
+        // Inform SDK what tenant to use in order to get the correct environments
+        setTenant(memberships[0].name);
       } else if (
         !hosting.multitenant &&
         environments.items &&
@@ -158,7 +160,7 @@ export const ShopifyConnector = () => {
         });
       }
     }
-  }, [memberships, environments, hosting, xId]);
+  }, [memberships, environments, hosting, data.tenant, xId]);
 
   React.useEffect(() => {
     if (data.force && token) {
@@ -176,7 +178,10 @@ export const ShopifyConnector = () => {
       })
         .then((v) => {
           setStage(stages[3]);
-          setIntegratedSystem(v);
+          setIntegratedSystem({
+            ...v,
+            integrationStatus: "ok",
+          });
           setError();
         })
         .catch((e) => setError(e));
@@ -251,6 +256,10 @@ export const ShopifyConnector = () => {
               <InputLabel required>Tenant</InputLabel>
               <Selector
                 placeholder="Select tenant"
+                defaultValue={{
+                  label: data.tenant,
+                  value: data.tenant,
+                }}
                 onChange={setSelectedTenant}
                 options={membershipOptions}
               />

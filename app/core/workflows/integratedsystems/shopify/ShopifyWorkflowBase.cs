@@ -59,7 +59,6 @@ namespace SignalBox.Core.Workflows
 
             system.SetCache(new ShopifyCache(storeAccess));
             system.CacheLastRefreshed = dateTimeProvider.Now;
-            system.IntegrationStatus = IntegrationStatuses.OK;
 
             await systemStoreCollection.IntegratedSystemStore.Update(system);
             await storageContext.SaveChanges();
@@ -69,7 +68,7 @@ namespace SignalBox.Core.Workflows
         {
             SystemTypeGuard(system);
 
-            if (system.IntegrationStatus != IntegrationStatuses.OK)
+            if (string.IsNullOrEmpty(system.Cache))
             {
                 return;
             }
