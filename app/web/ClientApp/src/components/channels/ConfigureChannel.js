@@ -11,6 +11,10 @@ import {
   TextInput,
   createStartsWithValidator,
   numericValidator,
+  joinValidators,
+  createLengthValidator,
+  commonIdFormatValidator,
+  lowercaseOnlyValidator,
 } from "../molecules/TextInput";
 import { AsyncButton, ErrorCard, Selector, Typography } from "../molecules";
 import { ToggleSwitch } from "../molecules/ToggleSwitch";
@@ -81,6 +85,7 @@ const WebConfiguration = ({ channel }) => {
   const [popupSubheader, setPopupSubheader] = useState("");
   const [popupDelay, setPopupDelay] = useState("");
   const [selectedRecommenderId, setSelectedRecommenderId] = useState("");
+  const [customerIdPrefix, setCustomerIdPrefix] = useState("");
 
   const handleSave = () => {
     setError(null);
@@ -91,6 +96,7 @@ const WebConfiguration = ({ channel }) => {
       id: channel.id,
       properties: {
         recommenderId: selectedRecommenderId || null,
+        customerIdPrefix,
         popupAskForEmail,
         popupDelay,
         popupHeader,
@@ -152,6 +158,7 @@ const WebConfiguration = ({ channel }) => {
     setPopupHeader(channel.popupHeader || "");
     setPopupSubheader(channel.popupSubheader || "");
     setSelectedRecommenderId(channel.recommenderIdToInvoke || "");
+    setCustomerIdPrefix(channel.customerIdPrefix || "");
   }, [channel]);
 
   return (
@@ -182,22 +189,12 @@ const WebConfiguration = ({ channel }) => {
 
       <div className="mt-4">
         <Typography variant="h2" className="font-weight-bold">
-          Popup Configuration
+          Configuration
         </Typography>
         <hr />
       </div>
 
       <div className="ml-1">
-        <div className="mt-3">
-          <Typography variant="h4">Choose a recommender</Typography>
-          <Selector
-            className="mt-1"
-            value={selectedRecommenderValue}
-            options={recommenderOptions}
-            onChange={handleSelectRecommender}
-          />
-        </div>
-
         <div className="mt-3">
           <ToggleSwitch
             name="Ask For Email Popup"
@@ -211,6 +208,29 @@ const WebConfiguration = ({ channel }) => {
             Enable popup
           </Typography>
         </div>
+
+        <div className="mt-3">
+          <Typography variant="h4">Choose a recommender</Typography>
+          <Selector
+            className="mt-1"
+            value={selectedRecommenderValue}
+            options={recommenderOptions}
+            onChange={handleSelectRecommender}
+          />
+        </div>
+
+        <InputGroup className="mt-3">
+          <TextInput
+            label="Customer ID Prefix"
+            value={customerIdPrefix}
+            validator={joinValidators([
+              createLengthValidator(3),
+              commonIdFormatValidator,
+              lowercaseOnlyValidator,
+            ])}
+            onChange={(e) => setCustomerIdPrefix(e.target.value)}
+          />
+        </InputGroup>
 
         <InputGroup className="mt-3">
           <TextInput

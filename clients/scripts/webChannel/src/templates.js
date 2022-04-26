@@ -18,6 +18,12 @@ export const showEmailPopup = ({ header = "", subheader = "", token }) => {
     `;
 
   const container = document.getElementById("cherry-root");
+
+  if (!container) {
+    console.error(`Cherry root container doesn't exist. Add <div id="cherry-root"></div> before the closing </body> tag in the HTML code.`)
+    return
+  }
+
   container.insertAdjacentHTML("beforeend", modalTemplate);
 
   const modalEl = document.getElementsByClassName("cherry-modal")[0];

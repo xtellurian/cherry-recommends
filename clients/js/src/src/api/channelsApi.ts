@@ -76,6 +76,7 @@ interface UpdateChannelPropertiesRequest extends EntityRequest {
     popupHeader: string,
     popupSubheader: string,
     recommenderId: number
+    customerIdPrefix: string,
   };
 }
 export const updateChannelPropertiesAsync = async ({

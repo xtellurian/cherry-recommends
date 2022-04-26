@@ -37,23 +37,62 @@ apiKeys.exchangeApiKeyAsync({ apiKey }).then(({ access_token }) => {
         popupHeader,
         popupSubheader,
         recommenderIdToInvoke,
+        customerIdPrefix,
       } = properties;
+      const qs = new URLSearchParams(window.location.search);
+
+      // add prefix to the customer id if:
+      // 1. customerIdPrefix exists
+      // 2. the customer id is not prefixed yet
+      if (customerIdPrefix && !sessionStorage.getItem("cherryid").includes("-")) {
+        const prefixedCherryId = `${customerIdPrefix}-${sessionStorage.getItem("cherryid")}`;
+        sessionStorage.setItem("cherryid", prefixedCherryId);
+      }
+
+      // log UTM parameters of the customers (a.k.a visitors) if exist
+      events.createEventsAsync({
+        token: access_token,
+        events: [
+          {
+            commonUserId: sessionStorage.getItem("cherryid"),
+            eventId: generateId(),
+            kind: "pageView",
+            eventType: "Customer UTM parameters",
+            recommendationCorrelatorId: null,
+            properties: {
+              utm_id: qs.get("utm_id"),
+              utm_source: qs.get("utm_source"),
+              utm_medium: qs.get("utm_medium"),
+              utm_campaign: qs.get("utm_campaign"),
+              utm_term: qs.get("utm_term"),
+              utm_content: qs.get("utm_content"),
+            },
+            timestamp: new Date(),
+          },
+        ],
+      });
 
       if (!popupAskForEmail) {
         return;
       }
 
+      // show popup asking for email WITHOUT promotion
       if (!recommenderIdToInvoke) {
+        const defaultSubheader =
+          "Don't miss any of our promotions. Subscribe now!";
+
         setTimeout(() => {
           showEmailPopup({
             token: access_token,
             header: popupHeader || "",
-            subheader: popupSubheader || "Don't miss any of our promotions. Subscribe now!",
+            subheader: popupSubheader || defaultSubheader,
           });
         }, popupDelay);
+
         return;
       }
 
+      // show popup asking for email WITH promotion
       if (recommenderIdToInvoke) {
         promotionsRecommenders
           .invokePromotionsRecommenderAsync({
@@ -67,16 +106,20 @@ apiKeys.exchangeApiKeyAsync({ apiKey }).then(({ access_token }) => {
           .then(({ scoredItems, correlatorId, customerId }) => {
             const { item } = scoredItems[0];
 
-            // const benefitLabels = {
-            //   percent: `${item.benefitValue}%`,
-            //   fixed: `$${item.benefitValue}`,
-            // };
+            const header = popupHeader
+              .replace("%promotionName%", item.name)
+              .toUpperCase();
+
+            const subheader = popupSubheader.replace(
+              "%promotionName%",
+              item.name.toLowerCase()
+            );
 
             setTimeout(() => {
               showEmailPopup({
                 token: access_token,
-                header: popupHeader.replace("%promotionName%", item.name).toUpperCase() || "",
-                subheader: popupSubheader.replace("%promotionName%", item.name.toLowerCase()) || item.name,
+                header: header || "",
+                subheader: subheader || item.name,
               });
             }, popupDelay);
 

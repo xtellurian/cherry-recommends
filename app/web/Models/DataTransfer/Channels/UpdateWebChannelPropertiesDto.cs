@@ -9,5 +9,6 @@ namespace SignalBox.Web.Dto
         public long? RecommenderId { get; set; }
         public string? PopupHeader { get; set; }
         public string? PopupSubheader { get; set; }
+        public string? CustomerIdPrefix { get; set; }
     }
 }

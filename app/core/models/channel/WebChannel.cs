@@ -38,6 +38,10 @@ namespace SignalBox.Core
         /// Popup subheader
         /// </summary>
         public string PopupSubheader { get; set; }
+        /// <summary>
+        /// Prefix added to the random customer id
+        /// </summary>
+        public string CustomerIdPrefix { get; set; }
         public override IDictionary<string, object> Properties =>
         new Dictionary<string, object>
         {
@@ -46,7 +50,8 @@ namespace SignalBox.Core
             {"popupDelay", PopupDelay},
             {"recommenderIdToInvoke", RecommenderIdToInvoke},
             {"popupHeader", PopupHeader},
-            {"popupSubheader", PopupSubheader}
+            {"popupSubheader", PopupSubheader},
+            {"customerIdPrefix", CustomerIdPrefix}
         };
 
 #nullable enable

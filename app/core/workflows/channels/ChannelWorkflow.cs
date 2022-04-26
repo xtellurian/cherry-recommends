@@ -62,11 +62,11 @@ namespace SignalBox.Core.Workflows
             return channel;
         }
 
-        public async Task<ChannelBase> UpdateWebChannelProperties(ChannelBase channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, string popupHeader = "", string popupSubheader = "", long? recommenderId = null)
+        public async Task<ChannelBase> UpdateWebChannelProperties(ChannelBase channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, string popupHeader = "", string popupSubheader = "", long? recommenderId = null, string customerIdPrefix = "")
         {
             if (channel is WebChannel webChannel)
             {
-                return await UpdateWebChannelProperties(webChannel, host, popupAskForEmail, popupDelay, popupHeader, popupSubheader, recommenderId);
+                return await UpdateWebChannelProperties(webChannel, host, popupAskForEmail, popupDelay, popupHeader, popupSubheader, recommenderId, customerIdPrefix);
             }
             else
             {
@@ -86,7 +86,7 @@ namespace SignalBox.Core.Workflows
             return channel;
         }
 
-        private async Task<WebChannel> UpdateWebChannelProperties(WebChannel channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, string popupHeader = "", string popupSubheader = "", long? recommenderId = null)
+        private async Task<WebChannel> UpdateWebChannelProperties(WebChannel channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, string popupHeader = "", string popupSubheader = "", long? recommenderId = null, string customerIdPrefix = "")
         {
             channel.Host = host;
             channel.PopupAskForEmail = popupAskForEmail ?? channel.PopupAskForEmail;
@@ -94,6 +94,7 @@ namespace SignalBox.Core.Workflows
             channel.PopupHeader = popupHeader ?? channel.PopupHeader;
             channel.PopupSubheader = popupSubheader ?? channel.PopupSubheader;
             channel.RecommenderIdToInvoke = recommenderId ?? channel.RecommenderIdToInvoke;
+            channel.CustomerIdPrefix = customerIdPrefix ?? channel.CustomerIdPrefix;
             await webChannelStore.Context.SaveChanges();
             return channel;
         }
