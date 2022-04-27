@@ -28,6 +28,7 @@ config:
   segment:writeKey:
     secure: AAABABXraw8QiY789EJ85SfK33gTwd+l+sAeQ3NJUswsJTaBvCkV2D2P90iH2JRKpmoekebIEm3fNMFO+6LWHA==
   shopify:apiKey: ec439be50721108d31a10646a97f9b85
+  shopify:billing_skip: "true"
   shopify:secretKey:
     secure: AAABAHNUkFoqoOXYETjvMhCe87shje2c/ZaMJTM0VXRU1eKgturDWGyV+1MR35C7yyQN9Wv/8/8pDmifiIx1qJWNDIudAg==
   signalbox:environment: Production
