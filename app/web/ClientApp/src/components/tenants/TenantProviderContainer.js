@@ -3,6 +3,7 @@ import { useHosting } from "./HostingProvider";
 import { Spinner } from "../molecules";
 import { PathTenantProvider } from "./PathTenantProvider";
 import { TenantChecker } from "./TenantChecker";
+import { MembershipsProvider } from "./MembershipsProvider";
 
 export const TenantProviderContainer = ({ children }) => {
   const hosting = useHosting();
@@ -11,9 +12,11 @@ export const TenantProviderContainer = ({ children }) => {
   }
   if (hosting.multitenant) {
     return (
-      <PathTenantProvider>
-        <TenantChecker hosting={hosting}>{children}</TenantChecker>
-      </PathTenantProvider>
+      <MembershipsProvider>
+        <PathTenantProvider>
+          <TenantChecker hosting={hosting}>{children}</TenantChecker>
+        </PathTenantProvider>
+      </MembershipsProvider>
     );
   } else {
     return <React.Fragment>{children}</React.Fragment>;

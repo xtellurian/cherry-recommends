@@ -5,8 +5,10 @@ import { useAuth } from "../../utility/useAuth";
 import { useTokenScopes } from "../../api-hooks/token";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { useAuthenticatedIA, hash as hashes } from "./MenuIA";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Navigation } from "../molecules";
+import { useMemberships } from "../tenants/MembershipsProvider";
 
 import "./SideNavMenu.css";
 
@@ -48,6 +50,7 @@ export const SideNavMenu = () => {
   const scopes = useTokenScopes();
   const integratedSystems = useIntegratedSystems();
   const authIA = useAuthenticatedIA(scopes);
+  const memberships = useMemberships();
 
   const isActive = useCallback(
     ({ hash }) => {
@@ -114,6 +117,23 @@ export const SideNavMenu = () => {
             </div>
           ))
         : null}
+
+      <div className="sticky-bottom">
+        {memberships.length > 1 ? (
+          <Navigation to="/" escapeTenant={true}>
+            <div
+              className={`menu-item selectable p-3 d-flex align-items-center justify-content-between `}
+            >
+              <div className="d-flex align-items-center">
+                <div className="icon-wrapper mr-3">
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                </div>
+                All Tenants
+              </div>
+            </div>
+          </Navigation>
+        ) : null}
+      </div>
     </nav>
   );
 };

@@ -1,5 +1,4 @@
 import React from "react";
-import AuthorizeRoute from "./components/auth0/ProtectedRoute";
 import "./global-css/cherry.css";
 
 import { useMemberships } from "./api-hooks/tenantsApi";

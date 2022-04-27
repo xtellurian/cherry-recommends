@@ -1,6 +1,7 @@
 import React from "react";
 import { useHosting as useHostingApiHook } from "../../api-hooks/reactConfigApi";
 import { PathTenantContext } from "./PathTenantProvider";
+import { MembershipsContext } from "./MembershipsProvider";
 
 export const HostingContext = React.createContext();
 
@@ -17,7 +18,9 @@ export const HostingProvider = ({ children }) => {
   return (
     <HostingContext.Provider value={hosting}>
       <PathTenantContext.Provider value={{ tenantName: "" }}>
-        {children}
+        <MembershipsContext.Provider value={[]}>
+          {children}
+        </MembershipsContext.Provider>
       </PathTenantContext.Provider>
     </HostingContext.Provider>
   );
