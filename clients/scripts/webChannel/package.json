@@ -32,6 +32,6 @@
     "rollup-plugin-uglify": "^6.0.4"
   },
   "dependencies": {
-    "cherry.ai": "^1.2.2"
+    "cherry.ai": "^1.2.4"
   }
 }

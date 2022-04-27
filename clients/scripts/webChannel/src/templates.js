@@ -17,11 +17,14 @@ export const showEmailPopup = ({ header = "", subheader = "", token }) => {
       </div>
     `;
 
-  const container = document.getElementById("cherry-root");
+  let container = document.getElementById("cherry-root");
 
+  // create container if it doesn't exist
   if (!container) {
-    console.error(`Cherry root container doesn't exist. Add <div id="cherry-root"></div> before the closing </body> tag in the HTML code.`)
-    return
+    const body = document.getElementsByTagName("body")[0];
+    container = document.createElement("div");
+    container.setAttribute("id", "cherry-root");
+    body.appendChild(container);
   }
 
   container.insertAdjacentHTML("beforeend", modalTemplate);

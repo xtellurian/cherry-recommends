@@ -10,7 +10,7 @@ import {
 } from "cherry.ai";
 
 import { showEmailPopup } from "./templates";
-import { generateId } from "./utilities";
+import { generateId, setLocalStorageWithExpiry } from "./utilities";
 
 const srcUrl = new URL(document.getElementById("cherry-channel").src);
 const params = new URLSearchParams(srcUrl.search);
@@ -27,9 +27,23 @@ if (!sessionStorage.getItem("cherryid")) {
   sessionStorage.setItem("cherryid", generateId());
 }
 
-apiKeys.exchangeApiKeyAsync({ apiKey }).then(({ access_token }) => {
+(async function () {
+  // check for accessToken in localStorage
+  let accessToken = JSON.parse(localStorage.getItem("cherry_token")) || {};
+  const now = new Date();
+
+  // if accessToken is null, exchange apiKey for token and store it in localStorage
+  if (!accessToken.value || accessToken.expiry <= now.getTime()) {
+    const payload = await apiKeys.exchangeApiKeyAsync({ apiKey });
+
+    if (payload.access_token) {
+      setLocalStorageWithExpiry("cherry_token", payload.access_token, 30);
+      accessToken = { value: payload.access_token };
+    }
+  }
+
   channels
-    .fetchChannelAsync({ id: channelId, token: access_token })
+    .fetchChannelAsync({ id: channelId, token: accessToken.value })
     .then(({ properties }) => {
       const {
         popupAskForEmail,
@@ -44,14 +58,19 @@ apiKeys.exchangeApiKeyAsync({ apiKey }).then(({ access_token }) => {
       // add prefix to the customer id if:
       // 1. customerIdPrefix exists
       // 2. the customer id is not prefixed yet
-      if (customerIdPrefix && !sessionStorage.getItem("cherryid").includes("-")) {
-        const prefixedCherryId = `${customerIdPrefix}-${sessionStorage.getItem("cherryid")}`;
+      if (
+        customerIdPrefix &&
+        !sessionStorage.getItem("cherryid").includes("-")
+      ) {
+        const prefixedCherryId = `${customerIdPrefix}-${sessionStorage.getItem(
+          "cherryid"
+        )}`;
         sessionStorage.setItem("cherryid", prefixedCherryId);
       }
 
       // log UTM parameters of the customers (a.k.a visitors) if exist
       events.createEventsAsync({
-        token: access_token,
+        token: accessToken.value,
         events: [
           {
             commonUserId: sessionStorage.getItem("cherryid"),
@@ -83,7 +102,7 @@ apiKeys.exchangeApiKeyAsync({ apiKey }).then(({ access_token }) => {
 
         setTimeout(() => {
           showEmailPopup({
-            token: access_token,
+            token: accessToken.value,
             header: popupHeader || "",
             subheader: popupSubheader || defaultSubheader,
           });
@@ -96,7 +115,7 @@ apiKeys.exchangeApiKeyAsync({ apiKey }).then(({ access_token }) => {
       if (recommenderIdToInvoke) {
         promotionsRecommenders
           .invokePromotionsRecommenderAsync({
-            token: access_token,
+            token: accessToken.value,
             id: recommenderIdToInvoke,
             input: {
               customerId: sessionStorage.getItem("cherryid"),
@@ -117,18 +136,18 @@ apiKeys.exchangeApiKeyAsync({ apiKey }).then(({ access_token }) => {
 
             setTimeout(() => {
               showEmailPopup({
-                token: access_token,
+                token: accessToken.value,
                 header: header || "",
                 subheader: subheader || item.name,
               });
             }, popupDelay);
 
             events.createRecommendationConsumedEventAsync({
-              token: access_token,
+              token: accessToken.value,
               customerId: customerId,
               correlatorId: correlatorId,
             });
           });
       }
     });
-});
+})();

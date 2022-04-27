@@ -18,6 +18,7 @@ import {
 } from "../molecules/TextInput";
 import { AsyncButton, ErrorCard, Selector, Typography } from "../molecules";
 import { ToggleSwitch } from "../molecules/ToggleSwitch";
+import { useTenantName } from "../tenants/PathTenantProvider";
 
 const WebhookConfiguration = ({ channel }) => {
   const token = useAccessToken();
@@ -75,8 +76,8 @@ const WebhookConfiguration = ({ channel }) => {
 
 const WebConfiguration = ({ channel }) => {
   const token = useAccessToken();
-  const { navigate, ensureAbsolutePathsHaveTenantNamePrefixed } =
-    useNavigation();
+  const { navigate } = useNavigation();
+  const { tenantName } = useTenantName();
   const [error, setError] = useState();
   const [saving, setSaving] = useState(false);
 
@@ -129,17 +130,13 @@ const WebConfiguration = ({ channel }) => {
     [recommenderOptions, selectedRecommenderId]
   );
 
-  const baseUrl = `${
-    window.location.origin
-  }${ensureAbsolutePathsHaveTenantNamePrefixed("/")}`;
-
   const jsScriptSnippet = `
     <!-- Start of Cherry Embed Code -->
       <script
         type="text/javascript"
         id="cherry-channel"
         async
-        src="https://jschannelscript.blob.core.windows.net/js-channel-script/channel.browser.js?apiKey=<YOUR_API_KEY>&channelId=${channel.id}&baseUrl=${baseUrl}"
+        src="https://jschannelscript.blob.core.windows.net/js-channel-script/channel.browser.js?apiKey=<YOUR_API_KEY>&channelId=${channel.id}&baseUrl=${window.location.origin}&tenant=${tenantName}"
       ></script>
     <!-- End of Cherry Embed Code -->
   `;
