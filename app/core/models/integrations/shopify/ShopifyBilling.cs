@@ -10,5 +10,6 @@ namespace SignalBox.Core.Integrations
         public decimal Price { get; set; }
         public bool Test { get; set; }
         public int TrialDays { get; set; }
+        public bool Skip { get; set; }
     }
 }

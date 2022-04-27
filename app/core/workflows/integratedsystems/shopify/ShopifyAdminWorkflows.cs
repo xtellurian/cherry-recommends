@@ -65,6 +65,13 @@ namespace SignalBox.Core.Workflows
             {
                 // Fetch Shopify access token
                 await base.Authorize(system, code, shop);
+                // Set status to OK if there's no billing
+                if (billingInfo.Skip)
+                {
+                    system.IntegrationStatus = IntegrationStatuses.OK;
+                    await systemStoreCollection.IntegratedSystemStore.Update(system);
+                    await systemStoreCollection.IntegratedSystemStore.Context.SaveChanges();
+                }
                 // Create webhook receiver
                 var webhookReceiver = await integratedSystemWorkflows.AddWebhookReceiver(system.Id, includeSharedSecret: false);
                 // Create Shopify webhooks for event subscription
@@ -116,6 +123,11 @@ namespace SignalBox.Core.Workflows
         public async Task<ShopifyRecurringCharge?> ChargeBilling(IntegratedSystem system, string returnUrl)
         {
             SystemTypeGuard(system);
+
+            if (billingInfo.Skip)
+            {
+                return null;
+            }
 
             string shop = GetShopifyUrl(system);
             string accessToken = GetAccessToken(system);
