@@ -33,10 +33,10 @@ namespace SignalBox.Test.Workflows
             var existingCustomer = new Customer(existingCustomerId);
             var newCustomer = new Customer(newCustomerId);
             mockCustomerStore
-                .Setup(_ => _.ExistsFromCommonId(It.Is<string>(_ => _ == newCustomer.CommonId)))
+                .Setup(_ => _.ExistsFromCommonId(It.Is<string>(_ => _ == newCustomer.CommonId), It.Is<long?>(_ => _ == newCustomer.EnvironmentId)))
                 .ReturnsAsync(false);
             mockCustomerStore
-                .Setup(_ => _.ExistsFromCommonId(It.Is<string>(_ => _ == existingCustomer.CommonId)))
+                .Setup(_ => _.ExistsFromCommonId(It.Is<string>(_ => _ == existingCustomer.CommonId), It.Is<long?>(_ => _ == existingCustomer.EnvironmentId)))
                 .ReturnsAsync(true);
 
             mockCustomerStore
@@ -44,6 +44,7 @@ namespace SignalBox.Test.Workflows
                 .ReturnsAsync(newCustomer);
             mockCustomerStore
                 .Setup(_ => _.ReadFromCommonId(It.Is<string>(_ => _ == existingCustomer.CommonId),
+                    It.Is<long?>(_ => _ == existingCustomer.EnvironmentId),
                     It.IsAny<System.Linq.Expressions.Expression<System.Func<Customer, ICollection<TrackedUserSystemMap>>>>()))
                 .ReturnsAsync(existingCustomer);
 
@@ -90,18 +91,20 @@ namespace SignalBox.Test.Workflows
             var existingCustomer1 = new Customer(existingCustomer1Id);
             var existingCustomer2 = new Customer(existingCustomer2Id);
             mockCustomerStore
-                .Setup(_ => _.ExistsFromCommonId(It.Is<string>(_ => _ == existingCustomer1.CommonId)))
+                .Setup(_ => _.ExistsFromCommonId(It.Is<string>(_ => _ == existingCustomer1.CommonId), It.Is<long?>(_ => _ == existingCustomer1.EnvironmentId)))
                 .ReturnsAsync(true);
             mockCustomerStore
-                .Setup(_ => _.ExistsFromCommonId(It.Is<string>(_ => _ == existingCustomer2.CommonId)))
+                .Setup(_ => _.ExistsFromCommonId(It.Is<string>(_ => _ == existingCustomer2.CommonId), It.Is<long?>(_ => _ == existingCustomer2.EnvironmentId)))
                 .ReturnsAsync(true);
 
             mockCustomerStore
                 .Setup(_ => _.ReadFromCommonId(It.Is<string>(_ => _ == existingCustomer1.CommonId),
+                    It.Is<long?>(_ => _ == existingCustomer1.EnvironmentId),
                     It.IsAny<System.Linq.Expressions.Expression<System.Func<Customer, ICollection<TrackedUserSystemMap>>>>()))
                 .ReturnsAsync(existingCustomer1);
             mockCustomerStore
                 .Setup(_ => _.ReadFromCommonId(It.Is<string>(_ => _ == existingCustomer2.CommonId),
+                    It.Is<long?>(_ => _ == existingCustomer2.EnvironmentId),
                     It.IsAny<System.Linq.Expressions.Expression<System.Func<Customer, ICollection<TrackedUserSystemMap>>>>()))
                 .ReturnsAsync(existingCustomer2);
 

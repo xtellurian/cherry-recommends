@@ -58,12 +58,18 @@ namespace SignalBox.Core.Workflows
             return customer;
         }
 
+        /// <summary>
+        /// Deals with environments explicitly
+        /// </summary>
+        /// <param name="pendingCustomer">The customer data to create or retrieve</param>
+        /// <param name="saveOnComplete">Should the database be updated by this method.</param>
+        /// <returns>An existing or new customer.</returns>
         public async Task<Customer> CreateOrUpdate(PendingCustomer pendingCustomer, bool saveOnComplete = true)
         {
             Customer customer;
-            if (await customerStore.ExistsFromCommonId(pendingCustomer.CommonId))
+            if (await customerStore.ExistsFromCommonId(pendingCustomer.CommonId, pendingCustomer.EnvironmentId))
             {
-                customer = await customerStore.ReadFromCommonId(pendingCustomer.CommonId, _ => _.IntegratedSystemMaps);
+                customer = await customerStore.ReadFromCommonId(pendingCustomer.CommonId, pendingCustomer.EnvironmentId, _ => _.IntegratedSystemMaps);
                 logger.LogInformation($"Updating user {customer.Id}");
                 if (pendingCustomer.OverwriteExisting)
                 {
@@ -90,7 +96,7 @@ namespace SignalBox.Core.Workflows
             if (pendingCustomer.IntegratedSystemReference != null &&
                 !customer.IntegratedSystemMaps.Any(_ => _.IntegratedSystemId == pendingCustomer.IntegratedSystemReference.IntegratedSystemId))
             {
-                logger.LogInformation($"Connecting user to integrated system: { pendingCustomer.IntegratedSystemReference.IntegratedSystemId}");
+                logger.LogInformation($"Connecting user to integrated system: {pendingCustomer.IntegratedSystemReference.IntegratedSystemId}");
                 var integratedSystem = await integratedSystemStore.Read(pendingCustomer.IntegratedSystemReference.IntegratedSystemId);
                 await trackedUserSystemMapStore.Create(
                     new TrackedUserSystemMap(pendingCustomer.IntegratedSystemReference.UserId, integratedSystem, customer));

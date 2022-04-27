@@ -77,8 +77,14 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<bool> ExistsFromCommonId(string commonId)
         {
-            return await this.QuerySet
+            return await QuerySet
                 .AnyAsync(_ => _.CommonId == commonId);
+        }
+
+        public async Task<bool> ExistsFromCommonId(string commonId, long? environmentId)
+        {
+            return await Set
+                 .AnyAsync(_ => _.EnvironmentId == environmentId && _.CommonId == commonId);
         }
 
         public virtual async Task<T> ReadFromCommonId(string commonId)
@@ -93,5 +99,12 @@ namespace SignalBox.Infrastructure.EntityFramework
                 throw new EntityNotFoundException(typeof(T), commonId, ex);
             }
         }
+        public async Task<T> ReadFromCommonId<TProperty>(string commonId, long? environmentId, Expression<Func<T, TProperty>> include)
+        {
+            return await Set
+                .Include(include)
+                .FirstAsync(_ => _.EnvironmentId == environmentId && _.CommonId == commonId);
+        }
+
     }
 }
