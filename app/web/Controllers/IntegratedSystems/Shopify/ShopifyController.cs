@@ -134,6 +134,7 @@ namespace SignalBox.Web.Controllers
         public async Task<IActionResult> Disconnect(long id)
         {
             var system = await store.Read(id);
+            await shopifyAdminWorkflows.UninstallApp(system, errorOnUninstall: false);
             await shopifyAdminWorkflows.Disconnect(system);
             return Ok(id);
         }

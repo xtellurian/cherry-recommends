@@ -11,7 +11,6 @@ namespace SignalBox.Core.Workflows
 #nullable enable
     public class ShopifyAdminWorkflows : ShopifyWorkflowBase, IShopifyAdminWorkflow
     {
-        private readonly ShopifyBilling billingInfo;
         private readonly IIntegratedSystemWorkflow integratedSystemWorkflows;
         private readonly IEnvironmentProvider environmentProvider;
 
@@ -21,13 +20,11 @@ namespace SignalBox.Core.Workflows
             IShopifyService shopifyService,
             IntegratedSystemStoreCollection systemStoreCollection,
             IOptions<ShopifyAppCredentials> creds,
-            IOptions<ShopifyBilling> billingInfo,
             ILogger<ShopifyAdminWorkflows> logger,
             IIntegratedSystemWorkflow integratedSystemWorkflows,
             IEnvironmentProvider environmentProvider)
             : base(dateTimeProvider, storageContext, shopifyService, systemStoreCollection, creds, logger)
         {
-            this.billingInfo = billingInfo.Value;
             this.integratedSystemWorkflows = integratedSystemWorkflows;
             this.environmentProvider = environmentProvider;
         }
@@ -66,6 +63,7 @@ namespace SignalBox.Core.Workflows
                 // Fetch Shopify access token
                 await base.Authorize(system, code, shop);
                 // Set status to OK if there's no billing
+                var billingInfo = await shopifyService.GetDefaultShopifyBilling();
                 if (billingInfo.Skip)
                 {
                     system.IntegrationStatus = IntegrationStatuses.OK;
@@ -103,11 +101,6 @@ namespace SignalBox.Core.Workflows
                 return;
             }
 
-            string shopifyUrl = GetShopifyUrl(system);
-            string accessToken = GetAccessToken(system);
-
-            await base.UninstallApp(system, errorOnUninstall: false);
-
             system.ClearCache();
             system.CacheLastRefreshed = dateTimeProvider.Now;
             system.IntegrationStatus = IntegrationStatuses.NotConfigured;
@@ -124,6 +117,7 @@ namespace SignalBox.Core.Workflows
         {
             SystemTypeGuard(system);
 
+            var billingInfo = await shopifyService.GetDefaultShopifyBilling();
             if (billingInfo.Skip)
             {
                 return null;

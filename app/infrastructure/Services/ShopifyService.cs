@@ -19,43 +19,76 @@ namespace SignalBox.Infrastructure.Services
     public class ShopifyService : IShopifyService
     {
         private readonly ShopifyAppCredentials creds;
+        private readonly ShopifyBilling billingInfo;
         private readonly ILogger<ShopifyService> logger;
+        private readonly ITenantProvider tenantProvider;
+        private readonly IIntegratedSystemCredentialStore credentialStore;
 
-        #region Authorization
-        public ShopifyService(IOptions<ShopifyAppCredentials> creds, ILogger<ShopifyService> logger)
+        public ShopifyService(
+            IOptions<ShopifyAppCredentials> creds,
+            IOptions<ShopifyBilling> billingInfo,
+            ILogger<ShopifyService> logger,
+            ITenantProvider tenantProvider,
+            IIntegratedSystemCredentialStore credentialStore)
         {
             this.creds = creds.Value;
+            this.billingInfo = billingInfo.Value;
             this.logger = logger;
+            this.tenantProvider = tenantProvider;
+            this.credentialStore = credentialStore;
         }
 
-        public Task<Uri> BuildAuthorizationUrl(string shopifyUrl, string redirectUrl, string state)
+        #region Authorization
+        public async Task<Uri> BuildAuthorizationUrl(string shopifyUrl, string redirectUrl, string state)
         {
-            return Task.FromResult(AuthorizationService.BuildAuthorizationUrl(creds.Scopes, shopifyUrl, creds.ApiKey, redirectUrl, state));
+            var _creds = await GetCredentials();
+            return AuthorizationService.BuildAuthorizationUrl(_creds.Scopes, shopifyUrl, _creds.ApiKey, redirectUrl, state);
         }
 
-        public Task<string> Authorize(string code, string shopifyUrl)
+        public async Task<string> Authorize(string code, string shopifyUrl)
         {
-            return AuthorizationService.Authorize(code, shopifyUrl, creds.ApiKey, creds.SecretKey);
+            var _creds = await GetCredentials();
+            return await AuthorizationService.Authorize(code, shopifyUrl, _creds.ApiKey, _creds.SecretKey);
         }
 
-        public Task<bool> IsAuthenticRequest(IDictionary<string, string> queryString)
+        public async Task<bool> IsAuthenticRequest(IDictionary<string, string> queryString)
         {
-            return Task.FromResult(AuthorizationService.IsAuthenticRequest(queryString, creds.SecretKey));
+            var _creds = await GetCredentials();
+            return AuthorizationService.IsAuthenticRequest(queryString, _creds.SecretKey);
         }
 
-        public Task<bool> IsAuthenticProxyRequest(IDictionary<string, string> queryString)
+        public async Task<bool> IsAuthenticProxyRequest(IDictionary<string, string> queryString)
         {
-            return Task.FromResult(AuthorizationService.IsAuthenticProxyRequest(queryString, creds.SecretKey));
+            var _creds = await GetCredentials();
+            return AuthorizationService.IsAuthenticProxyRequest(queryString, _creds.SecretKey);
         }
 
-        public Task<bool> IsAuthenticWebhook(IEnumerable<KeyValuePair<string, StringValues>> requestHeaders, string requestBody)
+        public async Task<bool> IsAuthenticWebhook(IEnumerable<KeyValuePair<string, StringValues>> requestHeaders, string requestBody)
         {
-            return Task.FromResult(AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, creds.SecretKey));
+            var _creds = await GetCredentials();
+            return AuthorizationService.IsAuthenticWebhook(requestHeaders, requestBody, _creds.SecretKey);
         }
 
-        public Task<bool> IsValidShopDomainAsync(string shopifyUrl)
+        public async Task<bool> IsValidShopDomainAsync(string shopifyUrl)
         {
-            return AuthorizationService.IsValidShopDomainAsync(shopifyUrl);
+            return await AuthorizationService.IsValidShopDomainAsync(shopifyUrl);
+        }
+
+        private async Task<ShopifyAppCredentials> GetCredentials()
+        {
+            var credentials = creds;
+
+            if (tenantProvider.Current() != null)
+            {
+                var fromDb = await credentialStore.ReadFromKey($"shopify_{tenantProvider.Current().Name}");
+                if (fromDb.Success && fromDb.Entity.SystemType == IntegratedSystemTypes.Shopify)
+                {
+                    // Override the app credentials from the appSettings
+                    credentials = fromDb.Entity.GetCredentials<ShopifyAppCredentials>();
+                }
+            }
+
+            return credentials;
         }
         #endregion
 
@@ -178,6 +211,23 @@ namespace SignalBox.Infrastructure.Services
             var service = new RecurringChargeService(shopifyUrl, accessToken);
             var entities = await service.ListAsync();
             return entities.Select(_ => _.ToCoreRepresentation());
+        }
+
+        public async Task<ShopifyBilling> GetDefaultShopifyBilling()
+        {
+            var billing = billingInfo;
+
+            if (tenantProvider.Current() != null)
+            {
+                var fromDb = await credentialStore.ReadFromKey($"shopify_{tenantProvider.Current().Name}");
+                if (fromDb.Success && fromDb.Entity.SystemType == IntegratedSystemTypes.Shopify)
+                {
+                    // Override the app credentials from the appSettings
+                    billing = fromDb.Entity.GetConfig<ShopifyBilling>();
+                }
+            }
+
+            return billing;
         }
 
         private void HandleErrors<T>(IMutationResponse<T> response, GraphQLError[] errors)

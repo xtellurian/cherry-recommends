@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
 using SignalBox.Core.Adapters.Shopify;
+using SignalBox.Core.Integrations;
 
 namespace SignalBox.Core
 {
@@ -23,5 +24,6 @@ namespace SignalBox.Core
         Task<ShopifyPriceRuleDiscountCode> CreateDiscountCode(string shopifyUrl, string accessToken, long priceRuleId, ShopifyPriceRuleDiscountCode discountCode);
         Task<ShopifyRecurringCharge> CreateRecurringCharge(string shopifyUrl, string accessToken, ShopifyRecurringCharge recurringCharge);
         Task<IEnumerable<ShopifyRecurringCharge>> ListRecurringCharges(string shopifyUrl, string accessToken);
+        Task<ShopifyBilling> GetDefaultShopifyBilling();
     }
 }

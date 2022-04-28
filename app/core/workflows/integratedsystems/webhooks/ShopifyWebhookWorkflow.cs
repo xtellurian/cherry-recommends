@@ -112,6 +112,7 @@ namespace SignalBox.Core.Workflows
 
             if (shopifyEvent?.AppSubscription?.Name == billingInfo.Name && shopifyEvent?.AppSubscription?.Status == "DECLINED")
             {
+                await shopifyAdminWorkflow.UninstallApp(system, errorOnUninstall: false);
                 await shopifyAdminWorkflow.Disconnect(system);
             }
             if (shopifyEvent?.AppSubscription?.Name == billingInfo.Name && shopifyEvent?.AppSubscription?.Status == "ACTIVE" &&

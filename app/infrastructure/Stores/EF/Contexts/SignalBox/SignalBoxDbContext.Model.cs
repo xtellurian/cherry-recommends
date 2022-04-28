@@ -82,6 +82,7 @@ namespace SignalBox.Infrastructure
         public DbSet<IntegratedSystem> IntegratedSystems { get; set; }
         public DbSet<CustomIntegratedSystem> CustomIntegratedSystems { get; set; }
         public DbSet<WebsiteIntegratedSystem> WebsiteIntegratedSystems { get; set; }
+        public DbSet<IntegratedSystemCredential> IntegratedSystemCredentials { get; set; }
 
         // system stuff
         public DbSet<HashedApiKey> ApiKeys { get; set; }

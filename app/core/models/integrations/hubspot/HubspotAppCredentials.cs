@@ -1,6 +1,6 @@
 namespace SignalBox.Core.Integrations
 {
-    public class HubspotAppCredentials
+    public class HubspotAppCredentials : IIntegratedSystemCredentials
     {
         public string AppId { get; set; }
         public string ClientId { get; set; }

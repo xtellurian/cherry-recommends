@@ -1,6 +1,6 @@
 namespace SignalBox.Core.Integrations
 {
-    public class ShopifyAppCredentials
+    public class ShopifyAppCredentials : IIntegratedSystemCredentials
     {
         public string ApiKey { get; set; }
         public string SecretKey { get; set; }
