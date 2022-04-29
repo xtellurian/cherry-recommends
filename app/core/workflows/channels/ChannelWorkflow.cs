@@ -6,15 +6,18 @@ namespace SignalBox.Core.Workflows
     public class ChannelWorkflow : IWorkflow, IChannelWorkflow
     {
         private readonly IWebhookChannelStore webhookChannelStore;
+        private readonly IEmailChannelStore emailChannelStore;
         private readonly IWebChannelStore webChannelStore;
         private readonly ILogger<ChannelWorkflow> logger;
 
         public ChannelWorkflow(IWebhookChannelStore webhookChannelStore,
                                IWebChannelStore webChannelStore,
+                               IEmailChannelStore emailChannelStore,
                                ILogger<ChannelWorkflow> logger)
         {
             this.webChannelStore = webChannelStore;
             this.webhookChannelStore = webhookChannelStore;
+            this.emailChannelStore = emailChannelStore;
             this.logger = logger;
         }
 
@@ -26,9 +29,23 @@ namespace SignalBox.Core.Workflows
                     return await CreateWebhookChannel(name, integratedSystem);
                 case ChannelTypes.Web:
                     return await CreateWebChannel(name, integratedSystem);
+                case ChannelTypes.Email:
+                    return await CreateEmailChannel(name, integratedSystem);
                 default:
                     throw new BadRequestException($"Channel type {type} not supported");
             }
+        }
+
+        private async Task<EmailChannel> CreateEmailChannel(string name, IntegratedSystem integratedSystem)
+        {
+            if (integratedSystem.SystemType != IntegratedSystemTypes.Klaviyo)
+            {
+                throw new BadRequestException($"Email channel only supports Klaviyo Integrated System");
+            }
+
+            var channel = await emailChannelStore.Create(new EmailChannel(name, integratedSystem));
+            await emailChannelStore.Context.SaveChanges();
+            return channel;
         }
 
         public async Task<ChannelBase> UpdateChannelEndpoint(ChannelBase channel, string endpoint)
@@ -96,6 +113,26 @@ namespace SignalBox.Core.Workflows
             channel.RecommenderIdToInvoke = recommenderId ?? channel.RecommenderIdToInvoke;
             channel.CustomerIdPrefix = customerIdPrefix ?? channel.CustomerIdPrefix;
             await webChannelStore.Context.SaveChanges();
+            return channel;
+        }
+
+        public async Task<ChannelBase> UpdateEmailChannelListTrigger(ChannelBase channel, string listId, string listName)
+        {
+            if (channel is EmailChannel emailChannel)
+            {
+                return await UpdateEmailChannelListTrigger(emailChannel, listId, listName);
+            }
+            else
+            {
+                throw new BadRequestException($"Channel type {channel.ChannelType} not supported");
+            }
+        }
+
+        private async Task<EmailChannel> UpdateEmailChannelListTrigger(EmailChannel channel, string listId, string listName)
+        {
+            channel.ListTriggerId = listId;
+            channel.ListTriggerName = listName;
+            await webhookChannelStore.Context.SaveChanges();
             return channel;
         }
     }

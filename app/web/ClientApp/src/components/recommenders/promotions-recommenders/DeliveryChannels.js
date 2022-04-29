@@ -30,12 +30,32 @@ const RecommenderChannelRow = ({ channel, remove }) => {
         <Typography variant="h2">
           {channel.name} : {channelTypeLabels[channel.channelType]}
         </Typography>
-        <div className="mt-3">
-          <CopyableField
-            label="Endpoint"
-            value={channel.endpoint || channel.properties?.endpoint}
-          />
-        </div>
+        {channel.channelType === "webhook" && (
+          <div className="mt-3">
+            <CopyableField
+              label="Endpoint"
+              value={channel.endpoint || channel.properties?.endpoint}
+            />
+          </div>
+        )}
+        {channel.channelType === "web" && (
+          <div className="mt-3">
+            <CopyableField
+              label="Enable Popup"
+              value={channel.PopupAskForEmail ? "Enabled" : "Disabled"}
+            />
+          </div>
+        )}
+        {channel.channelType === "email" && (
+          <div className="mt-3">
+            <CopyableField
+              label="List Trigger"
+              value={
+                channel.listTriggerName || channel.properties?.listTriggerName
+              }
+            />
+          </div>
+        )}
       </div>
     </div>
   );

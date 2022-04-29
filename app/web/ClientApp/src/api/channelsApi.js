@@ -7,3 +7,5 @@ export const deleteChannelAsync = channels.deleteChannelAsync;
 export const updateChannelEndpointAsync = channels.updateChannelEndpointAsync;
 export const updateChannelPropertiesAsync =
   channels.updateChannelPropertiesAsync;
+export const updateEmailChannelTriggerAsync =
+  channels.updateEmailChannelTriggerAsync;

@@ -22,4 +22,11 @@ interface UpdateChannelPropertiesRequest extends EntityRequest {
     };
 }
 export declare const updateChannelPropertiesAsync: ({ token, id, properties, }: UpdateChannelPropertiesRequest) => Promise<any>;
+interface UpdateEmailChannelTriggerRequest extends EntityRequest {
+    listTrigger: {
+        listId: string;
+        listName: string;
+    };
+}
+export declare const updateEmailChannelTriggerAsync: ({ token, id, listTrigger, }: UpdateEmailChannelTriggerRequest) => Promise<any>;
 export {};

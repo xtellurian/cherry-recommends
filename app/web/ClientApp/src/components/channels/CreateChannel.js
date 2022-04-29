@@ -14,6 +14,7 @@ import CreatePageLayout from "../molecules/layout/CreatePageLayout";
 const channelTypeOptions = [
   { value: "webhook", label: "Webhook" },
   { value: "web", label: "Web" },
+  { value: "email", label: "Email" },
 ];
 
 const defaultChannel = {
@@ -29,7 +30,7 @@ export const CreateChannel = () => {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
   const [newChannel, setNewChannel] = useState(defaultChannel);
-  const [systemType, setSystemType] = useState(null);
+  const [integratedSystemType, setIntegratedSystemType] = useState(null);
   const [selectedIntegratedSystem, setSelectedIntegratedSystem] =
     useState(null);
 
@@ -58,13 +59,16 @@ export const CreateChannel = () => {
   };
 
   useEffect(() => {
-    const channelSystemTypes = {
+    const integratedSystemTypes = {
       webhook: "custom",
       web: "website",
+      email: "klaviyo",
     };
 
     setSelectedIntegratedSystem(null); // clears the selected integrated system when channelType changes
-    setSystemType(channelSystemTypes[newChannel.channelType] || null);
+    setIntegratedSystemType(
+      integratedSystemTypes[newChannel.channelType] || null
+    );
   }, [newChannel.channelType]);
 
   return (
@@ -88,9 +92,6 @@ export const CreateChannel = () => {
         <Title>Add a Channel</Title>
         <hr />
         {error && <ErrorCard error={error} />}
-        <div className="text-warning">
-          Currently supports Webhook and Web channel types.
-        </div>
         <InputGroup className="mb-1">
           <TextInput
             label="Name"
@@ -118,7 +119,7 @@ export const CreateChannel = () => {
           <div>Choose an integrated system</div>
           <AsyncSelectIntegratedSystem
             value={selectedIntegratedSystem}
-            systemType={systemType}
+            systemType={integratedSystemType}
             onChange={(v) => setSelectedIntegratedSystem(v.value)}
           />
         </div>

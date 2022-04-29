@@ -71,12 +71,12 @@ export const updateChannelEndpointAsync = async ({
 
 interface UpdateChannelPropertiesRequest extends EntityRequest {
   properties: {
-    popupAskForEmail: boolean,
-    popupDelay: number,
-    popupHeader: string,
-    popupSubheader: string,
-    recommenderId: number
-    customerIdPrefix: string,
+    popupAskForEmail: boolean;
+    popupDelay: number;
+    popupHeader: string;
+    popupSubheader: string;
+    recommenderId: number;
+    customerIdPrefix: string;
   };
 }
 export const updateChannelPropertiesAsync = async ({
@@ -89,5 +89,24 @@ export const updateChannelPropertiesAsync = async ({
     path: `api/Channels/${id}/WebProperties`,
     method: "post",
     body: properties,
+  });
+};
+
+interface UpdateEmailChannelTriggerRequest extends EntityRequest {
+  listTrigger: {
+    listId: string;
+    listName: string;
+  };
+}
+export const updateEmailChannelTriggerAsync = async ({
+  token,
+  id,
+  listTrigger,
+}: UpdateEmailChannelTriggerRequest) => {
+  return await executeFetch({
+    token,
+    path: `api/Channels/${id}/EmailTrigger`,
+    method: "post",
+    body: listTrigger,
   });
 };

@@ -1,10 +1,10 @@
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
-using SignalBox.Core.Integrations;
+using SignalBox.Core.Adapters.Klaviyo;
 using SignalBox.Web.Dto;
 
 namespace SignalBox.Web.Controllers
@@ -36,6 +36,15 @@ namespace SignalBox.Web.Controllers
             system = await workflow.SetApiKeys(system, dto.PublicKey, dto.PrivateKey);
 
             return system;
+        }
+
+        /// <summary> Gets Klaviyo Lists.</summary>
+        [HttpGet("Lists")]
+        public async Task<IEnumerable<KlaviyoList>> GetLists(long id)
+        {
+            var system = await integratedSystemStore.Read(id);
+            var klaviyoLists = await workflow.GetLists(system);
+            return klaviyoLists;
         }
     }
 }

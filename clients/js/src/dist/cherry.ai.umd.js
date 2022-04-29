@@ -2148,6 +2148,14 @@
           body: properties,
       });
   };
+  const updateEmailChannelTriggerAsync = async ({ token, id, listTrigger, }) => {
+      return await executeFetch({
+          token,
+          path: `api/Channels/${id}/EmailTrigger`,
+          method: "post",
+          body: listTrigger,
+      });
+  };
 
   var channelsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -2156,7 +2164,8 @@
     fetchChannelAsync: fetchChannelAsync,
     deleteChannelAsync: deleteChannelAsync,
     updateChannelEndpointAsync: updateChannelEndpointAsync,
-    updateChannelPropertiesAsync: updateChannelPropertiesAsync
+    updateChannelPropertiesAsync: updateChannelPropertiesAsync,
+    updateEmailChannelTriggerAsync: updateEmailChannelTriggerAsync
   });
 
   /**

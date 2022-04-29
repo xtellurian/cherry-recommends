@@ -1,7 +1,7 @@
 import React from "react";
 import { PageHeading, ErrorCard } from "../../molecules";
 import { BigPopup } from "../../molecules/popups/BigPopup";
-import { AsyncSelectChannel } from "../../molecules/selectors/AsyncSelecChannel";
+import { AsyncSelectChannel } from "../../molecules/selectors/AsyncSelectChannel";
 import { useAccessToken } from "../../../api-hooks/token";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { addRecommenderChannelAsync } from "../../../api/promotionsRecommendersApi";
@@ -57,6 +57,17 @@ export const AddChannelPopup = ({
                 label="Endpoint"
                 value={
                   selectedItem.endpoint || selectedItem.properties?.endpoint
+                }
+              />
+            </div>
+          )}
+          {selectedItem?.channelType === "email" && (
+            <div className="mt-3">
+              <CopyableField
+                label="List Trigger"
+                value={
+                  selectedItem.listTriggerName ||
+                  selectedItem.properties?.listTriggerName
                 }
               />
             </div>

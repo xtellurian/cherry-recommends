@@ -13,10 +13,11 @@ namespace SignalBox.Test.Workflows
         {
             var mockWebhookChannelStore = new Mock<IWebhookChannelStore>();
             var mockWebChannelStore = new Mock<IWebChannelStore>();
+            var mockEmailChannelStore = new Mock<IEmailChannelStore>();
 
             mockWebhookChannelStore.SetupContext<IWebhookChannelStore, WebhookChannel>();
 
-            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
+            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, mockEmailChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
             var name = "MyChannel";
             var integratedSystem = new IntegratedSystem("abc", "Test", IntegratedSystemTypes.Custom);
             await workflow.CreateChannel(name, ChannelTypes.Webhook, integratedSystem);
@@ -30,10 +31,11 @@ namespace SignalBox.Test.Workflows
         {
             var mockWebhookChannelStore = new Mock<IWebhookChannelStore>();
             var mockWebChannelStore = new Mock<IWebChannelStore>();
+            var mockEmailChannelStore = new Mock<IEmailChannelStore>();
 
             mockWebhookChannelStore.SetupContext<IWebhookChannelStore, WebhookChannel>();
 
-            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
+            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, mockEmailChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
             var integratedSystem = new IntegratedSystem("abc", "Test", IntegratedSystemTypes.Segment);
 
             await Assert.ThrowsAsync<BadRequestException>(() => workflow.CreateChannel("MyChannel", ChannelTypes.Webhook, integratedSystem));
@@ -45,10 +47,11 @@ namespace SignalBox.Test.Workflows
         {
             var mockWebhookChannelStore = new Mock<IWebhookChannelStore>();
             var mockWebChannelStore = new Mock<IWebChannelStore>();
+            var mockEmailChannelStore = new Mock<IEmailChannelStore>();
 
             mockWebChannelStore.SetupContext<IWebChannelStore, WebChannel>();
 
-            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
+            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, mockEmailChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
             var name = "MyChannel";
             var integratedSystem = new IntegratedSystem("abc", "Test", IntegratedSystemTypes.Website);
             await workflow.CreateChannel(name, ChannelTypes.Web, integratedSystem);
@@ -62,10 +65,11 @@ namespace SignalBox.Test.Workflows
         {
             var mockWebhookChannelStore = new Mock<IWebhookChannelStore>();
             var mockWebChannelStore = new Mock<IWebChannelStore>();
+            var mockEmailChannelStore = new Mock<IEmailChannelStore>();
 
             mockWebChannelStore.SetupContext<IWebChannelStore, WebChannel>();
 
-            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
+            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, mockEmailChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
             var integratedSystem = new IntegratedSystem("abc", "Test", IntegratedSystemTypes.Custom);
 
             await Assert.ThrowsAsync<BadRequestException>(() => workflow.CreateChannel("MyChannel", ChannelTypes.Web, integratedSystem));
@@ -76,8 +80,9 @@ namespace SignalBox.Test.Workflows
         {
             var mockWebhookChannelStore = new Mock<IWebhookChannelStore>();
             var mockWebChannelStore = new Mock<IWebChannelStore>();
+            var mockEmailChannelStore = new Mock<IEmailChannelStore>();
 
-            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
+            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, mockEmailChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
             var integratedSystem = new IntegratedSystem("abc", "Test", IntegratedSystemTypes.Custom);
 
             await Assert.ThrowsAsync<BadRequestException>(() => workflow.CreateChannel("MyChannel", ChannelTypes.Email, integratedSystem));
@@ -93,10 +98,11 @@ namespace SignalBox.Test.Workflows
         {
             var mockWebhookChannelStore = new Mock<IWebhookChannelStore>();
             var mockWebChannelStore = new Mock<IWebChannelStore>();
+            var mockEmailChannelStore = new Mock<IEmailChannelStore>();
 
             mockWebChannelStore.SetupContext<IWebChannelStore, WebChannel>();
 
-            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
+            var workflow = new ChannelWorkflow(mockWebhookChannelStore.Object, mockWebChannelStore.Object, mockEmailChannelStore.Object, Utility.MockLogger<ChannelWorkflow>().Object);
 
             var integratedSystem = new IntegratedSystem("abc", "Test", IntegratedSystemTypes.Website);
             WebChannel channel = new WebChannel("myChannel", integratedSystem);

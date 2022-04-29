@@ -31,3 +31,15 @@ export const setKlaviyoApiKeysAsync = async ({
     throw await response.json();
   }
 };
+
+export const fetchKlaviyoListsAsync = async ({ token, tenant, id }) => {
+  const url = `api/integratedsystems/${id}/klaviyo/Lists`;
+  const response = await fetch(url, {
+    headers: headers(token, tenant),
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.json();
+  }
+};

@@ -43,3 +43,11 @@ export const updateChannelPropertiesAsync = async ({ token, id, properties, }) =
         body: properties,
     });
 };
+export const updateEmailChannelTriggerAsync = async ({ token, id, listTrigger, }) => {
+    return await executeFetch({
+        token,
+        path: `api/Channels/${id}/EmailTrigger`,
+        method: "post",
+        body: listTrigger,
+    });
+};

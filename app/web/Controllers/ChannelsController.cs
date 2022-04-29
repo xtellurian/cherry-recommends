@@ -65,5 +65,14 @@ namespace SignalBox.Web.Controllers
             channel = await workflow.UpdateWebChannelProperties(channel, dto.Host, dto.PopupAskForEmail, dto.PopupDelay, dto.PopupHeader, dto.PopupSubheader, dto.RecommenderId, dto.CustomerIdPrefix);
             return channel;
         }
+
+        /// <summary> Updates trigger properties of an email channel.</summary>
+        [HttpPost("{id}/EmailTrigger")]
+        public async Task<ChannelBase> UpdateEmailTriggerList(long id, [FromBody] UpdateEmailChannelTriggerDto dto)
+        {
+            var channel = await base.GetResource(id);
+            channel = await workflow.UpdateEmailChannelListTrigger(channel, dto.ListId, dto.ListName);
+            return channel;
+        }
     }
 }

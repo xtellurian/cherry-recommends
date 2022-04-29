@@ -19,6 +19,7 @@ import {
 import { AsyncButton, ErrorCard, Selector, Typography } from "../molecules";
 import { ToggleSwitch } from "../molecules/ToggleSwitch";
 import { useTenantName } from "../tenants/PathTenantProvider";
+import { EmailConfiguration } from "./EmailConfiguration";
 
 const WebhookConfiguration = ({ channel }) => {
   const token = useAccessToken();
@@ -63,7 +64,7 @@ const WebhookConfiguration = ({ channel }) => {
       </InputGroup>
 
       <AsyncButton
-        className="float-right mt-3 btn btn-outline-primary"
+        className="float-right mt-3 btn btn-primary"
         loading={saving}
         disabled={endpoint === channel.endpoint}
         onClick={handleSave}
@@ -257,7 +258,7 @@ const WebConfiguration = ({ channel }) => {
 
       <div className="clearfix">
         <AsyncButton
-          className="float-right mt-3 btn btn-outline-primary"
+          className="float-right mt-3 btn btn-primary"
           loading={saving}
           disabled={numericValidator(true, 100)(popupDelay).length > 0}
           onClick={handleSave}
@@ -276,6 +277,10 @@ export const ConfigureChannel = ({ channel }) => {
 
   if (channel.channelType === "web") {
     return <WebConfiguration channel={channel} />;
+  }
+
+  if (channel.channelType === "email") {
+    return <EmailConfiguration channel={channel} />;
   }
 
   return null;

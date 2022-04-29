@@ -70,6 +70,7 @@ namespace SignalBox.Infrastructure
         public DbSet<ChannelBase> Channels { get; set; }
         public DbSet<WebhookChannel> WebhookChannels { get; set; }
         public DbSet<WebChannel> WebChannels { get; set; }
+        public DbSet<EmailChannel> EmailChannels { get; set; }
         // optimisers
         public DbSet<PromotionOptimiser> PromotionOptimisers { get; set; }
 

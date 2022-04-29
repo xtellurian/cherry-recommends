@@ -167,6 +167,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IChannelStore, EFChannelStore>();
             services.AddScoped<IWebhookChannelStore, EFWebhookChannelStore>();
             services.AddScoped<IWebChannelStore, EFWebChannelStore>();
+            services.AddScoped<IEmailChannelStore, EFEmailChannelStore>();
 
             services.AddScoped<IHashedApiKeyStore, EFHashedAPIKeyStore>();
             services.AddScoped<IModelRegistrationStore, EFModelRegistrationStore>();

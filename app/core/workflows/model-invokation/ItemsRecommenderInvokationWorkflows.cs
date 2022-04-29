@@ -292,6 +292,7 @@ namespace SignalBox.Core.Workflows
             recommendation = await itemsRecommendationStore.Create(recommendation);
             context.LogMessage("Created a recommendation entity");
 
+            // TODO: delete ?? - channel already replaced destinations
             // send to any destinations
             await base.SendToDestinations(recommender, context, recommendation);
 
