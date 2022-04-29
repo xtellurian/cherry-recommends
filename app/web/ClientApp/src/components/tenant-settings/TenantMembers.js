@@ -5,7 +5,7 @@ import { ErrorCard, Spinner } from "../molecules";
 import { CardSection, Label } from "../molecules/layout/CardSection";
 import EntityRow from "../molecules/layout/EntityFlexRow";
 
-const MembershipRow = ({ membership }) => {
+export const MembershipRow = ({ membership }) => {
   return (
     <EntityRow>
       <div>

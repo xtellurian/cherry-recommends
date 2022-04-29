@@ -13,9 +13,8 @@ export function fetchEventTimelineAsync({ token, kind, eventType }: {
     kind: any;
     eventType: any;
 }): Promise<any>;
-export function fetchDashboardAsync({ token, scope }: {
+export function fetchGeneralSummaryAsync({ token }: {
     token: any;
-    scope: any;
 }): Promise<any>;
 export function fetchLatestActionsAsync({ token }: {
     token: any;

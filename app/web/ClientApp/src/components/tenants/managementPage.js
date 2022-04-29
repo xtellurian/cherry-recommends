@@ -2,25 +2,8 @@ import React from "react";
 import { Redirect, useRouteMatch } from "react-router-dom";
 import { useMemberships } from "../../api-hooks/tenantsApi";
 import { Spinner, Title, Subtitle, Navigation } from "../molecules";
-import { EntityRow } from "../molecules/layout/EntityRow";
+import MembershipRow from "./MembershipRow";
 
-const MembershipRow = ({ tenant }) => {
-  const link = `https://${window.location.host}/${tenant.name}?autoSignIn=true`;
-  return (
-    <EntityRow>
-      <div className="col-6">
-        <h5>{tenant.name}</h5>
-      </div>
-      <div className="col-6">
-        <a href={link}>
-          <button className="btn btn-outline-primary btn-block text-capitalize">
-            Go
-          </button>
-        </a>
-      </div>
-    </EntityRow>
-  );
-};
 export const ManagementPage = () => {
   const memberships = useMemberships();
   const { path } = useRouteMatch();

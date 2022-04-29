@@ -5,6 +5,7 @@ import { NoteBox } from "../molecules/NoteBox";
 import { EmptyStateText } from "../molecules/empty/EmptyStateText";
 import { Navigation } from "../molecules";
 import { hash } from "../menu/MenuIA";
+import { CardSection, Label, MoreLink } from "../molecules/layout/CardSection";
 
 const MAX_LIST_LENGTH = 5;
 export const Items = ({ className, items }) => {
@@ -17,7 +18,8 @@ export const Items = ({ className, items }) => {
   return (
     <>
       <div className={className}>
-        <NoteBox label="Promotions">
+        <CardSection className="p-4">
+          <Label>Promotions</Label>
           {items.loading && <Spinner />}
           {itemList &&
             itemList.map((i) => <PromotionRow key={i.id} promotion={i} />)}
@@ -37,17 +39,15 @@ export const Items = ({ className, items }) => {
               </Navigation>
             </EmptyState>
           )}
-          <div className="text-center text-muted">
-            <Navigation
-              to={{
-                pathname: "/promotions",
-                hash: hash.promotions,
-              }}
-            >
-              <button className="btn btn-link btn-sm">View More</button>
-            </Navigation>
-          </div>
-        </NoteBox>
+          <MoreLink
+            to={{
+              pathname: "/promotions",
+              hash: hash.promotions,
+            }}
+          >
+            View more
+          </MoreLink>
+        </CardSection>
       </div>
     </>
   );

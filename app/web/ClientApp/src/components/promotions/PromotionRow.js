@@ -13,7 +13,7 @@ export const PromotionRow = ({ promotion, children }) => {
 
   const shortenDescription = (description) => {
     if (!description || description === "") {
-      return "No Description";
+      return "";
     } else if (description.length > 22) {
       return description.substring(0, 22) + "...";
     } else {
@@ -32,7 +32,7 @@ export const PromotionRow = ({ promotion, children }) => {
       </div>{" "}
       <div className="flex-grow-1 text-left">{promotion.name}</div>
       <div>{shortenDescription(promotion.description)}</div>
-      <div className="flex-shrink-1 p-2">{children}</div>
+      {children ? <div className="flex-shrink-1 p-2">{children}</div> : null}
     </FlexRow>
   );
 };

@@ -2,10 +2,10 @@ import React from "react";
 import { usePromotionsRecommenders } from "../../api-hooks/promotionsRecommendersApi";
 import { useParameterSetRecommenders } from "../../api-hooks/parameterSetRecommendersApi";
 import { EmptyState, Navigation, Spinner } from "../molecules";
-import { NoteBox } from "../molecules/NoteBox";
 import { EmptyStateText } from "../molecules/empty/EmptyStateText";
 import { RecommenderRow } from "../recommenders/RecommenderRow";
 import { hash } from "../menu/MenuIA";
+import { CardSection, Label, MoreLink } from "../molecules/layout/CardSection";
 
 const MAX_LIST_LENGTH = 5;
 export const Recommenders = ({ className, hasItems }) => {
@@ -39,7 +39,8 @@ export const Recommenders = ({ className, hasItems }) => {
   return (
     <>
       <div className={className}>
-        <NoteBox label="Recommenders">
+        <CardSection className="p-4">
+          <Label>Recommenders</Label>
           {loading && <Spinner />}
           {allRecommenders.map((r) => (
             <RecommenderRow key={r.uniqueId} recommender={r} />
@@ -50,7 +51,6 @@ export const Recommenders = ({ className, hasItems }) => {
               <EmptyStateText>
                 You haven't created any recommenders.
               </EmptyStateText>
-
               <Navigation
                 to={{
                   pathname: "/recommenders/promotions-recommenders/create",
@@ -63,17 +63,15 @@ export const Recommenders = ({ className, hasItems }) => {
               </Navigation>
             </EmptyState>
           )}
-          <div className="text-center text-muted">
-            <Navigation
-              to={{
-                pathname: "/recommenders/promotions-recommenders",
-                hash: hash.promotionsRecommenders,
-              }}
-            >
-              <button className="btn btn-link btn-sm">View More</button>
-            </Navigation>
-          </div>
-        </NoteBox>
+          <MoreLink
+            to={{
+              pathname: "/recommenders/promotions-recommenders",
+              hash: hash.promotionsRecommenders,
+            }}
+          >
+            View More
+          </MoreLink>
+        </CardSection>
       </div>
     </>
   );

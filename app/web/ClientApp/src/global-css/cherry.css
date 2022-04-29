@@ -104,6 +104,12 @@ header a {
   background-color: var(--cherry-pink);
   border-color: var(--cherry-dark-pink);
 }
+.btn-link {
+  color: var(--cherry-purple);
+}
+.btn-link:hover {
+  color: var(--cherry-pink);
+}
 .input-group .btn {
   border-radius: 0px;
 }

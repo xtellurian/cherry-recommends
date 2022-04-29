@@ -5,8 +5,8 @@ import {
   fetchEventKindNamesAsync,
   fetchEventKindSummaryAsync,
   fetchEventTimelineAsync,
-  fetchDashboardAsync,
   fetchLatestActionsAsync,
+  fetchGeneralSummaryAsync,
 } from "../api/dataSummaryApi";
 import { useEnvironmentReducer } from "./environmentsApi";
 
@@ -107,7 +107,7 @@ export const useEventTimeline = ({ kind, eventType }) => {
   return { result };
 };
 
-export const useDashboard = ({ scope }) => {
+export const useGeneralSummary = ({ trigger } = {}) => {
   const token = useAccessToken();
   const [environment] = useEnvironmentReducer();
   const [result, setState] = React.useState({
@@ -116,14 +116,13 @@ export const useDashboard = ({ scope }) => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchDashboardAsync({
+      fetchGeneralSummaryAsync({
         token,
-        scope,
       })
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, scope, environment]);
+  }, [token, trigger, environment]);
 
   return result;
 };

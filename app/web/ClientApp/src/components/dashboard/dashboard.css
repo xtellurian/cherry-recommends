@@ -1,0 +1,16 @@
+.dashboard-this-is {
+  text-align: center;
+  color: var(--cherry-purple);
+  font-size: x-large;
+}
+.dashboard-this-is .tenant-name {
+  text-transform: capitalize;
+}
+
+.fact {
+  color: var(--cherry-purple);
+}
+
+.fact-value {
+  font-size: larger;
+}

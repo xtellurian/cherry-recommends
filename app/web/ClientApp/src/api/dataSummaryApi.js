@@ -7,6 +7,6 @@ export const fetchEventKindNamesAsync = dataSummary.fetchEventKindNamesAsync;
 
 export const fetchEventTimelineAsync = dataSummary.fetchEventTimelineAsync;
 
-export const fetchDashboardAsync = dataSummary.fetchDashboardAsync;
+export const fetchGeneralSummaryAsync = dataSummary.fetchGeneralSummaryAsync;
 
 export const fetchLatestActionsAsync = dataSummary.fetchLatestActionsAsync;

@@ -14,7 +14,7 @@ namespace SignalBox.Core.Workflows
         private readonly ILogger<DataSummaryWorkflows> logger;
         private readonly ICustomerStore customerStore;
         private readonly IDateTimeProvider dateTimeProvider;
-        private readonly IItemsRecommendationStore itemsRecommendationStore;
+        private readonly IItemsRecommendationStore promoRecommendationStore;
         private readonly IParameterSetRecommendationStore parameterSetRecommendationStore;
         private readonly ITelemetry telemetry;
 
@@ -22,7 +22,7 @@ namespace SignalBox.Core.Workflows
                                     ILogger<DataSummaryWorkflows> logger,
                                     ICustomerStore customerStore,
                                     IDateTimeProvider dateTimeProvider,
-                                    IItemsRecommendationStore itemsRecommendationStore,
+                                    IItemsRecommendationStore promoRecommendationStore,
                                     IParameterSetRecommendationStore parameterSetRecommendationStore,
                                     ITelemetry telemetry)
         {
@@ -30,7 +30,7 @@ namespace SignalBox.Core.Workflows
             this.logger = logger;
             this.customerStore = customerStore;
             this.dateTimeProvider = dateTimeProvider;
-            this.itemsRecommendationStore = itemsRecommendationStore;
+            this.promoRecommendationStore = promoRecommendationStore;
             this.parameterSetRecommendationStore = parameterSetRecommendationStore;
             this.telemetry = telemetry;
         }
@@ -105,38 +105,29 @@ namespace SignalBox.Core.Workflows
             return new EventCountTimeline(moments);
         }
 
-        public async Task<Dashboard> GenerateDashboardData(string scope = null)
+        public async Task<GeneralSummary> CalculateGeneralSummary()
         {
-            IEnumerable<CustomerEvent> latestEvents = new List<CustomerEvent>();
+            var now = dateTimeProvider.Now;
+            var yesterday = now.AddDays(-1);
             var totalCustomers = await customerStore.Count();
-            var recommendations = new List<RecommendationEntity>();
+            int eventCount24Hour = 0;
+
             var timeCutoff = dateTimeProvider.Now.AddMonths(-1);
             try
             {
-                latestEvents = await eventStore.Latest(timeCutoff);
+                eventCount24Hour = await eventStore.Count(_ => _.Created >= yesterday);
             }
             catch (Exception ex)
             {
-                logger.LogError("Timeout querying latest events", ex);
+                logger.LogError("Timeout querying 24H event count", ex);
                 throw;
             }
 
+            int recommendationCount24Hour = 0;
             try
             {
-                var parameterSetRecommendations = await parameterSetRecommendationStore.Query(
-                    new EntityStoreQueryOptions<ParameterSetRecommendation>
-                    {
-                        PageSize = 10
-                    });
-                recommendations.AddRange(parameterSetRecommendations.Items);
-                var itemsRecommendations = await itemsRecommendationStore.Query(new EntityStoreQueryOptions<ItemsRecommendation>
-                {
-                    PageSize = 10
-                });
-
-                recommendations.AddRange(itemsRecommendations.Items);
-                recommendations.Sort((x, y) => DateTimeOffset.Compare(y.LastUpdated, x.LastUpdated));
-                recommendations = recommendations.Take(20).ToList();
+                recommendationCount24Hour += await parameterSetRecommendationStore.Count(_ => _.Created >= yesterday);
+                recommendationCount24Hour += await promoRecommendationStore.Count(_ => _.Created >= yesterday);
             }
             catch (Exception ex)
             {
@@ -144,9 +135,7 @@ namespace SignalBox.Core.Workflows
                 throw;
             }
 
-
-
-            return new Dashboard(totalCustomers, latestEvents, recommendations);
+            return new GeneralSummary(totalCustomers, eventCount24Hour, recommendationCount24Hour);
         }
     }
 }

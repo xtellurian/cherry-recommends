@@ -23,11 +23,10 @@ export const fetchEventTimelineAsync = async ({ token, kind, eventType }) => {
         token,
     });
 };
-export const fetchDashboardAsync = async ({ token, scope }) => {
+export const fetchGeneralSummaryAsync = async ({ token }) => {
     return await executeFetch({
-        path: "api/datasummary/dashboard",
+        path: "api/DataSummary/GeneralSummary",
         token,
-        query: { scope },
     });
 };
 export const fetchLatestActionsAsync = async ({ token }) => {

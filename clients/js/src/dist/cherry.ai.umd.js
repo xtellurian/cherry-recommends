@@ -2343,11 +2343,10 @@
           token,
       });
   };
-  const fetchDashboardAsync = async ({ token, scope }) => {
+  const fetchGeneralSummaryAsync = async ({ token }) => {
       return await executeFetch({
-          path: "api/datasummary/dashboard",
+          path: "api/DataSummary/GeneralSummary",
           token,
-          query: { scope },
       });
   };
   const fetchLatestActionsAsync = async ({ token }) => {
@@ -2363,7 +2362,7 @@
     fetchEventKindNamesAsync: fetchEventKindNamesAsync,
     fetchEventKindSummaryAsync: fetchEventKindSummaryAsync,
     fetchEventTimelineAsync: fetchEventTimelineAsync,
-    fetchDashboardAsync: fetchDashboardAsync,
+    fetchGeneralSummaryAsync: fetchGeneralSummaryAsync,
     fetchLatestActionsAsync: fetchLatestActionsAsync
   });
 

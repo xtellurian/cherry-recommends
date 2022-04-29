@@ -25,11 +25,10 @@ namespace SignalBox.Web.Controllers
             this.workflows = workflows;
         }
 
-        [HttpGet("dashboard")]
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<Dashboard> DashboardData(string scope = null)
+        [HttpGet("GeneralSummary")]
+        public async Task<GeneralSummary> GeneralSummary()
         {
-            return await workflows.GenerateDashboardData(scope);
+            return await workflows.CalculateGeneralSummary();
         }
 
         /// <summary>Summarises the events that have been collected.</summary>

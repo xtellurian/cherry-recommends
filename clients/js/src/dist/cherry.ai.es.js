@@ -2337,11 +2337,10 @@ const fetchEventTimelineAsync = async ({ token, kind, eventType }) => {
         token,
     });
 };
-const fetchDashboardAsync = async ({ token, scope }) => {
+const fetchGeneralSummaryAsync = async ({ token }) => {
     return await executeFetch({
-        path: "api/datasummary/dashboard",
+        path: "api/DataSummary/GeneralSummary",
         token,
-        query: { scope },
     });
 };
 const fetchLatestActionsAsync = async ({ token }) => {
@@ -2357,7 +2356,7 @@ var dataSummaryApi = /*#__PURE__*/Object.freeze({
   fetchEventKindNamesAsync: fetchEventKindNamesAsync,
   fetchEventKindSummaryAsync: fetchEventKindSummaryAsync,
   fetchEventTimelineAsync: fetchEventTimelineAsync,
-  fetchDashboardAsync: fetchDashboardAsync,
+  fetchGeneralSummaryAsync: fetchGeneralSummaryAsync,
   fetchLatestActionsAsync: fetchLatestActionsAsync
 });
 
