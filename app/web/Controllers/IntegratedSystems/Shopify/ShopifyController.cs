@@ -72,16 +72,16 @@ namespace SignalBox.Web.Controllers
                 throw new SecurityException("Invalid Shopify request.");
             }
 
-            if (Request.Headers.TryGetValue("Host", out var host))
+            var tenant = tenantProvider.Current();
+            var redirectUrl = $"{Request.Scheme}://{Request.Host}/_connect/shopify/callback";
+            var state = string.Empty;
+            if (tenant != null)
             {
-                var redirectUrl = $"{Request.Scheme}://{host}/_connect/shopify/callback";
-                var state = string.Empty;
-                var url = await shopifyAdminWorkflows.BuildAuthorizationUrl(shop, redirectUrl, state);
-
-                return Redirect(url.ToString());
+                state = tenant.Name;
             }
+            var url = await shopifyAdminWorkflows.BuildAuthorizationUrl(shop, redirectUrl, state);
 
-            return BadRequest();
+            return Redirect(url.ToString());
         }
 
         /// <summary>Establish Shopify connection by creating a new integrated system. Call this after a successful Shopify app installation.</summary>

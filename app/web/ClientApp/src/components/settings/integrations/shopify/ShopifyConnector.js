@@ -9,15 +9,13 @@ import {
 } from "../../../../api/shopifyApi";
 import { useAnalytics } from "../../../../analytics/analyticsHooks";
 import { useNavigation } from "../../../../utility/useNavigation";
-import { Selector } from "../../../molecules";
+import { AsyncButton, Selector } from "../../../molecules";
 import { useMemberships } from "../../../../api-hooks/tenantsApi";
 import { useEnvironments } from "../../../../api-hooks/environmentsApi";
 import { setTenant } from "cherry.ai";
 import { InputLabel } from "../../../molecules/fields/InputLabel";
 import { useHosting } from "../../../tenants/HostingProvider";
 import { Spinner } from "reactstrap";
-
-const baseUrl = `${window.location.protocol}//${window.location.host}`;
 
 const stages = ["READY", "INSTALLING", "SAVING", "COMPLETE"];
 
@@ -74,6 +72,7 @@ const SystemStateView = ({ integratedSystem, tenant }) => {
 
 export const ShopifyConnector = () => {
   const query = useQuery();
+  const state = query.get("state"); // value is the tenantName
   const code = query.get("code");
   const shop = query.get("shop");
   const xId = query.get("x-id");
@@ -93,6 +92,7 @@ export const ShopifyConnector = () => {
     code: code,
     shop: shop,
   });
+  const [requestLoading, setRequestLoading] = React.useState(false);
 
   const hosting = useHosting();
   const token = useAccessToken();
@@ -108,8 +108,7 @@ export const ShopifyConnector = () => {
     environments.items &&
     environments.items.length <= 1;
   const showConnect = !singleOption && stage === stages[2];
-  const showSelectTenant = memberships.length >= 1 && data.tenant;
-  console.debug("showSelectTenant", showSelectTenant);
+  const showSelectTenant = memberships.length >= 1 && !xTenant && !state;
   React.useEffect(() => {
     if (integratedSystem?.integrationStatus === "ok" && stage !== stages[3]) {
       setStage(stages[3]);
@@ -117,7 +116,7 @@ export const ShopifyConnector = () => {
   }, [integratedSystem, stage]);
 
   React.useEffect(() => {
-    if (!memberships.loading) {
+    if (!memberships.loading && !memberships.error) {
       setMembershipOptions(
         memberships.map((_) => ({
           label: _.name,
@@ -128,7 +127,11 @@ export const ShopifyConnector = () => {
   }, [memberships]);
 
   React.useEffect(() => {
-    if (!environments.loading && environments.items?.length) {
+    if (
+      !environments.loading &&
+      !environments.error &&
+      environments.items?.length
+    ) {
       setEnvironmentOptions(
         environments.items.map((_) => ({
           label: _.name,
@@ -140,16 +143,8 @@ export const ShopifyConnector = () => {
 
   React.useEffect(() => {
     if (!xId && hosting && !memberships.loading && !environments.loading) {
-      // Single tenant and single environment scenario
-      if (hosting.multitenant && memberships.length === 1 && !data.tenant) {
-        setData({
-          ...data,
-          tenant: memberships[0].name,
-        });
-
-        // Inform SDK what tenant to use in order to get the correct environments
-        setTenant(memberships[0].name);
-      } else if (
+      // force only on single tenant and single environment
+      if (
         !hosting.multitenant &&
         environments.items &&
         environments.items.length <= 1
@@ -160,7 +155,20 @@ export const ShopifyConnector = () => {
         });
       }
     }
-  }, [memberships, environments, hosting, data.tenant, xId]);
+  }, [memberships, environments, hosting, xId]);
+
+  React.useEffect(() => {
+    const _tenant = xTenant ?? state;
+    if (hosting && hosting.multitenant && _tenant) {
+      setData({
+        ...data,
+        tenant: _tenant,
+      });
+
+      // Inform SDK what tenant to use in order to get the correct environments
+      setTenant(_tenant);
+    }
+  }, [hosting, xTenant, state]);
 
   React.useEffect(() => {
     if (data.force && token) {
@@ -190,6 +198,7 @@ export const ShopifyConnector = () => {
 
   const handleConnect = () => {
     const qsParams = new URLSearchParams(window.location.search);
+    setRequestLoading(true);
     shopifyConnectAsync({
       data,
       token,
@@ -209,7 +218,8 @@ export const ShopifyConnector = () => {
       .catch((e) => {
         analytics.track("site:settings_integration_shopify_connect_failure");
         setError(e);
-      });
+      })
+      .finally(() => setRequestLoading(false));
   };
 
   const setSelectedTenant = (o) => {
@@ -275,13 +285,14 @@ export const ShopifyConnector = () => {
           </div>
 
           <div className="text-center m-3">
-            <button
+            <AsyncButton
+              className="btn btn-outline-primary"
+              loading={requestLoading}
               disabled={isConnectDisabled}
               onClick={handleConnect}
-              className="btn btn-primary"
             >
               Connect
-            </button>
+            </AsyncButton>
           </div>
         </React.Fragment>
       )}
