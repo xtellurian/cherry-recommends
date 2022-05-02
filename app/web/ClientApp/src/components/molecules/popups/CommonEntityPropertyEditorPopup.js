@@ -1,8 +1,10 @@
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import Modal from "react-modal";
 import { ErrorCard } from "../ErrorCard";
 import { PropertiesEditor } from "../PropertiesEditor";
-import { big } from "./styles";
+import { big, closeButton } from "./styles";
 
 export const CommonEntityPropertyEditorPopup = ({
   isOpen,
@@ -31,6 +33,13 @@ export const CommonEntityPropertyEditorPopup = ({
       style={big}
       contentLabel="Edit Properties"
     >
+      <button
+        className="btn btn-link"
+        onClick={onRequestClose}
+        style={closeButton}
+      >
+        <FontAwesomeIcon icon={faCircleXmark} />
+      </button>
       <div className="text-center">
         <div className="pb-3">
           <h5>{label}</h5>

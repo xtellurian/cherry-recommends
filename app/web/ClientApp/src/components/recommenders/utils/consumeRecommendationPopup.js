@@ -1,10 +1,12 @@
 import React from "react";
 import Modal from "react-modal";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
-import { small } from "../../molecules/popups/styles";
+import { closeButton, small } from "../../molecules/popups/styles";
 import { createRecommendationConsumedEventAsync } from "../../../api/eventsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { ErrorCard } from "../../molecules";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 export const ConsumeRecommendationPopup = ({
   isOpen,
@@ -48,6 +50,13 @@ export const ConsumeRecommendationPopup = ({
         style={small}
         contentLabel="Consume Recommendation"
       >
+        <button
+          className="btn btn-link"
+          onClick={onRequestClose}
+          style={closeButton}
+        >
+          <FontAwesomeIcon icon={faCircleXmark} />
+        </button>
         {error && <ErrorCard error={error} />}
         <div className="m-3">Consume this recommendation?</div>
 

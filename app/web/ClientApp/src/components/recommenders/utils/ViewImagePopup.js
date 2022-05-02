@@ -1,8 +1,10 @@
 import React from "react";
 import Modal from "react-modal";
 import { Spinner } from "../../molecules/Spinner";
-import { big } from "../../molecules/popups/styles";
+import { big, closeButton } from "../../molecules/popups/styles";
 import { EmptyState } from "../../molecules";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 export const ViewReportImagePopup = ({
   isOpen,
@@ -19,6 +21,13 @@ export const ViewReportImagePopup = ({
       style={big}
       contentLabel="Report Image"
     >
+      <button
+        className="btn btn-link"
+        onClick={onRequestClose}
+        style={closeButton}
+      >
+        <FontAwesomeIcon icon={faCircleXmark} />
+      </button>
       <div className="text-center">
         <div className="m-2">
           {reportImgBlob.loading && <Spinner>Loading Image</Spinner>}

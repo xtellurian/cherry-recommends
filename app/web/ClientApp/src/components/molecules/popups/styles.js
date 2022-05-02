@@ -24,3 +24,9 @@ export const big = {
   },
   overlay,
 };
+
+export const closeButton = {
+  position: "absolute",
+  top: "0",
+  right: "0",
+};
