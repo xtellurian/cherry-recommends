@@ -301,9 +301,7 @@ export const CreateRecommender = () => {
               isMulti
               isSearchable
               placeholder="Select channels - maximum of 2."
-              noOptionsMessage={(inputValue) =>
-                `No channels found matching ${inputValue}`
-              }
+              noOptionsMessage={(inputValue) => `No Channels Available`}
               defaultValue={selectedChannels}
               onChange={(so) => {
                 setSelectedChannels(so);
