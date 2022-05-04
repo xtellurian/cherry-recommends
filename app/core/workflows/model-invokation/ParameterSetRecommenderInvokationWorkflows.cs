@@ -33,8 +33,9 @@ namespace SignalBox.Core.Workflows
                                     IWebhookSenderClient webhookSenderClient,
                                     IHistoricCustomerMetricStore historicFeatureStore,
                                     ICustomerWorkflow customerWorkflow,
-                                    IRecommenderModelClientFactory modelClientFactory)
-                                     : base(parameterSetRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider)
+                                    IRecommenderModelClientFactory modelClientFactory,
+                                    IKlaviyoSystemWorkflow klaviyoWorkflow)
+                                     : base(parameterSetRecommenderStore, historicFeatureStore, webhookSenderClient, dateTimeProvider, klaviyoWorkflow)
         {
             this.logger = logger;
             this.recommendationCache = recommendationCache;

@@ -14,10 +14,12 @@ namespace SignalBox.Test.Workflows
             var mockIntegratedSystemStore = new Mock<IIntegratedSystemStore>();
             var mockKlaviyoService = new Mock<IKlaviyoService>();
             var mockChannelStore = new Mock<IEmailChannelStore>();
+            var mockSystemMapStore = new Mock<ITrackedUserSystemMapStore>();
 
             mockIntegratedSystemStore.SetupContext<IIntegratedSystemStore, IntegratedSystem>();
 
-            var workflow = new KlaviyoSystemWorkflow(new System.Net.Http.HttpClient(), mockIntegratedSystemStore.Object, mockKlaviyoService.Object, mockChannelStore.Object, Utility.MockLogger<KlaviyoSystemWorkflow>().Object);
+            var workflow = new KlaviyoSystemWorkflow(new System.Net.Http.HttpClient(), mockIntegratedSystemStore.Object,
+                mockKlaviyoService.Object, mockChannelStore.Object, mockSystemMapStore.Object, Utility.MockLogger<KlaviyoSystemWorkflow>().Object);
             var integratedSystem = new IntegratedSystem("test", "test", IntegratedSystemTypes.Klaviyo);
             var result = await workflow.SetApiKeys(integratedSystem, "abcde", "fghij12345");
 
@@ -36,10 +38,12 @@ namespace SignalBox.Test.Workflows
             var mockIntegratedSystemStore = new Mock<IIntegratedSystemStore>();
             var mockKlaviyoService = new Mock<IKlaviyoService>();
             var mockChannelStore = new Mock<IEmailChannelStore>();
+            var mockSystemMapStore = new Mock<ITrackedUserSystemMapStore>();
 
             mockIntegratedSystemStore.SetupContext<IIntegratedSystemStore, IntegratedSystem>();
 
-            var workflow = new KlaviyoSystemWorkflow(new System.Net.Http.HttpClient(), mockIntegratedSystemStore.Object, mockKlaviyoService.Object, mockChannelStore.Object, Utility.MockLogger<KlaviyoSystemWorkflow>().Object);
+            var workflow = new KlaviyoSystemWorkflow(new System.Net.Http.HttpClient(), mockIntegratedSystemStore.Object,
+                mockKlaviyoService.Object, mockChannelStore.Object, mockSystemMapStore.Object, Utility.MockLogger<KlaviyoSystemWorkflow>().Object);
             var integratedSystem = new IntegratedSystem("abc", "Test", systemType);
 
             await Assert.ThrowsAsync<BadRequestException>(() => workflow.SetApiKeys(integratedSystem, "abc", "def"));

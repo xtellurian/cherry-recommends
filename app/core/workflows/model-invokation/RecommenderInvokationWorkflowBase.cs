@@ -13,17 +13,20 @@ namespace SignalBox.Core.Workflows
         private readonly IHistoricCustomerMetricStore customerMetricStore;
         private readonly IWebhookSenderClient webhookSender;
         protected readonly IDateTimeProvider dateTimeProvider;
+        private readonly IKlaviyoSystemWorkflow klaviyoWorkflow;
 
         public RecommenderInvokationWorkflowBase(
                                                  IRecommenderStore<T> store,
                                                  IHistoricCustomerMetricStore customerMetricStore,
                                                  IWebhookSenderClient webhookSender,
-                                                 IDateTimeProvider dateTimeProvider)
+                                                 IDateTimeProvider dateTimeProvider,
+                                                 IKlaviyoSystemWorkflow klaviyoWorkflow)
         {
             this.store = store;
             this.customerMetricStore = customerMetricStore;
             this.webhookSender = webhookSender;
             this.dateTimeProvider = dateTimeProvider;
+            this.klaviyoWorkflow = klaviyoWorkflow;
         }
 
 #nullable enable
@@ -73,6 +76,10 @@ namespace SignalBox.Core.Workflows
                 {
                     await webhookSender.Send(webhookChannel, recommendation);
                     context.LogMessage($"Send to Webhook endpoint: {webhookChannel.Endpoint}");
+                }
+                else if (channel is EmailChannel emailChannel)
+                {
+                    await klaviyoWorkflow.SendRecommendation(emailChannel, recommendation);
                 }
             }
         }
