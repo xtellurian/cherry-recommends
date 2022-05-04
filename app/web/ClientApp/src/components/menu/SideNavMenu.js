@@ -3,8 +3,7 @@ import { useLocation } from "react-router-dom";
 
 import { useAuth } from "../../utility/useAuth";
 import { useTokenScopes } from "../../api-hooks/token";
-import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
-import { useAuthenticatedIA, hash as hashes } from "./MenuIA";
+import { useAuthenticatedIA } from "./MenuIA";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Navigation } from "../molecules";
@@ -48,7 +47,6 @@ export const SideNavMenu = () => {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
   const scopes = useTokenScopes();
-  const integratedSystems = useIntegratedSystems();
   const authIA = useAuthenticatedIA(scopes);
   const memberships = useMemberships();
 
@@ -62,30 +60,9 @@ export const SideNavMenu = () => {
   const authenticatedIA = useMemo(
     () =>
       authIA.map((ia) => {
-        // add integrated systems as subitems of integration menu
-        if (ia.name === "Integrations") {
-          const _integratedSystems =
-            integratedSystems?.items?.length > 0 ? integratedSystems.items : [];
-
-          const newItems = _integratedSystems.reduce((acc, curr) => {
-            return [
-              ...acc,
-              {
-                name: curr.name,
-                to: {
-                  pathname: `/settings/integrations/detail/${curr.id}`,
-                  hash: hashes.integration,
-                },
-              },
-            ];
-          }, []);
-
-          return { ...ia, items: newItems };
-        }
-
         return ia;
       }),
-    [authIA, integratedSystems.items]
+    [authIA]
   );
 
   return (

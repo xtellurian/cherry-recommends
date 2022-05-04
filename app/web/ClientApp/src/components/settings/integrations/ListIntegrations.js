@@ -31,12 +31,24 @@ const IntegrationRow = ({ integration }) => {
     </div>
   );
 };
-export const ListIntegrations = () => {
+export const ListIntegrations = ({ title, systemTypes }) => {
   const result = useIntegratedSystems();
 
   if (result.error) {
     return <ErrorCard error={result.error} />;
   }
+
+  let integrations = [];
+
+  if (result.items) {
+    integrations = result.items;
+    if (systemTypes) {
+      integrations = integrations.filter((_) =>
+        systemTypes.includes(_.systemType)
+      );
+    }
+  }
+
   return (
     <React.Fragment>
       <div>
@@ -46,16 +58,17 @@ export const ListIntegrations = () => {
         >
           Create Integration
         </CreateButtonClassic>
-        <Title>Integrations</Title>
+        <Title>{title ?? "Integrations"}</Title>
         <hr />
         {result.loading && <Spinner />}
-        {result.items &&
-          result.items.length > 0 &&
-          result.items.map((i) => (
+        {result &&
+          result.items &&
+          integrations.length > 0 &&
+          integrations.map((i) => (
             <IntegrationRow key={i.id} integration={i} />
           ))}
 
-        {result && result.items && result.items.length === 0 && (
+        {result && result.items && integrations.length === 0 && (
           <EmptyList>
             No Integrated Systems.
             <CreateButtonClassic to="/settings/integrations/create">
@@ -65,5 +78,18 @@ export const ListIntegrations = () => {
         )}
       </div>
     </React.Fragment>
+  );
+};
+
+export const ListConnections = () => {
+  return <ListIntegrations title={"Connections"} />;
+};
+
+export const ListDataSources = () => {
+  return (
+    <ListIntegrations
+      title={"Data Sources"}
+      systemTypes={["segment", "hubspot", "shopify"]}
+    />
   );
 };

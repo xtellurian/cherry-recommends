@@ -45,14 +45,6 @@ const AuthenticatedIA = [
           hash: `${hash.promotions}_recommenders`,
         },
       },
-      {
-        name: "Channels",
-        to: {
-          pathname: "/channels",
-          search: "",
-          hash: `${hash.promotions}_channels`,
-        },
-      },
     ],
   },
   {
@@ -140,7 +132,32 @@ const AuthenticatedIA = [
       search: "",
       hash: hash.integration,
     },
-    items: [],
+    items: [
+      {
+        name: "Connections",
+        to: {
+          pathname: "/settings/integrations",
+          search: "",
+          hash: `${hash.integration}`,
+        },
+      },
+      {
+        name: "Data Sources",
+        to: {
+          pathname: "/settings/integrations/data-sources",
+          search: "",
+          hash: `${hash.integration}_datasources`,
+        },
+      },
+      {
+        name: "Channels",
+        to: {
+          pathname: "/channels",
+          search: "",
+          hash: `${hash.integration}_channels`,
+        },
+      },
+    ],
   },
 ];
 

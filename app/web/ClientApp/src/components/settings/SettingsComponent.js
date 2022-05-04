@@ -41,10 +41,6 @@ export const SettingsComponent = () => {
           path={`${path}/integrations`}
           component={IntegrationsComponent}
         />
-        <AuthorizeRoute
-          path={`${path}/integrations`}
-          component={IntegrationsComponent}
-        />
         <AuthorizeRoute path={`${path}/info`} component={DeploymentInfo} />
         <AuthorizeRoute
           path={`${path}/environments`}
