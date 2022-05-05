@@ -202,6 +202,28 @@ export const NavMenu = ({ children }) => {
                         </DropdownItem>
                       </DropdownMenu>
                     </UncontrolledDropdown>
+
+                    <UncontrolledDropdown nav inNavbar>
+                      <DropdownToggle nav className="ml-md-2">
+                        Help
+                      </DropdownToggle>
+                      <DropdownMenu right>
+                        <a
+                          className="text-dark"
+                          target="_blank"
+                          href={`http://docs.cherry.ai`}
+                        >
+                          <DropdownItem>Docs</DropdownItem>
+                        </a>
+                        <a
+                          className="text-dark"
+                          target="_blank"
+                          href={`http://docs.cherry.ai/contact`}
+                        >
+                          <DropdownItem>Contact Us</DropdownItem>
+                        </a>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
                   </React.Fragment>
                 ) : null}
               </ul>

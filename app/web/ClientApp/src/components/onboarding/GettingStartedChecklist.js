@@ -161,6 +161,9 @@ export const GettingStartedChecklistComponent = ({ requestClose }) => {
           </>
         )}
       </div>
+      <div className="mt-2">
+        Need Help? Click on the Help menu on the top navigation bar.
+      </div>
     </>
   );
 };
