@@ -61,6 +61,7 @@ namespace SignalBox.Core.Adapters.Shopify
             properties.Add("discountApplications", model.DiscountApplications);
             properties.Add("lineItems", model.LineItems);
             properties.Add("shippingLines", model.ShippingLines);
+            properties.Add("taxLines", model.TaxLines);
             properties.Add("customerId", model.Customer?.Id);
             properties.Add("customerEmail", model.Customer?.Email);
             properties.Add("customerFirstName", model.Customer?.FirstName);

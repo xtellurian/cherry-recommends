@@ -106,7 +106,7 @@ namespace SignalBox.Core.Adapters.Shopify
         /// An array of <see cref="TaxLine"/> objects, each of which details the taxes applicable to this <see cref="LineItem"/>.
         /// </summary>
         [JsonPropertyName("tax_lines")]
-        public IEnumerable<TaxLine> TaxLines { get; set; }
+        public IEnumerable<object> TaxLines { get; set; }
 
         /// <summary>
         /// The payment gateway used to tender the tip, such as shopify_payments. Present only on tips.
@@ -182,7 +182,7 @@ namespace SignalBox.Core.Adapters.Shopify
         /// A list of duty objects, each containing information about a duty on the line item
         /// </summary>
         [JsonPropertyName("duties")]
-        public IEnumerable<LineItemDuty> Duties { get; set; }
+        public IEnumerable<object> Duties { get; set; }
 
         /// <summary>
         /// The location of the line item's fulfillment origin.

@@ -140,7 +140,7 @@ namespace SignalBox.Core.Adapters.Shopify
         /// An array of <see cref="Fulfillment"/> objects for this order.
         /// </summary>
         [JsonPropertyName("fulfillments")]
-        public IEnumerable<Fulfillment> Fulfillments { get; set; }
+        public IEnumerable<object> Fulfillments { get; set; }
 
         /// <summary>
         /// The fulfillment status for this order. Known values are 'fulfilled', 'null' and 'partial'.
@@ -275,7 +275,7 @@ namespace SignalBox.Core.Adapters.Shopify
         /// An array of <see cref="TaxLine"/> objects, each of which details the total taxes applicable to the order.
         /// </summary>
         [JsonPropertyName("tax_lines")]
-        public IEnumerable<TaxLine> TaxLines { get; set; }
+        public IEnumerable<object> TaxLines { get; set; }
 
         /// <summary>
         /// States whether or not taxes are included in the order subtotal.

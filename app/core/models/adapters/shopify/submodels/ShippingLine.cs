@@ -57,7 +57,7 @@ namespace SignalBox.Core.Adapters.Shopify
         /// A list of <see cref="TaxLine"/> objects, each of which details the taxes applicable to this <see cref="ShippingLine"/>.
         /// </summary>
         [JsonPropertyName("tax_lines")]
-        public IEnumerable<TaxLine> TaxLines { get; set; }
+        public IEnumerable<object> TaxLines { get; set; }
 
         /// <summary>
         /// The price of the shipping method in shop and presentment currencies.
