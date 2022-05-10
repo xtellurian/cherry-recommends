@@ -66,6 +66,7 @@ namespace SignalBox.Infrastructure.Services
                     TargetSelection = "all", // all | entitled
                     TargetType = "line_item", // line_item | shipping_line
                     AllocationMethod = "across", // across | each
+                    OncePerCustomer = true,
                     StartsAt = discountCode.StartsAt,
                     EndsAt = discountCode.EndsAt
                 };
