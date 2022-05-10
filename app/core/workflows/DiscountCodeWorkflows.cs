@@ -1,22 +1,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SignalBox.Core.Workflows
 {
     public class DiscountCodeWorkflows : IDiscountCodeWorkflow, IWorkflow
     {
+        private readonly ILogger<DiscountCodeWorkflows> logger;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly IDiscountCodeStore discountCodeStore;
         private readonly IEnumerable<IDiscountCodeGenerator> discountCodeGenerators;
 
         public DiscountCodeWorkflows(
+            ILogger<DiscountCodeWorkflows> logger,
             IDateTimeProvider dateTimeProvider,
             IIntegratedSystemStore integratedSystemStore,
             IDiscountCodeStore discountCodeStore,
             IEnumerable<IDiscountCodeGenerator> discountCodeGenerators)
         {
+            this.logger = logger;
             this.dateTimeProvider = dateTimeProvider;
             this.integratedSystemStore = integratedSystemStore;
             this.discountCodeStore = discountCodeStore;
@@ -43,10 +47,7 @@ namespace SignalBox.Core.Workflows
 
             if (willGenerate)
             {
-                string code = DiscountCode.GenerateCode(promotion.CommonId, codeLength: 8);
-                var startsAt = dateTimeProvider.Now;
-                var endsAt = startsAt.TruncateToDayStart().AddDays(14); // default 14 days
-                var discountCode = new DiscountCode(promotion, code, startsAt, endsAt);
+                DiscountCode discountCode = null;
                 var result = await discountCodeStore.GetLatestByPromotion(promotion);
 
                 if (result.Success)
@@ -60,8 +61,12 @@ namespace SignalBox.Core.Workflows
                         await discountCodeStore.LoadMany(discountCode, _ => _.GeneratedAt);
                     }
                 }
-                else
+                if (discountCode == null)
                 {
+                    string code = DiscountCode.GenerateCode(promotion.CommonId, codeLength: 8);
+                    var startsAt = dateTimeProvider.Now;
+                    var endsAt = startsAt.TruncateToDayStart().AddDays(14); // default 14 days
+                    discountCode = new DiscountCode(promotion, code, startsAt, endsAt);
                     discountCode = await discountCodeStore.Create(discountCode);
                     foreach (var integratedSystem in discountCodeGeneratorSystems)
                     {
@@ -72,10 +77,21 @@ namespace SignalBox.Core.Workflows
                             await generator.Generate(integratedSystem, promotion, discountCode);
                             discountCode.GeneratedAt.Add(integratedSystem);
                         }
+                        else
+                        {
+                            logger.LogWarning("No generator found for integrated system {integratedSystemId} with type {systemType}.", integratedSystem.Id, integratedSystem.SystemType);
+                        }
                     }
                 }
 
-                discountCodes.Add(discountCode);
+                if (discountCode != null)
+                {
+                    discountCodes.Add(discountCode);
+                }
+                else
+                {
+                    logger.LogWarning("Invalid discount code generation scenario. willGenerate {willGenerate} but discount code is null. ", willGenerate);
+                }
             }
 
             return discountCodes;

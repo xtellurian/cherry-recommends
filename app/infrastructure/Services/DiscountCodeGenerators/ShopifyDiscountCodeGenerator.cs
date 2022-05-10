@@ -82,8 +82,8 @@ namespace SignalBox.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                logger.LogWarning(ex, "Discount code creation failed for IntegratedSystemId: {integratedSystemId} Type: {systemType}.", system.Id, system.SystemType);
-                throw new IntegratedSystemException("Failed to create Shopify price rule and discount code.", ex);
+                logger.LogWarning(ex, "Discount code creation failed for integrated system {integratedSystemId} with type {systemType}.", system.Id, system.SystemType);
+                throw new IntegratedSystemException("Failed to create Shopify price rule and discount code for integrated system {integratedSystemId} with type {systemType}.", ex);
             }
         }
 

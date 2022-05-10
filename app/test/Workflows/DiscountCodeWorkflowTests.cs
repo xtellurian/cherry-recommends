@@ -15,6 +15,7 @@ namespace SignalBox.Test.Stores
             // arrange
             var mockStorageContext = Utility.MockStorageContext();
             var dateTimeProvider = Utility.DateTimeProvider();
+            var mockLogger = Utility.MockLogger<DiscountCodeWorkflows>();
             var mockIntegratedSystemStore = new Mock<IIntegratedSystemStore>();
             var mockDiscountCodeStore = new Mock<IDiscountCodeStore>();
             var mockDiscountCodeGenerator = new Mock<IDiscountCodeGenerator>();
@@ -56,6 +57,7 @@ namespace SignalBox.Test.Stores
             };
             // act
             var workflow = new DiscountCodeWorkflows(
+                mockLogger.Object,
                 dateTimeProvider,
                 mockIntegratedSystemStore.Object,
                 mockDiscountCodeStore.Object,
@@ -78,6 +80,7 @@ namespace SignalBox.Test.Stores
             // arrange
             var mockStorageContext = Utility.MockStorageContext();
             var dateTimeProvider = Utility.DateTimeProvider();
+            var mockLogger = Utility.MockLogger<DiscountCodeWorkflows>();
             var mockIntegratedSystemStore = new Mock<IIntegratedSystemStore>();
             var mockDiscountCodeStore = new Mock<IDiscountCodeStore>();
             var mockDiscountCodeGenerator = new Mock<IDiscountCodeGenerator>();
@@ -92,8 +95,10 @@ namespace SignalBox.Test.Stores
             promotion.BenefitValue = 10;
 
             string code = DiscountCode.GenerateCode(promotion.CommonId, codeLength: 8);
-            var discountCode = new DiscountCode(promotion, code, dateTimeProvider.Now, dateTimeProvider.Now.AddDays(14));
-
+            var discountCode = new DiscountCode(promotion, code, dateTimeProvider.Now, dateTimeProvider.Now.AddDays(14))
+            {
+                Created = dateTimeProvider.Now.UtcDateTime
+            };
             mockDiscountCodeStore
                 .Setup(_ => _.GetLatestByPromotion(It.IsAny<RecommendableItem>()))
                 .ReturnsAsync(new EntityResult<DiscountCode>(discountCode));
@@ -119,6 +124,7 @@ namespace SignalBox.Test.Stores
             };
             // act
             var workflow = new DiscountCodeWorkflows(
+                mockLogger.Object,
                 dateTimeProvider,
                 mockIntegratedSystemStore.Object,
                 mockDiscountCodeStore.Object,
@@ -141,6 +147,7 @@ namespace SignalBox.Test.Stores
             // arrange
             var mockStorageContext = Utility.MockStorageContext();
             var dateTimeProvider = Utility.DateTimeProvider();
+            var mockLogger = Utility.MockLogger<DiscountCodeWorkflows>();
             var mockIntegratedSystemStore = new Mock<IIntegratedSystemStore>();
             var mockDiscountCodeStore = new Mock<IDiscountCodeStore>();
             var mockDiscountCodeGenerator = new Mock<IDiscountCodeGenerator>();
@@ -182,6 +189,7 @@ namespace SignalBox.Test.Stores
             };
             // act
             var workflow = new DiscountCodeWorkflows(
+                mockLogger.Object,
                 dateTimeProvider,
                 mockIntegratedSystemStore.Object,
                 mockDiscountCodeStore.Object,
