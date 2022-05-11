@@ -52,7 +52,7 @@ namespace SignalBox.Azure
                 EventHubName = AzureEventhubNames.EventIngestion,
                 MessageRetentionInDays = 7,
                 NamespaceName = ns.Name,
-                PartitionCount = 8,
+                PartitionCount = 4,
                 ResourceGroupName = rg.Name,
                 Status = EntityStatus.Active,
             });
