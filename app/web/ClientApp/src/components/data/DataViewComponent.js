@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouteMatch, Switch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
+import { ErrorBoundary } from "../molecules/ErrorBoundary";
 import { Title } from "../molecules/layout";
 import { ViewEventData } from "./ViewEventData";
 
@@ -19,14 +20,16 @@ export const DataViewComponent = () => {
 
   return (
     <React.Fragment>
-      <Switch>
-        <AuthorizeRoute exact path={`${path}`} component={DataViewHome} />
-        <AuthorizeRoute
-          exact
-          path={`${path}/events`}
-          component={ViewEventData}
-        />
-      </Switch>
+      <ErrorBoundary>
+        <Switch>
+          <AuthorizeRoute exact path={`${path}`} component={DataViewHome} />
+          <AuthorizeRoute
+            exact
+            path={`${path}/events`}
+            component={ViewEventData}
+          />
+        </Switch>
+      </ErrorBoundary>
     </React.Fragment>
   );
 };

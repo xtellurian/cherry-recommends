@@ -1,6 +1,7 @@
 import React from "react";
 import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
+import { ErrorBoundary } from "../molecules/ErrorBoundary";
 import { EventDetailPage } from "./EventDetail";
 
 export const EventsComponent = () => {
@@ -8,13 +9,15 @@ export const EventsComponent = () => {
 
   return (
     <React.Fragment>
-      <Switch>
-        <AuthorizeRoute
-          exact
-          path={`${path}/detail/:id`}
-          component={EventDetailPage}
-        />
-      </Switch>
+      <ErrorBoundary>
+        <Switch>
+          <AuthorizeRoute
+            exact
+            path={`${path}/detail/:id`}
+            component={EventDetailPage}
+          />
+        </Switch>
+      </ErrorBoundary>
     </React.Fragment>
   );
 };

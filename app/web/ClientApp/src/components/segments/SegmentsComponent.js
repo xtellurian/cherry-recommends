@@ -6,6 +6,7 @@ import { SegmentSummary } from "./SegmentSummary";
 import { SegmentDetail } from "./SegmentDetail";
 import { CreateButtonClassic } from "../molecules/CreateButton";
 import { useFeatureFlag } from "../launch-darkly/hooks";
+import { ErrorBoundary } from "../molecules/ErrorBoundary";
 
 const SegmentsHome = () => {
   let { path } = useRouteMatch();
@@ -29,19 +30,21 @@ export const SegmentsComponent = () => {
 
   return (
     <React.Fragment>
-      <Switch>
-        <AuthorizeRoute exact path={`${path}`} component={SegmentsHome} />
-        <AuthorizeRoute
-          exact
-          path={`${path}/detail/:id`}
-          component={SegmentDetail}
-        />
-        <AuthorizeRoute
-          exact
-          path={`${path}/create`}
-          component={CreateSegment}
-        />
-      </Switch>
+      <ErrorBoundary>
+        <Switch>
+          <AuthorizeRoute exact path={`${path}`} component={SegmentsHome} />
+          <AuthorizeRoute
+            exact
+            path={`${path}/detail/:id`}
+            component={SegmentDetail}
+          />
+          <AuthorizeRoute
+            exact
+            path={`${path}/create`}
+            component={CreateSegment}
+          />
+        </Switch>
+      </ErrorBoundary>
     </React.Fragment>
   );
 };

@@ -6,6 +6,7 @@ import { IntegrationsComponent } from "./integrations/IntegrationsComponent";
 import { DeploymentInfo } from "./deployment/DeploymentInfo";
 import { EnvironmentsComponent } from "./environments/EnvironmentsComponent";
 import { Navigation } from "../molecules";
+import { ErrorBoundary } from "../molecules/ErrorBoundary";
 
 const SettingsHome = () => {
   const { path } = useRouteMatch();
@@ -34,19 +35,24 @@ export const SettingsComponent = () => {
   const { path } = useRouteMatch();
   return (
     <React.Fragment>
-      <Switch>
-        <AuthorizeRoute exact path={`${path}`} component={SettingsHome} />
-        <AuthorizeRoute path={`${path}/api-keys`} component={ApiKeyComponent} />
-        <AuthorizeRoute
-          path={`${path}/integrations`}
-          component={IntegrationsComponent}
-        />
-        <AuthorizeRoute path={`${path}/info`} component={DeploymentInfo} />
-        <AuthorizeRoute
-          path={`${path}/environments`}
-          component={EnvironmentsComponent}
-        />
-      </Switch>
+      <ErrorBoundary>
+        <Switch>
+          <AuthorizeRoute exact path={`${path}`} component={SettingsHome} />
+          <AuthorizeRoute
+            path={`${path}/api-keys`}
+            component={ApiKeyComponent}
+          />
+          <AuthorizeRoute
+            path={`${path}/integrations`}
+            component={IntegrationsComponent}
+          />
+          <AuthorizeRoute path={`${path}/info`} component={DeploymentInfo} />
+          <AuthorizeRoute
+            path={`${path}/environments`}
+            component={EnvironmentsComponent}
+          />
+        </Switch>
+      </ErrorBoundary>
     </React.Fragment>
   );
 };

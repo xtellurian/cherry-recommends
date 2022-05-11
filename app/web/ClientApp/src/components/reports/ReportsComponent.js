@@ -7,6 +7,7 @@ import { useReports } from "../../api-hooks/reportsApi";
 import { downloadReportAsync } from "../../api/reportsApi";
 import { Title } from "../molecules/layout";
 import { Spinner } from "../molecules/Spinner";
+import { ErrorBoundary } from "../molecules/ErrorBoundary";
 
 const saveBlob = ({ blob, name }) => {
   var a = document.createElement("a");
@@ -81,9 +82,11 @@ export const ReportsComponent = () => {
   let { path } = useRouteMatch();
   return (
     <React.Fragment>
-      <Switch>
-        <AuthorizeRoute exact path={`${path}`} component={ReportsHome} />
-      </Switch>
+      <ErrorBoundary>
+        <Switch>
+          <AuthorizeRoute exact path={`${path}`} component={ReportsHome} />
+        </Switch>
+      </ErrorBoundary>
     </React.Fragment>
   );
 };

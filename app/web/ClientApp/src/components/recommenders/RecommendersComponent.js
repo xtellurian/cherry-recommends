@@ -1,6 +1,7 @@
 import React from "react";
 import { Switch, useRouteMatch } from "react-router-dom";
 import AuthorizeRoute from "../auth0/ProtectedRoute";
+import { ErrorBoundary } from "../molecules/ErrorBoundary";
 import { ParameterSetRecommendersComponent } from "./parameterset-recommenders/ParameterSetRecommendersComponent";
 import { PromotionsRecommendersComponent } from "./promotions-recommenders/PromotionsRecommendersComponent";
 
@@ -8,16 +9,18 @@ export const RecommendersComponent = () => {
   const { path } = useRouteMatch();
   return (
     <React.Fragment>
-      <Switch>
-        <AuthorizeRoute
-          path={`${path}/parameter-set-recommenders`}
-          component={ParameterSetRecommendersComponent}
-        />
-        <AuthorizeRoute
-          path={`${path}/promotions-recommenders`}
-          component={PromotionsRecommendersComponent}
-        />
-      </Switch>
+      <ErrorBoundary>
+        <Switch>
+          <AuthorizeRoute
+            path={`${path}/parameter-set-recommenders`}
+            component={ParameterSetRecommendersComponent}
+          />
+          <AuthorizeRoute
+            path={`${path}/promotions-recommenders`}
+            component={PromotionsRecommendersComponent}
+          />
+        </Switch>
+      </ErrorBoundary>
     </React.Fragment>
   );
 };
