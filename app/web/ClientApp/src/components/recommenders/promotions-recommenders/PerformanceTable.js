@@ -6,7 +6,7 @@ import {
   useReportImageBlobUrl,
 } from "../../../api-hooks/promotionsRecommendersApi";
 import { ErrorCard, Navigation, Spinner } from "../../molecules";
-import { ViewReportImagePopup } from "../utils/ViewImagePopup";
+import { DisplayReportImage } from "../utils/ViewImagePopup";
 import { PromotionRecommenderLayout } from "./PromotionRecommenderLayout";
 import {
   Table,
@@ -84,21 +84,15 @@ const Performance = () => {
             itemsById={performance.itemsById}
           />
         )}
-        <div className="d-flex flex-row-reverse">
+        <div className="row">
           {!recommender.loading && !recommender.error && (
             <React.Fragment>
-              <button
-                className="btn btn-primary"
-                onClick={() => setReportOpen(true)}
-              >
-                Show Latest Report
-              </button>
-              <ViewReportImagePopup
-                isOpen={reportOpen}
-                setIsOpen={setReportOpen}
-                id={id}
-                useReportImageBlobUrl={useReportImageBlobUrl}
-              />
+              <div className="col text-center">
+                <DisplayReportImage
+                  id={id}
+                  useReportImageBlobUrl={useReportImageBlobUrl}
+                />
+              </div>
             </React.Fragment>
           )}
         </div>

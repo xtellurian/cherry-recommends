@@ -42,3 +42,18 @@ export const ViewReportImagePopup = ({
     </Modal>
   );
 };
+
+export const DisplayReportImage = ({ useReportImageBlobUrl, id }) => {
+  const reportImgBlob = useReportImageBlobUrl({ id });
+  return (
+    <div className="m-2">
+      {reportImgBlob.loading && <Spinner>Loading Image</Spinner>}
+      {reportImgBlob.url && (
+        <img className="img-fluid" src={reportImgBlob.url} />
+      )}
+      {!reportImgBlob.loading && !reportImgBlob.url && (
+        <EmptyState>Report has not been generated.</EmptyState>
+      )}
+    </div>
+  );
+};
