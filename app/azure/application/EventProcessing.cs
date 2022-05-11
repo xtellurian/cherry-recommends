@@ -50,9 +50,9 @@ namespace SignalBox.Azure
             var hub = new EventHub("rawEvents", new EventHubArgs
             {
                 EventHubName = AzureEventhubNames.EventIngestion,
-                MessageRetentionInDays = 4,
+                MessageRetentionInDays = 7,
                 NamespaceName = ns.Name,
-                PartitionCount = 4,
+                PartitionCount = 8,
                 ResourceGroupName = rg.Name,
                 Status = EntityStatus.Active,
             });

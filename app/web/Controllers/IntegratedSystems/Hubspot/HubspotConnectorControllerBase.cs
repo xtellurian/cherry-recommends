@@ -47,7 +47,7 @@ namespace SignalBox.Web.Controllers
                 //https://legacydocs.hubspot.com/docs/faq/v2-request-validation
                 // var s = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyyPOSThttps://www.example.com/webhook_uri{\"example_field\":\"サンプルデータ\"}";
                 var sigValue = sig.ToString();
-                var uri = $"{ Request.Scheme }://{ Request.Host }{ Request.Path }{ Request.QueryString }";
+                var uri = $"{Request.Scheme}://{Request.Host}{Request.Path}{Request.QueryString}";
                 // need to include the body?
                 // string valueToHash;
                 string hashed;

@@ -80,7 +80,7 @@ namespace SignalBox.Core
                     }
                     else
                     {
-                        throw new BadRequestException($"The value {value} has invalid json value kind {jsonElement.ValueKind }. It cannot be used in a property.");
+                        throw new BadRequestException($"The value {value} has invalid json value kind {jsonElement.ValueKind}. It cannot be used in a property.");
                     }
                 }
                 if (value is null)
