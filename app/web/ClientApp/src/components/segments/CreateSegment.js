@@ -51,11 +51,13 @@ export const CreateSegment = () => {
             Create
           </AsyncButton>
         }
+        backButton={
+          <MoveUpHierarchyPrimaryButton to="/segments">
+            Back to Segments
+          </MoveUpHierarchyPrimaryButton>
+        }
+        header={<PageHeading title="Create a new Segment" />}
       >
-        <MoveUpHierarchyPrimaryButton to="/segments">
-          Back to Segments
-        </MoveUpHierarchyPrimaryButton>
-        <PageHeading title="Create a new Segment" showHr />
         {error && <ErrorCard error={error} />}
         <InputGroup>
           <TextInput

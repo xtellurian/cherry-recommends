@@ -5,10 +5,10 @@ import { useCustomer } from "../../api-hooks/customersApi";
 import {
   Title,
   Subtitle,
-  BackButton,
   AsyncButton,
   ErrorCard,
   Spinner,
+  MoveUpHierarchyButton,
 } from "../molecules";
 import { PropertiesEditor } from "../molecules/PropertiesEditor";
 import { useAccessToken } from "../../api-hooks/token";
@@ -37,9 +37,12 @@ export const EditProperties = () => {
   }, [trackedUser]);
   return (
     <React.Fragment>
-      <BackButton to={`/customers/detail/${id}`} className="float-right">
+      <MoveUpHierarchyButton
+        to={`/customers/detail/${id}`}
+        className="float-right"
+      >
         Back
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>{trackedUser.name || trackedUser.commonId}</Title>
       <Subtitle>Edit Properties</Subtitle>
       <hr />

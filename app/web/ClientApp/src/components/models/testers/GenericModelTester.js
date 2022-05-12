@@ -67,11 +67,7 @@ export const GenericModelTester = ({ model }) => {
       <MoveUpHierarchyPrimaryButton to="/models">
         Back to Models
       </MoveUpHierarchyPrimaryButton>
-      <PageHeading
-        title={model.name || "..."}
-        subtitle="Model Tester"
-        showHr={true}
-      />
+      <PageHeading title={model.name || "..."} subtitle="Model Tester" />
       <ExpandableCard label="Model Information">
         <JsonView data={model} />
       </ExpandableCard>

@@ -15,6 +15,7 @@ import { Tabs, TabActivator } from "../molecules/layout/Tabs";
 import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { useNavigation } from "../../utility/useNavigation";
 import { ConfigureChannel } from "./ConfigureChannel";
+import EntityDetailPageLayout from "../molecules/layout/EntityDetailPageLayout";
 
 const tabs = [
   {
@@ -43,26 +44,24 @@ export const ChannelDetail = () => {
   const [error, setError] = React.useState();
 
   return (
-    <React.Fragment>
-      <MoveUpHierarchyPrimaryButton
-        to={{ pathname: "/channels", search: null }}
-      >
-        Back to Channels
-      </MoveUpHierarchyPrimaryButton>
-
-      <button
-        className="btn btn-danger ml-1 float-right"
-        onClick={() => setIsDeletePopupOpen(true)}
-      >
-        Delete Channel
-      </button>
-
-      <PageHeading
-        title={channel.name || "..."}
-        subtitle="Channel"
-        showHr={false}
-      />
-
+    <EntityDetailPageLayout
+      backButton={
+        <MoveUpHierarchyPrimaryButton
+          to={{ pathname: "/channels", search: null }}
+        >
+          Back to Channels
+        </MoveUpHierarchyPrimaryButton>
+      }
+      options={
+        <button
+          className="btn btn-danger ml-1"
+          onClick={() => setIsDeletePopupOpen(true)}
+        >
+          Delete Channel
+        </button>
+      }
+      header={<PageHeading title={channel.name || "..."} subtitle="Channel" />}
+    >
       {channel.loading && <Spinner />}
       {channel.error && <ErrorCard error={channel.error} />}
 
@@ -111,6 +110,6 @@ export const ChannelDetail = () => {
             .catch(setError)
         }
       />
-    </React.Fragment>
+    </EntityDetailPageLayout>
   );
 };

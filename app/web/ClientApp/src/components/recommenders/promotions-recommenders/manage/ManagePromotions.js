@@ -9,7 +9,7 @@ import {
   Paginator,
   Spinner,
   PageHeading,
-  PrimaryBackButton,
+  MoveUpHierarchyPrimaryButton,
 } from "../../../molecules";
 import { PromotionRow } from "../../../promotions/PromotionRow";
 import { AddItemPopup } from "../AddItemPopup";
@@ -35,14 +35,14 @@ export const ManageItems = () => {
       >
         Add a Promotion
       </button>
-      <PrimaryBackButton
+      <MoveUpHierarchyPrimaryButton
         to={{
           pathname: `/recommenders/promotions-recommenders/detail/${id}`,
           search: null,
         }}
       >
-        Recommender
-      </PrimaryBackButton>
+        Back to Recommender
+      </MoveUpHierarchyPrimaryButton>
       <PageHeading
         title="Manage Promotions"
         subtitle={recommender.name || "..."}

@@ -4,7 +4,7 @@ import { useCustomer } from "../../api-hooks/customersApi";
 import { createOrUpdateCustomerAsync } from "../../api/customersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { JsonView } from "../molecules/JsonView";
-import { Title, BackButton, Spinner } from "../molecules";
+import { Title, Spinner, MoveUpHierarchyButton } from "../molecules";
 import { Selector } from "../molecules/selectors/Select";
 import { useAccessToken } from "../../api-hooks/token";
 import { useNavigation } from "../../utility/useNavigation";
@@ -12,9 +12,12 @@ import { useNavigation } from "../../utility/useNavigation";
 const Top = ({ id }) => {
   return (
     <React.Fragment>
-      <BackButton className="float-right" to={`/customers/detail/${id}`}>
+      <MoveUpHierarchyButton
+        className="float-right"
+        to={`/customers/detail/${id}`}
+      >
         User Details
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Link to Integrated System</Title>
     </React.Fragment>
   );

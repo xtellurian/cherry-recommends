@@ -27,6 +27,7 @@ import { MembersSection } from "./MembersSection";
 import { BusinessEventsSection } from "./BusinessEventsSection";
 import { Recommendations } from "./Recommendations";
 import { useNavigation } from "../../utility/useNavigation";
+import EntityDetailPageLayout from "../molecules/layout/EntityDetailPageLayout";
 
 const tabs = [
   {
@@ -60,37 +61,45 @@ export const BusinessDetail = () => {
   const numProperties = Object.keys(business?.properties || {}).length;
 
   return (
-    <React.Fragment>
-      <MoveUpHierarchyPrimaryButton
-        to={{ pathname: "/businesses", search: null }}
-      >
-        Back to Businesses
-      </MoveUpHierarchyPrimaryButton>
-      <ActionsButton
-        className="ml-1 float-right"
-        to={`/businesses/metrics/${id}`}
-        label="Metrics"
-      >
-        <ActionItemsGroup label="Actions">
-          <ActionLink to={`/businesses/edit-properties/${id}`}>
-            Edit Properties
-          </ActionLink>
-          <ActionLink to={`/businesses/create-event/${id}`}>
-            Log Event
-          </ActionLink>
-        </ActionItemsGroup>
-      </ActionsButton>
-      <button
-        className="btn btn-danger ml-1 float-right"
-        onClick={() => setIsDeletePopupOpen(true)}
-      >
-        Delete Business
-      </button>
-      <PageHeading
-        title={business.name || business.commonId || "..."}
-        subtitle="Business"
-        showHr={true}
-      />
+    <EntityDetailPageLayout
+      backButton={
+        <MoveUpHierarchyPrimaryButton
+          to={{ pathname: "/businesses", search: null }}
+        >
+          Back to Businesses
+        </MoveUpHierarchyPrimaryButton>
+      }
+      header={
+        <PageHeading
+          title={business.name || business.commonId || "..."}
+          subtitle="Business"
+        />
+      }
+      options={
+        <>
+          <ActionsButton
+            className="ml-1"
+            to={`/businesses/metrics/${id}`}
+            label="Metrics"
+          >
+            <ActionItemsGroup label="Actions">
+              <ActionLink to={`/businesses/edit-properties/${id}`}>
+                Edit Properties
+              </ActionLink>
+              <ActionLink to={`/businesses/create-event/${id}`}>
+                Log Event
+              </ActionLink>
+            </ActionItemsGroup>
+          </ActionsButton>
+          <button
+            className="btn btn-danger ml-1"
+            onClick={() => setIsDeletePopupOpen(true)}
+          >
+            Delete Business
+          </button>
+        </>
+      }
+    >
       {business.loading && <Spinner />}
       {business.error && <ErrorCard error={business.error} />}
       {business.lastUpdated && (
@@ -140,6 +149,6 @@ export const BusinessDetail = () => {
             .catch(setError)
         }
       />
-    </React.Fragment>
+    </EntityDetailPageLayout>
   );
 };

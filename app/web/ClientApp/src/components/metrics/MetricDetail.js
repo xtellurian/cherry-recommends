@@ -23,6 +23,7 @@ import { TabActivator, Tabs } from "../molecules/layout/Tabs";
 import MetricReports from "./MetricReports";
 import { SectionHeading } from "../molecules/layout";
 import { useNavigation } from "../../utility/useNavigation";
+import EntityDetailPageLayout from "../molecules/layout/EntityDetailPageLayout";
 
 const tabs = [
   {
@@ -84,27 +85,40 @@ const MetricDetail = () => {
   };
 
   return (
-    <React.Fragment>
-      <MoveUpHierarchyPrimaryButton
-        to={{ pathname: "/metrics/", search: null }}
-      >
-        Back to Metrics
-      </MoveUpHierarchyPrimaryButton>
-      {canWrite && (
-        <Navigation to={`/metrics/set-value/${id}`}>
-          <button className="btn btn-primary float-right mr-1">
-            Manually Set a Metric Value
+    <EntityDetailPageLayout
+      backButton={
+        <MoveUpHierarchyPrimaryButton
+          to={{ pathname: "/metrics/", search: null }}
+        >
+          Back to Metrics
+        </MoveUpHierarchyPrimaryButton>
+      }
+      header={<PageHeading title={metric.name || "..."} subtitle="Metric" />}
+      options={
+        <>
+          {canWrite && (
+            <Navigation to={`/metrics/set-value/${id}`}>
+              <button className="btn btn-primary mr-1">
+                Manually Set a Metric Value
+              </button>
+            </Navigation>
+          )}
+          <AsyncButton
+            loading={isExportLoading}
+            className="btn btn-outline-primary mr-1"
+            onClick={exportTopCustomers}
+          >
+            Export top customers
+          </AsyncButton>
+          <button
+            onClick={() => setDeleteOpen(true)}
+            className="btn btn-danger"
+          >
+            Delete Metric
           </button>
-        </Navigation>
-      )}
-      <AsyncButton
-        loading={isExportLoading}
-        className="btn btn-outline-primary float-right mr-1"
-        onClick={exportTopCustomers}
-      >
-        Export top customers
-      </AsyncButton>
-      <PageHeading title={metric.name || "..."} subtitle="Metric" />
+        </>
+      }
+    >
       <Tabs tabs={tabs} defaultTabId={tabs[0].id} />
       <TabActivator tabId={tabs[0].id} defaultTabId={defaultTabId}>
         <div className="mt-3 mb-2">
@@ -132,14 +146,6 @@ const MetricDetail = () => {
             error={deleteError}
             handleDelete={handleDelete}
           />
-          <div className="mt-2">
-            <button
-              onClick={() => setDeleteOpen(true)}
-              className="btn btn-danger"
-            >
-              Delete Metric
-            </button>
-          </div>
         </div>
       </TabActivator>
       <TabActivator tabId={"generator"} defaultTabId={defaultTabId}>
@@ -157,7 +163,7 @@ const MetricDetail = () => {
         {metric.error && <ErrorCard error={metric.error} />}
         {metric && !metric.loading && <MetricDestinations metric={metric} />}
       </TabActivator>
-    </React.Fragment>
+    </EntityDetailPageLayout>
   );
 };
 

@@ -4,7 +4,7 @@ import { useEnvironmentReducer } from "../../../api-hooks/environmentsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createEnvironmentAsync } from "../../../api/environmentsApi";
 import { useNavigation } from "../../../utility/useNavigation";
-import { Title, AsyncButton, BackButton } from "../../molecules";
+import { Title, AsyncButton, MoveUpHierarchyButton } from "../../molecules";
 import {
   TextInput,
   InputGroup,
@@ -48,9 +48,12 @@ export const CreateEnvironment = () => {
   };
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/settings/environments">
+      <MoveUpHierarchyButton
+        className="float-right"
+        to="/settings/environments"
+      >
         Back
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Create New Environment</Title>
 
       <hr />

@@ -3,12 +3,12 @@ import { useHubspotCrmCardBehaviour } from "../../../../api-hooks/hubspotApi";
 import { setHubspotCrmCardBehaviourAsync } from "../../../../api/hubspotApi";
 import { useMetrics } from "../../../../api-hooks/metricsApi";
 import {
-  BackButton,
   Title,
   Subtitle,
   Selector,
   AsyncButton,
   ErrorCard,
+  MoveUpHierarchyButton,
 } from "../../../molecules";
 import { ToggleSwitch } from "../../../molecules/ToggleSwitch";
 import { SettingRow } from "../../../molecules/layout/SettingRow";
@@ -21,12 +21,12 @@ import { usePromotionsRecommender } from "../../../../api-hooks/promotionsRecomm
 const Top = ({ integratedSystem }) => {
   return (
     <React.Fragment>
-      <BackButton
+      <MoveUpHierarchyButton
         className="float-right"
         to={`/settings/integrations/detail/${integratedSystem.id}`}
       >
         Overview
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title> Hubspot CRM Card Behaviour</Title>
       <Subtitle>
         {integratedSystem.name || integratedSystem.commonId || "..."}

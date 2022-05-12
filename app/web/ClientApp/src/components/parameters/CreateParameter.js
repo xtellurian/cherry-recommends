@@ -84,12 +84,13 @@ export const CreateParameter = () => {
           Save
         </AsyncButton>
       }
+      backButton={
+        <MoveUpHierarchyPrimaryButton to="/parameters">
+          Back to Parameters
+        </MoveUpHierarchyPrimaryButton>
+      }
+      header={<PageHeading title="Create Parameter" />}
     >
-      <MoveUpHierarchyPrimaryButton to="/parameters">
-        Back to Parameters
-      </MoveUpHierarchyPrimaryButton>
-      <PageHeading title="Create Parameter" showHr />
-
       {error && <ErrorCard error={error} />}
       <div>
         <div className="mb-2">

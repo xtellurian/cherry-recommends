@@ -5,15 +5,17 @@ import { useHubspotContactEvents } from "../../../../api-hooks/hubspotApi";
 import { ErrorCard } from "../../../molecules/ErrorCard";
 import { ExpandableCard } from "../../../molecules/ExpandableCard";
 import { JsonView } from "../../../molecules/JsonView";
-import { BackButton } from "../../../molecules/BackButton";
-import { EmptyList } from "../../../molecules";
+import { EmptyList, MoveUpHierarchyButton } from "../../../molecules";
 
 const Top = () => {
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/settings/integrations">
+      <MoveUpHierarchyButton
+        className="float-right"
+        to="/settings/integrations"
+      >
         Integrations
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Hubspot Contact Events</Title>
       <Subtitle>Sample Contact Events</Subtitle>
     </React.Fragment>

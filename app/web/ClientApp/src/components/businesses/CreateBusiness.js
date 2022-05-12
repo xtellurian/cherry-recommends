@@ -67,11 +67,13 @@ export const CreateBusiness = () => {
             Create
           </AsyncButton>
         }
+        backButton={
+          <MoveUpHierarchyPrimaryButton to="/businesses">
+            Back to Businesses
+          </MoveUpHierarchyPrimaryButton>
+        }
+        header={<PageHeading title="Add a Business" />}
       >
-        <MoveUpHierarchyPrimaryButton to="/businesses">
-          Back to Businesses
-        </MoveUpHierarchyPrimaryButton>
-        <PageHeading title="Add a Business" showHr />
         {error && <ErrorCard error={error} />}
         <InputGroup>
           <TextInput

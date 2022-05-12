@@ -7,7 +7,12 @@ import { HubspotLinkBehaviour } from "./LinkBehaviour";
 import { TabActivator, Tabs } from "../../../molecules/layout/Tabs";
 import { useIntegratedSystem } from "../../../../api-hooks/integratedSystemsApi";
 import { useHubspotAccount } from "../../../../api-hooks/hubspotApi";
-import { BackButton, EmptyList, ErrorCard, Spinner } from "../../../molecules";
+import {
+  EmptyList,
+  ErrorCard,
+  MoveUpHierarchyButton,
+  Spinner,
+} from "../../../molecules";
 import { CrmCardBehaviour } from "./CrmCardBehaviour";
 
 const tabs = [
@@ -49,9 +54,12 @@ export const HubspotIntegrationComponent = () => {
       <React.Fragment>
         <EmptyList>
           <p>Hubspot Account must be connected.</p>
-          <BackButton className="" to={`/settings/integrations/detail/${id}`}>
+          <MoveUpHierarchyButton
+            className=""
+            to={`/settings/integrations/detail/${id}`}
+          >
             Overview
-          </BackButton>
+          </MoveUpHierarchyButton>
         </EmptyList>
       </React.Fragment>
     );

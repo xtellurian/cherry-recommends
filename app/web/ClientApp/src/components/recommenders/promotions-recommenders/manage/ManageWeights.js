@@ -11,7 +11,11 @@ import {
 } from "../../../../api-hooks/promotionsRecommendersApi";
 import { useParams } from "react-router-dom";
 import { BigPopup } from "../../../molecules/popups/BigPopup";
-import { ErrorCard, PageHeading, PrimaryBackButton } from "../../../molecules";
+import {
+  ErrorCard,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
+} from "../../../molecules";
 import { Spinner } from "reactstrap";
 import { ManageNav } from "./Tabs";
 import { UseOptimiserControl } from "../UseOptimiserControl";
@@ -71,14 +75,14 @@ const Weights = () => {
           <Spinner />
         )}
       </BigPopup>
-      <PrimaryBackButton
+      <MoveUpHierarchyPrimaryButton
         to={{
           pathname: `/recommenders/promotions-recommenders/detail/${id}`,
           search: null,
         }}
       >
-        Recommender
-      </PrimaryBackButton>
+        Back to Recommender
+      </MoveUpHierarchyPrimaryButton>
       <PageHeading
         title="Manage Weights"
         subtitle={recommender.name || "..."}

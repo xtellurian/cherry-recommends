@@ -11,8 +11,8 @@ import {
   Spinner,
   ExpandableCard,
   EmptyList,
-  BackButton,
   ErrorCard,
+  MoveUpHierarchyButton,
 } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { toDate } from "../../utility/utility";
@@ -60,9 +60,12 @@ export const BusinessMetrics = () => {
   const businessMetrics = useBusinessMetrics({ id });
   return (
     <React.Fragment>
-      <BackButton className="float-right" to={`/businesses/detail/${id}`}>
+      <MoveUpHierarchyButton
+        className="float-right"
+        to={`/businesses/detail/${id}`}
+      >
         Business Details
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Metrics</Title>
       <Subtitle>
         {business.name || business.commonId || business.id || "..."}

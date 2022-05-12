@@ -9,9 +9,9 @@ import {
   Title,
   Subtitle,
   Spinner,
-  BackButton,
   ErrorCard,
   AsyncButton,
+  MoveUpHierarchyButton,
 } from "../molecules";
 import { InputGroup, TextInput } from "../molecules/TextInput";
 import { useAccessToken } from "../../api-hooks/token";
@@ -50,9 +50,12 @@ const SetMetricValue = () => {
 
   return (
     <React.Fragment>
-      <BackButton className="float-right" to={`/metrics/detail/${id}`}>
+      <MoveUpHierarchyButton
+        className="float-right"
+        to={`/metrics/detail/${id}`}
+      >
         Back to Metrics
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Set Metric Value</Title>
       <Subtitle>{metric.name}</Subtitle>
       <hr />

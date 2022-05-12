@@ -5,10 +5,10 @@ import { useBusiness } from "../../api-hooks/businessesApi";
 import {
   Title,
   Subtitle,
-  BackButton,
   AsyncButton,
   ErrorCard,
   Spinner,
+  MoveUpHierarchyButton,
 } from "../molecules";
 import { PropertiesEditor } from "../molecules/PropertiesEditor";
 import { useAccessToken } from "../../api-hooks/token";
@@ -40,9 +40,12 @@ export const EditBusinessProperties = () => {
 
   return (
     <React.Fragment>
-      <BackButton to={`/businesses/detail/${id}`} className="float-right">
+      <MoveUpHierarchyButton
+        to={`/businesses/detail/${id}`}
+        className="float-right"
+      >
         Back
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>{business.name || business.commonId}</Title>
       <Subtitle>Edit Properties</Subtitle>
       <hr />

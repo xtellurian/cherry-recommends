@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router";
-import { PrimaryBackButton } from "../../molecules/BackButton";
-import { Title, Subtitle } from "../../molecules";
+
+import { Title, Subtitle, MoveUpHierarchyPrimaryButton } from "../../molecules";
 import { ParameterSetRecommenderPrimaryNav } from "./ParameterSetRecommenderPrimaryNav";
 import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
 import { RecommenderStatusBox } from "../../molecules/RecommenderStatusBox";
@@ -31,9 +31,9 @@ export const ParameterSetRecommenderLayout = ({ children }) => {
         recommender={recommender}
         setEnabled={setEnabled}
       />
-      <PrimaryBackButton to={"/recommenders/parameter-set-recommenders"}>
+      <MoveUpHierarchyPrimaryButton to="/recommenders/parameter-set-recommenders">
         Back to Recommenders
-      </PrimaryBackButton>
+      </MoveUpHierarchyPrimaryButton>
       <Title>{recommender.name || "..."}</Title>
       <Subtitle>Parameter Set Recommender</Subtitle>
       <ParameterSetRecommenderPrimaryNav id={id} />

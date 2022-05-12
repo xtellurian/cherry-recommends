@@ -1,12 +1,12 @@
 import React from "react";
 import { useModelRegistrations } from "../../../api-hooks/modelRegistrationsApi";
-import { BackButton } from "../../molecules/BackButton";
 import {
   Title,
   Spinner,
   ErrorCard,
   Selector,
   Navigation,
+  MoveUpHierarchyButton,
 } from "../../molecules";
 import { NoteBox } from "../../molecules/NoteBox";
 import { CopyableField } from "../../molecules/fields/CopyableField";
@@ -61,12 +61,12 @@ export const LinkToModelUtility = ({
   };
   return (
     <React.Fragment>
-      <BackButton
+      <MoveUpHierarchyButton
         className="float-right"
         to={`${rootPath}/detail/${recommender.id}`}
       >
         Back to Recommender
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Link to Model</Title>
       <hr />
       <NoteBox className="m-auto w-50" label="Warning">

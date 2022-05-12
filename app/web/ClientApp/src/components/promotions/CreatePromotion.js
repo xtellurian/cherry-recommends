@@ -19,9 +19,9 @@ import {
   numericValidator,
 } from "../molecules/TextInput";
 import Select from "../molecules/selectors/Select";
-import PageLayout from "../molecules/layout/CreatePageLayout";
 import { useCommonId } from "../../utility/utility";
 import { useNavigation } from "../../utility/useNavigation";
+import CreatePageLayout from "../molecules/layout/CreatePageLayout";
 
 export const benefitTypeOptons = [
   { value: "percent", label: "%" },
@@ -98,17 +98,17 @@ export const CreateItem = () => {
 
   return (
     <React.Fragment>
-      <PageLayout
+      <CreatePageLayout
         createButton={
           <CreateButton handleCreate={handleCreate} loading={loading} />
         }
+        backButton={
+          <MoveUpHierarchyPrimaryButton to="/promotions">
+            Back to Promotions
+          </MoveUpHierarchyPrimaryButton>
+        }
+        header={<PageHeading title="Create Promotion" />}
       >
-        <MoveUpHierarchyPrimaryButton to="/promotions">
-          Back to Promotions
-        </MoveUpHierarchyPrimaryButton>
-
-        <PageHeading title="Create Promotion" showHr />
-
         {error && <ErrorCard error={error} />}
         <div className="mt-3">
           <InputGroup className="m-1">
@@ -227,7 +227,7 @@ export const CreateItem = () => {
             />
           </div>
         </div>
-      </PageLayout>
+      </CreatePageLayout>
     </React.Fragment>
   );
 };

@@ -91,18 +91,18 @@ const CreateMetric = () => {
           Create
         </AsyncButton>
       }
+      backButton={
+        <MoveUpHierarchyPrimaryButton
+          to={{
+            pathname: "/metrics/",
+            hash: hash.metrics,
+          }}
+        >
+          Back to Metrics
+        </MoveUpHierarchyPrimaryButton>
+      }
+      header={<PageHeading title="Create Metric" />}
     >
-      <MoveUpHierarchyPrimaryButton
-        to={{
-          pathname: "/metrics/",
-          hash: hash.metrics,
-        }}
-      >
-        Back to Metrics
-      </MoveUpHierarchyPrimaryButton>
-
-      <PageHeading title="Create Metric" showHr />
-
       {error && <ErrorCard error={error} />}
 
       <div>

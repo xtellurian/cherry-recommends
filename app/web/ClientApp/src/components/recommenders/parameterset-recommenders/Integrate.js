@@ -2,12 +2,12 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
 import {
-  BackButton,
   Subtitle,
   Title,
   Spinner,
   ErrorCard,
   Navigation,
+  MoveUpHierarchyButton,
 } from "../../molecules";
 import { CodeView } from "../../molecules/CodeView";
 import { Tabs, TabActivator } from "../../molecules/layout/Tabs";
@@ -100,12 +100,12 @@ export const IntegrateParameterSetRecommender = () => {
 
   return (
     <React.Fragment>
-      <BackButton
+      <MoveUpHierarchyButton
         className="float-right"
         to={`/recommenders/parameter-set-recommenders/detail/${id}`}
       >
         Recommender
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Integrate Parameter-Set Recommender</Title>
       <Subtitle>{recommender.name || "..."}</Subtitle>
       <Tabs tabs={tabs} defaultTabId={defaultTabId} />

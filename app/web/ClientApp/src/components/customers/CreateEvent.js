@@ -6,10 +6,10 @@ import { useCustomer } from "../../api-hooks/customersApi";
 import {
   Title,
   Subtitle,
-  BackButton,
   AsyncButton,
   ErrorCard,
   ExpandableCard,
+  MoveUpHierarchyButton,
 } from "../molecules";
 import {
   InputGroup,
@@ -93,9 +93,12 @@ export const CreateEvent = () => {
 
   return (
     <React.Fragment>
-      <BackButton className="float-right" to={`/customers/detail/${id}`}>
+      <MoveUpHierarchyButton
+        className="float-right"
+        to={`/customers/detail/${id}`}
+      >
         Back to Details
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Log a new Event</Title>
       <Subtitle>{trackedUser.name || trackedUser.commonId}</Subtitle>
       <hr />

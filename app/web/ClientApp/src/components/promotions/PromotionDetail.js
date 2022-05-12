@@ -22,6 +22,7 @@ import { CommonEntityPropertyEditorPopup } from "../molecules/popups/CommonEntit
 import { useAccessToken } from "../../api-hooks/token";
 import { EditItem } from "./EditPromotion";
 import { useNavigation } from "../../utility/useNavigation";
+import EntityDetailPageLayout from "../molecules/layout/EntityDetailPageLayout";
 
 export const ItemDetail = () => {
   const { id } = useParams();
@@ -52,27 +53,32 @@ export const ItemDetail = () => {
   };
 
   return (
-    <>
-      <MoveUpHierarchyPrimaryButton to="/promotions">
-        Back to Promotions
-      </MoveUpHierarchyPrimaryButton>
-      <button
-        onClick={() => setisDeletePopupOpen(true)}
-        className="float-right ml-2 btn btn-danger"
-      >
-        Delete Promotion
-      </button>
-      <button
-        onClick={() => setIsEditPopupOpen(true)}
-        className="float-right ml-2 btn btn-outline-primary"
-      >
-        Edit Promotion
-      </button>
-      <PageHeading
-        title={item.name || "..."}
-        subtitle="Promotion Detail"
-        showHr={true}
-      />
+    <EntityDetailPageLayout
+      backButton={
+        <MoveUpHierarchyPrimaryButton to="/promotions">
+          Back to Promotions
+        </MoveUpHierarchyPrimaryButton>
+      }
+      header={
+        <PageHeading title={item.name || "..."} subtitle="Promotion Detail" />
+      }
+      options={
+        <>
+          <button
+            onClick={() => setIsEditPopupOpen(true)}
+            className="ml-2 btn btn-outline-primary"
+          >
+            Edit Promotion
+          </button>
+          <button
+            onClick={() => setisDeletePopupOpen(true)}
+            className="ml-2 btn btn-danger"
+          >
+            Delete Promotion
+          </button>
+        </>
+      }
+    >
       {item.loading && <Spinner>Loading Promotion</Spinner>}
       {item.error && <ErrorCard error={item.error} />}
       {!isDeletePopupOpen && error && (
@@ -161,6 +167,6 @@ export const ItemDetail = () => {
       <BigPopup isOpen={isEditPopupOpen} setIsOpen={setIsEditPopupOpen}>
         <EditItem item={item} />
       </BigPopup>
-    </>
+    </EntityDetailPageLayout>
   );
 };

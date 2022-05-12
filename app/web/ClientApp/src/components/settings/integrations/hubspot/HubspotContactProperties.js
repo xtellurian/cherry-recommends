@@ -5,8 +5,8 @@ import {
   Title,
   Subtitle,
   Spinner,
-  BackButton,
   ErrorCard,
+  MoveUpHierarchyButton,
 } from "../../../molecules";
 import { NoteBox } from "../../../molecules/NoteBox";
 import {
@@ -29,12 +29,12 @@ const sameStringArrays = (a1, a2) => {
 const Top = ({ integratedSystem }) => {
   return (
     <React.Fragment>
-      <BackButton
+      <MoveUpHierarchyButton
         className="float-right"
         to={`/settings/integrations/detail/${integratedSystem.id}`}
       >
         Overview
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title> Hubspot Contact Properties</Title>
       <Subtitle>Available Contact Properties</Subtitle>
     </React.Fragment>

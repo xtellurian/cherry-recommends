@@ -40,11 +40,7 @@ export const AddChannelPopup = ({
   return (
     <React.Fragment>
       <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
-        <PageHeading
-          title="Add a Channel"
-          subtitle={recommender.name}
-          showHr={false}
-        />
+        <PageHeading title="Add a Channel" subtitle={recommender.name} />
         {error && <ErrorCard error={error} />}
         <div style={{ minHeight: "200px" }}>
           <AsyncSelectChannel

@@ -18,12 +18,11 @@ export const Subtitle = ({ children }) => {
   return <h5 className="text-capitalize">{children}</h5>;
 };
 
-export const PageHeading = ({ title, subtitle, showHr }) => {
+export const PageHeading = ({ title, subtitle }) => {
   return (
-    <div className="page-heading-wrapper mb-4">
+    <div className="page-heading-wrapper">
       <div className="title text-capitalize">{title}</div>
       <div className="subtitle text-capitalize">{subtitle}</div>
-      {showHr ? <hr /> : null}
     </div>
   );
 };

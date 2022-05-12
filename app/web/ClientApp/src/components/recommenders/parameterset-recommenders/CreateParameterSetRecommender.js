@@ -10,6 +10,7 @@ import {
   ErrorCard,
   AsyncButton,
   MoveUpHierarchyPrimaryButton,
+  PageHeading,
 } from "../../molecules";
 import {
   InputGroup,
@@ -197,18 +198,21 @@ export const CreateParameterSetRecommender = () => {
           Create
         </AsyncButton>
       }
+      backButton={
+        <MoveUpHierarchyPrimaryButton to="/recommenders/parameter-set-recommenders">
+          Parameter Set Recommenders
+        </MoveUpHierarchyPrimaryButton>
+      }
+      header={
+        <PageHeading title="Create Recommender" subtitle="Parameter Sets" />
+      }
     >
-      <MoveUpHierarchyPrimaryButton to="/recommenders/parameter-set-recommenders">
-        Parameter Set Recommenders
-      </MoveUpHierarchyPrimaryButton>
-      {/* <BackButton
+      {/* <MoveUpHierarchyButton
         to="/recommenders/parameter-set-recommenders"
         className="float-right"
       >
-      </BackButton> */}
-      <Title>Create Recommender</Title>
-      <Subtitle>Parameter Sets</Subtitle>
-      <hr />
+      </MoveUpHierarchyButton> */}
+
       {error && <ErrorCard error={error} />}
       <Subtitle>1. Set an ID and name.</Subtitle>
       <div className="m-1">

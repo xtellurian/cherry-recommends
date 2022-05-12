@@ -11,6 +11,7 @@ import { MembersSection } from "./MembersSection";
 import { PageHeading } from "../molecules/layout/PageHeadings";
 import { SegmentEnrolmentSection } from "./SegmentEnrolmentSection";
 import { useNavigation } from "../../utility/useNavigation";
+import EntityDetailPageLayout from "../molecules/layout/EntityDetailPageLayout";
 
 const tabs = [
   // {
@@ -38,23 +39,27 @@ export const SegmentDetail = () => {
   const [error, setError] = React.useState();
 
   return (
-    <React.Fragment>
-      <MoveUpHierarchyPrimaryButton
-        to={{ pathname: "/segments", search: null }}
-      >
-        Back to Segments
-      </MoveUpHierarchyPrimaryButton>
-      <button
-        className="btn btn-danger ml-1 float-right"
-        onClick={() => setIsDeletePopupOpen(true)}
-      >
-        Delete Segment
-      </button>
-      <PageHeading title={segment.name || "..."} subtitle="Segment" />
+    <EntityDetailPageLayout
+      backButton={
+        <MoveUpHierarchyPrimaryButton
+          to={{ pathname: "/segments", search: null }}
+        >
+          Back to Segments
+        </MoveUpHierarchyPrimaryButton>
+      }
+      header={<PageHeading title={segment.name || "..."} subtitle="Segment" />}
+      options={
+        <button
+          className="btn btn-danger ml-1"
+          onClick={() => setIsDeletePopupOpen(true)}
+        >
+          Delete Segment
+        </button>
+      }
+    >
       {segment.loading && <Spinner />}
       {segment.error && <ErrorCard error={segment.error} />}
       <Tabs tabs={tabs} defaultTabId={tabs[0].id} />
-
       <TabActivator
         tabId={"details"}
         defaultTabId={defaultTabId}
@@ -65,7 +70,6 @@ export const SegmentDetail = () => {
       <TabActivator tabId={"enrolment"} defaultTabId={defaultTabId}>
         <SegmentEnrolmentSection id={id} />
       </TabActivator>
-
       <ConfirmDeletePopup
         entity={segment}
         error={error}
@@ -77,6 +81,6 @@ export const SegmentDetail = () => {
             .catch(setError)
         }
       />
-    </React.Fragment>
+    </EntityDetailPageLayout>
   );
 };

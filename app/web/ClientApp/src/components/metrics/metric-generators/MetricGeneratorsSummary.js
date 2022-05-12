@@ -5,7 +5,7 @@ import {
   Spinner,
   EmptyList,
   ErrorCard,
-  BackButton,
+  MoveUpHierarchyButton,
 } from "../../molecules";
 import { ConfirmDeletePopup } from "../../molecules/popups/ConfirmDeletePopup";
 import {
@@ -55,9 +55,9 @@ const GeneratorsSummary = () => {
   const generators = useMetricGenerators({ trigger });
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/metrics">
+      <MoveUpHierarchyButton className="float-right" to="/metrics">
         Back to Metrics
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Metric Generators</Title>
 
       <hr />

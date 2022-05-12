@@ -75,12 +75,13 @@ export const CreateCustomer = () => {
             Create
           </AsyncButton>
         }
+        backButton={
+          <MoveUpHierarchyPrimaryButton to="/customers">
+            Back to Customers
+          </MoveUpHierarchyPrimaryButton>
+        }
+        header={<PageHeading title="Add a Customer" />}
       >
-        <MoveUpHierarchyPrimaryButton to="/customers">
-          Back to Customers
-        </MoveUpHierarchyPrimaryButton>
-        <PageHeading title="Add a Customer" showHr />
-
         {error && <ErrorCard error={error} />}
         <label>Required</label>
         <InputGroup>

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useAccessToken } from "../../api-hooks/token";
 import { createChannelAsync } from "../../api/channelsApi";
-import { Title } from "../molecules/layout";
 import { ErrorCard } from "../molecules/ErrorCard";
-import { AsyncButton } from "../molecules";
+import {
+  AsyncButton,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
+} from "../molecules";
 import { InputGroup, TextInput } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { AsyncSelectIntegratedSystem } from "../molecules/selectors/AsyncSelectIntegratedSystem";
@@ -88,9 +91,13 @@ export const CreateChannel = () => {
             Create
           </AsyncButton>
         }
+        backButton={
+          <MoveUpHierarchyPrimaryButton to="/channels">
+            Back to Channels
+          </MoveUpHierarchyPrimaryButton>
+        }
+        header={<PageHeading title="Add a Channel" />}
       >
-        <Title>Add a Channel</Title>
-        <hr />
         {error && <ErrorCard error={error} />}
         <InputGroup className="mb-1">
           <TextInput

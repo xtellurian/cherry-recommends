@@ -1,16 +1,16 @@
 import React from "react";
-import { Title, Subtitle, BackButton } from "../../../molecules";
+import { Title, Subtitle, MoveUpHierarchyButton } from "../../../molecules";
 import { CopyableField } from "../../../molecules/fields/CopyableField";
 
 export const CustomIntegrationSummary = ({ integratedSystem }) => {
   return (
     <React.Fragment>
-      <BackButton
+      <MoveUpHierarchyButton
         className="float-right"
         to={`/settings/integrations/detail/${integratedSystem.id}`}
       >
         Back
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Custom Integration</Title>
       <Subtitle>{integratedSystem.name}</Subtitle>
       <div className="pt-3">

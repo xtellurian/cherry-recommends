@@ -1,20 +1,20 @@
 import React from "react";
 
-const CreatePageLayout = ({
+const EntityDetailPageLayout = ({
   children,
-  createButton,
   backButton,
   header,
+  options,
   headerDivider = true,
 }) => {
   return (
     <React.Fragment>
       {backButton}
       <div className="row">
-        <div className="col d-flex align-items-center">{header}</div>
-        {createButton ? (
-          <div className="col d-flex justify-content-end align-items-center">
-            {createButton}
+        <div className="col">{header}</div>
+        {options ? (
+          <div className="col-9 d-flex justify-content-end align-items-start">
+            {options}
           </div>
         ) : null}
       </div>
@@ -24,4 +24,4 @@ const CreatePageLayout = ({
   );
 };
 
-export default CreatePageLayout;
+export default EntityDetailPageLayout;

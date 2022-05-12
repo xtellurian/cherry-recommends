@@ -54,12 +54,12 @@ export const TargetVariableValuesUtility = ({
 
   return (
     <React.Fragment>
-      {/* <BackButton
+      {/* <MoveUpHierarchyButton
         className="float-right"
         to={`${rootPath}/detail/${recommender.id}`}
       >
         Back to Recommender
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Target Variable</Title>
       <Subtitle>{recommender.name || "..."}</Subtitle>
       <hr /> */}

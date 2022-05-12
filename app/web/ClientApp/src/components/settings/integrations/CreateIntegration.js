@@ -9,6 +9,7 @@ import { TextInput, InputGroup } from "../../molecules/TextInput";
 import { IntegrationIcon } from "./icons/IntegrationIcons";
 import { MoveUpHierarchyPrimaryButton, PageHeading } from "../../molecules";
 import { useNavigation } from "../../../utility/useNavigation";
+import CreatePageLayout from "../../molecules/layout/CreatePageLayout";
 
 const systemTypes = [
   "Shopify",
@@ -105,52 +106,57 @@ export const CreateIntegration = () => {
   };
   return (
     <React.Fragment>
-      <MoveUpHierarchyPrimaryButton to="/settings/integrations">
-        Back to Integrations
-      </MoveUpHierarchyPrimaryButton>
-      <PageHeading title="Create New Integration" showHr />
-      {error && <ErrorCard error={error} />}
+      <CreatePageLayout
+        backButton={
+          <MoveUpHierarchyPrimaryButton to="/settings/integrations">
+            Back to Integrations
+          </MoveUpHierarchyPrimaryButton>
+        }
+        header={<PageHeading title="Create New Integration" />}
+      >
+        {error && <ErrorCard error={error} />}
 
-      {!integratedSystem.systemType && (
-        <div className="m-5">
-          {systemTypes.map((t) => (
-            <div
-              onClick={() =>
-                setIntegratedSystem({
-                  ...integratedSystem,
-                  systemType: t,
-                })
-              }
-              key={t}
-              className="p-3 mb-3 shadow bg-body rounded"
-              style={{ cursor: "pointer" }}
-            >
-              <div className="row justify-content-center">
-                <div className="col-3 text-center">
-                  <h5>{t}</h5>
-                </div>
-                <div className="col-2">
-                  <div style={{ maxWidth: "50px" }}>
-                    <IntegrationIcon systemType={t} />
+        {!integratedSystem.systemType && (
+          <div className="m-5">
+            {systemTypes.map((t) => (
+              <div
+                onClick={() =>
+                  setIntegratedSystem({
+                    ...integratedSystem,
+                    systemType: t,
+                  })
+                }
+                key={t}
+                className="p-3 mb-3 shadow bg-body rounded"
+                style={{ cursor: "pointer" }}
+              >
+                <div className="row justify-content-center">
+                  <div className="col-3 text-center">
+                    <h5>{t}</h5>
+                  </div>
+                  <div className="col-2">
+                    <div style={{ maxWidth: "50px" }}>
+                      <IntegrationIcon systemType={t} />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {integratedSystem.systemType &&
-        integratedSystem.systemType !== "Shopify" && (
-          <GenericNextSteps
-            handleCreate={handleCreate}
-            integratedSystem={integratedSystem}
-            setIntegratedSystem={setIntegratedSystem}
-            creating={creating}
-          />
+            ))}
+          </div>
         )}
-      {integratedSystem.systemType &&
-        integratedSystem.systemType === "Shopify" && <ShopifyNextSteps />}
+
+        {integratedSystem.systemType &&
+          integratedSystem.systemType !== "Shopify" && (
+            <GenericNextSteps
+              handleCreate={handleCreate}
+              integratedSystem={integratedSystem}
+              setIntegratedSystem={setIntegratedSystem}
+              creating={creating}
+            />
+          )}
+        {integratedSystem.systemType &&
+          integratedSystem.systemType === "Shopify" && <ShopifyNextSteps />}
+      </CreatePageLayout>
     </React.Fragment>
   );
 };

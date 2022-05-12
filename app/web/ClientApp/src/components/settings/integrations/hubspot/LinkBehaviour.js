@@ -4,7 +4,7 @@ import {
   Spinner,
   Title,
   Subtitle,
-  BackButton,
+  MoveUpHierarchyButton,
 } from "../../../molecules";
 import { Selector } from "../../../molecules/selectors/Select";
 import { ToggleSwitch } from "../../../molecules/ToggleSwitch";
@@ -20,12 +20,12 @@ import { SettingRow } from "../../../molecules/layout/SettingRow";
 const Top = ({ integratedSystem }) => {
   return (
     <React.Fragment>
-      <BackButton
+      <MoveUpHierarchyButton
         className="float-right"
         to={`/settings/integrations/detail/${integratedSystem.id}`}
       >
         Overview
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title> Hubspot Linking Behaviour</Title>
       <Subtitle>
         {integratedSystem.name || integratedSystem.commonId || "..."}

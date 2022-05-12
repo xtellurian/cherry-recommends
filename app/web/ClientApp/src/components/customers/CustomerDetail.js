@@ -27,6 +27,7 @@ import { ConfirmDeletePopup } from "../molecules/popups/ConfirmDeletePopup";
 import { HistorySection } from "./HistorySection";
 import { LatestRecommendationsSection } from "./LatestRecommendationsSection";
 import { useNavigation } from "../../utility/useNavigation";
+import EntityDetailPageLayout from "../molecules/layout/EntityDetailPageLayout";
 
 const tabs = [
   {
@@ -56,40 +57,48 @@ export const CustomerDetail = () => {
   const numProperties = Object.keys(trackedUser?.properties || {}).length;
 
   return (
-    <React.Fragment>
-      <MoveUpHierarchyPrimaryButton
-        to={{ pathname: "/customers", search: null }}
-      >
-        Back to Customers
-      </MoveUpHierarchyPrimaryButton>
-      <ActionsButton
-        className="ml-1 float-right"
-        to={`/customers/metrics/${id}`}
-        label="Metrics"
-      >
-        <ActionItemsGroup label="Actions">
-          <ActionLink to={`/customers/edit-properties/${id}`}>
-            Edit Properties
-          </ActionLink>
-          <ActionLink to={`/customers/create-event/${id}`}>
-            Log Event
-          </ActionLink>
-          <ActionLink to={`/customers/link-to-integrated-system/${id}`}>
-            Link to Integrated System
-          </ActionLink>
-        </ActionItemsGroup>
-      </ActionsButton>
-      <button
-        className="btn btn-danger ml-1 float-right"
-        onClick={() => setIsDeletePopupOpen(true)}
-      >
-        Delete Customer
-      </button>
-      <PageHeading
-        title={trackedUser.name || trackedUser.customerId || "..."}
-        subtitle="Customer"
-        showHr={true}
-      />
+    <EntityDetailPageLayout
+      backButton={
+        <MoveUpHierarchyPrimaryButton
+          to={{ pathname: "/customers", search: null }}
+        >
+          Back to Customers
+        </MoveUpHierarchyPrimaryButton>
+      }
+      header={
+        <PageHeading
+          title={trackedUser.name || trackedUser.customerId || "..."}
+          subtitle="Customer"
+        />
+      }
+      options={
+        <>
+          <ActionsButton
+            className="ml-1"
+            to={`/customers/metrics/${id}`}
+            label="Metrics"
+          >
+            <ActionItemsGroup label="Actions">
+              <ActionLink to={`/customers/edit-properties/${id}`}>
+                Edit Properties
+              </ActionLink>
+              <ActionLink to={`/customers/create-event/${id}`}>
+                Log Event
+              </ActionLink>
+              <ActionLink to={`/customers/link-to-integrated-system/${id}`}>
+                Link to Integrated System
+              </ActionLink>
+            </ActionItemsGroup>
+          </ActionsButton>
+          <button
+            className="btn btn-danger ml-1"
+            onClick={() => setIsDeletePopupOpen(true)}
+          >
+            Delete Customer
+          </button>
+        </>
+      }
+    >
       {trackedUser.loading && <Spinner />}
       {trackedUser.error && <ErrorCard error={trackedUser.error} />}
       {trackedUser.lastUpdated && (
@@ -137,6 +146,6 @@ export const CustomerDetail = () => {
             .catch(setError)
         }
       />
-    </React.Fragment>
+    </EntityDetailPageLayout>
   );
 };

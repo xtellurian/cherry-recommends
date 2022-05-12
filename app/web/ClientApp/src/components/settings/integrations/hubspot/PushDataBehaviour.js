@@ -5,8 +5,8 @@ import {
   Spinner,
   Title,
   Subtitle,
-  BackButton,
   AsyncButton,
+  MoveUpHierarchyButton,
 } from "../../../molecules";
 import { AsyncSelectItemsRecommender } from "../../../molecules/selectors/AsyncSelectItemsRecommender";
 import { useHubspotPushBehaviourAsync } from "../../../../api-hooks/hubspotApi";
@@ -17,12 +17,12 @@ import { SettingRow } from "../../../molecules/layout/SettingRow";
 const Top = ({ integratedSystem }) => {
   return (
     <React.Fragment>
-      <BackButton
+      <MoveUpHierarchyButton
         className="float-right"
         to={`/settings/integrations/detail/${integratedSystem.id}`}
       >
         Overview
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title> Data Push Behaviour</Title>
       <Subtitle>
         {integratedSystem.name || integratedSystem.commonId || "..."}

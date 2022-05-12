@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Title,
-  Subtitle,
-  BackButton,
-  Spinner,
-  ErrorCard,
-} from "../../molecules";
+import { Title, Subtitle, Spinner, ErrorCard } from "../../molecules";
 import { SettingRow } from "../../molecules/layout/SettingRow";
 import { TimespanSelector } from "../../molecules/selectors/TimespanSelector";
 import { ToggleSwitch } from "../../molecules/ToggleSwitch";

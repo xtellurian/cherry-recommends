@@ -164,13 +164,13 @@ export const CreateRecommender = () => {
             Create
           </AsyncButton>
         }
+        backButton={
+          <MoveUpHierarchyPrimaryButton to="/recommenders/promotions-recommenders">
+            Back to Recommenders
+          </MoveUpHierarchyPrimaryButton>
+        }
+        header={<PageHeading title="Create Promotion Recommender" />}
       >
-        <MoveUpHierarchyPrimaryButton to="/recommenders/promotions-recommenders">
-          Back to Recommenders
-        </MoveUpHierarchyPrimaryButton>
-
-        <PageHeading title="Create Promotion Recommender" showHr />
-
         {error && <ErrorCard error={error} />}
 
         <InputGroup>

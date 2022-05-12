@@ -1,5 +1,10 @@
 import React from "react";
-import { BackButton, ExpandableCard, Subtitle, Title } from "../molecules";
+import {
+  ExpandableCard,
+  MoveUpHierarchyButton,
+  Subtitle,
+  Title,
+} from "../molecules";
 import { useEvent } from "../../api-hooks/eventApi";
 import { useCustomer } from "../../api-hooks/customersApi";
 import { useParams } from "react-router-dom";
@@ -56,9 +61,9 @@ export const EventDetailPage = () => {
   const event = useEvent({ id });
   return (
     <React.Fragment>
-      <BackButton className="float-right" to="/">
+      <MoveUpHierarchyButton className="float-right" to="/">
         Home
-      </BackButton>
+      </MoveUpHierarchyButton>
       <EventDetail event={event} />;
     </React.Fragment>
   );

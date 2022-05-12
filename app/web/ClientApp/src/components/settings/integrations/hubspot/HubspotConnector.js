@@ -7,8 +7,7 @@ import { saveHubspotCodeAsync } from "../../../../api/hubspotApi";
 import { Title } from "../../../molecules/layout";
 import { Spinner } from "../../../molecules/Spinner";
 import { ErrorCard } from "../../../molecules/ErrorCard";
-import { BackButton } from "../../../molecules/BackButton";
-import { Navigation } from "../../../molecules";
+import { MoveUpHierarchyButton, Navigation } from "../../../molecules";
 
 const basePath = `${window.location.protocol}//${window.location.host}`;
 const redirectUri = `${basePath}/settings/integrations/hubspotconnector`;
@@ -17,9 +16,12 @@ const stages = ["READY", "INSTALLING", "SAVING", "COMPLETE"];
 const Top = () => {
   return (
     <React.Fragment>
-      <BackButton to="/settings/integrations" className="float-right">
+      <MoveUpHierarchyButton
+        to="/settings/integrations"
+        className="float-right"
+      >
         Integrations
-      </BackButton>
+      </MoveUpHierarchyButton>
       <Title>Hubspot Installation</Title>
       <hr />
     </React.Fragment>
