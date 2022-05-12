@@ -37,6 +37,7 @@ import { useFeatureFlag } from "../../launch-darkly/hooks";
 import { useChannels } from "../../../api-hooks/channelsApi";
 import CreatePageLayout from "../../molecules/layout/CreatePageLayout";
 import { useNavigation } from "../../../utility/useNavigation";
+import { ScheduleUtil } from "../utils/scheduleUtil";
 
 const InputLabel = ({ children, required }) => {
   return (
@@ -103,9 +104,12 @@ export const CreateRecommender = () => {
     targetMetricId: "",
     targetType: "customer",
     channelIds: null,
+    settings: null,
   });
 
   const forCustomer = recommender.targetType === "customer";
+  const [expDate, setExpiryDate] = React.useState(new Date());
+  const [expDateEnabled, setExpiryDateEnabled] = React.useState(false);
 
   React.useEffect(() => {
     if (startingItem.commonId) {
@@ -151,6 +155,22 @@ export const CreateRecommender = () => {
       commonId: generateCommonId(recommender.name),
     });
   }, [recommender.name]);
+
+  const handleScheduleSettingsChanged = () => {
+    const inputExpiry = expDateEnabled ? expDate : null;
+    setRecommender({
+      ...recommender,
+      settings: { expiryDate: inputExpiry },
+    });
+  };
+
+  React.useEffect(() => {
+    handleScheduleSettingsChanged();
+  }, [expDate]);
+
+  React.useEffect(() => {
+    handleScheduleSettingsChanged();
+  }, [expDateEnabled]);
 
   return (
     <React.Fragment>
@@ -361,6 +381,13 @@ export const CreateRecommender = () => {
               />
             )}
           </div>
+          <ScheduleUtil
+            header="Schedule"
+            onOptionChanged={setExpiryDateEnabled}
+            onDateChanged={setExpiryDate}
+            expiryDate={expDate}
+            expiryDateEnabled={expDateEnabled}
+          ></ScheduleUtil>
         </AdvancedOptionsPanel>
       </CreatePageLayout>
     </React.Fragment>

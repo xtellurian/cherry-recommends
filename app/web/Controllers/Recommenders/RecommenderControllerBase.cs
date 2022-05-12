@@ -67,7 +67,15 @@ namespace SignalBox.Web.Controllers
         public async Task<RecommenderSettings> SetSettings(string id, RecommenderSettingsDto dto)
         {
             var recommender = await base.GetResource(id);
+            bool prevEnabled = recommender.Settings.Enabled;
             recommender.Settings = dto.ToCoreRepresentation(recommender.Settings, true);
+
+            // Re-enabling the recommender will delete the expiry date
+            if (recommender.Settings.Enabled && !prevEnabled)
+            {
+                recommender.Settings.ExpiryDate = null;
+            }
+
             await store.Update(recommender);
             await store.Context.SaveChanges();
             return recommender.Settings;

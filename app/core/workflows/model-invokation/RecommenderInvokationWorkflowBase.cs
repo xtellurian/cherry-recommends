@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,11 +36,33 @@ namespace SignalBox.Core.Workflows
             return await store.QueryInvokationLogs(paginate, recommender.Id);
         }
 
-        protected void ThrowIfDisabled(T recommender)
+        protected async Task ThrowIfDisabled(T recommender)
         {
-            if (recommender?.Settings?.Enabled == false)
+            var isDisabled = await IsRecommenderDisabled(recommender);
+            if (isDisabled)
             {
-                throw new RecommenderInvokationException($"Recommender {recommender.Id} Disabled", "The recommender settings are preventing invokation.");
+                throw new RecommenderInvokationException($"Recommender {recommender.Id} Disabled or Expired", "The recommender settings are preventing invokation.");
+            }
+        }
+
+        public async Task<bool> IsRecommenderDisabled(T recommender)
+        {
+            await SetDisabledIfExpired(recommender);
+            // no need to check expiry date here since disabled is set above if past expiry date
+            return (recommender?.Settings?.Enabled == false);
+        }
+
+        private async Task SetDisabledIfExpired(T recommender)
+        {
+            if (recommender?.Settings?.ExpiryDate != null && recommender?.Settings?.Enabled == true)
+            {
+                // set to Disabled if past expiry date
+                if (DateTimeOffset.UtcNow.Date > recommender?.Settings?.ExpiryDate.Value.Date)
+                {
+                    recommender.Settings.Enabled = false;
+                    await store.Update(recommender);
+                    await store.Context.SaveChanges();
+                }
             }
         }
 

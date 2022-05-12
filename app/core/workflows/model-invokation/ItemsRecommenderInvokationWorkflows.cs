@@ -60,7 +60,7 @@ namespace SignalBox.Core.Workflows
             IItemsModelInput input,
             string? trigger = null)
         {
-            ThrowIfDisabled(recommender);
+            await ThrowIfDisabled(recommender);
             switch (recommender.TargetType)
             {
                 case PromotionRecommenderTargetTypes.Customer:

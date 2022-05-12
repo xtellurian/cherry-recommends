@@ -1,14 +1,16 @@
 import React from "react";
-import { Title, Subtitle, Spinner, ErrorCard } from "../../molecules";
+import { Spinner, ErrorCard } from "../../molecules";
 import { SettingRow } from "../../molecules/layout/SettingRow";
 import { TimespanSelector } from "../../molecules/selectors/TimespanSelector";
 import { ToggleSwitch } from "../../molecules/ToggleSwitch";
+import { ScheduleUtil } from "./scheduleUtil";
 
 const initSettings = {
   _isInitial: true,
   throwOnBadInput: false,
   requireConsumptionEvent: false,
   recommendationCacheTime: null,
+  expiryDate: null,
 };
 
 const anyAreDifferent = (newSettings, oldSettings) => {
@@ -17,21 +19,47 @@ const anyAreDifferent = (newSettings, oldSettings) => {
     newSettings?.requireConsumptionEvent !==
       oldSettings?.requireConsumptionEvent ||
     newSettings?.recommendationCacheTime !==
-      oldSettings?.recommendationCacheTime
+      oldSettings?.recommendationCacheTime ||
+    newSettings?.expiryDate !== oldSettings?.expiryDate
   );
 };
 export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
   // const [errorHandling, setErrorHandling] = React.useState();
   const [settings, setSettings] = React.useState(initSettings);
+  const [expDate, setExpiryDate] = React.useState(new Date());
+  const [expDateEnabled, setExpiryDateEnabled] = React.useState(false);
 
   if (updateSettings === undefined) {
     throw new Error("updateSettings is a required prop");
   }
 
+  const handleScheduleSettingsChanged = () => {
+    const inputExpiry = expDateEnabled ? expDate : null;
+    setSettings({
+      ...settings,
+      expiryDate: inputExpiry,
+    });
+  };
+
+  React.useEffect(() => {
+    handleScheduleSettingsChanged();
+  }, [expDate]);
+
+  React.useEffect(() => {
+    handleScheduleSettingsChanged();
+  }, [expDateEnabled]);
+
   React.useEffect(() => {
     if (!recommender.loading && !recommender.error) {
       setSettings(
         recommender?.settings || { ...initSettings, _isInitial: false }
+      );
+
+      setExpiryDateEnabled(recommender?.settings?.expiryDate !== null);
+      setExpiryDate(
+        recommender?.settings?.expiryDate
+          ? new Date(recommender?.settings?.expiryDate)
+          : new Date()
       );
     }
   }, [recommender]);
@@ -100,6 +128,18 @@ export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
                 setSettings({ ...settings, recommendationCacheTime: v })
               }
             />
+          </SettingRow>
+          <SettingRow
+            label="Schedule"
+            description="Choose a schedule for which the recommender will stop producing recommendations.
+            Setting an expiry date will make the recommender expire at end of day in UTC timezone."
+          >
+            <ScheduleUtil
+              onOptionChanged={setExpiryDateEnabled}
+              onDateChanged={setExpiryDate}
+              expiryDate={expDate}
+              expiryDateEnabled={expDateEnabled}
+            ></ScheduleUtil>
           </SettingRow>
         </React.Fragment>
       )}

@@ -21,7 +21,8 @@ namespace SignalBox.Web
                 Enabled = dto?.Enabled ?? current?.Enabled ?? true, // default to true
                 RecommendationCacheTime = dto?.RecommendationCacheTime ?? DefaultIfNull(current?.RecommendationCacheTime, writeNulls),
                 RequireConsumptionEvent = dto?.RequireConsumptionEvent ?? DefaultIfNull(current?.RequireConsumptionEvent, writeNulls),
-                ThrowOnBadInput = dto?.ThrowOnBadInput ?? DefaultIfNull(current?.ThrowOnBadInput, writeNulls)
+                ThrowOnBadInput = dto?.ThrowOnBadInput ?? DefaultIfNull(current?.ThrowOnBadInput, writeNulls),
+                ExpiryDate = dto?.ExpiryDate ?? DefaultIfNull(current?.ExpiryDate, writeNulls)
             };
         }
     }
