@@ -13,6 +13,7 @@ import { AnalyticsProvider } from "./analytics/analyticsHooks";
 import { getStartupConfigAsync } from "./utility/startupConfig";
 import LaunchDarklyConfigurator from "./components/launch-darkly/LaunchDarklyConfigurator";
 import { HostingProvider } from "./components/tenants/HostingProvider";
+import Analytics from "./analytics/Analytics";
 
 //import registerServiceWorker from './registerServiceWorker';
 Modal.setAppElement("#root");
@@ -38,7 +39,9 @@ if (window.location.host.startsWith("hidden-cherry-secret.local.zone")) {
                   <LDProvider>
                     <LaunchDarklyConfigurator>
                       <EnvironmentStore>
-                        <App multitenant={hosting.multitenant} />
+                        <Analytics>
+                          <App multitenant={hosting.multitenant} />
+                        </Analytics>
                       </EnvironmentStore>
                     </LaunchDarklyConfigurator>
                   </LDProvider>

@@ -11,6 +11,7 @@ import ManagementApp from "./ManagementApp";
 import MultiTenantHome from "./MultiTenantHome";
 import { AnonymousSwitcher } from "./components/anonymous/AnonymousSwitcher";
 import { ConnectComponent } from "./components/connect/ConnectComponent";
+import { Layout } from "./components/Layout";
 
 configure();
 const App = ({ multitenant }) => {
@@ -20,10 +21,12 @@ const App = ({ multitenant }) => {
   if (!multitenant) {
     return (
       <AnonymousSwitcher>
-        <Route path="/_connect">
-          <ConnectComponent />
-        </Route>
-        <InTenantApp multitenant={false} />;
+        <Layout>
+          <Route path="/_connect">
+            <ConnectComponent />
+          </Route>
+          <InTenantApp multitenant={false} />
+        </Layout>
       </AnonymousSwitcher>
     );
   } else
@@ -41,7 +44,9 @@ const App = ({ multitenant }) => {
           </Route>
           <Route path="/:tenant">
             <TenantProviderContainer>
-              <InTenantApp multitenant={true} />
+              <Layout>
+                <InTenantApp multitenant={true} />
+              </Layout>
             </TenantProviderContainer>
           </Route>
           <AuthorizeRoute exact path="/_profile" component={Profile} />
