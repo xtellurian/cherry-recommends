@@ -21,6 +21,7 @@ config:
   hubspot:clientId: 5fb5d0a3-1174-4689-b750-4147661972c1
   hubspot:clientSecret:
     secure: AAABAOBCVM9T+nzZCibaxAXo08VJca+cSQf0BCAYTJBDp5rPjvVwo8Ttq/yxiDDipN1BT3Pc6gfR0w0i9qh0E14ll2I=
+  signalbox:deployPythonFunctions: "true"
   signalbox:environment: Production
   signalbox:login-domain: canary.login.cherry.ai
   signalbox:sqlPassword:

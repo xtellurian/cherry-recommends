@@ -4,6 +4,7 @@ using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Web.Inputs;
 using Pulumi.AzureNative.Web;
 using System.Collections.Generic;
+using System;
 
 namespace SignalBox.Azure
 {
@@ -93,7 +94,7 @@ namespace SignalBox.Azure
                     HealthCheckPath = "/health",
                 }
             });
-            var pythonFuncs = CreatePythonFunctions(rg, storage, insights, plan);
+            this.PythonFunctionApp = CreatePythonFunctions(rg, storage, insights, plan);
 
             if (multitenant && !string.IsNullOrEmpty(canonicalRootDomain))
             {
@@ -112,7 +113,6 @@ namespace SignalBox.Azure
                                                       plan,
                                                       auth0);
 
-            this.FunctionApp = pythonFuncs;
             this.DotnetFunctionApp = dotnetFunctionApp;
             // include the functionApp Id in this method so it doesn't get called too early
             // also, dont think I actually need thissubs
@@ -168,8 +168,8 @@ namespace SignalBox.Azure
                     {"Queues__EnableReadQueue", false.ToString()},
 
                     // python functions connection
-                    {"PythonFunctions__Url",  Output.Format($"https://{pythonFuncs.DefaultHostName}/")},
-                    {"PythonFunctions__Key",  Output.Format($"{this.PythonFunctionAppDefaultKey}")},
+                    {"PythonFunctions__Url", (PythonFunctionApp == null) ? Output.Create("") :  Output.Format($"https://{PythonFunctionApp.DefaultHostName}/")},
+                    {"PythonFunctions__Key", (PythonFunctionApp == null) ? Output.Create("") :   Output.Format($"{this.PythonFunctionAppDefaultKey}")},
 
                     // dotnet functions connection
                     {"DotnetFunctions__Url",  Output.Format($"https://{dotnetFunctionApp.DefaultHostName}/")},
@@ -223,7 +223,7 @@ namespace SignalBox.Azure
 
         public string CanonicalRootDomain { get; }
         public WebApp WebApp { get; }
-        public WebApp FunctionApp { get; }
+        public WebApp? PythonFunctionApp { get; }
         public WebApp DotnetFunctionApp { get; }
         public bool Multitenant => multitenant;
 

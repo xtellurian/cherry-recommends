@@ -69,7 +69,7 @@ namespace SignalBox.Azure
             this.AppResourceGroup = appSvc.WebApp.ResourceGroup;
             this.CanonicalRootDomain = Output.Create(appSvc.CanonicalRootDomain);
             this.WebappName = appSvc.WebApp.Name;
-            this.FunctionAppName = appSvc.FunctionApp.Name;
+            this.PythonFunctionAppName = (appSvc.PythonFunctionApp == null) ? Output.Create("") : appSvc.PythonFunctionApp.Name;
             this.DotnetFunctionAppName = appSvc.DotnetFunctionApp.Name;
             this.DotnetFunctionAppMasterKey = appSvc.DotnetFunctionAppMasterKey;
             this.DotnetFunctionAppDefaultKey = appSvc.DotnetFunctionAppDefaultKey;
@@ -96,7 +96,7 @@ namespace SignalBox.Azure
         [Output]
         public Output<string> WebappName { get; set; }
         [Output]
-        public Output<string> FunctionAppName { get; set; }
+        public Output<string> PythonFunctionAppName { get; set; }
         [Output]
         public Output<string> DotnetFunctionAppName { get; set; }
         [Output]
@@ -104,8 +104,6 @@ namespace SignalBox.Azure
         [Output]
         public Output<string?>? DotnetFunctionAppDefaultKey { get; private set; }
 
-        // [Output]
-        // public Output<string> FunctionAppDefaultKey { get; set;}
         [Output]
         public Output<string> AppResourceGroup { get; set; }
         [Output]

@@ -220,20 +220,23 @@ namespace SignalBox.Azure
             }
         }
 
-        private WebApp CreatePythonFunctions(ResourceGroup rg,
+        private WebApp? CreatePythonFunctions(ResourceGroup rg,
                                                     Storage storage,
                                                     Component insights,
                                                     AppServicePlan plan)
         {
-            var funcs = new WebApp("pythonJobs", new WebAppArgs
+            var config = new Config();
+            if (config.GetBoolean("deployPythonFunctions") == true)
             {
-                Tags = tags,
-                ResourceGroupName = rg.Name,
-                ServerFarmId = plan.Id,
-                Kind = "functionapp",
-                SiteConfig = new SiteConfigArgs
+                var funcs = new WebApp("pythonJobs", new WebAppArgs
                 {
-                    AppSettings = {
+                    Tags = tags,
+                    ResourceGroupName = rg.Name,
+                    ServerFarmId = plan.Id,
+                    Kind = "functionapp",
+                    SiteConfig = new SiteConfigArgs
+                    {
+                        AppSettings = {
                         new NameValuePairArgs{
                             Name = "AzureWebJobsStorage",
                             Value = storage.PrimaryConnectionString,
@@ -255,31 +258,36 @@ namespace SignalBox.Azure
                             Value = "sqlserver",
                         }
                     },
-                    Http20Enabled = true,
-                    AlwaysOn = true,
-                    LinuxFxVersion = "Python|3.7"
-                },
-            });
+                        Http20Enabled = true,
+                        AlwaysOn = true,
+                        LinuxFxVersion = "Python|3.7"
+                    },
+                });
 
-            var keys = Output.Tuple(funcs.Name, funcs.ResourceGroup, Output.CreateSecret(""))
-               .Apply(GetHostKeys);
+                var keys = Output.Tuple(funcs.Name, funcs.ResourceGroup, Output.CreateSecret(""))
+                   .Apply(GetHostKeys);
 
-            this.PythonFunctionAppMasterKey = keys.Apply(k => k?.MasterKey);
+                this.PythonFunctionAppMasterKey = keys.Apply(k => k?.MasterKey);
 
-            this.PythonFunctionAppDefaultKey = keys.Apply(k =>
+                this.PythonFunctionAppDefaultKey = keys.Apply(k =>
+                {
+                    if (k?.FunctionKeys != null && k.FunctionKeys.ContainsKey("default"))
+                    {
+                        return k.FunctionKeys["default"];
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("No function Keys.");
+                        return null;
+                    }
+                });
+
+                return funcs;
+            }
+            else
             {
-                if (k?.FunctionKeys != null && k.FunctionKeys.ContainsKey("default"))
-                {
-                    return k.FunctionKeys["default"];
-                }
-                else
-                {
-                    System.Console.WriteLine("No function Keys.");
-                    return null;
-                }
-            });
-
-            return funcs;
+                return null;
+            }
         }
     }
 }

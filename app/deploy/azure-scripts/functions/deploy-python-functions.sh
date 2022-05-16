@@ -16,16 +16,24 @@ cd $APP_PATH/azure
 
 STACK=$(pulumi stack --show-name)
 echo "Using Pulumi Stack $STACK"
-FUNCTIONAPPNAME=$(pulumi stack output FunctionAppName)
-RG=$(pulumi stack output AppResourceGroup)
+DEPLOY_PYTHON_FUNCTIONS=$(pulumi config get deployPythonFunctions)
 
-cd $home_dir
-cd $APP_PATH/pythonFunctions
+if [ "$DEPLOY_PYTHON_FUNCTIONS" = "true" ]; then
+    echo "Deploying python functions."
 
-echo "Activating conda env"
-conda activate pythonFunctions
-echo "Publishing python functions to $FUNCTIONAPPNAME"
-func azure functionapp publish $FUNCTIONAPPNAME --python
-conda deactivate
-echo "Conda env deactivated"
-echo "Deployed functions $FUNCTIONAPPNAME in stack $STACK"
+    FUNCTIONAPPNAME=$(pulumi stack output PythonFunctionAppName)
+    RG=$(pulumi stack output AppResourceGroup)
+
+    cd $home_dir
+    cd $APP_PATH/pythonFunctions
+
+    echo "Activating conda env"
+    conda activate pythonFunctions
+    echo "Publishing python functions to $FUNCTIONAPPNAME"
+    func azure functionapp publish $FUNCTIONAPPNAME --python
+    conda deactivate
+    echo "Conda env deactivated"
+    echo "Deployed functions $FUNCTIONAPPNAME in stack $STACK"
+else
+    echo "Not deploying python functions."
+fi
