@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Moq;
 using SignalBox.Core;
 using SignalBox.Core.Metrics;
-using SignalBox.Core.Recommendations;
-using SignalBox.Core.Recommenders;
 using SignalBox.Core.Workflows;
 using SignalBox.Infrastructure.Services;
 using Xunit;

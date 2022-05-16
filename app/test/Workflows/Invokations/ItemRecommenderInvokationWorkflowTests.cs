@@ -9,7 +9,7 @@ using SignalBox.Core.Workflows;
 using SignalBox.Infrastructure.Services;
 using Xunit;
 
-namespace SignalBox.Test.Stores
+namespace SignalBox.Test.Workflows
 {
 #nullable enable
     public class ItemRecommenderInvokationWorkflowTests

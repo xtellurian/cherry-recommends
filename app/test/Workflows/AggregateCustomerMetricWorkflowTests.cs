@@ -9,7 +9,7 @@ using SignalBox.Core.Workflows;
 using SignalBox.Infrastructure.Files;
 using Xunit;
 
-namespace SignalBox.Test.Stores
+namespace SignalBox.Test.Workflows
 {
     public class AggregateCustomerMetricWorkflowTests
     {

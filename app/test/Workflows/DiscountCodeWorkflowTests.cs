@@ -5,7 +5,7 @@ using SignalBox.Core;
 using SignalBox.Core.Workflows;
 using Xunit;
 
-namespace SignalBox.Test.Stores
+namespace SignalBox.Test.Workflows
 {
     public class DiscountCodeWorkflowTests
     {

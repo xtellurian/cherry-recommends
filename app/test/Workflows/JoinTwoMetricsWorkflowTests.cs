@@ -6,7 +6,7 @@ using SignalBox.Core.Metrics;
 using SignalBox.Core.Workflows;
 using Xunit;
 
-namespace SignalBox.Test.Stores
+namespace SignalBox.Test.Workflows
 {
     public class JoinTwoMetricsWorkflowTests
     {

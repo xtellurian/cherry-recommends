@@ -5,7 +5,7 @@ using System;
 using SignalBox.Core;
 using SignalBox.Core.Optimisers;
 
-namespace SignalBox.Test.Stores
+namespace SignalBox.Test.Optimisers
 {
     public class OptimiserTests
     {
