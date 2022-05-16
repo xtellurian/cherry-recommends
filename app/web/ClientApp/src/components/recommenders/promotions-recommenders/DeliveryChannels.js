@@ -27,7 +27,7 @@ const RecommenderChannelRow = ({ channel, remove }) => {
             Remove
           </button>
         </div>
-        <Typography variant="h2">
+        <Typography variant="h6">
           {channel.name} : {channelTypeLabels[channel.channelType]}
         </Typography>
         {channel.channelType === "webhook" && (

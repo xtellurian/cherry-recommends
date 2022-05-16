@@ -123,7 +123,7 @@ export const CreateParameter = () => {
         <InputGroup>
           <TextInput
             label="Common Id"
-            placeholder="An unique identifier"
+            placeholder="A unique identifier"
             value={parameter.commonId}
             validator={commonIdValidator}
             onChange={(e) =>

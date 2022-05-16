@@ -1,6 +1,6 @@
 import React from "react";
 import { useAccessToken } from "../../../api-hooks/token";
-import { AsyncButton, ErrorCard, Spinner } from "../../molecules";
+import { AsyncButton, EmptyList, ErrorCard, Spinner } from "../../molecules";
 import { ArgumentsEditor } from "../../molecules/ArgumentsEditor";
 export const ArgumentsComponentUtil = ({ recommender, setArgumentsAsync }) => {
   const token = useAccessToken();
@@ -26,18 +26,22 @@ export const ArgumentsComponentUtil = ({ recommender, setArgumentsAsync }) => {
   return (
     <React.Fragment>
       <div className="mb-2">
-        <h5>Edit Arguments</h5>
-        {error && <ErrorCard error={error} />}
-        {args && (
+        {args.length === 0 ? (
+          <EmptyList>There are no arguments yet.</EmptyList>
+        ) : null}
+
+        {/* <Typography className="semi-bold">Edit Arguments</Typography> */}
+        {error ? <ErrorCard error={error} /> : null}
+        {args ? (
           <ArgumentsEditor
             initialArguments={initialArgs}
             onArgumentsChanged={setArguments}
           />
-        )}
+        ) : null}
       </div>
-      {!args && <Spinner />}
+      {!args ? <Spinner /> : null}
       <AsyncButton
-        className="btn btn-primary w-25"
+        className="btn btn-primary w-100 mt-4"
         loading={saving}
         onClick={setArgs}
       >

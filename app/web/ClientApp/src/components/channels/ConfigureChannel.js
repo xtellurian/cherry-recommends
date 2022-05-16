@@ -164,7 +164,7 @@ const WebConfiguration = ({ channel }) => {
       {error ? <ErrorCard error={error} /> : null}
 
       <div className="mt-4">
-        <Typography variant="h2" className="font-weight-bold">
+        <Typography variant="h6" className="bold">
           Tracking Code
         </Typography>
         <hr />
@@ -186,7 +186,7 @@ const WebConfiguration = ({ channel }) => {
       </div>
 
       <div className="mt-4">
-        <Typography variant="h2" className="font-weight-bold">
+        <Typography variant="h6" className="bold">
           Configuration
         </Typography>
         <hr />
@@ -202,13 +202,13 @@ const WebConfiguration = ({ channel }) => {
               setPopupAskForEmail((oldPopupAskForEmail) => !oldPopupAskForEmail)
             }
           />
-          <Typography variant="h4" className="ml-1">
+          <Typography className="ml-1" component="span">
             Enable popup
           </Typography>
         </div>
 
         <div className="mt-3">
-          <Typography variant="h4">Choose a recommender</Typography>
+          <Typography>Choose a recommender</Typography>
           <Selector
             className="mt-1"
             value={selectedRecommenderValue}

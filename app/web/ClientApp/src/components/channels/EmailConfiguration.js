@@ -43,7 +43,7 @@ export const EmailConfiguration = ({ channel }) => {
     <React.Fragment>
       {error ? <ErrorCard error={error} /> : null}
       <div className="mt-3">
-        <Typography variant="h4">
+        <Typography variant="h6">
           Choose the list that triggers the channel
         </Typography>
         <AsyncSelectChannelTriggerList

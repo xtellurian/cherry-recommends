@@ -1,7 +1,12 @@
-import Tippy from "@tippyjs/react";
 import React from "react";
+import Tippy from "@tippyjs/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+
+import { FieldLabel } from "./FieldLabel";
 import { Selector } from "./selectors/Select";
-import { InputGroup, TextInput, commonIdValidator } from "./TextInput";
+import { TextInput, commonIdValidator } from "./TextInput";
+
 const argumentTypeOptions = [
   { label: "Numerical", value: "numerical" },
   { label: "Categorical", value: "categorical" },
@@ -14,26 +19,30 @@ const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
     defaultValue = defaultArgumentValue;
   }
   return (
-    <div className="row mt-1">
-      <div className="col-2">
-        <Selector
-          placeholder="Type"
-          defaultValue={
-            argumentType
-              ? { label: argumentType, value: argumentType }
-              : argumentTypeOptions[0].value
-          }
-          onChange={(v) =>
-            onChange(entry, entry, { ...argument, argumentType: v.value })
-          }
-          options={argumentTypeOptions}
-        />
-      </div>
-      <div className="col">
-        <InputGroup>
+    <div className="border-bottom mt-4">
+      <div className="row align-items-center">
+        <div className="col-3">
+          <Selector
+            label="Type"
+            placeholder="Type"
+            inline={false}
+            defaultValue={
+              argumentType
+                ? { label: argumentType, value: argumentType }
+                : argumentTypeOptions[0].value
+            }
+            onChange={(v) =>
+              onChange(entry, entry, { ...argument, argumentType: v.value })
+            }
+            options={argumentTypeOptions}
+          />
+        </div>
+
+        <div className="col-3">
           <TextInput
             label="Identifier"
             placeholder="Identifier"
+            inline={false}
             value={commonId || ""}
             validator={commonIdValidator}
             onChange={(e) =>
@@ -43,10 +52,13 @@ const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
               })
             }
           />
+        </div>
 
+        <div className="col-3">
           <TextInput
             label="Default Value"
             placeholder="..."
+            inline={false}
             value={defaultValue || (argumentType === "numerical" ? 0 : "")}
             onChange={(e) =>
               onChange(entry, entry, {
@@ -55,32 +67,35 @@ const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
               })
             }
           />
-        </InputGroup>
-      </div>
-      <div className="col-2">
-        <div className="form-check">
-          <input
-            type="checkbox"
-            className="form-check-input"
-            checked={isRequired || false}
-            onChange={(e) =>
-              onChange(entry, entry, {
-                ...argument,
-                isRequired: e.target.checked,
-              })
-            }
-          />
-          <label className="form-check-label">Required</label>
         </div>
-      </div>
 
-      <div className="col-1">
-        <button
-          onClick={() => onRemove(entry)}
-          className="btn btn-outline-danger btn-block"
-        >
-          X
-        </button>
+        <div className="col-2">
+          <FieldLabel type="checkbox">
+            <div className="form-check w-100">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                checked={isRequired || false}
+                onChange={(e) =>
+                  onChange(entry, entry, {
+                    ...argument,
+                    isRequired: e.target.checked,
+                  })
+                }
+              />
+              <label className="form-check-label ml-1">Required</label>
+            </div>
+          </FieldLabel>
+        </div>
+
+        <div className="col-1">
+          <FontAwesomeIcon
+            icon={faCircleXmark}
+            className="cursor-pointer float-right text-danger"
+            style={{ fontSize: "1.5em" }}
+            onClick={() => onRemove(entry)}
+          />
+        </div>
       </div>
     </div>
   );
@@ -132,7 +147,7 @@ export const ArgumentsEditor = ({
 
   return (
     <React.Fragment>
-      {Object.entries(args).length === 0 && (
+      {Object.entries(args).length === 0 ? (
         <div className="p-1">
           {placeholder || (
             <button
@@ -143,7 +158,8 @@ export const ArgumentsEditor = ({
             </button>
           )}
         </div>
-      )}
+      ) : null}
+
       {Object.entries(args).map(([k, v], i) => (
         <ArgumentRow
           key={i}
@@ -153,18 +169,21 @@ export const ArgumentsEditor = ({
           onRemove={handleRemove}
         />
       ))}
-      <div className="row mt-2 justify-content-end">
-        <div className="col-1">
+
+      {Object.entries(args).length > 0 ? (
+        <div className="float-right mt-4">
           <Tippy content="Add Argument" placement="left">
-            <button
-              onClick={handleNewEntry}
-              className="btn btn-outline-success btn-block"
-            >
-              +
-            </button>
+            <span className="d-flex align-items-center justify-content-end">
+              <FontAwesomeIcon
+                icon={faCirclePlus}
+                className="cursor-pointer float-right text-success"
+                style={{ fontSize: "1.5em" }}
+                onClick={handleNewEntry}
+              />
+            </span>
           </Tippy>
         </div>
-      </div>
+      ) : null}
     </React.Fragment>
   );
 };

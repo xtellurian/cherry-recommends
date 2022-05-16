@@ -21,7 +21,7 @@ export class ErrorBoundary extends Component {
       // Error path
       return (
         <div>
-          <Typography variant="h1" className="mb-2">
+          <Typography variant="h6" className="mb-2">
             Something went wrong.
           </Typography>
           <ErrorCard error={this.state.error} />

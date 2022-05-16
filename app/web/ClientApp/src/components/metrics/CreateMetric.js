@@ -4,13 +4,11 @@ import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createMetricAsync } from "../../api/metricsApi";
 import {
-  AsyncButton,
   ErrorCard,
   MoveUpHierarchyPrimaryButton,
   PageHeading,
 } from "../molecules";
 import {
-  InputGroup,
   TextInput,
   createLengthValidator,
   createServerErrorValidator,
@@ -19,7 +17,9 @@ import Select from "../molecules/selectors/Select";
 import { useCommonId } from "../../utility/utility";
 
 import { hash } from "../menu/MenuIA";
-import CreatePageLayout from "../molecules/layout/CreatePageLayout";
+import CreatePageLayout, {
+  CreateButton,
+} from "../molecules/layout/CreatePageLayout";
 import { useNavigation } from "../../utility/useNavigation";
 
 const valueTypeOptions = [
@@ -83,13 +83,11 @@ const CreateMetric = () => {
   return (
     <CreatePageLayout
       createButton={
-        <AsyncButton
+        <CreateButton
+          label="Create Metric"
           loading={creating}
-          className="btn btn-primary"
           onClick={handleCreate}
-        >
-          Create
-        </AsyncButton>
+        />
       }
       backButton={
         <MoveUpHierarchyPrimaryButton
@@ -101,47 +99,45 @@ const CreateMetric = () => {
           Back to Metrics
         </MoveUpHierarchyPrimaryButton>
       }
-      header={<PageHeading title="Create Metric" />}
+      header={<PageHeading title="Create a Metric" />}
     >
       {error && <ErrorCard error={error} />}
 
       <div>
-        <InputGroup className="mb-1">
-          <TextInput
-            placeholder="Something human readable"
-            value={metric.name}
-            label="Friendly Name"
-            validator={createLengthValidator(5)}
-            onChange={(e) =>
-              setMetric({
-                ...metric,
-                name: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
-        <InputGroup className="mb-1">
-          <TextInput
-            placeholder="Something unique"
-            value={metric.commonId}
-            label="Common Id"
-            validator={createServerErrorValidator("CommonId", error)}
-            onChange={(e) =>
-              setMetric({
-                ...metric,
-                commonId: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+        <TextInput
+          placeholder="Something human readable"
+          value={metric.name}
+          label="Friendly Name"
+          validator={createLengthValidator(5)}
+          onChange={(e) =>
+            setMetric({
+              ...metric,
+              name: e.target.value,
+            })
+          }
+        />
+
+        <TextInput
+          placeholder="Something unique"
+          value={metric.commonId}
+          label="Common ID"
+          validator={createServerErrorValidator("CommonId", error)}
+          onChange={(e) =>
+            setMetric({
+              ...metric,
+              commonId: e.target.value,
+            })
+          }
+        />
 
         <Select
-          className="mb-1"
+          label="Scope"
           placeholder="Choose a scope"
           onChange={setSelectedScope}
           options={scopeOptions}
         />
-        {isCustomerOrBusiness && (
+
+        {isCustomerOrBusiness ? (
           <Select
             className="mb-1"
             placeholder="Select a metric value type"
@@ -149,7 +145,7 @@ const CreateMetric = () => {
             options={valueTypeOptions}
             defaultValue={valueTypeOptions[0]}
           />
-        )}
+        ) : null}
       </div>
     </CreatePageLayout>
   );

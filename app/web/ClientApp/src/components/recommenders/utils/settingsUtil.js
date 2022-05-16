@@ -1,6 +1,5 @@
 import React from "react";
-import { Spinner, ErrorCard } from "../../molecules";
-import { SettingRow } from "../../molecules/layout/SettingRow";
+import { Spinner, ErrorCard, Typography } from "../../molecules";
 import { TimespanSelector } from "../../molecules/selectors/TimespanSelector";
 import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 import { ScheduleUtil } from "./scheduleUtil";
@@ -23,6 +22,26 @@ const anyAreDifferent = (newSettings, oldSettings) => {
     newSettings?.expiryDate !== oldSettings?.expiryDate
   );
 };
+
+export const SettingRow = ({
+  label,
+  description,
+  children,
+  noBorderBottom,
+}) => {
+  return (
+    <div className={`${noBorderBottom ? "" : "border-bottom pb-4"}`}>
+      <div className="row mt-4">
+        <div className="col">
+          <Typography className="semi-bold">{label}</Typography>
+          <Typography className="text-secondary mt-1">{description}</Typography>
+        </div>
+        <div className="col-lg-6 col-md-8 text-center">{children}</div>
+      </div>
+    </div>
+  );
+};
+
 export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
   // const [errorHandling, setErrorHandling] = React.useState();
   const [settings, setSettings] = React.useState(initSettings);

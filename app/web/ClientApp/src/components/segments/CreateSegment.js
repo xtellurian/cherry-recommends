@@ -3,14 +3,15 @@ import React from "react";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createSegmentAsync } from "../../api/segmentsApi";
-import { InputGroup, TextInput } from "../molecules/TextInput";
+import { TextInput } from "../molecules/TextInput";
 import {
-  AsyncButton,
   ErrorCard,
   MoveUpHierarchyPrimaryButton,
   PageHeading,
 } from "../molecules";
-import CreatePageLayout from "../molecules/layout/CreatePageLayout";
+import CreatePageLayout, {
+  CreateButton,
+} from "../molecules/layout/CreatePageLayout";
 import { useNavigation } from "../../utility/useNavigation";
 
 export const CreateSegment = () => {
@@ -43,35 +44,31 @@ export const CreateSegment = () => {
     <React.Fragment>
       <CreatePageLayout
         createButton={
-          <AsyncButton
+          <CreateButton
+            label="Create Segment"
             loading={loading}
-            className="btn btn-primary"
             onClick={handleCreate}
-          >
-            Create
-          </AsyncButton>
+          />
         }
         backButton={
           <MoveUpHierarchyPrimaryButton to="/segments">
             Back to Segments
           </MoveUpHierarchyPrimaryButton>
         }
-        header={<PageHeading title="Create a new Segment" />}
+        header={<PageHeading title="Create a Segment" />}
       >
-        {error && <ErrorCard error={error} />}
-        <InputGroup>
-          <TextInput
-            label="Segment Name"
-            placeholder="Enter segment name here"
-            value={segment?.name}
-            onChange={(e) =>
-              setSegment({
-                ...segment,
-                name: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+        {error ? <ErrorCard error={error} /> : null}
+        <TextInput
+          label="Segment Name"
+          placeholder="Enter segment name here"
+          value={segment?.name}
+          onChange={(e) =>
+            setSegment({
+              ...segment,
+              name: e.target.value,
+            })
+          }
+        />
       </CreatePageLayout>
     </React.Fragment>
   );

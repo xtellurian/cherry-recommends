@@ -1,49 +1,52 @@
 import React from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+
+import { DatePicker } from "../../molecules";
+import { FieldLabel } from "../../molecules/FieldLabel";
 
 export const ScheduleUtil = ({
-  header,
   onOptionChanged,
   onDateChanged,
   expiryDateEnabled,
   expiryDate,
+  label,
 }) => {
   return (
-    <React.Fragment>
-      <div className="mt-2">
-        {header}
-        <div className="text-left">
-          <input
-            type="radio"
-            value={false}
-            name="schedule"
-            checked={expiryDateEnabled === false}
-            onChange={(v) => onOptionChanged(false)}
-          />
-          <span> Run continuously</span>
-        </div>
-        <div className="text-left">
-          <input
-            type="radio"
-            value={true}
-            name="schedule"
-            checked={expiryDateEnabled === true}
-            onChange={(v) => onOptionChanged(true)}
-          />
-          <span> Set expiry date (UTC)</span>
-          <div className="ml-3 mt-1">
-            <DatePicker
-              className="form-control"
-              readOnly={!expiryDateEnabled}
-              selected={expiryDate ? expiryDate : new Date()}
-              onChange={(date) => {
-                onDateChanged(date);
-              }}
+    <FieldLabel label={label} labelPosition="top">
+      <div className="form-field w-100">
+        <div className="row">
+          <div className="d-flex align-items-center col-12">
+            <input
+              type="radio"
+              value={false}
+              name="schedule"
+              checked={expiryDateEnabled === false}
+              onChange={(v) => onOptionChanged(false)}
             />
+            <span className="ml-2">Run continuously</span>
           </div>
+          <div className="d-flex align-items-center col-12 mt-2">
+            <input
+              type="radio"
+              value={true}
+              name="schedule"
+              checked={expiryDateEnabled === true}
+              onChange={(v) => onOptionChanged(true)}
+            />
+            <span className="ml-2">Set expiry date (UTC)</span>
+          </div>
+          {expiryDateEnabled ? (
+            <div className="col-12 mt-3">
+              <DatePicker
+                readOnly={!expiryDateEnabled}
+                selected={expiryDate ? expiryDate : new Date()}
+                onChange={(date) => {
+                  onDateChanged(date);
+                }}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
-    </React.Fragment>
+    </FieldLabel>
   );
 };

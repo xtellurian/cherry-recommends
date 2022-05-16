@@ -1,21 +1,33 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
+
 import {
-  Title,
-  Subtitle,
   Spinner,
   ErrorCard,
   AsyncButton,
   EmptyState,
+  Typography,
 } from "../../molecules";
 
-import { SettingRow } from "../../molecules/layout/SettingRow";
 import AsyncSelectMetric from "../../molecules/selectors/AsyncSelectMetric";
 import { useAccessToken } from "../../../api-hooks/token";
 import {
-  InputGroup,
   TextInput,
   createRequiredByServerValidator,
 } from "../../molecules/TextInput";
+
+const SettingRow = ({ label, description, children }) => {
+  return (
+    <div className="row mt-4">
+      <div className="col">
+        <Typography className="semi-bold">{label}</Typography>
+        <Typography className="text-secondary mt-1">{description}</Typography>
+      </div>
+      <div className="col-lg-6 col-md-8 text-center">{children}</div>
+    </div>
+  );
+};
 
 export const TriggersUtil = ({
   error,
@@ -83,16 +95,16 @@ export const TriggersUtil = ({
             label="Metrics Changed Trigger"
             description="Trigger an invokation when these Metrics change value."
           >
-            <InputGroup>
-              <TextInput
-                validator={createRequiredByServerValidator(error)}
-                placeholder="Label the trigger."
-                label="Trigger Name"
-                value={metricsChangedTriggerName}
-                onChange={(e) => setMetricsChangedTriggerName(e.target.value)}
-              />
-            </InputGroup>
+            <TextInput
+              validator={createRequiredByServerValidator(error)}
+              placeholder="Label the trigger"
+              label="Trigger Name"
+              value={metricsChangedTriggerName}
+              onChange={(e) => setMetricsChangedTriggerName(e.target.value)}
+            />
+
             <AsyncSelectMetric
+              label="Select Metrics"
               isMulti={true}
               placeholder="Select Metrics"
               onChange={setMetricOptions}
@@ -100,18 +112,24 @@ export const TriggersUtil = ({
                 triggerCollection?.metricsChanged?.metricCommonIds
               }
             />
-            <div
-              className={`text-right ${
-                isMetricsChangesTriggerActive && "text-success"
-              }`}
-            >
-              {isMetricsChangesTriggerActive ? "Active" : "Inactive"}
+            <div className="d-flex align-items-center justify-content-end">
+              <FontAwesomeIcon
+                icon={faCircle}
+                className={`${
+                  isMetricsChangesTriggerActive
+                    ? "text-success"
+                    : "text-secondary"
+                }`}
+              />
+              <Typography className="ml-2">
+                {isMetricsChangesTriggerActive ? "Active" : "Inactive"}
+              </Typography>
             </div>
           </SettingRow>
         </div>
       )}
 
-      <div className="mt-2">
+      <div className="mt-4">
         <AsyncButton
           className="btn btn-primary btn-block"
           onClick={handleSave}

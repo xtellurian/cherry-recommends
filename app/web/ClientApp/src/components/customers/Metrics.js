@@ -7,13 +7,12 @@ import {
 } from "../../api-hooks/metricsApi";
 import { toDate } from "../../utility/utility";
 import {
-  Title,
-  Subtitle,
   Spinner,
   ExpandableCard,
   EmptyList,
   ErrorCard,
-  MoveUpHierarchyButton,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
 } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 
@@ -60,17 +59,15 @@ const Metrics = () => {
   const customerMetrics = useCustomerMetrics({ id });
   return (
     <React.Fragment>
-      <MoveUpHierarchyButton
-        className="float-right"
-        to={`/customers/detail/${id}`}
-      >
-        User Details
-      </MoveUpHierarchyButton>
-      <Title>Metrics</Title>
-      <Subtitle>
-        {trackedUser.name || trackedUser.commonId || trackedUser.id || "..."}
-      </Subtitle>
-      <hr />
+      <MoveUpHierarchyPrimaryButton to={`/customers/detail/${id}`}>
+        Back to User Details
+      </MoveUpHierarchyPrimaryButton>
+      <PageHeading
+        title={
+          trackedUser.name || trackedUser.commonId || trackedUser.id || "..."
+        }
+        subtitle="Metrics"
+      />
       {(trackedUser.loading || customerMetrics.loading) && <Spinner />}
       {customerMetrics.length > 0 &&
         customerMetrics.map((f) => (

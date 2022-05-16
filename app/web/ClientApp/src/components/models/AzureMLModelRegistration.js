@@ -1,13 +1,12 @@
 import React from "react";
-import { ErrorCard, AsyncButton } from "../molecules";
-import {
-  TextInput,
-  InputGroup,
-  createServerErrorValidator,
-} from "../molecules/TextInput";
+import { ErrorCard, Typography } from "../molecules";
+import { TextInput, createServerErrorValidator } from "../molecules/TextInput";
 import { useAccessToken } from "../../api-hooks/token";
 import { createModelRegistrationAsync } from "../../api/modelRegistrationsApi";
 import { useNavigation } from "../../utility/useNavigation";
+import CreatePageLayout, {
+  CreateButton,
+} from "../molecules/layout/CreatePageLayout";
 
 export const AzureMLModelRegistration = ({ hostingType, modelType }) => {
   const { navigate } = useNavigation();
@@ -35,77 +34,77 @@ export const AzureMLModelRegistration = ({ hostingType, modelType }) => {
   };
 
   return (
-    <React.Fragment>
-      {error && <ErrorCard error={error} />}
-      <div className="mt-3">
-        <label className="form-label">
-          Register a new model that will be available via the API.
-        </label>
-        <InputGroup>
-          <TextInput
-            placeholder="Model Name"
-            value={modelRegistration.name}
-            validator={createServerErrorValidator("Name", error)}
-            onChange={(e) =>
-              setModelRegistration({
-                ...modelRegistration,
-                name: e.target.value,
-              })
-            }
-            resetTrigger={error}
-          />
-        </InputGroup>
+    <CreatePageLayout
+      createButton={
+        <CreateButton
+          label="Create Model"
+          loading={loading}
+          onCreate={handleCreate}
+        />
+      }
+    >
+      {error ? <ErrorCard error={error} /> : null}
 
-        <label>Location and credentials</label>
+      <Typography className="bold mb-4">
+        Register a new model that will be available via the API.
+      </Typography>
 
-        <InputGroup>
-          <TextInput
-            placeholder="https://model-url.com/score"
-            value={modelRegistration.scoringUrl}
-            onChange={(e) =>
-              setModelRegistration({
-                ...modelRegistration,
-                scoringUrl: e.target.value,
-              })
-            }
-            validator={createServerErrorValidator("ScoringUrl", error)}
-            resetTrigger={error}
-          />
+      <TextInput
+        label="Model Name"
+        placeholder="A name you recognise"
+        value={modelRegistration.name}
+        validator={createServerErrorValidator("Name", error)}
+        onChange={(e) =>
+          setModelRegistration({
+            ...modelRegistration,
+            name: e.target.value,
+          })
+        }
+        resetTrigger={error}
+      />
 
-          <TextInput
-            placeholder="Secret Key"
-            value={modelRegistration.key}
-            onChange={(e) =>
-              setModelRegistration({
-                ...modelRegistration,
-                key: e.target.value,
-              })
-            }
-            validator={createServerErrorValidator("Key", error)}
-            resetTrigger={error}
-          />
-        </InputGroup>
+      {/* <Typography className="bold mb-4">Location and Credentials</Typography> */}
 
-        <label className="form-label">Swagger URL (Optional)</label>
-        <InputGroup>
-          <TextInput
-            placeholder="https://model-url/com/swagger.json"
-            value={modelRegistration.swaggerUrl}
-            onChange={(e) =>
-              setModelRegistration({
-                ...modelRegistration,
-                swaggerUrl: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+      <TextInput
+        label="Scoring URL"
+        placeholder="https://model-url.com/score"
+        value={modelRegistration.scoringUrl}
+        onChange={(e) =>
+          setModelRegistration({
+            ...modelRegistration,
+            scoringUrl: e.target.value,
+          })
+        }
+        validator={createServerErrorValidator("ScoringUrl", error)}
+        resetTrigger={error}
+      />
 
-        <div className="mt-2">
-          <AsyncButton loading={loading} onClick={handleCreate}>
-            Create
-          </AsyncButton>
-        </div>
-      </div>
-    </React.Fragment>
+      <TextInput
+        label="Secret Key"
+        placeholder="Secret Key"
+        value={modelRegistration.key}
+        onChange={(e) =>
+          setModelRegistration({
+            ...modelRegistration,
+            key: e.target.value,
+          })
+        }
+        validator={createServerErrorValidator("Key", error)}
+        resetTrigger={error}
+      />
+
+      <TextInput
+        label="Swagger URL"
+        optional
+        placeholder="https://model-url/com/swagger.json"
+        value={modelRegistration.swaggerUrl}
+        onChange={(e) =>
+          setModelRegistration({
+            ...modelRegistration,
+            swaggerUrl: e.target.value,
+          })
+        }
+      />
+    </CreatePageLayout>
   );
 };

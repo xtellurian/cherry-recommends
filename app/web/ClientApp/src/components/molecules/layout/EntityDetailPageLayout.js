@@ -13,7 +13,7 @@ const EntityDetailPageLayout = ({
       <div className="row">
         <div className="col">{header}</div>
         {options ? (
-          <div className="col-9 d-flex justify-content-end align-items-start">
+          <div className="col d-flex justify-content-end align-items-start">
             {options}
           </div>
         ) : null}

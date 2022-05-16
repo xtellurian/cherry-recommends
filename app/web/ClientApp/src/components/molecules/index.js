@@ -18,6 +18,7 @@ import {
   MoveUpHierarchyButton,
   MoveUpHierarchyPrimaryButton,
 } from "./MoveUpHierarchyButton";
+import { DatePicker } from "./DatePicker";
 
 export {
   AsyncButton,
@@ -36,4 +37,5 @@ export {
   Typography,
   MoveUpHierarchyButton,
   MoveUpHierarchyPrimaryButton,
+  DatePicker,
 };

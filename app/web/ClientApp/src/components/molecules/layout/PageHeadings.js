@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./PageHeadings.css";
+import { Typography } from "../../molecules";
 
 export const Title = ({ children, ...props }) => {
   return (
@@ -20,9 +20,11 @@ export const Subtitle = ({ children }) => {
 
 export const PageHeading = ({ title, subtitle }) => {
   return (
-    <div className="page-heading-wrapper">
-      <div className="title text-capitalize">{title}</div>
-      <div className="subtitle text-capitalize">{subtitle}</div>
+    <div>
+      <Typography variant="h5" className="semi-bold mb-0">
+        {title}
+      </Typography>
+      <Typography className="text-secondary">{subtitle}</Typography>
     </div>
   );
 };

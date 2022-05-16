@@ -12,7 +12,6 @@ import {
 } from "../../../api-hooks/metricsApi";
 import {
   Selector,
-  AsyncButton,
   ErrorCard,
   MoveUpHierarchyPrimaryButton,
   PageHeading,
@@ -20,7 +19,6 @@ import {
 import { ToggleSwitch } from "../../molecules/ToggleSwitch";
 import {
   TextInput,
-  InputGroup,
   commonIdValidator,
   createServerErrorValidator,
   joinValidators,
@@ -28,27 +26,18 @@ import {
   createLengthValidator,
 } from "../../molecules/TextInput";
 import { IntegerRangeSelector } from "../../molecules/selectors/IntegerRangeSelector";
-import { SettingRow } from "../../molecules/layout/SettingRow";
 import { AdvancedOptionsPanel } from "../../molecules/layout/AdvancedOptionsPanel";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useCommonId } from "../../../utility/utility";
 import { useSegments } from "../../../api-hooks/segmentsApi";
 import { useFeatureFlag } from "../../launch-darkly/hooks";
 import { useChannels } from "../../../api-hooks/channelsApi";
-import CreatePageLayout from "../../molecules/layout/CreatePageLayout";
+import CreatePageLayout, {
+  CreateButton,
+} from "../../molecules/layout/CreatePageLayout";
 import { useNavigation } from "../../../utility/useNavigation";
+import { FieldLabel } from "../../molecules/FieldLabel";
 import { ScheduleUtil } from "../utils/scheduleUtil";
-
-const InputLabel = ({ children, required }) => {
-  return (
-    <div>
-      {children}{" "}
-      <label className="text-muted">
-        ({required ? "Required" : "Optional"})
-      </label>
-    </div>
-  );
-};
 
 const targetTypeOptions = [
   {
@@ -176,180 +165,169 @@ export const CreateRecommender = () => {
     <React.Fragment>
       <CreatePageLayout
         createButton={
-          <AsyncButton
-            className="btn btn-primary"
-            onClick={handleCreate}
+          <CreateButton
+            label="Create Recommender"
+            onCreate={handleCreate}
             loading={loading}
-          >
-            Create
-          </AsyncButton>
+          />
         }
         backButton={
           <MoveUpHierarchyPrimaryButton to="/recommenders/promotions-recommenders">
             Back to Recommenders
           </MoveUpHierarchyPrimaryButton>
         }
-        header={<PageHeading title="Create Promotion Recommender" />}
+        header={<PageHeading title="Create a Promotion Recommender" />}
       >
-        {error && <ErrorCard error={error} />}
+        {error ? <ErrorCard error={error} /> : null}
 
-        <InputGroup>
-          <TextInput
-            label="Display Name"
-            hint="Choose a name for this recommender."
-            validator={joinValidators([
-              createRequiredByServerValidator(error),
-              createServerErrorValidator("Name", error),
-              createLengthValidator(4),
-            ])}
-            value={recommender.name}
-            placeholder="A memorable name that you recognise later."
-            onChange={(e) =>
-              setRecommender({
-                ...recommender,
-                name: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+        <TextInput
+          label="Display Name"
+          hint="Choose a name for this recommender."
+          validator={joinValidators([
+            createRequiredByServerValidator(error),
+            createServerErrorValidator("Name", error),
+            createLengthValidator(4),
+          ])}
+          value={recommender.name}
+          placeholder="A memorable name that you recognise later."
+          onChange={(e) =>
+            setRecommender({
+              ...recommender,
+              name: e.target.value,
+            })
+          }
+        />
 
-        <InputGroup>
-          <TextInput
-            label="Common Id"
-            hint="An unique ID that you'll use to reference this recommender."
-            value={recommender.commonId}
-            placeholder="A unique ID for this recommender resource."
-            validator={joinValidators([
-              createRequiredByServerValidator(error),
-              commonIdValidator,
-              createServerErrorValidator("CommonId", error),
-            ])}
-            onChange={(e) =>
-              setRecommender({
-                ...recommender,
-                commonId: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+        <TextInput
+          label="Common ID"
+          hint="A unique ID that you'll use to reference this recommender."
+          value={recommender.commonId}
+          placeholder="A unique ID for this recommender resource."
+          validator={joinValidators([
+            createRequiredByServerValidator(error),
+            commonIdValidator,
+            createServerErrorValidator("CommonId", error),
+          ])}
+          onChange={(e) =>
+            setRecommender({
+              ...recommender,
+              commonId: e.target.value,
+            })
+          }
+        />
 
-        <div className="mt-2">
-          <InputLabel required>Baseline Promotion</InputLabel>
-          {!startingItem.loading && (
-            <Selector
-              isSearchable
-              placeholder="Choose a baseline promotion."
-              noOptionsMessage={(inputValue) => "No Promotions Available"}
-              defaultValue={{
-                label: startingItem.name,
-                value: startingItem.id,
-              }}
-              onChange={(so) => {
-                setRecommender({
-                  ...recommender,
-                  baselinePromotionId: so.value,
-                });
-              }}
-              options={itemsOptions}
-            />
-          )}
-        </div>
-        <div className="mt-2 mb-2">
-          <InputLabel required>Promotions</InputLabel>
+        {!startingItem.loading ? (
           <Selector
-            isMulti
+            label="Baseline Promotion"
             isSearchable
-            placeholder="Select promotions."
-            noOptionsMessage={(inputValue) =>
-              `No promotions found matching ${inputValue}`
-            }
-            defaultValue={selectedItems}
+            placeholder="Choose a baseline promotion."
+            noOptionsMessage={(inputValue) => "No Promotions Available"}
+            defaultValue={{
+              label: startingItem.name,
+              value: startingItem.id,
+            }}
             onChange={(so) => {
-              setSelectedItems(so);
               setRecommender({
                 ...recommender,
-                itemIds: so.map((o) => o.value),
+                baselinePromotionId: so.value,
               });
             }}
             options={itemsOptions}
           />
-        </div>
-        <div className="mt-2 mb-2">
-          <InputLabel required>Target</InputLabel>
+        ) : null}
+
+        <Selector
+          label="Promotions"
+          isMulti
+          isSearchable
+          placeholder="Select promotions."
+          noOptionsMessage={(inputValue) =>
+            `No promotions found matching ${inputValue}`
+          }
+          defaultValue={selectedItems}
+          onChange={(so) => {
+            setSelectedItems(so);
+            setRecommender({
+              ...recommender,
+              itemIds: so.map((o) => o.value),
+            });
+          }}
+          options={itemsOptions}
+        />
+
+        <Selector
+          label="Target"
+          defaultValue={targetTypeOptions[0]}
+          onChange={(o) => {
+            setRecommender({
+              ...recommender,
+              targetType: o.value,
+            });
+          }}
+          options={targetTypeOptions}
+        />
+
+        {segmentFlag && !segments.loading ? (
           <Selector
-            defaultValue={targetTypeOptions[0]}
-            onChange={(o) => {
+            optional
+            label="Audience"
+            isMulti
+            isSearchable
+            isDisabled={!forCustomer}
+            placeholder="Select segments."
+            noOptionsMessage={(inputValue) =>
+              `No segments found matching ${inputValue}`
+            }
+            defaultValue={selectedAudiences}
+            onChange={(so) => {
+              setSelectedAudiences(so);
               setRecommender({
                 ...recommender,
-                targetType: o.value,
+                segmentIds: so.map((o) => o.value),
               });
             }}
-            options={targetTypeOptions}
+            options={segmentsOptions}
           />
-        </div>
-        {segmentFlag && (
-          <div className="mt-2 mb-2">
-            <InputLabel>Audience</InputLabel>
+        ) : null}
 
-            {!segments.loading && (
-              <Selector
-                isMulti
-                isSearchable
-                isDisabled={!forCustomer}
-                placeholder="Select segments."
-                noOptionsMessage={(inputValue) =>
-                  `No segments found matching ${inputValue}`
-                }
-                defaultValue={selectedAudiences}
-                onChange={(so) => {
-                  setSelectedAudiences(so);
-                  setRecommender({
-                    ...recommender,
-                    segmentIds: so.map((o) => o.value),
-                  });
-                }}
-                options={segmentsOptions}
-              />
-            )}
-          </div>
-        )}
-        <div className="mt-2 mb-2">
-          <InputLabel>Channels</InputLabel>
+        {!channels.loading ? (
+          <Selector
+            label="Channels"
+            optional
+            isMulti
+            isSearchable
+            placeholder="Select channels - maximum of 2."
+            noOptionsMessage={(inputValue) => `No Channels Available`}
+            defaultValue={selectedChannels}
+            onChange={(so) => {
+              setSelectedChannels(so);
+              setRecommender({
+                ...recommender,
+                channelIds: so.map((o) => o.value),
+              });
+            }}
+            options={channelOptions}
+            isOptionDisabled={() => selectedChannels?.length >= 2}
+          />
+        ) : null}
 
-          {!channels.loading && (
-            <Selector
-              isMulti
-              isSearchable
-              placeholder="Select channels - maximum of 2."
-              noOptionsMessage={(inputValue) => `No Channels Available`}
-              defaultValue={selectedChannels}
-              onChange={(so) => {
-                setSelectedChannels(so);
-                setRecommender({
-                  ...recommender,
-                  channelIds: so.map((o) => o.value),
-                });
-              }}
-              options={channelOptions}
-              isOptionDisabled={() => selectedChannels?.length >= 2}
-            />
-          )}
-        </div>
-        <AdvancedOptionsPanel>
-          <SettingRow label="Use Auto-AI">
-            <div className="text-right">
-              <ToggleSwitch
-                name="Use Auto AI"
-                id="use-auto-ai"
-                checked={recommender.useAutoAi}
-                onChange={(v) =>
-                  setRecommender({ ...recommender, useAutoAi: v })
-                }
-              />
-            </div>
-          </SettingRow>
-          <div className="mt-2">
+        <div className="mb-4">
+          <AdvancedOptionsPanel>
+            <FieldLabel label="Use Auto AI">
+              <div className="w-100">
+                <ToggleSwitch
+                  name="Use Auto AI"
+                  id="use-auto-ai"
+                  checked={recommender.useAutoAi}
+                  onChange={(v) =>
+                    setRecommender({ ...recommender, useAutoAi: v })
+                  }
+                />
+              </div>
+            </FieldLabel>
+
             <IntegerRangeSelector
+              label="Number of Promotions Recommended"
               min={1}
               // max={selectedItems?.length || 1}
               max={1} // this should no default to 1
@@ -359,11 +337,10 @@ export const CreateRecommender = () => {
                 setRecommender({ ...recommender, numberOfItemsToRecommend })
               }
             />
-          </div>
-          <div className="mt-2">
-            Target Metric
-            {!startingMetric.loading && (
+
+            {!startingMetric.loading ? (
               <Selector
+                label="Target Metric"
                 isSearchable
                 placeholder="Choose a target metric."
                 noOptionsMessage={(inputValue) => "No Metrics Available"}
@@ -379,16 +356,17 @@ export const CreateRecommender = () => {
                 }}
                 options={metricsOptions}
               />
-            )}
-          </div>
-          <ScheduleUtil
-            header="Schedule"
-            onOptionChanged={setExpiryDateEnabled}
-            onDateChanged={setExpiryDate}
-            expiryDate={expDate}
-            expiryDateEnabled={expDateEnabled}
-          ></ScheduleUtil>
-        </AdvancedOptionsPanel>
+            ) : null}
+
+            <ScheduleUtil
+              label="Schedule"
+              onOptionChanged={setExpiryDateEnabled}
+              onDateChanged={setExpiryDate}
+              expiryDate={expDate}
+              expiryDateEnabled={expDateEnabled}
+            />
+          </AdvancedOptionsPanel>
+        </div>
       </CreatePageLayout>
     </React.Fragment>
   );

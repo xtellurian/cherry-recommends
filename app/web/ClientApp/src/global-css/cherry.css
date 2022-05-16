@@ -6,6 +6,7 @@
   --cherry-dark-teal: #00b6bf;
   --cherry-white: #ffffff;
   --cherry-black: #000000;
+  --cherry-dark-gray: #212121;
 
   --cherry-purple-alpha: rgba(40, 9, 56, 0.1);
   --cherry-pink-alpha: rgba(229, 0, 138, 0.1);
@@ -33,7 +34,8 @@ h1 {
 }
 
 body {
-  font-family: Nunito;
+  font-family: "Nunito", sans-serif;
+  color: var(--cherry-dark-gray);
   background-color: var(--cherry-white);
 }
 

@@ -6,13 +6,12 @@ import {
   useBusinessMetric,
 } from "../../api-hooks/metricsApi";
 import {
-  Title,
-  Subtitle,
   Spinner,
   ExpandableCard,
   EmptyList,
   ErrorCard,
-  MoveUpHierarchyButton,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
 } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { toDate } from "../../utility/utility";
@@ -60,17 +59,14 @@ export const BusinessMetrics = () => {
   const businessMetrics = useBusinessMetrics({ id });
   return (
     <React.Fragment>
-      <MoveUpHierarchyButton
-        className="float-right"
-        to={`/businesses/detail/${id}`}
-      >
-        Business Details
-      </MoveUpHierarchyButton>
-      <Title>Metrics</Title>
-      <Subtitle>
-        {business.name || business.commonId || business.id || "..."}
-      </Subtitle>
-      <hr />
+      <MoveUpHierarchyPrimaryButton to={`/businesses/detail/${id}`}>
+        Back to Business Details
+      </MoveUpHierarchyPrimaryButton>
+      <PageHeading
+        title={business.name || business.commonId || business.id || "..."}
+        subtitle="Metrics"
+      />
+
       {(business.loading || businessMetrics.loading) && <Spinner />}
       {businessMetrics.length > 0 &&
         businessMetrics.map((f) => (

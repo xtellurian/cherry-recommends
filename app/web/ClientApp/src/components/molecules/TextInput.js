@@ -1,5 +1,7 @@
 import React from "react";
 import Tippy from "@tippyjs/react";
+
+import { FieldLabel } from "./FieldLabel";
 import { toDate } from "../../utility/utility";
 
 export const joinValidators = (validators) => {
@@ -17,7 +19,7 @@ export const joinValidators = (validators) => {
   };
 };
 
-var commonIdFormat = /^[a-zA-Z0-9_\-|.@]+$/;
+const commonIdFormat = /^[a-zA-Z0-9_\-|.@]+$/;
 export const commonIdFormatValidator = (value) => {
   if (!value || value.length === 0) {
     return [];
@@ -149,22 +151,49 @@ export const createServerNameUnavailableValidator =
     }
   };
 
+const ErrorTippy = ({ children, errorMessages, hide }) => {
+  return (
+    <Tippy
+      placement="bottom-start"
+      content={
+        errorMessages &&
+        errorMessages.length > 0 &&
+        !hide && (
+          <div className="bg-white px-2 py-1 text-left text-danger border border-danger rounded">
+            <div>
+              {errorMessages.map((m) => (
+                <div className="" key={m}>
+                  {`${errorMessages.length > 1 ? "● " : ""} ${m}`}
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    >
+      {children}
+    </Tippy>
+  );
+};
+
 export const TextInput = ({
   label,
   hint,
   value,
   type,
+  required,
+  optional,
+  disabled,
   min,
   max,
   step,
   placeholder,
+  validator,
+  resetTrigger,
   onChange,
   onReturn,
   onBlur,
-  validator,
-  resetTrigger,
-  required,
-  disabled,
+  inline,
 }) => {
   const [hide, setHide] = React.useState(false);
   const [errorMessages, setErrorMessages] = React.useState([]);
@@ -187,9 +216,12 @@ export const TextInput = ({
   }, [errorMessages]);
 
   let formControlValidationClass = "";
-  if (hasError) {
+
+  if (hasError && !Array.isArray(hasError)) {
     formControlValidationClass = "is-invalid";
-  } else if (value && value.length > 0) {
+  }
+
+  if (value && value.length > 0) {
     formControlValidationClass = "is-valid";
   }
 
@@ -199,44 +231,19 @@ export const TextInput = ({
       e.preventDefault();
     }
   };
+
   return (
-    <React.Fragment>
-      {label && (
-        <Tippy
-          content={
-            hint && (
-              <div className="bg-light text-center border border-primary rounded p-1">
-                {hint}
-              </div>
-            )
-          }
-        >
-          <div className="input-group-prepend min-w-25">
-            <span className="input-group-text w-100">{label}</span>
-          </div>
-        </Tippy>
-      )}
-      <Tippy
-        placement="bottom-start"
-        content={
-          errorMessages &&
-          errorMessages.length > 0 &&
-          !hide && (
-            <div className="bg-light text-center text-danger border border-danger rounded">
-              <ul className="list-group">
-                {errorMessages.map((m) => (
-                  <li className="list-group-item" key={m}>
-                    {m}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )
-        }
-      >
+    <FieldLabel
+      label={label}
+      hint={hint}
+      required={required}
+      optional={optional}
+      inline={inline}
+    >
+      <ErrorTippy errorMessages={errorMessages} hide={hide}>
         <input
           type={type || "text"}
-          className={`form-control ${formControlValidationClass}`}
+          className={`form-control form-field rounded ${formControlValidationClass}`}
           placeholder={placeholder}
           value={value}
           min={min}
@@ -248,8 +255,34 @@ export const TextInput = ({
           required={required}
           disabled={disabled}
         />
-      </Tippy>
-    </React.Fragment>
+      </ErrorTippy>
+    </FieldLabel>
+  );
+};
+
+export const TextArea = ({
+  label,
+  value,
+  placeholder,
+  required,
+  optional,
+  onChange,
+}) => {
+  return (
+    <FieldLabel
+      type="textarea"
+      label={label}
+      required={required}
+      optional={optional}
+      labelPosition="top"
+    >
+      <textarea
+        className="form-control form-field"
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+      />
+    </FieldLabel>
   );
 };
 

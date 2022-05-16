@@ -1,6 +1,27 @@
+import React from "react";
 import Select from "react-select";
 
-export const Selector = Select;
+import { FieldLabel } from "../FieldLabel";
+
+export const Selector = ({
+  label,
+  required,
+  optional,
+  className,
+  inline,
+  ...props
+}) => {
+  return (
+    <FieldLabel
+      label={label}
+      required={required}
+      optional={optional}
+      inline={inline}
+    >
+      <Select className={`${className} w-100 form-field`} {...props} />
+    </FieldLabel>
+  );
+};
 
 export default Selector;
 

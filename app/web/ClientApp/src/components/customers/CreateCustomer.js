@@ -2,17 +2,14 @@ import React from "react";
 import { createOrUpdateCustomerAsync } from "../../api/customersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { useAccessToken } from "../../api-hooks/token";
-import { Subtitle } from "../molecules/layout";
 import { ErrorCard } from "../molecules/ErrorCard";
-import { DropdownItem, DropdownComponent } from "../molecules/Dropdown";
 import {
-  AsyncButton,
   ExpandableCard,
   MoveUpHierarchyPrimaryButton,
   PageHeading,
+  Typography,
 } from "../molecules";
 import {
-  InputGroup,
   TextInput,
   createLengthValidator,
   commonIdFormatValidator,
@@ -20,8 +17,11 @@ import {
   joinValidators,
 } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
-import CreatePageLayout from "../molecules/layout/CreatePageLayout";
+import CreatePageLayout, {
+  CreateButton,
+} from "../molecules/layout/CreatePageLayout";
 import { useNavigation } from "../../utility/useNavigation";
+import Select from "../molecules/selectors/Select";
 
 export const CreateCustomer = () => {
   const [newCustomer, setNewCustomer] = React.useState({
@@ -67,13 +67,11 @@ export const CreateCustomer = () => {
     <React.Fragment>
       <CreatePageLayout
         createButton={
-          <AsyncButton
+          <CreateButton
+            label="Create Customer"
+            onCreate={handleCreate}
             loading={loading}
-            className="btn btn-primary"
-            onClick={handleCreate}
-          >
-            Create
-          </AsyncButton>
+          />
         }
         backButton={
           <MoveUpHierarchyPrimaryButton to="/customers">
@@ -83,100 +81,89 @@ export const CreateCustomer = () => {
         header={<PageHeading title="Add a Customer" />}
       >
         {error && <ErrorCard error={error} />}
-        <label>Required</label>
-        <InputGroup>
-          <TextInput
-            validator={joinValidators([
-              createLengthValidator(3),
-              commonIdFormatValidator,
-              createRequiredByServerValidator(error),
-            ])}
-            label="Customer ID"
-            placeholder="XXXXXX-XXXX-XXXXX"
-            value={newCustomer.customerId}
-            onChange={(e) =>
-              setNewCustomer({
-                ...newCustomer,
-                customerId: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
 
-        <label className="mt-3">Optional</label>
+        <TextInput
+          validator={joinValidators([
+            createLengthValidator(3),
+            commonIdFormatValidator,
+            createRequiredByServerValidator(error),
+          ])}
+          label="Customer ID"
+          placeholder="XXXXXX-XXXX-XXXXX"
+          value={newCustomer.customerId}
+          onChange={(e) =>
+            setNewCustomer({
+              ...newCustomer,
+              customerId: e.target.value,
+            })
+          }
+        />
 
-        <InputGroup>
-          <TextInput
-            label="Name"
-            placeholder="Billy Buystuff"
-            value={newCustomer.name}
-            onChange={(e) =>
-              setNewCustomer({
-                ...newCustomer,
-                name: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+        <TextInput
+          optional
+          label="Name"
+          placeholder="Billy Buystuff"
+          value={newCustomer.name}
+          onChange={(e) =>
+            setNewCustomer({
+              ...newCustomer,
+              name: e.target.value,
+            })
+          }
+        />
 
-        <InputGroup>
-          <TextInput
-            label="Email"
-            placeholder="william@example.com"
-            value={newCustomer.email || ""}
-            onChange={(e) =>
-              setNewCustomer({
-                ...newCustomer,
-                email: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+        <TextInput
+          optional
+          label="Email"
+          placeholder="william@example.com"
+          value={newCustomer.email || ""}
+          onChange={(e) =>
+            setNewCustomer({
+              ...newCustomer,
+              email: e.target.value,
+            })
+          }
+        />
 
-        <div className="mt-4">
+        <div className="mb-4">
           <ExpandableCard label="Advanced">
-            <div className="mt-3">
-              <Subtitle>Link to integrated system</Subtitle>
-              <div className="input-group m-1">
-                <div className="input-group-prepend ml-1">
-                  <span className="input-group-text" id="basic-addon3">
-                    User Identifier in integrated system
-                  </span>
-                </div>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Customer Id in external system"
-                  value={integratedSystemReference.userId}
-                  onChange={(e) =>
+            <div>
+              <Typography className="bold mb-4">
+                Link to Integrated System
+              </Typography>
+
+              <TextInput
+                label="User Identifier in Integrated System"
+                placeholder="Customer ID in external system"
+                value={integratedSystemReference.userId}
+                onChange={(e) =>
+                  setIntegratedSystemReference({
+                    ...integratedSystemReference,
+                    userId: e.target.value,
+                  })
+                }
+              />
+
+              {!integratedSystems.loading && integratedSystems.items ? (
+                <Select
+                  label="Integrated System"
+                  value={{
+                    value: integratedSystemReference.integratedSystemId,
+                    label: integratedSystemReference.integratedSystemName,
+                  }}
+                  options={integratedSystems.items.map((integratedSystem) => ({
+                    value: integratedSystem.id,
+                    label: integratedSystem.name,
+                  }))}
+                  onChange={(value) => {
                     setIntegratedSystemReference({
                       ...integratedSystemReference,
-                      userId: e.target.value,
-                    })
-                  }
+                      integratedSystemId: value.value,
+                      integratedSystemName: value.label,
+                    });
+                  }}
                 />
-                <DropdownComponent
-                  title={integratedSystemReference.integratedSystemName}
-                >
-                  <DropdownItem header>Integrated System</DropdownItem>
-                  {!integratedSystems.loading &&
-                    integratedSystems.items &&
-                    integratedSystems.items.map((i) => (
-                      <DropdownItem
-                        key={i.id}
-                        onClick={() => {
-                          setIntegratedSystemReference({
-                            ...integratedSystemReference,
-                            integratedSystemId: i.id,
-                            integratedSystemName: i.name,
-                          });
-                        }}
-                      >
-                        {i.name}
-                      </DropdownItem>
-                    ))}
-                </DropdownComponent>
-              </div>
+              ) : null}
             </div>
           </ExpandableCard>
         </div>

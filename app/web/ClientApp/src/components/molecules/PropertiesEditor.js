@@ -1,6 +1,7 @@
 import React from "react";
-import { Subtitle } from "./layout";
+
 import { EmptyList } from "./empty/EmptyList";
+import { Typography } from "./Typography";
 
 const PropertyRow = ({ id, entry, value, onChange, onRemove }) => {
   const [state, setState] = React.useState({
@@ -157,12 +158,16 @@ export const PropertiesEditor = ({
 
   return (
     <React.Fragment>
-      <Subtitle> {label || "Property Editor"}</Subtitle>
+      <Typography className="bold my-4">
+        {label || "Property Editor"}
+      </Typography>
+
       {propertyList.length === 0 && (
         <EmptyList>
           <div>{placeholder}</div>
         </EmptyList>
       )}
+
       {propertyList.map((p, i) => (
         <PropertyRow
           key={p.id}
@@ -173,6 +178,7 @@ export const PropertiesEditor = ({
           onRemove={handleRemove}
         />
       ))}
+
       <div className="row m-2 justify-content-center">
         <div className="col-4 text-center">
           <button

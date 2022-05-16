@@ -1,0 +1,12 @@
+.create-button {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .create-button {
+    float: right;
+    width: inherit;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}

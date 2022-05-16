@@ -4,14 +4,13 @@ import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createPromotionAsync } from "../../api/promotionsApi";
 import {
-  AsyncButton,
   ErrorCard,
   MoveUpHierarchyPrimaryButton,
   PageHeading,
 } from "../molecules";
 import {
-  InputGroup,
   TextInput,
+  TextArea,
   createRequiredByServerValidator,
   commonIdValidator,
   createServerErrorValidator,
@@ -21,7 +20,9 @@ import {
 import Select from "../molecules/selectors/Select";
 import { useCommonId } from "../../utility/utility";
 import { useNavigation } from "../../utility/useNavigation";
-import CreatePageLayout from "../molecules/layout/CreatePageLayout";
+import CreatePageLayout, {
+  CreateButton,
+} from "../molecules/layout/CreatePageLayout";
 
 export const benefitTypeOptons = [
   { value: "percent", label: "%" },
@@ -35,18 +36,6 @@ export const promotionTypeOptons = [
   { value: "upgrade", label: "Upgrade" },
   { value: "other", label: "Other" },
 ];
-
-const CreateButton = ({ handleCreate, loading }) => {
-  return (
-    <AsyncButton
-      loading={loading}
-      onClick={handleCreate}
-      className="btn btn-primary"
-    >
-      Create
-    </AsyncButton>
-  );
-};
 
 export const CreateItem = () => {
   const token = useAccessToken();
@@ -100,132 +89,128 @@ export const CreateItem = () => {
     <React.Fragment>
       <CreatePageLayout
         createButton={
-          <CreateButton handleCreate={handleCreate} loading={loading} />
+          <CreateButton
+            label="Create Promotion"
+            onCreate={handleCreate}
+            loading={loading}
+          />
         }
         backButton={
           <MoveUpHierarchyPrimaryButton to="/promotions">
             Back to Promotions
           </MoveUpHierarchyPrimaryButton>
         }
-        header={<PageHeading title="Create Promotion" />}
+        header={<PageHeading title="Create a Promotion" />}
       >
         {error && <ErrorCard error={error} />}
-        <div className="mt-3">
-          <InputGroup className="m-1">
-            <TextInput
-              label="Display Name"
-              placeholder="Promotion Name"
-              value={item.name}
-              validator={createRequiredByServerValidator(error)}
-              onChange={(e) =>
-                setItem({
-                  ...item,
-                  name: e.target.value,
-                })
-              }
-            />
 
-            <TextInput
-              label="Promotion Identifier"
-              placeholder="Your SKU, Product Id, Plan Id, Discount Code etc."
-              value={item.commonId}
-              validator={joinValidators([
-                commonIdValidator,
-                createServerErrorValidator("CommonId", error),
-              ])}
-              onChange={(e) =>
-                setItem({
-                  ...item,
-                  commonId: e.target.value,
-                })
-              }
-            />
-          </InputGroup>
+        <div className="mt-3">
+          <TextInput
+            label="Promotion Identifier"
+            placeholder="Your SKU, Product Id, Plan Id, Discount Code etc."
+            value={item.commonId}
+            validator={joinValidators([
+              commonIdValidator,
+              createServerErrorValidator("CommonId", error),
+            ])}
+            onChange={(e) =>
+              setItem({
+                ...item,
+                commonId: e.target.value,
+              })
+            }
+          />
+
+          <TextInput
+            label="Display Name"
+            placeholder="Promotion Name"
+            value={item.name}
+            validator={createRequiredByServerValidator(error)}
+            onChange={(e) =>
+              setItem({
+                ...item,
+                name: e.target.value,
+              })
+            }
+          />
 
           <Select
-            className="m-1 w-100"
+            label="Promotion Type"
             placeholder="Select a promotion type"
             onChange={setSelectedPromotionType}
             options={promotionTypeOptons}
           />
 
           <Select
-            className="m-1 w-100"
+            label="Promotion Benefit Type"
             placeholder="Select a promotion benefit type"
             onChange={setSelectedBenefitType}
             options={benefitTypeOptons}
           />
 
-          <InputGroup className="m-1">
-            <TextInput
-              label="Benefit Value"
-              placeholder="Value of the benefit, per unit."
-              type="number"
-              min={0}
-              value={item.benefitValue}
-              validator={joinValidators([
-                createRequiredByServerValidator(error),
-                numericValidator(false, 0),
-              ])}
-              onChange={(e) =>
-                setItem({
-                  ...item,
-                  benefitValue: e.target.value,
-                })
-              }
-            />
-          </InputGroup>
+          <TextInput
+            label="Benefit Value"
+            placeholder="Value of the benefit, per unit."
+            type="number"
+            min={0}
+            value={item.benefitValue}
+            validator={joinValidators([
+              createRequiredByServerValidator(error),
+              numericValidator(false, 0),
+            ])}
+            onChange={(e) =>
+              setItem({
+                ...item,
+                benefitValue: e.target.value,
+              })
+            }
+          />
 
-          <InputGroup className="m-1">
-            <TextInput
-              label="Cost of promotion"
-              placeholder="Price you pay to acquire the promotion, per unit."
-              type="number"
-              min={0}
-              value={item.directCost}
-              onChange={(e) =>
-                setItem({
-                  ...item,
-                  directCost: e.target.value,
-                })
-              }
-            />
-          </InputGroup>
+          <TextInput
+            label="Cost of Promotion"
+            placeholder="Price you pay to acquire the promotion, per unit."
+            type="number"
+            min={0}
+            value={item.directCost}
+            onChange={(e) =>
+              setItem({
+                ...item,
+                directCost: e.target.value,
+              })
+            }
+          />
 
-          <InputGroup className="m-1">
-            <TextInput
-              label="Redemption Limit"
-              placeholder="# of promotion redemptions."
-              type="number"
-              min={1}
-              max={6}
-              value={item.numberOfRedemptions}
-              validator={joinValidators([
-                createRequiredByServerValidator(error),
-                numericValidator(true, 1, 6),
-              ])}
-              onChange={(e) =>
-                setItem({
-                  ...item,
-                  numberOfRedemptions: e.target.value,
-                })
-              }
-            />
-          </InputGroup>
+          <TextInput
+            label="Redemption Limit"
+            placeholder="# of promotion redemptions."
+            type="number"
+            min={1}
+            max={6}
+            value={item.numberOfRedemptions}
+            validator={joinValidators([
+              createRequiredByServerValidator(error),
+              numericValidator(true, 1, 6),
+            ])}
+            onChange={(e) =>
+              setItem({
+                ...item,
+                numberOfRedemptions: e.target.value,
+              })
+            }
+          />
 
-          <div className="input-group m-1">
-            <textarea
-              className="form-control"
-              placeholder="Describe the promotion"
-              value={item.description}
-              onChange={(e) =>
-                setItem({
-                  ...item,
-                  description: e.target.value,
-                })
-              }
-            />
-          </div>
+          <TextArea
+            optional
+            label="Promotion Description"
+            placeholder="Describe the promotion"
+            value={item.description}
+            onChange={(e) =>
+              setItem({
+                ...item,
+                description: e.target.value,
+              })
+            }
+          />
         </div>
       </CreatePageLayout>
     </React.Fragment>

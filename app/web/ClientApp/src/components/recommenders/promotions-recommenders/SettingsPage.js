@@ -90,7 +90,7 @@ export const SettingsPage = () => {
         <SettingsNav nav={advancedMenu} />
       </Row>
 
-      <RecommenderCard ref={learningMetricsRef}>
+      <RecommenderCard ref={learningMetricsRef} title="Learning Metrics">
         <LearningMetrics />
       </RecommenderCard>
 

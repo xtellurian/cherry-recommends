@@ -4,15 +4,12 @@ import "./Typography.css";
 
 export const Typography = ({
   children,
-  variant = "h5",
-  component = "span",
+  variant,
+  component = "div",
   className = "",
-  gutterBottom,
   ...props
 }) => {
-  const _className = `typography ${className} ${variant} ${
-    gutterBottom ? "gutterBottom" : ""
-  }`;
+  const _className = `typography ${className} ${variant}`;
 
   if (component === "div") {
     return (

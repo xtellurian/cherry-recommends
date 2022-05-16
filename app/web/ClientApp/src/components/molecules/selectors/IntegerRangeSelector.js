@@ -25,6 +25,9 @@ export const IntegerRangeSelector = ({
   defaultValue,
   placeholder,
   onSelected,
+  label,
+  required,
+  optional,
 }) => {
   const options = getRangeOptions(min, max);
   let starting = null;
@@ -44,10 +47,13 @@ export const IntegerRangeSelector = ({
 
   return (
     <Selector
+      label={label}
+      required={required}
+      optional={optional}
       placeholder={placeholder}
       defaultValue={selectedOption}
-      onChange={setSelectedOption}
       options={options}
+      onChange={setSelectedOption}
     />
   );
 };

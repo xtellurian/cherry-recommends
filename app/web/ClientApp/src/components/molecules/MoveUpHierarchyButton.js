@@ -1,5 +1,6 @@
 import React from "react";
-import { ArrowLeft } from "react-bootstrap-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 import { Typography } from "../molecules";
 import { Navigation } from "./Navigation";
@@ -11,7 +12,7 @@ export const MoveUpHierarchyButton = ({ to, children, className }) => {
     <div className={className}>
       <Navigation to={to}>
         <button className="btn btn-outline-primary d-flex align-items-center">
-          <ArrowLeft size={18} className="mr-2" />
+          <FontAwesomeIcon icon={faArrowLeft} fontSize={16} className="mr-2" />
           {children}
         </button>
       </Navigation>
@@ -19,16 +20,18 @@ export const MoveUpHierarchyButton = ({ to, children, className }) => {
   );
 };
 
-export const MoveUpHierarchyPrimaryButton = ({
-  to,
-  children,
-  className = "",
-}) => {
+export const MoveUpHierarchyPrimaryButton = ({ to, children, className }) => {
   return (
-    <div className={`mb-3 ${className}`}>
+    <div className={`mb-4 ${className}`}>
       <Navigation to={to} className="primary-nav-link text-decoration-none">
-        <ArrowLeft size={18} className="mr-2" />
-        <Typography variant="h4">{children}</Typography>
+        <FontAwesomeIcon icon={faArrowLeft} fontSize={16} className="mr-2" />
+        <Typography
+          component="span"
+          className="semi-bold"
+          style={{ color: "var(--cherry-purple)" }}
+        >
+          {children}
+        </Typography>
       </Navigation>
     </div>
   );

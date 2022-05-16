@@ -1,6 +1,21 @@
+import React from "react";
 import Async from "react-select/async";
 
-export const AsyncSelector = Async;
+import { FieldLabel } from "../FieldLabel";
+
+export const AsyncSelector = ({
+  label,
+  required,
+  optional,
+  className,
+  ...props
+}) => {
+  return (
+    <FieldLabel label={label} required={required} optional={optional}>
+      <Async className={`${className} w-100 form-field`} {...props} />
+    </FieldLabel>
+  );
+};
 
 // const options = [
 //   { value: 'chocolate', label: 'Chocolate' },

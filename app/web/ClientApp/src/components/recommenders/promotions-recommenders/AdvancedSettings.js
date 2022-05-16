@@ -11,10 +11,9 @@ import {
   setBaselinePromotionAsync,
 } from "../../../api/promotionsRecommendersApi";
 import { Selector } from "../../molecules/selectors/Select";
-import { SettingsUtil } from "../utils/settingsUtil";
+import { SettingsUtil, SettingRow } from "../utils/settingsUtil";
 import { ErrorCard, Spinner } from "../../molecules";
 import { LoadingPopup } from "../../molecules/popups/LoadingPopup";
-import { SettingRow } from "../../molecules/layout/SettingRow";
 import { UseOptimiserControl } from "./UseOptimiserControl";
 
 export const AdvancedSettings = () => {
@@ -85,6 +84,7 @@ export const AdvancedSettings = () => {
             label="Baseline Promotion"
             description="The baseline promotion should be a safe default choice. The baseline will
               be used in reporting to compare the performance of promotion variations."
+            noBorderBottom
           >
             {baselineItem.loading ? (
               <Spinner />

@@ -4,15 +4,12 @@ import { useParams } from "react-router-dom";
 import { createEventsAsync } from "../../api/eventsApi";
 import { useCustomer } from "../../api-hooks/customersApi";
 import {
-  Title,
-  Subtitle,
-  AsyncButton,
   ErrorCard,
   ExpandableCard,
-  MoveUpHierarchyButton,
+  PageHeading,
+  MoveUpHierarchyPrimaryButton,
 } from "../molecules";
 import {
-  InputGroup,
   TextInput,
   createRequiredByServerValidator,
   maxCurrentDateValidator,
@@ -21,6 +18,9 @@ import { PropertiesEditor } from "../molecules/PropertiesEditor";
 import { useAccessToken } from "../../api-hooks/token";
 import { EventKindSelect } from "../molecules/selectors/EventKindSelect";
 import { useNavigation } from "../../utility/useNavigation";
+import CreatePageLayout, {
+  CreateButton,
+} from "../molecules/layout/CreatePageLayout";
 
 const parseIntElseNull = (number) => {
   try {
@@ -93,30 +93,42 @@ export const CreateEvent = () => {
 
   return (
     <React.Fragment>
-      <MoveUpHierarchyButton
-        className="float-right"
-        to={`/customers/detail/${id}`}
+      <CreatePageLayout
+        createButton={
+          <CreateButton
+            label="Create Event"
+            loading={loading}
+            disabled={isDisabled}
+            onCreate={handleCreate}
+          />
+        }
+        backButton={
+          <MoveUpHierarchyPrimaryButton to={`/customers/detail/${id}`}>
+            Back to Details
+          </MoveUpHierarchyPrimaryButton>
+        }
+        header={
+          <PageHeading
+            title="Log an Event"
+            subtitle={trackedUser.name || trackedUser.commonId}
+          />
+        }
       >
-        Back to Details
-      </MoveUpHierarchyButton>
-      <Title>Log a new Event</Title>
-      <Subtitle>{trackedUser.name || trackedUser.commonId}</Subtitle>
-      <hr />
-      {error && <ErrorCard error={error} />}
-      <InputGroup className="mb-2">
+        {error ? <ErrorCard error={error} /> : null}
+
         <TextInput
           label="Event ID"
           value={payload.eventId}
           onChange={(v) => setPayload({ ...payload, eventId: v.target.value })}
         />
-      </InputGroup>
 
-      <EventKindSelect
-        defaultValue="custom"
-        placeholder="Select a kind of event"
-        onSelected={(v) => setPayload({ ...payload, kind: v })}
-      />
-      <InputGroup className="mb-2">
+        <EventKindSelect
+          label="Event Kind"
+          defaultValue="custom"
+          placeholder="Select a kind of event"
+          onSelected={(v) => setPayload({ ...payload, kind: v })}
+        />
+
         <TextInput
           label="Event Type"
           placeholder="The specific type of event."
@@ -125,14 +137,12 @@ export const CreateEvent = () => {
           onChange={(v) =>
             setPayload({ ...payload, eventType: v.target.value })
           }
-          required={true}
         />
-      </InputGroup>
-      <div className="mb-2">
-        <ExpandableCard label="Advanced">
-          <InputGroup className="mb-2">
+
+        <div className="mb-2">
+          <ExpandableCard label="Advanced">
             <TextInput
-              label="Recommendation Correlator Id"
+              label="Recommendation Correlator ID"
               type="number"
               value={payload.recommendationCorrelatorId || -1}
               placeholder="Link this event to a recommendation via the Correlator ID."
@@ -143,8 +153,6 @@ export const CreateEvent = () => {
                 })
               }
             />
-          </InputGroup>
-          <InputGroup className="mb-2">
             <TextInput
               label="Event Timestamp"
               type="datetime-local"
@@ -158,24 +166,15 @@ export const CreateEvent = () => {
                 });
               }}
             />
-          </InputGroup>
-        </ExpandableCard>
-      </div>
+          </ExpandableCard>
+        </div>
 
-      <PropertiesEditor
-        label="Event Properties"
-        placeholder="Add optional properties to the event"
-        onPropertiesChanged={setProperties}
-      />
-
-      <AsyncButton
-        loading={loading}
-        className="mt-2 btn btn-primary btn-block"
-        disabled={isDisabled}
-        onClick={handleCreate}
-      >
-        Save
-      </AsyncButton>
+        <PropertiesEditor
+          label="Event Properties"
+          placeholder="Add optional properties to the event"
+          onPropertiesChanged={setProperties}
+        />
+      </CreatePageLayout>
     </React.Fragment>
   );
 };

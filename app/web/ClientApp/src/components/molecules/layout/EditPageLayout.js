@@ -2,30 +2,23 @@ import React from "react";
 
 import { AsyncButton } from "../AsyncButton";
 
-import "./CreatePageLayout.css";
+import "./EditPageLayout.css";
 
-export const CreateButton = ({
-  label,
-  onCreate,
-  className,
-  loading,
-  disabled,
-}) => {
+export const EditButton = ({ label, onCreate, className, loading }) => {
   return (
     <AsyncButton
       loading={loading}
       onClick={onCreate}
-      className={`btn btn-primary create-button ${className}`}
-      disabled={disabled}
+      className={`btn btn-primary edit-button ${className}`}
     >
-      {label || "Create"}
+      {label || "Save"}
     </AsyncButton>
   );
 };
 
-const CreatePageLayout = ({
+const EditPageLayout = ({
   children,
-  createButton,
+  editButton,
   backButton,
   header,
   headerDivider = true,
@@ -36,9 +29,9 @@ const CreatePageLayout = ({
       {header}
       {headerDivider ? <hr className="mb-4" /> : null}
       {children}
-      <div>{createButton}</div>
+      <div>{editButton}</div>
     </div>
   );
 };
 
-export default CreatePageLayout;
+export default EditPageLayout;

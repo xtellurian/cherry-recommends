@@ -3,19 +3,13 @@ import React from "react";
 import { createBusinessAsync } from "../../api/businessesApi";
 import { useAccessToken } from "../../api-hooks/token";
 import { ErrorCard } from "../molecules/ErrorCard";
-import {
-  AsyncButton,
-  MoveUpHierarchyPrimaryButton,
-  PageHeading,
-} from "../molecules";
-import {
-  InputGroup,
-  TextInput,
-  createServerErrorValidator,
-} from "../molecules/TextInput";
+import { MoveUpHierarchyPrimaryButton, PageHeading } from "../molecules";
+import { TextInput, createServerErrorValidator } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useCommonId } from "../../utility/utility";
-import CreatePageLayout from "../molecules/layout/CreatePageLayout";
+import CreatePageLayout, {
+  CreateButton,
+} from "../molecules/layout/CreatePageLayout";
 import { useNavigation } from "../../utility/useNavigation";
 
 export const CreateBusiness = () => {
@@ -59,13 +53,11 @@ export const CreateBusiness = () => {
     <React.Fragment>
       <CreatePageLayout
         createButton={
-          <AsyncButton
+          <CreateButton
+            label="Create Business"
             loading={loading}
-            className="btn btn-primary"
             onClick={handleCreate}
-          >
-            Create
-          </AsyncButton>
+          />
         }
         backButton={
           <MoveUpHierarchyPrimaryButton to="/businesses">
@@ -75,46 +67,42 @@ export const CreateBusiness = () => {
         header={<PageHeading title="Add a Business" />}
       >
         {error && <ErrorCard error={error} />}
-        <InputGroup>
-          <TextInput
-            label="Business Name"
-            placeholder="Enter business name here"
-            value={newBusiness.name}
-            onChange={(e) =>
-              setNewBusiness({
-                ...newBusiness,
-                name: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
-        <InputGroup>
-          <TextInput
-            placeholder="Something unique"
-            value={newBusiness.commonId}
-            label="Common Id"
-            validator={createServerErrorValidator("CommonId", error)}
-            onChange={(e) =>
-              setNewBusiness({
-                ...newBusiness,
-                commonId: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
-        <InputGroup>
-          <TextInput
-            label="Description"
-            placeholder="Enter description here"
-            value={newBusiness.description}
-            onChange={(e) =>
-              setNewBusiness({
-                ...newBusiness,
-                description: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+        <TextInput
+          label="Business Name"
+          placeholder="Enter business name here"
+          value={newBusiness.name}
+          onChange={(e) =>
+            setNewBusiness({
+              ...newBusiness,
+              name: e.target.value,
+            })
+          }
+        />
+
+        <TextInput
+          label="Common ID"
+          placeholder="Something unique"
+          value={newBusiness.commonId}
+          validator={createServerErrorValidator("CommonId", error)}
+          onChange={(e) =>
+            setNewBusiness({
+              ...newBusiness,
+              commonId: e.target.value,
+            })
+          }
+        />
+
+        <TextInput
+          label="Description"
+          placeholder="Enter description here"
+          value={newBusiness.description}
+          onChange={(e) =>
+            setNewBusiness({
+              ...newBusiness,
+              description: e.target.value,
+            })
+          }
+        />
       </CreatePageLayout>
     </React.Fragment>
   );

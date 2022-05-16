@@ -6,6 +6,7 @@ import { useAccessToken } from "../../../api-hooks/token";
 import { Selector } from "..";
 
 const AsyncSelectMetric = ({
+  label,
   onChange,
   placeholder,
   allowNone,
@@ -69,6 +70,7 @@ const AsyncSelectMetric = ({
   }
   return (
     <AsyncSelector
+      label={label}
       defaultOptions={metricsSelectable}
       defaultValue={defaultMetrics}
       placeholder={placeholder || "Search for a Metric."}

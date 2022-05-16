@@ -1,9 +1,12 @@
 import React from "react";
-import { ErrorCard, AsyncButton } from "../molecules";
-import { TextInput, InputGroup } from "../molecules/TextInput";
+import { ErrorCard } from "../molecules";
+import { TextInput } from "../molecules/TextInput";
 import { useAccessToken } from "../../api-hooks/token";
 import { createModelRegistrationAsync } from "../../api/modelRegistrationsApi";
 import { useNavigation } from "../../utility/useNavigation";
+import CreatePageLayout, {
+  CreateButton,
+} from "../molecules/layout/CreatePageLayout";
 
 export const AzurePersonalizerModelRegistration = ({
   hostingType,
@@ -34,55 +37,52 @@ export const AzurePersonalizerModelRegistration = ({
   };
 
   return (
-    <React.Fragment>
-      {error && <ErrorCard error={error} />}
+    <CreatePageLayout
+      createButton={
+        <CreateButton
+          label="Create Model"
+          loading={loading}
+          onClick={handleCreate}
+        />
+      }
+    >
+      {error ? <ErrorCard error={error} /> : null}
 
-      <div className="mt-3">
-        <InputGroup>
-          <TextInput
-            label="Model Name"
-            placeholder="A name you recognise"
-            value={modelRegistration.name}
-            onChange={(e) =>
-              setModelRegistration({
-                ...modelRegistration,
-                name: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+      <TextInput
+        label="Model Name"
+        placeholder="A name you recognise"
+        value={modelRegistration.name}
+        onChange={(e) =>
+          setModelRegistration({
+            ...modelRegistration,
+            name: e.target.value,
+          })
+        }
+      />
 
-        <InputGroup className="mt-1">
-          <TextInput
-            label="Scoring URL"
-            placeholder="The Service Endpoint of the Personalizer"
-            value={modelRegistration.scoringUrl}
-            onChange={(e) =>
-              setModelRegistration({
-                ...modelRegistration,
-                scoringUrl: e.target.value,
-              })
-            }
-          />
-          <TextInput
-            label="API Key"
-            placeholder="Personalizer Key"
-            value={modelRegistration.key}
-            onChange={(e) =>
-              setModelRegistration({
-                ...modelRegistration,
-                key: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+      <TextInput
+        label="Scoring URL"
+        placeholder="The Service Endpoint of the Personalizer"
+        value={modelRegistration.scoringUrl}
+        onChange={(e) =>
+          setModelRegistration({
+            ...modelRegistration,
+            scoringUrl: e.target.value,
+          })
+        }
+      />
 
-        <div className="mt-2">
-          <AsyncButton loading={loading} onClick={handleCreate}>
-            Create
-          </AsyncButton>
-        </div>
-      </div>
-    </React.Fragment>
+      <TextInput
+        label="API Key"
+        placeholder="Personalizer Key"
+        value={modelRegistration.key}
+        onChange={(e) =>
+          setModelRegistration({
+            ...modelRegistration,
+            key: e.target.value,
+          })
+        }
+      />
+    </CreatePageLayout>
   );
 };

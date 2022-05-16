@@ -1,28 +1,31 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+
 import AsyncSelectMetric from "../../molecules/selectors/AsyncSelectMetric";
 import { BigPopup } from "../../molecules/popups/BigPopup";
-import { EntityRow } from "../../molecules/layout/EntityRow";
-
-import { EmptyList, ErrorCard, Spinner } from "../../molecules";
+import { ErrorCard, Spinner, Typography } from "../../molecules";
 
 const LearningMetricRow = ({ metric, requestRemove }) => {
   if (metric.loading) {
     return <Spinner />;
   }
   return (
-    <EntityRow>
-      <div className="col">
-        <h5>{metric.name}</h5>
+    <div className="border-bottom py-3">
+      <div className="row">
+        <div className="col">
+          <Typography>{metric.name}</Typography>
+        </div>
+        <div className="col-md-3">
+          <FontAwesomeIcon
+            icon={faCircleXmark}
+            className="cursor-pointer float-right text-danger"
+            style={{ fontSize: "1.5em" }}
+            onClick={() => requestRemove(metric)}
+          />
+        </div>
       </div>
-      <div className="col-md-3">
-        <button
-          onClick={() => requestRemove(metric)}
-          className="btn btn-block btn-outline-danger"
-        >
-          Remove
-        </button>
-      </div>
-    </EntityRow>
+    </div>
   );
 };
 
@@ -51,9 +54,12 @@ export const LearningMetricsUtil = ({
   return (
     <React.Fragment>
       <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
-        <h3>Add a Learning Metric</h3>
-        {error && <ErrorCard error={error} />}
-        <div style={{ minHeight: "200px" }}>
+        <Typography variant="h6" className="semi-bold border-bottom pb-2">
+          Add a Learning Metric
+        </Typography>
+        {error ? <ErrorCard error={error} /> : null}
+
+        <div className="mt-4" style={{ minHeight: "200px" }}>
           <AsyncSelectMetric onChange={setNewMetricOption} />
         </div>
         <button
@@ -64,29 +70,41 @@ export const LearningMetricsUtil = ({
         </button>
       </BigPopup>
 
-      <h3>Learning Metrics</h3>
-      {error && <ErrorCard error={error} />}
+      {error ? <ErrorCard error={error} /> : null}
 
       {learningMetrics.map((f) => (
         <LearningMetricRow metric={f} key={f.id} requestRemove={handleRemove} />
       ))}
-      {learningMetrics.length === 0 && (
-        <EmptyList>
-          {recommender.targetType === "business"
-            ? "Business targets do not support learning metrics"
-            : "There are no Learning Metrics yet."}
-        </EmptyList>
-      )}
 
-      <div className="mt-4">
-        <button
-          disabled={recommender.targetType === "business"}
-          className="btn btn-primary float-right"
-          onClick={() => setIsOpen(true)}
-        >
-          Add Learning Metric
-        </button>
-      </div>
+      {learningMetrics.length === 0 ? (
+        <div className="d-flex flex-wrap justify-content-center mt-4 mb-4">
+          <div className="mb-2 text-secondary text-center w-100">
+            {recommender.targetType === "business"
+              ? "Business targets do not support learning metrics"
+              : "There are no Learning Metrics yet"}
+          </div>
+          {recommender.targetType === "business" ? null : (
+            <button
+              className="btn btn-primary px-4 mt-1"
+              onClick={() => setIsOpen(true)}
+            >
+              Add Learning Metric
+            </button>
+          )}
+        </div>
+      ) : null}
+
+      {learningMetrics.length > 0 ? (
+        <div className="mt-4">
+          <button
+            disabled={recommender.targetType === "business"}
+            className="btn btn-primary float-right px-4"
+            onClick={() => setIsOpen(true)}
+          >
+            Add Learning Metric
+          </button>
+        </div>
+      ) : null}
     </React.Fragment>
   );
 };

@@ -19,7 +19,13 @@ const getEventKindOptions = () => {
   return result;
 };
 
-export const EventKindSelect = ({ defaultValue, placeholder, onSelected }) => {
+export const EventKindSelect = ({
+  label,
+  required,
+  defaultValue,
+  placeholder,
+  onSelected,
+}) => {
   const options = getEventKindOptions();
   // let starting = null;
   // if (defaultValue !== undefined) {
@@ -37,6 +43,8 @@ export const EventKindSelect = ({ defaultValue, placeholder, onSelected }) => {
 
   return (
     <Selector
+      label={label}
+      required={required}
       placeholder={placeholder}
       defaultValue={selectedOption}
       onChange={setSelectedOption}
