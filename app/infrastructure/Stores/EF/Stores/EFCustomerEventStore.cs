@@ -124,8 +124,9 @@ namespace SignalBox.Infrastructure.EntityFramework
                 results = await QuerySet
                     .Where(predicate)
                     .Where(selectCustomer)
-                    .OrderByDescending(_ => _.Timestamp)
+                    .OrderByDescending(_ => _.Id)
                     .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
+                    .OrderByDescending(_ => _.Timestamp)
                     .ToListAsync();
             }
             else

@@ -58,6 +58,7 @@ namespace SignalBox.Web.Controllers
         public async Task<Paginated<CustomerEvent>> GetEvents([FromQuery] PaginateRequest p, string id, bool? useInternalId = null)
         {
             var customer = await store.GetEntity(id, useInternalId);
+            p.PageSize ??= 12;
             return await eventStore.ReadEventsForUser(p, customer);
         }
 
