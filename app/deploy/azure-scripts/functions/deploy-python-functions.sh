@@ -16,7 +16,9 @@ cd $APP_PATH/azure
 
 STACK=$(pulumi stack --show-name)
 echo "Using Pulumi Stack $STACK"
+set +e
 DEPLOY_PYTHON_FUNCTIONS=$(pulumi config get deployPythonFunctions)
+set -e
 
 if [ "$DEPLOY_PYTHON_FUNCTIONS" = "true" ]; then
     echo "Deploying python functions."
