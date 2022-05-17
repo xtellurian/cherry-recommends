@@ -2,6 +2,7 @@ config:
   appsvc:canonical-root-domain: app.cherry.ai
   appsvc:capacity: "4"
   appsvc:multitenant: "true"
+  appsvc:process-count: "2"
   appsvc:sku-name: P2V2
   appsvc:sku-tier: Production
   auth0:clientId: tB4g1JLH2kQLPbwrLq66Cb8R8KLcT7YT

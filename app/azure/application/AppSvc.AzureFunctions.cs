@@ -37,6 +37,12 @@ namespace SignalBox.Azure
                     AlwaysOn = true, // recommended in the Azure portal.
                     AppSettings = {
                         new NameValuePairArgs{
+                            // https://docs.microsoft.com/en-us/azure/azure-functions/functions-best-practices?tabs=csharp#worker-process-count
+                            // this should be the same as the number of cores on the app service plan machine
+                            Name = "FUNCTIONS_WORKER_PROCESS_COUNT",
+                            Value = appSvcConfig.Get("process-count") ?? "1"
+                        },
+                        new NameValuePairArgs{
                             Name = "EventIngestionConnectionString",
                             Value = eventProcessing.PrimaryNamespaceReadConnectionString // this must be a namespace scope connection string
                         },

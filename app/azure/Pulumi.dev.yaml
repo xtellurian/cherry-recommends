@@ -1,5 +1,6 @@
 config:
   appsvc:multitenant: "false"
+  appsvc:process-count: "1"
   appsvc:singleTenantDatabaseName: single
   appsvc:sku-name: B2
   appsvc:sku-tier: Basic
