@@ -1,6 +1,6 @@
 config:
   appsvc:canonical-root-domain: app.cherry.ai
-  appsvc:capacity: "2"
+  appsvc:capacity: "4"
   appsvc:multitenant: "true"
   appsvc:sku-name: P2V2
   appsvc:sku-tier: Production
