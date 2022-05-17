@@ -12,18 +12,15 @@ namespace SignalBox.Core.Workflows
 {
     public class SegmentWebhookWorkflow : ISegmentWebhookWorkflow, IWorkflow
     {
-        private readonly IStorageContext storageContext;
         private readonly ILogger<SegmentWebhookWorkflow> logger;
         private readonly ICustomerEventsWorkflow eventsWorkflows;
         private readonly ITenantProvider tenantProvider;
 
         public SegmentWebhookWorkflow(
-            IStorageContext storageContext,
             ILogger<SegmentWebhookWorkflow> logger,
             ICustomerEventsWorkflow eventsWorkflows,
             ITenantProvider tenantProvider)
         {
-            this.storageContext = storageContext;
             this.logger = logger;
             this.eventsWorkflows = eventsWorkflows;
             this.tenantProvider = tenantProvider;

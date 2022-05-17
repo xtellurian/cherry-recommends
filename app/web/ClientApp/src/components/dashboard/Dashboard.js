@@ -1,4 +1,5 @@
 import React from "react";
+import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useGeneralSummary } from "../../api-hooks/dataSummaryApi";
 import { usePromotions } from "../../api-hooks/promotionsApi";
 import { Title, Spinner, Navigation } from "../molecules";
@@ -33,6 +34,8 @@ const Fact = ({ label, to, children }) => {
   );
 };
 export const Dashboard = () => {
+  const analytics = useAnalytics();
+  analytics.track("site:dashboard_mounted");
   const tenant = useCurrentTenant();
   const generalSummary = useGeneralSummary();
   const memberships = useCurrentTenantMemberships();

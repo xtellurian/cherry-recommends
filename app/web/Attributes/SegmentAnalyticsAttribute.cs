@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
@@ -47,14 +46,15 @@ namespace SignalBox.Web
 
                 try
                 {
-                    var segmentConfig = this.segmentOptions.CurrentValue;
-                    string writeKey = segmentConfig.WriteKey;
+                    var segmentConfig = segmentOptions.CurrentValue;
+                    string writeKey = segmentConfig?.WriteKey;
                     if (!string.IsNullOrEmpty(writeKey))
                     {
                         string httpMethod = context.HttpContext.Request.Method;
-                        string eventName = $"[{httpMethod}]{context.ActionDescriptor.DisplayName}";
-                        string tenant = this.tenantProvider.Current()?.Name;
-                        string stack = this.diOptions.CurrentValue.Stack;
+                        // remove prefix Signalbox.Web.Controllers. - it's on everything
+                        string eventName = $"[{httpMethod}]{context.ActionDescriptor.DisplayName.Replace("Signalbox.Web.Controllers.", "")}";
+                        string tenant = tenantProvider.Current()?.Name;
+                        string stack = diOptions.CurrentValue.Stack;
                         var properties = new Dictionary<string, object>
                         {
                             { "tenant", tenant },

@@ -61,7 +61,7 @@ namespace SignalBox.Test.Workflows
             mockCustomerEventsWorkflows.Setup(
                 _ => _.Ingest(It.Is<IEnumerable<CustomerEventInput>>(x => x.First().Kind == expectedKind)))
                 .ReturnsAsync(new EventLoggingResponse { EventsEnqueued = 1 });
-            var segmentWebhookWorkflow = new SegmentWebhookWorkflow(Utility.MockStorageContext().Object, Utility.MockLogger<SegmentWebhookWorkflow>().Object, mockCustomerEventsWorkflows.Object, mockTenantProvider.Object);
+            var segmentWebhookWorkflow = new SegmentWebhookWorkflow(Utility.MockLogger<SegmentWebhookWorkflow>().Object, mockCustomerEventsWorkflows.Object, mockTenantProvider.Object);
             var mockShopifyWebhookWorkflow = new Mock<IShopifyWebhookWorkflow>();
             var sut = new WebhookWorkflows(mockLogger.Object, mockTenantProvider.Object, mockWebhookReceiverStore.Object, mockCustomerEventsWorkflows.Object, segmentWebhookWorkflow, mockShopifyWebhookWorkflow.Object);
             var headers = Enumerable.Empty<KeyValuePair<string, Microsoft.Extensions.Primitives.StringValues>>();
@@ -98,7 +98,7 @@ namespace SignalBox.Test.Workflows
             mockCustomerEventsWorkflows.Setup(
                 _ => _.Ingest(It.Is<IEnumerable<CustomerEventInput>>(x => x.Count() == 1)))
                 .ReturnsAsync(new EventLoggingResponse { EventsEnqueued = 1 });
-            var segmentWebhookWorkflow = new SegmentWebhookWorkflow(Utility.MockStorageContext().Object, Utility.MockLogger<SegmentWebhookWorkflow>().Object, mockCustomerEventsWorkflows.Object, mockTenantProvider.Object);
+            var segmentWebhookWorkflow = new SegmentWebhookWorkflow(Utility.MockLogger<SegmentWebhookWorkflow>().Object, mockCustomerEventsWorkflows.Object, mockTenantProvider.Object);
             var mockShopifyWebhookWorkflow = new Mock<IShopifyWebhookWorkflow>();
             var sut = new WebhookWorkflows(mockLogger.Object, mockTenantProvider.Object, mockWebhookReceiverStore.Object, mockCustomerEventsWorkflows.Object, segmentWebhookWorkflow, mockShopifyWebhookWorkflow.Object);
             var headers = Enumerable.Empty<KeyValuePair<string, Microsoft.Extensions.Primitives.StringValues>>();
