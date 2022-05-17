@@ -5,6 +5,15 @@ export const fetchEventAsync = async ({ id, token }) => {
         path: `api/events/${id}`,
     });
 };
+export const eventKinds = {
+    custom: "custom",
+    behaviour: "behaviour",
+    pageView: "pageView",
+    identify: "identify",
+    addToBusiness: "addToBusiness",
+    purchase: "purchase",
+    usePromotion: "usePromotion",
+};
 export const createEventsAsync = async ({ apiKey, token, events, }) => {
     return await executeFetch({
         path: "api/events",

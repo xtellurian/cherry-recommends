@@ -73,7 +73,7 @@ namespace SignalBox.Test.Controllers
             dto.SourceSystemId = 1;
             dto.Kind = EventKinds.Behaviour;
             dto.EventType = "PageView";
-            dto.Properties = new Dictionary<string, object>() { { "puchase", 50 } };
+            dto.Properties = new EventProperties { { "puchase", 50 } };
 
             var result = await sut.LogEvents(new List<EventDto>() { dto });
 

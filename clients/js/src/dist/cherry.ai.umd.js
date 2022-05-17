@@ -2384,6 +2384,15 @@
           path: `api/events/${id}`,
       });
   };
+  const eventKinds = {
+      custom: "custom",
+      behaviour: "behaviour",
+      pageView: "pageView",
+      identify: "identify",
+      addToBusiness: "addToBusiness",
+      purchase: "purchase",
+      usePromotion: "usePromotion",
+  };
   const createEventsAsync = async ({ apiKey, token, events, }) => {
       return await executeFetch({
           path: "api/events",
@@ -2428,6 +2437,7 @@
   var eventsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
     fetchEventAsync: fetchEventAsync,
+    eventKinds: eventKinds,
     createEventsAsync: createEventsAsync,
     fetchCustomersEventsAsync: fetchCustomersEventsAsync,
     fetchTrackedUsersEventsAsync: fetchTrackedUsersEventsAsync,

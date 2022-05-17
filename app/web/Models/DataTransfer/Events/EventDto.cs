@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using SignalBox.Core;
 
@@ -18,6 +17,6 @@ namespace SignalBox.Web.Dto
         public EventKinds Kind { get; set; }
         [Required]
         public string EventType { get; set; }
-        public Dictionary<string, object> Properties { get; set; }
+        public EventProperties Properties { get; set; }
     }
 }

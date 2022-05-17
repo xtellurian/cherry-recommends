@@ -10,6 +10,25 @@ export const fetchEventAsync = async ({ id, token }: EntityRequest) => {
   });
 };
 
+export type EventKinds = components["schemas"]["EventKinds"];
+interface EventKindConstants {
+  custom: EventKinds;
+  behaviour: EventKinds;
+  pageView: EventKinds;
+  identify: EventKinds;
+  addToBusiness: EventKinds;
+  purchase: EventKinds;
+  usePromotion: EventKinds;
+}
+export const eventKinds: EventKindConstants = {
+  custom: "custom",
+  behaviour: "behaviour",
+  pageView: "pageView",
+  identify: "identify",
+  addToBusiness: "addToBusiness",
+  purchase: "purchase",
+  usePromotion: "usePromotion",
+};
 type EventDto = components["schemas"]["EventDto"];
 type EventLoggingResponse = components["schemas"]["EventLoggingResponse"];
 interface CreateEventRequest {

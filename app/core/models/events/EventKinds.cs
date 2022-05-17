@@ -10,5 +10,7 @@ namespace SignalBox.Core
         Identify,
         ConsumeRecommendation,
         AddToBusiness,
+        Purchase,
+        UsePromotion
     }
 }

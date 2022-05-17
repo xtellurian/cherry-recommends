@@ -6,3 +6,4 @@ export const createEventsAsync = events.createEventsAsync;
 export const createRecommendationConsumedEventAsync =
   events.createRecommendationConsumedEventAsync;
 export const fetchBusinessEventsAsync = events.fetchBusinessEventsAsync;
+export const eventKinds = events.eventKinds;

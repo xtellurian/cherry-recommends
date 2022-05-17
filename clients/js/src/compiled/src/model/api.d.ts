@@ -682,7 +682,7 @@ export interface paths {
             };
         };
     };
-    "/api/Channels/{id}/properties": {
+    "/api/Channels/{id}/WebProperties": {
         post: {
             parameters: {
                 path: {
@@ -705,9 +705,39 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["UpdateChannelPropertiesDto"];
-                    "text/json": components["schemas"]["UpdateChannelPropertiesDto"];
-                    "application/*+json": components["schemas"]["UpdateChannelPropertiesDto"];
+                    "application/json": components["schemas"]["UpdateWebChannelPropertiesDto"];
+                    "text/json": components["schemas"]["UpdateWebChannelPropertiesDto"];
+                    "application/*+json": components["schemas"]["UpdateWebChannelPropertiesDto"];
+                };
+            };
+        };
+    };
+    "/api/Channels/{id}/EmailTrigger": {
+        post: {
+            parameters: {
+                path: {
+                    id: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ChannelBase"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateEmailChannelTriggerDto"];
+                    "text/json": components["schemas"]["UpdateEmailChannelTriggerDto"];
+                    "application/*+json": components["schemas"]["UpdateEmailChannelTriggerDto"];
                 };
             };
         };
@@ -1634,6 +1664,24 @@ export interface paths {
             };
         };
     };
+    "/api/DataSummary/GeneralSummary": {
+        get: {
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["GeneralSummary"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
     "/api/DataSummary/event-kind-names": {
         get: {
             responses: {
@@ -2138,6 +2186,59 @@ export interface paths {
                     };
                     "application/*+json": {
                         [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    "/api/integratedsystems/{id}/klaviyo/ApiKeys": {
+        post: {
+            parameters: {
+                path: {
+                    id: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["IntegratedSystem"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SetKlaviyoApiKeysDto"];
+                    "text/json": components["schemas"]["SetKlaviyoApiKeysDto"];
+                    "application/*+json": components["schemas"]["SetKlaviyoApiKeysDto"];
+                };
+            };
+        };
+    };
+    "/api/integratedsystems/{id}/klaviyo/Lists": {
+        get: {
+            parameters: {
+                path: {
+                    id: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["KlaviyoList"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
                     };
                 };
             };
@@ -8371,6 +8472,7 @@ export interface components {
             properties?: {
                 [key: string]: unknown;
             } | null;
+            recommenders?: components["schemas"]["RecommenderEntityBase"][] | null;
         };
         ChannelBasePaginated: {
             items?: components["schemas"]["ChannelBase"][] | null;
@@ -8641,6 +8743,7 @@ export interface components {
             startsAt?: string | null;
             endsAt?: string | null;
             promotionId?: number;
+            generatedAt?: components["schemas"]["IntegratedSystem"][] | null;
         };
         Empty: {
             get?: components["schemas"]["Get"];
@@ -8698,7 +8801,7 @@ export interface components {
                 [key: string]: unknown;
             } | null;
         };
-        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation" | "addToBusiness";
+        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation" | "addToBusiness" | "purchase" | "usePromotion";
         EventKindSummary: {
             keys?: string[] | null;
             instanceCount?: number;
@@ -8737,6 +8840,11 @@ export interface components {
         };
         FilterStep: {
             eventTypeMatch?: string | null;
+        };
+        GeneralSummary: {
+            totalCustomers?: number;
+            eventCount24Hour?: number;
+            recommendationCount24Hour?: number;
         };
         Get: {
             operationId?: string | null;
@@ -8812,7 +8920,7 @@ export interface components {
             integratedSystemId: number;
             userId: string;
         };
-        IntegratedSystemTypes: "segment" | "hubspot" | "shopify" | "custom" | "website";
+        IntegratedSystemTypes: "segment" | "hubspot" | "shopify" | "custom" | "website" | "klaviyo";
         IntegrationStatuses: "notConfigured" | "ok";
         InvokationLogEntry: {
             id?: number;
@@ -8939,6 +9047,10 @@ export interface components {
             joinType: components["schemas"]["JoinType"];
         };
         JoinType: "divide";
+        KlaviyoList: {
+            list_id?: string | null;
+            list_name?: string | null;
+        };
         LaunchDarklyConfig: {
             sdkKey?: string | null;
             mobileKey?: string | null;
@@ -9348,19 +9460,26 @@ export interface components {
             modelRegistration?: components["schemas"]["ModelRegistration"];
         };
         RecommenderErrorHandling: {
+            enabled?: boolean;
             throwOnBadInput?: boolean | null;
             requireConsumptionEvent?: boolean | null;
             recommendationCacheTime?: components["schemas"]["TimeSpan"];
+            expiryDate?: string | null;
         };
         RecommenderSettings: {
+            enabled?: boolean;
             throwOnBadInput?: boolean | null;
             requireConsumptionEvent?: boolean | null;
             recommendationCacheTime?: components["schemas"]["TimeSpan"];
+            expiryDate?: string | null;
         };
         RecommenderSettingsDto: {
+            enabled?: boolean | null;
             throwOnBadInput?: boolean | null;
             requireConsumptionEvent?: boolean | null;
             recommendationCacheTime?: components["schemas"]["TimeSpan"];
+            /** Date after which no more recommendations will be produced */
+            expiryDate?: string | null;
         };
         RecommenderStatistics: {
             numberCustomersRecommended?: number;
@@ -9422,6 +9541,10 @@ export interface components {
             type?: string | null;
             items?: components["schemas"]["StatusCodeClass"];
             example?: number[] | null;
+        };
+        SetKlaviyoApiKeysDto: {
+            publicKey: string;
+            privateKey: string;
         };
         SetLearningMetrics: {
             useInternalId?: boolean | null;
@@ -9486,9 +9609,11 @@ export interface components {
             featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
             metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
-        UpdateChannelPropertiesDto: {
-            endpoint?: string | null;
-            popupAskForEmail?: boolean | null;
+        UpdateEmailChannelTriggerDto: {
+            /** Id of the List that triggers the Email flow */
+            listId?: string | null;
+            /** Name of the List that triggers the Email flow */
+            listName?: string | null;
         };
         UpdatePromotionDto: {
             name: string;
@@ -9501,6 +9626,15 @@ export interface components {
             properties?: {
                 [key: string]: unknown;
             } | null;
+        };
+        UpdateWebChannelPropertiesDto: {
+            host?: string | null;
+            popupAskForEmail?: boolean | null;
+            popupDelay?: number | null;
+            recommenderId?: number | null;
+            popupHeader?: string | null;
+            popupSubheader?: string | null;
+            customerIdPrefix?: string | null;
         };
         UpdateWeightDto: {
             id?: number;

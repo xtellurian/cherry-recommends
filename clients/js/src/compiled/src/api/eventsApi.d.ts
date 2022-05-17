@@ -1,6 +1,17 @@
 import { EntityRequest, PaginatedEntityRequest } from "../interfaces";
 import { components } from "../model/api";
 export declare const fetchEventAsync: ({ id, token }: EntityRequest) => Promise<any>;
+export declare type EventKinds = components["schemas"]["EventKinds"];
+interface EventKindConstants {
+    custom: EventKinds;
+    behaviour: EventKinds;
+    pageView: EventKinds;
+    identify: EventKinds;
+    addToBusiness: EventKinds;
+    purchase: EventKinds;
+    usePromotion: EventKinds;
+}
+export declare const eventKinds: EventKindConstants;
 declare type EventDto = components["schemas"]["EventDto"];
 declare type EventLoggingResponse = components["schemas"]["EventLoggingResponse"];
 interface CreateEventRequest {

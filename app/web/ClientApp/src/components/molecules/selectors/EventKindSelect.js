@@ -1,22 +1,37 @@
 import React from "react";
 import { Selector } from "./Select";
-
+import { eventKinds } from "../../../api/eventsApi";
 const getEventKindOptions = () => {
-  const result = [
+  return [
     {
       label: "Custom",
-      value: "custom",
+      value: eventKinds.custom,
     },
     {
       label: "Behaviour",
-      value: "behaviour",
+      value: eventKinds.behaviour,
     },
     {
       label: "Consume Recommendation",
-      value: "consumeRecommendation",
+      value: eventKinds.consumeRecommendation,
+    },
+    {
+      label: "Identify",
+      value: eventKinds.identify,
+    },
+    {
+      label: "Page View",
+      value: eventKinds.pageView,
+    },
+    {
+      label: "Purchase",
+      value: eventKinds.purchase,
+    },
+    {
+      label: "Use Promotion",
+      value: eventKinds.usePromotion,
     },
   ];
-  return result;
 };
 
 export const EventKindSelect = ({

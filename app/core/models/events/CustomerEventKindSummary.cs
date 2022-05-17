@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace SignalBox.Core
 {
     public class CustomerEventKindSummary

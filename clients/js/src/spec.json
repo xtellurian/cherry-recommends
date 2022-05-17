@@ -1392,7 +1392,7 @@
         }
       }
     },
-    "/api/Channels/{id}/properties": {
+    "/api/Channels/{id}/WebProperties": {
       "post": {
         "tags": [
           "Channels"
@@ -1413,17 +1413,77 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateChannelPropertiesDto"
+                "$ref": "#/components/schemas/UpdateWebChannelPropertiesDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateChannelPropertiesDto"
+                "$ref": "#/components/schemas/UpdateWebChannelPropertiesDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateChannelPropertiesDto"
+                "$ref": "#/components/schemas/UpdateWebChannelPropertiesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelBase"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Channels/{id}/EmailTrigger": {
+      "post": {
+        "tags": [
+          "Channels"
+        ],
+        "summary": "Updates trigger properties of an email channel.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmailChannelTriggerDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmailChannelTriggerDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmailChannelTriggerDto"
               }
             }
           }
@@ -3396,6 +3456,35 @@
         }
       }
     },
+    "/api/DataSummary/GeneralSummary": {
+      "get": {
+        "tags": [
+          "DataSummary"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/DataSummary/event-kind-names": {
       "get": {
         "tags": [
@@ -4165,6 +4254,7 @@
         "tags": [
           "IntegratedSystems"
         ],
+        "summary": "Toggle for the determining if the system can be used as a discount code generator.",
         "parameters": [
           {
             "name": "id",
@@ -4365,6 +4455,110 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": { }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integratedsystems/{id}/klaviyo/ApiKeys": {
+      "post": {
+        "tags": [
+          "Klaviyo"
+        ],
+        "summary": "Sets Klaviyo API Keys.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetKlaviyoApiKeysDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetKlaviyoApiKeysDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetKlaviyoApiKeysDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegratedSystem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integratedsystems/{id}/klaviyo/Lists": {
+      "get": {
+        "tags": [
+          "Klaviyo"
+        ],
+        "summary": "Gets Klaviyo Lists.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KlaviyoList"
+                  }
                 }
               }
             }
@@ -17121,6 +17315,13 @@
             "additionalProperties": { },
             "nullable": true,
             "readOnly": true
+          },
+          "recommenders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecommenderEntityBase"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -17333,7 +17534,7 @@
             "type": "string"
           },
           "systemType": {
-            "pattern": "Segment|Hubspot|Shopify|Custom|Website",
+            "pattern": "Segment|Hubspot|Shopify|Klaviyo|Custom|Website",
             "type": "string"
           }
         },
@@ -18178,6 +18379,13 @@
           "promotionId": {
             "type": "integer",
             "format": "int64"
+          },
+          "generatedAt": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntegratedSystem"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -18398,7 +18606,9 @@
           "pageView",
           "identify",
           "consumeRecommendation",
-          "addToBusiness"
+          "addToBusiness",
+          "purchase",
+          "usePromotion"
         ],
         "type": "string"
       },
@@ -18540,6 +18750,27 @@
           "eventTypeMatch": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GeneralSummary": {
+        "type": "object",
+        "properties": {
+          "totalCustomers": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "eventCount24Hour": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "recommendationCount24Hour": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -18817,7 +19048,8 @@
           "hubspot",
           "shopify",
           "custom",
-          "website"
+          "website",
+          "klaviyo"
         ],
         "type": "string"
       },
@@ -19308,6 +19540,20 @@
           "divide"
         ],
         "type": "string"
+      },
+      "KlaviyoList": {
+        "type": "object",
+        "properties": {
+          "list_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "list_name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "LaunchDarklyConfig": {
         "type": "object",
@@ -20860,6 +21106,9 @@
       "RecommenderErrorHandling": {
         "type": "object",
         "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
           "throwOnBadInput": {
             "type": "boolean",
             "nullable": true
@@ -20870,6 +21119,11 @@
           },
           "recommendationCacheTime": {
             "$ref": "#/components/schemas/TimeSpan"
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -20877,6 +21131,9 @@
       "RecommenderSettings": {
         "type": "object",
         "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
           "throwOnBadInput": {
             "type": "boolean",
             "nullable": true
@@ -20887,6 +21144,11 @@
           },
           "recommendationCacheTime": {
             "$ref": "#/components/schemas/TimeSpan"
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -20894,6 +21156,10 @@
       "RecommenderSettingsDto": {
         "type": "object",
         "properties": {
+          "enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
           "throwOnBadInput": {
             "type": "boolean",
             "nullable": true
@@ -20904,6 +21170,12 @@
           },
           "recommendationCacheTime": {
             "$ref": "#/components/schemas/TimeSpan"
+          },
+          "expiryDate": {
+            "type": "string",
+            "description": "Date after which no more recommendations will be produced",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -21136,6 +21408,22 @@
               "format": "int64"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SetKlaviyoApiKeysDto": {
+        "required": [
+          "privateKey",
+          "publicKey"
+        ],
+        "type": "object",
+        "properties": {
+          "publicKey": {
+            "type": "string"
+          },
+          "privateKey": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -21389,15 +21677,17 @@
         },
         "additionalProperties": false
       },
-      "UpdateChannelPropertiesDto": {
+      "UpdateEmailChannelTriggerDto": {
         "type": "object",
         "properties": {
-          "endpoint": {
+          "listId": {
             "type": "string",
+            "description": "Id of the List that triggers the Email flow",
             "nullable": true
           },
-          "popupAskForEmail": {
-            "type": "boolean",
+          "listName": {
+            "type": "string",
+            "description": "Name of the List that triggers the Email flow",
             "nullable": true
           }
         },
@@ -21447,6 +21737,42 @@
           "properties": {
             "type": "object",
             "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateWebChannelPropertiesDto": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "nullable": true
+          },
+          "popupAskForEmail": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "popupDelay": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "recommenderId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "popupHeader": {
+            "type": "string",
+            "nullable": true
+          },
+          "popupSubheader": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerIdPrefix": {
+            "type": "string",
             "nullable": true
           }
         },

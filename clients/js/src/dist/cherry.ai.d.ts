@@ -296,6 +296,7 @@ interface components {
             properties?: {
                 [key: string]: unknown;
             } | null;
+            recommenders?: components["schemas"]["RecommenderEntityBase"][] | null;
         };
         ChannelBasePaginated: {
             items?: components["schemas"]["ChannelBase"][] | null;
@@ -566,6 +567,7 @@ interface components {
             startsAt?: string | null;
             endsAt?: string | null;
             promotionId?: number;
+            generatedAt?: components["schemas"]["IntegratedSystem"][] | null;
         };
         Empty: {
             get?: components["schemas"]["Get"];
@@ -623,7 +625,7 @@ interface components {
                 [key: string]: unknown;
             } | null;
         };
-        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation" | "addToBusiness";
+        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation" | "addToBusiness" | "purchase" | "usePromotion";
         EventKindSummary: {
             keys?: string[] | null;
             instanceCount?: number;
@@ -662,6 +664,11 @@ interface components {
         };
         FilterStep: {
             eventTypeMatch?: string | null;
+        };
+        GeneralSummary: {
+            totalCustomers?: number;
+            eventCount24Hour?: number;
+            recommendationCount24Hour?: number;
         };
         Get: {
             operationId?: string | null;
@@ -737,7 +744,7 @@ interface components {
             integratedSystemId: number;
             userId: string;
         };
-        IntegratedSystemTypes: "segment" | "hubspot" | "shopify" | "custom" | "website";
+        IntegratedSystemTypes: "segment" | "hubspot" | "shopify" | "custom" | "website" | "klaviyo";
         IntegrationStatuses: "notConfigured" | "ok";
         InvokationLogEntry: {
             id?: number;
@@ -864,6 +871,10 @@ interface components {
             joinType: components["schemas"]["JoinType"];
         };
         JoinType: "divide";
+        KlaviyoList: {
+            list_id?: string | null;
+            list_name?: string | null;
+        };
         LaunchDarklyConfig: {
             sdkKey?: string | null;
             mobileKey?: string | null;
@@ -1273,19 +1284,26 @@ interface components {
             modelRegistration?: components["schemas"]["ModelRegistration"];
         };
         RecommenderErrorHandling: {
+            enabled?: boolean;
             throwOnBadInput?: boolean | null;
             requireConsumptionEvent?: boolean | null;
             recommendationCacheTime?: components["schemas"]["TimeSpan"];
+            expiryDate?: string | null;
         };
         RecommenderSettings: {
+            enabled?: boolean;
             throwOnBadInput?: boolean | null;
             requireConsumptionEvent?: boolean | null;
             recommendationCacheTime?: components["schemas"]["TimeSpan"];
+            expiryDate?: string | null;
         };
         RecommenderSettingsDto: {
+            enabled?: boolean | null;
             throwOnBadInput?: boolean | null;
             requireConsumptionEvent?: boolean | null;
             recommendationCacheTime?: components["schemas"]["TimeSpan"];
+            /** Date after which no more recommendations will be produced */
+            expiryDate?: string | null;
         };
         RecommenderStatistics: {
             numberCustomersRecommended?: number;
@@ -1347,6 +1365,10 @@ interface components {
             type?: string | null;
             items?: components["schemas"]["StatusCodeClass"];
             example?: number[] | null;
+        };
+        SetKlaviyoApiKeysDto: {
+            publicKey: string;
+            privateKey: string;
         };
         SetLearningMetrics: {
             useInternalId?: boolean | null;
@@ -1411,9 +1433,11 @@ interface components {
             featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
             metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
-        UpdateChannelPropertiesDto: {
-            endpoint?: string | null;
-            popupAskForEmail?: boolean | null;
+        UpdateEmailChannelTriggerDto: {
+            /** Id of the List that triggers the Email flow */
+            listId?: string | null;
+            /** Name of the List that triggers the Email flow */
+            listName?: string | null;
         };
         UpdatePromotionDto: {
             name: string;
@@ -1426,6 +1450,15 @@ interface components {
             properties?: {
                 [key: string]: unknown;
             } | null;
+        };
+        UpdateWebChannelPropertiesDto: {
+            host?: string | null;
+            popupAskForEmail?: boolean | null;
+            popupDelay?: number | null;
+            recommenderId?: number | null;
+            popupHeader?: string | null;
+            popupSubheader?: string | null;
+            customerIdPrefix?: string | null;
         };
         UpdateWeightDto: {
             id?: number;
@@ -1705,6 +1738,17 @@ declare namespace deploymentApi_d {
 }
 
 declare const fetchEventAsync: ({ id, token }: EntityRequest) => Promise<any>;
+declare type EventKinds = components["schemas"]["EventKinds"];
+interface EventKindConstants {
+    custom: EventKinds;
+    behaviour: EventKinds;
+    pageView: EventKinds;
+    identify: EventKinds;
+    addToBusiness: EventKinds;
+    purchase: EventKinds;
+    usePromotion: EventKinds;
+}
+declare const eventKinds: EventKindConstants;
 declare type EventDto = components["schemas"]["EventDto"];
 declare type EventLoggingResponse = components["schemas"]["EventLoggingResponse"];
 interface CreateEventRequest {
@@ -1732,6 +1776,8 @@ declare const createRecommendationConsumedEventAsync: ({ token, commonUserId, cu
 declare const fetchBusinessEventsAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 
 declare const eventsApi_d_fetchEventAsync: typeof fetchEventAsync;
+type eventsApi_d_EventKinds = EventKinds;
+declare const eventsApi_d_eventKinds: typeof eventKinds;
 declare const eventsApi_d_createEventsAsync: typeof createEventsAsync;
 declare const eventsApi_d_fetchCustomersEventsAsync: typeof fetchCustomersEventsAsync;
 declare const eventsApi_d_fetchTrackedUsersEventsAsync: typeof fetchTrackedUsersEventsAsync;
@@ -1740,6 +1786,8 @@ declare const eventsApi_d_fetchBusinessEventsAsync: typeof fetchBusinessEventsAs
 declare namespace eventsApi_d {
   export {
     eventsApi_d_fetchEventAsync as fetchEventAsync,
+    eventsApi_d_EventKinds as EventKinds,
+    eventsApi_d_eventKinds as eventKinds,
     eventsApi_d_createEventsAsync as createEventsAsync,
     eventsApi_d_fetchCustomersEventsAsync as fetchCustomersEventsAsync,
     eventsApi_d_fetchTrackedUsersEventsAsync as fetchTrackedUsersEventsAsync,
