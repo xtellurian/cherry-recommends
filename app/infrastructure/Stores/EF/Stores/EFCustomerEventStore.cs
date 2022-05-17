@@ -46,18 +46,34 @@ namespace SignalBox.Infrastructure.EntityFramework
                 e.EnvironmentId = environmentProvider.CurrentEnvironmentId;
             }
 
-            // need to chunk this query, because too many ids in a single Contains() breaks the db connection.
-            foreach (var chunks in events.ToChunks(255))
+            if (events.Count() == 1)
             {
-                var eventIds = chunks.Select(_ => _.EventId);
-                var toRemove = QuerySet.Where(_ => eventIds.Contains(_.EventId));
-                if (toRemove.Any())
+                // no need to chunk
+                var e = events.First();
+                var toRemove = await QuerySet.FirstOrDefaultAsync(_ => _.EventId == e.EventId);
+                if (toRemove != null)
                 {
-                    Set.RemoveRange(await toRemove.ToListAsync());
+                    Set.Remove(toRemove);
                 }
+
+                await Set.AddAsync(e);
+            }
+            else
+            {
+                // need to chunk this query, because too many ids in a single Contains() breaks the db connection.
+                foreach (var chunks in events.ToChunks(255))
+                {
+                    var eventIds = chunks.Select(_ => _.EventId);
+                    var toRemove = QuerySet.Where(_ => eventIds.Contains(_.EventId));
+                    if (toRemove.Any())
+                    {
+                        Set.RemoveRange(await toRemove.ToListAsync());
+                    }
+                }
+
+                await Set.AddRangeAsync(events);
             }
 
-            await Set.AddRangeAsync(events);
             return events;
         }
 
