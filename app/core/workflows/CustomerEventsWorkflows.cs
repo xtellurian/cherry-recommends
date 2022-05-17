@@ -10,6 +10,7 @@ namespace SignalBox.Core.Workflows
     public class CustomerEventsWorkflows : IWorkflow, ICustomerEventsWorkflow
     {
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly ITelemetry telemetry;
         private readonly ILogger<CustomerEventsWorkflows> logger;
         private readonly ICustomerWorkflow customerWorkflow;
         private readonly IEnvironmentProvider environmentProvider;
@@ -21,6 +22,7 @@ namespace SignalBox.Core.Workflows
         public JsonSerializerOptions SerializerOptions => new JsonSerializerOptions();
         public CustomerEventsWorkflows(
             IDateTimeProvider dateTimeProvider,
+            ITelemetry telemetry,
             ILogger<CustomerEventsWorkflows> logger,
             ICustomerWorkflow customerWorkflow,
             IEnvironmentProvider environmentProvider,
@@ -30,6 +32,7 @@ namespace SignalBox.Core.Workflows
             IEventIngestor eventIngestor)
         {
             this.dateTimeProvider = dateTimeProvider;
+            this.telemetry = telemetry;
             this.logger = logger;
             this.customerWorkflow = customerWorkflow;
             this.environmentProvider = environmentProvider;
@@ -44,10 +47,12 @@ namespace SignalBox.Core.Workflows
             // ingest by default
             if (eventIngestor.CanIngest)
             {
+                var eventCount = input.Count();
+                telemetry.TrackEvent("CustomerEventsWorkflows.Ingest", new Dictionary<string, string> { { "eventCount", eventCount.ToString() } });
                 await eventIngestor.Ingest(input);
                 return new EventLoggingResponse
                 {
-                    EventsEnqueued = input.Count()
+                    EventsEnqueued = eventCount
                 };
             }
             else
@@ -59,19 +64,29 @@ namespace SignalBox.Core.Workflows
         }
         public async Task<EventLoggingResponse> ProcessEvents(IEnumerable<CustomerEventInput> input)
         {
+            try
+            {
+                var stopwatch = telemetry.NewStopwatch(true);
+                logger.LogInformation("Processing Events");
 
-            logger.LogInformation("Processing Events");
+                var customers = await CreateOrGetCustomers(input);
+                SetCustomerProperties(input, customers);
+                var events = await CreateCustomerEvents(input, customers);
 
-            var customers = await CreateOrGetCustomers(input);
-            SetCustomerProperties(input, customers);
-            var events = await CreateCustomerEvents(input, customers);
+                // save changes
+                await customerEventStore.Context.SaveChanges();
 
-            // save changes
-            await customerEventStore.Context.SaveChanges();
+                // check if we should add any customer to a business
+                await AddToBusinesses(input, customers);
 
-            // check if we should add any customer to a business
-            await AddToBusinesses(input, customers);
-            return new EventLoggingResponse { EventsProcessed = events.Count() };
+                telemetry.TrackMetric("CustomerEventsWorkflows.ProcessEvents.ElapsedMilliseconds", stopwatch.ElapsedMilliseconds);
+                return new EventLoggingResponse { EventsProcessed = events.Count() };
+            }
+            catch (Exception ex)
+            {
+                telemetry.TrackException(ex);
+                throw new AggregateException("Error Processing Events", ex);
+            }
         }
 
         private void SetCustomerProperties(IEnumerable<CustomerEventInput> input, IEnumerable<Customer> customers)

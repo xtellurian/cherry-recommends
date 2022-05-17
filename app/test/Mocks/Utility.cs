@@ -14,7 +14,9 @@ namespace SignalBox.Test
         }
         public static Mock<ITelemetry> MockTelemetry()
         {
-            return new Mock<ITelemetry>();
+            var m = new Mock<ITelemetry>();
+            m.Setup(_ => _.NewStopwatch(It.IsAny<bool>())).Returns(new System.Diagnostics.Stopwatch());
+            return m;
         }
         public static Mock<IStorageContext> MockStorageContext()
         {

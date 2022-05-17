@@ -22,11 +22,12 @@ namespace SignalBox.Test.Controllers
             var mockEnvironmentProvider = new Mock<IEnvironmentProvider>();
             var mockTenanProvider = new Mock<ITenantProvider>();
             var mockLogger = Utility.MockLogger<CustomerEventsWorkflows>();
+            var mockTelemetry = Utility.MockTelemetry();
             var mockCustomerWorkflow = new Mock<ICustomerWorkflow>();
             var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
             var mockEventIngestor = new Mock<IEventIngestor>();
 
-            Customer customer = new Customer(customerId);
+            Customer customer = new(customerId);
             var customerEvent = new CustomerEvent(customer, eventId, DateTime.Now, null, EventKinds.ConsumeRecommendation, "eventType", null);
 
             mockCustomerEventStore.Setup(_ => _.Context).Returns(mockContext.Object);
@@ -39,6 +40,7 @@ namespace SignalBox.Test.Controllers
 
             var customerEventsWorkflow = new CustomerEventsWorkflows(
                 dateTimeProvider,
+                mockTelemetry.Object,
                 mockLogger.Object,
                 mockCustomerWorkflow.Object,
                 mockEnvironmentProvider.Object,
@@ -63,17 +65,18 @@ namespace SignalBox.Test.Controllers
             string eventId = "event1";
             var sut = CreateEventsController(customerId, eventId);
 
-            EventDto dto = new EventDto();
-
-            dto.CommonUserId = customerId;
-            dto.CustomerId = customerId;
-            dto.EventId = eventId;
-            dto.Timestamp = DateTime.Now;
-            dto.RecommendationCorrelatorId = 1;
-            dto.SourceSystemId = 1;
-            dto.Kind = EventKinds.Behaviour;
-            dto.EventType = "PageView";
-            dto.Properties = new EventProperties { { "puchase", 50 } };
+            EventDto dto = new()
+            {
+                CommonUserId = customerId,
+                CustomerId = customerId,
+                EventId = eventId,
+                Timestamp = DateTime.Now,
+                RecommendationCorrelatorId = 1,
+                SourceSystemId = 1,
+                Kind = EventKinds.Behaviour,
+                EventType = "PageView",
+                Properties = new EventProperties { { "puchase", 50 } }
+            };
 
             var result = await sut.LogEvents(new List<EventDto>() { dto });
 

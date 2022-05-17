@@ -16,6 +16,7 @@ namespace SignalBox.Test.Workflows
         {
             var dateTimeProvider = new SystemDateTimeProvider();
             var mockLogger = Utility.MockLogger<CustomerEventsWorkflows>();
+            var mockTelemetry = Utility.MockTelemetry();
             var mockContext = Utility.MockStorageContext();
             var mockCustomerWorkflow = new Mock<ICustomerWorkflow>();
             var mockEnvironmentProvider = new Mock<IEnvironmentProvider>();
@@ -46,6 +47,7 @@ namespace SignalBox.Test.Workflows
 
             var sut = new CustomerEventsWorkflows(
                 dateTimeProvider,
+                mockTelemetry.Object,
                 mockLogger.Object,
                 mockCustomerWorkflow.Object,
                 mockEnvironmentProvider.Object,
