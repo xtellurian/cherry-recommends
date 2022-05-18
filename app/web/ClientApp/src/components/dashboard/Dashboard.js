@@ -34,7 +34,7 @@ const Fact = ({ label, to, children }) => {
   );
 };
 export const Dashboard = () => {
-  const analytics = useAnalytics();
+  const { analytics } = useAnalytics();
   analytics.track("site:dashboard_mounted");
   const tenant = useCurrentTenant();
   const generalSummary = useGeneralSummary();
