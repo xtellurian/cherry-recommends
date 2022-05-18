@@ -66,8 +66,8 @@ namespace SignalBox.Core.Workflows
         {
             try
             {
-                var stopwatch = telemetry.NewStopwatch(true);
                 logger.LogInformation("Processing Events");
+                var stopwatch = telemetry.NewStopwatch(true);
 
                 var customers = await CreateOrGetCustomers(input);
                 SetCustomerProperties(input, customers);
@@ -79,7 +79,10 @@ namespace SignalBox.Core.Workflows
                 // check if we should add any customer to a business
                 await AddToBusinesses(input, customers);
 
+                // log some useful metrics
+                var minTimestamp = events.Min(_ => _.Timestamp);
                 telemetry.TrackMetric("CustomerEventsWorkflows.ProcessEvents.ElapsedMilliseconds", stopwatch.ElapsedMilliseconds);
+                telemetry.TrackMetric("CustomerEventsWorkflows.ProcessEvents.TimestampDelta", (dateTimeProvider.Now - minTimestamp).TotalMilliseconds);
                 return new EventLoggingResponse { EventsProcessed = events.Count() };
             }
             catch (Exception ex)
