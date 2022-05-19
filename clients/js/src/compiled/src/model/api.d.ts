@@ -5986,6 +5986,114 @@ export interface paths {
             };
         };
     };
+    "/api/recommenders/ItemsRecommenders/Recommendations/{recommendationId}": {
+        get: {
+            parameters: {
+                path: {
+                    recommendationId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ItemsRecommendation"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/recommenders/PromotionsRecommenders/Recommendations/{recommendationId}": {
+        get: {
+            parameters: {
+                path: {
+                    recommendationId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ItemsRecommendation"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/recommenders/ItemsRecommenders/{id}/Offers": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    page?: number;
+                    pageSize?: number;
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["OfferPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/recommenders/PromotionsRecommenders/{id}/Offers": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    page?: number;
+                    pageSize?: number;
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["OfferPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
     "/api/recommenders/ItemsRecommenders/{id}/Items": {
         get: {
             parameters: {
@@ -8975,6 +9083,7 @@ export interface components {
             isFromCache?: boolean;
             recommenderId?: number | null;
             recommender?: components["schemas"]["ItemsRecommender"];
+            offer?: components["schemas"]["Offer"];
             maxScoreItemId?: number | null;
             scoredItems?: components["schemas"]["ScoredRecommendableItem"][] | null;
         };
@@ -9212,6 +9321,24 @@ export interface components {
             items?: unknown[] | null;
             pagination?: components["schemas"]["PaginationInfo"];
         };
+        Offer: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            recommendationId?: number;
+            redeemedPromotionId?: number | null;
+            state?: components["schemas"]["OfferState"];
+            redeemedAt?: string | null;
+            grossRevenue?: number | null;
+            redeemedPromotion?: components["schemas"]["RecommendableItem"];
+        };
+        OfferPaginated: {
+            items?: components["schemas"]["Offer"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        OfferState: "created" | "presented" | "redeemed" | "expired";
         OpenApiSecurity: {
             Bearer?: unknown[] | null;
         };

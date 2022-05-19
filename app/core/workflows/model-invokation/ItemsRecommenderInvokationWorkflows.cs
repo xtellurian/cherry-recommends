@@ -22,6 +22,7 @@ namespace SignalBox.Core.Workflows
         private readonly IAudienceStore audienceStore;
         private readonly IInternalOptimiserClientFactory optimiserClientFactory;
         private readonly IDiscountCodeWorkflow discountCodeWorkflow;
+        private readonly IOfferStore offerStore;
 
         public ItemsRecommenderInvokationWorkflows(ILogger<ItemsRecommenderInvokationWorkflows> logger,
                                     IDateTimeProvider dateTimeProvider,
@@ -38,7 +39,8 @@ namespace SignalBox.Core.Workflows
                                     IAudienceStore audienceStore,
                                     IInternalOptimiserClientFactory optimiserClientFactory,
                                     IDiscountCodeWorkflow discountCodeWorkflow,
-                                    IKlaviyoSystemWorkflow klaviyoWorkflow)
+                                    IKlaviyoSystemWorkflow klaviyoWorkflow,
+                                    IOfferStore offerStore)
                                      : base(itemsRecommenderStore, historicMetricStore, webhookSenderClient, dateTimeProvider, klaviyoWorkflow)
         {
             this.logger = logger;
@@ -53,6 +55,7 @@ namespace SignalBox.Core.Workflows
             this.audienceStore = audienceStore;
             this.optimiserClientFactory = optimiserClientFactory;
             this.discountCodeWorkflow = discountCodeWorkflow;
+            this.offerStore = offerStore;
         }
 
         public async Task<ItemsRecommendation> InvokeItemsRecommender(
@@ -292,6 +295,15 @@ namespace SignalBox.Core.Workflows
             recommendation.SetOutput(output);
             recommendation = await itemsRecommendationStore.Create(recommendation);
             context.LogMessage("Created a recommendation entity");
+
+            var offer = new Offer(recommendation);
+            offer = await offerStore.Create(offer);
+            if (recommender.Settings?.RequireConsumptionEvent != true)
+            {
+                offer.State = OfferState.Presented;
+            }
+            recommendation.Offer = offer;
+            context.LogMessage("Created an offer entity");
 
             // TODO: delete ?? - channel already replaced destinations
             // send to any destinations

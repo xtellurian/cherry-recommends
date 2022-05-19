@@ -1,4 +1,5 @@
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +26,8 @@ namespace SignalBox.Web.Controllers
         private readonly ItemsRecommenderInvokationWorkflows invokationWorkflows;
         private readonly ItemsRecommenderPerformanceWorkflows performanceWorkflows;
         private readonly PromotionsRecommenderWorkflows workflows;
+        private readonly IOfferWorkflow offerWorkflow;
+        private readonly IItemsRecommendationStore recommendationStore;
 
         public PromotionsRecommendersController(ILogger<PromotionsRecommendersController> logger,
                                                  IItemsRecommenderStore store,
@@ -32,13 +35,17 @@ namespace SignalBox.Web.Controllers
                                                  IAudienceStore audienceStore,
                                                  ItemsRecommenderInvokationWorkflows invokationWorkflows,
                                                  ItemsRecommenderPerformanceWorkflows performanceWorkflows,
-                                                 PromotionsRecommenderWorkflows workflows)
+                                                 PromotionsRecommenderWorkflows workflows,
+                                                 IOfferWorkflow offerWorkflow,
+                                                 IItemsRecommendationStore recommendationStore)
                                                  : base(store, segmentStore, audienceStore, workflows, invokationWorkflows)
         {
             this.logger = logger;
             this.invokationWorkflows = invokationWorkflows;
             this.performanceWorkflows = performanceWorkflows;
             this.workflows = workflows;
+            this.offerWorkflow = offerWorkflow;
+            this.recommendationStore = recommendationStore;
         }
 
         /// <summary>Returns the resource with this Id.</summary>
@@ -159,6 +166,35 @@ namespace SignalBox.Web.Controllers
         public async Task<Paginated<ItemsRecommendation>> GetRecommendations(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
         {
             return await workflows.QueryRecommendations(id, p, useInternalId);
+        }
+
+        /// <summary>Get a recommendation made by a recommender.</summary>
+        [HttpGet("Recommendations/{recommendationId}")]
+        public async Task<ItemsRecommendation> GetRecommendation(long recommendationId, bool? useInternalId = null)
+        {
+            var recommendation = await recommendationStore.Read(recommendationId);
+            await recommendationStore.LoadMany(recommendation, _ => _.Items);
+            await recommendationStore.Load(recommendation, _ => _.Customer);
+            await recommendationStore.Load(recommendation, _ => _.Business);
+            await recommendationStore.Load(recommendation, _ => _.Offer);
+
+            return recommendation;
+        }
+
+        /// <summary>Get the offers made by a recommender.</summary>
+        [HttpGet("{id}/Offers")]
+        public async Task<Paginated<Offer>> GetOffers(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
+        {
+            var recommender = await base.GetResource(id, useInternalId);
+            string qsOfferState = HttpContext.Request.Query["offerState"].ToString();
+            OfferState? state = null;
+
+            if (Enum.TryParse<OfferState>(qsOfferState, true, out OfferState parsedState))
+            {
+                state = parsedState;
+            };
+
+            return await offerWorkflow.QueryOffers(recommender, p, state);
         }
 
         /// <summary>Get the promotions associated with a recommender.</summary>

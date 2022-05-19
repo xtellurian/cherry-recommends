@@ -587,3 +587,38 @@ export const removeRecommenderChannelAsync = async ({
     method: "delete",
   });
 };
+
+interface RecommendationRequest extends EntityRequest {
+  recommendationId: number;
+}
+
+export const fetchPromotionsRecommendationAsync = async ({
+  token,
+  recommendationId,
+}: RecommendationRequest) => {
+  return await executeFetch({
+    token,
+    path: `api/recommenders/PromotionsRecommenders/Recommendations/${recommendationId}`,
+  });
+};
+
+interface OffersRequest extends PaginatedEntityRequest {
+  page: number;
+  offerState?: string;
+}
+
+export const fetchOffersAsync = async ({
+  token,
+  page,
+  pageSize,
+  id,
+  offerState,
+}: OffersRequest) => {
+  return await executeFetch({
+    token,
+    path: `api/recommenders/PromotionsRecommenders/${id}/Offers`,
+    page,
+    pageSize,
+    query: { offerState },
+  });
+};

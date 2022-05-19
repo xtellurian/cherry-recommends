@@ -150,6 +150,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IRecommendationCorrelatorStore, EFRecommendationCorrelatorStore>();
             services.AddScoped<IParameterSetRecommendationStore, EFParameterSetRecommendationStore>();
             services.AddScoped<IItemsRecommendationStore, EFItemsRecommendationStore>();
+            services.AddScoped<IOfferStore, EFOfferStore>();
 
             // optimisers
             services.AddScoped<IPromotionOptimiserStore, EFPromotionOptimiserStore>();

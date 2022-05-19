@@ -41,8 +41,28 @@ namespace SignalBox.Infrastructure.EntityFramework
             {
                 results = await Set
                     .Where(_ => _.RecommenderId == recommenderId)
-                    .Include(_ => _.Items)
-                    .Include(_ => _.Customer)
+                    .OrderByDescending(_ => _.Created)
+                    .OrderByDescending(_ => _.LastUpdated)
+                    .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
+                    .ToListAsync();
+            }
+            else
+            {
+                results = new List<ItemsRecommendation>();
+            }
+            var pageCount = (int)Math.Ceiling((double)itemCount / pageSize);
+            return new Paginated<ItemsRecommendation>(results, pageCount, itemCount, paginate.SafePage);
+        }
+
+        public async Task<Paginated<ItemsRecommendation>> QueryForCustomer(IPaginate paginate, long customerId)
+        {
+            var pageSize = paginate.PageSize ?? DefaultPageSize;
+            var itemCount = await Set.CountAsync(_ => _.CustomerId == customerId);
+            List<ItemsRecommendation> results;
+            if (itemCount > 0) // check and let's see whether the query is worth running against the database
+            {
+                results = await Set
+                    .Where(_ => _.RecommenderId == customerId)
                     .OrderByDescending(_ => _.Created)
                     .OrderByDescending(_ => _.LastUpdated)
                     .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)

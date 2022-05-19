@@ -17,6 +17,8 @@ import {
   fetchAudienceAsync,
   fetchPromotionOptimiserAsync,
   fetchRecommenderChannelsAsync,
+  fetchOffersAsync,
+  fetchPromotionsRecommendationAsync,
 } from "../api/promotionsRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -332,6 +334,47 @@ export const useRecommenderChannels = ({ id, trigger }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, trigger]);
+
+  return state;
+};
+
+export const usePromotionsRecommendation = ({ recommendationId, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && recommendationId) {
+      fetchPromotionsRecommendationAsync({
+        token,
+        recommendationId,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, recommendationId, trigger]);
+
+  return state;
+};
+
+export const useOffers = ({ id, pageSize, offerState }) => {
+  const token = useAccessToken();
+  const page = usePagination();
+  const [environment] = useEnvironmentReducer();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchOffersAsync({
+        token,
+        id,
+        page,
+        pageSize,
+        offerState,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, page, pageSize, environment]);
 
   return state;
 };

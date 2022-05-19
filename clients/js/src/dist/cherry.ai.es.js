@@ -3940,6 +3940,21 @@ const removeRecommenderChannelAsync = async ({ id, token, channelId, }) => {
         method: "delete",
     });
 };
+const fetchPromotionsRecommendationAsync = async ({ token, recommendationId, }) => {
+    return await executeFetch({
+        token,
+        path: `api/recommenders/PromotionsRecommenders/Recommendations/${recommendationId}`,
+    });
+};
+const fetchOffersAsync = async ({ token, page, pageSize, id, offerState, }) => {
+    return await executeFetch({
+        token,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Offers`,
+        page,
+        pageSize,
+        query: { offerState },
+    });
+};
 
 var promotionsRecommendersApi = /*#__PURE__*/Object.freeze({
   __proto__: null,
@@ -3980,7 +3995,9 @@ var promotionsRecommendersApi = /*#__PURE__*/Object.freeze({
   setUseOptimiserAsync: setUseOptimiserAsync,
   fetchRecommenderChannelsAsync: fetchRecommenderChannelsAsync,
   addRecommenderChannelAsync: addRecommenderChannelAsync,
-  removeRecommenderChannelAsync: removeRecommenderChannelAsync
+  removeRecommenderChannelAsync: removeRecommenderChannelAsync,
+  fetchPromotionsRecommendationAsync: fetchPromotionsRecommendationAsync,
+  fetchOffersAsync: fetchOffersAsync
 });
 
 let authConfig = undefined; // caches this because it rarely change

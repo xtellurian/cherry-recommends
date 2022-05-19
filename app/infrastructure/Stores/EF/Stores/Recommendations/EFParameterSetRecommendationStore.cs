@@ -56,6 +56,29 @@ namespace SignalBox.Infrastructure.EntityFramework
             return new Paginated<ParameterSetRecommendation>(results, pageCount, itemCount, paginate.SafePage);
         }
 
+        public async Task<Paginated<ParameterSetRecommendation>> QueryForCustomer(IPaginate paginate, long customerId)
+        {
+            var pageSize = paginate.PageSize ?? DefaultPageSize;
+            var itemCount = await Set.CountAsync(_ => _.CustomerId == customerId);
+            List<ParameterSetRecommendation> results;
+            if (itemCount > 0) // check and let's see whether the query is worth running against the database
+            {
+                results = await Set
+                    .Where(_ => _.RecommenderId == customerId)
+                    .Include(_ => _.Customer)
+                    .OrderByDescending(_ => _.Created)
+                    .OrderByDescending(_ => _.LastUpdated)
+                    .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
+                    .ToListAsync();
+            }
+            else
+            {
+                results = new List<ParameterSetRecommendation>();
+            }
+            var pageCount = (int)Math.Ceiling((double)itemCount / pageSize);
+            return new Paginated<ParameterSetRecommendation>(results, pageCount, itemCount, paginate.SafePage);
+        }
+
         public async Task<IEnumerable<ParameterSetRecommendation>> RecommendationsSince(long recommenderId,
                                                                                         Customer customer,
                                                                                         DateTimeOffset since)

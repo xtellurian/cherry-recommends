@@ -5,24 +5,24 @@ import FlexRow from "../molecules/layout/EntityFlexRow";
 import { BigPopup } from "../molecules/popups/BigPopup";
 import { RecommendationDetail } from "./RecommendationDetail";
 
-export const RecommendationRow = ({ recommendation }) => {
+export const OfferRow = ({ offer }) => {
   const [isPopupOpen, setIsPopupOpen] = React.useState(false);
 
   return (
     <React.Fragment>
       <BigPopup isOpen={isPopupOpen} setIsOpen={setIsPopupOpen}>
-        <RecommendationDetail recommendationId={recommendation.id} />
+        <RecommendationDetail recommendationId={offer.recommendationId} />
       </BigPopup>
       <FlexRow
         className="clickable-row"
-        onClick={() => setIsPopupOpen(true)}
         style={{ cursor: "pointer" }}
+        onClick={() => setIsPopupOpen(true)}
       >
         <div>
           <CaretRightFill style={{ color: "var(--cherry-pink)" }} />
-          <span className="ml-2">{recommendation.recommenderType}</span>
+          <span className="ml-2">{offer.state}</span>
         </div>
-        <DateTimeField date={recommendation.created} />
+        <DateTimeField date={offer.created} />
       </FlexRow>
     </React.Fragment>
   );

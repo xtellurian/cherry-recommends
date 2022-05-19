@@ -18,6 +18,7 @@ namespace SignalBox.Core.Workflows
         private readonly ICustomerEventStore customerEventStore;
         private readonly IBusinessWorkflow businessWorkflow;
         private readonly IEventIngestor eventIngestor;
+        private readonly IOfferWorkflow offerWorkflow;
 
         public JsonSerializerOptions SerializerOptions => new JsonSerializerOptions();
         public CustomerEventsWorkflows(
@@ -29,7 +30,8 @@ namespace SignalBox.Core.Workflows
             IIntegratedSystemStore integratedSystemStore,
             ICustomerEventStore customerEventStore,
             IBusinessWorkflow businessWorkflow,
-            IEventIngestor eventIngestor)
+            IEventIngestor eventIngestor,
+            IOfferWorkflow offerWorkflow)
         {
             this.dateTimeProvider = dateTimeProvider;
             this.telemetry = telemetry;
@@ -40,6 +42,7 @@ namespace SignalBox.Core.Workflows
             this.customerEventStore = customerEventStore;
             this.businessWorkflow = businessWorkflow;
             this.eventIngestor = eventIngestor;
+            this.offerWorkflow = offerWorkflow;
         }
 
         public async Task<EventLoggingResponse> Ingest(IEnumerable<CustomerEventInput> input)
@@ -169,14 +172,18 @@ namespace SignalBox.Core.Workflows
 
                 var customer = customers.First(_ => _.CommonId == d.CustomerId);
                 customer.LastUpdated = dateTimeProvider.Now; // user has been updated.
-                events.Add(new CustomerEvent(customer,
+                var customerEvent = new CustomerEvent(customer,
                                                 d.EventId,
                                                 d.Timestamp ?? dateTimeProvider.Now,
                                                 sourceSystem,
                                                 d.Kind,
                                                 d.EventType,
                                                 d.Properties,
-                                                d.RecommendationCorrelatorId));
+                                                d.RecommendationCorrelatorId);
+                events.Add(customerEvent);
+
+                // Check to see if an offer was redeemed
+                await offerWorkflow.RedeemOffer(customerEvent);
             }
 
             return await customerEventStore.AddRange(events);

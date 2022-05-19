@@ -129,4 +129,13 @@ interface RemoveRecommenderChannelRequest extends EntityRequest {
     channelId: number;
 }
 export declare const removeRecommenderChannelAsync: ({ id, token, channelId, }: RemoveRecommenderChannelRequest) => Promise<PromotionsRecommenders>;
+interface RecommendationRequest extends EntityRequest {
+    recommendationId: number;
+}
+export declare const fetchPromotionsRecommendationAsync: ({ token, recommendationId, }: RecommendationRequest) => Promise<any>;
+interface OffersRequest extends PaginatedEntityRequest {
+    page: number;
+    offerState?: string;
+}
+export declare const fetchOffersAsync: ({ token, page, pageSize, id, offerState, }: OffersRequest) => Promise<any>;
 export {};

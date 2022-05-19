@@ -5,7 +5,6 @@ using SignalBox.Core.Recommenders;
 
 namespace SignalBox.Core.Recommendations
 {
-    // TODO: Add discount codes
     public class ItemsRecommendation : RecommendationEntity
     {
         protected ItemsRecommendation()
@@ -31,6 +30,8 @@ namespace SignalBox.Core.Recommendations
         public long? RecommenderId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ItemsRecommender? Recommender { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public Offer? Offer { get; set; }
         [JsonIgnore]
         public ICollection<RecommendableItem> Items { get; set; }
         [JsonIgnore]

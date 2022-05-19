@@ -26,6 +26,7 @@ namespace SignalBox.Test.Controllers
             var mockCustomerWorkflow = new Mock<ICustomerWorkflow>();
             var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
             var mockEventIngestor = new Mock<IEventIngestor>();
+            var mockOfferWorkflow = new Mock<IOfferWorkflow>();
 
             Customer customer = new(customerId);
             var customerEvent = new CustomerEvent(customer, eventId, DateTime.Now, null, EventKinds.ConsumeRecommendation, "eventType", null);
@@ -47,7 +48,8 @@ namespace SignalBox.Test.Controllers
                 mockIntegratedSystemStore.Object,
                 mockCustomerEventStore.Object,
                 mockBusinessWorkflow.Object,
-                mockEventIngestor.Object
+                mockEventIngestor.Object,
+                mockOfferWorkflow.Object
             );
 
             var controller = new EventsController(mockEnvironmentProvider.Object,

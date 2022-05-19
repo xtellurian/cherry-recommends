@@ -35,10 +35,8 @@ namespace SignalBox.Web.Controllers
         public async Task<Paginated<object>> GetRecommendations([FromQuery] PaginateRequest p, string id, bool? useInternalId = null)
         {
             var customer = await customerStore.GetEntity(id, useInternalId);
-            var parameterSetRecommendations = await parameterSetRecommendationStore.Query(
-                new EntityStoreQueryOptions<ParameterSetRecommendation>(p.Page, _ => _.CustomerId == customer.Id));
-            var itemsRecommendations = await itemsRecommendationStore.Query(
-                new EntityStoreQueryOptions<ItemsRecommendation>(p.Page, _ => _.CustomerId == customer.Id));
+            var parameterSetRecommendations = await parameterSetRecommendationStore.QueryForCustomer(p, customer.Id);
+            var itemsRecommendations = await itemsRecommendationStore.QueryForCustomer(p, customer.Id);
             var recommendations = new List<RecommendationEntity>();
             recommendations.AddRange(parameterSetRecommendations.Items);
             recommendations.AddRange(itemsRecommendations.Items);

@@ -298,3 +298,18 @@ export const removeRecommenderChannelAsync = async ({ id, token, channelId, }) =
         method: "delete",
     });
 };
+export const fetchPromotionsRecommendationAsync = async ({ token, recommendationId, }) => {
+    return await executeFetch({
+        token,
+        path: `api/recommenders/PromotionsRecommenders/Recommendations/${recommendationId}`,
+    });
+};
+export const fetchOffersAsync = async ({ token, page, pageSize, id, offerState, }) => {
+    return await executeFetch({
+        token,
+        path: `api/recommenders/PromotionsRecommenders/${id}/Offers`,
+        page,
+        pageSize,
+        query: { offerState },
+    });
+};

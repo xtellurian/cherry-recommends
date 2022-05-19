@@ -38,6 +38,7 @@ namespace SignalBox.Test.Workflows
             var mockInternalOptimiserClientFactory = new Mock<IInternalOptimiserClientFactory>();
             var mockDiscountCodeWorkflow = new Mock<IDiscountCodeWorkflow>();
             var mockKlaviyoWorkflow = new Mock<IKlaviyoSystemWorkflow>();
+            var mockOfferStore = new Mock<IOfferStore>();
 
             var sut = new ItemsRecommenderInvokationWorkflows(
                 mockLogger.Object,
@@ -55,7 +56,8 @@ namespace SignalBox.Test.Workflows
                 mockAudienceStore.Object,
                 mockInternalOptimiserClientFactory.Object,
                 mockDiscountCodeWorkflow.Object,
-                mockKlaviyoWorkflow.Object
+                mockKlaviyoWorkflow.Object,
+                mockOfferStore.Object
             );
 
             var baseline = new RecommendableItem("item1", "Item 1", 1, 1, BenefitType.Percent, 1, PromotionType.Discount, null);
@@ -94,6 +96,7 @@ namespace SignalBox.Test.Workflows
             var mockInternalOptimiserClientFactory = new Mock<IInternalOptimiserClientFactory>();
             var mockDiscountCodeWorkflow = new Mock<IDiscountCodeWorkflow>();
             var mockKlaviyoWorkflow = new Mock<IKlaviyoSystemWorkflow>();
+            var mockOfferStore = new Mock<IOfferStore>();
 
             var sut = new ItemsRecommenderInvokationWorkflows(
                 mockLogger.Object,
@@ -111,7 +114,8 @@ namespace SignalBox.Test.Workflows
                 mockAudienceStore.Object,
                 mockInternalOptimiserClientFactory.Object,
                 mockDiscountCodeWorkflow.Object,
-                mockKlaviyoWorkflow.Object
+                mockKlaviyoWorkflow.Object,
+                mockOfferStore.Object
             );
 
             var baseline = new RecommendableItem("item1", "Item 1", 1, 1, BenefitType.Percent, 1, PromotionType.Discount, null);

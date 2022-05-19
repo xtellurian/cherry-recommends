@@ -799,6 +799,7 @@ interface components {
             isFromCache?: boolean;
             recommenderId?: number | null;
             recommender?: components["schemas"]["ItemsRecommender"];
+            offer?: components["schemas"]["Offer"];
             maxScoreItemId?: number | null;
             scoredItems?: components["schemas"]["ScoredRecommendableItem"][] | null;
         };
@@ -1036,6 +1037,24 @@ interface components {
             items?: unknown[] | null;
             pagination?: components["schemas"]["PaginationInfo"];
         };
+        Offer: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            environmentId?: number | null;
+            environment?: components["schemas"]["Environment"];
+            recommendationId?: number;
+            redeemedPromotionId?: number | null;
+            state?: components["schemas"]["OfferState"];
+            redeemedAt?: string | null;
+            grossRevenue?: number | null;
+            redeemedPromotion?: components["schemas"]["RecommendableItem"];
+        };
+        OfferPaginated: {
+            items?: components["schemas"]["Offer"][] | null;
+            pagination?: components["schemas"]["PaginationInfo"];
+        };
+        OfferState: "created" | "presented" | "redeemed" | "expired";
         OpenApiSecurity: {
             Bearer?: unknown[] | null;
         };
@@ -2566,6 +2585,15 @@ interface RemoveRecommenderChannelRequest extends EntityRequest {
     channelId: number;
 }
 declare const removeRecommenderChannelAsync: ({ id, token, channelId, }: RemoveRecommenderChannelRequest) => Promise<PromotionsRecommenders>;
+interface RecommendationRequest extends EntityRequest {
+    recommendationId: number;
+}
+declare const fetchPromotionsRecommendationAsync: ({ token, recommendationId, }: RecommendationRequest) => Promise<any>;
+interface OffersRequest extends PaginatedEntityRequest {
+    page: number;
+    offerState?: string;
+}
+declare const fetchOffersAsync: ({ token, page, pageSize, id, offerState, }: OffersRequest) => Promise<any>;
 
 declare const promotionsRecommendersApi_d_fetchPromotionsRecommendersAsync: typeof fetchPromotionsRecommendersAsync;
 declare const promotionsRecommendersApi_d_fetchPromotionsRecommenderAsync: typeof fetchPromotionsRecommenderAsync;
@@ -2604,6 +2632,8 @@ declare const promotionsRecommendersApi_d_setUseOptimiserAsync: typeof setUseOpt
 declare const promotionsRecommendersApi_d_fetchRecommenderChannelsAsync: typeof fetchRecommenderChannelsAsync;
 declare const promotionsRecommendersApi_d_addRecommenderChannelAsync: typeof addRecommenderChannelAsync;
 declare const promotionsRecommendersApi_d_removeRecommenderChannelAsync: typeof removeRecommenderChannelAsync;
+declare const promotionsRecommendersApi_d_fetchPromotionsRecommendationAsync: typeof fetchPromotionsRecommendationAsync;
+declare const promotionsRecommendersApi_d_fetchOffersAsync: typeof fetchOffersAsync;
 declare namespace promotionsRecommendersApi_d {
   export {
     promotionsRecommendersApi_d_fetchPromotionsRecommendersAsync as fetchPromotionsRecommendersAsync,
@@ -2644,6 +2674,8 @@ declare namespace promotionsRecommendersApi_d {
     promotionsRecommendersApi_d_fetchRecommenderChannelsAsync as fetchRecommenderChannelsAsync,
     promotionsRecommendersApi_d_addRecommenderChannelAsync as addRecommenderChannelAsync,
     promotionsRecommendersApi_d_removeRecommenderChannelAsync as removeRecommenderChannelAsync,
+    promotionsRecommendersApi_d_fetchPromotionsRecommendationAsync as fetchPromotionsRecommendationAsync,
+    promotionsRecommendersApi_d_fetchOffersAsync as fetchOffersAsync,
   };
 }
 

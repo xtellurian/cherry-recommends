@@ -117,7 +117,7 @@ export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
           </SettingRow>
 
           <SettingRow
-            label="Require Consumption Event"
+            label="Require Presented Event"
             description="By default, all recommendations are assumed to be consumed, i.e.
               affect the Customer's behaviour in some way. In some situations,
               you may wish to invoke a recommender and only later decide whether
@@ -126,7 +126,7 @@ export const SettingsUtil = ({ recommender, basePath, updateSettings }) => {
               the recommendation."
           >
             <ToggleSwitch
-              name="Require Consumption Event"
+              name="Require Presented Event"
               id="require-consumption-event"
               checked={settings.requireConsumptionEvent}
               onChange={(v) =>

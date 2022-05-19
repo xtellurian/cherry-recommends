@@ -24,6 +24,7 @@ namespace SignalBox.Test.Workflows
             var mockCustomerEventStore = new Mock<ICustomerEventStore>();
             var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
             var mockEventIngestor = new Mock<IEventIngestor>();
+            var mockOfferWorkflow = new Mock<IOfferWorkflow>();
 
             mockCustomerEventStore.Setup(_ => _.Context).Returns(mockContext.Object);
             mockCustomerEventStore.Setup(_ => _.AddRange(It.Is<IEnumerable<CustomerEvent>>(x => x.Count() == 1)))
@@ -54,7 +55,8 @@ namespace SignalBox.Test.Workflows
                 mockIntegratedSystemStore.Object,
                 mockCustomerEventStore.Object,
                 mockBusinessWorkflow.Object,
-                mockEventIngestor.Object
+                mockEventIngestor.Object,
+                mockOfferWorkflow.Object
             );
 
             var response = await sut.ProcessEvents(new List<CustomerEventInput>

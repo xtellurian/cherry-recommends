@@ -8,6 +8,8 @@ export const fetchPromotionsRecommenderAsync =
 
 export const fetchPromotionsRecommendationsAsync =
   promotionsRecommenders.fetchPromotionsRecommendationsAsync;
+export const fetchPromotionsRecommendationAsync =
+  promotionsRecommenders.fetchPromotionsRecommendationAsync;
 
 export const deletePromotionsRecommenderAsync =
   promotionsRecommenders.deletePromotionsRecommenderAsync;
@@ -89,3 +91,5 @@ export const addRecommenderChannelAsync =
   promotionsRecommenders.addRecommenderChannelAsync;
 export const removeRecommenderChannelAsync =
   promotionsRecommenders.removeRecommenderChannelAsync;
+
+export const fetchOffersAsync = promotionsRecommenders.fetchOffersAsync;

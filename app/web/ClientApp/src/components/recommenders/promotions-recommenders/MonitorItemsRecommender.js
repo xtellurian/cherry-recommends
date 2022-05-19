@@ -6,6 +6,7 @@ import {
   StatefulTabs,
   TabActivator,
 } from "../../molecules/layout/StatefulTabs";
+import { OfferList } from "./OfferList";
 
 export const MonitorRecommender = () => {
   const [currentTabId, setCurrentTabId] = React.useState();
