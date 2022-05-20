@@ -13,18 +13,22 @@ export const fetchEventAsync = async ({ id, token }: EntityRequest) => {
 export type EventKinds = components["schemas"]["EventKinds"];
 interface EventKindConstants {
   custom: EventKinds;
+  propertyUpdate: EventKinds;
   behaviour: EventKinds;
   pageView: EventKinds;
   identify: EventKinds;
+  consumeRecommendation: EventKinds;
   addToBusiness: EventKinds;
   purchase: EventKinds;
   usePromotion: EventKinds;
 }
 export const eventKinds: EventKindConstants = {
   custom: "custom",
+  propertyUpdate: "propertyUpdate",
   behaviour: "behaviour",
   pageView: "pageView",
   identify: "identify",
+  consumeRecommendation: "consumeRecommendation",
   addToBusiness: "addToBusiness",
   purchase: "purchase",
   usePromotion: "usePromotion",

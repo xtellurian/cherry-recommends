@@ -60,8 +60,17 @@ namespace SignalBox.Test.Controllers
             return controller;
         }
 
-        [Fact]
-        public async Task CanLogEvent()
+        [Theory]
+        [InlineData(EventKinds.AddToBusiness)]
+        [InlineData(EventKinds.Behaviour)]
+        [InlineData(EventKinds.ConsumeRecommendation)]
+        [InlineData(EventKinds.Custom)]
+        [InlineData(EventKinds.Identify)]
+        [InlineData(EventKinds.PageView)]
+        [InlineData(EventKinds.PropertyUpdate)]
+        [InlineData(EventKinds.Purchase)]
+        [InlineData(EventKinds.UsePromotion)]
+        public async Task CanLogEvent(EventKinds eventKind)
         {
             string customerId = "customer1";
             string eventId = "event1";
@@ -75,7 +84,7 @@ namespace SignalBox.Test.Controllers
                 Timestamp = DateTime.Now,
                 RecommendationCorrelatorId = 1,
                 SourceSystemId = 1,
-                Kind = EventKinds.Behaviour,
+                Kind = eventKind,
                 EventType = "PageView",
                 Properties = new EventProperties { { "puchase", 50 } }
             };

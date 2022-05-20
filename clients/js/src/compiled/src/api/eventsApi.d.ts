@@ -4,9 +4,11 @@ export declare const fetchEventAsync: ({ id, token }: EntityRequest) => Promise<
 export declare type EventKinds = components["schemas"]["EventKinds"];
 interface EventKindConstants {
     custom: EventKinds;
+    propertyUpdate: EventKinds;
     behaviour: EventKinds;
     pageView: EventKinds;
     identify: EventKinds;
+    consumeRecommendation: EventKinds;
     addToBusiness: EventKinds;
     purchase: EventKinds;
     usePromotion: EventKinds;

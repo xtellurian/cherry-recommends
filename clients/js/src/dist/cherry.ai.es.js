@@ -2380,9 +2380,11 @@ const fetchEventAsync = async ({ id, token }) => {
 };
 const eventKinds = {
     custom: "custom",
+    propertyUpdate: "propertyUpdate",
     behaviour: "behaviour",
     pageView: "pageView",
     identify: "identify",
+    consumeRecommendation: "consumeRecommendation",
     addToBusiness: "addToBusiness",
     purchase: "purchase",
     usePromotion: "usePromotion",
