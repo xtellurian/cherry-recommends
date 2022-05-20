@@ -11,7 +11,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         {
             base.Configure(builder);
             builder.Property(_ => _.ParameterBounds).HasJsonConversion();
-            builder.Property(_ => _.Arguments).HasJsonConversion();
+            builder.Property(_ => _.OldArguments).HasJsonConversion();
             builder.Property(_ => _.TriggerCollection).HasJsonConversion();
 
             builder

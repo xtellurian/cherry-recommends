@@ -185,9 +185,9 @@ namespace SignalBox.Core.Workflows
                 }
 
                 // check all arguments are supplied, and add defaults if necessary
-                if (recommender.Arguments != null)
+                if (recommender.OldArguments != null)
                 {
-                    foreach (var r in recommender.Arguments)
+                    foreach (var r in recommender.OldArguments)
                     {
                         CheckArgument(recommender, r, input, context);
                     }

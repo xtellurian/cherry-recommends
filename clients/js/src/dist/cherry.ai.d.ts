@@ -272,6 +272,16 @@ interface components {
             items?: components["schemas"]["Business"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
         };
+        CampaignArgument: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            campaignId?: number;
+            campaign?: components["schemas"]["RecommenderEntityBase"];
+            commonId?: string | null;
+            argumentType?: components["schemas"]["ArgumentTypes"];
+            isRequired?: boolean;
+        };
         CategoricalParameterBounds: {
             categories?: string[] | null;
         };
@@ -382,7 +392,6 @@ interface components {
         CreateOrUpdateRecommenderArgument: {
             commonId: string;
             argumentType?: components["schemas"]["ArgumentTypes"];
-            defaultValue?: string | null;
             isRequired?: boolean;
         };
         CreateParameter: {
@@ -821,7 +830,7 @@ interface components {
             maxChannelCount?: number;
             errorHandling?: components["schemas"]["RecommenderErrorHandling"];
             settings?: components["schemas"]["RecommenderSettings"];
-            arguments?: components["schemas"]["RecommenderArgument"][] | null;
+            oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
             triggerCollection?: components["schemas"]["TriggerCollection"];
             modelRegistrationId?: number | null;
             modelRegistration?: components["schemas"]["ModelRegistration"];
@@ -1055,6 +1064,13 @@ interface components {
             pagination?: components["schemas"]["PaginationInfo"];
         };
         OfferState: "created" | "presented" | "redeemed" | "expired";
+        OldRecommenderArgument: {
+            commonId?: string | null;
+            argumentType?: components["schemas"]["ArgumentTypes"];
+            defaultValue?: components["schemas"]["DefaultArgumentContainer"];
+            defaultArgumentValue?: unknown | null;
+            isRequired?: boolean;
+        };
         OpenApiSecurity: {
             Bearer?: unknown[] | null;
         };
@@ -1148,7 +1164,7 @@ interface components {
             maxChannelCount?: number;
             errorHandling?: components["schemas"]["RecommenderErrorHandling"];
             settings?: components["schemas"]["RecommenderSettings"];
-            arguments?: components["schemas"]["RecommenderArgument"][] | null;
+            oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
             triggerCollection?: components["schemas"]["TriggerCollection"];
             modelRegistrationId?: number | null;
             modelRegistration?: components["schemas"]["ModelRegistration"];
@@ -1276,13 +1292,6 @@ interface components {
             connectedSystem?: components["schemas"]["IntegratedSystem"];
             discriminator?: string | null;
         };
-        RecommenderArgument: {
-            commonId?: string | null;
-            argumentType?: components["schemas"]["ArgumentTypes"];
-            defaultValue?: components["schemas"]["DefaultArgumentContainer"];
-            defaultArgumentValue?: unknown | null;
-            isRequired?: boolean;
-        };
         RecommenderEntityBase: {
             id?: number;
             created?: string;
@@ -1297,7 +1306,7 @@ interface components {
             maxChannelCount?: number;
             errorHandling?: components["schemas"]["RecommenderErrorHandling"];
             settings?: components["schemas"]["RecommenderSettings"];
-            arguments?: components["schemas"]["RecommenderArgument"][] | null;
+            oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
             triggerCollection?: components["schemas"]["TriggerCollection"];
             modelRegistrationId?: number | null;
             modelRegistration?: components["schemas"]["ModelRegistration"];
@@ -2221,10 +2230,13 @@ interface SetSettingsRequest$2 extends EntityRequest {
     settings: components["schemas"]["RecommenderSettingsDto"];
 }
 declare const setSettingsAsync$2: ({ id, token, settings, }: SetSettingsRequest$2) => Promise<any>;
+declare type CreateArgument$1 = components["schemas"]["CreateOrUpdateRecommenderArgument"];
+declare type Argument$2 = components["schemas"]["CampaignArgument"];
 interface SetArgumentsRequest$2 extends EntityRequest {
-    args: components["schemas"]["CreateOrUpdateRecommenderArgument"][];
+    args: CreateArgument$1[];
 }
-declare const setArgumentsAsync$2: ({ id, token, args, }: SetArgumentsRequest$2) => Promise<any>;
+declare const fetchArgumentsAsync$1: ({ id, token }: EntityRequest) => Promise<any>;
+declare const setArgumentsAsync$2: ({ id, token, args, }: SetArgumentsRequest$2) => Promise<Argument$2[]>;
 declare const fetchDestinationsAsync$2: ({ id, token }: EntityRequest) => Promise<any>;
 interface CreateDestinationRequest$2 extends EntityRequest {
     destination: components["schemas"]["CreateDestinationDto"];
@@ -2273,6 +2285,7 @@ declare namespace parameterSetRecommendersApi_d {
     fetchTargetVariablesAsync$2 as fetchTargetVariablesAsync,
     createTargetVariableAsync$2 as createTargetVariableAsync,
     setSettingsAsync$2 as setSettingsAsync,
+    fetchArgumentsAsync$1 as fetchArgumentsAsync,
     setArgumentsAsync$2 as setArgumentsAsync,
     fetchDestinationsAsync$2 as fetchDestinationsAsync,
     createDestinationAsync$2 as createDestinationAsync,
@@ -2511,16 +2524,13 @@ interface SetSettingsRequest extends EntityRequest {
     settings: RecommenderSettings;
 }
 declare const setSettingsAsync: ({ id, token, settings, }: SetSettingsRequest) => Promise<any>;
-interface Argument {
-    commonId: string;
-    argumentType: "Numerical" | "Categorical";
-    defaultValue: string | number;
-    isRequired: boolean;
-}
+declare type CreateArgument = components["schemas"]["CreateOrUpdateRecommenderArgument"];
+declare type Argument = components["schemas"]["CampaignArgument"];
 interface SetArgumentsRequest extends EntityRequest {
-    args: Argument[];
+    args: CreateArgument[];
 }
-declare const setArgumentsAsync: ({ id, token, args, }: SetArgumentsRequest) => Promise<any>;
+declare const fetchArgumentsAsync: ({ id, token }: EntityRequest) => Promise<any>;
+declare const setArgumentsAsync: ({ id, token, args, }: SetArgumentsRequest) => Promise<Argument[]>;
 declare const fetchDestinationsAsync: ({ id, token }: EntityRequest) => Promise<any>;
 interface Destination {
     destinationType: "Webhook" | "SegmentSourceFunction" | "HubspotContactProperty";
@@ -2614,6 +2624,7 @@ declare const promotionsRecommendersApi_d_fetchInvokationLogsAsync: typeof fetch
 declare const promotionsRecommendersApi_d_fetchTargetVariablesAsync: typeof fetchTargetVariablesAsync;
 declare const promotionsRecommendersApi_d_createTargetVariableAsync: typeof createTargetVariableAsync;
 declare const promotionsRecommendersApi_d_setSettingsAsync: typeof setSettingsAsync;
+declare const promotionsRecommendersApi_d_fetchArgumentsAsync: typeof fetchArgumentsAsync;
 declare const promotionsRecommendersApi_d_setArgumentsAsync: typeof setArgumentsAsync;
 declare const promotionsRecommendersApi_d_fetchDestinationsAsync: typeof fetchDestinationsAsync;
 declare const promotionsRecommendersApi_d_createDestinationAsync: typeof createDestinationAsync;
@@ -2656,6 +2667,7 @@ declare namespace promotionsRecommendersApi_d {
     promotionsRecommendersApi_d_fetchTargetVariablesAsync as fetchTargetVariablesAsync,
     promotionsRecommendersApi_d_createTargetVariableAsync as createTargetVariableAsync,
     promotionsRecommendersApi_d_setSettingsAsync as setSettingsAsync,
+    promotionsRecommendersApi_d_fetchArgumentsAsync as fetchArgumentsAsync,
     promotionsRecommendersApi_d_setArgumentsAsync as setArgumentsAsync,
     promotionsRecommendersApi_d_fetchDestinationsAsync as fetchDestinationsAsync,
     promotionsRecommendersApi_d_createDestinationAsync as createDestinationAsync,

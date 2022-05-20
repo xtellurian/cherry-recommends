@@ -56,8 +56,8 @@ Content-Type: 'application/json'
 export const JsIntegrate = ({ id }) => {
   const recommender = useParameterSetRecommender({ id });
 
-  const argumentsExample = recommender.arguments
-    ? mapArgumentsToObject(recommender.arguments)
+  const argumentsExample = recommender.oldArguments
+    ? mapArgumentsToObject(recommender.oldArguments)
     : [];
   return (
     <CodeView
@@ -69,8 +69,8 @@ export const JsIntegrate = ({ id }) => {
 
 export const RESTIntegrate = ({ id }) => {
   const recommender = useParameterSetRecommender({ id });
-  const argumentsExample = recommender.arguments
-    ? mapArgumentsToObject(recommender.arguments)
+  const argumentsExample = recommender.oldArguments
+    ? mapArgumentsToObject(recommender.oldArguments)
     : [];
   return (
     <CodeView
@@ -94,8 +94,8 @@ export const IntegrateParameterSetRecommender = () => {
   const defaultTabId = tabs[0].id;
   const origin = window.location.origin;
 
-  const argumentsExample = recommender.arguments
-    ? mapArgumentsToObject(recommender.arguments)
+  const argumentsExample = recommender.oldArguments
+    ? mapArgumentsToObject(recommender.oldArguments)
     : [];
 
   return (

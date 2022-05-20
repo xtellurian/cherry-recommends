@@ -9,7 +9,6 @@ namespace SignalBox.Web.Dto
         [StringLength(100, MinimumLength = 4)]
         public string CommonId { get; set; } // use commonId for external API consistency
         public ArgumentTypes ArgumentType { get; set; }
-        public string DefaultValue { get; set; }
         public bool IsRequired { get; set; } = false; // default not required.
     }
 }

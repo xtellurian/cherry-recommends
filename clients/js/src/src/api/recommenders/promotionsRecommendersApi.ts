@@ -273,21 +273,27 @@ export const setSettingsAsync = async ({
   });
 };
 
-interface Argument {
-  commonId: string;
-  argumentType: "Numerical" | "Categorical";
-  defaultValue: string | number;
-  isRequired: boolean;
-}
+type CreateArgument =
+  components["schemas"]["CreateOrUpdateRecommenderArgument"];
+type Argument = components["schemas"]["CampaignArgument"];
+
 interface SetArgumentsRequest extends EntityRequest {
-  args: Argument[];
+  args: CreateArgument[];
 }
+
+export const fetchArgumentsAsync = async ({ id, token }: EntityRequest) => {
+  return await ar.fetchArgumentsAsync({
+    recommenderApiName,
+    id,
+    token,
+  });
+};
 
 export const setArgumentsAsync = async ({
   id,
   token,
   args,
-}: SetArgumentsRequest) => {
+}: SetArgumentsRequest): Promise<Argument[]> => {
   return await ar.setArgumentsAsync({
     recommenderApiName,
     id,

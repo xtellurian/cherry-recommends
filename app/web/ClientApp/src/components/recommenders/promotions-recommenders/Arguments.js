@@ -1,6 +1,9 @@
 import React from "react";
 import { useParams } from "react-router";
-import { usePromotionsRecommender } from "../../../api-hooks/promotionsRecommendersApi";
+import {
+  useArguments,
+  usePromotionsRecommender,
+} from "../../../api-hooks/promotionsRecommendersApi";
 import { setArgumentsAsync } from "../../../api/promotionsRecommendersApi";
 import { ErrorCard, Spinner } from "../../molecules";
 import { ArgumentsComponentUtil } from "../utils/argumentsComponent";
@@ -31,9 +34,10 @@ export const ArgumentsSection = ({ recommender, setTrigger }) => {
         {recommender.loading && <Spinner />}
         {!recommender.loading && (
           <ArgumentsComponentUtil
-            recommender={recommender}
+            id={recommender.id}
             basePath="/recommenders/promotions-recommenders"
             setArgumentsAsync={handleSet}
+            useArguments={useArguments}
           />
         )}
       </div>

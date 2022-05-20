@@ -16,7 +16,7 @@ namespace SignalBox.Core.Recommenders
                                 string? name,
                                 RecommendableItem? baselineItem,
                                 ICollection<RecommendableItem> promotions,
-                                IEnumerable<RecommenderArgument>? arguments,
+                                IEnumerable<CampaignArgument>? arguments,
                                 RecommenderSettings? settings,
                                 Metric? targetMetric,
                                 int numberOfItemsToRecommend = 1) : base(commonId, name, arguments, settings)

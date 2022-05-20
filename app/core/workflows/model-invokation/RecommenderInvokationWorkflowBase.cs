@@ -179,7 +179,7 @@ namespace SignalBox.Core.Workflows
         /// It meant to throw in some situations.
         /// </summary>
         protected void CheckArgument(RecommenderEntityBase recommender,
-                                    RecommenderArgument arg,
+                                    OldRecommenderArgument arg,
                                     IModelInput input,
                                     RecommendingContext context)
         {

@@ -104,6 +104,13 @@ export const setSettingsAsync = async ({ id, token, settings, }) => {
         settings,
     });
 };
+export const fetchArgumentsAsync = async ({ id, token }) => {
+    return await ar.fetchArgumentsAsync({
+        recommenderApiName,
+        id,
+        token,
+    });
+};
 export const setArgumentsAsync = async ({ id, token, args, }) => {
     return await ar.setArgumentsAsync({
         recommenderApiName,

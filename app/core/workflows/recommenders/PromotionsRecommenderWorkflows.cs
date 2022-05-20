@@ -80,7 +80,7 @@ namespace SignalBox.Core.Workflows
                                                                    IEnumerable<long>? segmentIds,
                                                                    IEnumerable<long>? channelIds,
                                                                    int? numberOfItemsToRecommend,
-                                                                   IEnumerable<RecommenderArgument>? arguments,
+                                                                   IEnumerable<CampaignArgument>? arguments,
                                                                    RecommenderSettings settings,
                                                                    bool useOptimiser,
                                                                    string? targetMetricId,

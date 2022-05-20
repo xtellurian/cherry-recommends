@@ -88,7 +88,7 @@ namespace SignalBox.Core.Workflows
                     {
                         // check this recommender will work.
                         var recommender = await parameterSetRecommenderStore.Read(behaviour.ParameterSetRecommenderId.Value);
-                        if (recommender.Arguments.Any(_ => _.IsRequired))
+                        if (recommender.OldArguments.Any(_ => _.IsRequired))
                         {
                             throw new BadRequestException($"Hubspot Recommenders do not support required arguments");
                         }

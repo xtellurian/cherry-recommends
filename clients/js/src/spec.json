@@ -8269,7 +8269,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RecommenderArgument"
+                    "$ref": "#/components/schemas/CampaignArgument"
                   }
                 }
               }
@@ -8344,7 +8344,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RecommenderArgument"
+                    "$ref": "#/components/schemas/CampaignArgument"
                   }
                 }
               }
@@ -13709,7 +13709,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RecommenderArgument"
+                    "$ref": "#/components/schemas/CampaignArgument"
                   }
                 }
               }
@@ -13784,7 +13784,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RecommenderArgument"
+                    "$ref": "#/components/schemas/CampaignArgument"
                   }
                 }
               }
@@ -13833,7 +13833,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RecommenderArgument"
+                    "$ref": "#/components/schemas/CampaignArgument"
                   }
                 }
               }
@@ -13908,7 +13908,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RecommenderArgument"
+                    "$ref": "#/components/schemas/CampaignArgument"
                   }
                 }
               }
@@ -17455,6 +17455,41 @@
         },
         "additionalProperties": false
       },
+      "CampaignArgument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "campaignId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "campaign": {
+            "$ref": "#/components/schemas/RecommenderEntityBase"
+          },
+          "commonId": {
+            "type": "string",
+            "nullable": true
+          },
+          "argumentType": {
+            "$ref": "#/components/schemas/ArgumentTypes"
+          },
+          "isRequired": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "CategoricalParameterBounds": {
         "type": "object",
         "properties": {
@@ -17895,10 +17930,6 @@
           },
           "argumentType": {
             "$ref": "#/components/schemas/ArgumentTypes"
-          },
-          "defaultValue": {
-            "type": "string",
-            "nullable": true
           },
           "isRequired": {
             "type": "boolean"
@@ -19578,10 +19609,10 @@
           "settings": {
             "$ref": "#/components/schemas/RecommenderSettings"
           },
-          "arguments": {
+          "oldArguments": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RecommenderArgument"
+              "$ref": "#/components/schemas/OldRecommenderArgument"
             },
             "nullable": true
           },
@@ -20454,6 +20485,24 @@
           },
           "redeemedPromotion": {
             "$ref": "#/components/schemas/RecommendableItem"
+      "OldRecommenderArgument": {
+        "type": "object",
+        "properties": {
+          "commonId": {
+            "type": "string",
+            "nullable": true
+          },
+          "argumentType": {
+            "$ref": "#/components/schemas/ArgumentTypes"
+          },
+          "defaultValue": {
+            "$ref": "#/components/schemas/DefaultArgumentContainer"
+          },
+          "defaultArgumentValue": {
+            "nullable": true
+          },
+          "isRequired": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -20821,10 +20870,10 @@
           "settings": {
             "$ref": "#/components/schemas/RecommenderSettings"
           },
-          "arguments": {
+          "oldArguments": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RecommenderArgument"
+              "$ref": "#/components/schemas/OldRecommenderArgument"
             },
             "nullable": true
           },
@@ -21323,28 +21372,6 @@
         },
         "additionalProperties": false
       },
-      "RecommenderArgument": {
-        "type": "object",
-        "properties": {
-          "commonId": {
-            "type": "string",
-            "nullable": true
-          },
-          "argumentType": {
-            "$ref": "#/components/schemas/ArgumentTypes"
-          },
-          "defaultValue": {
-            "$ref": "#/components/schemas/DefaultArgumentContainer"
-          },
-          "defaultArgumentValue": {
-            "nullable": true
-          },
-          "isRequired": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "RecommenderEntityBase": {
         "type": "object",
         "properties": {
@@ -21392,10 +21419,10 @@
           "settings": {
             "$ref": "#/components/schemas/RecommenderSettings"
           },
-          "arguments": {
+          "oldArguments": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RecommenderArgument"
+              "$ref": "#/components/schemas/OldRecommenderArgument"
             },
             "nullable": true
           },

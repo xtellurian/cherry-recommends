@@ -185,15 +185,27 @@ export const setSettingsAsync = async ({
     settings,
   });
 };
+type CreateArgument =
+  components["schemas"]["CreateOrUpdateRecommenderArgument"];
+type Argument = components["schemas"]["CampaignArgument"];
 
 interface SetArgumentsRequest extends EntityRequest {
-  args: components["schemas"]["CreateOrUpdateRecommenderArgument"][];
+  args: CreateArgument[];
 }
+
+export const fetchArgumentsAsync = async ({ id, token }: EntityRequest) => {
+  return await ar.fetchArgumentsAsync({
+    recommenderApiName,
+    id,
+    token,
+  });
+};
+
 export const setArgumentsAsync = async ({
   id,
   token,
   args,
-}: SetArgumentsRequest) => {
+}: SetArgumentsRequest): Promise<Argument[]> => {
   return await ar.setArgumentsAsync({
     recommenderApiName,
     id,
@@ -201,7 +213,6 @@ export const setArgumentsAsync = async ({
     args,
   });
 };
-
 export const fetchDestinationsAsync = async ({ id, token }: EntityRequest) => {
   return await ds.fetchDestinationsAsync({
     recommenderApiName,

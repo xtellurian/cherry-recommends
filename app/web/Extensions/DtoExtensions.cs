@@ -10,15 +10,10 @@ namespace SignalBox.Web
 {
     public static class DtoExtensions
     {
-        public static List<RecommenderArgument>? ToCoreRepresentation(
+        public static List<CampaignArgument>? ToCoreRepresentation(
             this IEnumerable<CreateOrUpdateRecommenderArgument>? dtoArguments)
         {
-            return dtoArguments?.Select(a => new RecommenderArgument
-            {
-                ArgumentType = a.ArgumentType,
-                CommonId = a.CommonId,
-                DefaultValue = new DefaultArgumentContainer(a.ArgumentType, a.DefaultValue)
-            })?.ToList();
+            return dtoArguments?.Select(a => new CampaignArgument(a.CommonId, a.ArgumentType, a.IsRequired))?.ToList();
         }
 
         public static TriggerCollection ToCoreRepresentation(this SetTriggersDto triggersDto, TriggerCollection? current)

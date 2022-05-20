@@ -53,16 +53,13 @@ interface SetSettingsRequest extends EntityRequest {
     settings: RecommenderSettings;
 }
 export declare const setSettingsAsync: ({ id, token, settings, }: SetSettingsRequest) => Promise<any>;
-interface Argument {
-    commonId: string;
-    argumentType: "Numerical" | "Categorical";
-    defaultValue: string | number;
-    isRequired: boolean;
-}
+declare type CreateArgument = components["schemas"]["CreateOrUpdateRecommenderArgument"];
+declare type Argument = components["schemas"]["CampaignArgument"];
 interface SetArgumentsRequest extends EntityRequest {
-    args: Argument[];
+    args: CreateArgument[];
 }
-export declare const setArgumentsAsync: ({ id, token, args, }: SetArgumentsRequest) => Promise<any>;
+export declare const fetchArgumentsAsync: ({ id, token }: EntityRequest) => Promise<any>;
+export declare const setArgumentsAsync: ({ id, token, args, }: SetArgumentsRequest) => Promise<Argument[]>;
 export declare const fetchDestinationsAsync: ({ id, token }: EntityRequest) => Promise<any>;
 interface Destination {
     destinationType: "Webhook" | "SegmentSourceFunction" | "HubspotContactProperty";

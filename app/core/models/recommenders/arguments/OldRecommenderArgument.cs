@@ -1,6 +1,6 @@
 namespace SignalBox.Core.Recommenders
 {
-    public class RecommenderArgument
+    public class OldRecommenderArgument
     {
         private DefaultArgumentContainer defaultValue;
         private object defaultArgumentValue;

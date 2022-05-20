@@ -4025,7 +4025,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderArgument"][];
+            "application/json": components["schemas"]["CampaignArgument"][];
           };
         };
         /** Bad Request */
@@ -4049,7 +4049,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderArgument"][];
+            "application/json": components["schemas"]["CampaignArgument"][];
           };
         };
         /** Bad Request */
@@ -6691,7 +6691,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderArgument"][];
+            "application/json": components["schemas"]["CampaignArgument"][];
           };
         };
         /** Bad Request */
@@ -6715,7 +6715,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderArgument"][];
+            "application/json": components["schemas"]["CampaignArgument"][];
           };
         };
         /** Bad Request */
@@ -6748,7 +6748,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderArgument"][];
+            "application/json": components["schemas"]["CampaignArgument"][];
           };
         };
         /** Bad Request */
@@ -6772,7 +6772,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderArgument"][];
+            "application/json": components["schemas"]["CampaignArgument"][];
           };
         };
         /** Bad Request */
@@ -8428,6 +8428,16 @@ export interface components {
       items?: components["schemas"]["Business"][] | null;
       pagination?: components["schemas"]["PaginationInfo"];
     };
+    CampaignArgument: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      campaignId?: number;
+      campaign?: components["schemas"]["RecommenderEntityBase"];
+      commonId?: string | null;
+      argumentType?: components["schemas"]["ArgumentTypes"];
+      isRequired?: boolean;
+    };
     CategoricalParameterBounds: {
       categories?: string[] | null;
     };
@@ -8534,7 +8544,6 @@ export interface components {
     CreateOrUpdateRecommenderArgument: {
       commonId: string;
       argumentType?: components["schemas"]["ArgumentTypes"];
-      defaultValue?: string | null;
       isRequired?: boolean;
     };
     CreateParameter: {
@@ -8979,7 +8988,7 @@ export interface components {
       maxChannelCount?: number;
       errorHandling?: components["schemas"]["RecommenderErrorHandling"];
       settings?: components["schemas"]["RecommenderSettings"];
-      arguments?: components["schemas"]["RecommenderArgument"][] | null;
+      oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
       triggerCollection?: components["schemas"]["TriggerCollection"];
       modelRegistrationId?: number | null;
       modelRegistration?: components["schemas"]["ModelRegistration"];
@@ -9220,6 +9229,13 @@ export interface components {
       pagination?: components["schemas"]["PaginationInfo"];
     };
     OfferState: "created" | "presented" | "redeemed" | "expired";
+    OldRecommenderArgument: {
+      commonId?: string | null;
+      argumentType?: components["schemas"]["ArgumentTypes"];
+      defaultValue?: components["schemas"]["DefaultArgumentContainer"];
+      defaultArgumentValue?: unknown | null;
+      isRequired?: boolean;
+    };
     OpenApiSecurity: {
       Bearer?: unknown[] | null;
     };
@@ -9307,7 +9323,7 @@ export interface components {
       maxChannelCount?: number;
       errorHandling?: components["schemas"]["RecommenderErrorHandling"];
       settings?: components["schemas"]["RecommenderSettings"];
-      arguments?: components["schemas"]["RecommenderArgument"][] | null;
+      oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
       triggerCollection?: components["schemas"]["TriggerCollection"];
       modelRegistrationId?: number | null;
       modelRegistration?: components["schemas"]["ModelRegistration"];
@@ -9429,13 +9445,6 @@ export interface components {
       connectedSystem?: components["schemas"]["IntegratedSystem"];
       discriminator?: string | null;
     };
-    RecommenderArgument: {
-      commonId?: string | null;
-      argumentType?: components["schemas"]["ArgumentTypes"];
-      defaultValue?: components["schemas"]["DefaultArgumentContainer"];
-      defaultArgumentValue?: unknown | null;
-      isRequired?: boolean;
-    };
     RecommenderEntityBase: {
       id?: number;
       created?: string;
@@ -9448,7 +9457,7 @@ export interface components {
       maxChannelCount?: number;
       errorHandling?: components["schemas"]["RecommenderErrorHandling"];
       settings?: components["schemas"]["RecommenderSettings"];
-      arguments?: components["schemas"]["RecommenderArgument"][] | null;
+      oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
       triggerCollection?: components["schemas"]["TriggerCollection"];
       modelRegistrationId?: number | null;
       modelRegistration?: components["schemas"]["ModelRegistration"];

@@ -33,7 +33,9 @@ export const createTargetVariableAsync =
 export const fetchInvokationLogsAsync =
   parameterSetRecommenders.fetchInvokationLogsAsync;
 
+export const fetchArgumentsAsync = parameterSetRecommenders.fetchArgumentsAsync;
 export const setArgumentsAsync = parameterSetRecommenders.setArgumentsAsync;
+
 export const setSettingsAsync = parameterSetRecommenders.setSettingsAsync;
 
 export const fetchDestinationsAsync =

@@ -21,7 +21,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Property(_ => _.Arguments).IsRequired(false).HasJsonConversion();
+            builder.Property(_ => _.OldArguments).IsRequired(false).HasJsonConversion();
             builder.Property(_ => _.ErrorHandling).HasJsonConversion();
             builder.Property(_ => _.TriggerCollection).HasJsonConversion();
             builder.Property(_ => _.Settings).HasJsonConversion();

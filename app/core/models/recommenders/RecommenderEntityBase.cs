@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -14,20 +15,23 @@ namespace SignalBox.Core.Recommenders
         { }
 
 #nullable enable
-        public RecommenderEntityBase(string commonId, string? name, IEnumerable<RecommenderArgument>? arguments, RecommenderSettings? settings) : base(commonId, name)
+        public RecommenderEntityBase(string commonId, string? name, IEnumerable<CampaignArgument>? arguments, RecommenderSettings? settings) : base(commonId, name)
         {
             this.ErrorHandling = settings is RecommenderErrorHandling handling
                 ? handling
                 : new RecommenderErrorHandling(settings);
             this.Settings = settings;
-            this.Arguments = arguments?.ToList() ?? new List<RecommenderArgument>();
+            this.OldArguments = arguments?.Select(_ => _.ToOldArgument())?.ToList() ?? new List<OldRecommenderArgument>();
+            this.Arguments = arguments?.ToList() ?? new List<CampaignArgument>();
         }
 
 
         public bool ShouldThrowOnBadInput() => (this.Settings?.ThrowOnBadInput == true) || (this.ErrorHandling?.ThrowOnBadInput == true);
         public RecommenderErrorHandling? ErrorHandling { get; set; }
         public RecommenderSettings? Settings { get; set; }
-        public List<RecommenderArgument>? Arguments { get; set; }
+        // todo old arguments are obsolete.
+        // [Obsolete]
+        public List<OldRecommenderArgument>? OldArguments { get; set; }
         public TriggerCollection? TriggerCollection { get; set; }
 
         public long? ModelRegistrationId { get; set; }
@@ -46,5 +50,9 @@ namespace SignalBox.Core.Recommenders
         public ICollection<RecommendationDestinationBase> RecommendationDestinations { get; set; } = null!;
         [JsonIgnore]
         public ICollection<ChannelBase> Channels { get; set; } = new List<ChannelBase>();
+        [JsonIgnore]
+        public ICollection<CampaignArgument> Arguments { get; set; }
+        [JsonIgnore]
+        public ICollection<ArgumentRule> ArgumentRules { get; set; } = new List<ArgumentRule>();
     }
 }

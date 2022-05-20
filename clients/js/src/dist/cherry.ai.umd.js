@@ -3048,6 +3048,13 @@
           body: args,
       });
   };
+  const fetchArgumentsAsync$2 = async ({ recommenderApiName, token, id, }) => {
+      return await executeFetch({
+          path: `api/recommenders/${recommenderApiName}/${id}/Arguments`,
+          token,
+          method: "get",
+      });
+  };
 
   const setSettingsAsync$3 = async ({ recommenderApiName, token, id, settings, }) => {
       return await executeFetch({
@@ -3247,6 +3254,13 @@
           settings,
       });
   };
+  const fetchArgumentsAsync$1 = async ({ id, token }) => {
+      return await fetchArgumentsAsync$2({
+          recommenderApiName: recommenderApiName$2,
+          id,
+          token,
+      });
+  };
   const setArgumentsAsync$2 = async ({ id, token, args, }) => {
       return await setArgumentsAsync$3({
           recommenderApiName: recommenderApiName$2,
@@ -3356,6 +3370,7 @@
     fetchTargetVariablesAsync: fetchTargetVariablesAsync$2,
     createTargetVariableAsync: createTargetVariableAsync$2,
     setSettingsAsync: setSettingsAsync$2,
+    fetchArgumentsAsync: fetchArgumentsAsync$1,
     setArgumentsAsync: setArgumentsAsync$2,
     fetchDestinationsAsync: fetchDestinationsAsync$2,
     createDestinationAsync: createDestinationAsync$2,
@@ -3793,6 +3808,13 @@
           settings,
       });
   };
+  const fetchArgumentsAsync = async ({ id, token }) => {
+      return await fetchArgumentsAsync$2({
+          recommenderApiName,
+          id,
+          token,
+      });
+  };
   const setArgumentsAsync = async ({ id, token, args, }) => {
       return await setArgumentsAsync$3({
           recommenderApiName,
@@ -3984,6 +4006,7 @@
     fetchTargetVariablesAsync: fetchTargetVariablesAsync,
     createTargetVariableAsync: createTargetVariableAsync,
     setSettingsAsync: setSettingsAsync,
+    fetchArgumentsAsync: fetchArgumentsAsync,
     setArgumentsAsync: setArgumentsAsync,
     fetchDestinationsAsync: fetchDestinationsAsync,
     createDestinationAsync: createDestinationAsync,

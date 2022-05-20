@@ -47,6 +47,10 @@ namespace SignalBox.Infrastructure
         public DbSet<ParameterSetRecommender> ParameterSetRecommenders { get; set; }
         public DbSet<ItemsRecommender> ItemsRecommenders { get; set; }
 
+        // argument rules
+        public DbSet<ArgumentRule> ArgumentRules { get; set; }
+        public DbSet<ChoosePromotionArgumentRule> ChoosePromotionArgumentRules { get; set; }
+
         // ----- destinations -----
         // recommendation destinations
         public DbSet<RecommendationDestinationBase> RecommendationDestinations { get; set; }

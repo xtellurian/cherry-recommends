@@ -50,6 +50,7 @@ export const fetchPromotionsAsync = promotionsRecommenders.fetchPromotionsAsync;
 export const addPromotionAsync = promotionsRecommenders.addPromotionAsync;
 export const removePromotionAsync = promotionsRecommenders.removePromotionAsync;
 
+export const fetchArgumentsAsync = promotionsRecommenders.fetchArgumentsAsync;
 export const setArgumentsAsync = promotionsRecommenders.setArgumentsAsync;
 
 export const fetchDestinationsAsync =

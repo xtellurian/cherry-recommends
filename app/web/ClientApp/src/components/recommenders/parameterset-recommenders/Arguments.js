@@ -1,6 +1,9 @@
 import React from "react";
 import { useParams } from "react-router";
-import { useParameterSetRecommender } from "../../../api-hooks/parameterSetRecommendersApi";
+import {
+  useArguments,
+  useParameterSetRecommender,
+} from "../../../api-hooks/parameterSetRecommendersApi";
 import { setArgumentsAsync } from "../../../api/parameterSetRecommendersApi";
 import { ErrorCard, Spinner } from "../../molecules";
 import { ArgumentsComponentUtil } from "../utils/argumentsComponent";
@@ -33,9 +36,10 @@ export const ArgumentsSection = ({ recommender, setTrigger }) => {
           <div>
             {error && <ErrorCard error={error} />}
             <ArgumentsComponentUtil
-              recommender={recommender}
+              id={recommender.id}
               basePath="/recommenders/parameter-set-recommenders"
               setArgumentsAsync={handleSet}
+              useArguments={useArguments}
             />
           </div>
         )}

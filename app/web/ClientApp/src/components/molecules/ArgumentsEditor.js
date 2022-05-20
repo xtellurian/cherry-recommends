@@ -13,23 +13,20 @@ const argumentTypeOptions = [
 ];
 
 const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
-  const { commonId, argumentType, isRequired, defaultArgumentValue } = argument;
-  let defaultValue = argument.defaultValue;
-  if (defaultArgumentValue && typeof defaultValue === "object") {
-    defaultValue = defaultArgumentValue;
-  }
+  const { commonId, argumentType, isRequired } = argument;
+
   return (
     <div className="border-bottom mt-4">
-      <div className="row align-items-center">
-        <div className="col-3">
+      <div className="d-flex align-items-center justify-content-between">
+        <div className="">
           <Selector
             label="Type"
             placeholder="Type"
             inline={false}
             defaultValue={
-              argumentType
-                ? { label: argumentType, value: argumentType }
-                : argumentTypeOptions[0].value
+              argumentType === "numerical"
+                ? argumentTypeOptions[0]
+                : argumentTypeOptions[1]
             }
             onChange={(v) =>
               onChange(entry, entry, { ...argument, argumentType: v.value })
@@ -38,7 +35,7 @@ const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
           />
         </div>
 
-        <div className="col-3">
+        <div className="">
           <TextInput
             label="Identifier"
             placeholder="Identifier"
@@ -54,22 +51,7 @@ const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
           />
         </div>
 
-        <div className="col-3">
-          <TextInput
-            label="Default Value"
-            placeholder="..."
-            inline={false}
-            value={defaultValue || (argumentType === "numerical" ? 0 : "")}
-            onChange={(e) =>
-              onChange(entry, entry, {
-                ...argument,
-                defaultValue: e.target.value,
-              })
-            }
-          />
-        </div>
-
-        <div className="col-2">
+        <div className="">
           <FieldLabel type="checkbox">
             <div className="form-check w-100">
               <input
@@ -88,7 +70,7 @@ const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
           </FieldLabel>
         </div>
 
-        <div className="col-1">
+        <div className="">
           <FontAwesomeIcon
             icon={faCircleXmark}
             className="cursor-pointer float-right text-danger"
@@ -100,6 +82,7 @@ const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
     </div>
   );
 };
+
 export const ArgumentsEditor = ({
   initialArguments,
   onArgumentsChanged,
@@ -130,18 +113,10 @@ export const ArgumentsEditor = ({
     setArguments({ ...args });
   };
 
-  // updates the parent on changes
-  const ensureDefaultValNotObject = (a) => {
-    if (a.defaultValue && typeof a.defaultValue === "object") {
-      a.defaultValue = a.defaultValue.value;
-    }
-    return a;
-  };
   React.useEffect(() => {
     if (args) {
       const vals = Object.values(args);
-      const vals_edited = vals.map(ensureDefaultValNotObject);
-      onArgumentsChanged(vals_edited);
+      onArgumentsChanged(vals);
     }
   }, [args, onArgumentsChanged]);
 

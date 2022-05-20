@@ -29,10 +29,13 @@ interface SetSettingsRequest extends EntityRequest {
     settings: components["schemas"]["RecommenderSettingsDto"];
 }
 export declare const setSettingsAsync: ({ id, token, settings, }: SetSettingsRequest) => Promise<any>;
+declare type CreateArgument = components["schemas"]["CreateOrUpdateRecommenderArgument"];
+declare type Argument = components["schemas"]["CampaignArgument"];
 interface SetArgumentsRequest extends EntityRequest {
-    args: components["schemas"]["CreateOrUpdateRecommenderArgument"][];
+    args: CreateArgument[];
 }
-export declare const setArgumentsAsync: ({ id, token, args, }: SetArgumentsRequest) => Promise<any>;
+export declare const fetchArgumentsAsync: ({ id, token }: EntityRequest) => Promise<any>;
+export declare const setArgumentsAsync: ({ id, token, args, }: SetArgumentsRequest) => Promise<Argument[]>;
 export declare const fetchDestinationsAsync: ({ id, token }: EntityRequest) => Promise<any>;
 interface CreateDestinationRequest extends EntityRequest {
     destination: components["schemas"]["CreateDestinationDto"];

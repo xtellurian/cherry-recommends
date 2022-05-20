@@ -13,3 +13,15 @@ export const setArgumentsAsync = async ({
     body: args,
   });
 };
+
+export const fetchArgumentsAsync = async ({
+  recommenderApiName,
+  token,
+  id,
+}) => {
+  return await executeFetch({
+    path: `api/recommenders/${recommenderApiName}/${id}/Arguments`,
+    token,
+    method: "get",
+  });
+};

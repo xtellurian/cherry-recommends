@@ -48,7 +48,7 @@ namespace SignalBox.Core.Workflows
         public async Task<ParameterSetRecommender> CreateParameterSetRecommender(CreateCommonEntityModel common,
                                                                                  IEnumerable<string> parameterCommonIds,
                                                                                  IEnumerable<ParameterBounds> bounds,
-                                                                                 IEnumerable<RecommenderArgument>? arguments,
+                                                                                 IEnumerable<CampaignArgument>? arguments,
                                                                                  RecommenderSettings settings)
         {
             var parameters = new List<Parameter>();

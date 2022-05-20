@@ -9,7 +9,7 @@ namespace SignalBox.Infrastructure.EntityFramework
     {
         public override void Configure(EntityTypeBuilder<ItemsRecommender> builder)
         {
-            builder.Property(_ => _.Arguments).HasJsonConversion();
+            builder.Property(_ => _.OldArguments).HasJsonConversion();
             builder.Property(_ => _.TriggerCollection).HasJsonConversion();
             builder.Property(_ => _.TargetType)
                 .HasConversion<string>()

@@ -31,14 +31,14 @@ namespace SignalBox.Web.Controllers
 
         public PromotionsRecommendersController(ILogger<PromotionsRecommendersController> logger,
                                                  IItemsRecommenderStore store,
-                                                 ISegmentStore segmentStore,
                                                  IAudienceStore audienceStore,
                                                  ItemsRecommenderInvokationWorkflows invokationWorkflows,
                                                  ItemsRecommenderPerformanceWorkflows performanceWorkflows,
                                                  PromotionsRecommenderWorkflows workflows,
                                                  IOfferWorkflow offerWorkflow,
                                                  IItemsRecommendationStore recommendationStore)
-                                                 : base(store, segmentStore, audienceStore, workflows, invokationWorkflows)
+                                                 : base(store, audienceStore, workflows, invokationWorkflows)
+
         {
             this.logger = logger;
             this.invokationWorkflows = invokationWorkflows;

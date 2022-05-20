@@ -18,20 +18,15 @@ namespace SignalBox.Web.Controllers
     public abstract class RecommenderControllerBase<T> : CommonEntityControllerBase<T> where T : RecommenderEntityBase
     {
         private readonly RecommenderInvokationWorkflowBase<T> invokationWorkflows;
-        private readonly IRecommenderStore<T> recommenderStore;
-        private readonly ISegmentStore segmentStore;
         private readonly IAudienceStore audienceStore;
         private readonly RecommenderWorkflowBase<T> workflows;
 
         protected RecommenderControllerBase(IRecommenderStore<T> store,
-                                            ISegmentStore segmentStore,
                                             IAudienceStore audienceStore,
                                             RecommenderWorkflowBase<T> workflows,
                                             RecommenderInvokationWorkflowBase<T> invokationWorkflows) : base(store)
         {
             this.invokationWorkflows = invokationWorkflows;
-            this.recommenderStore = store;
-            this.segmentStore = segmentStore;
             this.audienceStore = audienceStore;
             this.workflows = workflows;
         }
@@ -89,16 +84,18 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpGet("{id}/Arguments")]
-        public async Task<IEnumerable<RecommenderArgument>> GetArguments(string id, bool? useInternalId = null)
+        public async Task<IEnumerable<CampaignArgument>> GetArguments(string id, bool? useInternalId = null)
         {
             var recommender = await base.GetEntity(id, useInternalId);
+            await store.LoadMany(recommender, _ => _.Arguments);
             return recommender.Arguments;
         }
 
         [HttpPost("{id}/Arguments")]
-        public async Task<IEnumerable<RecommenderArgument>> SetArguments(string id, IEnumerable<CreateOrUpdateRecommenderArgument> dto, bool? useInternalId = null)
+        public async Task<IEnumerable<CampaignArgument>> SetArguments(string id, IEnumerable<CreateOrUpdateRecommenderArgument> dto, bool? useInternalId = null)
         {
             var recommender = await base.GetResource(id, useInternalId);
+            await store.LoadMany(recommender, _ => _.Arguments);
             recommender.Arguments = dto.ToCoreRepresentation();
             await store.Update(recommender);
             await store.Context.SaveChanges();

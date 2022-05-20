@@ -11,6 +11,7 @@ import {
   fetchLearningMetricsAsync,
   fetchStatisticsAsync,
   fetchReportImageBlobUrlAsync,
+  fetchArgumentsAsync,
 } from "../api/parameterSetRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -126,6 +127,24 @@ export const useTargetVariables = ({ id, name }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, name]);
+
+  return state;
+};
+
+export const useArguments = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchArgumentsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
 
   return state;
 };

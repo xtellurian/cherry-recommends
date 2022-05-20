@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220519024651_develop_argument_promo_rule_5726_pre")]
+    partial class develop_argument_promo_rule_5726_pre
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1418,58 +1420,6 @@ namespace sqlserver.SignalBox
                     b.ToTable("ItemsRecommendations");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Recommendations.Offer", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long?>("EnvironmentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<float?>("GrossRevenue")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("real")
-                        .HasDefaultValue(1f);
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<long>("RecommendationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset?>("RedeemedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<long?>("RedeemedPromotionId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnvironmentId");
-
-                    b.HasIndex("RecommendationId")
-                        .IsUnique();
-
-                    b.HasIndex("RedeemedPromotionId");
-
-                    b.ToTable("Offers");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Recommendations.ParameterSetRecommendation", b =>
                 {
                     b.Property<long>("Id")
@@ -1579,87 +1529,6 @@ namespace sqlserver.SignalBox
                     b.HasIndex("RecommenderId");
 
                     b.ToTable("RecommendationCorrelators");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Recommenders.ArgumentRule", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ArgumentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("CampaignId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArgumentId");
-
-                    b.HasIndex("CampaignId");
-
-                    b.ToTable("ArgumentRules");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("ArgumentRule");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Recommenders.CampaignArgument", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ArgumentType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("CampaignId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CommonId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<bool>("IsRequired")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CampaignId", "CommonId")
-                        .IsUnique();
-
-                    b.ToTable("CampaignArgument");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.InvokationLogEntry", b =>
@@ -2361,21 +2230,6 @@ namespace sqlserver.SignalBox
                     b.HasDiscriminator().HasValue("WebhookDestination");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Recommenders.ChoosePromotionArgumentRule", b =>
-                {
-                    b.HasBaseType("SignalBox.Core.Recommenders.ArgumentRule");
-
-                    b.Property<string>("ArgumentValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("PromotionId")
-                        .HasColumnType("bigint");
-
-                    b.HasIndex("PromotionId");
-
-                    b.HasDiscriminator().HasValue("ChoosePromotionArgumentRule");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Recommenders.ItemsRecommenderPerformanceReport", b =>
                 {
                     b.HasBaseType("SignalBox.Core.Recommenders.PerformanceReportBase");
@@ -3017,30 +2871,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("TargetMetric");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Recommendations.Offer", b =>
-                {
-                    b.HasOne("SignalBox.Core.Environment", "Environment")
-                        .WithMany()
-                        .HasForeignKey("EnvironmentId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("SignalBox.Core.Recommendations.ItemsRecommendation", "Recommendation")
-                        .WithOne("Offer")
-                        .HasForeignKey("SignalBox.Core.Recommendations.Offer", "RecommendationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignalBox.Core.RecommendableItem", "RedeemedPromotion")
-                        .WithMany()
-                        .HasForeignKey("RedeemedPromotionId");
-
-                    b.Navigation("Environment");
-
-                    b.Navigation("Recommendation");
-
-                    b.Navigation("RedeemedPromotion");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Recommendations.ParameterSetRecommendation", b =>
                 {
                     b.HasOne("SignalBox.Core.Business", "Business")
@@ -3103,36 +2933,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("ModelRegistration");
 
                     b.Navigation("Recommender");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Recommenders.ArgumentRule", b =>
-                {
-                    b.HasOne("SignalBox.Core.Recommenders.CampaignArgument", "Argument")
-                        .WithMany()
-                        .HasForeignKey("ArgumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", "Campaign")
-                        .WithMany("ArgumentRules")
-                        .HasForeignKey("CampaignId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Argument");
-
-                    b.Navigation("Campaign");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.Recommenders.CampaignArgument", b =>
-                {
-                    b.HasOne("SignalBox.Core.Recommenders.RecommenderEntityBase", "Campaign")
-                        .WithMany("Arguments")
-                        .HasForeignKey("CampaignId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Campaign");
                 });
 
             modelBuilder.Entity("SignalBox.Core.Recommenders.InvokationLogEntry", b =>
@@ -3334,17 +3134,6 @@ namespace sqlserver.SignalBox
                     b.Navigation("Metric");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Recommenders.ChoosePromotionArgumentRule", b =>
-                {
-                    b.HasOne("SignalBox.Core.RecommendableItem", "Promotion")
-                        .WithMany()
-                        .HasForeignKey("PromotionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Promotion");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Recommenders.ItemsRecommender", b =>
                 {
                     b.HasOne("SignalBox.Core.RecommendableItem", "BaselineItem")
@@ -3404,17 +3193,8 @@ namespace sqlserver.SignalBox
                     b.Navigation("Recommenders");
                 });
 
-            modelBuilder.Entity("SignalBox.Core.Recommendations.ItemsRecommendation", b =>
-                {
-                    b.Navigation("Offer");
-                });
-
             modelBuilder.Entity("SignalBox.Core.Recommenders.RecommenderEntityBase", b =>
                 {
-                    b.Navigation("ArgumentRules");
-
-                    b.Navigation("Arguments");
-
                     b.Navigation("RecommendationCorrelators");
 
                     b.Navigation("RecommendationDestinations");

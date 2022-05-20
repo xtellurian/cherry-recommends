@@ -25,10 +25,9 @@ namespace SignalBox.Web.Controllers
 
         public ParameterSetRecommendersController(ILogger<ParameterSetRecommendersController> logger,
                                                  IParameterSetRecommenderStore store,
-                                                 ISegmentStore segmentStore,
                                                  IAudienceStore audienceStore,
                                                  ParameterSetRecommenderInvokationWorkflows invokationWorkflows,
-                                                 ParameterSetRecommenderWorkflows workflows) : base(store, segmentStore, audienceStore, workflows, invokationWorkflows)
+                                                 ParameterSetRecommenderWorkflows workflows) : base(store, audienceStore, workflows, invokationWorkflows)
         {
             this.logger = logger;
             this.invokationWorkflows = invokationWorkflows;
