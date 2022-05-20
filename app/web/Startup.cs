@@ -206,6 +206,7 @@ namespace SignalBox.Web
             services.AddScoped<ITenantAuthorizationStrategy, TokenClaimTenantAuthorizor>();
 
             services.AddHealthChecks();
+            services.AddServerTiming();
 
             services.AddApiVersioning(o =>
             {
@@ -316,6 +317,8 @@ namespace SignalBox.Web
             {
                 c.RouteTemplate = "api/docs/{documentName}/spec.json";
             });
+
+            app.UseServerTiming();
 
             // the order is important.
             app.UseMiddleware<TenantSelectorMiddleware>(); // select must occur before API Key Middleware, cos db access is required.

@@ -126,64 +126,65 @@ namespace SignalBox.Infrastructure
         }
         public static IServiceCollection AddEFStores(this IServiceCollection services)
         {
-            services.AddScoped<ICustomerEventStore, EFCustomerEventStore>();
-            services.AddScoped<ICustomerStore, EFCustomerStore>();
+            services.AddInterceptedScoped<ICustomerEventStore, EFCustomerEventStore, TimingInterceptor>();
+            services.AddInterceptedScoped<ICustomerStore, EFCustomerStore, TimingInterceptor>();
 
-            services.AddScoped<ISegmentStore, EFSegmentStore>();
-            services.AddScoped<IAudienceStore, EFAudienceStore>();
-            services.AddScoped<IEnrolmentRuleStore, EFEnrolmentRuleStore>();
-            services.AddScoped<IMetricEnrolmentRuleStore, EFMetricEnrolmentRuleStore>();
+            services.AddInterceptedScoped<ISegmentStore, EFSegmentStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IAudienceStore, EFAudienceStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IEnrolmentRuleStore, EFEnrolmentRuleStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IMetricEnrolmentRuleStore, EFMetricEnrolmentRuleStore, TimingInterceptor>();
 
-            services.AddScoped<IRecommendableItemStore, EFRecommendableItemStore>();
-            services.AddScoped<IParameterStore, EFParameterStore>();
+            services.AddInterceptedScoped<IRecommendableItemStore, EFRecommendableItemStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IParameterStore, EFParameterStore, TimingInterceptor>();
 
-            services.AddScoped<IBusinessStore, EFBusinessStore>();
+            services.AddInterceptedScoped<IBusinessStore, EFBusinessStore, TimingInterceptor>();
 
             // environment
-            services.AddScoped<IEnvironmentStore, EFEnvironmentStore>();
+            services.AddInterceptedScoped<IEnvironmentStore, EFEnvironmentStore, TimingInterceptor>();
 
             // recommenders
-            services.AddScoped<IItemsRecommenderStore, EFItemsRecommenderStore>();
-            services.AddScoped<IParameterSetRecommenderStore, EFParameterSetRecommenderStore>();
+            services.AddInterceptedScoped<IItemsRecommenderStore, EFItemsRecommenderStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IParameterSetRecommenderStore, EFParameterSetRecommenderStore, TimingInterceptor>();
 
             // recommendations
-            services.AddScoped<IRecommendationCorrelatorStore, EFRecommendationCorrelatorStore>();
-            services.AddScoped<IParameterSetRecommendationStore, EFParameterSetRecommendationStore>();
-            services.AddScoped<IItemsRecommendationStore, EFItemsRecommendationStore>();
-            services.AddScoped<IOfferStore, EFOfferStore>();
+            services.AddInterceptedScoped<IRecommendationCorrelatorStore, EFRecommendationCorrelatorStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IParameterSetRecommendationStore, EFParameterSetRecommendationStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IItemsRecommendationStore, EFItemsRecommendationStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IOfferStore, EFOfferStore, TimingInterceptor>();
 
             // optimisers
-            services.AddScoped<IPromotionOptimiserStore, EFPromotionOptimiserStore>();
+            services.AddInterceptedScoped<IPromotionOptimiserStore, EFPromotionOptimiserStore, TimingInterceptor>();
 
             // performance
-            services.AddScoped<IItemsRecommenderPerformanceReportStore, EFItemsRecommenderPerformanceReportStore>();
+            services.AddInterceptedScoped<IItemsRecommenderPerformanceReportStore, EFItemsRecommenderPerformanceReportStore, TimingInterceptor>();
 
-            services.AddScoped<IMetricStore, EFMetricStore>();
-            services.AddScoped<IMetricGeneratorStore, EFMetricGeneratorStore>();
-            services.AddScoped<IHistoricCustomerMetricStore, EFHistoricCustomerMetricStore>();
-            services.AddScoped<IGlobalMetricValueStore, EFGlobalMetricValueStore>();
-            services.AddScoped<IBusinessMetricValueStore, EFBusinessMetricValueStore>();
+            services.AddInterceptedScoped<IMetricStore, EFMetricStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IMetricGeneratorStore, EFMetricGeneratorStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IHistoricCustomerMetricStore, EFHistoricCustomerMetricStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IGlobalMetricValueStore, EFGlobalMetricValueStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IBusinessMetricValueStore, EFBusinessMetricValueStore, TimingInterceptor>();
 
             // channels
-            services.AddScoped<IChannelStore, EFChannelStore>();
-            services.AddScoped<IWebhookChannelStore, EFWebhookChannelStore>();
-            services.AddScoped<IWebChannelStore, EFWebChannelStore>();
-            services.AddScoped<IEmailChannelStore, EFEmailChannelStore>();
+            services.AddInterceptedScoped<IChannelStore, EFChannelStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IWebhookChannelStore, EFWebhookChannelStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IWebChannelStore, EFWebChannelStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IEmailChannelStore, EFEmailChannelStore, TimingInterceptor>();
 
-            services.AddScoped<IHashedApiKeyStore, EFHashedAPIKeyStore>();
-            services.AddScoped<IModelRegistrationStore, EFModelRegistrationStore>();
-            services.AddScoped<ITrackedUserSystemMapStore, EFTrackedUserSystemMapStore>();
-            services.AddScoped<IWebhookReceiverStore, EFSWebhookReceiverStore>();
+            services.AddInterceptedScoped<IHashedApiKeyStore, EFHashedAPIKeyStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IModelRegistrationStore, EFModelRegistrationStore, TimingInterceptor>();
+            services.AddInterceptedScoped<ITrackedUserSystemMapStore, EFTrackedUserSystemMapStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IWebhookReceiverStore, EFSWebhookReceiverStore, TimingInterceptor>();
 
             // integrated systems
-            services.AddScoped<IIntegratedSystemStore, EFIntegratedSystemStore>();
-            services.AddScoped<ICustomIntegratedSystemStore, EFCustomIntegratedSystemStore>();
-            services.AddScoped<IWebsiteIntegratedSystemStore, EFWebsiteIntegratedSystemStore>();
-            services.AddScoped<IIntegratedSystemCredentialStore, EFIntegratedSystemCredentialStore>();
+            services.AddInterceptedScoped<IIntegratedSystemStore, EFIntegratedSystemStore, TimingInterceptor>();
+            services.AddInterceptedScoped<ICustomIntegratedSystemStore, EFCustomIntegratedSystemStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IWebsiteIntegratedSystemStore, EFWebsiteIntegratedSystemStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IIntegratedSystemCredentialStore, EFIntegratedSystemCredentialStore, TimingInterceptor>();
 
             // discount codes
-            services.AddScoped<IDiscountCodeStore, EFDiscountCodeStore>();
+            services.AddInterceptedScoped<IDiscountCodeStore, EFDiscountCodeStore, TimingInterceptor>();
 
+            // extra utils
             services.AddScoped<IStorageContext, EFStorageContext>();
             services.RegisterCollections();
 

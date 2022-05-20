@@ -1,4 +1,6 @@
+using Castle.DynamicProxy;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using SignalBox.Core;
 using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommenders;
@@ -48,6 +50,25 @@ namespace SignalBox.Infrastructure
             services.AddScoped<ITenantStore, EFTenantStore>();
             services.AddScoped<ITenantMembershipStore, EFTenantMembershipStore>();
             services.AddScoped<IDbContextProvider<SignalBoxDbContext>, MultiTenantContextProvider<SignalBoxDbContext>>();
+            return services;
+        }
+
+        public static IServiceCollection AddInterceptedScoped<TInterface, TImplemetation, TInterceptor>(this IServiceCollection services)
+            where TInterface : class
+            where TImplemetation : class, TInterface
+            where TInterceptor : class, IInterceptor
+        {
+
+            services.TryAddSingleton<IProxyGenerator, ProxyGenerator>(); // register an internal castle.core thing
+            services.TryAddScoped<TImplemetation>(); // register for use below
+            services.TryAddTransient<TInterceptor>(); // register for use below
+            services.TryAddScoped(provider =>
+            {
+                var proxyGenerator = provider.GetRequiredService<IProxyGenerator>();
+                var impl = provider.GetRequiredService<TImplemetation>();
+                var interceptor = provider.GetRequiredService<TInterceptor>();
+                return proxyGenerator.CreateInterfaceProxyWithTarget<TInterface>(impl, interceptor);
+            });
             return services;
         }
     }

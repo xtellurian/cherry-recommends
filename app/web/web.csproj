@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Include="Analytics" Version="3.8.0" />
     <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="5.4.0" />
+    <PackageReference Include="Lib.AspNetCore.ServerTiming" Version="4.4.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />

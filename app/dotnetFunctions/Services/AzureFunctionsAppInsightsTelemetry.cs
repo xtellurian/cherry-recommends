@@ -24,6 +24,11 @@ namespace SignalBox.Functions.Services
             logger.LogInformation($"Metric: {name} = {value}", properties);
         }
 
+        public void TrackTimingMetric(string name, TimeSpan value, string description)
+        {
+            TrackMetric(name, value.TotalMilliseconds, new Dictionary<string, string> { { "description", description } });
+        }
+
         public void TrackEvent(string name, IDictionary<string, string> properties = null)
         {
             logger.LogInformation($"Event: {name} occurred", properties);
