@@ -1,16 +1,14 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+
 import { useQuery } from "../../utility/utility";
 import { Navigation } from "./Navigation";
 
 const PageLink = ({ page, children }) => {
-  const loc = useLocation();
   const qs = useQuery();
   qs.set("page", `${page}`);
-  const to = `${loc.pathname}?${qs.toString()}`;
 
   return (
-    <Navigation className="page-link" to={to}>
+    <Navigation className="page-link" to={{ search: qs.toString() }}>
       {children}
     </Navigation>
   );
