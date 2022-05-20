@@ -62,7 +62,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
                 results = await Set
-                    .Where(_ => _.RecommenderId == customerId)
+                    .Where(_ => _.CustomerId == customerId)
                     .OrderByDescending(_ => _.Created)
                     .OrderByDescending(_ => _.LastUpdated)
                     .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
