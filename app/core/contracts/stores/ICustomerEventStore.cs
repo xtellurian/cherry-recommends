@@ -12,6 +12,7 @@ namespace SignalBox.Core
         Task<IEnumerable<CustomerEvent>> AddRange(IEnumerable<CustomerEvent> events);
         Task LoadMany<TProperty>(CustomerEvent entity, Expression<Func<CustomerEvent, IEnumerable<TProperty>>> propertyExpression) where TProperty : class;
         Task<IEnumerable<CustomerEvent>> Latest(DateTimeOffset after);
+        Task<Paginated<CustomerEvent>> Latest(IPaginate paginate);
         Task<int> Count(Expression<Func<CustomerEvent, bool>> predicate = null);
         Task<TProperty> Max<TProperty>(Expression<Func<CustomerEvent, TProperty>> selector);
         Task<TProperty> Min<TProperty>(Expression<Func<CustomerEvent, TProperty>> selector);

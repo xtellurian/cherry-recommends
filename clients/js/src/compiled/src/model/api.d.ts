@@ -3,6 +3,32 @@
  * Do not make direct changes to the file.
  */
 export interface paths {
+    "/api/ActivityFeed": {
+        get: {
+            parameters: {
+                query: {
+                    page?: number;
+                    pageSize?: number;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "text/plain": components["schemas"]["ActivityFeedEntity"][];
+                        "application/json": components["schemas"]["ActivityFeedEntity"][];
+                        "text/json": components["schemas"]["ActivityFeedEntity"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
     "/api/ApiKeys/exchange": {
         post: {
             responses: {
@@ -8409,6 +8435,11 @@ export interface paths {
 }
 export interface components {
     schemas: {
+        ActivityFeedEntity: {
+            activityKind?: components["schemas"]["ActivityKinds"];
+            activityItems?: components["schemas"]["ObjectPaginated"];
+        };
+        ActivityKinds: "event" | "recommendation";
         AddMemberDto: {
             commonId: string;
             name?: string | null;

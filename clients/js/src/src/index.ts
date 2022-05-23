@@ -1,3 +1,4 @@
+import * as activityFeed from "./api/activityFeedApi";
 import * as apiKeys from "./api/apiKeyApi";
 import * as businesses from "./api/businessesApi";
 import * as channels from "./api/channelsApi";
@@ -39,6 +40,7 @@ import {
 import * as errorHandling from "./utilities/errorHandling";
 
 export {
+  activityFeed,
   apiKeys,
   axiosInstance,
   businesses,

@@ -84,6 +84,11 @@ const AuthenticatedIA = [
           pathname: "/metrics/metrics",
         }),
       },
+      {
+        id: routes.activityFeed,
+        name: "Activity Feed",
+        to: createURL({ pathname: "/metrics/activity-feed" }),
+      },
     ],
   },
   {

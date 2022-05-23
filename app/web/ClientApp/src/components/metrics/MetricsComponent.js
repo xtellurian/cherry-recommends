@@ -8,6 +8,7 @@ import Create from "./CreateMetric";
 import Detail from "./MetricDetail";
 import SetMetricValue from "./SetMetricValue";
 import GeneratorsComponent from "./metric-generators/MetricGeneratorsComponent";
+import ActivityFeed from "./ActivityFeed";
 import { ErrorBoundary } from "../molecules/ErrorBoundary";
 
 const DefaultComponent = () => {
@@ -50,6 +51,10 @@ const MetricsComponent = () => {
           <AuthorizeRoute
             path={`${path}/metrics`}
             component={DefaultComponent}
+          />
+          <AuthorizeRoute
+            path={`${path}/activity-feed`}
+            component={ActivityFeed}
           />
           <Route path={path}>
             <Redirect to={`${path}/metrics`} />

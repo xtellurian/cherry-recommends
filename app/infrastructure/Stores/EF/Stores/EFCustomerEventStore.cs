@@ -179,6 +179,19 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .ToListAsync();
         }
 
+        public async Task<Paginated<CustomerEvent>> Latest(IPaginate paginate)
+        {
+            var pageSize = paginate.PageSize ?? DefaultPageSize;
+            var result = await QuerySet
+                .OrderByDescending(_ => _.Id) // this should be more performant than OrderBy(Created), and be mostly the same
+                .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
+                .ToListAsync();
+
+            var itemCount = result.Count;
+            var pageCount = (int)Math.Ceiling((double)itemCount / pageSize);
+            return new Paginated<CustomerEvent>(result, pageCount, itemCount, paginate.SafePage);
+        }
+
         public async Task<Paginated<CustomerEvent>> ReadEventsForBusiness(IPaginate paginate, Business business)
         {
             var pageSize = paginate.PageSize ?? DefaultPageSize;

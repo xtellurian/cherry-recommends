@@ -21,4 +21,5 @@ export const routes = {
   gettingStarted: "getting-started",
   docsApi: "docs/api",
   integrations: "integrations",
+  activityFeed: "activity-feed",
 };

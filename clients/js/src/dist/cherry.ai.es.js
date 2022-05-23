@@ -1971,6 +1971,19 @@ const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method,
     }
 };
 
+const fetchActivityFeedEntitiesAsync = async ({ token, page, }) => {
+    return await executeFetch({
+        path: "api/ActivityFeed",
+        token,
+        page,
+    });
+};
+
+var activityFeedApi = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  fetchActivityFeedEntitiesAsync: fetchActivityFeedEntitiesAsync
+});
+
 const fetchApiKeysAsync = async ({ token, page }) => {
     return await executeFetch({
         path: "api/apiKeys",
@@ -4491,4 +4504,4 @@ var rewardSelectorsApi = /*#__PURE__*/Object.freeze({
   createRewardSelectorAsync: createRewardSelectorAsync
 });
 
-export { apiKeyApi as apiKeys, axiosInstance, businessesApi as businesses, channelsApi as channels, customersApi as customers, dataSummaryApi as dataSummary, deploymentApi as deployment, environmentsApi as environments, errorHandling, eventsApi as events, featureGeneratorsApi as featureGenerators, featuresApi as features, integratedSystemsApi as integratedSystems, itemsRecommendersApi as itemsRecommenders, metricGeneratorsApi as metricGenerators, metricsApi as metrics, modelRegistrationsApi as modelRegistrations, index as models, parameterSetRecommendersApi as parameterSetRecommenders, parametersApi as parameters, profileApi as profile, promotionsApi as promotions, promotionsRecommendersApi as promotionsRecommenders, reactConfigApi as reactConfig, recommendableItemsApi as recommendableItems, reportsApi as reports, rewardSelectorsApi as rewardSelectors, segmentsApi as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId$1 as setDefaultEnvironmentId, setTenant, tenantsApi as tenants, touchpointsApi as touchpoints, trackedUsersApi as trackedUsers };
+export { activityFeedApi as activityFeed, apiKeyApi as apiKeys, axiosInstance, businessesApi as businesses, channelsApi as channels, customersApi as customers, dataSummaryApi as dataSummary, deploymentApi as deployment, environmentsApi as environments, errorHandling, eventsApi as events, featureGeneratorsApi as featureGenerators, featuresApi as features, integratedSystemsApi as integratedSystems, itemsRecommendersApi as itemsRecommenders, metricGeneratorsApi as metricGenerators, metricsApi as metrics, modelRegistrationsApi as modelRegistrations, index as models, parameterSetRecommendersApi as parameterSetRecommenders, parametersApi as parameters, profileApi as profile, promotionsApi as promotions, promotionsRecommendersApi as promotionsRecommenders, reactConfigApi as reactConfig, recommendableItemsApi as recommendableItems, reportsApi as reports, rewardSelectorsApi as rewardSelectors, segmentsApi as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId$1 as setDefaultEnvironmentId, setTenant, tenantsApi as tenants, touchpointsApi as touchpoints, trackedUsersApi as trackedUsers };

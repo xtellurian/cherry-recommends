@@ -1977,6 +1977,19 @@
       }
   };
 
+  const fetchActivityFeedEntitiesAsync = async ({ token, page, }) => {
+      return await executeFetch({
+          path: "api/ActivityFeed",
+          token,
+          page,
+      });
+  };
+
+  var activityFeedApi = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    fetchActivityFeedEntitiesAsync: fetchActivityFeedEntitiesAsync
+  });
+
   const fetchApiKeysAsync = async ({ token, page }) => {
       return await executeFetch({
           path: "api/apiKeys",
@@ -4497,6 +4510,7 @@
     createRewardSelectorAsync: createRewardSelectorAsync
   });
 
+  exports.activityFeed = activityFeedApi;
   exports.apiKeys = apiKeyApi;
   exports.axiosInstance = axiosInstance;
   exports.businesses = businessesApi;

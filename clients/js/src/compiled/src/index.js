@@ -1,3 +1,4 @@
+import * as activityFeed from "./api/activityFeedApi";
 import * as apiKeys from "./api/apiKeyApi";
 import * as businesses from "./api/businessesApi";
 import * as channels from "./api/channelsApi";
@@ -31,4 +32,4 @@ import * as rewardSelectors from "./api/rewardSelectorsApi";
 import { setBaseUrl } from "./api/client/baseUrl";
 import { setDefaultEnvironmentId, setDefaultApiKey, setTenant, } from "./api/client/headers";
 import * as errorHandling from "./utilities/errorHandling";
-export { apiKeys, axiosInstance, businesses, channels, customers, dataSummary, deployment, events, environments, featureGenerators, features, integratedSystems, itemsRecommenders, promotionsRecommenders, metrics, metricGenerators, modelRegistrations, models, parameters, parameterSetRecommenders, profile, reactConfig, recommendableItems, promotions, reports, rewardSelectors, segments, tenants, touchpoints, trackedUsers, setBaseUrl, setDefaultEnvironmentId, setDefaultApiKey, setTenant, errorHandling, };
+export { activityFeed, apiKeys, axiosInstance, businesses, channels, customers, dataSummary, deployment, events, environments, featureGenerators, features, integratedSystems, itemsRecommenders, promotionsRecommenders, metrics, metricGenerators, modelRegistrations, models, parameters, parameterSetRecommenders, profile, reactConfig, recommendableItems, promotions, reports, rewardSelectors, segments, tenants, touchpoints, trackedUsers, setBaseUrl, setDefaultEnvironmentId, setDefaultApiKey, setTenant, errorHandling, };

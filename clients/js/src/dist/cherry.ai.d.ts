@@ -88,43 +88,13 @@ interface PromotionsRequest extends EntitySearchRequest {
 interface Channel$1 extends Entity {
 }
 
-declare const fetchApiKeysAsync: ({ token, page }: PaginatedRequest) => Promise<any>;
-declare enum ApiKeyType {
-    Server = "Server",
-    Web = "Web"
-}
-interface CreateApiKeyPayload {
-    name: string;
-    apiKeyType: ApiKeyType;
-}
-interface CreateApiKeyRequest extends AuthenticatedRequest {
-    payload: CreateApiKeyPayload;
-}
-declare const createApiKeyAsync: ({ token, payload, }: CreateApiKeyRequest) => Promise<any>;
-interface ExchangeApiKeyRequest {
-    apiKey: string;
-}
-interface AccessTokenResponse {
-    access_token: string;
-}
-declare const exchangeApiKeyAsync: ({ apiKey, }: ExchangeApiKeyRequest) => Promise<AccessTokenResponse>;
-declare const deleteApiKeyAsync: ({ token, id }: DeleteRequest) => Promise<any>;
-
-declare const apiKeyApi_d_fetchApiKeysAsync: typeof fetchApiKeysAsync;
-declare const apiKeyApi_d_createApiKeyAsync: typeof createApiKeyAsync;
-declare const apiKeyApi_d_exchangeApiKeyAsync: typeof exchangeApiKeyAsync;
-declare const apiKeyApi_d_deleteApiKeyAsync: typeof deleteApiKeyAsync;
-declare namespace apiKeyApi_d {
-  export {
-    apiKeyApi_d_fetchApiKeysAsync as fetchApiKeysAsync,
-    apiKeyApi_d_createApiKeyAsync as createApiKeyAsync,
-    apiKeyApi_d_exchangeApiKeyAsync as exchangeApiKeyAsync,
-    apiKeyApi_d_deleteApiKeyAsync as deleteApiKeyAsync,
-  };
-}
-
 interface components {
     schemas: {
+        ActivityFeedEntity: {
+            activityKind?: components["schemas"]["ActivityKinds"];
+            activityItems?: components["schemas"]["ObjectPaginated"];
+        };
+        ActivityKinds: "event" | "recommendation";
         AddMemberDto: {
             commonId: string;
             name?: string | null;
@@ -1518,6 +1488,51 @@ interface components {
             sharedSecret?: string | null;
         };
     };
+}
+
+declare type ActivityFeedEntities = components["schemas"]["ActivityFeedEntity"][];
+declare const fetchActivityFeedEntitiesAsync: ({ token, page, }: EntitySearchRequest) => Promise<ActivityFeedEntities>;
+
+declare const activityFeedApi_d_fetchActivityFeedEntitiesAsync: typeof fetchActivityFeedEntitiesAsync;
+declare namespace activityFeedApi_d {
+  export {
+    activityFeedApi_d_fetchActivityFeedEntitiesAsync as fetchActivityFeedEntitiesAsync,
+  };
+}
+
+declare const fetchApiKeysAsync: ({ token, page }: PaginatedRequest) => Promise<any>;
+declare enum ApiKeyType {
+    Server = "Server",
+    Web = "Web"
+}
+interface CreateApiKeyPayload {
+    name: string;
+    apiKeyType: ApiKeyType;
+}
+interface CreateApiKeyRequest extends AuthenticatedRequest {
+    payload: CreateApiKeyPayload;
+}
+declare const createApiKeyAsync: ({ token, payload, }: CreateApiKeyRequest) => Promise<any>;
+interface ExchangeApiKeyRequest {
+    apiKey: string;
+}
+interface AccessTokenResponse {
+    access_token: string;
+}
+declare const exchangeApiKeyAsync: ({ apiKey, }: ExchangeApiKeyRequest) => Promise<AccessTokenResponse>;
+declare const deleteApiKeyAsync: ({ token, id }: DeleteRequest) => Promise<any>;
+
+declare const apiKeyApi_d_fetchApiKeysAsync: typeof fetchApiKeysAsync;
+declare const apiKeyApi_d_createApiKeyAsync: typeof createApiKeyAsync;
+declare const apiKeyApi_d_exchangeApiKeyAsync: typeof exchangeApiKeyAsync;
+declare const apiKeyApi_d_deleteApiKeyAsync: typeof deleteApiKeyAsync;
+declare namespace apiKeyApi_d {
+  export {
+    apiKeyApi_d_fetchApiKeysAsync as fetchApiKeysAsync,
+    apiKeyApi_d_createApiKeyAsync as createApiKeyAsync,
+    apiKeyApi_d_exchangeApiKeyAsync as exchangeApiKeyAsync,
+    apiKeyApi_d_deleteApiKeyAsync as deleteApiKeyAsync,
+  };
 }
 
 declare const fetchBusinessesAsync: ({ token, page, searchTerm, }: EntitySearchRequest) => Promise<PaginateResponse<Business>>;
@@ -3074,4 +3089,4 @@ declare namespace errorHandling_d {
   };
 }
 
-export { apiKeyApi_d as apiKeys, axiosInstance_d as axiosInstance, businessesApi_d as businesses, channelsApi_d as channels, components, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, metricGeneratorsApi_d as metricGenerators, metricsApi_d as metrics, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, promotionsApi_d as promotions, promotionsRecommendersApi_d as promotionsRecommenders, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, setTenant, tenantsApi_d as tenants, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };
+export { activityFeedApi_d as activityFeed, apiKeyApi_d as apiKeys, axiosInstance_d as axiosInstance, businessesApi_d as businesses, channelsApi_d as channels, components, customersApi_d as customers, dataSummaryApi_d as dataSummary, deploymentApi_d as deployment, environmentsApi_d as environments, errorHandling_d as errorHandling, eventsApi_d as events, featureGeneratorsApi_d as featureGenerators, featuresApi_d as features, integratedSystemsApi_d as integratedSystems, itemsRecommendersApi_d as itemsRecommenders, metricGeneratorsApi_d as metricGenerators, metricsApi_d as metrics, modelRegistrationsApi_d as modelRegistrations, index_d as models, parameterSetRecommendersApi_d as parameterSetRecommenders, parametersApi_d as parameters, profileApi_d as profile, promotionsApi_d as promotions, promotionsRecommendersApi_d as promotionsRecommenders, reactConfigApi_d as reactConfig, recommendableItemsApi_d as recommendableItems, reportsApi_d as reports, rewardSelectorsApi_d as rewardSelectors, segmentsApi_d as segments, setBaseUrl, setDefaultApiKey, setDefaultEnvironmentId, setTenant, tenantsApi_d as tenants, touchpointsApi_d as touchpoints, trackedUsersApi_d as trackedUsers };

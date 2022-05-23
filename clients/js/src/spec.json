@@ -20485,6 +20485,9 @@
           },
           "redeemedPromotion": {
             "$ref": "#/components/schemas/RecommendableItem"
+          }
+        }
+      },
       "OldRecommenderArgument": {
         "type": "object",
         "properties": {
