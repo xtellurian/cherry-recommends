@@ -37,7 +37,9 @@ const WebhookConfiguration = ({ channel }) => {
       id: channel.id,
       endpoint,
     })
-      .then(() => navigate({ pathname: `/channels/detail/${channel.id}` }))
+      .then(() =>
+        navigate({ pathname: `/integrations/channels/detail/${channel.id}` })
+      )
       .catch((e) => setError(e))
       .finally(() => setSaving(false));
   };
@@ -105,7 +107,9 @@ const WebConfiguration = ({ channel }) => {
         popupSubheader,
       },
     })
-      .then(() => navigate({ pathname: `/channels/detail/${channel.id}` }))
+      .then(() =>
+        navigate({ pathname: `/integrations/channels/detail/${channel.id}` })
+      )
       .catch((e) => setError(e))
       .finally(() => setSaving(false));
   };

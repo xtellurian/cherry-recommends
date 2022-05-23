@@ -27,7 +27,7 @@ export const EditBusinessProperties = () => {
     setError(null);
     setSaving(true);
     updateBusinessPropertiesAsync({ token, id, properties })
-      .then(() => navigate(`/businesses/detail/${id}`))
+      .then(() => navigate(`/customers/businesses/detail/${id}`))
       .catch(setError)
       .finally(() => setSaving(false));
   };
@@ -41,7 +41,7 @@ export const EditBusinessProperties = () => {
   return (
     <React.Fragment>
       <MoveUpHierarchyButton
-        to={`/businesses/detail/${id}`}
+        to={`/customers/businesses/detail/${id}`}
         className="float-right"
       >
         Back

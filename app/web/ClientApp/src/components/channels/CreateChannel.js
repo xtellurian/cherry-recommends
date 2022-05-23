@@ -52,7 +52,7 @@ export const CreateChannel = () => {
     })
       .then((u) => {
         analytics.track("site:channel_create_success");
-        navigate({ pathname: `/channels/detail/${u.id}` });
+        navigate({ pathname: `/integrations/channels/detail/${u.id}` });
       })
       .catch((e) => {
         analytics.track("site:channel_create_failure");
@@ -92,7 +92,7 @@ export const CreateChannel = () => {
           </AsyncButton>
         }
         backButton={
-          <MoveUpHierarchyPrimaryButton to="/channels">
+          <MoveUpHierarchyPrimaryButton to="/integrations/channels">
             Back to Channels
           </MoveUpHierarchyPrimaryButton>
         }

@@ -4,12 +4,9 @@ import { useRouteMatch } from "react-router-dom";
 import { Home } from "./components/Home";
 import { CustomersComponent } from "./components/customers/CustomersComponent";
 import AuthorizeRoute from "./components/auth0/ProtectedRoute";
-import { SegmentsComponent } from "./components/segments/SegmentsComponent";
-import { ModelRegistrationsComponent } from "./components/models/ModelRegistrationsComponent";
 import { ApiDocs } from "./components/docs/ApiDocs";
 import { Profile } from "./components/auth0/Profile";
 import { SettingsComponent } from "./components/settings/SettingsComponent";
-import { DataViewComponent } from "./components/data/DataViewComponent";
 import { ReportsComponent } from "./components/reports/ReportsComponent";
 import MetricsComponent from "./components/metrics/MetricsComponent";
 import { ParametersComponent } from "./components/parameters/ParametersComponent";
@@ -20,9 +17,11 @@ import { AdminComponent } from "./components/admin/AdminComponent";
 import { TenantSettingsComponent } from "./components/tenant-settings/TenantSettingsComponent";
 import Identifier from "./analytics/Identifier";
 import "./global-css/cherry.css";
-import { BusinessesComponent } from "./components/businesses/BusinessesComponent";
 import { ChannelsComponent } from "./components/channels/ChannelsComponent";
 import { GettingStartedChecklistComponent } from "./components/onboarding/GettingStartedChecklist";
+
+// TODO: if single tenant, path format must be `/<menu>/<submenu>`
+// TODO: if multi tenant, path format must be `/<tenant-name>/<menu>/<submenu>`
 
 const InTenantApp = ({ multitenant }) => {
   const { params } = useRouteMatch();
@@ -38,23 +37,23 @@ const InTenantApp = ({ multitenant }) => {
         path={`${routePrefix}/admin`}
         component={AdminComponent}
       />
-      {/* todo: move out of single tenant app?  */}
+
+      {/* TODO: move out of single tenant app?  */}
       <AuthorizeRoute component={Profile} path={`${routePrefix}/profile`} />
 
+      {/* TODO: move to CustomerComponent */}
       <Route path={`${routePrefix}/tracked-users`}>
         <Redirect to={`${routePrefix}/customers`} />
       </Route>
+
       <AuthorizeRoute
         path={`${routePrefix}/customers`}
         component={CustomersComponent}
       />
+
       <AuthorizeRoute
         path={`${routePrefix}/metrics`}
         component={MetricsComponent}
-      />
-      <AuthorizeRoute
-        path={`${routePrefix}/segments`}
-        component={SegmentsComponent}
       />
       <AuthorizeRoute
         path={`${routePrefix}/parameters`}
@@ -69,10 +68,6 @@ const InTenantApp = ({ multitenant }) => {
         component={PromotionsComponent}
       />
       <AuthorizeRoute
-        path={`${routePrefix}/models`}
-        component={ModelRegistrationsComponent}
-      />
-      <AuthorizeRoute
         path={`${routePrefix}/events`}
         component={EventsComponent}
       />
@@ -80,26 +75,17 @@ const InTenantApp = ({ multitenant }) => {
         path={`${routePrefix}/settings`}
         component={SettingsComponent}
       />
-
       <AuthorizeRoute
         path={`${routePrefix}/tenant-settings`}
         component={TenantSettingsComponent}
-      />
-
-      <AuthorizeRoute
-        path={`${routePrefix}/dataview`}
-        component={DataViewComponent}
       />
       <AuthorizeRoute
         path={`${routePrefix}/reports`}
         component={ReportsComponent}
       />
+      {/* Note: move to IntegrationsComponent */}
       <AuthorizeRoute
-        path={`${routePrefix}/businesses`}
-        component={BusinessesComponent}
-      />
-      <AuthorizeRoute
-        path={`${routePrefix}/channels`}
+        path={`${routePrefix}/integrations/channels`}
         component={ChannelsComponent}
       />
       <AuthorizeRoute

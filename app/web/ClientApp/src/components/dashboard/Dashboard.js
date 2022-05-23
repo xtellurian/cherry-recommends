@@ -56,7 +56,7 @@ export const Dashboard = () => {
               <Spinner />
             ) : (
               <React.Fragment>
-                <Fact label="Number of Customers" to="/customers">
+                <Fact label="Number of Customers" to="/customers/customers">
                   {generalSummary.totalCustomers}
                 </Fact>
                 <Fact label="Events in 24 Hours">

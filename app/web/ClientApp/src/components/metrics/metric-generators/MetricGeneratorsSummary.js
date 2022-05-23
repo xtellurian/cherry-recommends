@@ -55,7 +55,7 @@ const GeneratorsSummary = () => {
   const generators = useMetricGenerators({ trigger });
   return (
     <React.Fragment>
-      <MoveUpHierarchyButton className="float-right" to="/metrics">
+      <MoveUpHierarchyButton className="float-right" to="/metrics/metrics">
         Back to Metrics
       </MoveUpHierarchyButton>
       <Title>Metric Generators</Title>

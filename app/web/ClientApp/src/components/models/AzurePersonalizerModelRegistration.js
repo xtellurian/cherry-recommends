@@ -31,7 +31,7 @@ export const AzurePersonalizerModelRegistration = ({
       payload: modelRegistration,
       token,
     })
-      .then((m) => navigate(`/models/test/${m.id}`))
+      .then((m) => navigate(`/admin/models/test/${m.id}`))
       .catch(setError)
       .finally(() => setLoading(false));
   };

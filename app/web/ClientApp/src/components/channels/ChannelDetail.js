@@ -47,7 +47,7 @@ export const ChannelDetail = () => {
     <EntityDetailPageLayout
       backButton={
         <MoveUpHierarchyPrimaryButton
-          to={{ pathname: "/channels", search: null }}
+          to={{ pathname: "/integrations/channels", search: null }}
         >
           Back to Channels
         </MoveUpHierarchyPrimaryButton>
@@ -106,7 +106,7 @@ export const ChannelDetail = () => {
         setOpen={setIsDeletePopupOpen}
         handleDelete={() =>
           deleteChannelAsync({ id, token })
-            .then(() => navigate({ pathname: "/channels" }))
+            .then(() => navigate({ pathname: "/integrations/channels" }))
             .catch(setError)
         }
       />

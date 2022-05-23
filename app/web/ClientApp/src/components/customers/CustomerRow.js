@@ -8,7 +8,7 @@ export const CustomerRow = ({ customer, children }) => {
   const { navigate } = useNavigation();
 
   const handleClick = () => {
-    navigate({ pathname: `/customers/detail/${customer.id}` });
+    navigate({ pathname: `/customers/customers/detail/${customer.id}` });
   };
 
   return (

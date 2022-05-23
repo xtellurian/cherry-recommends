@@ -11,7 +11,7 @@ export const ChannelsSummary = () => {
   return (
     <div>
       <div className="float-right">
-        <CreateButtonClassic to="/channels/create">
+        <CreateButtonClassic to="/integrations/channels/create">
           Create New
         </CreateButtonClassic>
       </div>

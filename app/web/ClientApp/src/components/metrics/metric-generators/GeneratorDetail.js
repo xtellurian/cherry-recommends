@@ -63,7 +63,7 @@ const AggregateCustomerMetricInfo = ({ aggregateCustomerMetric }) => {
         <div>
           Calculating the {aggregateCustomerMetric.aggregationType} of{" "}
           <Navigation
-            to={`/metrics/detail/${aggregateCustomerMetric.metricId}`}
+            to={`/metrics/metrics/detail/${aggregateCustomerMetric.metricId}`}
           >
             {aggregateCustomerMetric.metric?.name}
           </Navigation>
@@ -81,11 +81,15 @@ const JoinTwoMetrics = ({ joinTwoMetrics }) => {
         <div>Joining 2 Metrics</div>
         <div>
           Dividing{" "}
-          <Navigation to={`/metrics/detail/${joinTwoMetrics.metric1Id}`}>
+          <Navigation
+            to={`/metrics/metrics/detail/${joinTwoMetrics.metric1Id}`}
+          >
             {joinTwoMetrics.metric1?.name}
           </Navigation>
           {" by "}
-          <Navigation to={`/metrics/detail/${joinTwoMetrics.metric2Id}`}>
+          <Navigation
+            to={`/metrics/metrics/detail/${joinTwoMetrics.metric2Id}`}
+          >
             {joinTwoMetrics.metric2?.name}
           </Navigation>
         </div>

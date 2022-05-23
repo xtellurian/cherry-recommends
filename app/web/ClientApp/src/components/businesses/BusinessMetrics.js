@@ -59,7 +59,7 @@ export const BusinessMetrics = () => {
   const businessMetrics = useBusinessMetrics({ id });
   return (
     <React.Fragment>
-      <MoveUpHierarchyPrimaryButton to={`/businesses/detail/${id}`}>
+      <MoveUpHierarchyPrimaryButton to={`/customers/businesses/detail/${id}`}>
         Back to Business Details
       </MoveUpHierarchyPrimaryButton>
       <PageHeading

@@ -12,6 +12,7 @@ import {
   DropdownToggle,
   UncontrolledDropdown,
 } from "reactstrap";
+
 import { useAuth } from "../../utility/useAuth";
 import { settingsItems } from "./MenuIA";
 import { LoadingPopup } from "../molecules/popups/LoadingPopup";
@@ -24,6 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { SideNavMenu } from "./SideNavMenu";
 import { Navigation } from "../molecules";
+
 import "./NavMenu.css";
 
 const DropdownMenuItem = ({ section }) => {
@@ -65,7 +67,7 @@ const SmartMenuItem = ({ section }) => {
   }
 };
 
-export const NavMenu = ({ children }) => {
+export const NavMenu = ({ children, multitenant }) => {
   const { isAuthenticated, logout } = useAuth();
   const [state, setState] = React.useState({
     collapsed: true,
@@ -233,7 +235,7 @@ export const NavMenu = ({ children }) => {
       </header>
 
       <aside>
-        <SideNavMenu />
+        <SideNavMenu multitenant={multitenant} />
       </aside>
 
       <section className="content p-4">{children}</section>

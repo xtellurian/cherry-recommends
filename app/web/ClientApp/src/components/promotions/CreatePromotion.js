@@ -63,7 +63,7 @@ export const CreateItem = () => {
     })
       .then((p) => {
         analytics.track("site:item_create_success");
-        navigate(`/promotions/detail/${p.id}`);
+        navigate(`/promotions/promotions/detail/${p.id}`);
       })
       .catch((e) => {
         analytics.track("site:item_create_failure");
@@ -96,7 +96,7 @@ export const CreateItem = () => {
           />
         }
         backButton={
-          <MoveUpHierarchyPrimaryButton to="/promotions">
+          <MoveUpHierarchyPrimaryButton to="/promotions/promotions">
             Back to Promotions
           </MoveUpHierarchyPrimaryButton>
         }

@@ -64,7 +64,7 @@ export const GenericModelTester = ({ model }) => {
   };
   return (
     <React.Fragment>
-      <MoveUpHierarchyPrimaryButton to="/models">
+      <MoveUpHierarchyPrimaryButton to="/admin/models">
         Back to Models
       </MoveUpHierarchyPrimaryButton>
       <PageHeading title={model.name || "..."} subtitle="Model Tester" />

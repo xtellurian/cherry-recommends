@@ -53,7 +53,7 @@ export const EditItem = ({ item: currentItem }) => {
       promotion,
     })
       .then((p) => {
-        navigate(`/promotions/detail/${p.id}`);
+        navigate(`/promotions/promotions/detail/${p.id}`);
       })
       .catch((e) => {
         setError(e);

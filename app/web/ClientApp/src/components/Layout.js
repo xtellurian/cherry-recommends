@@ -2,9 +2,9 @@ import React from "react";
 import { Container } from "reactstrap";
 import { NavMenu } from "./menu/NavMenu";
 
-export const Layout = ({ children }) => {
+export const Layout = ({ children, multitenant }) => {
   return (
-    <NavMenu>
+    <NavMenu multitenant={multitenant}>
       <Container className="mw-100">{children}</Container>
     </NavMenu>
   );

@@ -17,7 +17,7 @@ export const GetStarted = () => {
               creating a data integration
             </Navigation>{" "}
             or{" "}
-            <Navigation to="/customers/upload">
+            <Navigation to="/customers/customers/upload">
               uploading a .csv file with customer information.
             </Navigation>
           </li>
@@ -31,7 +31,9 @@ export const GetStarted = () => {
           </li>
           <li>
             For example, define parameters to optimise in the{" "}
-            <Navigation to="/parameters">Parameter catalog</Navigation>
+            <Navigation to="/parameters/parameters">
+              Parameter catalog
+            </Navigation>
           </li>
         </ul>
       </ExpandableCard>

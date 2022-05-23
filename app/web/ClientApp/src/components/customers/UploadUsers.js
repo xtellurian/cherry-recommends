@@ -86,7 +86,7 @@ export const UploadTrackedUserComponent = () => {
   if (processState.complete) {
     return (
       <div className="process-complete">
-        <Navigation to="/customers">
+        <Navigation to="/customers/customers">
           <button className="btn btn-primary">Go to Customers</button>
         </Navigation>
       </div>

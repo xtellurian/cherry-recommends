@@ -16,7 +16,6 @@ import {
 import Select from "../molecules/selectors/Select";
 import { useCommonId } from "../../utility/utility";
 
-import { hash } from "../menu/MenuIA";
 import CreatePageLayout, {
   CreateButton,
 } from "../molecules/layout/CreatePageLayout";
@@ -58,7 +57,7 @@ const CreateMetric = () => {
     })
       .then((r) => {
         analytics.track("site:metric_create_success");
-        navigate(`/metrics/detail/${r.id}`);
+        navigate(`/metrics/metrics/detail/${r.id}`);
       })
       .catch((e) => {
         analytics.track("site:metric_create_failure");
@@ -92,8 +91,7 @@ const CreateMetric = () => {
       backButton={
         <MoveUpHierarchyPrimaryButton
           to={{
-            pathname: "/metrics/",
-            hash: hash.metrics,
+            pathname: "/metrics/metrics",
           }}
         >
           Back to Metrics

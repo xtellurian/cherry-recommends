@@ -14,7 +14,7 @@ const Top = ({ id }) => {
     <React.Fragment>
       <MoveUpHierarchyButton
         className="float-right"
-        to={`/customers/detail/${id}`}
+        to={`/customers/customers/detail/${id}`}
       >
         User Details
       </MoveUpHierarchyButton>
@@ -60,7 +60,7 @@ export const LinkToIntegratedSystem = () => {
       token,
       user: trackedUser,
     })
-      .then(() => navigate(`/customers/detail/${trackedUser.id}`))
+      .then(() => navigate(`/customers/customers/detail/${trackedUser.id}`))
       .catch((e) => console.error(e));
   };
   return (

@@ -60,7 +60,7 @@ export const CustomerDetail = () => {
     <EntityDetailPageLayout
       backButton={
         <MoveUpHierarchyPrimaryButton
-          to={{ pathname: "/customers", search: null }}
+          to={{ pathname: "/customers/customers", search: null }}
         >
           Back to Customers
         </MoveUpHierarchyPrimaryButton>
@@ -75,17 +75,19 @@ export const CustomerDetail = () => {
         <>
           <ActionsButton
             className="ml-1"
-            to={`/customers/metrics/${id}`}
+            to={`/customers/customers/metrics/${id}`}
             label="Metrics"
           >
             <ActionItemsGroup label="Actions">
-              <ActionLink to={`/customers/edit-properties/${id}`}>
+              <ActionLink to={`/customers/customers/edit-properties/${id}`}>
                 Edit Properties
               </ActionLink>
-              <ActionLink to={`/customers/create-event/${id}`}>
+              <ActionLink to={`/customers/customers/create-event/${id}`}>
                 Log Event
               </ActionLink>
-              <ActionLink to={`/customers/link-to-integrated-system/${id}`}>
+              <ActionLink
+                to={`/customers/customers/link-to-integrated-system/${id}`}
+              >
                 Link to Integrated System
               </ActionLink>
             </ActionItemsGroup>
@@ -116,7 +118,9 @@ export const CustomerDetail = () => {
       <TabActivator tabId="properties" defaultTabId={defaultTabId}>
         <Subtitle>Properties ({numProperties})</Subtitle>
 
-        <Navigation to={`/customers/edit-properties/${trackedUser.id}`}>
+        <Navigation
+          to={`/customers/customers/edit-properties/${trackedUser.id}`}
+        >
           <button className="btn btn-outline-primary float-right">
             Edit Properties
           </button>
@@ -142,7 +146,7 @@ export const CustomerDetail = () => {
         setOpen={setIsDeletePopupOpen}
         handleDelete={() =>
           deleteCustomerAsync({ id, token })
-            .then(() => navigate("/customers"))
+            .then(() => navigate("/customers/customers"))
             .catch(setError)
         }
       />

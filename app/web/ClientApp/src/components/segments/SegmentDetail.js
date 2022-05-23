@@ -42,7 +42,7 @@ export const SegmentDetail = () => {
     <EntityDetailPageLayout
       backButton={
         <MoveUpHierarchyPrimaryButton
-          to={{ pathname: "/segments", search: null }}
+          to={{ pathname: "/customers/segments", search: null }}
         >
           Back to Segments
         </MoveUpHierarchyPrimaryButton>
@@ -77,7 +77,7 @@ export const SegmentDetail = () => {
         setOpen={setIsDeletePopupOpen}
         handleDelete={() =>
           deleteSegmentAsync({ id, token })
-            .then(() => navigate("/segments"))
+            .then(() => navigate("/customers/segments"))
             .catch(setError)
         }
       />

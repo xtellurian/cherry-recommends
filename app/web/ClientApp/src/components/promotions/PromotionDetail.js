@@ -55,7 +55,7 @@ export const ItemDetail = () => {
   return (
     <EntityDetailPageLayout
       backButton={
-        <MoveUpHierarchyPrimaryButton to="/promotions">
+        <MoveUpHierarchyPrimaryButton to="/promotions/promotions">
           Back to Promotions
         </MoveUpHierarchyPrimaryButton>
       }
@@ -149,7 +149,7 @@ export const ItemDetail = () => {
             setOpen={setisDeletePopupOpen}
             handleDelete={() =>
               deletePromotionAsync({ id: item.id, token })
-                .then(() => navigate("/promotions"))
+                .then(() => navigate("/promotions/promotions"))
                 .catch(setError)
             }
           />

@@ -4,7 +4,6 @@ import { useParameterSetRecommenders } from "../../api-hooks/parameterSetRecomme
 import { EmptyState, Navigation, Spinner } from "../molecules";
 import { EmptyStateText } from "../molecules/empty/EmptyStateText";
 import { RecommenderRow } from "../recommenders/RecommenderRow";
-import { hash } from "../menu/MenuIA";
 import { CardSection, Label, MoreLink } from "../molecules/layout/CardSection";
 
 const MAX_LIST_LENGTH = 5;
@@ -54,7 +53,6 @@ export const Recommenders = ({ className, hasItems }) => {
               <Navigation
                 to={{
                   pathname: "/recommenders/promotions-recommenders/create",
-                  hash: hash.promotionsRecommenders,
                 }}
               >
                 <button disabled={!hasItems} className="btn btn-primary">
@@ -66,7 +64,6 @@ export const Recommenders = ({ className, hasItems }) => {
           <MoreLink
             to={{
               pathname: "/recommenders/promotions-recommenders",
-              hash: hash.promotionsRecommenders,
             }}
           >
             View More

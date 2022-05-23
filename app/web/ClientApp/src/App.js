@@ -21,7 +21,7 @@ const App = ({ multitenant }) => {
   if (!multitenant) {
     return (
       <AnonymousSwitcher>
-        <Layout>
+        <Layout multitenant={false}>
           <Route path="/_connect">
             <ConnectComponent />
           </Route>
@@ -44,7 +44,7 @@ const App = ({ multitenant }) => {
           </Route>
           <Route path="/:tenant">
             <TenantProviderContainer>
-              <Layout>
+              <Layout multitenant={true}>
                 <InTenantApp multitenant={true} />
               </Layout>
             </TenantProviderContainer>

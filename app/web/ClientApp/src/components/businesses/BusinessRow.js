@@ -8,7 +8,7 @@ export const BusinessRow = ({ business, children }) => {
   const { navigate } = useNavigation();
 
   const handleClick = () => {
-    navigate({ pathname: `/businesses/detail/${business.id}` });
+    navigate({ pathname: `/customers/businesses/detail/${business.id}` });
   };
 
   return (

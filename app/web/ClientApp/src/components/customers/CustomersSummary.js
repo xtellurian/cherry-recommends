@@ -8,7 +8,7 @@ import { EmptyList } from "../molecules";
 
 const CreateButton = () => {
   return (
-    <Navigation to="/customers/create">
+    <Navigation to="/customers/customers/create">
       <button className="btn btn-primary">Add a Customer</button>
     </Navigation>
   );

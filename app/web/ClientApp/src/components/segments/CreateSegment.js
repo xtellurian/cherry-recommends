@@ -31,7 +31,7 @@ export const CreateSegment = () => {
     })
       .then((r) => {
         analytics.track("site:segment_create_success");
-        navigate("/segments");
+        navigate("/customers/segments");
       })
       .catch((e) => {
         analytics.track("site:segment_create_failure");
@@ -51,7 +51,7 @@ export const CreateSegment = () => {
           />
         }
         backButton={
-          <MoveUpHierarchyPrimaryButton to="/segments">
+          <MoveUpHierarchyPrimaryButton to="/customers/segments">
             Back to Segments
           </MoveUpHierarchyPrimaryButton>
         }

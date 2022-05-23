@@ -6,8 +6,6 @@ import { CreateButtonClassic } from "../molecules/CreateButton";
 import { MetricRow } from "./MetricRow";
 import { EmptyList, Paginator, Title, ErrorCard, Spinner } from "../molecules";
 
-import { metricsHash } from "../menu/MenuIA";
-
 const MetricsSummary = () => {
   const metrics = useMetrics();
   return (
@@ -15,8 +13,7 @@ const MetricsSummary = () => {
       <CreateButtonClassic
         className="float-right"
         to={{
-          pathname: "/metrics/create",
-          hash: metricsHash.create,
+          pathname: "/metrics/metrics/create",
         }}
       >
         Create Metric

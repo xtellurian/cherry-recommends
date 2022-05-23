@@ -33,7 +33,7 @@ export const CreateBusiness = () => {
     })
       .then((u) => {
         analytics.track("site:business_create_success");
-        navigate(`/businesses/detail/${u.id}`);
+        navigate(`/customers/businesses/detail/${u.id}`);
       })
       .catch((e) => {
         analytics.track("site:business_create_failure");
@@ -60,7 +60,7 @@ export const CreateBusiness = () => {
           />
         }
         backButton={
-          <MoveUpHierarchyPrimaryButton to="/businesses">
+          <MoveUpHierarchyPrimaryButton to="/customers/businesses">
             Back to Businesses
           </MoveUpHierarchyPrimaryButton>
         }

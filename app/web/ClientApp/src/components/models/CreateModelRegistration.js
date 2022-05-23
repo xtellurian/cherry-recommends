@@ -29,7 +29,7 @@ export const CreateModelRegistration = () => {
     <React.Fragment>
       <CreatePageLayout
         backButton={
-          <MoveUpHierarchyPrimaryButton to="/models">
+          <MoveUpHierarchyPrimaryButton to="/admin/models">
             Back to Models
           </MoveUpHierarchyPrimaryButton>
         }

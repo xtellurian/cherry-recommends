@@ -4,7 +4,6 @@ import { PromotionRow } from "../promotions/PromotionRow";
 import { NoteBox } from "../molecules/NoteBox";
 import { EmptyStateText } from "../molecules/empty/EmptyStateText";
 import { Navigation } from "../molecules";
-import { hash } from "../menu/MenuIA";
 import { CardSection, Label, MoreLink } from "../molecules/layout/CardSection";
 
 const MAX_LIST_LENGTH = 5;
@@ -31,8 +30,7 @@ export const Items = ({ className, items }) => {
               </EmptyStateText>
               <Navigation
                 to={{
-                  pathname: "/promotions/create",
-                  hash: hash.promotions,
+                  pathname: "/promotions/promotions/create",
                 }}
               >
                 <button className="btn btn-primary">Create a Promotion</button>
@@ -41,8 +39,7 @@ export const Items = ({ className, items }) => {
           )}
           <MoreLink
             to={{
-              pathname: "/promotions",
-              hash: hash.promotions,
+              pathname: "/promotions/promotions",
             }}
           >
             View more

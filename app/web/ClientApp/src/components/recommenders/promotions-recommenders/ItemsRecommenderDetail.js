@@ -207,7 +207,7 @@ const RecommenderDetailSection = () => {
             <EntityField
               label="Baseline Promotion"
               entity={recommender.baselineItem}
-              to={`/promotions/detail/${recommender.baselineItemId}`}
+              to={`/promotions/promotions/detail/${recommender.baselineItemId}`}
             />
           )}
 
@@ -215,7 +215,7 @@ const RecommenderDetailSection = () => {
             <EntityField
               label="Target Metric"
               entity={recommender.targetMetric}
-              to={`/metrics/detail/${recommender.targetMetric.id}`}
+              to={`/metrics/metrics/detail/${recommender.targetMetric.id}`}
             />
           )}
         </div>

@@ -26,7 +26,7 @@ const PerformanceTableRow = ({ data, itemsById }) => {
   return (
     <TableRow>
       <Cell>
-        <Navigation to={`/promotions/detail/${data.itemId}`}>
+        <Navigation to={`/promotions/promotions/detail/${data.itemId}`}>
           {item.name}
         </Navigation>
       </Cell>

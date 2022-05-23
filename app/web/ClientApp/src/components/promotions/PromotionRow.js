@@ -8,7 +8,7 @@ export const PromotionRow = ({ promotion, children }) => {
   const { navigate } = useNavigation();
 
   const handleClick = () => {
-    navigate({ pathname: `/promotions/detail/${promotion.id}` });
+    navigate({ pathname: `/promotions/promotions/detail/${promotion.id}` });
   };
 
   const shortenDescription = (description) => {

@@ -8,7 +8,10 @@ export const SegmentRow = ({ segment, children }) => {
   const { navigate } = useNavigation();
 
   const handleClick = () => {
-    navigate({ pathname: `/segments/detail/${segment.id}`, search: "" });
+    navigate({
+      pathname: `/customers/segments/detail/${segment.id}`,
+      search: "",
+    });
   };
 
   return (

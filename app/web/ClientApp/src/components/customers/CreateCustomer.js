@@ -55,7 +55,7 @@ export const CreateCustomer = () => {
     })
       .then((u) => {
         analytics.track("site:customer_create_success");
-        navigate(`/customers/detail/${u.id}`);
+        navigate(`/customers/customers/detail/${u.id}`);
       })
       .catch((e) => {
         analytics.track("site:customer_create_failure");
@@ -74,7 +74,7 @@ export const CreateCustomer = () => {
           />
         }
         backButton={
-          <MoveUpHierarchyPrimaryButton to="/customers">
+          <MoveUpHierarchyPrimaryButton to="/customers/customers">
             Back to Customers
           </MoveUpHierarchyPrimaryButton>
         }

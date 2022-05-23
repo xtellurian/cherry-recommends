@@ -19,7 +19,7 @@ const LinkedModelInfo = ({ linkedModel }) => {
       <div className="card-header">Currently Linked</div>
       <div className="card-body">
         <CopyableField label="Model Name" value={linkedModel.name} />
-        <Navigation to={`/models/test/${linkedModel.id}`}>
+        <Navigation to={`/admin/models/test/${linkedModel.id}`}>
           <button className="btn btn-secondary float-right">Test Model</button>
         </Navigation>
       </div>

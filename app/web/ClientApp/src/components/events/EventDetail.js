@@ -35,7 +35,7 @@ export const EventDetail = ({ event }) => {
         <EntityField
           label="Customer"
           entity={trackedUser}
-          to={`/customers/detail/${event.trackedUserId}`}
+          to={`/customers/customers/detail/${event.trackedUserId}`}
         />
         <CopyableField label="Event ID" value={event.eventId} />
         <CopyableField label="Kind" value={event.eventKind} />

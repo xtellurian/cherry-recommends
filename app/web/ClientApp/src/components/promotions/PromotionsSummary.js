@@ -38,7 +38,10 @@ export const RecommendableItemsSummary = () => {
 
   return (
     <React.Fragment>
-      <CreateButtonClassic className="float-right" to="/promotions/create">
+      <CreateButtonClassic
+        className="float-right"
+        to="/promotions/promotions/create"
+      >
         Create Promotion
       </CreateButtonClassic>
       <Title>Promotion Catalogue</Title>

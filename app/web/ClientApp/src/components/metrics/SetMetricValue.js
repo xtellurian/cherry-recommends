@@ -52,7 +52,7 @@ const SetMetricValue = () => {
     <React.Fragment>
       <MoveUpHierarchyButton
         className="float-right"
-        to={`/metrics/detail/${id}`}
+        to={`/metrics/metrics/detail/${id}`}
       >
         Back to Metrics
       </MoveUpHierarchyButton>

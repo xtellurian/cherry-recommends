@@ -7,7 +7,7 @@ export const ChannelRow = ({ channel, children }) => {
   const { navigate } = useNavigation();
 
   const handleClick = () => {
-    navigate({ pathname: `/channels/detail/${channel.id}` });
+    navigate({ pathname: `/integrations/channels/detail/${channel.id}` });
   };
 
   return (

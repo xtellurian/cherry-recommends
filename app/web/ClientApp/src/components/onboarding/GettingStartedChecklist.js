@@ -20,6 +20,7 @@ const GettingStartedStep = ({
   const isComplete = step.complete;
   const isCurrent = step.current;
   const isNext = step.next;
+  const actionTo = step.actionTo.split("#");
 
   return (
     <div
@@ -59,10 +60,13 @@ const GettingStartedStep = ({
         <div className="mt-3">
           <div className="text-right">
             <Navigation
-              to={step.actionTo.replace(
-                "{recommenderId}",
-                defaultRecommenderId
-              )}
+              to={{
+                pathname: actionTo[0].replace(
+                  "{recommenderId}",
+                  defaultRecommenderId
+                ),
+                hash: actionTo[1],
+              }}
             >
               <AsyncButton
                 onClick={() => {

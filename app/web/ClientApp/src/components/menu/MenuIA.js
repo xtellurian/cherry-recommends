@@ -1,161 +1,139 @@
 import React from "react";
 import { useFlags } from "launchdarkly-react-client-sdk";
 
-export const hash = {
-  gettingStarted: "#gettingStarted",
-  admin: "#admin",
-  promotions: "#promotions",
-  customers: "#customers",
-  metrics: "#metrics",
-  parameters: "#parameters",
-  integration: "#integrations",
-  promotionsRecommenders: "#promotions_recommenders",
-};
+import { routes } from "../../utility/routes";
 
-export const metricsHash = {
-  create: `${hash.metrics}_create`,
+const createURL = (props) => {
+  return { search: "", hash: "", ...props };
 };
 
 const AuthenticatedIA = [
   {
+    id: routes.gettingStarted,
     name: "Get Started",
     icon: "/icons/rocket.svg",
-    to: { pathname: "/getting-started", search: "", hash: hash.gettingStarted },
+    to: createURL({ pathname: "/getting-started" }),
     activeIcon: false,
     items: [],
   },
   {
+    id: routes.promotions,
     name: "Promotions",
     icon: "/icons/tag.svg",
-    to: { pathname: "/promotions", search: "", hash: hash.promotions },
     items: [
       {
+        id: routes.promotions,
         name: "Promotions",
-        to: {
-          pathname: "/promotions/",
-          search: "",
-          hash: hash.promotions,
-        },
+        to: createURL({
+          pathname: "/promotions/promotions",
+        }),
       },
       {
+        id: "promotions-recommenders",
         name: "Recommenders",
-        to: {
+        to: createURL({
           pathname: "/recommenders/promotions-recommenders",
-          search: "",
-          hash: `${hash.promotions}_recommenders`,
-        },
+        }),
       },
     ],
   },
   {
+    id: routes.customers,
     name: "Customers",
     icon: "/icons/customer.svg",
-    to: { pathname: "/customers", search: "", hash: hash.customers },
     items: [
       {
+        id: routes.customers,
         name: "Customers",
-        to: {
-          pathname: "/customers",
-          search: "",
-          hash: hash.customers,
-        },
+        to: createURL({
+          pathname: "/customers/customers",
+        }),
       },
       {
+        id: routes.businesses,
         name: "Businesses",
-        to: {
-          pathname: "/businesses",
-          search: "",
-          hash: `${hash.customers}_businesses`,
-        },
+        to: createURL({
+          pathname: "/customers/businesses",
+        }),
       },
       {
+        id: routes.segments,
         name: "Segments",
-        to: {
-          pathname: "/segments",
-          search: "",
-          hash: `${hash.customers}_segments`,
-        },
+        to: createURL({
+          pathname: "/customers/segments",
+        }),
       },
       {
+        id: routes.dataview,
         name: "Events Overview",
-        to: {
-          pathname: "/dataview",
-          search: "",
-          hash: `${hash.customers}_dataview`,
-        },
+        to: createURL({
+          pathname: "/customers/dataview",
+        }),
       },
     ],
   },
   {
+    id: routes.metrics,
     name: "Metrics",
     icon: "/icons/graph-up.svg",
-    to: { pathname: "/metrics", search: "", hash: hash.metrics },
     items: [
       {
+        id: routes.metrics,
         name: "Metrics",
-        to: {
-          pathname: "/metrics/",
-          search: "",
-          hash: hash.metrics,
-        },
+        to: createURL({
+          pathname: "/metrics/metrics",
+        }),
       },
     ],
   },
   {
+    id: routes.parameters,
     name: "Parameters",
     icon: "/icons/beta.svg",
-    to: { pathname: "/parameters", search: "", hash: hash.parameters },
     items: [
       {
+        id: routes.parameters,
         name: "Parameters",
-        to: {
-          pathname: "/parameters/",
-          search: "",
-          hash: hash.parameters,
-        },
+        to: createURL({
+          pathname: "/parameters/parameters",
+        }),
       },
       {
+        id: "parameter-set-recommenders",
         name: "Recommenders",
-        to: {
+        to: createURL({
           pathname: "/recommenders/parameter-set-recommenders",
-          search: "",
-          hash: `${hash.parameters}_recommenders`,
-        },
+        }),
       },
     ],
   },
   {
+    id: routes.integrations,
     name: "Integrations",
     icon: "/icons/integrations.svg",
-    to: {
-      pathname: "/settings/integrations",
-      search: "",
-      hash: hash.integration,
-    },
     items: [
       {
+        id: "connections",
         name: "Connections",
-        to: {
+        to: createURL({
           pathname: "/settings/integrations",
-          search: "",
-          hash: `${hash.integration}`,
-        },
+          hash: "connections",
+        }),
       },
       {
+        id: "data-sources",
         name: "Data Sources",
-        to: {
+        to: createURL({
           pathname: "/settings/integrations/data-sources",
-          search: "",
-          hash: `${hash.integration}_datasources`,
-        },
+          hash: "datasources",
+        }),
       },
       {
+        id: routes.channels,
         name: "Channels",
-        to: {
-          pathname: "/channels",
-          search: "",
-          hash: `${hash.integration}_channels`,
-        },
+        to: createURL({
+          pathname: "/integrations/channels",
+        }),
       },
     ],
   },
@@ -191,16 +169,16 @@ const getAuthenticatedIA = (scopes, flags) => {
   }
   if (scopes.includes("write:metrics")) {
     ia.splice(1, 0, {
+      id: routes.admin,
       name: "Admin",
       icon: "/icons/metric.svg",
-      to: { pathname: "/", hash: hash.admin },
       items: [
         {
+          id: routes.models,
           name: "Models",
-          to: {
-            pathname: "/models",
-            hash: `${hash.admin}_models`,
-          },
+          to: createURL({
+            pathname: "/admin/models",
+          }),
         },
       ],
     });

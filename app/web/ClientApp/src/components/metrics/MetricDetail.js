@@ -55,7 +55,7 @@ const MetricDetail = () => {
   const [deleteError, setDeleteError] = React.useState();
   const handleDelete = () => {
     deleteMetricAsync({ id, token })
-      .then(() => navigate("/metrics"))
+      .then(() => navigate("/metrics/metrics"))
       .catch(setDeleteError);
   };
 
@@ -88,7 +88,7 @@ const MetricDetail = () => {
     <EntityDetailPageLayout
       backButton={
         <MoveUpHierarchyPrimaryButton
-          to={{ pathname: "/metrics/", search: null }}
+          to={{ pathname: "/metrics/metrics", search: null }}
         >
           Back to Metrics
         </MoveUpHierarchyPrimaryButton>
@@ -97,7 +97,7 @@ const MetricDetail = () => {
       options={
         <>
           {canWrite && (
-            <Navigation to={`/metrics/set-value/${id}`}>
+            <Navigation to={`/metrics/metrics/set-value/${id}`}>
               <button className="btn btn-primary mr-1">
                 Manually Set a Metric Value
               </button>

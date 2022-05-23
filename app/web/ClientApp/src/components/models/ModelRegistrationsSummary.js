@@ -28,7 +28,7 @@ const ModelRow = ({ model, onDeleted }) => {
     <ExpandableCard label={model.name}>
       <ActionsButton
         label="Test"
-        to={`/models/test/${model.id}`}
+        to={`/admin/models/test/${model.id}`}
         className="float-right"
       >
         <ActionItemsGroup label="Actions">

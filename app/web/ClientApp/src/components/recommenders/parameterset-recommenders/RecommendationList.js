@@ -42,7 +42,9 @@ const RecommendationRow = ({ recommendation, size }) => {
     <React.Fragment>
       <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
         {recommendation.customer && (
-          <Navigation to={`/customers/detail/${recommendation.customer.id}`}>
+          <Navigation
+            to={`/customers/customers/detail/${recommendation.customer.id}`}
+          >
             <button className="btn btn-primary float-right">
               View Customer <Link45deg />
             </button>

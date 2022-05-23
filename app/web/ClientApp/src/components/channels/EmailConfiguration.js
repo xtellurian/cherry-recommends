@@ -24,7 +24,9 @@ export const EmailConfiguration = ({ channel }) => {
       id: channel.id,
       listTrigger,
     })
-      .then(() => navigate({ pathname: `/channels/detail/${channel.id}` }))
+      .then(() =>
+        navigate({ pathname: `/integrations/channels/detail/${channel.id}` })
+      )
       .catch((e) => setError(e))
       .finally(() => setSaving(false));
   };

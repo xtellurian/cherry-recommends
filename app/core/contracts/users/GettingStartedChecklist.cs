@@ -13,7 +13,7 @@ namespace SignalBox.Core.Internal
                 {
                     label= "Connect Cherry to your Stack",
                     description= "Choose an integration from the Cherry App Library.",
-                    actionTo= "/settings/integrations/create",
+                    actionTo= "/settings/integrations/create#datasources",
                     actionLabel= "Connect",
                     docsLink="/docs/integrations/library",
                     complete = false
@@ -25,7 +25,7 @@ namespace SignalBox.Core.Internal
                 {
                     label= "Create a Promotion",
                     description= "For example, 10% off next purchase.",
-                    actionTo= "/promotions/create",
+                    actionTo= "/promotions/promotions/create",
                     actionLabel= "Create Promotion",
                     docsLink="/docs/guides/create_promotions",
                     complete = false,
@@ -51,7 +51,7 @@ namespace SignalBox.Core.Internal
                     label= "Deliver Promotions via Channels",
                     description= "Recommendations are delivered to Customers via Channels. "
                         + "Channels may be your website, an email campaign, or backend systems.",
-                    actionTo= "/channels/create",
+                    actionTo= "/integrations/channels/create",
                     actionLabel= "Deliver",
                     docsLink="/docs/integrations/library",
                     complete = false

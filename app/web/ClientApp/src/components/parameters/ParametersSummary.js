@@ -11,7 +11,10 @@ export const ParametersSummary = () => {
 
   return (
     <React.Fragment>
-      <CreateButtonClassic className="float-right" to="/parameters/create">
+      <CreateButtonClassic
+        className="float-right"
+        to="/parameters/parameters/create"
+      >
         Create Parameter
       </CreateButtonClassic>
       <Title>Parameters</Title>

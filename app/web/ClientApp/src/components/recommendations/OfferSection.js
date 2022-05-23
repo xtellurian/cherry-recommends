@@ -10,7 +10,7 @@ export const OfferSection = ({ recommendation, customer, business }) => {
           entity={customer}
           label="Customer"
           to={{
-            pathname: `/customers/detail/${customer.id}`,
+            pathname: `/customers/customers/detail/${customer.id}`,
             search: null,
           }}
         />

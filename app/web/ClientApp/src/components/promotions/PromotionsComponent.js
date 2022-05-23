@@ -1,13 +1,16 @@
 import React from "react";
+import { Redirect, Route } from "react-router";
 import { Switch, useRouteMatch } from "react-router-dom";
+
 import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { RecommendableItemsSummary } from "./PromotionsSummary";
 import { CreateItem } from "./CreatePromotion";
 import { ItemDetail } from "./PromotionDetail";
 import { ErrorBoundary } from "../molecules/ErrorBoundary";
 
-const PromotionsComponent = () => {
+const DefaultComponent = () => {
   const { path } = useRouteMatch();
+
   return (
     <React.Fragment>
       <ErrorBoundary>
@@ -23,6 +26,26 @@ const PromotionsComponent = () => {
             path={`${path}/create`}
             component={CreateItem}
           />
+        </Switch>
+      </ErrorBoundary>
+    </React.Fragment>
+  );
+};
+
+const PromotionsComponent = () => {
+  const { path } = useRouteMatch();
+
+  return (
+    <React.Fragment>
+      <ErrorBoundary>
+        <Switch>
+          <AuthorizeRoute
+            path={`${path}/promotions`}
+            component={DefaultComponent}
+          />
+          <Route path={path}>
+            <Redirect to={`${path}/promotions`} />
+          </Route>
         </Switch>
       </ErrorBoundary>
     </React.Fragment>

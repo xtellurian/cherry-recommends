@@ -64,7 +64,7 @@ export const BusinessDetail = () => {
     <EntityDetailPageLayout
       backButton={
         <MoveUpHierarchyPrimaryButton
-          to={{ pathname: "/businesses", search: null }}
+          to={{ pathname: "/customers/businesses", search: null }}
         >
           Back to Businesses
         </MoveUpHierarchyPrimaryButton>
@@ -79,14 +79,14 @@ export const BusinessDetail = () => {
         <>
           <ActionsButton
             className="ml-1"
-            to={`/businesses/metrics/${id}`}
+            to={`/customers/businesses/metrics/${id}`}
             label="Metrics"
           >
             <ActionItemsGroup label="Actions">
-              <ActionLink to={`/businesses/edit-properties/${id}`}>
+              <ActionLink to={`/customers/businesses/edit-properties/${id}`}>
                 Edit Properties
               </ActionLink>
-              <ActionLink to={`/businesses/create-event/${id}`}>
+              <ActionLink to={`/customers/businesses/create-event/${id}`}>
                 Log Event
               </ActionLink>
             </ActionItemsGroup>
@@ -117,7 +117,7 @@ export const BusinessDetail = () => {
       <TabActivator tabId={tabs[0].id} defaultTabId={defaultTabId}>
         <Subtitle>Properties ({numProperties})</Subtitle>
 
-        <Navigation to={`/businesses/edit-properties/${business.id}`}>
+        <Navigation to={`/customers/businesses/edit-properties/${business.id}`}>
           <button className="btn btn-outline-primary float-right">
             Edit Properties
           </button>
@@ -145,7 +145,7 @@ export const BusinessDetail = () => {
         setOpen={setIsDeletePopupOpen}
         handleDelete={() =>
           deleteBusinessAsync({ id, token })
-            .then(() => navigate("/businesses"))
+            .then(() => navigate("/customers/businesses"))
             .catch(setError)
         }
       />

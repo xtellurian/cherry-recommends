@@ -26,7 +26,7 @@ export const EditProperties = () => {
     setError(null);
     setSaving(true);
     updateMergePropertiesAsync({ token, id, properties })
-      .then(() => navigate(`/customers/detail/${id}`))
+      .then(() => navigate(`/customers/customers/detail/${id}`))
       .catch(setError)
       .finally(() => setSaving(false));
   };
@@ -38,7 +38,7 @@ export const EditProperties = () => {
   return (
     <React.Fragment>
       <MoveUpHierarchyButton
-        to={`/customers/detail/${id}`}
+        to={`/customers/customers/detail/${id}`}
         className="float-right"
       >
         Back

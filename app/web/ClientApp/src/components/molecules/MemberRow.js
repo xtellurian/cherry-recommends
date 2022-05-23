@@ -9,7 +9,7 @@ export const MemberRow = ({ member, onDelete, error }) => {
   const { navigate } = useNavigation();
 
   const handleMemberClick = (member) => {
-    navigate({ pathname: `/customers/detail/${member.id}` });
+    navigate({ pathname: `/customers/customers/detail/${member.id}` });
   };
 
   return (

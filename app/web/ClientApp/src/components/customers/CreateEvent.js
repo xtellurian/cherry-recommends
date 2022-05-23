@@ -83,7 +83,7 @@ export const CreateEvent = () => {
       token,
       events: [tempPayload],
     })
-      .then((_) => navigate(`/customers/detail/${id}?tab=history`))
+      .then((_) => navigate(`/customers/customers/detail/${id}?tab=history`))
       .catch(setError)
       .finally(() => setLoading(false));
   };
@@ -103,7 +103,9 @@ export const CreateEvent = () => {
           />
         }
         backButton={
-          <MoveUpHierarchyPrimaryButton to={`/customers/detail/${id}`}>
+          <MoveUpHierarchyPrimaryButton
+            to={`/customers/customers/detail/${id}`}
+          >
             Back to Details
           </MoveUpHierarchyPrimaryButton>
         }

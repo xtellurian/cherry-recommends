@@ -5,7 +5,7 @@ import { ParametersSummary } from "./ParametersSummary";
 import { CreateParameter } from "./CreateParameter";
 import { ErrorBoundary } from "../molecules/ErrorBoundary";
 
-export const ParametersComponent = () => {
+const DefaultComponent = () => {
   const { path } = useRouteMatch();
   return (
     <React.Fragment>
@@ -20,6 +20,22 @@ export const ParametersComponent = () => {
             exact
             path={`${path}/create`}
             component={CreateParameter}
+          />
+        </Switch>
+      </ErrorBoundary>
+    </React.Fragment>
+  );
+};
+
+export const ParametersComponent = () => {
+  const { path } = useRouteMatch();
+  return (
+    <React.Fragment>
+      <ErrorBoundary>
+        <Switch>
+          <AuthorizeRoute
+            path={`${path}/parameters`}
+            component={DefaultComponent}
           />
         </Switch>
       </ErrorBoundary>

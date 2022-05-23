@@ -48,7 +48,7 @@ export const CreateParameter = () => {
     })
       .then((r) => {
         analytics.track("site:parameter_create_success");
-        navigate("/parameters");
+        navigate("/parameters/parameters");
       })
       .catch((e) => {
         analytics.track("site:parameter_create_failure");
@@ -85,7 +85,7 @@ export const CreateParameter = () => {
         </AsyncButton>
       }
       backButton={
-        <MoveUpHierarchyPrimaryButton to="/parameters">
+        <MoveUpHierarchyPrimaryButton to="/parameters/parameters">
           Back to Parameters
         </MoveUpHierarchyPrimaryButton>
       }

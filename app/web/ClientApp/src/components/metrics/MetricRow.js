@@ -8,7 +8,7 @@ export const MetricRow = ({ metric, children }) => {
   const { navigate } = useNavigation();
 
   const handleClick = () => {
-    navigate({ pathname: `/metrics/detail/${metric.id}` });
+    navigate({ pathname: `/metrics/metrics/detail/${metric.id}` });
   };
 
   return (

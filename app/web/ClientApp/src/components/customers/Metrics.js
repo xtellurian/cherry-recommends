@@ -59,7 +59,7 @@ const Metrics = () => {
   const customerMetrics = useCustomerMetrics({ id });
   return (
     <React.Fragment>
-      <MoveUpHierarchyPrimaryButton to={`/customers/detail/${id}`}>
+      <MoveUpHierarchyPrimaryButton to={`/customers/customers/detail/${id}`}>
         Back to User Details
       </MoveUpHierarchyPrimaryButton>
       <PageHeading
