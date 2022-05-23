@@ -4,11 +4,11 @@ import { AsyncButton } from "../AsyncButton";
 
 import "./EditPageLayout.css";
 
-export const EditButton = ({ label, onCreate, className, loading }) => {
+export const EditButton = ({ label, onClick, className, loading }) => {
   return (
     <AsyncButton
       loading={loading}
-      onClick={onCreate}
+      onClick={onClick}
       className={`btn btn-primary edit-button ${className}`}
     >
       {label || "Save"}
