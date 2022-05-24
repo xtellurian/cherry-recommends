@@ -57,6 +57,7 @@ namespace SignalBox.Infrastructure.Services
             // Only the discount code is tracked in our system.
             try
             {
+                int usageLimit = promotion.NumberOfRedemptions > 0 ? promotion.NumberOfRedemptions : 1;
                 ShopifyPriceRule shopifyPriceRule = new ShopifyPriceRule
                 {
                     Title = discountCode.Code, // For a consistent search experience, use the same value for title as the code property of the associated discount code.
@@ -66,7 +67,8 @@ namespace SignalBox.Infrastructure.Services
                     TargetSelection = "all", // all | entitled
                     TargetType = "line_item", // line_item | shipping_line
                     AllocationMethod = "across", // across | each
-                    OncePerCustomer = true,
+                    UsageLimit = usageLimit,
+                    OncePerCustomer = false,
                     StartsAt = discountCode.StartsAt,
                     EndsAt = discountCode.EndsAt
                 };

@@ -33,7 +33,7 @@ namespace SignalBox.Test.Workflows
             var discountCode = new DiscountCode(promotion, code, dateTimeProvider.Now, dateTimeProvider.Now.AddDays(14));
 
             mockDiscountCodeStore
-                .Setup(_ => _.GetLatestByPromotion(It.IsAny<RecommendableItem>()))
+                .Setup(_ => _.ReadByCode(It.IsAny<string>()))
                 .ReturnsAsync(new EntityResult<DiscountCode>(null));
             mockDiscountCodeStore
                 .Setup(_ => _.Create(It.IsAny<DiscountCode>()))
@@ -65,7 +65,7 @@ namespace SignalBox.Test.Workflows
             );
             var result = await workflow.GenerateDiscountCodes(promotion);
             // assert
-            mockDiscountCodeStore.Verify(_ => _.GetLatestByPromotion(It.IsAny<RecommendableItem>()), Times.Once);
+            mockDiscountCodeStore.Verify(_ => _.ReadByCode(It.IsAny<string>()), Times.Once);
             mockDiscountCodeStore.Verify(_ => _.Create(It.IsAny<DiscountCode>()), Times.Once);
             mockDiscountCodeGenerator.Verify(_ => _.Generate(
                 It.IsAny<IntegratedSystem>(),
@@ -75,7 +75,7 @@ namespace SignalBox.Test.Workflows
         }
 
         [Fact]
-        public async Task CanGenerateDiscountCodes_Returns_Existing()
+        public async Task CanGenerateDiscountCodes_Code_Exists()
         {
             // arrange
             var mockStorageContext = Utility.MockStorageContext();
@@ -100,8 +100,9 @@ namespace SignalBox.Test.Workflows
                 Created = dateTimeProvider.Now.UtcDateTime
             };
             mockDiscountCodeStore
-                .Setup(_ => _.GetLatestByPromotion(It.IsAny<RecommendableItem>()))
-                .ReturnsAsync(new EntityResult<DiscountCode>(discountCode));
+                .SetupSequence(_ => _.ReadByCode(It.IsAny<string>()))
+                .ReturnsAsync(new EntityResult<DiscountCode>(discountCode))
+                .ReturnsAsync(new EntityResult<DiscountCode>(null));
             mockDiscountCodeStore
                 .Setup(_ => _.Create(It.IsAny<DiscountCode>()))
                 .ReturnsAsync(discountCode);
@@ -132,12 +133,12 @@ namespace SignalBox.Test.Workflows
             );
             var result = await workflow.GenerateDiscountCodes(promotion);
             // assert
-            mockDiscountCodeStore.Verify(_ => _.GetLatestByPromotion(It.IsAny<RecommendableItem>()), Times.Once);
-            mockDiscountCodeStore.Verify(_ => _.Create(It.IsAny<DiscountCode>()), Times.Never);
+            mockDiscountCodeStore.Verify(_ => _.ReadByCode(It.IsAny<string>()), Times.Exactly(2));
+            mockDiscountCodeStore.Verify(_ => _.Create(It.IsAny<DiscountCode>()), Times.Once);
             mockDiscountCodeGenerator.Verify(_ => _.Generate(
                 It.IsAny<IntegratedSystem>(),
                 It.IsAny<RecommendableItem>(),
-                It.IsAny<DiscountCode>()), Times.Never);
+                It.IsAny<DiscountCode>()), Times.Once);
             Assert.NotEmpty(result);
         }
 
@@ -165,7 +166,7 @@ namespace SignalBox.Test.Workflows
             var discountCode = new DiscountCode(promotion, code, dateTimeProvider.Now, dateTimeProvider.Now.AddDays(14));
 
             mockDiscountCodeStore
-                .Setup(_ => _.GetLatestByPromotion(It.IsAny<RecommendableItem>()))
+                .Setup(_ => _.ReadByCode(It.IsAny<string>()))
                 .ReturnsAsync(new EntityResult<DiscountCode>(discountCode));
             mockDiscountCodeStore
                 .Setup(_ => _.Create(It.IsAny<DiscountCode>()))
@@ -197,7 +198,7 @@ namespace SignalBox.Test.Workflows
             );
             var result = await workflow.GenerateDiscountCodes(promotion);
             // assert
-            mockDiscountCodeStore.Verify(_ => _.GetLatestByPromotion(It.IsAny<RecommendableItem>()), Times.Never);
+            mockDiscountCodeStore.Verify(_ => _.ReadByCode(It.IsAny<string>()), Times.Never);
             mockDiscountCodeStore.Verify(_ => _.Create(It.IsAny<DiscountCode>()), Times.Never);
             mockDiscountCodeGenerator.Verify(_ => _.Generate(
                 It.IsAny<IntegratedSystem>(),

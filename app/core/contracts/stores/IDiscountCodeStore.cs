@@ -4,7 +4,7 @@ namespace SignalBox.Core
 {
     public interface IDiscountCodeStore : IEntityStore<DiscountCode>
     {
-        Task<EntityResult<DiscountCode>> GetFromCode(string code);
-        Task<EntityResult<DiscountCode>> GetLatestByPromotion(RecommendableItem promotion);
+        Task<EntityResult<DiscountCode>> ReadByCode(string code);
+        Task<EntityResult<DiscountCode>> ReadLatestByPromotion(RecommendableItem promotion);
     }
 }

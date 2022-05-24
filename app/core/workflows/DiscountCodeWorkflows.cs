@@ -48,24 +48,21 @@ namespace SignalBox.Core.Workflows
             if (willGenerate)
             {
                 DiscountCode discountCode = null;
-                var result = await discountCodeStore.GetLatestByPromotion(promotion);
-
-                if (result.Success)
-                {
-                    // Re-use valid generated discount code created within the day
-                    // Entity Created property is in UTC
-                    if (result.Entity.WasCreatedOnDate(dateTimeProvider.Now.UtcDateTime) &&
-                        result.Entity.IsActiveByDate(dateTimeProvider.Now))
-                    {
-                        discountCode = result.Entity;
-                        await discountCodeStore.LoadMany(discountCode, _ => _.GeneratedAt);
-                    }
-                }
+                // Always generate a unique discount code
                 if (discountCode == null)
                 {
-                    string code = DiscountCode.GenerateCode(promotion.CommonId, codeLength: 8);
+                    string code = string.Empty;
                     var startsAt = dateTimeProvider.Now;
                     var endsAt = startsAt.TruncateToDayStart().AddDays(14); // default 14 days
+                    bool codeExists = false;
+                    do
+                    {
+                        // Ensure that the new code does not yet exist in Cherry
+                        // Code generation logic can be further optimized
+                        code = DiscountCode.GenerateCode(promotion.CommonId, codeLength: 8);
+                        var result = await discountCodeStore.ReadByCode(code);
+                        codeExists = result.Success;
+                    } while (codeExists);
                     discountCode = new DiscountCode(promotion, code, startsAt, endsAt);
                     discountCode = await discountCodeStore.Create(discountCode);
                     foreach (var integratedSystem in discountCodeGeneratorSystems)
