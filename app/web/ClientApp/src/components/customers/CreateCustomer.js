@@ -68,7 +68,7 @@ export const CreateCustomer = () => {
         createButton={
           <CreateButton
             label="Create Customer"
-            onCreate={handleCreate}
+            onClick={handleCreate}
             loading={loading}
           />
         }

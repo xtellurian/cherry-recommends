@@ -97,7 +97,7 @@ export const CreateItem = () => {
         createButton={
           <CreateButton
             label="Create Promotion"
-            onCreate={handleCreate}
+            onClick={handleCreate}
             loading={loading}
           />
         }

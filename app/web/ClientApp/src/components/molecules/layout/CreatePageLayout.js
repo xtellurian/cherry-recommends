@@ -7,7 +7,7 @@ import "./CreatePageLayout.css";
 
 export const CreateButton = ({
   label,
-  onCreate,
+  onClick,
   className,
   loading,
   disabled,
@@ -15,7 +15,7 @@ export const CreateButton = ({
   return (
     <AsyncButton
       loading={loading}
-      onClick={onCreate}
+      onClick={onClick}
       className={`btn btn-primary create-button ${className}`}
       disabled={disabled}
     >

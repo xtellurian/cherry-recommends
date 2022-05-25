@@ -39,7 +39,7 @@ export const AzureMLModelRegistration = ({ hostingType, modelType }) => {
         <CreateButton
           label="Create Model"
           loading={loading}
-          onCreate={handleCreate}
+          onClick={handleCreate}
         />
       }
       error={error}

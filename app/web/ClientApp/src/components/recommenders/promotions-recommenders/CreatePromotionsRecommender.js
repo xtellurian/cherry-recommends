@@ -166,7 +166,7 @@ export const CreateRecommender = () => {
         createButton={
           <CreateButton
             label="Create Recommender"
-            onCreate={handleCreate}
+            onClick={handleCreate}
             loading={loading}
           />
         }

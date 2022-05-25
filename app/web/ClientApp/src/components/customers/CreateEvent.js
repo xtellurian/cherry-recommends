@@ -98,7 +98,7 @@ export const CreateEvent = () => {
             label="Create Event"
             loading={loading}
             disabled={isDisabled}
-            onCreate={handleCreate}
+            onClick={handleCreate}
           />
         }
         backButton={
