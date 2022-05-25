@@ -1,13 +1,35 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleXmark,
+  faCirclePlus,
+  faCircleInfo,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { EmptyList } from "./empty/EmptyList";
 import { Typography } from "./Typography";
+import { TextInput } from "./TextInput";
+import { SuggestedProperties } from "../promotions/SuggestedProperties";
+import { HintTippy } from "./FieldLabel";
 
-const PropertyRow = ({ id, entry, value, onChange, onRemove }) => {
+const PropertyRow = ({
+  id,
+  entry,
+  value,
+  isLast,
+  hint,
+  onChange,
+  onRemove,
+  onAdd,
+}) => {
   const [state, setState] = React.useState({
     key: entry,
     value,
   });
+
+  const handleUpdate = () => {
+    onChange(id, state.key, state.value);
+  };
 
   React.useEffect(() => {
     if (state.key !== entry || state.value !== value) {
@@ -15,59 +37,66 @@ const PropertyRow = ({ id, entry, value, onChange, onRemove }) => {
     }
   }, [entry, value]);
 
-  const handleUpdate = () => {
-    onChange(id, state.key, state.value);
-  };
-
   return (
-    <div className="row mt-1">
+    <div className="row">
       <div className="col">
-        <div className="input-group">
-          <div className="input-group-prepend ml-1">
-            <span className="input-group-text" id="basic-addon3">
-              Property
-            </span>
+        <HintTippy value={hint}>
+          <div className="relative">
+            <TextInput
+              placeholder="Enter property name"
+              value={state.key}
+              disabled={hint}
+              onBlur={handleUpdate}
+              onChange={(e) =>
+                setState({
+                  key: e.target.value,
+                  value: state.value,
+                })
+              }
+            />
+            {hint ? (
+              <FontAwesomeIcon
+                icon={faCircleInfo}
+                className="text-secondary"
+                style={{
+                  position: "absolute",
+                  top: "0.95em",
+                  right: "2.25em",
+                }}
+                fontSize={12}
+              />
+            ) : null}
           </div>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Entry"
-            value={state.key}
-            onBlur={handleUpdate}
-            onChange={(e) =>
-              setState({
-                key: e.target.value,
-                value: state.value,
-              })
-            }
-          />
-          {/* <div className="ml-l input-group-prepend ml-1">
-            <span className="input-group-text" id="basic-addon3">
-              Value:
-            </span>
-          </div> */}
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Value"
-            value={state.value}
-            onBlur={handleUpdate}
-            onChange={(e) =>
-              setState({
-                key: state.key,
-                value: e.target.value,
-              })
-            }
-          />
-        </div>
+        </HintTippy>
+      </div>
+      <div className="col">
+        <TextInput
+          placeholder="Enter property value"
+          value={state.value}
+          onBlur={handleUpdate}
+          onChange={(e) =>
+            setState({
+              key: state.key,
+              value: e.target.value,
+            })
+          }
+        />
       </div>
       <div className="col-1">
-        <button
+        {isLast ? (
+          <FontAwesomeIcon
+            icon={faCirclePlus}
+            className="cursor-pointer float-right text-success mt-2 ml-2"
+            style={{ fontSize: "1.5em" }}
+            onClick={onAdd}
+          />
+        ) : null}
+        <FontAwesomeIcon
+          icon={faCircleXmark}
+          className="cursor-pointer float-right text-danger mt-2"
+          style={{ fontSize: "1.5em" }}
           onClick={() => onRemove(id)}
-          className="btn btn-outline-danger btn-block"
-        >
-          X
-        </button>
+        />
       </div>
     </div>
   );
@@ -94,6 +123,7 @@ const dictToList = (properties) => {
     id: i,
   }));
 };
+
 const listToDict = (propertyList) => {
   const result = {};
   for (const p of propertyList) {
@@ -101,16 +131,57 @@ const listToDict = (propertyList) => {
   }
   return result;
 };
+
 export const PropertiesEditor = ({
   label,
   initialProperties,
   onPropertiesChanged,
   placeholder,
+  suggestions,
 }) => {
   const [properties, setProperties] = React.useState(initialProperties || {});
   const [propertyList, setPropertyList] = React.useState(
     dictToList(initialProperties || {})
   );
+
+  const handleChange = (id, key, value) => {
+    const prop = propertyList.find((_) => _.id === id);
+    if (prop) {
+      prop.key = key;
+      prop.value = value;
+      setPropertyList([...propertyList]);
+    } else {
+      console.warn("warning: couldn't find property ID");
+    }
+  };
+
+  const handleRemove = (id) => {
+    const propIndex = propertyList.findIndex((_) => _.id === id);
+    if (propIndex > -1) {
+      propertyList.splice(propIndex, 1);
+      setPropertyList([...propertyList]);
+    }
+  };
+
+  const handleNewEntry = (e, customValue) => {
+    // check if the last one is empty, and don't add if so
+    if (propertyList && propertyList.length > 0) {
+      const lastItem = propertyList[propertyList.length - 1];
+      if (!lastItem.key) {
+        // don't add, the last key is required
+        return;
+      }
+    }
+    const maxId = maxValue(propertyList.map((_) => _.id));
+    propertyList.push({ value: "", key: "", id: maxId + 1, ...customValue });
+    setPropertyList([...propertyList]);
+  };
+
+  const getDescription = (key) => {
+    const el = suggestions?.find((el) => key === el.key);
+    return el?.description;
+  };
+
   React.useEffect(() => {
     if (propertyList) {
       setProperties(listToDict(propertyList));
@@ -124,49 +195,49 @@ export const PropertiesEditor = ({
     }
   }, [properties, onPropertiesChanged]);
 
-  const handleChange = (id, key, value) => {
-    const prop = propertyList.find((_) => _.id === id);
-    if (prop) {
-      prop.key = key;
-      prop.value = value;
-      setPropertyList([...propertyList]);
-    } else {
-      console.warn("warning: couldn't find property ID");
-    }
-  };
-  const handleRemove = (id) => {
-    const propIndex = propertyList.findIndex((_) => _.id === id);
-    if (propIndex > -1) {
-      propertyList.splice(propIndex, 1);
-      setPropertyList([...propertyList]);
-    }
-  };
-
-  const handleNewEntry = () => {
-    // check if the last one is empty, and don't add if so
-    if (propertyList && propertyList.length > 0) {
-      const lastItem = propertyList[propertyList.length - 1];
-      if (!lastItem.key) {
-        // don't add, the last key is required
-        return;
-      }
-    }
-    const maxId = maxValue(propertyList.map((_) => _.id));
-    propertyList.push({ value: "", key: "", id: maxId + 1 });
-    setPropertyList([...propertyList]);
-  };
-
   return (
     <React.Fragment>
       <Typography className="bold my-4">
-        {label || "Property Editor"}
+        {label ?? "Property Editor"}
       </Typography>
 
-      {propertyList.length === 0 && (
+      {suggestions ? (
+        <SuggestedProperties
+          suggestions={suggestions}
+          currentProperties={propertyList}
+          addProperty={handleNewEntry}
+        />
+      ) : null}
+
+      {propertyList.length === 0 ? (
         <EmptyList>
-          <div>{placeholder}</div>
+          <div>
+            <div>{placeholder}</div>
+            <button
+              onClick={handleNewEntry}
+              className="btn btn-outline-success mt-3 px-4"
+            >
+              Add Property
+            </button>
+          </div>
         </EmptyList>
-      )}
+      ) : null}
+
+      {propertyList.length > 0 ? (
+        <div className="row mb-3">
+          <div className="col">
+            <Typography variant="label" className="semi-bold">
+              Property
+            </Typography>
+          </div>
+          <div className="col">
+            <Typography variant="label" className="semi-bold">
+              Value
+            </Typography>
+          </div>
+          <div className="col-1" />
+        </div>
+      ) : null}
 
       {propertyList.map((p, i) => (
         <PropertyRow
@@ -174,21 +245,13 @@ export const PropertiesEditor = ({
           id={p.id}
           entry={p.key}
           value={p.value}
+          isLast={i === propertyList.length - 1}
+          hint={getDescription(p.key)}
           onChange={handleChange}
           onRemove={handleRemove}
+          onAdd={handleNewEntry}
         />
       ))}
-
-      <div className="row m-2 justify-content-center">
-        <div className="col-4 text-center">
-          <button
-            onClick={handleNewEntry}
-            className="btn btn-outline-success btn-block"
-          >
-            Add Property
-          </button>
-        </div>
-      </div>
     </React.Fragment>
   );
 };

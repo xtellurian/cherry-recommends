@@ -3,11 +3,7 @@ import React from "react";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createMetricAsync } from "../../api/metricsApi";
-import {
-  ErrorCard,
-  MoveUpHierarchyPrimaryButton,
-  PageHeading,
-} from "../molecules";
+import { MoveUpHierarchyPrimaryButton, PageHeading } from "../molecules";
 import {
   TextInput,
   createLengthValidator,
@@ -98,9 +94,8 @@ const CreateMetric = () => {
         </MoveUpHierarchyPrimaryButton>
       }
       header={<PageHeading title="Create a Metric" />}
+      error={error}
     >
-      {error && <ErrorCard error={error} />}
-
       <div>
         <TextInput
           placeholder="Something human readable"

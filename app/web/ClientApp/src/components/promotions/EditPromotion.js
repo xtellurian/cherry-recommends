@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAccessToken } from "../../api-hooks/token";
 import { updatePromotionAsync } from "../../api/promotionsApi";
 import { useNavigation } from "../../utility/useNavigation";
-import { ErrorCard, Typography } from "../molecules";
+import { Typography } from "../molecules";
 import {
   TextInput,
   createRequiredByServerValidator,
@@ -90,9 +90,8 @@ export const EditItem = ({ item: currentItem }) => {
             Edit Promotion
           </Typography>
         }
+        error={error}
       >
-        {error ? <ErrorCard error={error} /> : null}
-
         <TextInput
           label="Display Name"
           placeholder="Promotion Name"

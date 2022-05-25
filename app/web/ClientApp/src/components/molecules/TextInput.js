@@ -197,7 +197,14 @@ export const TextInput = ({
 }) => {
   const [hide, setHide] = React.useState(false);
   const [errorMessages, setErrorMessages] = React.useState([]);
-  const [hasError, setHasError] = React.useState([]);
+  const [hasError, setHasError] = React.useState(false);
+
+  const handleOnKeyPress = (e) => {
+    if (e.key === "Enter" && onReturn) {
+      onReturn(value || e.target.value);
+      e.preventDefault();
+    }
+  };
 
   React.useEffect(() => {
     if (hide === true) {
@@ -215,22 +222,17 @@ export const TextInput = ({
     setHasError(errorMessages && errorMessages.length > 0);
   }, [errorMessages]);
 
-  let formControlValidationClass = "";
-
-  if (hasError && !Array.isArray(hasError)) {
-    formControlValidationClass = "is-invalid";
-  }
-
-  if (value && value.length > 0) {
-    formControlValidationClass = "is-valid";
-  }
-
-  const handleOnKeyPress = (e) => {
-    if (e.key == "Enter" && onReturn) {
-      onReturn(value || e.target.value);
-      e.preventDefault();
+  const formControlValidationClass = React.useMemo(() => {
+    if (hasError) {
+      return "is-invalid";
     }
-  };
+
+    if (validator && value && value.length > 0) {
+      return "is-valid";
+    }
+
+    return "";
+  }, [hasError, validator, value]);
 
   return (
     <FieldLabel

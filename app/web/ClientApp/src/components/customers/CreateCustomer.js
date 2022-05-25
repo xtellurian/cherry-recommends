@@ -2,7 +2,6 @@ import React from "react";
 import { createOrUpdateCustomerAsync } from "../../api/customersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
 import { useAccessToken } from "../../api-hooks/token";
-import { ErrorCard } from "../molecules/ErrorCard";
 import {
   ExpandableCard,
   MoveUpHierarchyPrimaryButton,
@@ -79,9 +78,8 @@ export const CreateCustomer = () => {
           </MoveUpHierarchyPrimaryButton>
         }
         header={<PageHeading title="Add a Customer" />}
+        error={error}
       >
-        {error && <ErrorCard error={error} />}
-
         <TextInput
           validator={joinValidators([
             createLengthValidator(3),

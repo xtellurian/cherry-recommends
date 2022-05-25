@@ -1,0 +1,4 @@
+.suggestion-pill:hover {
+  opacity: 0.83;
+  /* background-color: var(--cherry-pink) !important; */
+}

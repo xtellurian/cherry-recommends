@@ -16,7 +16,7 @@ export const PropertiesTableView = ({ properties, onEdit }) => {
       );
     }
     return (
-      <React.Fragment>
+      <div className="clearfix">
         <Table>
           <TableHead headings={["Property", "Value"]} />
           <TableBody>
@@ -27,10 +27,13 @@ export const PropertiesTableView = ({ properties, onEdit }) => {
             ))}
           </TableBody>
         </Table>
-        <button className="btn btn-outline-primary" onClick={onEdit}>
+        <button
+          className="btn btn-outline-primary float-right"
+          onClick={onEdit}
+        >
           Edit Properties
         </button>
-      </React.Fragment>
+      </div>
     );
   } else {
     return (

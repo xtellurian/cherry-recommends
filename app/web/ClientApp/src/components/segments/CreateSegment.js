@@ -4,11 +4,7 @@ import { useAnalytics } from "../../analytics/analyticsHooks";
 import { useAccessToken } from "../../api-hooks/token";
 import { createSegmentAsync } from "../../api/segmentsApi";
 import { TextInput } from "../molecules/TextInput";
-import {
-  ErrorCard,
-  MoveUpHierarchyPrimaryButton,
-  PageHeading,
-} from "../molecules";
+import { MoveUpHierarchyPrimaryButton, PageHeading } from "../molecules";
 import CreatePageLayout, {
   CreateButton,
 } from "../molecules/layout/CreatePageLayout";
@@ -56,8 +52,8 @@ export const CreateSegment = () => {
           </MoveUpHierarchyPrimaryButton>
         }
         header={<PageHeading title="Create a Segment" />}
+        error={error}
       >
-        {error ? <ErrorCard error={error} /> : null}
         <TextInput
           label="Segment Name"
           placeholder="Enter segment name here"

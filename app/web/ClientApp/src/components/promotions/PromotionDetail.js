@@ -12,6 +12,7 @@ import {
   Spinner,
   ErrorCard,
   MoveUpHierarchyPrimaryButton,
+  Typography,
 } from "../molecules";
 import { CopyableField } from "../molecules/fields/CopyableField";
 import { PropertiesTableView } from "../molecules/PropertiesTableView";
@@ -132,15 +133,19 @@ export const ItemDetail = () => {
             onValueEdited={(v) => handleEditProperty("numberOfRedemptions", v)}
           />
 
-          <div className="ml-1 mb-3">
-            <label className="font-weight-bold">Description</label>
-            <p>{item.description}</p>
+          <div className="ml-1 mt-4">
+            <Typography className="bold mb-1">Description</Typography>
+            <Typography className={item.description ? "" : "text-muted"}>
+              {item.description || "No Description"}
+            </Typography>
           </div>
 
-          <PropertiesTableView
-            properties={item.properties}
-            onEdit={() => setIsPropertyEditorPopupOpen(true)}
-          />
+          <div className="ml-1 mt-4">
+            <PropertiesTableView
+              properties={item.properties}
+              onEdit={() => setIsPropertyEditorPopupOpen(true)}
+            />
+          </div>
 
           <ConfirmDeletePopup
             entity={item}

@@ -1,5 +1,4 @@
 import React from "react";
-import { ErrorCard } from "../molecules";
 import { TextInput } from "../molecules/TextInput";
 import { useAccessToken } from "../../api-hooks/token";
 import { createModelRegistrationAsync } from "../../api/modelRegistrationsApi";
@@ -45,9 +44,8 @@ export const AzurePersonalizerModelRegistration = ({
           onClick={handleCreate}
         />
       }
+      error={error}
     >
-      {error ? <ErrorCard error={error} /> : null}
-
       <TextInput
         label="Model Name"
         placeholder="A name you recognise"

@@ -12,7 +12,6 @@ import {
 } from "../../../api-hooks/metricsApi";
 import {
   Selector,
-  ErrorCard,
   MoveUpHierarchyPrimaryButton,
   PageHeading,
 } from "../../molecules";
@@ -177,9 +176,8 @@ export const CreateRecommender = () => {
           </MoveUpHierarchyPrimaryButton>
         }
         header={<PageHeading title="Create a Promotion Recommender" />}
+        error={error}
       >
-        {error ? <ErrorCard error={error} /> : null}
-
         <TextInput
           label="Display Name"
           hint="Choose a name for this recommender."

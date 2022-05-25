@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  ErrorCard,
   AsyncButton,
   PageHeading,
   MoveUpHierarchyPrimaryButton,
@@ -90,8 +89,8 @@ export const CreateParameter = () => {
         </MoveUpHierarchyPrimaryButton>
       }
       header={<PageHeading title="Create Parameter" />}
+      error={error}
     >
-      {error && <ErrorCard error={error} />}
       <div>
         <div className="mb-2">
           <Selector

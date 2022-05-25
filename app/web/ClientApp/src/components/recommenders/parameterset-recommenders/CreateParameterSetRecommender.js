@@ -3,11 +3,9 @@ import { useAccessToken } from "../../../api-hooks/token";
 import { useParameters } from "../../../api-hooks/parametersApi";
 import { createParameterSetRecommenderAsync } from "../../../api/parameterSetRecommendersApi";
 import {
-  Title,
   Subtitle,
   Selector,
   ExpandableCard,
-  ErrorCard,
   AsyncButton,
   MoveUpHierarchyPrimaryButton,
   PageHeading,
@@ -206,14 +204,8 @@ export const CreateParameterSetRecommender = () => {
       header={
         <PageHeading title="Create Recommender" subtitle="Parameter Sets" />
       }
+      error={error}
     >
-      {/* <MoveUpHierarchyButton
-        to="/recommenders/parameter-set-recommenders"
-        className="float-right"
-      >
-      </MoveUpHierarchyButton> */}
-
-      {error && <ErrorCard error={error} />}
       <Subtitle>1. Set an ID and name.</Subtitle>
       <div className="m-1">
         <InputGroup>

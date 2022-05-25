@@ -1,6 +1,7 @@
 import React from "react";
 
 import { AsyncButton } from "../AsyncButton";
+import { ErrorCard } from "../ErrorCard";
 
 import "./CreatePageLayout.css";
 
@@ -29,14 +30,20 @@ const CreatePageLayout = ({
   backButton,
   header,
   headerDivider = true,
+  error,
 }) => {
   return (
     <div className="clearfix">
       {backButton}
       {header}
       {headerDivider ? <hr className="mb-4" /> : null}
+      {error ? (
+        <div className="mb-4">
+          <ErrorCard error={error} />
+        </div>
+      ) : null}
       {children}
-      <div>{createButton}</div>
+      <div className="mt-4">{createButton}</div>
     </div>
   );
 };

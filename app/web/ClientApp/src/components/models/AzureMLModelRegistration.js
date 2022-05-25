@@ -1,5 +1,5 @@
 import React from "react";
-import { ErrorCard, Typography } from "../molecules";
+import { Typography } from "../molecules";
 import { TextInput, createServerErrorValidator } from "../molecules/TextInput";
 import { useAccessToken } from "../../api-hooks/token";
 import { createModelRegistrationAsync } from "../../api/modelRegistrationsApi";
@@ -42,9 +42,8 @@ export const AzureMLModelRegistration = ({ hostingType, modelType }) => {
           onCreate={handleCreate}
         />
       }
+      error={error}
     >
-      {error ? <ErrorCard error={error} /> : null}
-
       <Typography className="bold mb-4">
         Register a new model that will be available via the API.
       </Typography>

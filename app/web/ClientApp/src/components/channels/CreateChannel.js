@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAccessToken } from "../../api-hooks/token";
 import { createChannelAsync } from "../../api/channelsApi";
-import { ErrorCard } from "../molecules/ErrorCard";
 import {
   AsyncButton,
   MoveUpHierarchyPrimaryButton,
@@ -97,8 +96,8 @@ export const CreateChannel = () => {
           </MoveUpHierarchyPrimaryButton>
         }
         header={<PageHeading title="Add a Channel" />}
+        error={error}
       >
-        {error && <ErrorCard error={error} />}
         <InputGroup className="mb-1">
           <TextInput
             label="Name"

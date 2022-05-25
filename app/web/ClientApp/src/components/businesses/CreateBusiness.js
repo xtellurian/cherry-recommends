@@ -2,7 +2,6 @@ import React from "react";
 
 import { createBusinessAsync } from "../../api/businessesApi";
 import { useAccessToken } from "../../api-hooks/token";
-import { ErrorCard } from "../molecules/ErrorCard";
 import { MoveUpHierarchyPrimaryButton, PageHeading } from "../molecules";
 import { TextInput, createServerErrorValidator } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
@@ -65,8 +64,8 @@ export const CreateBusiness = () => {
           </MoveUpHierarchyPrimaryButton>
         }
         header={<PageHeading title="Add a Business" />}
+        error={error}
       >
-        {error && <ErrorCard error={error} />}
         <TextInput
           label="Business Name"
           placeholder="Enter business name here"

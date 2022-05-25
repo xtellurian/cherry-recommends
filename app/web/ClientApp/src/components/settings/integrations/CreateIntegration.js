@@ -3,7 +3,6 @@ import React from "react";
 import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createIntegratedSystemAsync } from "../../../api/integratedSystemsApi";
-import { ErrorCard } from "../../molecules/ErrorCard";
 import { AsyncButton } from "../../molecules/AsyncButton";
 import { TextInput, InputGroup } from "../../molecules/TextInput";
 import { IntegrationIcon } from "./icons/IntegrationIcons";
@@ -113,9 +112,8 @@ export const CreateIntegration = () => {
           </MoveUpHierarchyPrimaryButton>
         }
         header={<PageHeading title="Create New Integration" />}
+        error={error}
       >
-        {error && <ErrorCard error={error} />}
-
         {!integratedSystem.systemType && (
           <div className="m-5">
             {systemTypes.map((t) => (

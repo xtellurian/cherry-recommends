@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { createEventsAsync } from "../../api/eventsApi";
 import { useCustomer } from "../../api-hooks/customersApi";
 import {
-  ErrorCard,
   ExpandableCard,
   PageHeading,
   MoveUpHierarchyPrimaryButton,
@@ -115,9 +114,8 @@ export const CreateEvent = () => {
             subtitle={trackedUser.name || trackedUser.commonId}
           />
         }
+        error={error}
       >
-        {error ? <ErrorCard error={error} /> : null}
-
         <TextInput
           label="Event ID"
           value={payload.eventId}

@@ -1,19 +1,26 @@
 import React from "react";
 import Tippy from "@tippyjs/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 import { Typography } from "../../components/molecules";
 
 import "./FieldLabel.css";
 
-const HintTippy = ({ children, value }) => {
+export const HintTippy = ({ children, value }) => {
   return (
     <Tippy
+      duration={[null, 0]}
       placement="top-start"
       content={
         value ? (
-          <div className="bg-white text-center border rounded px-2 py-1 field-label-popup shadow-sm">
+          <Typography
+            variant="label"
+            className="text-white text-center border rounded px-3 py-2 field-label-popup shadow"
+            style={{ backgroundColor: "#212121" }}
+          >
             {value}
-          </div>
+          </Typography>
         ) : null
       }
     >
@@ -50,7 +57,11 @@ export const FieldLabel = ({
     >
       {label ? (
         <HintTippy value={hint}>
-          <div className="field-label mb-1 mb-md-0">
+          <div
+            className={`field-label mb-1 mb-md-0 ${
+              hint ? "cursor-pointer" : ""
+            }`}
+          >
             <Typography
               variant="label"
               className={`semi-bold mr-0 ${
@@ -58,12 +69,21 @@ export const FieldLabel = ({
               }`}
             >
               {label}{" "}
-              {required ? <span className="text-danger">{`*`}</span> : null}
+              {required ? (
+                <span className="text-danger mr-1">{`*`}</span>
+              ) : null}
               {optional ? (
                 <span
-                  className="font-italic"
+                  className="font-italic mr-1"
                   style={{ fontWeight: 400 }}
                 >{`(optional)`}</span>
+              ) : null}
+              {hint ? (
+                <FontAwesomeIcon
+                  icon={faCircleInfo}
+                  className="text-secondary ml-1 mt-1"
+                  fontSize={12}
+                />
               ) : null}
             </Typography>
           </div>
