@@ -40,18 +40,21 @@ namespace SignalBox.Test.Workflows
 
             mockPromoRecommenderStore.Setup(_ => _.Create(It.IsAny<ItemsRecommender>())).ReturnsAsync((ItemsRecommender r) => r);
 
+            var mockStoreCollection = new MockStoreCollection()
+               .With<IChannelStore, ChannelBase>(mockChannelStore)
+               .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
+
             var sut = new PromotionsRecommenderWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
-                mockSegmentStore.Object,
-                mockIntegratedSystemStore.Object,
                 mockCategoricalOptimiserClient.Object,
                 mockModelRegistrationStore.Object,
                 mockAudienceStore.Object,
                 mockReportWorkflow.Object,
                 mockPromoStore.Object,
                 mockChannelStore.Object,
+                mockStoreCollection,
                 mockPromotionOptimiserCRUDWorkflow.Object
             );
 
@@ -103,18 +106,21 @@ namespace SignalBox.Test.Workflows
             var mockPromotionOptimiserCRUDWorkflow = new Mock<IPromotionOptimiserCRUDWorkflow>();
             var mockChannelStore = new Mock<IChannelStore>();
 
+            var mockStoreCollection = new MockStoreCollection()
+               .With<IChannelStore, ChannelBase>(mockChannelStore)
+               .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
+
             var sut = new PromotionsRecommenderWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
-                mockSegmentStore.Object,
-                mockIntegratedSystemStore.Object,
                 mockCategoricalOptimiserClient.Object,
                 mockModelRegistrationStore.Object,
                 mockAudienceStore.Object,
                 mockReportWorkflow.Object,
                 mockPromoStore.Object,
                 mockChannelStore.Object,
+                mockStoreCollection,
                 mockPromotionOptimiserCRUDWorkflow.Object
             );
 
@@ -157,19 +163,21 @@ namespace SignalBox.Test.Workflows
                 .WithContext<Mock<IRecommendableItemStore>, IRecommendableItemStore, RecommendableItem>();
             var mockPromotionOptimiserCRUDWorkflow = new Mock<IPromotionOptimiserCRUDWorkflow>();
             var mockChannelStore = new Mock<IChannelStore>();
+            var mockStoreCollection = new MockStoreCollection()
+               .With<IChannelStore, ChannelBase>(mockChannelStore)
+               .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
 
             var sut = new PromotionsRecommenderWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
-                mockSegmentStore.Object,
-                mockIntegratedSystemStore.Object,
                 mockCategoricalOptimiserClient.Object,
                 mockModelRegistrationStore.Object,
                 mockAudienceStore.Object,
                 mockReportWorkflow.Object,
                 mockPromoStore.Object,
                 mockChannelStore.Object,
+                mockStoreCollection,
                 mockPromotionOptimiserCRUDWorkflow.Object
             );
 
@@ -214,19 +222,22 @@ namespace SignalBox.Test.Workflows
                 .WithContext<Mock<IRecommendableItemStore>, IRecommendableItemStore, RecommendableItem>();
             var mockPromotionOptimiserCRUDWorkflow = new Mock<IPromotionOptimiserCRUDWorkflow>();
             var mockChannelStore = new Mock<IChannelStore>();
+            var mockStoreCollection = new MockStoreCollection()
+               .With<IChannelStore, ChannelBase>(mockChannelStore)
+               .With<IIntegratedSystemStore, IntegratedSystem>(mockIntegratedSystemStore)
+               .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
 
             var sut = new PromotionsRecommenderWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
-                mockSegmentStore.Object,
-                mockIntegratedSystemStore.Object,
                 mockCategoricalOptimiserClient.Object,
                 mockModelRegistrationStore.Object,
                 mockAudienceStore.Object,
                 mockReportWorkflow.Object,
                 mockPromoStore.Object,
                 mockChannelStore.Object,
+                mockStoreCollection,
                 mockPromotionOptimiserCRUDWorkflow.Object
             );
 
@@ -264,19 +275,21 @@ namespace SignalBox.Test.Workflows
                 .WithContext<Mock<IRecommendableItemStore>, IRecommendableItemStore, RecommendableItem>();
             var mockPromotionOptimiserCRUDWorkflow = new Mock<IPromotionOptimiserCRUDWorkflow>();
             var mockChannelStore = new Mock<IChannelStore>();
+            var mockStoreCollection = new MockStoreCollection()
+                .With<IChannelStore, ChannelBase>(mockChannelStore)
+                .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
 
             var sut = new PromotionsRecommenderWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
-                mockSegmentStore.Object,
-                mockIntegratedSystemStore.Object,
                 mockCategoricalOptimiserClient.Object,
                 mockModelRegistrationStore.Object,
                 mockAudienceStore.Object,
                 mockReportWorkflow.Object,
                 mockPromoStore.Object,
                 mockChannelStore.Object,
+                mockStoreCollection,
                 mockPromotionOptimiserCRUDWorkflow.Object
             );
 
@@ -318,18 +331,21 @@ namespace SignalBox.Test.Workflows
             var mockPromotionOptimiserCRUDWorkflow = new Mock<IPromotionOptimiserCRUDWorkflow>();
             var mockChannelStore = new Mock<IChannelStore>();
 
+            var mockStoreCollection = new MockStoreCollection()
+               .With<IChannelStore, ChannelBase>(mockChannelStore)
+               .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
+
             var sut = new PromotionsRecommenderWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
-                mockSegmentStore.Object,
-                mockIntegratedSystemStore.Object,
                 mockCategoricalOptimiserClient.Object,
                 mockModelRegistrationStore.Object,
                 mockAudienceStore.Object,
                 mockReportWorkflow.Object,
                 mockPromoStore.Object,
                 mockChannelStore.Object,
+                mockStoreCollection,
                 mockPromotionOptimiserCRUDWorkflow.Object
             );
 

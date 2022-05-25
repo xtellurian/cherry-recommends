@@ -4037,6 +4037,124 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ParameterSetRecommenders/{id}/ChoosePromotionArgumentRules": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChoosePromotionArgumentRule"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+          "text/json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+          "application/*+json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/ParameterSetRecommenders/{id}/ChoosePromotionArgumentRules/{ruleId}": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+          "text/json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+          "application/*+json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/ParameterSetRecommenders/{id}/ArgumentRules/{ruleId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ParameterSetRecommenders/{id}/Arguments": {
     get: {
       parameters: {
@@ -6703,6 +6821,242 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ItemsRecommenders/{id}/ChoosePromotionArgumentRules": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChoosePromotionArgumentRule"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+          "text/json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+          "application/*+json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/ChoosePromotionArgumentRules": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChoosePromotionArgumentRule"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+          "text/json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+          "application/*+json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/ItemsRecommenders/{id}/ChoosePromotionArgumentRules/{ruleId}": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+          "text/json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+          "application/*+json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/ChoosePromotionArgumentRules/{ruleId}": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+          "text/json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+          "application/*+json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/ItemsRecommenders/{id}/ArgumentRules/{ruleId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/ArgumentRules/{ruleId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/Arguments": {
     get: {
       parameters: {
@@ -8367,6 +8721,16 @@ export interface components {
       access_token?: string | null;
     };
     ApiKeyTypes: "server" | "web";
+    ArgumentRule: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      discriminator?: string | null;
+      campaignId?: number;
+      campaign?: components["schemas"]["RecommenderEntityBase"];
+      argumentId?: number;
+      argument?: components["schemas"]["CampaignArgument"];
+    };
     ArgumentTypes: "numerical" | "categorical";
     Audience: {
       id?: number;
@@ -8509,6 +8873,19 @@ export interface components {
       actionLabel?: string | null;
       docsLink?: string | null;
     };
+    ChoosePromotionArgumentRule: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      discriminator?: string | null;
+      campaignId?: number;
+      campaign?: components["schemas"]["RecommenderEntityBase"];
+      argumentId?: number;
+      argument?: components["schemas"]["CampaignArgument"];
+      argumentValue?: string | null;
+      promotionId?: number;
+      promotion?: components["schemas"]["RecommendableItem"];
+    };
     CreateApiKeyDto: {
       name: string;
       apiKeyType: string;
@@ -8527,6 +8904,11 @@ export interface components {
       name: string;
       channelType: components["schemas"]["ChannelTypes"];
       integratedSystemId: number;
+    };
+    CreateChoosePromotionArgumentRuleDto: {
+      argumentId: number;
+      promotionId: number;
+      argumentValue: string;
     };
     CreateCustomerMetric: {
       value: unknown;
@@ -9642,6 +10024,10 @@ export interface components {
     TriggerCollection: {
       featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
       metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
+    };
+    UpdateChoosePromotionArgumentRuleDto: {
+      promotionId: number;
+      argumentValue: string;
     };
     UpdateEmailChannelTriggerDto: {
       /** Id of the List that triggers the Email flow */

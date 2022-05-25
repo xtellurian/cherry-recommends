@@ -140,6 +140,16 @@ interface components {
             access_token?: string | null;
         };
         ApiKeyTypes: "server" | "web";
+        ArgumentRule: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            discriminator?: string | null;
+            campaignId?: number;
+            campaign?: components["schemas"]["RecommenderEntityBase"];
+            argumentId?: number;
+            argument?: components["schemas"]["CampaignArgument"];
+        };
         ArgumentTypes: "numerical" | "categorical";
         Audience: {
             id?: number;
@@ -294,6 +304,19 @@ interface components {
             actionLabel?: string | null;
             docsLink?: string | null;
         };
+        ChoosePromotionArgumentRule: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            discriminator?: string | null;
+            campaignId?: number;
+            campaign?: components["schemas"]["RecommenderEntityBase"];
+            argumentId?: number;
+            argument?: components["schemas"]["CampaignArgument"];
+            argumentValue?: string | null;
+            promotionId?: number;
+            promotion?: components["schemas"]["RecommendableItem"];
+        };
         CreateApiKeyDto: {
             name: string;
             apiKeyType: string;
@@ -312,6 +335,11 @@ interface components {
             name: string;
             channelType: components["schemas"]["ChannelTypes"];
             integratedSystemId: number;
+        };
+        CreateChoosePromotionArgumentRuleDto: {
+            argumentId: number;
+            promotionId: number;
+            argumentValue: string;
         };
         CreateCustomerMetric: {
             value: unknown;
@@ -1431,6 +1459,10 @@ interface components {
             featuresChanged?: components["schemas"]["MetricsChangedTrigger"];
             metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
+        UpdateChoosePromotionArgumentRuleDto: {
+            promotionId: number;
+            argumentValue: string;
+        };
         UpdateEmailChannelTriggerDto: {
             /** Id of the List that triggers the Email flow */
             listId?: string | null;
@@ -2238,7 +2270,7 @@ interface InvokeParameterSetRecommenderRequest extends EntityRequest {
     input: components["schemas"]["ModelInputDto"];
 }
 declare const invokeParameterSetRecommenderAsync: ({ token, id, input, }: InvokeParameterSetRecommenderRequest) => Promise<any>;
-declare const fetchInvokationLogsAsync$2: ({ id, token, page, }: PaginatedEntityRequest) => Promise<any>;
+declare const fetchInvokationLogsAsync$2: ({ id, token, page, pageSize }: PaginatedEntityRequest) => Promise<any>;
 declare const fetchTargetVariablesAsync$2: ({ id, token, name }: any) => Promise<any>;
 declare const createTargetVariableAsync$2: ({ id, token, targetVariableValue, }: any) => Promise<any>;
 interface SetSettingsRequest$2 extends EntityRequest {
@@ -2371,10 +2403,7 @@ interface InvokeItemRecommenderRequest extends EntityRequest {
     input: ModelInput;
 }
 declare const invokeItemsRecommenderAsync: ({ token, id, input, }: InvokeItemRecommenderRequest) => Promise<ItemsRecommendation>;
-interface FetchInvokationLogsRequest$1 extends EntityRequest {
-    page: number;
-}
-declare const fetchInvokationLogsAsync$1: ({ id, token, page, }: FetchInvokationLogsRequest$1) => Promise<any>;
+declare const fetchInvokationLogsAsync$1: ({ id, token, page, pageSize, }: PaginatedEntityRequest) => Promise<any>;
 declare const fetchTargetVariablesAsync$1: ({ id, token, name }: any) => Promise<any>;
 declare const createTargetVariableAsync$1: ({ id, token, targetVariableValue, }: any) => Promise<any>;
 interface RecommenderSettings$1 {
@@ -2524,10 +2553,7 @@ interface InvokePromotionRecommenderRequest extends EntityRequest {
     input: ModelInput;
 }
 declare const invokePromotionsRecommenderAsync: ({ token, id, input, }: InvokePromotionRecommenderRequest) => Promise<PromotionsRecommendation>;
-interface FetchInvokationLogsRequest extends EntityRequest {
-    page: number;
-}
-declare const fetchInvokationLogsAsync: ({ id, token, page, }: FetchInvokationLogsRequest) => Promise<any>;
+declare const fetchInvokationLogsAsync: ({ id, token, page, pageSize, }: PaginatedEntityRequest) => Promise<any>;
 declare const fetchTargetVariablesAsync: ({ id, token, name }: any) => Promise<any>;
 declare const createTargetVariableAsync: ({ id, token, targetVariableValue, }: any) => Promise<any>;
 interface RecommenderSettings {
@@ -2546,6 +2572,20 @@ interface SetArgumentsRequest extends EntityRequest {
 }
 declare const fetchArgumentsAsync: ({ id, token }: EntityRequest) => Promise<any>;
 declare const setArgumentsAsync: ({ id, token, args, }: SetArgumentsRequest) => Promise<Argument[]>;
+interface CreateChoosePromotionArgumentRule extends EntityRequest {
+    rule: components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+}
+declare const createChoosePromotionArgumentRuleAsync: ({ id, useInternalId, token, rule, }: CreateChoosePromotionArgumentRule) => Promise<any>;
+interface UpdateChoosePromotionArgumentRule extends EntityRequest {
+    rule: components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+    ruleId: number;
+}
+declare const updateChoosePromotionArgumentRuleAsync: ({ id, useInternalId, token, rule, ruleId, }: UpdateChoosePromotionArgumentRule) => Promise<any>;
+declare const fetchChoosePromotionArgumentRulesAsync: ({ id, useInternalId, token, }: CreateChoosePromotionArgumentRule) => Promise<any>;
+interface DeleteArgumentRule extends EntityRequest {
+    ruleId: number;
+}
+declare const deleteArgumentRuleAsync: ({ id, useInternalId, token, ruleId, }: DeleteArgumentRule) => Promise<any>;
 declare const fetchDestinationsAsync: ({ id, token }: EntityRequest) => Promise<any>;
 interface Destination {
     destinationType: "Webhook" | "SegmentSourceFunction" | "HubspotContactProperty";
@@ -2641,6 +2681,10 @@ declare const promotionsRecommendersApi_d_createTargetVariableAsync: typeof crea
 declare const promotionsRecommendersApi_d_setSettingsAsync: typeof setSettingsAsync;
 declare const promotionsRecommendersApi_d_fetchArgumentsAsync: typeof fetchArgumentsAsync;
 declare const promotionsRecommendersApi_d_setArgumentsAsync: typeof setArgumentsAsync;
+declare const promotionsRecommendersApi_d_createChoosePromotionArgumentRuleAsync: typeof createChoosePromotionArgumentRuleAsync;
+declare const promotionsRecommendersApi_d_updateChoosePromotionArgumentRuleAsync: typeof updateChoosePromotionArgumentRuleAsync;
+declare const promotionsRecommendersApi_d_fetchChoosePromotionArgumentRulesAsync: typeof fetchChoosePromotionArgumentRulesAsync;
+declare const promotionsRecommendersApi_d_deleteArgumentRuleAsync: typeof deleteArgumentRuleAsync;
 declare const promotionsRecommendersApi_d_fetchDestinationsAsync: typeof fetchDestinationsAsync;
 declare const promotionsRecommendersApi_d_createDestinationAsync: typeof createDestinationAsync;
 declare const promotionsRecommendersApi_d_removeDestinationAsync: typeof removeDestinationAsync;
@@ -2684,6 +2728,10 @@ declare namespace promotionsRecommendersApi_d {
     promotionsRecommendersApi_d_setSettingsAsync as setSettingsAsync,
     promotionsRecommendersApi_d_fetchArgumentsAsync as fetchArgumentsAsync,
     promotionsRecommendersApi_d_setArgumentsAsync as setArgumentsAsync,
+    promotionsRecommendersApi_d_createChoosePromotionArgumentRuleAsync as createChoosePromotionArgumentRuleAsync,
+    promotionsRecommendersApi_d_updateChoosePromotionArgumentRuleAsync as updateChoosePromotionArgumentRuleAsync,
+    promotionsRecommendersApi_d_fetchChoosePromotionArgumentRulesAsync as fetchChoosePromotionArgumentRulesAsync,
+    promotionsRecommendersApi_d_deleteArgumentRuleAsync as deleteArgumentRuleAsync,
     promotionsRecommendersApi_d_fetchDestinationsAsync as fetchDestinationsAsync,
     promotionsRecommendersApi_d_createDestinationAsync as createDestinationAsync,
     promotionsRecommendersApi_d_removeDestinationAsync as removeDestinationAsync,

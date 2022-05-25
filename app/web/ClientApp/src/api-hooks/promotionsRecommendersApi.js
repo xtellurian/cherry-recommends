@@ -20,6 +20,7 @@ import {
   fetchOffersAsync,
   fetchPromotionsRecommendationAsync,
   fetchArgumentsAsync,
+  fetchChoosePromotionArgumentRulesAsync,
 } from "../api/promotionsRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -80,7 +81,7 @@ export const usePromotionsRecommender = ({ id, trigger }) => {
   return result;
 };
 
-export const usePromotionsRecommendations = ({ id, pageSize }) => {
+export const usePromotionsRecommendations = ({ id, pageSize, trigger }) => {
   const token = useAccessToken();
   const page = usePagination();
   const [result, setState] = React.useState({ loading: true });
@@ -96,12 +97,12 @@ export const usePromotionsRecommendations = ({ id, pageSize }) => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, id, page, pageSize]);
+  }, [token, id, page, pageSize, trigger]);
 
   return result;
 };
 
-export const useInvokationLogs = ({ id }) => {
+export const useInvokationLogs = ({ id, trigger, pageSize }) => {
   const token = useAccessToken();
   const page = usePagination();
   const [result, setState] = React.useState({ loading: true });
@@ -112,11 +113,12 @@ export const useInvokationLogs = ({ id }) => {
         token,
         id,
         page,
+        pageSize,
       })
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, id, page]);
+  }, [token, id, page, pageSize, trigger]);
 
   return result;
 };
@@ -183,6 +185,24 @@ export const useArguments = ({ id, trigger }) => {
     setState({ loading: true });
     if (token) {
       fetchArgumentsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useChoosePromotionArgumentRules = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token) {
+      fetchChoosePromotionArgumentRulesAsync({
         token,
         id,
       })

@@ -8,7 +8,11 @@ import {
 
 import { Navigation } from "../Navigation";
 
-export const ActionsButton = ({ to, label, className, children }) => {
+// dont set to and onClick at the same time
+export const ActionsButton = ({ to, onClick, label, className, children }) => {
+  if (to && onClick) {
+    throw new Error("Dont set to and onClick at the same time");
+  }
   const [isOpen, setIsOpen] = React.useState(false);
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -16,9 +20,16 @@ export const ActionsButton = ({ to, label, className, children }) => {
 
   return (
     <span className={className || "float-right btn-group"}>
-      <Navigation to={to}>
-        <button className="btn btn-primary mr-1">{label}</button>
-      </Navigation>
+      {to ? (
+        <Navigation to={to}>
+          <button className="btn btn-primary mr-1">{label}</button>
+        </Navigation>
+      ) : null}
+      {onClick ? (
+        <button onClick={onClick} className="btn btn-primary mr-1">
+          {label}
+        </button>
+      ) : null}
       {children && (
         <ButtonDropdown isOpen={isOpen} toggle={toggle}>
           <DropdownToggle className="pl-2 pr-2" split color="primary" />

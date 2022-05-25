@@ -41,9 +41,6 @@ export const setBaselinePromotionAsync =
 export const getBaselinePromotionAsync =
   promotionsRecommenders.getBaselinePromotionAsync;
 
-export const fetchRecommenderTrackedUserActionsAsync =
-  promotionsRecommenders.fetchRecommenderTrackedUserActionsAsync;
-
 export const setSettingsAsync = promotionsRecommenders.setSettingsAsync;
 
 export const fetchPromotionsAsync = promotionsRecommenders.fetchPromotionsAsync;
@@ -52,6 +49,14 @@ export const removePromotionAsync = promotionsRecommenders.removePromotionAsync;
 
 export const fetchArgumentsAsync = promotionsRecommenders.fetchArgumentsAsync;
 export const setArgumentsAsync = promotionsRecommenders.setArgumentsAsync;
+export const fetchChoosePromotionArgumentRulesAsync =
+  promotionsRecommenders.fetchChoosePromotionArgumentRulesAsync;
+export const createChoosePromotionArgumentRuleAsync =
+  promotionsRecommenders.createChoosePromotionArgumentRuleAsync;
+export const updateChoosePromotionArgumentRuleAsync =
+  promotionsRecommenders.updateChoosePromotionArgumentRuleAsync;
+export const deleteArgumentRuleAsync =
+  promotionsRecommenders.deleteArgumentRuleAsync;
 
 export const fetchDestinationsAsync =
   promotionsRecommenders.fetchDestinationsAsync;

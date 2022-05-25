@@ -5,10 +5,12 @@ export const fetchRecommenderInvokationLogsAsync = async ({
   token,
   id,
   page,
+  pageSize,
 }) => {
   return await executeFetch({
     path: `api/recommenders/${recommenderApiName}/${id}/InvokationLogs`,
     page,
+    pageSize,
     token,
   });
 };

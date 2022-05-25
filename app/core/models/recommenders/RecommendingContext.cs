@@ -19,6 +19,21 @@ namespace SignalBox.Core.Recommenders
             this.Trigger = trigger;
         }
 
+        public RecommendingContext(InvokationLogEntry invokationLogEntry, IItemsModelInput promotionInput, string? trigger)
+        {
+            InvokationLog = invokationLogEntry;
+            this.Trigger = trigger;
+            Input = promotionInput;
+        }
+
+        public RecommendingContext(RecommendationCorrelator correlator, InvokationLogEntry invokationLogEntry, IItemsModelInput promotionInput, string? trigger)
+        {
+            Correlator = correlator;
+            InvokationLog = invokationLogEntry;
+            this.Trigger = trigger;
+            Input = promotionInput;
+        }
+
         public void SetLogger(ILogger logger)
         {
             this.logger = logger;
@@ -36,5 +51,6 @@ namespace SignalBox.Core.Recommenders
         public Business? Business { get; set; }
         public RecommendationCorrelator? Correlator { get; set; }
         public InvokationLogEntry InvokationLog { get; }
+        public IItemsModelInput? Input { get; }
     }
 }

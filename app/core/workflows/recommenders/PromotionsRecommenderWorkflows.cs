@@ -22,15 +22,14 @@ namespace SignalBox.Core.Workflows
             IItemsRecommenderStore store,
             IItemsRecommendationStore recommendationStore,
             IMetricStore metricStore,
-            ISegmentStore segmentStore,
-            IIntegratedSystemStore systemStore,
             ICategoricalOptimiserClient optimiserClient,
             IModelRegistrationStore modelRegistrationStore,
             IAudienceStore audienceStore,
             IRecommenderReportImageWorkflow reportImageWorkflows,
             IRecommendableItemStore itemStore,
             IChannelStore channelStore,
-            IPromotionOptimiserCRUDWorkflow promotionOptimiserCRUDWorkflow) : base(store, systemStore, metricStore, segmentStore, channelStore, reportImageWorkflows)
+            IStoreCollection storeCollection,
+            IPromotionOptimiserCRUDWorkflow promotionOptimiserCRUDWorkflow) : base(store, storeCollection, reportImageWorkflows)
         {
             this.recommendationStore = recommendationStore;
             this.metricStore = metricStore;

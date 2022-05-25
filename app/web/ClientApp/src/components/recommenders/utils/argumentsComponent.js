@@ -6,6 +6,7 @@ export const ArgumentsComponentUtil = ({
   id,
   useArguments,
   setArgumentsAsync,
+  renderActionButton,
 }) => {
   const token = useAccessToken();
   const [saving, setSaving] = React.useState(false);
@@ -43,6 +44,7 @@ export const ArgumentsComponentUtil = ({
         {error ? <ErrorCard error={error} /> : null}
         {!serverArgs.loading && internalArgs ? (
           <ArgumentsEditor
+            renderActionButton={renderActionButton}
             initialArguments={internalArgs}
             onArgumentsChanged={setInternalArgs}
           />

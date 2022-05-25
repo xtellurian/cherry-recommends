@@ -2,7 +2,6 @@ import React from "react";
 import { Row, Col } from "reactstrap";
 
 import { AdvancedSettings } from "./AdvancedSettings";
-import { Destinations } from "./Destinations";
 import { Triggers } from "./Triggers";
 import { LearningMetrics } from "./LearningMetrics";
 import { Arguments } from "./Arguments";
@@ -90,16 +89,16 @@ export const SettingsPage = () => {
         <SettingsNav nav={advancedMenu} />
       </Row>
 
-      <RecommenderCard ref={learningMetricsRef} title="Learning Metrics">
-        <LearningMetrics />
-      </RecommenderCard>
-
       <RecommenderCard ref={triggersRef} title="Triggers">
         <Triggers />
       </RecommenderCard>
 
       <RecommenderCard ref={argumentsRef} title="Arguments">
         <Arguments />
+      </RecommenderCard>
+
+      <RecommenderCard ref={learningMetricsRef} title="Learning Metrics">
+        <LearningMetrics />
       </RecommenderCard>
 
       <RecommenderCard ref={advancedRef} title="Advanced">

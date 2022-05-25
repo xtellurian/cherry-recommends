@@ -66,5 +66,22 @@ namespace SignalBox.Core
         {
             return collection == null || !collection.Any();
         }
+
+        /// <summary>
+        /// Creates a new list with any objects that are of the derived type.
+        /// </summary>
+        /// <typeparam name="T">The parent type</typeparam>
+        /// <typeparam name="TDerived">The derived or child type</typeparam>
+        /// <param name="collection">The collection of parents</param>
+        /// <returns>A collection of children. Empty if none match the type</returns>
+        public static IList<TDerived> AsDerived<T, TDerived>(this IEnumerable<T> collection) where TDerived : T where T : class
+        {
+            return new List<TDerived>(
+                collection
+                .Where(_ => _ is TDerived)
+                .Where(_ => _ != null)
+                .Select(_ => (TDerived)_)
+            );
+        }
     }
 }

@@ -8,9 +8,11 @@ import { useAccessToken } from "../../../api-hooks/token";
 export const AsyncSelectItem = ({
   onChange,
   placeholder,
+  defaultId,
   defaultIds,
   allowNone,
   isMulti,
+  label,
 }) => {
   const token = useAccessToken();
   const items = usePromotions();
@@ -34,6 +36,13 @@ export const AsyncSelectItem = ({
       );
     } else {
       throw new Error("single selector not enabled");
+    }
+  }
+  if (defaultId) {
+    if (isMulti) {
+      throw new Error("multi-selector not enabled");
+    } else {
+      defaultItems = itemsSelectable.find((_) => defaultId === _.value.id);
     }
   }
 
@@ -65,6 +74,7 @@ export const AsyncSelectItem = ({
   }
   return (
     <AsyncSelector
+      label={label}
       defaultValue={defaultItems}
       defaultOptions={itemsSelectable}
       placeholder={placeholder || "Search for a Promotion."}
@@ -75,3 +85,5 @@ export const AsyncSelectItem = ({
     />
   );
 };
+
+export default AsyncSelectItem;

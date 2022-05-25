@@ -31,6 +31,8 @@ namespace SignalBox.Infrastructure.EntityFramework
                     .SelectMany(_ => _.RecommenderInvokationLogs)
                     .OrderByDescending(_ => _.LastUpdated)
                     .Skip((paginate.SafePage - 1) * pageSize).Take(pageSize)
+                    .Include(_ => _.Customer)
+                    .Include(_ => _.Business)
                     .ToListAsync();
             }
             else

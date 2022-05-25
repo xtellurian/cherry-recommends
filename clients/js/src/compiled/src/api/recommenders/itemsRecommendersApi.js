@@ -108,12 +108,13 @@ export const invokeItemsRecommenderAsync = async ({ token, id, input, }) => {
         body: input,
     });
 };
-export const fetchInvokationLogsAsync = async ({ id, token, page, }) => {
+export const fetchInvokationLogsAsync = async ({ id, token, page, pageSize, }) => {
     return await il.fetchRecommenderInvokationLogsAsync({
         recommenderApiName,
         id,
         token,
         page,
+        pageSize,
     });
 };
 export const fetchTargetVariablesAsync = async ({ id, token, name }) => {

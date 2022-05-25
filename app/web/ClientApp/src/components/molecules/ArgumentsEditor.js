@@ -12,12 +12,24 @@ const argumentTypeOptions = [
   { label: "Categorical", value: "categorical" },
 ];
 
-const ArgumentRow = ({ entry, argument, onChange, onRemove }) => {
-  const { commonId, argumentType, isRequired } = argument;
+const ArgumentRow = ({
+  entry,
+  argument,
+  onChange,
+  onRemove,
+  renderActionButton,
+}) => {
+  const { id, commonId, argumentType, isRequired } = argument;
 
   return (
     <div className="border-bottom mt-4">
       <div className="d-flex align-items-center justify-content-between">
+        {renderActionButton ? (
+          <div className="flex-shrink-0">
+            {" "}
+            {React.cloneElement(renderActionButton, { id })}{" "}
+          </div>
+        ) : null}
         <div className="">
           <Selector
             label="Type"
@@ -87,6 +99,7 @@ export const ArgumentsEditor = ({
   initialArguments,
   onArgumentsChanged,
   placeholder,
+  renderActionButton,
 }) => {
   const [args, setArguments] = React.useState(initialArguments || {});
   const handleChange = (oldEntry, newEntry, value) => {
@@ -137,6 +150,7 @@ export const ArgumentsEditor = ({
 
       {Object.entries(args).map(([k, v], i) => (
         <ArgumentRow
+          renderActionButton={renderActionButton}
           key={i}
           entry={k}
           argument={v}

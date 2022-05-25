@@ -12,19 +12,21 @@ namespace SignalBox.Core.Workflows
     {
         private readonly IRecommenderStore<T> store;
         private readonly IHistoricCustomerMetricStore customerMetricStore;
+        private readonly IArgumentRuleStore argumentRuleStore;
         private readonly IWebhookSenderClient webhookSender;
         protected readonly IDateTimeProvider dateTimeProvider;
         private readonly IKlaviyoSystemWorkflow klaviyoWorkflow;
 
         public RecommenderInvokationWorkflowBase(
                                                  IRecommenderStore<T> store,
-                                                 IHistoricCustomerMetricStore customerMetricStore,
+                                                 IStoreCollection storeCollection,
                                                  IWebhookSenderClient webhookSender,
                                                  IDateTimeProvider dateTimeProvider,
                                                  IKlaviyoSystemWorkflow klaviyoWorkflow)
         {
             this.store = store;
-            this.customerMetricStore = customerMetricStore;
+            this.customerMetricStore = storeCollection.ResolveStore<IHistoricCustomerMetricStore, HistoricCustomerMetric>();
+            this.argumentRuleStore = storeCollection.ResolveStore<IArgumentRuleStore, ArgumentRule>();
             this.webhookSender = webhookSender;
             this.dateTimeProvider = dateTimeProvider;
             this.klaviyoWorkflow = klaviyoWorkflow;
@@ -49,7 +51,7 @@ namespace SignalBox.Core.Workflows
         {
             await SetDisabledIfExpired(recommender);
             // no need to check expiry date here since disabled is set above if past expiry date
-            return (recommender?.Settings?.Enabled == false);
+            return recommender?.Settings?.Enabled == false;
         }
 
         private async Task SetDisabledIfExpired(T recommender)
@@ -64,6 +66,31 @@ namespace SignalBox.Core.Workflows
                     await store.Context.SaveChanges();
                 }
             }
+        }
+
+        protected async Task<ChoosePromotionArgumentRule?> CheckArgumentRulesForPromotion(T campaign, RecommendingContext context)
+        {
+            await store.LoadMany(campaign, _ => _.ArgumentRules);
+            var rules = campaign.ArgumentRules.AsDerived<ArgumentRule, ChoosePromotionArgumentRule>();
+            if (!rules.Any() || context.Input?.Arguments == null || !context.Input.Arguments.Any())
+            {
+                return null; // no rules to evaluate
+            }
+
+            foreach (var rule in rules)
+            {
+                await argumentRuleStore.Load(rule, _ => _.Argument);
+                if (context.Input.Arguments.ContainsKey(rule.Argument.CommonId))
+                {
+                    // then we found a matching rule
+                    if (string.Equals(rule.ArgumentValue, context.Input.Arguments[rule.Argument.CommonId]?.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        // then we found a match and we should return the promotion
+                        return rule;
+                    }
+                }
+            }
+            return null; // return null by default;
         }
 
         protected async Task SendToDestinations(T recommender, RecommendingContext context, RecommendationEntity recommendation)

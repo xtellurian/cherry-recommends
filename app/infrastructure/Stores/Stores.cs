@@ -124,6 +124,7 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IQueueStores, QueueStores>();
             return services;
         }
+
         public static IServiceCollection AddEFStores(this IServiceCollection services)
         {
             services.AddInterceptedScoped<ICustomerEventStore, EFCustomerEventStore, TimingInterceptor>();
@@ -145,6 +146,8 @@ namespace SignalBox.Infrastructure
             // recommenders
             services.AddInterceptedScoped<IItemsRecommenderStore, EFItemsRecommenderStore, TimingInterceptor>();
             services.AddInterceptedScoped<IParameterSetRecommenderStore, EFParameterSetRecommenderStore, TimingInterceptor>();
+
+            services.AddInterceptedScoped<IArgumentRuleStore, EFArgumentRuleStore, TimingInterceptor>();
 
             // recommendations
             services.AddInterceptedScoped<IRecommendationCorrelatorStore, EFRecommendationCorrelatorStore, TimingInterceptor>();
@@ -183,6 +186,9 @@ namespace SignalBox.Infrastructure
 
             // discount codes
             services.AddInterceptedScoped<IDiscountCodeStore, EFDiscountCodeStore, TimingInterceptor>();
+
+            // add a way to get all the stores in one  container
+            services.AddScoped<IStoreCollection, DIStoreCollection>();
 
             // extra utils
             services.AddScoped<IStorageContext, EFStorageContext>();

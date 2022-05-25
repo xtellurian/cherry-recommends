@@ -14,7 +14,14 @@ import { BigPopup } from "../../molecules/popups/BigPopup";
 const InvokationRow = ({ invokation }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const label = invokation.status || invokation.message || "Invoked";
+  const label =
+    (invokation.status || invokation.message || "Invoked") +
+    (invokation.customerId
+      ? " for customer " + invokation.customer?.commonId
+      : "") +
+    (invokation.businessId
+      ? " for business " + invokation.business?.commonId
+      : "");
 
   return (
     <>

@@ -38,10 +38,7 @@ interface InvokePromotionRecommenderRequest extends EntityRequest {
     input: ModelInput;
 }
 export declare const invokePromotionsRecommenderAsync: ({ token, id, input, }: InvokePromotionRecommenderRequest) => Promise<PromotionsRecommendation>;
-interface FetchInvokationLogsRequest extends EntityRequest {
-    page: number;
-}
-export declare const fetchInvokationLogsAsync: ({ id, token, page, }: FetchInvokationLogsRequest) => Promise<any>;
+export declare const fetchInvokationLogsAsync: ({ id, token, page, pageSize, }: PaginatedEntityRequest) => Promise<any>;
 export declare const fetchTargetVariablesAsync: ({ id, token, name }: any) => Promise<any>;
 export declare const createTargetVariableAsync: ({ id, token, targetVariableValue, }: any) => Promise<any>;
 interface RecommenderSettings {
@@ -60,6 +57,20 @@ interface SetArgumentsRequest extends EntityRequest {
 }
 export declare const fetchArgumentsAsync: ({ id, token }: EntityRequest) => Promise<any>;
 export declare const setArgumentsAsync: ({ id, token, args, }: SetArgumentsRequest) => Promise<Argument[]>;
+interface CreateChoosePromotionArgumentRule extends EntityRequest {
+    rule: components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+}
+export declare const createChoosePromotionArgumentRuleAsync: ({ id, useInternalId, token, rule, }: CreateChoosePromotionArgumentRule) => Promise<any>;
+interface UpdateChoosePromotionArgumentRule extends EntityRequest {
+    rule: components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+    ruleId: number;
+}
+export declare const updateChoosePromotionArgumentRuleAsync: ({ id, useInternalId, token, rule, ruleId, }: UpdateChoosePromotionArgumentRule) => Promise<any>;
+export declare const fetchChoosePromotionArgumentRulesAsync: ({ id, useInternalId, token, }: CreateChoosePromotionArgumentRule) => Promise<any>;
+interface DeleteArgumentRule extends EntityRequest {
+    ruleId: number;
+}
+export declare const deleteArgumentRuleAsync: ({ id, useInternalId, token, ruleId, }: DeleteArgumentRule) => Promise<any>;
 export declare const fetchDestinationsAsync: ({ id, token }: EntityRequest) => Promise<any>;
 interface Destination {
     destinationType: "Webhook" | "SegmentSourceFunction" | "HubspotContactProperty";

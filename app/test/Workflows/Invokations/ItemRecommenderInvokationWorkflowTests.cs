@@ -39,6 +39,10 @@ namespace SignalBox.Test.Workflows
             var mockDiscountCodeWorkflow = new Mock<IDiscountCodeWorkflow>();
             var mockKlaviyoWorkflow = new Mock<IKlaviyoSystemWorkflow>();
             var mockOfferStore = new Mock<IOfferStore>();
+            var mockArgumentRuleStore = new Mock<IArgumentRuleStore>();
+            var mockStoreCollection = new MockStoreCollection()
+            .With<IHistoricCustomerMetricStore, HistoricCustomerMetric>(mockHistoricCustomerMetricStore)
+            .With<IArgumentRuleStore, ArgumentRule>(mockArgumentRuleStore);
 
             var sut = new ItemsRecommenderInvokationWorkflows(
                 mockLogger.Object,
@@ -47,7 +51,7 @@ namespace SignalBox.Test.Workflows
                 mockRecommenderModelClientFactory.Object,
                 mockCustomerWorkflow.Object,
                 mockBusinessWorkflow.Object,
-                mockHistoricCustomerMetricStore.Object,
+                mockStoreCollection,
                 mockRecommendableItemStore.Object,
                 mockWebhookSenderClient.Object,
                 mockCorrelatorStore.Object,
@@ -97,6 +101,10 @@ namespace SignalBox.Test.Workflows
             var mockDiscountCodeWorkflow = new Mock<IDiscountCodeWorkflow>();
             var mockKlaviyoWorkflow = new Mock<IKlaviyoSystemWorkflow>();
             var mockOfferStore = new Mock<IOfferStore>();
+            var mockArgumentRuleStore = new Mock<IArgumentRuleStore>();
+            var mockStoreCollection = new MockStoreCollection()
+            .With<IHistoricCustomerMetricStore, HistoricCustomerMetric>(mockHistoricCustomerMetricStore)
+            .With<IArgumentRuleStore, ArgumentRule>(mockArgumentRuleStore);
 
             var sut = new ItemsRecommenderInvokationWorkflows(
                 mockLogger.Object,
@@ -105,7 +113,7 @@ namespace SignalBox.Test.Workflows
                 mockRecommenderModelClientFactory.Object,
                 mockCustomerWorkflow.Object,
                 mockBusinessWorkflow.Object,
-                mockHistoricCustomerMetricStore.Object,
+                mockStoreCollection,
                 mockRecommendableItemStore.Object,
                 mockWebhookSenderClient.Object,
                 mockCorrelatorStore.Object,

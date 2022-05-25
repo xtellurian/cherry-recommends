@@ -7,13 +7,14 @@ import {
 } from "../../../api-hooks/promotionsRecommendersApi";
 import { RecommendationRow } from "../../recommendations/RecommendationRow";
 
-const RecommendationRowTemp = ({ recommendation, size }) => {
-  return <RecommendationRow recommendation={recommendation} />;
-};
-export const ItemsRecommendationList = ({ size }) => {
+export const ItemsRecommendationList = ({ size, trigger }) => {
   const { id } = useParams();
   const recommender = usePromotionsRecommender({ id });
-  const recommendations = usePromotionsRecommendations({ id, pageSize: 5 });
+  const recommendations = usePromotionsRecommendations({
+    id,
+    pageSize: 5,
+    trigger,
+  });
 
   return (
     <React.Fragment>
@@ -24,7 +25,7 @@ export const ItemsRecommendationList = ({ size }) => {
       )}
       {recommendations.items &&
         recommendations.items.map((r) => (
-          <RecommendationRowTemp size={size} recommendation={r} key={r.id} />
+          <RecommendationRow key={r.id} recommendation={r} />
         ))}
       {recommendations.pagination && size !== "sm" && (
         <Paginator {...recommendations.pagination} />

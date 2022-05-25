@@ -83,6 +83,39 @@ namespace SignalBox.Web.Controllers
             return recommender.Settings;
         }
 
+        [HttpGet("{id}/ChoosePromotionArgumentRules")]
+        public async Task<IEnumerable<ChoosePromotionArgumentRule>> GetArgumentRules(string id, bool? useInternalId = null)
+        {
+            var recommender = await GetEntity(id, useInternalId);
+            await store.LoadMany(recommender, _ => _.ArgumentRules);
+            return new List<ChoosePromotionArgumentRule>(
+                recommender.ArgumentRules
+                .Select(_ => _ as ChoosePromotionArgumentRule)
+                .Where(_ => _ != null));
+        }
+
+        [HttpPost("{id}/ChoosePromotionArgumentRules")]
+        public async Task<ArgumentRule> CreateChoosePromotionArgumentRule(string id, CreateChoosePromotionArgumentRuleDto dto, bool? useInternalId = null)
+        {
+            var recommender = await base.GetEntity(id, useInternalId);
+            return await workflows.CreateChoosePromotionArgumentRule(recommender, dto.ArgumentId, dto.PromotionId, dto.ArgumentValue);
+        }
+
+        [HttpPost("{id}/ChoosePromotionArgumentRules/{ruleId}")]
+        public async Task<ArgumentRule> UpdateChoosePromotionArgumentRule(string id, UpdateChoosePromotionArgumentRuleDto dto, long ruleId, bool? useInternalId = null)
+        {
+            var recommender = await base.GetEntity(id, useInternalId);
+            return await workflows.UpdateChoosePromotionArgumentRule(recommender, ruleId, dto.PromotionId, dto.ArgumentValue);
+        }
+
+        [HttpDelete("{id}/ArgumentRules/{ruleId}")]
+        public async Task<DeleteResponse> DeleteArgumentRule(string id, long ruleId, bool? useInternalId = null)
+        {
+            var campaign = await GetEntity(id, useInternalId);
+            await workflows.DeleteArgumentRule(campaign, ruleId);
+            return new DeleteResponse(ruleId, Request.Path.Value, true);
+        }
+
         [HttpGet("{id}/Arguments")]
         public async Task<IEnumerable<CampaignArgument>> GetArguments(string id, bool? useInternalId = null)
         {

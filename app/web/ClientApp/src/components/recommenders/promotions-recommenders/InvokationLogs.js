@@ -6,10 +6,10 @@ import {
 } from "../../../api-hooks/promotionsRecommendersApi";
 import { Spinner } from "../../molecules";
 import { InvokationLogsUtil } from "../utils/InvokationLogsUtil";
-export const InvokationLogs = () => {
+export const InvokationLogs = ({ trigger }) => {
   const { id } = useParams();
   const recommender = usePromotionsRecommender({ id });
-  const invokations = useInvokationLogs({ id });
+  const invokations = useInvokationLogs({ id, pageSize: 5, trigger });
 
   if (recommender.loading || invokations.loading) {
     return <Spinner />;

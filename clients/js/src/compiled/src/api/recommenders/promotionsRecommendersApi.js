@@ -111,12 +111,13 @@ export const invokePromotionsRecommenderAsync = async ({ token, id, input, }) =>
         body: input,
     });
 };
-export const fetchInvokationLogsAsync = async ({ id, token, page, }) => {
+export const fetchInvokationLogsAsync = async ({ id, token, page, pageSize, }) => {
     return await il.fetchRecommenderInvokationLogsAsync({
         recommenderApiName,
         id,
         token,
         page,
+        pageSize,
     });
 };
 export const fetchTargetVariablesAsync = async ({ id, token, name }) => {
@@ -156,6 +157,42 @@ export const setArgumentsAsync = async ({ id, token, args, }) => {
         id,
         token,
         args,
+    });
+};
+export const createChoosePromotionArgumentRuleAsync = async ({ id, useInternalId, token, rule, }) => {
+    return await ar.createChoosePromotionArgumentRuleAsync({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
+        rule,
+    });
+};
+export const updateChoosePromotionArgumentRuleAsync = async ({ id, useInternalId, token, rule, ruleId, }) => {
+    return await ar.updateChoosePromotionArgumentRuleAsync({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
+        rule,
+        ruleId,
+    });
+};
+export const fetchChoosePromotionArgumentRulesAsync = async ({ id, useInternalId, token, }) => {
+    return await ar.fetchChoosePromotionArgumentRulesAsync({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
+    });
+};
+export const deleteArgumentRuleAsync = async ({ id, useInternalId, token, ruleId, }) => {
+    return await ar.deleteArgumentRuleAsync({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
+        ruleId,
     });
 };
 export const fetchDestinationsAsync = async ({ id, token }) => {

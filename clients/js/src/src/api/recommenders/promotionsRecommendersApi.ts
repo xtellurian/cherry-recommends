@@ -214,19 +214,18 @@ export const invokePromotionsRecommenderAsync = async ({
   });
 };
 
-interface FetchInvokationLogsRequest extends EntityRequest {
-  page: number;
-}
 export const fetchInvokationLogsAsync = async ({
   id,
   token,
   page,
-}: FetchInvokationLogsRequest) => {
+  pageSize,
+}: PaginatedEntityRequest) => {
   return await il.fetchRecommenderInvokationLogsAsync({
     recommenderApiName,
     id,
     token,
     page,
+    pageSize,
   });
 };
 
@@ -299,6 +298,76 @@ export const setArgumentsAsync = async ({
     id,
     token,
     args,
+  });
+};
+
+interface CreateChoosePromotionArgumentRule extends EntityRequest {
+  rule: components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+}
+export const createChoosePromotionArgumentRuleAsync = async ({
+  id,
+  useInternalId,
+  token,
+  rule,
+}: CreateChoosePromotionArgumentRule) => {
+  return await ar.createChoosePromotionArgumentRuleAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
+    rule,
+  });
+};
+
+interface UpdateChoosePromotionArgumentRule extends EntityRequest {
+  rule: components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+  ruleId: number;
+}
+export const updateChoosePromotionArgumentRuleAsync = async ({
+  id,
+  useInternalId,
+  token,
+  rule,
+  ruleId,
+}: UpdateChoosePromotionArgumentRule) => {
+  return await ar.updateChoosePromotionArgumentRuleAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
+    rule,
+    ruleId,
+  });
+};
+
+export const fetchChoosePromotionArgumentRulesAsync = async ({
+  id,
+  useInternalId,
+  token,
+}: CreateChoosePromotionArgumentRule) => {
+  return await ar.fetchChoosePromotionArgumentRulesAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
+  });
+};
+
+interface DeleteArgumentRule extends EntityRequest {
+  ruleId: number;
+}
+export const deleteArgumentRuleAsync = async ({
+  id,
+  useInternalId,
+  token,
+  ruleId,
+}: DeleteArgumentRule) => {
+  return await ar.deleteArgumentRuleAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
+    ruleId,
   });
 };
 

@@ -139,12 +139,14 @@ export const fetchInvokationLogsAsync = async ({
   id,
   token,
   page,
+  pageSize
 }: PaginatedEntityRequest) => {
   return await il.fetchRecommenderInvokationLogsAsync({
     recommenderApiName,
     id,
     token,
     page,
+    pageSize
   });
 };
 

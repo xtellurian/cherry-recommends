@@ -3,7 +3,7 @@ import { useAnalytics } from "../../../analytics/analyticsHooks";
 import { addPromotionAsync } from "../../../api/promotionsRecommendersApi";
 import { AsyncButton, ErrorCard, Subtitle, Title } from "../../molecules";
 import { BigPopup } from "../../molecules/popups/BigPopup";
-import { AsyncSelectItem } from "../../molecules/selectors/AsyncSelectItem";
+import AsyncSelectItem from "../../molecules/selectors/AsyncSelectPromotion";
 import { PromotionRow } from "../../promotions/PromotionRow";
 import { useAccessToken } from "../../../api-hooks/token";
 export const AddItemPopup = ({ isOpen, setIsOpen, recommender, onAdded }) => {

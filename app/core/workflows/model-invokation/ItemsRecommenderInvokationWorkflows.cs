@@ -30,7 +30,7 @@ namespace SignalBox.Core.Workflows
                                     IRecommenderModelClientFactory modelClientFactory,
                                     ICustomerWorkflow customerWorkflow,
                                     IBusinessWorkflow businessWorkflow,
-                                    IHistoricCustomerMetricStore historicMetricStore,
+                                    IStoreCollection storeCollection,
                                     IRecommendableItemStore itemStore,
                                     IWebhookSenderClient webhookSenderClient,
                                     IRecommendationCorrelatorStore correlatorStore,
@@ -41,7 +41,7 @@ namespace SignalBox.Core.Workflows
                                     IDiscountCodeWorkflow discountCodeWorkflow,
                                     IKlaviyoSystemWorkflow klaviyoWorkflow,
                                     IOfferStore offerStore)
-                                     : base(itemsRecommenderStore, historicMetricStore, webhookSenderClient, dateTimeProvider, klaviyoWorkflow)
+                                     : base(itemsRecommenderStore, storeCollection, webhookSenderClient, dateTimeProvider, klaviyoWorkflow)
         {
             this.logger = logger;
             this.recommendationCache = recommendationCache;
@@ -82,7 +82,7 @@ namespace SignalBox.Core.Workflows
 
             await itemsRecommenderStore.Load(recommender, _ => _.ModelRegistration);
             var invokationEntry = await base.StartTrackInvokation(recommender, input);
-            var context = new RecommendingContext(invokationEntry, trigger);
+            var context = new RecommendingContext(invokationEntry, input, trigger);
             context.SetLogger(logger);
 
             string commonIdOrName;
@@ -136,6 +136,21 @@ namespace SignalBox.Core.Workflows
                 else
                 {
                     throw new BadRequestException("Failed invokation - unknown target.");
+                }
+
+                // check rules that need to be evaluated
+                var matchingRule = await CheckArgumentRulesForPromotion(recommender, context);
+                if (matchingRule != null)
+                {
+                    context.LogMessage($"Found argument rule ({matchingRule.Id}) matching argument {matchingRule.Argument?.CommonId}.");
+                    // construct an output that works.
+                    var outputByRule = new ItemsRecommenderModelOutputV1
+                    {
+                        ScoredItems = new List<ScoredRecommendableItem> { new ScoredRecommendableItem(matchingRule.Promotion, 1) }
+                    };
+
+                    await LoadReferences(outputByRule);
+                    return await HandleRecommendation(recommender, context, input, outputByRule);
                 }
 
                 // load the metrics for the invokation
@@ -195,33 +210,7 @@ namespace SignalBox.Core.Workflows
 
                 var output = await client.Invoke(recommender, context, input);
 
-                // load the items
-                foreach (var scoredItem in output.ScoredItems)
-                {
-                    if (scoredItem == null)
-                    {
-                        throw new ModelInvokationException("Model returned a null ScoredItem");
-                    }
-                    else if (!string.IsNullOrEmpty(scoredItem.CommonId))
-                    {
-                        scoredItem.Item ??= await itemStore.ReadFromCommonId(scoredItem.CommonId);
-                    }
-                    else if (scoredItem.ItemId.HasValue)
-                    {
-                        scoredItem.Item ??= await itemStore.Read(scoredItem.ItemId.Value);
-                    }
-                    else if (!string.IsNullOrEmpty(scoredItem.ItemCommonId))
-                    {
-                        scoredItem.Item ??= await itemStore.ReadFromCommonId(scoredItem.ItemCommonId);
-                    }
-                    else if (scoredItem.Item == null)
-                    {
-                        throw new ModelInvokationException("The model did not return a valid item." +
-                         $"ItemCommonId: {scoredItem.ItemCommonId}, CommonId: {scoredItem.CommonId}, ItemId: {scoredItem.ItemId}, Score: {scoredItem.Score}");
-                    }
-
-                    scoredItem.DiscountCodes = await discountCodeWorkflow.GenerateDiscountCodes(scoredItem.Item);
-                }
+                await LoadReferences(output);
 
                 return await HandleRecommendation(recommender, context, input, output);
             }
@@ -280,6 +269,42 @@ namespace SignalBox.Core.Workflows
                     };
                     return await HandleRecommendation(recommender, context, input, output);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Loads the items from the database if required, and any discount codes.
+        /// </summary>
+        /// <param name="output">The model output.</param>
+        /// <exception cref="ModelInvokationException">Throws if an item is invalid.</exception>
+        private async Task LoadReferences(ItemsRecommenderModelOutputV1 output)
+        {
+            // load the items
+            foreach (var scoredItem in output.ScoredItems)
+            {
+                if (scoredItem == null)
+                {
+                    throw new ModelInvokationException("Model returned a null ScoredItem");
+                }
+                else if (!string.IsNullOrEmpty(scoredItem.CommonId))
+                {
+                    scoredItem.Item ??= await itemStore.ReadFromCommonId(scoredItem.CommonId);
+                }
+                else if (scoredItem.ItemId.HasValue)
+                {
+                    scoredItem.Item ??= await itemStore.Read(scoredItem.ItemId.Value);
+                }
+                else if (!string.IsNullOrEmpty(scoredItem.ItemCommonId))
+                {
+                    scoredItem.Item ??= await itemStore.ReadFromCommonId(scoredItem.ItemCommonId);
+                }
+                else if (scoredItem.Item == null)
+                {
+                    throw new ModelInvokationException("The model did not return a valid item." +
+                     $"ItemCommonId: {scoredItem.ItemCommonId}, CommonId: {scoredItem.CommonId}, ItemId: {scoredItem.ItemId}, Score: {scoredItem.Score}");
+                }
+
+                scoredItem.DiscountCodes = await discountCodeWorkflow.GenerateDiscountCodes(scoredItem.Item);
             }
         }
 

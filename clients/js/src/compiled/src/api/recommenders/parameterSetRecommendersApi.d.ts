@@ -22,7 +22,7 @@ interface InvokeParameterSetRecommenderRequest extends EntityRequest {
     input: components["schemas"]["ModelInputDto"];
 }
 export declare const invokeParameterSetRecommenderAsync: ({ token, id, input, }: InvokeParameterSetRecommenderRequest) => Promise<any>;
-export declare const fetchInvokationLogsAsync: ({ id, token, page, }: PaginatedEntityRequest) => Promise<any>;
+export declare const fetchInvokationLogsAsync: ({ id, token, page, pageSize }: PaginatedEntityRequest) => Promise<any>;
 export declare const fetchTargetVariablesAsync: ({ id, token, name }: any) => Promise<any>;
 export declare const createTargetVariableAsync: ({ id, token, targetVariableValue, }: any) => Promise<any>;
 interface SetSettingsRequest extends EntityRequest {

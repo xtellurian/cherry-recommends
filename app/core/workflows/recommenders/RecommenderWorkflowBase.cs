@@ -13,20 +13,21 @@ namespace SignalBox.Core.Workflows
         protected readonly IMetricStore featureStore;
         protected readonly ISegmentStore segmentStore;
         private readonly IChannelStore channelStore;
+        private readonly IRecommendableItemStore promotionStore;
+        private readonly IArgumentRuleStore argumentRuleStore;
         private readonly IRecommenderReportImageWorkflow imageWorkflows;
 
         protected RecommenderWorkflowBase(IRecommenderStore<TRecommender> store,
-                                          IIntegratedSystemStore systemStore,
-                                          IMetricStore featureStore,
-                                          ISegmentStore segmentStore,
-                                          IChannelStore channelStore,
+                                          IStoreCollection storeCollection,
                                           IRecommenderReportImageWorkflow imageWorkflows)
         {
             this.store = store;
-            this.systemStore = systemStore;
-            this.featureStore = featureStore;
-            this.segmentStore = segmentStore;
-            this.channelStore = channelStore;
+            this.systemStore = storeCollection.ResolveStore<IIntegratedSystemStore, IntegratedSystem>();
+            this.featureStore = storeCollection.ResolveStore<IMetricStore, Metric>(); ;
+            this.segmentStore = storeCollection.ResolveStore<ISegmentStore, Segment>(); ;
+            this.channelStore = storeCollection.ResolveStore<IChannelStore, ChannelBase>();
+            this.promotionStore = storeCollection.ResolveStore<IRecommendableItemStore, RecommendableItem>();
+            this.argumentRuleStore = storeCollection.ResolveStore<IArgumentRuleStore, ArgumentRule>();
             this.imageWorkflows = imageWorkflows;
         }
 
@@ -152,6 +153,54 @@ namespace SignalBox.Core.Workflows
             recommender.Channels.Remove(channel);
             await store.Context.SaveChanges();
             return recommender;
+        }
+
+        // ArgumentRule rules
+        public async Task<ChoosePromotionArgumentRule> CreateChoosePromotionArgumentRule(TRecommender campaign, long argumentId, long promotionId, string argumentValue)
+        {
+            await store.LoadMany(campaign, _ => _.ArgumentRules);
+            await store.LoadMany(campaign, _ => _.Arguments);
+            var arg = campaign.Arguments.First(_ => _.Id == argumentId);
+            var promotion = await promotionStore.Read(promotionId);
+
+            var rule = new ChoosePromotionArgumentRule(campaign, arg, promotion, argumentValue);
+            rule.Validate();
+            campaign.ArgumentRules.Add(rule);
+            await store.Update(campaign);
+            await store.Context.SaveChanges();
+            return rule;
+        }
+        public async Task<ChoosePromotionArgumentRule> UpdateChoosePromotionArgumentRule(TRecommender campaign, long ruleId, long promotionId, string argumentValue)
+        {
+            await store.LoadMany(campaign, _ => _.ArgumentRules);
+            await store.LoadMany(campaign, _ => _.Arguments);
+
+            if (!(campaign.ArgumentRules.FirstOrDefault(_ => _.Id == ruleId) is ChoosePromotionArgumentRule rule))
+            {
+                throw new EntityNotFoundException(typeof(ChoosePromotionArgumentRule), ruleId, "No rule found");
+            }
+
+            var promotion = await promotionStore.Read(promotionId);
+            rule.PromotionId = promotionId;
+            rule.Promotion = promotion;
+            rule.ArgumentValue = argumentValue;
+            rule.Validate();
+            await store.Update(campaign);
+            await store.Context.SaveChanges();
+            return rule;
+        }
+
+        public async Task DeleteArgumentRule(TRecommender campaign, long ruleId)
+        {
+            await store.LoadMany(campaign, _ => _.ArgumentRules);
+            var rule = campaign.ArgumentRules.First(_ => _.Id == ruleId);
+
+            await argumentRuleStore.Remove(ruleId);
+            campaign.ArgumentRules.Remove(rule);
+
+            await store.Update(campaign);
+            await argumentRuleStore.Context.SaveChanges();
+            await store.Context.SaveChanges();
         }
     }
 }

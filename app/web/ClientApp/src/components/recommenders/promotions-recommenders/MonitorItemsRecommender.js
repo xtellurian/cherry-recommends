@@ -8,19 +8,19 @@ import {
 } from "../../molecules/layout/StatefulTabs";
 import { OfferList } from "./OfferList";
 
-export const MonitorRecommender = () => {
+export const MonitorRecommender = ({ trigger }) => {
   const [currentTabId, setCurrentTabId] = React.useState();
 
   const tabs = [
     {
       id: "recommendations",
       label: "Latest Recommendations",
-      render: () => <ItemsRecommendationList size="lg" />,
+      render: () => <ItemsRecommendationList trigger={trigger} size="lg" />,
     },
     {
       id: "invokations",
       label: "Invokations",
-      render: () => <InvokationLogs />,
+      render: () => <InvokationLogs trigger={trigger} />,
     },
   ];
 

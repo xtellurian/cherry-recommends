@@ -3045,10 +3045,11 @@
       });
   };
 
-  const fetchRecommenderInvokationLogsAsync = async ({ recommenderApiName, token, id, page, }) => {
+  const fetchRecommenderInvokationLogsAsync = async ({ recommenderApiName, token, id, page, pageSize, }) => {
       return await executeFetch({
           path: `api/recommenders/${recommenderApiName}/${id}/InvokationLogs`,
           page,
+          pageSize,
           token,
       });
   };
@@ -3066,6 +3067,48 @@
           path: `api/recommenders/${recommenderApiName}/${id}/Arguments`,
           token,
           method: "get",
+      });
+  };
+  const fetchChoosePromotionArgumentRulesAsync$1 = async ({ recommenderApiName, token, id, useInternalId, }) => {
+      return await executeFetch({
+          path: `api/recommenders/${recommenderApiName}/${id}/ChoosePromotionArgumentRules`,
+          token,
+          method: "get",
+          query: {
+              useInternalId,
+          },
+      });
+  };
+  const createChoosePromotionArgumentRuleAsync$1 = async ({ recommenderApiName, token, id, useInternalId, rule, }) => {
+      return await executeFetch({
+          path: `api/recommenders/${recommenderApiName}/${id}/ChoosePromotionArgumentRules`,
+          token,
+          method: "post",
+          body: rule,
+          query: {
+              useInternalId,
+          },
+      });
+  };
+  const updateChoosePromotionArgumentRuleAsync$1 = async ({ recommenderApiName, token, id, useInternalId, rule, ruleId, }) => {
+      return await executeFetch({
+          path: `api/recommenders/${recommenderApiName}/${id}/ChoosePromotionArgumentRules/${ruleId}`,
+          token,
+          method: "post",
+          body: rule,
+          query: {
+              useInternalId,
+          },
+      });
+  };
+  const deleteArgumentRuleAsync$1 = async ({ recommenderApiName, token, id, useInternalId, ruleId, }) => {
+      return await executeFetch({
+          path: `api/recommenders/${recommenderApiName}/${id}/ArgumentRules/${ruleId}`,
+          token,
+          method: "delete",
+          query: {
+              useInternalId,
+          },
       });
   };
 
@@ -3235,12 +3278,13 @@
           body: input,
       });
   };
-  const fetchInvokationLogsAsync$2 = async ({ id, token, page, }) => {
+  const fetchInvokationLogsAsync$2 = async ({ id, token, page, pageSize }) => {
       return await fetchRecommenderInvokationLogsAsync({
           recommenderApiName: recommenderApiName$2,
           id,
           token,
           page,
+          pageSize
       });
   };
   const fetchTargetVariablesAsync$2 = async ({ id, token, name }) => {
@@ -3518,12 +3562,13 @@
           body: input,
       });
   };
-  const fetchInvokationLogsAsync$1 = async ({ id, token, page, }) => {
+  const fetchInvokationLogsAsync$1 = async ({ id, token, page, pageSize, }) => {
       return await fetchRecommenderInvokationLogsAsync({
           recommenderApiName: recommenderApiName$1,
           id,
           token,
           page,
+          pageSize,
       });
   };
   const fetchTargetVariablesAsync$1 = async ({ id, token, name }) => {
@@ -3789,12 +3834,13 @@
           body: input,
       });
   };
-  const fetchInvokationLogsAsync = async ({ id, token, page, }) => {
+  const fetchInvokationLogsAsync = async ({ id, token, page, pageSize, }) => {
       return await fetchRecommenderInvokationLogsAsync({
           recommenderApiName,
           id,
           token,
           page,
+          pageSize,
       });
   };
   const fetchTargetVariablesAsync = async ({ id, token, name }) => {
@@ -3834,6 +3880,42 @@
           id,
           token,
           args,
+      });
+  };
+  const createChoosePromotionArgumentRuleAsync = async ({ id, useInternalId, token, rule, }) => {
+      return await createChoosePromotionArgumentRuleAsync$1({
+          recommenderApiName,
+          id,
+          token,
+          useInternalId,
+          rule,
+      });
+  };
+  const updateChoosePromotionArgumentRuleAsync = async ({ id, useInternalId, token, rule, ruleId, }) => {
+      return await updateChoosePromotionArgumentRuleAsync$1({
+          recommenderApiName,
+          id,
+          token,
+          useInternalId,
+          rule,
+          ruleId,
+      });
+  };
+  const fetchChoosePromotionArgumentRulesAsync = async ({ id, useInternalId, token, }) => {
+      return await fetchChoosePromotionArgumentRulesAsync$1({
+          recommenderApiName,
+          id,
+          token,
+          useInternalId,
+      });
+  };
+  const deleteArgumentRuleAsync = async ({ id, useInternalId, token, ruleId, }) => {
+      return await deleteArgumentRuleAsync$1({
+          recommenderApiName,
+          id,
+          token,
+          useInternalId,
+          ruleId,
       });
   };
   const fetchDestinationsAsync = async ({ id, token }) => {
@@ -4021,6 +4103,10 @@
     setSettingsAsync: setSettingsAsync,
     fetchArgumentsAsync: fetchArgumentsAsync,
     setArgumentsAsync: setArgumentsAsync,
+    createChoosePromotionArgumentRuleAsync: createChoosePromotionArgumentRuleAsync,
+    updateChoosePromotionArgumentRuleAsync: updateChoosePromotionArgumentRuleAsync,
+    fetchChoosePromotionArgumentRulesAsync: fetchChoosePromotionArgumentRulesAsync,
+    deleteArgumentRuleAsync: deleteArgumentRuleAsync,
     fetchDestinationsAsync: fetchDestinationsAsync,
     createDestinationAsync: createDestinationAsync,
     removeDestinationAsync: removeDestinationAsync,

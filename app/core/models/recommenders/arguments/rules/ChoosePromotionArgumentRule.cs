@@ -20,5 +20,19 @@ namespace SignalBox.Core.Recommenders
         /// Rule will force the campaign to return this promotion.
         /// </summary>
         public RecommendableItem Promotion { get; set; }
+
+        public override void Validate()
+        {
+            base.Validate();
+            // check if numeric value can be parsed
+            if (Argument.ArgumentType == ArgumentTypes.Numerical)
+            {
+                if (!double.TryParse(ArgumentValue, out var _))
+                {
+                    // not a numeric value
+                    throw new BadRequestException($"The value {ArgumentValue} cannot match numerical arguments as it in not numeric");
+                }
+            }
+        }
     }
 }

@@ -38,10 +38,7 @@ interface InvokeItemRecommenderRequest extends EntityRequest {
     input: ModelInput;
 }
 export declare const invokeItemsRecommenderAsync: ({ token, id, input, }: InvokeItemRecommenderRequest) => Promise<ItemsRecommendation>;
-interface FetchInvokationLogsRequest extends EntityRequest {
-    page: number;
-}
-export declare const fetchInvokationLogsAsync: ({ id, token, page, }: FetchInvokationLogsRequest) => Promise<any>;
+export declare const fetchInvokationLogsAsync: ({ id, token, page, pageSize, }: PaginatedEntityRequest) => Promise<any>;
 export declare const fetchTargetVariablesAsync: ({ id, token, name }: any) => Promise<any>;
 export declare const createTargetVariableAsync: ({ id, token, targetVariableValue, }: any) => Promise<any>;
 interface RecommenderSettings {
