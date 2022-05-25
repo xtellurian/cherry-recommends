@@ -2407,6 +2407,7 @@
       addToBusiness: "addToBusiness",
       purchase: "purchase",
       usePromotion: "usePromotion",
+      promotionPresented: "promotionPresented",
   };
   const createEventsAsync = async ({ apiKey, token, events, }) => {
       return await executeFetch({

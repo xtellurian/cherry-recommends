@@ -22,10 +22,8 @@ namespace SignalBox.Test.Workflows
         [InlineData(EventKinds.PageView, 6, 6)]
         [InlineData(EventKinds.PropertyUpdate, 7, 7)]
         [InlineData(EventKinds.Purchase, null, 8)]
-        [InlineData(EventKinds.Purchase, 9, null)]
-        [InlineData(EventKinds.UsePromotion, null, 10)]
-        [InlineData(EventKinds.UsePromotion, 11, null)]
-        public async Task RedeemOffer_Returns_OnInvalidEvents(EventKinds eventKind, long? recommendationCorrelatorId, long? promotionId)
+        [InlineData(EventKinds.UsePromotion, null, 9)]
+        public async Task UpdateOffer_Returns_OnInvalidEvents(EventKinds eventKind, long? recommendationCorrelatorId, long? promotionId)
         {
             // Arrange
             var mockStorageContext = Utility.MockStorageContext();
@@ -51,7 +49,7 @@ namespace SignalBox.Test.Workflows
                 mockPromotionsRecommendationStore.Object,
                 Utility.DateTimeProvider()
             );
-            await workflow.RedeemOffer(customerEvent);
+            await workflow.UpdateOffer(customerEvent);
             // Assert
             mockOfferStore.Verify(_ => _.ReadOfferByRecommendationCorrelator(It.IsAny<long>()), Times.Never);
             mockPromotionStore.Verify(_ => _.Read(It.IsAny<long>()), Times.Never);
@@ -60,15 +58,79 @@ namespace SignalBox.Test.Workflows
         }
 
         [Theory]
-        [InlineData(EventKinds.Purchase, 1, 1)]
-        [InlineData(EventKinds.UsePromotion, 2, 2)]
-        public async Task RedeemOffer_Redeems(EventKinds eventKind, long recommendationCorrelatorId, long promotionId)
+        [InlineData(EventKinds.PromotionPresented, 1)]
+        public async Task UpdateOffer_OfferIsPresented(EventKinds eventKind, long recommendationCorrelatorId)
         {
             // Arrange
             var mockStorageContext = Utility.MockStorageContext();
             var mockOfferStore = new Mock<IOfferStore>();
             var mockPromotionStore = new Mock<IRecommendableItemStore>();
             var mockPromotionsRecommendationStore = new Mock<IItemsRecommendationStore>();
+            var dateTimeProvider = Utility.DateTimeProvider();
+            var customer = new Customer("customer-id", "John Smith");
+            var source = new IntegratedSystem("test-source", "Test Source", IntegratedSystemTypes.Segment);
+            var properties = new Dictionary<string, object>();
+            var customerEvent = new CustomerEvent(
+                customer, "test-event", DateTimeOffset.Now, source,
+                eventKind, "test-event", properties, recommendationCorrelatorId);
+            var recommender = new ItemsRecommender(
+                "test-recommender", "Test Recommender", RecommendableItem.DefaultRecommendableItem,
+                new RecommendableItem[] { }, null, null, null);
+            var recommendingContext = new RecommendingContext(
+                new RecommendationCorrelator(recommender), null, null
+            );
+            var recommendation = new ItemsRecommendation(
+                recommender,
+                recommendingContext,
+                new ScoredRecommendableItem[] { });
+            var offerCreated = new Offer(recommendation);
+            var offerPresented = new Offer(recommendation)
+            {
+                State = OfferState.Presented
+            };
+            var offerRedeemed = new Offer(recommendation)
+            {
+                State = OfferState.Redeemed,
+                RedeemedAt = dateTimeProvider.Now
+            };
+
+            mockOfferStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
+            mockOfferStore
+                .SetupSequence(_ => _.ReadOfferByRecommendationCorrelator(It.Is<long>(_ => _ == recommendationCorrelatorId)))
+                .ReturnsAsync(new EntityResult<Offer>(offerCreated))
+                .ReturnsAsync(new EntityResult<Offer>(offerPresented))
+                .ReturnsAsync(new EntityResult<Offer>(offerRedeemed));
+            // Act
+            var workflow = new OfferWorkflows(
+                Utility.MockLogger<OfferWorkflows>().Object,
+                mockOfferStore.Object,
+                mockPromotionStore.Object,
+                mockPromotionsRecommendationStore.Object,
+                dateTimeProvider
+            );
+            await workflow.UpdateOffer(customerEvent); // offerCreated
+            await workflow.UpdateOffer(customerEvent); // offerPresented
+            await workflow.UpdateOffer(customerEvent); // offerRedeemed
+            // Assert
+            mockOfferStore.Verify(_ => _.ReadOfferByRecommendationCorrelator(It.IsAny<long>()), Times.Exactly(3));
+            mockPromotionStore.Verify(_ => _.Read(It.IsAny<long>()), Times.Never);
+            mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Created)), Times.Never);
+            mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Presented)), Times.Exactly(2));
+            mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Redeemed)), Times.Once);
+            mockOfferStore.Verify(_ => _.Context.SaveChanges(), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(EventKinds.Purchase, 1, 1)]
+        [InlineData(EventKinds.UsePromotion, 2, 2)]
+        public async Task UpdateOffer_OfferIsRedeemed(EventKinds eventKind, long recommendationCorrelatorId, long promotionId)
+        {
+            // Arrange
+            var mockStorageContext = Utility.MockStorageContext();
+            var mockOfferStore = new Mock<IOfferStore>();
+            var mockPromotionStore = new Mock<IRecommendableItemStore>();
+            var mockPromotionsRecommendationStore = new Mock<IItemsRecommendationStore>();
+            var dateTimeProvider = Utility.DateTimeProvider();
             var customer = new Customer("customer-id", "John Smith");
             var source = new IntegratedSystem("test-source", "Test Source", IntegratedSystemTypes.Segment);
             var properties = new Dictionary<string, object>()
@@ -97,12 +159,23 @@ namespace SignalBox.Test.Workflows
                 recommender,
                 recommendingContext,
                 new ScoredRecommendableItem[] { new ScoredRecommendableItem(promotion, 0.25, null) });
-            var offer = new Offer(recommendation);
+            var offerCreated = new Offer(recommendation);
+            var offerPresented = new Offer(recommendation)
+            {
+                State = OfferState.Presented
+            };
+            var offerRedeemed = new Offer(recommendation)
+            {
+                State = OfferState.Redeemed,
+                RedeemedAt = dateTimeProvider.Now
+            };
 
             mockOfferStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
             mockOfferStore
-                .Setup(_ => _.ReadOfferByRecommendationCorrelator(It.Is<long>(_ => _ == recommendationCorrelatorId)))
-                .ReturnsAsync(new EntityResult<Offer>(offer));
+                .SetupSequence(_ => _.ReadOfferByRecommendationCorrelator(It.Is<long>(_ => _ == recommendationCorrelatorId)))
+                .ReturnsAsync(new EntityResult<Offer>(offerCreated))
+                .ReturnsAsync(new EntityResult<Offer>(offerPresented))
+                .ReturnsAsync(new EntityResult<Offer>(offerRedeemed));
             mockPromotionStore.Setup(_ => _.Read(It.Is<long>(_ => _ == promotionId))).ReturnsAsync(promotion);
             // Act
             var workflow = new OfferWorkflows(
@@ -110,19 +183,28 @@ namespace SignalBox.Test.Workflows
                 mockOfferStore.Object,
                 mockPromotionStore.Object,
                 mockPromotionsRecommendationStore.Object,
-                Utility.DateTimeProvider()
+                dateTimeProvider
             );
-            await workflow.RedeemOffer(customerEvent);
+            await workflow.UpdateOffer(customerEvent); // offerCreated
+            await workflow.UpdateOffer(customerEvent); // offerPresented
+            await workflow.UpdateOffer(customerEvent); // offerRedeemed
             // Assert
-            mockOfferStore.Verify(_ => _.ReadOfferByRecommendationCorrelator(It.IsAny<long>()), Times.Once);
-            mockPromotionStore.Verify(_ => _.Read(It.IsAny<long>()), Times.Once);
-            mockOfferStore.Verify(_ => _.Update(It.IsAny<Offer>()), Times.Once);
+            mockOfferStore.Verify(_ => _.ReadOfferByRecommendationCorrelator(It.IsAny<long>()), Times.Exactly(3));
+            mockPromotionStore.Verify(_ => _.Read(It.IsAny<long>()), Times.Exactly(2));
+            mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Created)), Times.Never);
+            mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Presented)), Times.Never);
+            mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Redeemed)), Times.Exactly(3));
             mockOfferStore.Verify(_ => _.Context.SaveChanges(), Times.Never);
 
             if (eventKind == EventKinds.Purchase)
             {
-                Assert.Equal(defaultValue, offer.GrossRevenue);
+                Assert.Equal(defaultValue, offerCreated.GrossRevenue);
+                Assert.Equal(defaultValue, offerPresented.GrossRevenue);
             }
+            Assert.True(offerCreated.RedeemedAt.HasValue);
+            Assert.True(offerPresented.RedeemedAt.HasValue);
+            Assert.True(offerCreated.RedeemedPromotionId.HasValue);
+            Assert.True(offerPresented.RedeemedPromotionId.HasValue);
         }
 
         [Fact]

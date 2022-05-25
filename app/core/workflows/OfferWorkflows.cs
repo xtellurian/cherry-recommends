@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -30,40 +31,61 @@ namespace SignalBox.Core.Workflows
             this.dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task RedeemOffer(CustomerEvent customerEvent)
+        public async Task UpdateOffer(CustomerEvent customerEvent)
         {
-            long? promotionId = TryGetValue<long>(customerEvent.Properties, "promotionId");
+            var offerEventKinds = new EventKinds[]
+            {
+                EventKinds.Purchase,
+                EventKinds.UsePromotion,
+                EventKinds.PromotionPresented
+            };
+            bool isOfferEventKind = offerEventKinds.Any(_ => _ == customerEvent.EventKind);
+            bool isRedeemEvent = customerEvent.EventKind == EventKinds.Purchase ||
+                customerEvent.EventKind == EventKinds.UsePromotion;
 
-            // Only process Purchase and UsePromotion events with related recommendation and promotion
-            if ((customerEvent.EventKind != EventKinds.Purchase &&
-                customerEvent.EventKind != EventKinds.UsePromotion) ||
-                !customerEvent.RecommendationCorrelatorId.HasValue ||
-                !promotionId.HasValue)
+            // Only process valid offer events
+            if (!isOfferEventKind ||
+                !customerEvent.RecommendationCorrelatorId.HasValue)
             {
                 return;
             }
 
-            float? value = TryGetValue<float>(customerEvent.Properties, "value");
-            var promotion = await promotionStore.Read(promotionId.Value);
             var result = await offerStore.ReadOfferByRecommendationCorrelator(customerEvent.RecommendationCorrelatorId.Value);
             if (result.Success)
             {
                 var now = dateTimeProvider.Now;
                 var offer = result.Entity;
-                offer.State = OfferState.Redeemed;
-                offer.LastUpdated = now;
-                offer.RedeemedAt = now;
-                offer.RedeemedPromotionId = promotion.Id;
-                offer.RedeemedPromotion = promotion;
-                if (customerEvent.EventKind == EventKinds.Purchase && value.HasValue)
+
+                if (customerEvent.EventKind == EventKinds.PromotionPresented && offer.State == OfferState.Created)
                 {
-                    offer.GrossRevenue = value;
+                    offer.State = OfferState.Presented;
+                    offer.LastUpdated = now;
+                    logger.LogInformation("Offer {offerId} presented", offer.Id);
+                }
+                else if (isRedeemEvent && offer.State != OfferState.Redeemed)
+                {
+                    long? promotionId = TryGetValue<long>(customerEvent.Properties, "promotionId");
+                    if (promotionId.HasValue)
+                    {
+                        var promotion = await promotionStore.Read(promotionId.Value);
+                        offer.RedeemedPromotionId = promotion.Id;
+                        offer.RedeemedPromotion = promotion;
+                    }
+                    offer.State = OfferState.Redeemed;
+                    offer.LastUpdated = now;
+                    offer.RedeemedAt = now;
+
+                    if (customerEvent.EventKind == EventKinds.Purchase)
+                    {
+                        float? value = TryGetValue<float>(customerEvent.Properties, "value");
+                        offer.GrossRevenue = value.HasValue ? value : offer.GrossRevenue;
+                    }
+                    logger.LogInformation("Offer {offerId} redeemed using promotion {promotionId}", offer.Id, promotionId);
                 }
 
                 await offerStore.Update(offer);
                 // Do not call Context.SaveChanges() for better performance. 
                 // Calling method should handle this.
-                logger.LogInformation("Offer {offerId} redeemed using promotion {promotionId}", offer.Id, promotion.Id);
             }
         }
 

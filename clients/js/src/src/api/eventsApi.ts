@@ -21,6 +21,7 @@ interface EventKindConstants {
   addToBusiness: EventKinds;
   purchase: EventKinds;
   usePromotion: EventKinds;
+  promotionPresented: EventKinds;
 }
 export const eventKinds: EventKindConstants = {
   custom: "custom",
@@ -32,6 +33,7 @@ export const eventKinds: EventKindConstants = {
   addToBusiness: "addToBusiness",
   purchase: "purchase",
   usePromotion: "usePromotion",
+  promotionPresented: "promotionPresented",
 };
 type EventDto = components["schemas"]["EventDto"];
 type EventLoggingResponse = components["schemas"]["EventLoggingResponse"];

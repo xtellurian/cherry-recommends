@@ -9202,7 +9202,8 @@ export interface components {
       | "consumeRecommendation"
       | "addToBusiness"
       | "purchase"
-      | "usePromotion";
+      | "usePromotion"
+      | "promotionPresented";
     EventKindSummary: {
       keys?: string[] | null;
       instanceCount?: number;

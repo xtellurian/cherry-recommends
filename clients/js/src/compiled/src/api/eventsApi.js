@@ -15,6 +15,7 @@ export const eventKinds = {
     addToBusiness: "addToBusiness",
     purchase: "purchase",
     usePromotion: "usePromotion",
+    promotionPresented: "promotionPresented",
 };
 export const createEventsAsync = async ({ apiKey, token, events, }) => {
     return await executeFetch({

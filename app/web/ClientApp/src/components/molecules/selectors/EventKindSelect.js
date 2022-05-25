@@ -31,6 +31,10 @@ const getEventKindOptions = () => {
       label: "Use Promotion",
       value: eventKinds.usePromotion,
     },
+    {
+      label: "Promotion Presented",
+      value: eventKinds.promotionPresented,
+    },
   ];
 };
 

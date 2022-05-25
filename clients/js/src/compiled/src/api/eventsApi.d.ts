@@ -12,6 +12,7 @@ interface EventKindConstants {
     addToBusiness: EventKinds;
     purchase: EventKinds;
     usePromotion: EventKinds;
+    promotionPresented: EventKinds;
 }
 export declare const eventKinds: EventKindConstants;
 declare type EventDto = components["schemas"]["EventDto"];

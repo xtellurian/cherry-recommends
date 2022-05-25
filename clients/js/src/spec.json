@@ -19788,7 +19788,8 @@
           "consumeRecommendation",
           "addToBusiness",
           "purchase",
-          "usePromotion"
+          "usePromotion",
+          "promotionPresented"
         ],
         "type": "string"
       },

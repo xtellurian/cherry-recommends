@@ -9331,7 +9331,7 @@ export interface components {
                 [key: string]: unknown;
             } | null;
         };
-        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation" | "addToBusiness" | "purchase" | "usePromotion";
+        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation" | "addToBusiness" | "purchase" | "usePromotion" | "promotionPresented";
         EventKindSummary: {
             keys?: string[] | null;
             instanceCount?: number;

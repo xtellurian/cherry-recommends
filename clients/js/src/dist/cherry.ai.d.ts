@@ -632,7 +632,7 @@ interface components {
                 [key: string]: unknown;
             } | null;
         };
-        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation" | "addToBusiness" | "purchase" | "usePromotion";
+        EventKinds: "custom" | "propertyUpdate" | "behaviour" | "pageView" | "identify" | "consumeRecommendation" | "addToBusiness" | "purchase" | "usePromotion" | "promotionPresented";
         EventKindSummary: {
             keys?: string[] | null;
             instanceCount?: number;
@@ -1824,6 +1824,7 @@ interface EventKindConstants {
     addToBusiness: EventKinds;
     purchase: EventKinds;
     usePromotion: EventKinds;
+    promotionPresented: EventKinds;
 }
 declare const eventKinds: EventKindConstants;
 declare type EventDto = components["schemas"]["EventDto"];

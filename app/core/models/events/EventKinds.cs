@@ -11,6 +11,7 @@ namespace SignalBox.Core
         ConsumeRecommendation,
         AddToBusiness,
         Purchase,
-        UsePromotion
+        UsePromotion,
+        PromotionPresented
     }
 }

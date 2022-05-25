@@ -183,7 +183,7 @@ namespace SignalBox.Core.Workflows
                 events.Add(customerEvent);
 
                 // Check to see if an offer was redeemed
-                await offerWorkflow.RedeemOffer(customerEvent);
+                await offerWorkflow.UpdateOffer(customerEvent);
             }
 
             return await customerEventStore.AddRange(events);
