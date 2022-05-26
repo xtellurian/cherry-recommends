@@ -7,7 +7,7 @@ namespace SignalBox.Infrastructure.Models.Databases
     public class MigrationResult
     {
         public Tenant Tenant { get; set; }
-        public List<MigrationInfo> Migrations { get; set; }
+        public List<MigrationInfo> PendingMigrations { get; set; } = new List<MigrationInfo>();
         public string Auth0RoleId { get; set; }
         public string ExceptionMessage { get; set; }
 
@@ -15,24 +15,17 @@ namespace SignalBox.Infrastructure.Models.Databases
         public MigrationResult(Tenant tenant)
         {
             Tenant = tenant;
-            Migrations = new List<MigrationInfo>();
         }
 
         public MigrationResult(Tenant tenant, System.Exception exception)
         {
             Tenant = tenant;
-            Migrations = new List<MigrationInfo>();
             ExceptionMessage = exception.Message;
         }
 
-        public void AddMigration(bool isApplied, string name)
+        public void AddPendingMigrations(bool willBeApplied, IEnumerable<string> names)
         {
-            Migrations.Add(new MigrationInfo(name, isApplied));
-        }
-
-        public void AddMigrations(bool isApplied, IEnumerable<string> names)
-        {
-            Migrations.AddRange(names.Select(_ => new MigrationInfo(_, isApplied)));
+            PendingMigrations.AddRange(names.Select(_ => new MigrationInfo(_, willBeApplied)));
         }
     }
 }

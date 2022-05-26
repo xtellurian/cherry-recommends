@@ -40,10 +40,9 @@ namespace SignalBox.Infrastructure.Azure
             var options = CreateDbContextOptions(databaseName);
             using (var context = new SignalBoxDbContext(options.Options))
             {
+                var pending = await context.Database.GetPendingMigrationsAsync();
+                result.AddPendingMigrations(true, pending);
                 await context.Database.MigrateAsync();
-
-                var applied = await context.Database.GetAppliedMigrationsAsync();
-                result.AddMigrations(true, applied);
             }
             logger.LogInformation("Migrated database {databaseName}", databaseName);
         }

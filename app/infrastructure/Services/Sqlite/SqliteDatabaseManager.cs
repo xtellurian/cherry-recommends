@@ -30,22 +30,22 @@ namespace SignalBox.Infrastructure.Sqlite
         public async Task<MigrationResult> CreateDatabase(Tenant tenant, Func<string, string> manipulateConnectionString = null)
         {
             var result = new MigrationResult(tenant);
-            logger.LogInformation($"Creating database {tenant.DatabaseName} in directory {config.Directory}");
+            logger.LogInformation("Creating database {databaseName} in directory {configDirectory}", tenant.DatabaseName, config.Directory);
             try
             {
                 var options = ConstructDbContextOptions(tenant, manipulateConnectionString);
                 using (var context = new SignalBoxDbContext(options.Options))
                 {
                     var pending = await context.Database.GetPendingMigrationsAsync();
-                    result.AddMigrations(true, pending);
+                    result.AddPendingMigrations(true, pending);
                     await context.Database.MigrateAsync();
                 }
                 return result;
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed to create or migrate database {tenant.DatabaseName} for tenant {tenant.Name}");
-                logger.LogError(ex.Message);
+                logger.LogError("Failed to create or migrate database {databaseName} for tenant {tenantName}", tenant.DatabaseName, tenant.Name);
+                logger.LogError(message: ex.Message);
                 throw;
             }
         }

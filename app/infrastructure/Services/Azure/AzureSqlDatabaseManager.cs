@@ -119,13 +119,10 @@ namespace SignalBox.Infrastructure.Azure
                     await context.Database.ExecuteSqlRawAsync(query.ToString());
                 }
 
-                var applied = await context.Database.GetAppliedMigrationsAsync();
-                result.AddMigrations(true, applied);
-
                 var pending = await context.Database.GetPendingMigrationsAsync();
-                result.AddMigrations(false, pending);
+                result.AddPendingMigrations(true, pending);
 
-                logger.LogInformation("Migrating database. There are {pending} pending migrations and {applied} applied.", pending.Count(), applied.Count());
+                logger.LogInformation("Migrating database. There are {pending} pending migrations.", pending.Count());
                 await context.Database.MigrateAsync();
             }
             logger.LogInformation("Migrated database {databaseName}", database.Name);
