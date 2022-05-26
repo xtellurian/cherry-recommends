@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faAnglesUp as icon } from "@fortawesome/free-solid-svg-icons";
 
 import { Typography } from "../molecules";
 import { Navigation } from "./Navigation";
@@ -12,7 +12,8 @@ export const MoveUpHierarchyButton = ({ to, children, className }) => {
     <div className={className}>
       <Navigation to={to}>
         <button className="btn btn-outline-primary d-flex align-items-center">
-          <FontAwesomeIcon icon={faArrowLeft} fontSize={16} className="mr-2" />
+          <FontAwesomeIcon icon={icon} fontSize={16} className="mr-2" />
+
           {children}
         </button>
       </Navigation>
@@ -24,7 +25,7 @@ export const MoveUpHierarchyPrimaryButton = ({ to, children, className }) => {
   return (
     <div className={`mb-4 ${className}`}>
       <Navigation to={to} className="primary-nav-link text-decoration-none">
-        <FontAwesomeIcon icon={faArrowLeft} fontSize={16} className="mr-2" />
+        <FontAwesomeIcon icon={icon} fontSize={16} className="mr-2" />
         <Typography
           component="span"
           className="semi-bold"
