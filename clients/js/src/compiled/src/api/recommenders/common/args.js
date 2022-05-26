@@ -46,6 +46,38 @@ export const updateChoosePromotionArgumentRuleAsync = async ({ recommenderApiNam
         },
     });
 };
+export const fetchChooseSegmentArgumentRulesAsync = async ({ recommenderApiName, token, id, useInternalId, }) => {
+    return await executeFetch({
+        path: `api/recommenders/${recommenderApiName}/${id}/ChooseSegmentArgumentRules`,
+        token,
+        method: "get",
+        query: {
+            useInternalId,
+        },
+    });
+};
+export const createChooseSegmentArgumentRuleAsync = async ({ recommenderApiName, token, id, useInternalId, rule, }) => {
+    return await executeFetch({
+        path: `api/recommenders/${recommenderApiName}/${id}/ChooseSegmentArgumentRules`,
+        token,
+        method: "post",
+        body: rule,
+        query: {
+            useInternalId,
+        },
+    });
+};
+export const updateChooseSegmentArgumentRuleAsync = async ({ recommenderApiName, token, id, useInternalId, rule, ruleId, }) => {
+    return await executeFetch({
+        path: `api/recommenders/${recommenderApiName}/${id}/ChooseSegmentArgumentRules/${ruleId}`,
+        token,
+        method: "post",
+        body: rule,
+        query: {
+            useInternalId,
+        },
+    });
+};
 export const deleteArgumentRuleAsync = async ({ recommenderApiName, token, id, useInternalId, ruleId, }) => {
     return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/ArgumentRules/${ruleId}`,

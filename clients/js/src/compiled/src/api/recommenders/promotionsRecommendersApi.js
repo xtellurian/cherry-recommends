@@ -186,6 +186,33 @@ export const fetchChoosePromotionArgumentRulesAsync = async ({ id, useInternalId
         useInternalId,
     });
 };
+export const createChooseSegmentArgumentRuleAsync = async ({ id, useInternalId, token, rule, }) => {
+    return await ar.createChooseSegmentArgumentRuleAsync({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
+        rule,
+    });
+};
+export const updateChooseSegmentArgumentRuleAsync = async ({ id, useInternalId, token, rule, ruleId, }) => {
+    return await ar.updateChooseSegmentArgumentRuleAsync({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
+        rule,
+        ruleId,
+    });
+};
+export const fetchChooseSegmentArgumentRulesAsync = async ({ id, useInternalId, token, }) => {
+    return await ar.fetchChooseSegmentArgumentRulesAsync({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
+    });
+};
 export const deleteArgumentRuleAsync = async ({ id, useInternalId, token, ruleId, }) => {
     return await ar.deleteArgumentRuleAsync({
         recommenderApiName,

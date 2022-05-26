@@ -84,28 +84,47 @@ namespace SignalBox.Web.Controllers
         }
 
         [HttpGet("{id}/ChoosePromotionArgumentRules")]
-        public async Task<IEnumerable<ChoosePromotionArgumentRule>> GetArgumentRules(string id, bool? useInternalId = null)
+        public async Task<IEnumerable<ChoosePromotionArgumentRule>> GetChoosePromotionArgumentRules(string id, bool? useInternalId = null)
         {
-            var recommender = await GetEntity(id, useInternalId);
-            await store.LoadMany(recommender, _ => _.ArgumentRules);
-            return new List<ChoosePromotionArgumentRule>(
-                recommender.ArgumentRules
-                .Select(_ => _ as ChoosePromotionArgumentRule)
-                .Where(_ => _ != null));
+            var campaign = await GetEntity(id, useInternalId);
+            await store.LoadMany(campaign, _ => _.ArgumentRules);
+            return campaign.ArgumentRules.AsDerived<ArgumentRule, ChoosePromotionArgumentRule>();
         }
 
         [HttpPost("{id}/ChoosePromotionArgumentRules")]
         public async Task<ArgumentRule> CreateChoosePromotionArgumentRule(string id, CreateChoosePromotionArgumentRuleDto dto, bool? useInternalId = null)
         {
-            var recommender = await base.GetEntity(id, useInternalId);
-            return await workflows.CreateChoosePromotionArgumentRule(recommender, dto.ArgumentId, dto.PromotionId, dto.ArgumentValue);
+            var campaign = await base.GetEntity(id, useInternalId);
+            return await workflows.CreateChoosePromotionArgumentRule(campaign, dto.ArgumentId, dto.PromotionId, dto.ArgumentValue);
         }
 
         [HttpPost("{id}/ChoosePromotionArgumentRules/{ruleId}")]
         public async Task<ArgumentRule> UpdateChoosePromotionArgumentRule(string id, UpdateChoosePromotionArgumentRuleDto dto, long ruleId, bool? useInternalId = null)
         {
-            var recommender = await base.GetEntity(id, useInternalId);
-            return await workflows.UpdateChoosePromotionArgumentRule(recommender, ruleId, dto.PromotionId, dto.ArgumentValue);
+            var campaign = await base.GetEntity(id, useInternalId);
+            return await workflows.UpdateChoosePromotionArgumentRule(campaign, ruleId, dto.PromotionId, dto.ArgumentValue);
+        }
+
+        [HttpGet("{id}/ChooseSegmentArgumentRules")]
+        public async Task<IEnumerable<ChooseSegmentArgumentRule>> GetChooseSegmentArgumentRules(string id, bool? useInternalId = null)
+        {
+            var campaign = await GetEntity(id, useInternalId);
+            await store.LoadMany(campaign, _ => _.ArgumentRules);
+            return campaign.ArgumentRules.AsDerived<ArgumentRule, ChooseSegmentArgumentRule>();
+        }
+
+        [HttpPost("{id}/ChooseSegmentArgumentRules")]
+        public async Task<ArgumentRule> CreateChooseSegmentArgumentRule(string id, CreateChooseSegmentArgumentRuleDto dto, bool? useInternalId = null)
+        {
+            var campaign = await base.GetEntity(id, useInternalId);
+            return await workflows.CreateChooseSegmentArgumentRule(campaign, dto.ArgumentId, dto.SegmentId, dto.ArgumentValue);
+        }
+
+        [HttpPost("{id}/ChooseSegmentArgumentRules/{ruleId}")]
+        public async Task<ArgumentRule> UpdateChooseSegmentArgumentRule(string id, UpdateChooseSegmentArgumentRuleDto dto, long ruleId, bool? useInternalId = null)
+        {
+            var campaign = await base.GetEntity(id, useInternalId);
+            return await workflows.UpdateChooseSegmentArgumentRule(campaign, ruleId, dto.SegmentId, dto.ArgumentValue);
         }
 
         [HttpDelete("{id}/ArgumentRules/{ruleId}")]

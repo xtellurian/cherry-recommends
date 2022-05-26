@@ -3096,6 +3096,38 @@ const updateChoosePromotionArgumentRuleAsync$1 = async ({ recommenderApiName, to
         },
     });
 };
+const fetchChooseSegmentArgumentRulesAsync$1 = async ({ recommenderApiName, token, id, useInternalId, }) => {
+    return await executeFetch({
+        path: `api/recommenders/${recommenderApiName}/${id}/ChooseSegmentArgumentRules`,
+        token,
+        method: "get",
+        query: {
+            useInternalId,
+        },
+    });
+};
+const createChooseSegmentArgumentRuleAsync$1 = async ({ recommenderApiName, token, id, useInternalId, rule, }) => {
+    return await executeFetch({
+        path: `api/recommenders/${recommenderApiName}/${id}/ChooseSegmentArgumentRules`,
+        token,
+        method: "post",
+        body: rule,
+        query: {
+            useInternalId,
+        },
+    });
+};
+const updateChooseSegmentArgumentRuleAsync$1 = async ({ recommenderApiName, token, id, useInternalId, rule, ruleId, }) => {
+    return await executeFetch({
+        path: `api/recommenders/${recommenderApiName}/${id}/ChooseSegmentArgumentRules/${ruleId}`,
+        token,
+        method: "post",
+        body: rule,
+        query: {
+            useInternalId,
+        },
+    });
+};
 const deleteArgumentRuleAsync$1 = async ({ recommenderApiName, token, id, useInternalId, ruleId, }) => {
     return await executeFetch({
         path: `api/recommenders/${recommenderApiName}/${id}/ArgumentRules/${ruleId}`,
@@ -3904,6 +3936,33 @@ const fetchChoosePromotionArgumentRulesAsync = async ({ id, useInternalId, token
         useInternalId,
     });
 };
+const createChooseSegmentArgumentRuleAsync = async ({ id, useInternalId, token, rule, }) => {
+    return await createChooseSegmentArgumentRuleAsync$1({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
+        rule,
+    });
+};
+const updateChooseSegmentArgumentRuleAsync = async ({ id, useInternalId, token, rule, ruleId, }) => {
+    return await updateChooseSegmentArgumentRuleAsync$1({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
+        rule,
+        ruleId,
+    });
+};
+const fetchChooseSegmentArgumentRulesAsync = async ({ id, useInternalId, token, }) => {
+    return await fetchChooseSegmentArgumentRulesAsync$1({
+        recommenderApiName,
+        id,
+        token,
+        useInternalId,
+    });
+};
 const deleteArgumentRuleAsync = async ({ id, useInternalId, token, ruleId, }) => {
     return await deleteArgumentRuleAsync$1({
         recommenderApiName,
@@ -4101,6 +4160,9 @@ var promotionsRecommendersApi = /*#__PURE__*/Object.freeze({
   createChoosePromotionArgumentRuleAsync: createChoosePromotionArgumentRuleAsync,
   updateChoosePromotionArgumentRuleAsync: updateChoosePromotionArgumentRuleAsync,
   fetchChoosePromotionArgumentRulesAsync: fetchChoosePromotionArgumentRulesAsync,
+  createChooseSegmentArgumentRuleAsync: createChooseSegmentArgumentRuleAsync,
+  updateChooseSegmentArgumentRuleAsync: updateChooseSegmentArgumentRuleAsync,
+  fetchChooseSegmentArgumentRulesAsync: fetchChooseSegmentArgumentRulesAsync,
   deleteArgumentRuleAsync: deleteArgumentRuleAsync,
   fetchDestinationsAsync: fetchDestinationsAsync,
   createDestinationAsync: createDestinationAsync,

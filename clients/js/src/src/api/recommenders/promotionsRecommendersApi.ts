@@ -353,6 +353,58 @@ export const fetchChoosePromotionArgumentRulesAsync = async ({
   });
 };
 
+interface CreateChooseSegmentArgumentRule extends EntityRequest {
+  rule: components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+}
+export const createChooseSegmentArgumentRuleAsync = async ({
+  id,
+  useInternalId,
+  token,
+  rule,
+}: CreateChooseSegmentArgumentRule) => {
+  return await ar.createChooseSegmentArgumentRuleAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
+    rule,
+  });
+};
+
+interface UpdateChooseSegmentArgumentRule extends EntityRequest {
+  rule: components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+  ruleId: number;
+}
+export const updateChooseSegmentArgumentRuleAsync = async ({
+  id,
+  useInternalId,
+  token,
+  rule,
+  ruleId,
+}: UpdateChooseSegmentArgumentRule) => {
+  return await ar.updateChooseSegmentArgumentRuleAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
+    rule,
+    ruleId,
+  });
+};
+
+export const fetchChooseSegmentArgumentRulesAsync = async ({
+  id,
+  useInternalId,
+  token,
+}: CreateChoosePromotionArgumentRule) => {
+  return await ar.fetchChooseSegmentArgumentRulesAsync({
+    recommenderApiName,
+    id,
+    token,
+    useInternalId,
+  });
+};
+
 interface DeleteArgumentRule extends EntityRequest {
   ruleId: number;
 }

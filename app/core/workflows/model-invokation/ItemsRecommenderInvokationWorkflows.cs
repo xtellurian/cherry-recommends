@@ -153,6 +153,8 @@ namespace SignalBox.Core.Workflows
                     return await HandleRecommendation(recommender, context, input, outputByRule);
                 }
 
+                var segmentRule = await CheckArgumentRulesForSegment(recommender, context);
+
                 // load the metrics for the invokation
                 input.Metrics = await base.GetMetrics(recommender, context);
 

@@ -317,6 +317,19 @@ interface components {
             promotionId?: number;
             promotion?: components["schemas"]["RecommendableItem"];
         };
+        ChooseSegmentArgumentRule: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            discriminator?: string | null;
+            campaignId?: number;
+            campaign?: components["schemas"]["RecommenderEntityBase"];
+            argumentId?: number;
+            argument?: components["schemas"]["CampaignArgument"];
+            argumentValue?: string | null;
+            segmentId?: number;
+            segment?: components["schemas"]["Segment"];
+        };
         CreateApiKeyDto: {
             name: string;
             apiKeyType: string;
@@ -337,9 +350,14 @@ interface components {
             integratedSystemId: number;
         };
         CreateChoosePromotionArgumentRuleDto: {
+            argumentValue: string;
             argumentId: number;
             promotionId: number;
+        };
+        CreateChooseSegmentArgumentRuleDto: {
             argumentValue: string;
+            argumentId: number;
+            segmentId: number;
         };
         CreateCustomerMetric: {
             value: unknown;
@@ -1460,8 +1478,12 @@ interface components {
             metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
         UpdateChoosePromotionArgumentRuleDto: {
-            promotionId: number;
             argumentValue: string;
+            promotionId: number;
+        };
+        UpdateChooseSegmentArgumentRuleDto: {
+            argumentValue: string;
+            segmentId: number;
         };
         UpdateEmailChannelTriggerDto: {
             /** Id of the List that triggers the Email flow */
@@ -2583,6 +2605,16 @@ interface UpdateChoosePromotionArgumentRule extends EntityRequest {
 }
 declare const updateChoosePromotionArgumentRuleAsync: ({ id, useInternalId, token, rule, ruleId, }: UpdateChoosePromotionArgumentRule) => Promise<any>;
 declare const fetchChoosePromotionArgumentRulesAsync: ({ id, useInternalId, token, }: CreateChoosePromotionArgumentRule) => Promise<any>;
+interface CreateChooseSegmentArgumentRule extends EntityRequest {
+    rule: components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+}
+declare const createChooseSegmentArgumentRuleAsync: ({ id, useInternalId, token, rule, }: CreateChooseSegmentArgumentRule) => Promise<any>;
+interface UpdateChooseSegmentArgumentRule extends EntityRequest {
+    rule: components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+    ruleId: number;
+}
+declare const updateChooseSegmentArgumentRuleAsync: ({ id, useInternalId, token, rule, ruleId, }: UpdateChooseSegmentArgumentRule) => Promise<any>;
+declare const fetchChooseSegmentArgumentRulesAsync: ({ id, useInternalId, token, }: CreateChoosePromotionArgumentRule) => Promise<any>;
 interface DeleteArgumentRule extends EntityRequest {
     ruleId: number;
 }
@@ -2685,6 +2717,9 @@ declare const promotionsRecommendersApi_d_setArgumentsAsync: typeof setArguments
 declare const promotionsRecommendersApi_d_createChoosePromotionArgumentRuleAsync: typeof createChoosePromotionArgumentRuleAsync;
 declare const promotionsRecommendersApi_d_updateChoosePromotionArgumentRuleAsync: typeof updateChoosePromotionArgumentRuleAsync;
 declare const promotionsRecommendersApi_d_fetchChoosePromotionArgumentRulesAsync: typeof fetchChoosePromotionArgumentRulesAsync;
+declare const promotionsRecommendersApi_d_createChooseSegmentArgumentRuleAsync: typeof createChooseSegmentArgumentRuleAsync;
+declare const promotionsRecommendersApi_d_updateChooseSegmentArgumentRuleAsync: typeof updateChooseSegmentArgumentRuleAsync;
+declare const promotionsRecommendersApi_d_fetchChooseSegmentArgumentRulesAsync: typeof fetchChooseSegmentArgumentRulesAsync;
 declare const promotionsRecommendersApi_d_deleteArgumentRuleAsync: typeof deleteArgumentRuleAsync;
 declare const promotionsRecommendersApi_d_fetchDestinationsAsync: typeof fetchDestinationsAsync;
 declare const promotionsRecommendersApi_d_createDestinationAsync: typeof createDestinationAsync;
@@ -2732,6 +2767,9 @@ declare namespace promotionsRecommendersApi_d {
     promotionsRecommendersApi_d_createChoosePromotionArgumentRuleAsync as createChoosePromotionArgumentRuleAsync,
     promotionsRecommendersApi_d_updateChoosePromotionArgumentRuleAsync as updateChoosePromotionArgumentRuleAsync,
     promotionsRecommendersApi_d_fetchChoosePromotionArgumentRulesAsync as fetchChoosePromotionArgumentRulesAsync,
+    promotionsRecommendersApi_d_createChooseSegmentArgumentRuleAsync as createChooseSegmentArgumentRuleAsync,
+    promotionsRecommendersApi_d_updateChooseSegmentArgumentRuleAsync as updateChooseSegmentArgumentRuleAsync,
+    promotionsRecommendersApi_d_fetchChooseSegmentArgumentRulesAsync as fetchChooseSegmentArgumentRulesAsync,
     promotionsRecommendersApi_d_deleteArgumentRuleAsync as deleteArgumentRuleAsync,
     promotionsRecommendersApi_d_fetchDestinationsAsync as fetchDestinationsAsync,
     promotionsRecommendersApi_d_createDestinationAsync as createDestinationAsync,

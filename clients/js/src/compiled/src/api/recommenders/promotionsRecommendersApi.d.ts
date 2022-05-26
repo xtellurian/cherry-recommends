@@ -67,6 +67,16 @@ interface UpdateChoosePromotionArgumentRule extends EntityRequest {
 }
 export declare const updateChoosePromotionArgumentRuleAsync: ({ id, useInternalId, token, rule, ruleId, }: UpdateChoosePromotionArgumentRule) => Promise<any>;
 export declare const fetchChoosePromotionArgumentRulesAsync: ({ id, useInternalId, token, }: CreateChoosePromotionArgumentRule) => Promise<any>;
+interface CreateChooseSegmentArgumentRule extends EntityRequest {
+    rule: components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+}
+export declare const createChooseSegmentArgumentRuleAsync: ({ id, useInternalId, token, rule, }: CreateChooseSegmentArgumentRule) => Promise<any>;
+interface UpdateChooseSegmentArgumentRule extends EntityRequest {
+    rule: components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+    ruleId: number;
+}
+export declare const updateChooseSegmentArgumentRuleAsync: ({ id, useInternalId, token, rule, ruleId, }: UpdateChooseSegmentArgumentRule) => Promise<any>;
+export declare const fetchChooseSegmentArgumentRulesAsync: ({ id, useInternalId, token, }: CreateChoosePromotionArgumentRule) => Promise<any>;
 interface DeleteArgumentRule extends EntityRequest {
     ruleId: number;
 }

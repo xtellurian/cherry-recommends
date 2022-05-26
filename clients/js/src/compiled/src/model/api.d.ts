@@ -4197,6 +4197,97 @@ export interface paths {
             };
         };
     };
+    "/api/recommenders/ParameterSetRecommenders/{id}/ChooseSegmentArgumentRules": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ChooseSegmentArgumentRule"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ArgumentRule"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+                    "text/json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+                    "application/*+json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+                };
+            };
+        };
+    };
+    "/api/recommenders/ParameterSetRecommenders/{id}/ChooseSegmentArgumentRules/{ruleId}": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                    ruleId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ArgumentRule"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+                    "text/json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+                    "application/*+json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+                };
+            };
+        };
+    };
     "/api/recommenders/ParameterSetRecommenders/{id}/ArgumentRules/{ruleId}": {
         delete: {
             parameters: {
@@ -7102,6 +7193,188 @@ export interface paths {
             };
         };
     };
+    "/api/recommenders/ItemsRecommenders/{id}/ChooseSegmentArgumentRules": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ChooseSegmentArgumentRule"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ArgumentRule"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+                    "text/json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+                    "application/*+json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+                };
+            };
+        };
+    };
+    "/api/recommenders/PromotionsRecommenders/{id}/ChooseSegmentArgumentRules": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ChooseSegmentArgumentRule"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ArgumentRule"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+                    "text/json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+                    "application/*+json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+                };
+            };
+        };
+    };
+    "/api/recommenders/ItemsRecommenders/{id}/ChooseSegmentArgumentRules/{ruleId}": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                    ruleId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ArgumentRule"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+                    "text/json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+                    "application/*+json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+                };
+            };
+        };
+    };
+    "/api/recommenders/PromotionsRecommenders/{id}/ChooseSegmentArgumentRules/{ruleId}": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                    ruleId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["ArgumentRule"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+                    "text/json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+                    "application/*+json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+                };
+            };
+        };
+    };
     "/api/recommenders/ItemsRecommenders/{id}/ArgumentRules/{ruleId}": {
         delete: {
             parameters: {
@@ -9016,6 +9289,19 @@ export interface components {
             promotionId?: number;
             promotion?: components["schemas"]["RecommendableItem"];
         };
+        ChooseSegmentArgumentRule: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            discriminator?: string | null;
+            campaignId?: number;
+            campaign?: components["schemas"]["RecommenderEntityBase"];
+            argumentId?: number;
+            argument?: components["schemas"]["CampaignArgument"];
+            argumentValue?: string | null;
+            segmentId?: number;
+            segment?: components["schemas"]["Segment"];
+        };
         CreateApiKeyDto: {
             name: string;
             apiKeyType: string;
@@ -9036,9 +9322,14 @@ export interface components {
             integratedSystemId: number;
         };
         CreateChoosePromotionArgumentRuleDto: {
+            argumentValue: string;
             argumentId: number;
             promotionId: number;
+        };
+        CreateChooseSegmentArgumentRuleDto: {
             argumentValue: string;
+            argumentId: number;
+            segmentId: number;
         };
         CreateCustomerMetric: {
             value: unknown;
@@ -10159,8 +10450,12 @@ export interface components {
             metricsChanged?: components["schemas"]["MetricsChangedTrigger"];
         };
         UpdateChoosePromotionArgumentRuleDto: {
-            promotionId: number;
             argumentValue: string;
+            promotionId: number;
+        };
+        UpdateChooseSegmentArgumentRuleDto: {
+            argumentValue: string;
+            segmentId: number;
         };
         UpdateEmailChannelTriggerDto: {
             /** Id of the List that triggers the Email flow */

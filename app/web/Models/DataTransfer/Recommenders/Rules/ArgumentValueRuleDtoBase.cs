@@ -2,13 +2,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SignalBox.Web.Dto
 {
-    public class UpdateChoosePromotionArgumentRuleDto : DtoBase
+    public abstract class ArgumentValueRuleDtoBase : DtoBase
     {
         [Required]
-        public long PromotionId { get; set; }
-        [Required]
         [MinLength(1)]
-        [MaxLength(20)]
+        [MaxLength(127)]
         public string ArgumentValue { get; set; }
     }
 }

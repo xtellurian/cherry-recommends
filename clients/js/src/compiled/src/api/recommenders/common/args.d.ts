@@ -30,6 +30,27 @@ export function updateChoosePromotionArgumentRuleAsync({ recommenderApiName, tok
     rule: any;
     ruleId: any;
 }): Promise<any>;
+export function fetchChooseSegmentArgumentRulesAsync({ recommenderApiName, token, id, useInternalId, }: {
+    recommenderApiName: any;
+    token: any;
+    id: any;
+    useInternalId: any;
+}): Promise<any>;
+export function createChooseSegmentArgumentRuleAsync({ recommenderApiName, token, id, useInternalId, rule, }: {
+    recommenderApiName: any;
+    token: any;
+    id: any;
+    useInternalId: any;
+    rule: any;
+}): Promise<any>;
+export function updateChooseSegmentArgumentRuleAsync({ recommenderApiName, token, id, useInternalId, rule, ruleId, }: {
+    recommenderApiName: any;
+    token: any;
+    id: any;
+    useInternalId: any;
+    rule: any;
+    ruleId: any;
+}): Promise<any>;
 export function deleteArgumentRuleAsync({ recommenderApiName, token, id, useInternalId, ruleId, }: {
     recommenderApiName: any;
     token: any;

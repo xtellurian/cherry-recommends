@@ -55,6 +55,12 @@ export const createChoosePromotionArgumentRuleAsync =
   promotionsRecommenders.createChoosePromotionArgumentRuleAsync;
 export const updateChoosePromotionArgumentRuleAsync =
   promotionsRecommenders.updateChoosePromotionArgumentRuleAsync;
+export const fetchChooseSegmentArgumentRulesAsync =
+  promotionsRecommenders.fetchChooseSegmentArgumentRulesAsync;
+export const createChooseSegmentArgumentRuleAsync =
+  promotionsRecommenders.createChooseSegmentArgumentRuleAsync;
+export const updateChooseSegmentArgumentRuleAsync =
+  promotionsRecommenders.updateChooseSegmentArgumentRuleAsync;
 export const deleteArgumentRuleAsync =
   promotionsRecommenders.deleteArgumentRuleAsync;
 

@@ -13,6 +13,7 @@ namespace SignalBox.Core.Workflows
         private readonly IRecommenderStore<T> store;
         private readonly IHistoricCustomerMetricStore customerMetricStore;
         private readonly IArgumentRuleStore argumentRuleStore;
+        private readonly ISegmentStore segmentStore;
         private readonly IWebhookSenderClient webhookSender;
         protected readonly IDateTimeProvider dateTimeProvider;
         private readonly IKlaviyoSystemWorkflow klaviyoWorkflow;
@@ -27,6 +28,7 @@ namespace SignalBox.Core.Workflows
             this.store = store;
             this.customerMetricStore = storeCollection.ResolveStore<IHistoricCustomerMetricStore, HistoricCustomerMetric>();
             this.argumentRuleStore = storeCollection.ResolveStore<IArgumentRuleStore, ArgumentRule>();
+            this.segmentStore = storeCollection.ResolveStore<ISegmentStore, Segment>();
             this.webhookSender = webhookSender;
             this.dateTimeProvider = dateTimeProvider;
             this.klaviyoWorkflow = klaviyoWorkflow;
@@ -86,6 +88,50 @@ namespace SignalBox.Core.Workflows
                     if (string.Equals(rule.ArgumentValue, context.Input.Arguments[rule.Argument.CommonId]?.ToString(), StringComparison.InvariantCultureIgnoreCase))
                     {
                         // then we found a match and we should return the promotion
+                        return rule;
+                    }
+                }
+            }
+            return null; // return null by default;
+        }
+
+        /// <summary>
+        /// Checks argument rules and adds a Customer to a Segment if required.
+        /// </summary>
+        /// <param name="campaign"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        protected async Task<ChooseSegmentArgumentRule?> CheckArgumentRulesForSegment(T campaign, RecommendingContext context)
+        {
+            if (context.Customer == null)
+            {
+                throw new NullReferenceException("Recommending Context Customer must not be null");
+            }
+            await store.LoadMany(campaign, _ => _.ArgumentRules);
+            var rules = campaign.ArgumentRules.AsDerived<ArgumentRule, ChooseSegmentArgumentRule>();
+            if (!rules.Any() || context.Input?.Arguments == null || !context.Input.Arguments.Any())
+            {
+                return null; // no rules to evaluate
+            }
+
+            foreach (var rule in rules)
+            {
+                await argumentRuleStore.Load(rule, _ => _.Argument);
+                if (context.Input.Arguments.ContainsKey(rule.Argument.CommonId))
+                {
+                    // then we found a matching rule
+                    if (string.Equals(rule.ArgumentValue, context.Input.Arguments[rule.Argument.CommonId]?.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        // then we found a match and we should return the promotion
+                        // so place the customer in the segment, IF they aren't aready
+                        var segment = await segmentStore.Read(rule.SegmentId);
+                        if (!await segmentStore.CustomerExistsInSegment(segment, context.Customer.Id))
+                        {
+                            context.LogMessage($"Putting customer in segment {segment.Id} according to rule {rule.Id}");
+                            await segmentStore.AddCustomer(segment, context.Customer);
+                            await segmentStore.Context.SaveChanges();
+                        }
+
                         return rule;
                     }
                 }

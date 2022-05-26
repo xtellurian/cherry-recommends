@@ -190,6 +190,41 @@ namespace SignalBox.Core.Workflows
             return rule;
         }
 
+        public async Task<ChooseSegmentArgumentRule> CreateChooseSegmentArgumentRule(TRecommender campaign, long argumentId, long segmentId, string argumentValue)
+        {
+            await store.LoadMany(campaign, _ => _.ArgumentRules);
+            await store.LoadMany(campaign, _ => _.Arguments);
+            var arg = campaign.Arguments.First(_ => _.Id == argumentId);
+            var segment = await segmentStore.Read(segmentId);
+
+            var rule = new ChooseSegmentArgumentRule(campaign, arg, segment, argumentValue);
+            rule.Validate();
+            campaign.ArgumentRules.Add(rule);
+            await store.Update(campaign);
+            await store.Context.SaveChanges();
+            return rule;
+        }
+
+        public async Task<ChooseSegmentArgumentRule> UpdateChooseSegmentArgumentRule(TRecommender campaign, long ruleId, long segmentId, string argumentValue)
+        {
+            await store.LoadMany(campaign, _ => _.ArgumentRules);
+            await store.LoadMany(campaign, _ => _.Arguments);
+
+            if (!(campaign.ArgumentRules.FirstOrDefault(_ => _.Id == ruleId) is ChooseSegmentArgumentRule rule))
+            {
+                throw new EntityNotFoundException(typeof(ChooseSegmentArgumentRule), ruleId, "No rule found");
+            }
+
+            var segment = await segmentStore.Read(segmentId);
+            rule.SegmentId = segmentId;
+            rule.Segment = segment;
+            rule.ArgumentValue = argumentValue;
+            rule.Validate();
+            await store.Update(campaign);
+            await store.Context.SaveChanges();
+            return rule;
+        }
+
         public async Task DeleteArgumentRule(TRecommender campaign, long ruleId)
         {
             await store.LoadMany(campaign, _ => _.ArgumentRules);

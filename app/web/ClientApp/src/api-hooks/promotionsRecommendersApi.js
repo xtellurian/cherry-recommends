@@ -21,6 +21,7 @@ import {
   fetchPromotionsRecommendationAsync,
   fetchArgumentsAsync,
   fetchChoosePromotionArgumentRulesAsync,
+  fetchChooseSegmentArgumentRulesAsync,
 } from "../api/promotionsRecommendersApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -50,7 +51,7 @@ export const useBaselinePromotion = ({ id, trigger }) => {
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       getBaselinePromotionAsync({
         token,
         id,
@@ -87,7 +88,7 @@ export const usePromotionsRecommendations = ({ id, pageSize, trigger }) => {
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchPromotionsRecommendationsAsync({
         token,
         id,
@@ -128,7 +129,7 @@ export const useLinkedRegisteredModel = ({ id }) => {
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchLinkedRegisteredModelAsync({
         token,
         id,
@@ -146,7 +147,7 @@ export const usePromotions = ({ id, trigger }) => {
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchPromotionsAsync({
         token,
         id,
@@ -164,7 +165,7 @@ export const useTargetVariables = ({ id, name }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchTargetVariablesAsync({
         token,
         id,
@@ -183,7 +184,7 @@ export const useArguments = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchArgumentsAsync({
         token,
         id,
@@ -201,7 +202,7 @@ export const useChoosePromotionArgumentRules = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchChoosePromotionArgumentRulesAsync({
         token,
         id,
@@ -214,12 +215,40 @@ export const useChoosePromotionArgumentRules = ({ id, trigger }) => {
   return state;
 };
 
+export const useChooseSegmentArgumentRules = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchChooseSegmentArgumentRulesAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useArgumentRules = ({ id, trigger }) => {
+  const promoRules = useChoosePromotionArgumentRules({ id, trigger });
+  const segmentRules = useChooseSegmentArgumentRules({ id, trigger });
+  if (promoRules.loading || segmentRules.loading) {
+    return { loading: true };
+  } else {
+    return [...promoRules, ...segmentRules].sort((a, b) => a.id - b.id);
+  }
+};
+
 export const useDestinations = ({ id, trigger }) => {
   const token = useAccessToken();
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchDestinationsAsync({
         token,
         id,
@@ -238,7 +267,7 @@ export const useTrigger = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchTriggerAsync({
         token,
         id,
@@ -256,7 +285,7 @@ export const useLearningMetrics = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchLearningMetricsAsync({
         token,
         id,
@@ -274,7 +303,7 @@ export const useStatistics = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchStatisticsAsync({
         token,
         id,
@@ -292,7 +321,7 @@ export const useReportImageBlobUrl = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchReportImageBlobUrlAsync({
         token,
         id,
@@ -310,7 +339,7 @@ export const usePerformance = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchPerformanceAsync({
         token,
         id,
@@ -328,7 +357,7 @@ export const useAudience = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchAudienceAsync({
         token,
         id,
@@ -364,7 +393,7 @@ export const useRecommenderChannels = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchRecommenderChannelsAsync({
         token,
         id,
@@ -402,7 +431,7 @@ export const useOffers = ({ id, pageSize, offerState }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchOffersAsync({
         token,
         id,

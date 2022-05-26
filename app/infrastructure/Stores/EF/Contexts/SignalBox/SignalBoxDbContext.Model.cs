@@ -50,6 +50,7 @@ namespace SignalBox.Infrastructure
         // argument rules
         public DbSet<ArgumentRule> ArgumentRules { get; set; }
         public DbSet<ChoosePromotionArgumentRule> ChoosePromotionArgumentRules { get; set; }
+        public DbSet<ChooseSegmentArgumentRule> ChooseSegmentArgumentRules { get; set; }
 
         // ----- destinations -----
         // recommendation destinations
