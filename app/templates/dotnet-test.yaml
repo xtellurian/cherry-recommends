@@ -4,6 +4,10 @@ steps:
     inputs:
       version: 6.0.x
 
+  - script: dotnet tool restore
+    displayName: Restore dotnet tools
+    workingDirectory: app
+
   - script: dotnet build
     displayName: Dotnet build solution
     workingDirectory: app
@@ -39,6 +43,11 @@ steps:
       codeCoverageTool: "Cobertura"
       summaryFileLocation: "$(Agent.TempDirectory)/**/coverage.cobertura.xml"
 
+  - script: git diff --exit-code spec.json
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest')) # only run pretty check if in PR
+    displayName: Check spec.json is updated
+    workingDirectory: app/web/static/swagger/v1
+
   - script: npx prettier --check .
     condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest')) # only run pretty check if in PR
     displayName: Check Prettier - /ClientApp
@@ -51,5 +60,4 @@ steps:
   - script: npm test
     displayName: npm test
     workingDirectory: app/web/ClientApp/
-
 # todo: run the cypress tests. maybe on windows? certificates on linux is a pain

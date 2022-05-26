@@ -4,10 +4,10 @@ steps:
     inputs:
       version: 6.0.x
 
-  - script: dotnet build
+  - script: dotnet build -c Release
     displayName: Dotnet build solution
     workingDirectory: app
 
-  - script: dotnet publish
+  - script: dotnet publish -c Release
     displayName: Dotnet publish web
     workingDirectory: app/web

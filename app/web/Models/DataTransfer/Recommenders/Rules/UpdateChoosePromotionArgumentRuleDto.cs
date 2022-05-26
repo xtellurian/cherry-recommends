@@ -6,6 +6,5 @@ namespace SignalBox.Web.Dto
     {
         [Required]
         public long PromotionId { get; set; }
-
     }
 }

@@ -9,7 +9,7 @@
     "compile": "tsc",
     "rollup": "rollup -c",
     "build": "rimraf compiled && rimraf dist && tsc && rollup -c rollup.config.js",
-    "spec": "./generate_spec.sh && openapi-typescript spec.json --output src/model/api.ts"
+    "spec": "./copy_spec.sh && openapi-typescript spec.json --output src/model/api.ts"
   },
   "keywords": [
     "Four2",

@@ -31,6 +31,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using System.Linq;
 using Microsoft.AspNetCore.Routing;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
 
 namespace SignalBox.Web
 {
@@ -223,6 +225,21 @@ namespace SignalBox.Web
                 var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = System.IO.Path.Combine(System.AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
+                c.SwaggerGeneratorOptions.Servers.Add(new OpenApiServer
+                {
+                    Description = "Local Development",
+                    Url = "https://localhost:5001"
+                });
+                c.SwaggerGeneratorOptions.Servers.Add(new OpenApiServer
+                {
+                    Description = "Canary",
+                    Url = "https://canary.cherry.ai"
+                });
+                c.SwaggerGeneratorOptions.Servers.Add(new OpenApiServer
+                {
+                    Description = "App",
+                    Url = "https://app.cherry.ai"
+                });
             });
 
             if (Env.IsDevelopment())
@@ -306,17 +323,19 @@ namespace SignalBox.Web
             app.UseProblemDetails(); // must come after app.UseDeveloperExceptionPage()
             app.UseMiddleware<ExceptionTelemetryMiddleware>(); // must come after UseProblemDetails()
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                // serves the swagger spec files at web/static/swagger/v1
+                FileProvider = new PhysicalFileProvider(Path.Combine(Env.ContentRootPath, "static", "swagger", "v1")),
+                RequestPath = "/api/docs/v1"
+            });
+
             app.UseSpaStaticFiles();
 
             app.UseRouting();
             app.UseCors();
 
             app.UseAuthentication();
-            app.UseSwagger(c =>
-            {
-                c.RouteTemplate = "api/docs/{documentName}/spec.json";
-            });
 
             app.UseServerTiming();
 

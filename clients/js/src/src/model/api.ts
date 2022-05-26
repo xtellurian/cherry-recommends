@@ -9484,6 +9484,13 @@ export interface components {
       eventType: string;
       properties?: { [key: string]: unknown } | null;
     };
+    EventKindSummary: {
+      keys?: string[] | null;
+      instanceCount?: number;
+      eventTypes?: {
+        [key: string]: components["schemas"]["EventStats"];
+      } | null;
+    };
     EventKinds:
       | "custom"
       | "propertyUpdate"
@@ -9495,13 +9502,6 @@ export interface components {
       | "purchase"
       | "usePromotion"
       | "promotionPresented";
-    EventKindSummary: {
-      keys?: string[] | null;
-      instanceCount?: number;
-      eventTypes?: {
-        [key: string]: components["schemas"]["EventStats"];
-      } | null;
-    };
     EventLoggingResponse: {
       eventsProcessed?: number;
       eventsEnqueued?: number;
@@ -9848,13 +9848,13 @@ export interface components {
       items?: components["schemas"]["Metric"][] | null;
       pagination?: components["schemas"]["PaginationInfo"];
     };
+    MetricScopes: "customer" | "business" | "global";
+    MetricValueType: "numeric" | "categorical";
     MetricsChangedTrigger: {
       name: string;
       featureCommonIds?: string[] | null;
       metricCommonIds?: string[] | null;
     };
-    MetricScopes: "customer" | "business" | "global";
-    MetricValueType: "numeric" | "categorical";
     ModelInputDto: {
       customerId?: string | null;
       commonUserId?: string | null;
@@ -9896,10 +9896,6 @@ export interface components {
     NextPageInfo: {
       after?: string | null;
     };
-    NumericalParameterBounds: {
-      min?: number;
-      max?: number;
-    };
     NumericPredicate: {
       predicateOperator?: components["schemas"]["NumericPredicateOperators"];
       compareTo?: number;
@@ -9912,6 +9908,10 @@ export interface components {
       | "lessThan"
       | "greaterThanOrEqualTo"
       | "lessThanOrEqualTo";
+    NumericalParameterBounds: {
+      min?: number;
+      max?: number;
+    };
     ObjectPaginated: {
       items?: unknown[] | null;
       pagination?: components["schemas"]["PaginationInfo"];
@@ -10088,6 +10088,7 @@ export interface components {
       optimiserId?: number;
     };
     PromotionRecommenderTargetTypes: "customer" | "business";
+    PromotionType: "discount" | "gift" | "service" | "upgrade" | "other";
     PromotionsRecommendationDto: {
       created?: string;
       correlatorId?: number | null;
@@ -10099,7 +10100,6 @@ export interface components {
       customerId?: string | null;
       trigger?: string | null;
     };
-    PromotionType: "discount" | "gift" | "service" | "upgrade" | "other";
     ReactConfig: {
       segment?: components["schemas"]["SegmentConfig"];
       hotjar?: components["schemas"]["HotjarConfig"];
