@@ -14,6 +14,7 @@ namespace SignalBox.Core.Workflows
         private readonly IHistoricCustomerMetricStore customerMetricStore;
         private readonly IArgumentRuleStore argumentRuleStore;
         private readonly ISegmentStore segmentStore;
+        private readonly IChannelStore channelStore;
         private readonly IWebhookSenderClient webhookSender;
         protected readonly IDateTimeProvider dateTimeProvider;
         private readonly IKlaviyoSystemWorkflow klaviyoWorkflow;
@@ -23,12 +24,13 @@ namespace SignalBox.Core.Workflows
                                                  IStoreCollection storeCollection,
                                                  IWebhookSenderClient webhookSender,
                                                  IDateTimeProvider dateTimeProvider,
-                                                 IKlaviyoSystemWorkflow klaviyoWorkflow)
+                                                 IKlaviyoSystemWorkflow klaviyoWorkflow) // todo: refactor out klaviyo into channel workflow
         {
             this.store = store;
             this.customerMetricStore = storeCollection.ResolveStore<IHistoricCustomerMetricStore, HistoricCustomerMetric>();
             this.argumentRuleStore = storeCollection.ResolveStore<IArgumentRuleStore, ArgumentRule>();
             this.segmentStore = storeCollection.ResolveStore<ISegmentStore, Segment>();
+            this.channelStore = storeCollection.ResolveStore<IChannelStore, ChannelBase>();
             this.webhookSender = webhookSender;
             this.dateTimeProvider = dateTimeProvider;
             this.klaviyoWorkflow = klaviyoWorkflow;
@@ -142,23 +144,30 @@ namespace SignalBox.Core.Workflows
         protected async Task SendToDestinations(T recommender, RecommendingContext context, RecommendationEntity recommendation)
         {
             await store.LoadMany(recommender, _ => _.RecommendationDestinations);
-            context.LogMessage($"Discovered {recommender.RecommendationDestinations.Count} destinations");
-            foreach (var d in recommender.RecommendationDestinations)
+            if (recommender.RecommendationDestinations?.Count > 0)
             {
-                if (d is WebhookDestination webhookDestination)
+                context.LogMessage($"Discovered {recommender.RecommendationDestinations.Count} destinations");
+                foreach (var d in recommender.RecommendationDestinations)
                 {
-                    await webhookSender.Send(webhookDestination, recommendation);
-                    context.LogMessage($"Send to Webhook endpoint: {webhookDestination.Endpoint}");
+                    if (d is WebhookDestination webhookDestination)
+                    {
+                        await webhookSender.Send(webhookDestination, recommendation);
+                        context.LogMessage($"Send to Webhook endpoint: {webhookDestination.Endpoint}");
+                    }
+                    else if (d is SegmentSourceFunctionDestination segDestination)
+                    {
+                        await webhookSender.Send(segDestination, recommendation);
+                        context.LogMessage($"Send to Segment endpoint: {segDestination.Endpoint}");
+                    }
+                    else
+                    {
+                        context.LogMessage($"Warning: Cannot handle destination Type {d.DestinationType}");
+                    }
                 }
-                else if (d is SegmentSourceFunctionDestination segDestination)
-                {
-                    await webhookSender.Send(segDestination, recommendation);
-                    context.LogMessage($"Send to Segment endpoint: {segDestination.Endpoint}");
-                }
-                else
-                {
-                    context.LogMessage($"Warning: Cannot handle destination Type {d.DestinationType}");
-                }
+            }
+            else
+            {
+                context.LogMessage("No destinations discovered.");
             }
         }
 
@@ -175,7 +184,15 @@ namespace SignalBox.Core.Workflows
                 }
                 else if (channel is EmailChannel emailChannel)
                 {
-                    await klaviyoWorkflow.SendRecommendation(emailChannel, recommendation);
+                    await channelStore.Load(channel, _ => _.LinkedIntegratedSystem);
+                    if (emailChannel.LinkedIntegratedSystem.SystemType == IntegratedSystemTypes.Klaviyo)
+                    {
+                        await klaviyoWorkflow.SendRecommendation(emailChannel, recommendation);
+                    }
+                    else
+                    {
+                        context.LogMessage($"WARN: Unable to send email to channel {channel.Id}");
+                    }
                 }
             }
         }

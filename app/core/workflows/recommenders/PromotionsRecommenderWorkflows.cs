@@ -48,7 +48,7 @@ namespace SignalBox.Core.Workflows
             await store.LoadMany(from, _ => _.Channels);
 
             var fromAudience = await audienceStore.GetAudience(from);
-            var segmentIds = fromAudience.Success ? fromAudience.Entity.Segments.Select(_ => _.Id) : Enumerable.Empty<long>();
+            var segmentIds = fromAudience.Success ? fromAudience.Entity!.Segments.Select(_ => _.Id) : Enumerable.Empty<long>();
             var channelIds = from.Channels.Count > 0 ? from.Channels.Select(_ => _.Id) : Enumerable.Empty<long>();
 
             return await CreateItemsRecommender(common,

@@ -8,6 +8,11 @@ namespace SignalBox.Test
 {
     public static class Utility
     {
+        public static string RandomString()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
         public static Mock<ILogger<T>> MockLogger<T>()
         {
             return new Mock<ILogger<T>>();

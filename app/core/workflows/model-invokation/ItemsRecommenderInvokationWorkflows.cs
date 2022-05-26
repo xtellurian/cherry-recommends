@@ -31,31 +31,26 @@ namespace SignalBox.Core.Workflows
                                     ICustomerWorkflow customerWorkflow,
                                     IBusinessWorkflow businessWorkflow,
                                     IStoreCollection storeCollection,
-                                    IRecommendableItemStore itemStore,
-                                    IWebhookSenderClient webhookSenderClient,
-                                    IRecommendationCorrelatorStore correlatorStore,
                                     IItemsRecommenderStore itemsRecommenderStore,
-                                    IItemsRecommendationStore itemsRecommendationStore,
-                                    IAudienceStore audienceStore,
+                                    IWebhookSenderClient webhookSenderClient,
                                     IInternalOptimiserClientFactory optimiserClientFactory,
                                     IDiscountCodeWorkflow discountCodeWorkflow,
-                                    IKlaviyoSystemWorkflow klaviyoWorkflow,
-                                    IOfferStore offerStore)
-                                     : base(itemsRecommenderStore, storeCollection, webhookSenderClient, dateTimeProvider, klaviyoWorkflow)
+                                    IKlaviyoSystemWorkflow klaviyoWorkflow)
+                                    : base(itemsRecommenderStore, storeCollection, webhookSenderClient, dateTimeProvider, klaviyoWorkflow)
         {
             this.logger = logger;
             this.recommendationCache = recommendationCache;
             this.modelClientFactory = modelClientFactory;
             this.customerWorkflow = customerWorkflow;
             this.businessWorkflow = businessWorkflow;
-            this.itemStore = itemStore;
-            this.correlatorStore = correlatorStore;
             this.itemsRecommenderStore = itemsRecommenderStore;
-            this.itemsRecommendationStore = itemsRecommendationStore;
-            this.audienceStore = audienceStore;
+            this.itemStore = storeCollection.ResolveStore<IRecommendableItemStore, RecommendableItem>();
+            this.correlatorStore = storeCollection.ResolveStore<IRecommendationCorrelatorStore, RecommendationCorrelator>();
+            this.itemsRecommendationStore = storeCollection.ResolveStore<IItemsRecommendationStore, ItemsRecommendation>();
+            this.audienceStore = storeCollection.ResolveStore<IAudienceStore, Audience>();
+            this.offerStore = storeCollection.ResolveStore<IOfferStore, Offer>();
             this.optimiserClientFactory = optimiserClientFactory;
             this.discountCodeWorkflow = discountCodeWorkflow;
-            this.offerStore = offerStore;
         }
 
         public async Task<ItemsRecommendation> InvokeItemsRecommender(
@@ -120,7 +115,7 @@ namespace SignalBox.Core.Workflows
 
                         context.Correlator = await correlatorStore.Create(new RecommendationCorrelator(recommender));
                         logger.LogInformation("Saving correlator to create Id");
-                        await audienceStore.Context.SaveChanges();
+                        await correlatorStore.Context.SaveChanges();
                     }
                 }
                 else if (recommender.TargetType == PromotionRecommenderTargetTypes.Business && input.BusinessId != null)
