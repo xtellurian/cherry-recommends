@@ -24,7 +24,7 @@ import { parameterSetRecommenders } from "cherry.ai";
 parameterSetRecommenders
   .invokeParameterSetRecommenderAsync({
     token: "Your JSON Web Token / access token",
-    id: 1, // the id of this recommender
+    id: 1, // the id of this campaign
     input: {
       commonUserId: "The common Id of the user to recommend for",
       arguments: {
@@ -104,9 +104,9 @@ export const IntegrateParameterSetRecommender = () => {
         className="float-right"
         to={`/recommenders/parameter-set-recommenders/detail/${id}`}
       >
-        Recommender
+        Campaign
       </MoveUpHierarchyButton>
-      <Title>Integrate Parameter-Set Recommender</Title>
+      <Title>Integrate Parameter-Set Campaign</Title>
       <Subtitle>{recommender.name || "..."}</Subtitle>
       <Tabs tabs={tabs} defaultTabId={defaultTabId} />
       <hr />
@@ -131,7 +131,7 @@ export const IntegrateParameterSetRecommender = () => {
           <TabActivator tabId="hubspot" defaultTabId={defaultTabId}>
             {id && (
               <div>
-                <h5>To connect this recommender to your Hubspot CRM card:</h5>
+                <h5>To connect this campaign to your Hubspot CRM card:</h5>
                 <ol class="list-group list-group-numbered">
                   <li class="list-group-item">
                     <Navigation to="/settings/integrations">
@@ -147,7 +147,7 @@ export const IntegrateParameterSetRecommender = () => {
                     click "More Options"
                   </li>
                   <li class="list-group-item">
-                    Go to the CRM Card tab, and choose this recommender (
+                    Go to the CRM Card tab, and choose this campaign (
                     {recommender.name})
                   </li>
                 </ol>

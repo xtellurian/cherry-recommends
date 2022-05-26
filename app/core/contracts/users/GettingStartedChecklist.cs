@@ -35,9 +35,9 @@ namespace SignalBox.Core.Internal
                 32,
                 new CheckistItem
                 {
-                    label= "Create a Recommender",
-                    description= "A Promotion Recommender chooses the best promotion for every customer. "
-                     + "For example, a recommender can choose the best promotion for returning customers to your landing pages.",
+                    label= "Create a Campaign",
+                    description= "A Promotion Campaign chooses the best promotion for every customer. "
+                     + "For example, a campaign can choose the best promotion for returning customers to your landing pages.",
                     actionTo= "/recommenders/promotions-recommenders/create",
                     actionLabel= "Setup",
                     docsLink="/docs/guides/create_promotion_recommender",

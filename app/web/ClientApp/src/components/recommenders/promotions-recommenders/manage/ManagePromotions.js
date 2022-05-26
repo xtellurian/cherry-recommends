@@ -41,7 +41,7 @@ export const ManageItems = () => {
           search: null,
         }}
       >
-        Back to Recommender
+        Back to Campaign
       </MoveUpHierarchyPrimaryButton>
       <PageHeading
         title="Manage Promotions"
@@ -66,8 +66,8 @@ export const ManageItems = () => {
 
       {items.pagination && items.pagination.totalItemCount === 0 && (
         <EmptyList>
-          There are no promotions associated with this recommender. All
-          promotions will be used.
+          There are no promotions associated with this campaign. All promotions
+          will be used.
           <div className="mt-2 text-center">
             <button
               onClick={() => setIsAddItemPopupOpen(true)}

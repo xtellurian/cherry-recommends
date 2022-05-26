@@ -42,13 +42,13 @@ export const PromotionRecommenderLayout = ({ children }) => {
             search: searchParams.toString(),
           }}
         >
-          Back to Recommenders
+          Back to Campaigns
         </MoveUpHierarchyPrimaryButton>
       }
       header={
         <PageHeading
           title={recommender.name || "..."}
-          subtitle="Promotion Recommender"
+          subtitle="Promotion Campaign"
         />
       }
       options={

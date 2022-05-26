@@ -30,7 +30,7 @@ const AuthenticatedIA = [
       },
       {
         id: "promotions-recommenders",
-        name: "Recommenders",
+        name: "Campaigns",
         to: createURL({
           pathname: "/recommenders/promotions-recommenders",
         }),
@@ -105,7 +105,7 @@ const AuthenticatedIA = [
       },
       {
         id: "parameter-set-recommenders",
-        name: "Recommenders",
+        name: "Campaigns",
         to: createURL({
           pathname: "/recommenders/parameter-set-recommenders",
         }),

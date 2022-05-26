@@ -48,7 +48,7 @@ export const AsyncSelectParameterSetRecommender = ({
   return (
     <AsyncSelector
       defaultOptions={recommendersSelectable}
-      placeholder={placeholder || "Search for a Parameter-Set Recommender."}
+      placeholder={placeholder || "Search for a Parameter-Set Campaign."}
       cacheOptions
       loadOptions={loadSelectable}
       onChange={onChange}

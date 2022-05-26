@@ -39,7 +39,7 @@ export const Recommenders = ({ className, hasItems }) => {
     <>
       <div className={className}>
         <CardSection className="p-4">
-          <Label>Recommenders</Label>
+          <Label>Campaignss</Label>
           {loading && <Spinner />}
           {allRecommenders.map((r) => (
             <RecommenderRow key={r.uniqueId} recommender={r} />
@@ -48,7 +48,7 @@ export const Recommenders = ({ className, hasItems }) => {
           {!loading && allRecommenders.length === 0 && (
             <EmptyState>
               <EmptyStateText>
-                You haven't created any recommenders.
+                You haven't created any campaigns.
               </EmptyStateText>
               <Navigation
                 to={{
@@ -56,7 +56,7 @@ export const Recommenders = ({ className, hasItems }) => {
                 }}
               >
                 <button disabled={!hasItems} className="btn btn-primary">
-                  Create a Recommender
+                  Create a Campaign
                 </button>
               </Navigation>
             </EmptyState>

@@ -115,7 +115,7 @@ export const DestinationsUtil = ({
 
       {error && <ErrorCard error={error} />}
       {destinations.length === 0 && (
-        <EmptyList>There are no destinations for this recommender</EmptyList>
+        <EmptyList>There are no destinations for this campaign</EmptyList>
       )}
       {destinations.length > 0 &&
         destinations.map((d) => (
@@ -225,8 +225,7 @@ export const DestinationsUtil = ({
 
       {destinations.length > 0 && (
         <div className="mt-5 text-muted text-center">
-          Testing the recommender should push a recommendation to all
-          destinations.
+          Testing the campaign should push a recommendation to all destinations.
         </div>
       )}
     </React.Fragment>

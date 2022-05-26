@@ -33,7 +33,7 @@ namespace SignalBox.Web.Controllers
             await store.LoadMany(entity, _ => _.ParameterSetRecommenders);
             if (entity.ParameterSetRecommenders.Any())
             {
-                return (false, "Parameter is used in a recommender. Delete the recommender first.");
+                return (false, "Parameter is used in a campaign. Delete the campaign first.");
             }
             else
             {

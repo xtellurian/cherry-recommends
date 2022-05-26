@@ -33,9 +33,9 @@ export const ParameterSetRecommendersSummary = () => {
         className="float-right"
         to="/recommenders/parameter-set-recommenders/create"
       >
-        Create Parameter Recommender
+        Create Parameter Campaign
       </CreateButtonClassic>
-      <Title>Parameter Set Recommenders</Title>
+      <Title>Parameter Set Campaigns</Title>
       <hr />
       {parameterSetRecommenders.error && (
         <ErrorCard error={parameterSetRecommenders.error} />
@@ -44,9 +44,9 @@ export const ParameterSetRecommendersSummary = () => {
       {parameterSetRecommenders.items &&
         parameterSetRecommenders.items.length === 0 && (
           <EmptyList>
-            <p>You have not created any Parameter-Set Recommenders. </p>
+            <p>You have not created any Parameter-Set Campaigns. </p>
             <CreateButtonClassic to="/recommenders/parameter-set-recommenders/create">
-              Create Parameter-Set Recommender
+              Create Parameter-Set Campaign
             </CreateButtonClassic>
           </EmptyList>
         )}

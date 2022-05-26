@@ -21,9 +21,9 @@ export const ItemsRecommendersSummary = () => {
         className="float-right"
         to="/recommenders/promotions-recommenders/create"
       >
-        Create Promotion Recommender
+        Create Promotion Campaign
       </CreateButtonClassic>
-      <Title>Promotion Recommenders</Title>
+      <Title>Promotion Campaigns</Title>
 
       <hr />
       {itemsRecommenders.error && <ErrorCard error={itemsRecommenders.error} />}
@@ -31,7 +31,7 @@ export const ItemsRecommendersSummary = () => {
       {itemsRecommenders.items && itemsRecommenders.items.length === 0 && (
         <EmptyList>
           <div className="text-muted m-3">
-            There are no promotion recommenders.
+            There are no promotion campaigns.
           </div>
           <CreateButtonClassic to="/recommenders/promotions-recommenders/create">
             Create

@@ -6,7 +6,7 @@ import { promotionsRecommenders } from "cherry.ai";
 
 promotionsRecommenders.invokePromotionsRecommenderAsync({
     token: "Your JSON Web Token / access token",
-    id: ${id}, // the id of this recommender
+    id: ${id}, // the id of this campaign
     input: {
         commonUserId: "The common Id of the user to recommend for",
     }

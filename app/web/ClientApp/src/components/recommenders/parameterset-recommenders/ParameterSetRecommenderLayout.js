@@ -32,10 +32,10 @@ export const ParameterSetRecommenderLayout = ({ children }) => {
         setEnabled={setEnabled}
       />
       <MoveUpHierarchyPrimaryButton to="/recommenders/parameter-set-recommenders">
-        Back to Recommenders
+        Back to Campaigns
       </MoveUpHierarchyPrimaryButton>
       <Title>{recommender.name || "..."}</Title>
-      <Subtitle>Parameter Set Recommender</Subtitle>
+      <Subtitle>Parameter Set Campaign</Subtitle>
       <ParameterSetRecommenderPrimaryNav id={id} />
       {children}
     </>

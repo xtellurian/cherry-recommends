@@ -81,7 +81,7 @@ const Weights = () => {
           search: null,
         }}
       >
-        Back to Recommender
+        Back to Campaign
       </MoveUpHierarchyPrimaryButton>
       <PageHeading
         title="Manage Weights"

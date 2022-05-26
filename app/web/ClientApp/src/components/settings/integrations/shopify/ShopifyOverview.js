@@ -143,7 +143,7 @@ export const ShopifyOverview = ({ integratedSystem, onReload }) => {
             {!integratedSystem.loading && !integratedSystem.error && (
               <SettingRow
                 label="Discount Code Generator"
-                description="When enabled, promotions recommender invokations will generate discount codes in Shopify. 
+                description="When enabled, promotions campaign invokations will generate discount codes in Shopify. 
                   Only one discount code per promotion can be generated within a single day."
               >
                 <ToggleSwitch

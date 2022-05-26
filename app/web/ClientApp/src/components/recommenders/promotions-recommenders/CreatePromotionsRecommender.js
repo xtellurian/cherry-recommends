@@ -165,22 +165,22 @@ export const CreateRecommender = () => {
       <CreatePageLayout
         createButton={
           <CreateButton
-            label="Create Recommender"
+            label="Create Campaign"
             onClick={handleCreate}
             loading={loading}
           />
         }
         backButton={
           <MoveUpHierarchyPrimaryButton to="/recommenders/promotions-recommenders">
-            Back to Recommenders
+            Back to Campaigns
           </MoveUpHierarchyPrimaryButton>
         }
-        header={<PageHeading title="Create a Promotion Recommender" />}
+        header={<PageHeading title="Create a Promotion Campaign" />}
         error={error}
       >
         <TextInput
           label="Display Name"
-          hint="Choose a name for this recommender."
+          hint="Choose a name for this campaign."
           validator={joinValidators([
             createRequiredByServerValidator(error),
             createServerErrorValidator("Name", error),
@@ -198,9 +198,9 @@ export const CreateRecommender = () => {
 
         <TextInput
           label="Common ID"
-          hint="A unique ID that you'll use to reference this recommender."
+          hint="A unique ID that you'll use to reference this campaign."
           value={recommender.commonId}
-          placeholder="A unique ID for this recommender resource."
+          placeholder="A unique ID for this campaign resource."
           validator={joinValidators([
             createRequiredByServerValidator(error),
             commonIdValidator,

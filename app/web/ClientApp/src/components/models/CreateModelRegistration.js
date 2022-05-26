@@ -11,8 +11,8 @@ import { AzurePersonalizerModelRegistration } from "./AzurePersonalizerModelRegi
 import CreatePageLayout from "../molecules/layout/CreatePageLayout";
 
 const modelTypes = [
-  { label: "Promotions Recommender", value: "ItemsRecommenderV1" },
-  { label: "Parameter Set Recommender", value: "ParameterSetRecommenderV1" },
+  { label: "Promotions Campaign", value: "ItemsRecommenderV1" },
+  { label: "Parameter Set Campaign", value: "ParameterSetRecommenderV1" },
   { label: "Classifier", value: "SingleClassClassifier" },
 ];
 

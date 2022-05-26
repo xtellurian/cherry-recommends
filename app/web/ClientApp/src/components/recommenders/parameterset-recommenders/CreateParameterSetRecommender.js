@@ -198,12 +198,10 @@ export const CreateParameterSetRecommender = () => {
       }
       backButton={
         <MoveUpHierarchyPrimaryButton to="/recommenders/parameter-set-recommenders">
-          Parameter Set Recommenders
+          Parameter Set Campaigns
         </MoveUpHierarchyPrimaryButton>
       }
-      header={
-        <PageHeading title="Create Recommender" subtitle="Parameter Sets" />
-      }
+      header={<PageHeading title="Create Campaign" subtitle="Parameter Sets" />}
       error={error}
     >
       <Subtitle>1. Set an ID and name.</Subtitle>

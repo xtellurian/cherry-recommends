@@ -212,7 +212,7 @@ const WebConfiguration = ({ channel }) => {
         </div>
 
         <div className="mt-3">
-          <Typography>Choose a recommender</Typography>
+          <Typography>Choose a campaign</Typography>
           <Selector
             className="mt-1"
             value={selectedRecommenderValue}

@@ -37,21 +37,21 @@ export const GetStarted = () => {
           </li>
         </ul>
       </ExpandableCard>
-      <ExpandableCard label="Step 3. Create a Recommender.">
+      <ExpandableCard label="Step 3. Create a Campaign.">
         <ul>
           <li>
             If you created a Parameter Catalogue, you can now setup a{" "}
             <Navigation to="/recommenders/parameter-set-recommenders/create">
-              Parameter Set Recommender.
+              Parameter Set Campaign.
             </Navigation>
           </li>
         </ul>
       </ExpandableCard>
 
-      <ExpandableCard label="Step 4. Use your Recommender.">
+      <ExpandableCard label="Step 4. Use your Campaign.">
         <ul>
           <li>
-            Once your recommender has finished training, you can start consuming
+            Once your campaign has finished training, you can start consuming
             the recommendations in your app or CRM.
           </li>
         </ul>

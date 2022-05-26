@@ -95,7 +95,7 @@ export const ParameterSetRecommenderDetail = () => {
         </div>
       </ConfirmationPopup>
       <ParameterSetRecommenderLayout>
-        {recommender.loading && <Spinner>Loading Recommender</Spinner>}
+        {recommender.loading && <Spinner>Loading Campaign</Spinner>}
         {recommender.error && <ErrorCard error={recommender.error} />}
 
         <div className="row mb-2">
@@ -135,7 +135,7 @@ export const ParameterSetRecommenderDetail = () => {
                 className="btn btn-outline-primary mr-1"
                 onClick={() => setCloneOpen(true)}
               >
-                Clone this Recommender
+                Clone this Campaign
               </button>
               <button
                 className="btn btn-link"
@@ -146,7 +146,7 @@ export const ParameterSetRecommenderDetail = () => {
               <ConfirmationPopup
                 isOpen={cloneOpen}
                 setIsOpen={setCloneOpen}
-                label="Clone this recommender?"
+                label="Clone this campaign?"
               >
                 <CloneRecommender
                   recommender={recommender}

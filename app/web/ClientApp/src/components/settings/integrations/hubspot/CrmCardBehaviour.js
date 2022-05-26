@@ -37,8 +37,8 @@ const Top = ({ integratedSystem }) => {
 };
 
 const recommenderTypeOptions = [
-  { label: "Promotion Recommender", value: "ITEMS" },
-  { label: "Parameter Set Recommender", value: "PARAMETER-SET" },
+  { label: "Promotion Campaign", value: "ITEMS" },
+  { label: "Parameter Set Campaign", value: "PARAMETER-SET" },
   { label: "None", value: "None" },
 ];
 
@@ -159,11 +159,11 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
       <Top integratedSystem={integratedSystem} />
       {error && <ErrorCard error={error} />}
       <SettingRow
-        label="Recommender"
+        label="Campaign"
         description="Would you like to show recommendations in HubSpot? Currently, only ParameterSet Recommendations are supported."
       >
         <Selector
-          placeholder="Recommender Type"
+          placeholder="Campaign Type"
           value={recommenderType}
           defaultValue={recommenderType}
           onChange={setRecommenderType}
@@ -175,7 +175,7 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
               allowNone={true}
               placeholder={
                 parameterSetRecommender.name ||
-                "Choose a parameter-set recommender"
+                "Choose a parameter-set campaign"
               }
               onChange={(v) => setRecommender(v.value)}
             />
@@ -184,7 +184,7 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
           <AsyncSelectItemsRecommender
             allowNone={true}
             placeholder={
-              itemsRecommender.name || "Choose a promotions recommender"
+              itemsRecommender.name || "Choose a promotions campaign"
             }
             onChange={(v) => setRecommender(v.value)}
           />

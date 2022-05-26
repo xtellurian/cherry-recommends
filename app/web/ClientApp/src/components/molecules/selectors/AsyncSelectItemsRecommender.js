@@ -65,7 +65,7 @@ export const AsyncSelectItemsRecommender = ({
     <AsyncSelector
       defaultValue={defaultRecommenders}
       defaultOptions={recommendersSelectable}
-      placeholder={placeholder || "Search for a Promotion Recommender."}
+      placeholder={placeholder || "Search for a Promotion Campaign."}
       cacheOptions
       isMulti={isMulti}
       loadOptions={loadSelectable}

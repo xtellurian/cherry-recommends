@@ -21,7 +21,7 @@ export const ItemsRecommendationList = ({ size, trigger }) => {
       {recommendations.loading && <Spinner />}
       {recommendations.error && <ErrorCard error={recommendations.error} />}
       {recommendations.items && recommendations.items.length === 0 && (
-        <EmptyList>This recommender is yet to make a recommendation.</EmptyList>
+        <EmptyList>This campaign is yet to make a recommendation.</EmptyList>
       )}
       {recommendations.items &&
         recommendations.items.map((r) => (

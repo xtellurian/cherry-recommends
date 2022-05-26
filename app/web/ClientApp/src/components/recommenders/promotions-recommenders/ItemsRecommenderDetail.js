@@ -67,7 +67,7 @@ export const ItemRecommenderClone = ({ iconClassName }) => {
       <ConfirmationPopup
         isOpen={cloneOpen}
         setIsOpen={setCloneOpen}
-        label="Clone this recommender?"
+        label="Clone this campaign?"
       >
         <CloneRecommender
           recommender={recommender}
@@ -112,7 +112,7 @@ export const ItemRecommenderDelete = ({ iconClassName }) => {
       <ConfirmationPopup
         isOpen={deleteOpen}
         setIsOpen={setDeleteOpen}
-        label="Are you sure you want to delete this Recommender?"
+        label="Are you sure you want to delete this Campaign?"
       >
         <div className="m-2">{recommender.name}</div>
         {deleteError && <ErrorCard error={deleteError} />}
@@ -176,7 +176,7 @@ const RecommenderDetailSection = () => {
 
   return (
     <React.Fragment>
-      {recommender.loading && <Spinner>Loading Recommender</Spinner>}
+      {recommender.loading && <Spinner>Loading Campaign</Spinner>}
       {recommender.error && <ErrorCard error={recommender.error} />}
 
       {!recommender.loading && (
@@ -243,7 +243,7 @@ const RecommenderDetailSection = () => {
               <PromotionRow promotion={i} key={i.id} />
             ))}
           {recommender.items && recommender.items.length === 0 && (
-            <EmptyList>This recommender works with all promotions.</EmptyList>
+            <EmptyList>This campaign works with all promotions.</EmptyList>
           )}
         </div>
         {segmentFlag && (
@@ -258,7 +258,7 @@ const RecommenderDetailSection = () => {
             {(!audience.segments ||
               (audience.segments && audience.segments.length === 0)) && (
               <EmptyList>
-                This recommender works with all{" "}
+                This campaign works with all{" "}
                 {targetPlurals[recommender.targetType]}.
               </EmptyList>
             )}

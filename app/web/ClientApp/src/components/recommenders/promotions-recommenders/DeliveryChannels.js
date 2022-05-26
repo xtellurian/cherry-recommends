@@ -95,7 +95,7 @@ export const DeliveryChannels = () => {
         {channels.loading && <Spinner />}
         {channels.error && <ErrorCard error={channels.error} />}
         {channels.length === 0 && (
-          <EmptyList>This recommender has no channels.</EmptyList>
+          <EmptyList>This campaign has no channels.</EmptyList>
         )}
       </div>
       <div className="mt-4">

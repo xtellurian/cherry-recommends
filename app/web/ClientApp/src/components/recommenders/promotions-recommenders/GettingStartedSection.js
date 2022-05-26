@@ -23,7 +23,7 @@ export const GettingStartedSection = ({ recommender }) => {
             <div>
               <NoteBox label="Use recommendations">
                 <p>
-                  To use this recommender, you can send recommendations to an
+                  To use this campaign, you can send recommendations to an
                   Integrated System via a channel.
                 </p>
                 <Navigation

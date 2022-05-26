@@ -65,7 +65,7 @@ export const LinkToModelUtility = ({
         className="float-right"
         to={`${rootPath}/detail/${recommender.id}`}
       >
-        Back to Recommender
+        Back to Campaign
       </MoveUpHierarchyButton>
       <Title>Link to Model</Title>
       <hr />
@@ -81,7 +81,7 @@ export const LinkToModelUtility = ({
       )}
       <Selector
         isSearchable
-        placeholder="Select a registered model to link to this recommender"
+        placeholder="Select a registered model to link to this campaign"
         noOptionsMessage={(inputValue) => "No Models Available"}
         onChange={(so) => setSelectedModel(so.value)}
         options={modelRegistrationOptions}

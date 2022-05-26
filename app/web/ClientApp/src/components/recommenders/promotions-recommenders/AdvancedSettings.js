@@ -63,7 +63,7 @@ export const AdvancedSettings = () => {
     <React.Fragment>
       <LoadingPopup loading={saving} label="Saving Settings" />
       {error && <ErrorCard error={error} />}
-      {recommender.loading && <Spinner>Loading Recommender</Spinner>}
+      {recommender.loading && <Spinner>Loading Campaign</Spinner>}
       {!recommender.loading && (
         <React.Fragment>
           <SettingsUtil
@@ -73,7 +73,7 @@ export const AdvancedSettings = () => {
           />
           <SettingRow
             label="Use Optimiser"
-            description="Choose whether the recommender uses the weights set internally, or whether a custom model is used instead."
+            description="Choose whether the campaign uses the weights set internally, or whether a custom model is used instead."
           >
             <UseOptimiserControl
               recommender={recommender}

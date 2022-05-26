@@ -17,9 +17,7 @@ const EnabledToggle = ({ recommender, setEnabled }) => {
       <Tippy
         placement="bottom-start"
         content={
-          <div className="cherry-tooltip">
-            Enable or Disable the recommender
-          </div>
+          <div className="cherry-tooltip">Enable or Disable the campaign</div>
         }
       >
         <div id="d-flex justify-content-between">

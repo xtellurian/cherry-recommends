@@ -86,14 +86,14 @@ export const PushDataBehaviour = ({ integratedSystem }) => {
         {error && <ErrorCard error={error} />}
         <SettingRow
           label="Recommendations"
-          description="Which recommenders should be connected to properties in Hubspot?"
+          description="Which campaigns should be connected to properties in Hubspot?"
         >
           <div>
             <AsyncSelectItemsRecommender
               defaultIds={behaviour.recommenderIds}
               isMulti={true}
               onChange={handleSelectItemsRecommenders}
-              placeholder="Select a Promotion Recommender"
+              placeholder="Select a Promotion Campaign"
             />
           </div>
         </SettingRow>
