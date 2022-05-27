@@ -10,7 +10,7 @@ import { SettingsComponent } from "./components/settings/SettingsComponent";
 import { ReportsComponent } from "./components/reports/ReportsComponent";
 import MetricsComponent from "./components/metrics/MetricsComponent";
 import { ParametersComponent } from "./components/parameters/ParametersComponent";
-import { RecommendersComponent } from "./components/recommenders/RecommendersComponent";
+import { CampaignsComponent } from "./components/campaigns/CampaignsComponent";
 import PromotionsComponent from "./components/promotions/PromotionsComponent";
 import { EventsComponent } from "./components/events/EventsComponent";
 import { AdminComponent } from "./components/admin/AdminComponent";
@@ -60,8 +60,8 @@ const InTenantApp = ({ multitenant }) => {
         component={ParametersComponent}
       />
       <AuthorizeRoute
-        path={`${routePrefix}/recommenders`}
-        component={RecommendersComponent}
+        path={`${routePrefix}/campaigns`}
+        component={CampaignsComponent}
       />
       <AuthorizeRoute
         path={`${routePrefix}/promotions`}

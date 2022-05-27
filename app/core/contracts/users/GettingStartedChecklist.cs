@@ -38,9 +38,9 @@ namespace SignalBox.Core.Internal
                     label= "Create a Campaign",
                     description= "A Promotion Campaign chooses the best promotion for every customer. "
                      + "For example, a campaign can choose the best promotion for returning customers to your landing pages.",
-                    actionTo= "/recommenders/promotions-recommenders/create",
+                    actionTo= "/campaigns/promotions-campaigns/create",
                     actionLabel= "Setup",
-                    docsLink="/docs/guides/create_promotion_recommender",
+                    docsLink="/docs/guides/create_promotion_campaign",
                     complete = false,
                 }
             },

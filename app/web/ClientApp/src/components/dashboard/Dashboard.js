@@ -5,7 +5,7 @@ import { usePromotions } from "../../api-hooks/promotionsApi";
 import { Title, Spinner, Navigation } from "../molecules";
 import { CardSection, Label, MoreLink } from "../molecules/layout/CardSection";
 
-import { Recommenders } from "./Recommenders";
+import { Campaigns } from "./Campaigns";
 import { Items } from "./Promotions";
 import Metrics from "./Metrics";
 import { MembershipRow } from "../tenant-settings/TenantMembers";
@@ -90,7 +90,7 @@ export const Dashboard = () => {
           <Items items={items} />
         </div>
         <div className="col">
-          <Recommenders
+          <Campaigns
             hasItems={!items.loading && items.items && items.items.length > 0}
           />
         </div>

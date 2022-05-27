@@ -8,7 +8,7 @@ import {
   AsyncButton,
   MoveUpHierarchyButton,
 } from "../../../molecules";
-import { AsyncSelectItemsRecommender } from "../../../molecules/selectors/AsyncSelectItemsRecommender";
+import { AsyncSelectPromotionsCampaign } from "../../../molecules/selectors/AsyncSelectPromotionsCampaign";
 import { useHubspotPushBehaviourAsync } from "../../../../api-hooks/hubspotApi";
 import { setHubspotPushBehaviourAsync } from "../../../../api/hubspotApi";
 import { useAccessToken } from "../../../../api-hooks/token";
@@ -89,7 +89,7 @@ export const PushDataBehaviour = ({ integratedSystem }) => {
           description="Which campaigns should be connected to properties in Hubspot?"
         >
           <div>
-            <AsyncSelectItemsRecommender
+            <AsyncSelectPromotionsCampaign
               defaultIds={behaviour.recommenderIds}
               isMulti={true}
               onChange={handleSelectItemsRecommenders}

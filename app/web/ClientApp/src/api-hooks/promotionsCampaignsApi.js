@@ -1,25 +1,33 @@
 import React from "react";
 import {
-  fetchItemsRecommendersAsync,
-  fetchItemsRecommenderAsync,
+  fetchPromotionsCampaignsAsync,
+  fetchPromotionsCampaignAsync,
   fetchLinkedRegisteredModelAsync,
   fetchInvokationLogsAsync,
-  fetchItemsRecommendationsAsync,
+  fetchPromotionsRecommendationsAsync,
   fetchTargetVariablesAsync,
-  fetchItemsAsync,
+  fetchPromotionsAsync,
   fetchStatisticsAsync,
   fetchDestinationsAsync,
-  getBaselineItemAsync,
+  getBaselinePromotionAsync,
   fetchTriggerAsync,
   fetchLearningMetricsAsync,
   fetchReportImageBlobUrlAsync,
   fetchPerformanceAsync,
+  fetchAudienceAsync,
+  fetchPromotionOptimiserAsync,
+  fetchCampaignChannelsAsync,
+  fetchOffersAsync,
+  fetchPromotionsRecommendationAsync,
+  fetchArgumentsAsync,
+  fetchChoosePromotionArgumentRulesAsync,
+  fetchChooseSegmentArgumentRulesAsync,
 } from "../api/promotionsCampaignsApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
 import { useEnvironmentReducer } from "./environmentsApi";
 
-export const useItemsRecommenders = () => {
+export const usePromotionsCampaigns = () => {
   const token = useAccessToken();
   const page = usePagination();
   const [environment] = useEnvironmentReducer();
@@ -27,7 +35,7 @@ export const useItemsRecommenders = () => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchItemsRecommendersAsync({
+      fetchPromotionsCampaignsAsync({
         token,
         page,
       })
@@ -38,31 +46,13 @@ export const useItemsRecommenders = () => {
   return result;
 };
 
-export const useBaselineItem = ({ id, trigger }) => {
-  const token = useAccessToken();
-  const [result, setState] = React.useState({ loading: true });
-  React.useEffect(() => {
-    setState({ loading: true });
-    if (token) {
-      getBaselineItemAsync({
-        token,
-        id,
-      })
-        .then(setState)
-        .catch((error) => setState({ error }));
-    }
-  }, [token, id, trigger]);
-
-  return result;
-};
-
-export const useItemsRecommender = ({ id, trigger }) => {
+export const useBaselinePromotion = ({ id, trigger }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
     if (token && id) {
-      fetchItemsRecommenderAsync({
+      getBaselinePromotionAsync({
         token,
         id,
       })
@@ -74,14 +64,32 @@ export const useItemsRecommender = ({ id, trigger }) => {
   return result;
 };
 
-export const useItemsRecommendations = ({ id, pageSize }) => {
+export const usePromotionsCampaign = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [result, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchPromotionsCampaignAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return result;
+};
+
+export const usePromotionsRecommendations = ({ id, pageSize, trigger }) => {
   const token = useAccessToken();
   const page = usePagination();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
-      fetchItemsRecommendationsAsync({
+    if (token && id) {
+      fetchPromotionsRecommendationsAsync({
         token,
         id,
         page,
@@ -90,12 +98,12 @@ export const useItemsRecommendations = ({ id, pageSize }) => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, id, page, pageSize]);
+  }, [token, id, page, pageSize, trigger]);
 
   return result;
 };
 
-export const useInvokationLogs = ({ id }) => {
+export const useInvokationLogs = ({ id, trigger, pageSize }) => {
   const token = useAccessToken();
   const page = usePagination();
   const [result, setState] = React.useState({ loading: true });
@@ -106,11 +114,12 @@ export const useInvokationLogs = ({ id }) => {
         token,
         id,
         page,
+        pageSize,
       })
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, id, page]);
+  }, [token, id, page, pageSize, trigger]);
 
   return result;
 };
@@ -120,7 +129,7 @@ export const useLinkedRegisteredModel = ({ id }) => {
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchLinkedRegisteredModelAsync({
         token,
         id,
@@ -133,13 +142,13 @@ export const useLinkedRegisteredModel = ({ id }) => {
   return result;
 };
 
-export const useItems = ({ id, trigger }) => {
+export const usePromotions = ({ id, trigger }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
-      fetchItemsAsync({
+    if (token && id) {
+      fetchPromotionsAsync({
         token,
         id,
       })
@@ -156,7 +165,7 @@ export const useTargetVariables = ({ id, name }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchTargetVariablesAsync({
         token,
         id,
@@ -170,12 +179,76 @@ export const useTargetVariables = ({ id, name }) => {
   return state;
 };
 
+export const useArguments = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchArgumentsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useChoosePromotionArgumentRules = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchChoosePromotionArgumentRulesAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useChooseSegmentArgumentRules = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchChooseSegmentArgumentRulesAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useArgumentRules = ({ id, trigger }) => {
+  const promoRules = useChoosePromotionArgumentRules({ id, trigger });
+  const segmentRules = useChooseSegmentArgumentRules({ id, trigger });
+  if (promoRules.loading || segmentRules.loading) {
+    return { loading: true };
+  } else {
+    return [...promoRules, ...segmentRules].sort((a, b) => a.id - b.id);
+  }
+};
+
 export const useDestinations = ({ id, trigger }) => {
   const token = useAccessToken();
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchDestinationsAsync({
         token,
         id,
@@ -194,7 +267,7 @@ export const useTrigger = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchTriggerAsync({
         token,
         id,
@@ -212,7 +285,7 @@ export const useLearningMetrics = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchLearningMetricsAsync({
         token,
         id,
@@ -230,7 +303,7 @@ export const useStatistics = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchStatisticsAsync({
         token,
         id,
@@ -248,7 +321,7 @@ export const useReportImageBlobUrl = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchReportImageBlobUrlAsync({
         token,
         id,
@@ -266,7 +339,7 @@ export const usePerformance = ({ id, trigger }) => {
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchPerformanceAsync({
         token,
         id,
@@ -275,6 +348,101 @@ export const usePerformance = ({ id, trigger }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useAudience = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchAudienceAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useOptimiser = ({ id }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchPromotionOptimiserAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id]);
+
+  return state;
+};
+
+export const useCampaignChannels = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchCampaignChannelsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const usePromotionsRecommendation = ({ recommendationId, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && recommendationId) {
+      fetchPromotionsRecommendationAsync({
+        token,
+        recommendationId,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, recommendationId, trigger]);
+
+  return state;
+};
+
+export const useOffers = ({ id, pageSize, offerState }) => {
+  const token = useAccessToken();
+  const page = usePagination();
+  const [environment] = useEnvironmentReducer();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchOffersAsync({
+        token,
+        id,
+        page,
+        pageSize,
+        offerState,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, page, pageSize, environment]);
 
   return state;
 };

@@ -6,7 +6,7 @@ import { CircleFill, CheckCircle } from "react-bootstrap-icons";
 import { useMetadata } from "../../api-hooks/profileApi";
 import { setMetadataAsync } from "../../api/profileApi";
 import { useAccessToken } from "../../api-hooks/token";
-import { usePromotionsRecommenders } from "../../api-hooks/promotionsRecommendersApi";
+import { usePromotionsCampaigns } from "../../api-hooks/promotionsCampaignsApi";
 
 import "./getting-started.css";
 
@@ -97,7 +97,7 @@ export const GettingStartedChecklistComponent = ({ requestClose }) => {
   const steps = gettingStartedChecklist?.steps;
   const stepIndex = Object.keys(gettingStartedChecklist?.steps || {});
 
-  const recommenders = usePromotionsRecommenders();
+  const recommenders = usePromotionsCampaigns();
   let defaultRecommenderId = 1;
   if (!recommenders.loading && recommenders.items) {
     defaultRecommenderId = recommenders.items.find((_) => _.id)?.id;

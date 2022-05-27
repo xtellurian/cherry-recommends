@@ -1,25 +1,23 @@
 import React from "react";
 import {
-  fetchItemsRecommendersAsync,
-  fetchItemsRecommenderAsync,
+  fetchParameterSetCampaignsAsync,
+  fetchParameterSetCampaignAsync,
+  fetchParameterSetRecommendationsAsync,
   fetchLinkedRegisteredModelAsync,
   fetchInvokationLogsAsync,
-  fetchItemsRecommendationsAsync,
   fetchTargetVariablesAsync,
-  fetchItemsAsync,
-  fetchStatisticsAsync,
   fetchDestinationsAsync,
-  getBaselineItemAsync,
   fetchTriggerAsync,
   fetchLearningMetricsAsync,
+  fetchStatisticsAsync,
   fetchReportImageBlobUrlAsync,
-  fetchPerformanceAsync,
-} from "../api/promotionsCampaignsApi";
+  fetchArgumentsAsync,
+} from "../api/parameterSetCampaignsApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
 import { useEnvironmentReducer } from "./environmentsApi";
 
-export const useItemsRecommenders = () => {
+export const useParameterSetCampaigns = () => {
   const token = useAccessToken();
   const page = usePagination();
   const [environment] = useEnvironmentReducer();
@@ -27,7 +25,7 @@ export const useItemsRecommenders = () => {
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchItemsRecommendersAsync({
+      fetchParameterSetCampaignsAsync({
         token,
         page,
       })
@@ -35,16 +33,17 @@ export const useItemsRecommenders = () => {
         .catch((error) => setState({ error }));
     }
   }, [token, page, environment]);
+
   return result;
 };
 
-export const useBaselineItem = ({ id, trigger }) => {
+export const useParameterSetCampaign = ({ id, trigger }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
-      getBaselineItemAsync({
+    if (id && token) {
+      fetchParameterSetCampaignAsync({
         token,
         id,
       })
@@ -56,41 +55,21 @@ export const useBaselineItem = ({ id, trigger }) => {
   return result;
 };
 
-export const useItemsRecommender = ({ id, trigger }) => {
+export const useParameterSetRecommendations = ({ id, pageSize }) => {
   const token = useAccessToken();
-  const [result, setState] = React.useState({ loading: true });
-  React.useEffect(() => {
-    setState({ loading: true });
-    if (token && id) {
-      fetchItemsRecommenderAsync({
-        token,
-        id,
-      })
-        .then(setState)
-        .catch((error) => setState({ error }));
-    }
-  }, [token, id, trigger]);
-
-  return result;
-};
-
-export const useItemsRecommendations = ({ id, pageSize }) => {
-  const token = useAccessToken();
-  const page = usePagination();
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
-      fetchItemsRecommendationsAsync({
+      fetchParameterSetRecommendationsAsync({
         token,
         id,
-        page,
         pageSize,
       })
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, id, page, pageSize]);
+  }, [token, id]);
 
   return result;
 };
@@ -101,7 +80,7 @@ export const useInvokationLogs = ({ id }) => {
   const [result, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token && id) {
+    if (token) {
       fetchInvokationLogsAsync({
         token,
         id,
@@ -133,24 +112,6 @@ export const useLinkedRegisteredModel = ({ id }) => {
   return result;
 };
 
-export const useItems = ({ id, trigger }) => {
-  const token = useAccessToken();
-  const [result, setState] = React.useState({ loading: true });
-  React.useEffect(() => {
-    setState({ loading: true });
-    if (token) {
-      fetchItemsAsync({
-        token,
-        id,
-      })
-        .then(setState)
-        .catch((error) => setState({ error }));
-    }
-  }, [token, id, trigger]);
-
-  return result;
-};
-
 export const useTargetVariables = ({ id, name }) => {
   const token = useAccessToken();
   const [state, setState] = React.useState({ loading: true });
@@ -170,12 +131,30 @@ export const useTargetVariables = ({ id, name }) => {
   return state;
 };
 
-export const useDestinations = ({ id, trigger }) => {
+export const useArguments = ({ id, trigger }) => {
   const token = useAccessToken();
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
     if (token) {
+      fetchArgumentsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
+
+  return state;
+};
+
+export const useDestinations = ({ id, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
       fetchDestinationsAsync({
         token,
         id,
@@ -188,13 +167,12 @@ export const useDestinations = ({ id, trigger }) => {
   return state;
 };
 
-// the trigger param is a different trigger
 export const useTrigger = ({ id, trigger }) => {
   const token = useAccessToken();
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
     setState({ loading: true });
-    if (token) {
+    if (token && id) {
       fetchTriggerAsync({
         token,
         id,
@@ -243,7 +221,7 @@ export const useStatistics = ({ id, trigger }) => {
   return state;
 };
 
-export const useReportImageBlobUrl = ({ id, trigger }) => {
+export const useReportImageBlobUrl = ({ id }) => {
   const token = useAccessToken();
   const [state, setState] = React.useState({ loading: true });
   React.useEffect(() => {
@@ -256,25 +234,7 @@ export const useReportImageBlobUrl = ({ id, trigger }) => {
         .then((url) => setState({ url }))
         .catch((error) => setState({ error }));
     }
-  }, [token, id, trigger]);
-
-  return state;
-};
-
-export const usePerformance = ({ id, trigger }) => {
-  const token = useAccessToken();
-  const [state, setState] = React.useState({ loading: true });
-  React.useEffect(() => {
-    setState({ loading: true });
-    if (token) {
-      fetchPerformanceAsync({
-        token,
-        id,
-      })
-        .then(setState)
-        .catch((error) => setState({ error }));
-    }
-  }, [token, id, trigger]);
+  }, [token, id]);
 
   return state;
 };

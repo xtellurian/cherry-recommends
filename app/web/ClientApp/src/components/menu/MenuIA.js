@@ -29,10 +29,10 @@ const AuthenticatedIA = [
         }),
       },
       {
-        id: "promotions-recommenders",
+        id: "promotions-campaigns",
         name: "Campaigns",
         to: createURL({
-          pathname: "/recommenders/promotions-recommenders",
+          pathname: "/campaigns/promotions-campaigns",
         }),
       },
     ],
@@ -104,10 +104,10 @@ const AuthenticatedIA = [
         }),
       },
       {
-        id: "parameter-set-recommenders",
+        id: "parameter-set-campaigns",
         name: "Campaigns",
         to: createURL({
-          pathname: "/recommenders/parameter-set-recommenders",
+          pathname: "/campaigns/parameter-set-campaigns",
         }),
       },
     ],

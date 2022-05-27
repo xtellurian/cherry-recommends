@@ -1,5 +1,5 @@
 import React from "react";
-import { usePromotionsRecommendation } from "../../api-hooks/promotionsRecommendersApi";
+import { usePromotionsRecommendation } from "../../api-hooks/promotionsCampaignsApi";
 import { Spinner, Subtitle, Title } from "../molecules";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { JsonView } from "../molecules/JsonView";

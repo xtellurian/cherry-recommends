@@ -41,7 +41,7 @@ export const GetStarted = () => {
         <ul>
           <li>
             If you created a Parameter Catalogue, you can now setup a{" "}
-            <Navigation to="/recommenders/parameter-set-recommenders/create">
+            <Navigation to="/campaigns/parameter-set-campaigns/create">
               Parameter Set Campaign.
             </Navigation>
           </li>

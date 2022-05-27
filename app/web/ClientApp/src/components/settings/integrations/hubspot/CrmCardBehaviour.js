@@ -13,10 +13,10 @@ import {
 import { ToggleSwitch } from "../../../molecules/ToggleSwitch";
 import { SettingRow } from "../../../molecules/layout/SettingRow";
 import { useAccessToken } from "../../../../api-hooks/token";
-import { useParameterSetRecommender } from "../../../../api-hooks/parameterSetRecommendersApi";
-import { AsyncSelectParameterSetRecommender } from "../../../molecules/selectors/AsyncSelectParameterSetRecommender";
-import { AsyncSelectItemsRecommender } from "../../../molecules/selectors/AsyncSelectItemsRecommender";
-import { usePromotionsRecommender } from "../../../../api-hooks/promotionsRecommendersApi";
+import { useParameterSetCampaign } from "../../../../api-hooks/parameterSetCampaignsApi";
+import { AsyncSelectParameterSetCampaign } from "../../../molecules/selectors/AsyncSelectParameterSetCampaign";
+import { AsyncSelectPromotionsCampaign } from "../../../molecules/selectors/AsyncSelectPromotionsCampaign";
+import { usePromotionsCampaign } from "../../../../api-hooks/promotionsCampaignsApi";
 
 const Top = ({ integratedSystem }) => {
   return (
@@ -50,10 +50,10 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
     trigger: updateTrigger,
   });
 
-  const parameterSetRecommender = useParameterSetRecommender({
+  const parameterSetRecommender = useParameterSetCampaign({
     id: behaviour.parameterSetRecommenderId,
   });
-  const itemsRecommender = usePromotionsRecommender({
+  const itemsRecommender = usePromotionsCampaign({
     id: behaviour.itemsRecommenderId,
   });
 
@@ -171,7 +171,7 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
         />
         {!recommenderType ||
           (recommenderType.value === "PARAMETER-SET" && (
-            <AsyncSelectParameterSetRecommender
+            <AsyncSelectParameterSetCampaign
               allowNone={true}
               placeholder={
                 parameterSetRecommender.name ||
@@ -181,7 +181,7 @@ export const CrmCardBehaviour = ({ integratedSystem }) => {
             />
           ))}
         {recommenderType && recommenderType.value === "ITEMS" && (
-          <AsyncSelectItemsRecommender
+          <AsyncSelectPromotionsCampaign
             allowNone={true}
             placeholder={
               itemsRecommender.name || "Choose a promotions campaign"
