@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SignalBox.Core.Optimisers;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Workflows
 {
@@ -10,16 +10,16 @@ namespace SignalBox.Core.Workflows
     public class PromotionOptimiserCRUDWorkflow : IWorkflow, IPromotionOptimiserCRUDWorkflow
     {
         private readonly IPromotionOptimiserStore store;
-        private readonly IItemsRecommenderStore recommenderStore;
+        private readonly IPromotionsCampaignStore recommenderStore;
 
-        public PromotionOptimiserCRUDWorkflow(IPromotionOptimiserStore store, IItemsRecommenderStore recommenderStore)
+        public PromotionOptimiserCRUDWorkflow(IPromotionOptimiserStore store, IPromotionsCampaignStore recommenderStore)
         {
             this.store = store;
             this.recommenderStore = recommenderStore;
         }
 
 
-        public async Task<PromotionOptimiser> Create(ItemsRecommender recommender)
+        public async Task<PromotionOptimiser> Create(PromotionsCampaign recommender)
         {
             if (recommender.BaselineItemId is null)
             {

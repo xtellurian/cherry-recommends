@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using SignalBox.Core.Integrations.Custom;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 #nullable enable
 namespace SignalBox.Core.Recommendations.Destinations
@@ -11,7 +11,7 @@ namespace SignalBox.Core.Recommendations.Destinations
         {
             Endpoint = null!;
         }
-        public WebhookDestination(RecommenderEntityBase recommender, IntegratedSystem connectedSystem, string endpoint)
+        public WebhookDestination(CampaignEntityBase recommender, IntegratedSystem connectedSystem, string endpoint)
          : base(recommender, connectedSystem)
         {
 

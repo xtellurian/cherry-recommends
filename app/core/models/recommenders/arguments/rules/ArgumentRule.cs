@@ -1,9 +1,9 @@
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
     public abstract class ArgumentRule : Entity, IHierarchyBase
     {
         protected ArgumentRule() { }
-        protected ArgumentRule(RecommenderEntityBase campaign, CampaignArgument argument)
+        protected ArgumentRule(CampaignEntityBase campaign, CampaignArgument argument)
         {
             Argument = argument;
             ArgumentId = argument.Id;
@@ -13,7 +13,7 @@ namespace SignalBox.Core.Recommenders
         public string Discriminator { get; set; }
 
         public long CampaignId { get; set; }
-        public RecommenderEntityBase Campaign { get; set; }
+        public CampaignEntityBase Campaign { get; set; }
         public long ArgumentId { get; set; }
         public CampaignArgument Argument { get; set; }
     }

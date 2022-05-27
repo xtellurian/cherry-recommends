@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {

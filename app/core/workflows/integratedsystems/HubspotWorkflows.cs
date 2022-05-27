@@ -16,8 +16,8 @@ namespace SignalBox.Core.Workflows
         private readonly ICustomerEventStore eventStore;
         private readonly IEnvironmentProvider environmentProvider;
         private readonly ITrackedUserSystemMapStore systemMapStore;
-        private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
-        private readonly IItemsRecommenderStore itemsRecommenderStore;
+        private readonly IParameterSetCampaignStore parameterSetRecommenderStore;
+        private readonly IPromotionsCampaignStore itemsRecommenderStore;
         private readonly IStorageContext storageContext;
         private readonly ITelemetry telemetry;
 
@@ -28,8 +28,8 @@ namespace SignalBox.Core.Workflows
                                 ICustomerEventStore eventStore,
                                 IEnvironmentProvider environmentProvider,
                                 ITrackedUserSystemMapStore systemMapStore,
-                                IParameterSetRecommenderStore parameterSetRecommenderStore,
-                                IItemsRecommenderStore itemsRecommenderStore,
+                                IParameterSetCampaignStore parameterSetRecommenderStore,
+                                IPromotionsCampaignStore itemsRecommenderStore,
                                 IStorageContext storageContext,
                                 IHubspotService hubspotService,
                                 IDateTimeProvider dateTimeProvider,

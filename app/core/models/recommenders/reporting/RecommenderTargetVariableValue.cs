@@ -1,6 +1,6 @@
 using System;
 
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
     public class RecommenderTargetVariableValue : Entity
     {

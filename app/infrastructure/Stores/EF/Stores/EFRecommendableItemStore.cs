@@ -17,7 +17,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         public async Task<Paginated<RecommendableItem>> QueryForRecommender(IPaginate paginate, long recommenderId)
         {
             var pageSize = paginate.PageSize ?? DefaultPageSize;
-            var itemCount = await context.ItemsRecommenders
+            var itemCount = await context.PromotionsCampaigns
                 .Where(_ => _.Id == recommenderId)
                 .SelectMany(_ => _.Items)
                 .Distinct()
@@ -27,7 +27,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 
             if (itemCount > 0) // check and let's see whether the query is worth running against the database
             {
-                results = await context.ItemsRecommenders
+                results = await context.PromotionsCampaigns
                     .Where(_ => _.Id == recommenderId)
                     .SelectMany(_ => _.Items)
                     .Distinct()

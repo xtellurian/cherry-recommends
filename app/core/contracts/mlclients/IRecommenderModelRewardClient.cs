@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {
     public interface IRecommenderModelRewardClient
     {
         [Obsolete]
-        Task Reward(IRecommender recommender, RewardingContext context);
+        Task Reward(ICampaign campaign, RewardingContext context);
     }
 }

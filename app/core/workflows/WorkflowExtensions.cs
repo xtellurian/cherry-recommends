@@ -22,9 +22,9 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<HubspotEtlWorkflows>();
             services.AddScoped<HubspotPushWorkflows>();
             services.AddScoped<ParameterWorkflows>();
-            services.AddScoped<ParameterSetRecommenderWorkflows>();
-            services.AddScoped<PromotionsRecommenderWorkflows>();
-            services.AddScoped<ItemsRecommenderPerformanceWorkflows>();
+            services.AddScoped<ParameterSetCampaignWorkflows>();
+            services.AddScoped<PromotionsCampaignWorkflows>();
+            services.AddScoped<PromotionsCampaignPerformanceWorkflows>();
             services.AddScoped<BusinessWorkflows>();
             services.AddScoped<BusinessMetricGeneratorWorkflow>();
             services.AddScoped<FilterSelectAggregateWorkflow>();
@@ -36,8 +36,8 @@ namespace SignalBox.Core.Workflows
             // model invokation
             services.AddScoped<GenericModelWorkflows>();
             services.AddScoped<ClassifierModelWorkflows>();
-            services.AddScoped<ItemsRecommenderInvokationWorkflows>();
-            services.AddScoped<ParameterSetRecommenderInvokationWorkflows>();
+            services.AddScoped<PromotionsCampaignInvokationWorkflows>();
+            services.AddScoped<ParameterSetCampaignInvokationWorkflows>();
 
             services.AddScoped<AggregateCustomerMetricWorkflow>();
 
@@ -48,7 +48,7 @@ namespace SignalBox.Core.Workflows
             services.AddScoped<ICustomerSegmentWorkflow, CustomerSegmentWorkflows>();
             services.AddScoped<IPromotionOptimiserCRUDWorkflow, PromotionOptimiserCRUDWorkflow>();
             services.AddScoped<IRecommenderReportImageWorkflow, RecommenderReportImageWorkflows>();
-            services.AddScoped<IRecommenderMetricTriggersWorkflow, RecommenderTriggersWorkflows>();
+            services.AddScoped<IRecommenderMetricTriggersWorkflow, CampaignTriggersWorkflows>();
             services.AddScoped<IChannelWorkflow, ChannelWorkflow>();
             services.AddScoped<IShopifyAdminWorkflow, ShopifyAdminWorkflows>();
             services.AddScoped<IShopifyWebhookWorkflow, ShopifyWebhookWorkflow>();

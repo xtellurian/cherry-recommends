@@ -20,7 +20,7 @@ namespace SignalBox.Test.Controllers
         public async Task CanQuery()
         {
             var mockRecommendableItemStore = new Mock<IRecommendableItemStore>();
-            var mockItemsRecommenderStore = new Mock<IItemsRecommenderStore>();
+            var mockItemsRecommenderStore = new Mock<IPromotionsCampaignStore>();
             var mockStorageContext = new Mock<IStorageContext>();
 
             mockRecommendableItemStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
@@ -69,7 +69,7 @@ namespace SignalBox.Test.Controllers
         public async Task CanCreate()
         {
             var mockRecommendableItemStore = new Mock<IRecommendableItemStore>();
-            var mockItemsRecommenderStore = new Mock<IItemsRecommenderStore>();
+            var mockItemsRecommenderStore = new Mock<IPromotionsCampaignStore>();
             var mockStorageContext = new Mock<IStorageContext>();
 
             var properties = new DynamicPropertyDictionary() { { "discount", 0.05 } };
@@ -104,7 +104,7 @@ namespace SignalBox.Test.Controllers
         public async Task CanUpdate()
         {
             var mockRecommendableItemStore = new Mock<IRecommendableItemStore>();
-            var mockItemsRecommenderStore = new Mock<IItemsRecommenderStore>();
+            var mockItemsRecommenderStore = new Mock<IPromotionsCampaignStore>();
             var mockStorageContext = new Mock<IStorageContext>();
 
             string promotionId = "promo1";

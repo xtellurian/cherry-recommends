@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using SignalBox.Core;
 using SignalBox.Core.Optimisers;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure.ML
 {
@@ -34,11 +34,11 @@ namespace SignalBox.Infrastructure.ML
 
         public HttpClient httpClient { get; }
 
-        public async Task<CategoricalOptimiser> Create(IRecommender recommender)
+        public async Task<CategoricalOptimiser> Create(ICampaign recommender)
         {
             var tenant = tenantProvider.Current();
             var tenantName = tenant?.Name ?? "single-tenant";
-            var itemsRecommender = (ItemsRecommender)recommender;
+            var itemsRecommender = (PromotionsCampaign)recommender;
             var optimiser = new CategoricalOptimiser
             {
                 Id = System.Guid.NewGuid().ToString(),

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using SignalBox.Core.Metrics;
 using SignalBox.Core.Metrics.Destinations;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {
@@ -38,7 +38,7 @@ namespace SignalBox.Core
         public MetricScopes Scope { get; set; }
 
         [JsonIgnore]
-        public ICollection<RecommenderEntityBase> Recommenders { get; set; }
+        public ICollection<CampaignEntityBase> Recommenders { get; set; }
         [JsonIgnore]
         public ICollection<HistoricCustomerMetric> HistoricTrackedUserFeatures { get; set; }
         [JsonIgnore]

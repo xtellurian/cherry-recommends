@@ -1,4 +1,4 @@
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
 #nullable enable
     public class TriggerCollection

@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using SignalBox.Core;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure.ML.Azure
 {
@@ -21,7 +21,7 @@ namespace SignalBox.Infrastructure.ML.Azure
 
         public HttpClient httpClient { get; }
 
-        public async Task<ItemsRecommenderModelOutputV1> Invoke(IRecommender recommender, RecommendingContext context, IModelInput input)
+        public async Task<ItemsRecommenderModelOutputV1> Invoke(ICampaign recommender, RecommendingContext context, IModelInput input)
         {
             var tenant = tenantProvider.Current();
             httpClient.DefaultRequestHeaders.Add("x-functions-key", recommender.ModelRegistration.Key);
@@ -46,7 +46,7 @@ namespace SignalBox.Infrastructure.ML.Azure
 
         }
 
-        public Task Reward(IRecommender recommender, RewardingContext context)
+        public Task Reward(ICampaign campaign, RewardingContext context)
         {
             throw new System.NotImplementedException();
         }

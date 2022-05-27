@@ -17,7 +17,7 @@ namespace SignalBox.Test.Workflows
                 1, BenefitType.Fixed, 3, PromotionType.Other, null);
 
             var mockRecommendableItemStore = new Mock<IRecommendableItemStore>();
-            var mockItemsRecommenderStore = new Mock<IItemsRecommenderStore>();
+            var mockItemsRecommenderStore = new Mock<IPromotionsCampaignStore>();
             var mockStorageContext = new Mock<IStorageContext>();
 
             mockRecommendableItemStore.Setup(x => x.Create(It.Is<RecommendableItem>(_ => _.CommonId == recommendableItem.CommonId)))
@@ -49,7 +49,7 @@ namespace SignalBox.Test.Workflows
                 1, BenefitType.Fixed, 3, PromotionType.Other, null);
 
             var mockRecommendableItemStore = new Mock<IRecommendableItemStore>();
-            var mockItemsRecommenderStore = new Mock<IItemsRecommenderStore>();
+            var mockItemsRecommenderStore = new Mock<IPromotionsCampaignStore>();
             var mockStorageContext = new Mock<IStorageContext>();
 
             mockRecommendableItemStore.Setup(x => x.Create(It.Is<RecommendableItem>(_ => _.CommonId == recommendableItem.CommonId)))
@@ -99,7 +99,7 @@ namespace SignalBox.Test.Workflows
                 1, BenefitType.Fixed, 3, PromotionType.Other, null);
 
             var mockRecommendableItemStore = new Mock<IRecommendableItemStore>();
-            var mockItemsRecommenderStore = new Mock<IItemsRecommenderStore>();
+            var mockItemsRecommenderStore = new Mock<IPromotionsCampaignStore>();
             var mockStorageContext = new Mock<IStorageContext>();
 
             mockRecommendableItemStore.Setup(x => x.Create(It.Is<RecommendableItem>(_ => _.CommonId == recommendableItem.CommonId)))

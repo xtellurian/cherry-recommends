@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using SignalBox.Core.Recommendations;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {
@@ -42,7 +42,7 @@ namespace SignalBox.Core
 
         public string Name { get; set; }
         [JsonIgnore]
-        public ICollection<RecommenderEntityBase> Recommenders { get; set; }
+        public ICollection<CampaignEntityBase> Recommenders { get; set; }
         [JsonIgnore]
         public ICollection<RecommendationCorrelator> Correlators { get; set; }
         public ModelTypes ModelType { get; set; }

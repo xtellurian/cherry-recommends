@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {
@@ -7,13 +7,13 @@ namespace SignalBox.Core
     {
         public long RecommenderId { get; set; }
 
-        public RecommenderEntityBase Recommender { get; set; }
+        public CampaignEntityBase Recommender { get; set; }
         public ICollection<Segment> Segments { get; set; }
 
         protected Audience()
         { }
 
-        public Audience(RecommenderEntityBase recommender, ICollection<Segment> segments)
+        public Audience(CampaignEntityBase recommender, ICollection<Segment> segments)
         {
             this.RecommenderId = recommender.Id;
             this.Recommender = recommender;

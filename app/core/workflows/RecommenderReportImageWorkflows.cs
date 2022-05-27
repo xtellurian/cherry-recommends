@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Workflows
 {
@@ -14,10 +14,10 @@ namespace SignalBox.Core.Workflows
             this.tenantProvider = tenantProvider;
         }
 
-        public async Task<byte[]> DownloadImage(RecommenderEntityBase recommender)
+        public async Task<byte[]> DownloadImage(CampaignEntityBase campaign)
         {
             var tenant = tenantProvider.Current();
-            var name = $"{recommender.Id}.png";
+            var name = $"{campaign.Id}.png";
             if (tenant == null)
             {
                 return await fileStore.ReadAllBytes(name);

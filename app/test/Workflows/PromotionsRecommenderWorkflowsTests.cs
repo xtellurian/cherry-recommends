@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
 using SignalBox.Core;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 using SignalBox.Core.Workflows;
 using Xunit;
 
@@ -15,8 +15,8 @@ namespace SignalBox.Test.Workflows
         {
 
             // arrange
-            var mockPromoRecommenderStore = new Mock<IItemsRecommenderStore>()
-                .WithContext<Mock<IItemsRecommenderStore>, IItemsRecommenderStore, ItemsRecommender>();
+            var mockPromoRecommenderStore = new Mock<IPromotionsCampaignStore>()
+                .WithContext<Mock<IPromotionsCampaignStore>, IPromotionsCampaignStore, PromotionsCampaign>();
             var mockPromoRecommendationStore = new Mock<IItemsRecommendationStore>();
             var mockSegmentStore = new Mock<ISegmentStore>();
             var mockMetricStore = new Mock<IMetricStore>();
@@ -38,13 +38,13 @@ namespace SignalBox.Test.Workflows
                 .WithId();
             mockPromoStore.SetupCommonStoreRead<Mock<IRecommendableItemStore>, IRecommendableItemStore, RecommendableItem>(baselinePromo, promo2, promo3);
 
-            mockPromoRecommenderStore.Setup(_ => _.Create(It.IsAny<ItemsRecommender>())).ReturnsAsync((ItemsRecommender r) => r);
+            mockPromoRecommenderStore.Setup(_ => _.Create(It.IsAny<PromotionsCampaign>())).ReturnsAsync((PromotionsCampaign r) => r);
 
             var mockStoreCollection = new MockStoreCollection()
                .With<IChannelStore, ChannelBase>(mockChannelStore)
                .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
 
-            var sut = new PromotionsRecommenderWorkflows(
+            var sut = new PromotionsCampaignWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
@@ -61,7 +61,7 @@ namespace SignalBox.Test.Workflows
             var useOptimiser = false;
 
             // act
-            var output = await sut.CreateItemsRecommender(
+            var output = await sut.CreatePromotionsCampaign(
                 new CreateCommonEntityModel("commonId", "Name"),
                 baselineItemId: baselinePromo.CommonId,
                 itemIds: new List<string> { promo2.CommonId, promo3.CommonId },
@@ -69,10 +69,10 @@ namespace SignalBox.Test.Workflows
                 channelIds: null,
                 numberOfItemsToRecommend: 1,
                 arguments: null,
-                settings: new RecommenderSettings(),
+                settings: new CampaignSettings(),
                 useOptimiser: useOptimiser,
                 targetMetricId: null,
-                targetType: PromotionRecommenderTargetTypes.Customer,
+                targetType: PromotionCampaignTargetTypes.Customer,
                 useInternalId: null
             );
 
@@ -84,15 +84,15 @@ namespace SignalBox.Test.Workflows
             Assert.Contains(baselinePromo, output.Items);
             Assert.Equal(useOptimiser, output.UseOptimiser);
 
-            mockPromotionOptimiserCRUDWorkflow.Verify(_ => _.Create(It.Is<ItemsRecommender>(r => r.CommonId == output.CommonId)), useOptimiser ? Times.Once : Times.Never);
+            mockPromotionOptimiserCRUDWorkflow.Verify(_ => _.Create(It.Is<PromotionsCampaign>(r => r.CommonId == output.CommonId)), useOptimiser ? Times.Once : Times.Never);
         }
 
         [Fact]
         public async Task AddChannelTest()
         {
             // arrange
-            var mockPromoRecommenderStore = new Mock<IItemsRecommenderStore>()
-                .WithContext<Mock<IItemsRecommenderStore>, IItemsRecommenderStore, ItemsRecommender>();
+            var mockPromoRecommenderStore = new Mock<IPromotionsCampaignStore>()
+                .WithContext<Mock<IPromotionsCampaignStore>, IPromotionsCampaignStore, PromotionsCampaign>();
             var mockPromoRecommendationStore = new Mock<IItemsRecommendationStore>();
             var mockSegmentStore = new Mock<ISegmentStore>();
             var mockMetricStore = new Mock<IMetricStore>();
@@ -110,7 +110,7 @@ namespace SignalBox.Test.Workflows
                .With<IChannelStore, ChannelBase>(mockChannelStore)
                .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
 
-            var sut = new PromotionsRecommenderWorkflows(
+            var sut = new PromotionsCampaignWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
@@ -130,7 +130,7 @@ namespace SignalBox.Test.Workflows
                 Id = 1
             };
 
-            ItemsRecommender recommender = new ItemsRecommender("Recommender1", "Recommender1", null, new List<RecommendableItem>(), null, null, null)
+            PromotionsCampaign recommender = new PromotionsCampaign("Recommender1", "Recommender1", null, new List<RecommendableItem>(), null, null, null)
             {
                 Id = 1
             };
@@ -149,8 +149,8 @@ namespace SignalBox.Test.Workflows
         public async Task AddChannel_Maximum_Test()
         {
             // arrange
-            var mockPromoRecommenderStore = new Mock<IItemsRecommenderStore>()
-                .WithContext<Mock<IItemsRecommenderStore>, IItemsRecommenderStore, ItemsRecommender>();
+            var mockPromoRecommenderStore = new Mock<IPromotionsCampaignStore>()
+                .WithContext<Mock<IPromotionsCampaignStore>, IPromotionsCampaignStore, PromotionsCampaign>();
             var mockPromoRecommendationStore = new Mock<IItemsRecommendationStore>();
             var mockSegmentStore = new Mock<ISegmentStore>();
             var mockMetricStore = new Mock<IMetricStore>();
@@ -167,7 +167,7 @@ namespace SignalBox.Test.Workflows
                .With<IChannelStore, ChannelBase>(mockChannelStore)
                .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
 
-            var sut = new PromotionsRecommenderWorkflows(
+            var sut = new PromotionsCampaignWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
@@ -192,7 +192,7 @@ namespace SignalBox.Test.Workflows
                 Id = 2
             };
 
-            ItemsRecommender recommender = new ItemsRecommender("Recommender1", "Recommender1", null, new List<RecommendableItem>(), null, null, null)
+            PromotionsCampaign recommender = new PromotionsCampaign("Recommender1", "Recommender1", null, new List<RecommendableItem>(), null, null, null)
             {
                 Id = 1
             };
@@ -208,8 +208,8 @@ namespace SignalBox.Test.Workflows
         public async Task AddChannel_AlreadyExists_Test()
         {
             // arrange
-            var mockPromoRecommenderStore = new Mock<IItemsRecommenderStore>()
-                .WithContext<Mock<IItemsRecommenderStore>, IItemsRecommenderStore, ItemsRecommender>();
+            var mockPromoRecommenderStore = new Mock<IPromotionsCampaignStore>()
+                .WithContext<Mock<IPromotionsCampaignStore>, IPromotionsCampaignStore, PromotionsCampaign>();
             var mockPromoRecommendationStore = new Mock<IItemsRecommendationStore>();
             var mockSegmentStore = new Mock<ISegmentStore>();
             var mockMetricStore = new Mock<IMetricStore>();
@@ -227,7 +227,7 @@ namespace SignalBox.Test.Workflows
                .With<IIntegratedSystemStore, IntegratedSystem>(mockIntegratedSystemStore)
                .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
 
-            var sut = new PromotionsRecommenderWorkflows(
+            var sut = new PromotionsCampaignWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
@@ -247,7 +247,7 @@ namespace SignalBox.Test.Workflows
                 Id = 1
             };
 
-            ItemsRecommender recommender = new ItemsRecommender("Recommender1", "Recommender1", null, new List<RecommendableItem>(), null, null, null)
+            PromotionsCampaign recommender = new PromotionsCampaign("Recommender1", "Recommender1", null, new List<RecommendableItem>(), null, null, null)
             {
                 Id = 1
             };
@@ -261,8 +261,8 @@ namespace SignalBox.Test.Workflows
         public async Task RemoveChannelTest()
         {
             // arrange
-            var mockPromoRecommenderStore = new Mock<IItemsRecommenderStore>()
-                .WithContext<Mock<IItemsRecommenderStore>, IItemsRecommenderStore, ItemsRecommender>();
+            var mockPromoRecommenderStore = new Mock<IPromotionsCampaignStore>()
+                .WithContext<Mock<IPromotionsCampaignStore>, IPromotionsCampaignStore, PromotionsCampaign>();
             var mockPromoRecommendationStore = new Mock<IItemsRecommendationStore>();
             var mockSegmentStore = new Mock<ISegmentStore>();
             var mockMetricStore = new Mock<IMetricStore>();
@@ -279,7 +279,7 @@ namespace SignalBox.Test.Workflows
                 .With<IChannelStore, ChannelBase>(mockChannelStore)
                 .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
 
-            var sut = new PromotionsRecommenderWorkflows(
+            var sut = new PromotionsCampaignWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
@@ -298,7 +298,7 @@ namespace SignalBox.Test.Workflows
             {
                 Id = 1
             };
-            ItemsRecommender recommender = new ItemsRecommender("Recommender1", "Recommender1", null, new List<RecommendableItem>(), null, null, null)
+            PromotionsCampaign recommender = new PromotionsCampaign("Recommender1", "Recommender1", null, new List<RecommendableItem>(), null, null, null)
             {
                 Id = 1
             };
@@ -316,8 +316,8 @@ namespace SignalBox.Test.Workflows
         public async Task RemoveChannel_NotExistInRecommender_Test()
         {
             // arrange
-            var mockPromoRecommenderStore = new Mock<IItemsRecommenderStore>()
-                .WithContext<Mock<IItemsRecommenderStore>, IItemsRecommenderStore, ItemsRecommender>();
+            var mockPromoRecommenderStore = new Mock<IPromotionsCampaignStore>()
+                .WithContext<Mock<IPromotionsCampaignStore>, IPromotionsCampaignStore, PromotionsCampaign>();
             var mockPromoRecommendationStore = new Mock<IItemsRecommendationStore>();
             var mockSegmentStore = new Mock<ISegmentStore>();
             var mockMetricStore = new Mock<IMetricStore>();
@@ -335,7 +335,7 @@ namespace SignalBox.Test.Workflows
                .With<IChannelStore, ChannelBase>(mockChannelStore)
                .With<IRecommendableItemStore, RecommendableItem>(mockPromoStore);
 
-            var sut = new PromotionsRecommenderWorkflows(
+            var sut = new PromotionsCampaignWorkflows(
                 mockPromoRecommenderStore.Object,
                 mockPromoRecommendationStore.Object,
                 mockMetricStore.Object,
@@ -354,7 +354,7 @@ namespace SignalBox.Test.Workflows
             {
                 Id = 1
             };
-            ItemsRecommender recommender = new ItemsRecommender("Recommender1", "Recommender1", null, new List<RecommendableItem>(), null, null, null)
+            PromotionsCampaign recommender = new PromotionsCampaign("Recommender1", "Recommender1", null, new List<RecommendableItem>(), null, null, null)
             {
                 Id = 1
             };

@@ -6,14 +6,14 @@ using Microsoft.Extensions.Options;
 using SignalBox.Core.Adapters.Hubspot;
 using SignalBox.Core.Metrics.Destinations;
 using SignalBox.Core.Integrations;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Workflows
 {
     public class HubspotPushWorkflows : HubspotWorkflowBase, IWorkflow
     {
         private readonly ITrackedUserSystemMapStore systemMapStore;
-        private readonly ItemsRecommenderInvokationWorkflows itemsRecommenderWorkflows;
+        private readonly PromotionsCampaignInvokationWorkflows itemsRecommenderWorkflows;
 
         public HubspotPushWorkflows(ILogger<HubspotEtlWorkflows> logger,
                                    IHubspotService hubspotService,
@@ -22,14 +22,14 @@ namespace SignalBox.Core.Workflows
                                    ITrackedUserSystemMapStore systemMapStore,
                                    ICustomerStore trackedUserStore,
                                    IDateTimeProvider dateTimeProvider,
-                                   ItemsRecommenderInvokationWorkflows itemsRecommenderWorkflows)
+                                   PromotionsCampaignInvokationWorkflows itemsRecommenderWorkflows)
         : base(logger, hubspotService, hubspotCreds, integratedSystemStore, trackedUserStore, dateTimeProvider)
         {
             this.systemMapStore = systemMapStore;
             this.itemsRecommenderWorkflows = itemsRecommenderWorkflows;
         }
 
-        public async Task<HubspotDataPushReport> RecommendForAllHubspotContacts(IntegratedSystem system, ItemsRecommender recommender)
+        public async Task<HubspotDataPushReport> RecommendForAllHubspotContacts(IntegratedSystem system, PromotionsCampaign recommender)
         {
             if (system.SystemType != IntegratedSystemTypes.Hubspot)
             {
@@ -61,11 +61,11 @@ namespace SignalBox.Core.Workflows
             return report;
         }
 
-        private async Task<bool> SetRecommendationProperty(IntegratedSystem system, ItemsRecommender recommender, Customer tu)
+        private async Task<bool> SetRecommendationProperty(IntegratedSystem system, PromotionsCampaign recommender, Customer tu)
         {
             if (await systemMapStore.MapExists(tu, system))
             {
-                var recommendationResponse = await itemsRecommenderWorkflows.InvokeItemsRecommender(recommender, new ItemsModelInputDto(tu.CommonId));
+                var recommendationResponse = await itemsRecommenderWorkflows.InvokePromotionsCampaign(recommender, new ItemsModelInputDto(tu.CommonId));
                 var topItemId = recommendationResponse.ScoredItems.OrderByDescending(_ => _.Score).FirstOrDefault().ItemCommonId;
                 var map = await systemMapStore.FindMap(tu, system);
                 await hubspotService.SetPropertyValue(system, new HubspotContactPropertyValue(map.UserId, recommender.CommonId, topItemId));

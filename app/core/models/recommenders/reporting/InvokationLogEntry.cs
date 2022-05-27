@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using SignalBox.Core.Recommendations;
 
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
     public class InvokationLogEntry : Entity
     {
         protected InvokationLogEntry() { }
-        public InvokationLogEntry(RecommenderEntityBase recommender, DateTimeOffset started)
+        public InvokationLogEntry(CampaignEntityBase recommender, DateTimeOffset started)
         {
             RecommenderId = recommender.Id;
             RecommenderType = recommender.GetType().Name;

@@ -3,7 +3,7 @@ using SignalBox.Core;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {

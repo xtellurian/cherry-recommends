@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
@@ -12,7 +12,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, _ => _.Audiences)
         { }
 
-        public async Task<EntityResult<Audience>> GetAudience(RecommenderEntityBase recommender)
+        public async Task<EntityResult<Audience>> GetAudience(CampaignEntityBase recommender)
         {
             var entity = await QuerySet.Include(_ => _.Segments).FirstOrDefaultAsync(_ => _.RecommenderId == recommender.Id);
             var result = new EntityResult<Audience>(entity);

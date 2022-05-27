@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {
     public interface IRecommenderModelClient<TOutput> where TOutput : IModelOutput
     {
-        Task<TOutput> Invoke(IRecommender recommender, RecommendingContext context, IModelInput input);
+        Task<TOutput> Invoke(ICampaign campaign, RecommendingContext context, IModelInput input);
     }
 }

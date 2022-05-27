@@ -24,7 +24,7 @@ namespace SignalBox.Infrastructure.ML
             this.itemStore = itemStore;
         }
 
-        public Task<IRecommenderModelClient<TOutput>> GetClient<TOutput>(IRecommender recommender)
+        public Task<IRecommenderModelClient<TOutput>> GetClient<TOutput>(ICampaign recommender)
             where TOutput : IModelOutput
         {
             var model = recommender.ModelRegistration;
@@ -53,12 +53,12 @@ namespace SignalBox.Infrastructure.ML
             }
         }
 
-        public Task<IRecommenderModelRewardClient> GetRewardClient(IRecommender recommender)
+        public Task<IRecommenderModelRewardClient> GetRewardClient(ICampaign recommender)
         {
             return Task.FromResult((IRecommenderModelRewardClient)new DefaultRewardClient());
         }
 
-        public Task<IRecommenderModelClient<TOutput>> GetUnregisteredClient<TOutput>(IRecommender recommender)
+        public Task<IRecommenderModelClient<TOutput>> GetUnregisteredClient<TOutput>(ICampaign recommender)
             where TOutput : IModelOutput
         {
             if (typeof(TOutput) == typeof(ParameterSetRecommenderModelOutputV1))
@@ -71,7 +71,7 @@ namespace SignalBox.Infrastructure.ML
             }
         }
 
-        public Task<IRecommenderModelClient<TOutput>> GetUnregisteredItemsRecommenderClient<TOutput>(IRecommender recommender) where TOutput : IModelOutput
+        public Task<IRecommenderModelClient<TOutput>> GetUnregisteredItemsRecommenderClient<TOutput>(ICampaign recommender) where TOutput : IModelOutput
         {
             return Task.FromResult((IRecommenderModelClient<TOutput>)new RandomItemsRecommender(itemStore));
         }

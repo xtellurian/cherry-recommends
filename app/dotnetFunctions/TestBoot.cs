@@ -11,7 +11,7 @@ namespace dotnetFunctions
 {
     public class TestBoot
     {
-        private readonly IItemsRecommenderStore itemsRecommenderStore;
+        private readonly IPromotionsCampaignStore itemsRecommenderStore;
         private readonly ITenantProvider tenantProvider;
 
         // add all project dependencies to this ctor
@@ -20,7 +20,7 @@ namespace dotnetFunctions
                         CustomerWorkflows customerWorkflows,
                         CustomerEventsWorkflows customerEventsWorkflows,
                         HubspotPushWorkflows hubspotPushWorkflows,
-                        IItemsRecommenderStore itemsRecommenderStore,
+                        IPromotionsCampaignStore itemsRecommenderStore,
                         IQueueMessagesFileStore queueMessagesFileStore,
                         ITenantStore tenantStore,
                         ITenantMembershipStore membershipStore,

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Recommendations
 {
@@ -8,7 +8,7 @@ namespace SignalBox.Core.Recommendations
     {
         protected RecommendationCorrelator()
         { }
-        public RecommendationCorrelator(RecommenderEntityBase recommender)
+        public RecommendationCorrelator(CampaignEntityBase recommender)
         {
             this.RecommenderId = recommender.Id;
             this.Recommender = recommender;
@@ -17,7 +17,7 @@ namespace SignalBox.Core.Recommendations
         }
 
         public long? RecommenderId { get; set; }
-        public RecommenderEntityBase? Recommender { get; set; }
+        public CampaignEntityBase? Recommender { get; set; }
         public long? ModelRegistrationId { get; set; }
         public ModelRegistration? ModelRegistration { get; set; }
     }

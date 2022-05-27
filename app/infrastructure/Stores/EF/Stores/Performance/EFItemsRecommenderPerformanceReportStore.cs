@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SignalBox.Core;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
@@ -14,7 +14,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, (c) => c.ItemsRecommenderPerformanceReports)
         { }
 
-        public async Task<IEnumerable<ItemsRecommenderPerformanceReport>> ReadForRecommender(ItemsRecommender recommender)
+        public async Task<IEnumerable<ItemsRecommenderPerformanceReport>> ReadForRecommender(PromotionsCampaign recommender)
         {
             if (!await HasReport(recommender))
             {
@@ -27,7 +27,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .ToListAsync();
         }
 
-        public async Task<ItemsRecommenderPerformanceReport> ReadLatestForRecommender(ItemsRecommender recommender)
+        public async Task<ItemsRecommenderPerformanceReport> ReadLatestForRecommender(PromotionsCampaign recommender)
         {
             if (!await HasReport(recommender))
             {
@@ -40,7 +40,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .FirstAsync();
         }
 
-        public async Task<bool> HasReport(ItemsRecommender recommender)
+        public async Task<bool> HasReport(PromotionsCampaign recommender)
         {
             return await QuerySet.AnyAsync(_ => _.RecommenderId == recommender.Id);
         }

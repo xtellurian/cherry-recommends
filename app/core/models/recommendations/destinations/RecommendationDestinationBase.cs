@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using SignalBox.Core.Integrations.Custom;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Recommendations.Destinations
 {
@@ -15,9 +15,9 @@ namespace SignalBox.Core.Recommendations.Destinations
             ConnectedSystem = null!;
         }
 
-        public RecommendationDestinationBase(RecommenderEntityBase recommender, IntegratedSystem connectedSystem)
+        public RecommendationDestinationBase(CampaignEntityBase campaign, IntegratedSystem connectedSystem)
         {
-            Recommender = recommender;
+            Recommender = campaign;
             ConnectedSystem = connectedSystem;
             ConnectedSystemId = connectedSystem.Id;
 
@@ -49,7 +49,7 @@ namespace SignalBox.Core.Recommendations.Destinations
 
         public abstract IDictionary<string, string>? Properties { get; }
         public abstract string DestinationType { get; }
-        public RecommenderEntityBase Recommender { get; set; }
+        public CampaignEntityBase Recommender { get; set; }
         public DestinationTrigger? Trigger { get; set; }
 
         public virtual long ConnectedSystemId { get; set; }

@@ -1,9 +1,9 @@
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
     public class ChooseSegmentArgumentRule : ArgumentRule
     {
         protected ChooseSegmentArgumentRule() { }
-        public ChooseSegmentArgumentRule(RecommenderEntityBase campaign,
+        public ChooseSegmentArgumentRule(CampaignEntityBase campaign,
                                            CampaignArgument argument,
                                            Segment segment,
                                            string argumentValue) : base(campaign, argument)

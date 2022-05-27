@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using SignalBox.Core.Recommendations;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {
@@ -35,7 +35,7 @@ namespace SignalBox.Core
 
         // required property for a many to many relationship
         [JsonIgnore]
-        public ICollection<ItemsRecommender> Recommenders { get; set; } = null!;
+        public ICollection<PromotionsCampaign> Recommenders { get; set; } = null!;
         // required property for a many to many relationship
         [JsonIgnore]
         public ICollection<ItemsRecommendation> Recommendations { get; set; } = null!;

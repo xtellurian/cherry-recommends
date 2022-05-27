@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Workflows;
 
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
-    public class RewardingContext : RecommenderContextBase
+    public class RewardingContext : CampaignContextBase
     {
         public RewardingContext(ILogger<IWorkflow> logger) : base(logger)
         {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure
 {
@@ -16,10 +16,10 @@ namespace SignalBox.Infrastructure
         {
             this.itemStore = itemStore;
         }
-        public async Task<ItemsRecommenderModelOutputV1> Invoke(IRecommender recommender, RecommendingContext recommendingContext, IModelInput input)
+        public async Task<ItemsRecommenderModelOutputV1> Invoke(ICampaign recommender, RecommendingContext recommendingContext, IModelInput input)
         {
             var random = new Random();
-            var itemsRecommender = (ItemsRecommender)recommender;
+            var itemsRecommender = (PromotionsCampaign)recommender;
             var items = new List<RecommendableItem>();
             if (itemsRecommender.Items == null || !itemsRecommender.Items.Any())
             {
@@ -40,7 +40,7 @@ namespace SignalBox.Infrastructure
             };
         }
 
-        public Task Reward(IRecommender recommender, RewardingContext context)
+        public Task Reward(ICampaign recommender, RewardingContext context)
         {
             context.Logger.LogWarning("{type} cannot be rewarded", this.GetType());
             return Task.CompletedTask;

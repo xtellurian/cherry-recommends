@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
     public abstract class TriggerBase
     {

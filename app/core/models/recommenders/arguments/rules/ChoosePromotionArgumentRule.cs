@@ -1,9 +1,9 @@
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
     public class ChoosePromotionArgumentRule : ArgumentRule
     {
         protected ChoosePromotionArgumentRule() { }
-        public ChoosePromotionArgumentRule(RecommenderEntityBase campaign,
+        public ChoosePromotionArgumentRule(CampaignEntityBase campaign,
                                            CampaignArgument argument,
                                            RecommendableItem promotion,
                                            string argumentValue) : base(campaign, argument)

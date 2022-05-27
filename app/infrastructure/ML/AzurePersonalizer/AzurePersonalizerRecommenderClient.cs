@@ -5,7 +5,7 @@
 // using Microsoft.Azure.CognitiveServices.Personalizer;
 // using Microsoft.Azure.CognitiveServices.Personalizer.Models;
 // using SignalBox.Core;
-// using SignalBox.Core.Recommenders;
+// using SignalBox.Core.Campaigns;
 
 // namespace SignalBox.Infrastructure.ML.Azure
 // {

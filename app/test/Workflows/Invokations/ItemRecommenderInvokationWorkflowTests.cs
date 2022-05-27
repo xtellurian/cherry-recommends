@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using SignalBox.Core;
 using SignalBox.Core.Recommendations;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 using SignalBox.Core.Workflows;
 using SignalBox.Infrastructure.Services;
 using Xunit;
@@ -18,10 +18,10 @@ namespace SignalBox.Test.Workflows
 
         private class MockDependencies
         {
-            public Mock<ILogger<ItemsRecommenderInvokationWorkflows>> MockLogger { get; set; } = Utility.MockLogger<ItemsRecommenderInvokationWorkflows>();
+            public Mock<ILogger<PromotionsCampaignInvokationWorkflows>> MockLogger { get; set; } = Utility.MockLogger<PromotionsCampaignInvokationWorkflows>();
             public Mock<IStorageContext> MockContext { get; set; } = new Mock<IStorageContext>();
             public IDateTimeProvider DateTimeProvider { get; set; } = new SystemDateTimeProvider();
-            public Mock<IRecommendationCache<ItemsRecommender, ItemsRecommendation>> MockRecommendationCache { get; set; } = new Mock<IRecommendationCache<ItemsRecommender, ItemsRecommendation>>();
+            public Mock<IRecommendationCache<PromotionsCampaign, ItemsRecommendation>> MockRecommendationCache { get; set; } = new Mock<IRecommendationCache<PromotionsCampaign, ItemsRecommendation>>();
             public Mock<IRecommenderModelClientFactory> MockRecommenderModelClientFactory { get; set; } = new Mock<IRecommenderModelClientFactory>();
             public Mock<ICustomerWorkflow> MockCustomerWorkflow { get; set; } = new Mock<ICustomerWorkflow>();
             public Mock<IBusinessWorkflow> MockBusinessWorkflow { get; set; } = new Mock<IBusinessWorkflow>();
@@ -31,9 +31,9 @@ namespace SignalBox.Test.Workflows
             public Mock<IRecommendationCorrelatorStore> MockCorrelatorStore =>
                 new Mock<IRecommendationCorrelatorStore>()
                 .WithContext<Mock<IRecommendationCorrelatorStore>, IRecommendationCorrelatorStore, RecommendationCorrelator>(MockContext.Object);
-            public Mock<IItemsRecommenderStore> MockItemsRecommenderStore =>
-                new Mock<IItemsRecommenderStore>()
-                .WithContext<Mock<IItemsRecommenderStore>, IItemsRecommenderStore, ItemsRecommender>(MockContext.Object);
+            public Mock<IPromotionsCampaignStore> MockItemsRecommenderStore =>
+                new Mock<IPromotionsCampaignStore>()
+                .WithContext<Mock<IPromotionsCampaignStore>, IPromotionsCampaignStore, PromotionsCampaign>(MockContext.Object);
             public Mock<IItemsRecommendationStore> MockItemsRecommendationStore { get; set; } = new Mock<IItemsRecommendationStore>();
             public Mock<IAudienceStore> MockAudienceStore { get; set; } = new Mock<IAudienceStore>();
             public Mock<IInternalOptimiserClientFactory> MockInternalOptimiserClientFactory { get; set; } = new Mock<IInternalOptimiserClientFactory>();
@@ -45,7 +45,7 @@ namespace SignalBox.Test.Workflows
                .With<IHistoricCustomerMetricStore, HistoricCustomerMetric>(MockHistoricCustomerMetricStore)
                .With<IRecommendableItemStore, RecommendableItem>(MockRecommendableItemStore)
                .With<IRecommendationCorrelatorStore, RecommendationCorrelator>(MockCorrelatorStore)
-               .With<IItemsRecommenderStore, ItemsRecommender>(MockItemsRecommenderStore)
+               .With<IPromotionsCampaignStore, PromotionsCampaign>(MockItemsRecommenderStore)
                .With<IItemsRecommendationStore, ItemsRecommendation>(MockItemsRecommendationStore)
                .With<IAudienceStore, Audience>(MockAudienceStore)
                .With<IOfferStore, Offer>(MockOfferStore)
@@ -53,13 +53,13 @@ namespace SignalBox.Test.Workflows
         }
 
         [Theory]
-        [InlineData(null, "business", PromotionRecommenderTargetTypes.Customer)]
-        [InlineData("customer", null, PromotionRecommenderTargetTypes.Business)]
-        public async Task InvokeForWrongTarget_Throws(string? customerId, string? businessId, PromotionRecommenderTargetTypes targetType)
+        [InlineData(null, "business", PromotionCampaignTargetTypes.Customer)]
+        [InlineData("customer", null, PromotionCampaignTargetTypes.Business)]
+        public async Task InvokeForWrongTarget_Throws(string? customerId, string? businessId, PromotionCampaignTargetTypes targetType)
         {
 
             var deps = new MockDependencies();
-            var sut = new ItemsRecommenderInvokationWorkflows(
+            var sut = new PromotionsCampaignInvokationWorkflows(
                 deps.MockLogger.Object,
                 deps.DateTimeProvider,
                 deps.MockRecommendationCache.Object,
@@ -77,7 +77,7 @@ namespace SignalBox.Test.Workflows
             var baseline = new RecommendableItem("item1", "Item 1", 1, 1, BenefitType.Percent, 1, PromotionType.Discount, null);
             var other = new RecommendableItem("item2", "Item 2", 1, 1, BenefitType.Percent, 1, PromotionType.Discount, null);
             var allItems = new List<RecommendableItem> { baseline, other };
-            var recommender = new ItemsRecommender("recommenderId", "Recomender", baseline, allItems, null, null, null)
+            var recommender = new PromotionsCampaign("recommenderId", "Recomender", baseline, allItems, null, null, null)
             {
                 TargetType = targetType
             };
@@ -87,14 +87,14 @@ namespace SignalBox.Test.Workflows
                 BusinessId = businessId
             };
             // act
-            await Assert.ThrowsAsync<BadRequestException>(() => sut.InvokeItemsRecommender(recommender, input));
+            await Assert.ThrowsAsync<BadRequestException>(() => sut.InvokePromotionsCampaign(recommender, input));
         }
 
         [Fact]
         public async Task DisabledRecommender_OnInvoked_Throws()
         {
             var deps = new MockDependencies();
-            var sut = new ItemsRecommenderInvokationWorkflows(
+            var sut = new PromotionsCampaignInvokationWorkflows(
                 deps.MockLogger.Object,
                 deps.DateTimeProvider,
                 deps.MockRecommendationCache.Object,
@@ -112,10 +112,10 @@ namespace SignalBox.Test.Workflows
             var baseline = new RecommendableItem("item1", "Item 1", 1, 1, BenefitType.Percent, 1, PromotionType.Discount, null);
             var other = new RecommendableItem("item2", "Item 2", 1, 1, BenefitType.Percent, 1, PromotionType.Discount, null);
             var allItems = new List<RecommendableItem> { baseline, other };
-            var recommender = new ItemsRecommender("recommenderId", "Recomender", baseline, allItems, null, null, null)
+            var recommender = new PromotionsCampaign("recommenderId", "Recomender", baseline, allItems, null, null, null)
             {
-                TargetType = PromotionRecommenderTargetTypes.Customer,
-                Settings = new RecommenderSettings
+                TargetType = PromotionCampaignTargetTypes.Customer,
+                Settings = new CampaignSettings
                 {
                     Enabled = false
                 }
@@ -125,14 +125,14 @@ namespace SignalBox.Test.Workflows
                 CustomerId = "1234",
             };
             // act
-            await Assert.ThrowsAsync<RecommenderInvokationException>(() => sut.InvokeItemsRecommender(recommender, input));
+            await Assert.ThrowsAsync<RecommenderInvokationException>(() => sut.InvokePromotionsCampaign(recommender, input));
         }
 
         [Fact]
         public async Task ArgumentPromotionRule_ReturnsPromotion()
         {
             var deps = new MockDependencies();
-            var sut = new ItemsRecommenderInvokationWorkflows(
+            var sut = new PromotionsCampaignInvokationWorkflows(
                 deps.MockLogger.Object,
                 deps.DateTimeProvider,
                 deps.MockRecommendationCache.Object,
@@ -150,7 +150,7 @@ namespace SignalBox.Test.Workflows
             deps.MockItemsRecommendationStore.SetupStoreCreate<Mock<IItemsRecommendationStore>, IItemsRecommendationStore, ItemsRecommendation>();
             deps.MockOfferStore.SetupStoreCreate<Mock<IOfferStore>, IOfferStore, Offer>();
             deps.MockAudienceStore.SetupStoreCreate<Mock<IAudienceStore>, IAudienceStore, Audience>();
-            deps.MockAudienceStore.Setup(_ => _.GetAudience(It.IsAny<RecommenderEntityBase>())).ReturnsAsync(new EntityResult<Audience>(null));
+            deps.MockAudienceStore.Setup(_ => _.GetAudience(It.IsAny<CampaignEntityBase>())).ReturnsAsync(new EntityResult<Audience>(null));
             deps.MockCustomerWorkflow
                 .Setup(_ => _.CreateOrUpdate(It.IsAny<PendingCustomer>(), It.IsAny<bool>()))
                 .ReturnsAsync((PendingCustomer p, bool b) => p.ToCoreRepresentation());
@@ -163,10 +163,10 @@ namespace SignalBox.Test.Workflows
             var argCommonId = Utility.RandomString();
             var argValue = Utility.RandomString();
             var argument = new CampaignArgument(argCommonId, ArgumentTypes.Categorical, false);
-            var campaign = new ItemsRecommender("recommenderId", "Recomender", baseline, allItems, null, null, null)
+            var campaign = new PromotionsCampaign("recommenderId", "Recomender", baseline, allItems, null, null, null)
             {
-                TargetType = PromotionRecommenderTargetTypes.Customer,
-                Settings = new RecommenderSettings
+                TargetType = PromotionCampaignTargetTypes.Customer,
+                Settings = new CampaignSettings
                 {
                     ThrowOnBadInput = true
                 },
@@ -184,7 +184,7 @@ namespace SignalBox.Test.Workflows
                 }
             };
             // act
-            var recommendation = await sut.InvokeItemsRecommender(campaign, input);
+            var recommendation = await sut.InvokePromotionsCampaign(campaign, input);
 
             Assert.Equal(toRecommend, recommendation.ScoredItems.First().Item);
         }

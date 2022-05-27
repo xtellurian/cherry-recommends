@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
     public class PerformanceByItem
     {

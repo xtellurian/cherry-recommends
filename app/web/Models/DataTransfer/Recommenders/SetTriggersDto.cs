@@ -1,4 +1,4 @@
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 #nullable enable
 namespace SignalBox.Web.Dto

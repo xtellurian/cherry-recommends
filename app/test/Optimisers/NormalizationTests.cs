@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SignalBox.Core;
 using SignalBox.Core.Optimisers;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 using Xunit;
 
 namespace SignalBox.Test.Optimisers
@@ -17,7 +17,7 @@ namespace SignalBox.Test.Optimisers
         public void EmptyRecommenderPromotions_Throws()
         {
             // arrange
-            var recommender = new ItemsRecommender(RndStr,
+            var recommender = new PromotionsCampaign(RndStr,
                                                    RndStr,
                                                    baselineItem: null,
                                                    promotions: Enumerable.Empty<RecommendableItem>().ToList(),
@@ -42,7 +42,7 @@ namespace SignalBox.Test.Optimisers
                 promotions.Add(EntityFactory.Promotion().WithId());
             }
             var baselinePromotion = promotions.First();
-            var recommender = new ItemsRecommender(RndStr, RndStr, promotions.First(), promotions, null, null, null, 1);
+            var recommender = new PromotionsCampaign(RndStr, RndStr, promotions.First(), promotions, null, null, null, 1);
 
             var sut = new PromotionOptimiser(recommender);
 
@@ -117,7 +117,7 @@ namespace SignalBox.Test.Optimisers
                 promotions.Add(EntityFactory.Promotion().WithId());
             }
             var baselinePromotion = promotions.First();
-            var recommender = new ItemsRecommender(RndStr, RndStr, promotions.First(), promotions, null, null, null, 1);
+            var recommender = new PromotionsCampaign(RndStr, RndStr, promotions.First(), promotions, null, null, null, 1);
 
             var sut = new PromotionOptimiser(recommender);
             sut = sut.InitialiseWeights(recommender);

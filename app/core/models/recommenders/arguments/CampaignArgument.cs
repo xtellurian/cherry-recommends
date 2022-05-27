@@ -1,4 +1,4 @@
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
     public class CampaignArgument : Entity
     {
@@ -24,7 +24,7 @@ namespace SignalBox.Core.Recommenders
         }
 
         public long CampaignId { get; set; }
-        public RecommenderEntityBase? Campaign { get; set; }
+        public CampaignEntityBase? Campaign { get; set; }
         public string CommonId { get; set; } // use commonId for external API consistency
         public ArgumentTypes ArgumentType { get; set; }
         public bool IsRequired { get; set; } = false;

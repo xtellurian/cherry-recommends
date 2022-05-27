@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Moq;
 using SignalBox.Core;
 using SignalBox.Core.Optimisers;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 using SignalBox.Core.Workflows;
 using Xunit;
 
@@ -22,7 +22,7 @@ namespace SignalBox.Test.Workflows
             {
                 baseline, other
             };
-            var recommender = new ItemsRecommender("commonId",
+            var recommender = new PromotionsCampaign("commonId",
                                                    "name",
                                                    baselineItem: baseline,
                                                    promotions,
@@ -35,7 +35,7 @@ namespace SignalBox.Test.Workflows
             var mockStorageContext = Utility.MockStorageContext();
             mockPromotionOptimiserStore.SetupStoreCreate<Mock<IPromotionOptimiserStore>, IPromotionOptimiserStore, PromotionOptimiser>();
             mockPromotionOptimiserStore.WithContext<Mock<IPromotionOptimiserStore>, IPromotionOptimiserStore, PromotionOptimiser>(mockStorageContext.Object);
-            var mockItemsRecommenderStore = new Mock<IItemsRecommenderStore>();
+            var mockItemsRecommenderStore = new Mock<IPromotionsCampaignStore>();
             var sut = new PromotionOptimiserCRUDWorkflow(mockPromotionOptimiserStore.Object, mockItemsRecommenderStore.Object);
 
             // act

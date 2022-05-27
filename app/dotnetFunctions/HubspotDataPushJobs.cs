@@ -14,11 +14,11 @@ namespace SignalBox.Functions
     public class HubspotDataPushJobs
     {
         private readonly HubspotPushWorkflows workflows;
-        private readonly IItemsRecommenderStore itemsRecommenderStore;
+        private readonly IPromotionsCampaignStore itemsRecommenderStore;
         private readonly IIntegratedSystemStore integratedSystemStore;
 
         public HubspotDataPushJobs(HubspotPushWorkflows workflows,
-                                   IItemsRecommenderStore itemsRecommenderStore,
+                                   IPromotionsCampaignStore itemsRecommenderStore,
                                    IIntegratedSystemStore integratedSystemStore)
         {
             this.workflows = workflows;

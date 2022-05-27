@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Optimisers
 {
@@ -10,15 +10,15 @@ namespace SignalBox.Core.Optimisers
         protected PromotionOptimiser()
         { }
 
-        public PromotionOptimiser(ItemsRecommender recommender)
+        public PromotionOptimiser(PromotionsCampaign campaign)
         {
-            RecommenderId = recommender.Id;
-            Recommender = recommender;
+            RecommenderId = campaign.Id;
+            Recommender = campaign;
         }
 
         public long RecommenderId { get; set; }
         [JsonIgnore]
-        public ItemsRecommender Recommender { get; set; } = null!;
+        public PromotionsCampaign Recommender { get; set; } = null!;
         /// <summary>
         /// These are configured as an Owned Entity collection in the database.
         /// </summary>

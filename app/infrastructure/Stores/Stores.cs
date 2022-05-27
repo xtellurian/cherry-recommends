@@ -144,8 +144,8 @@ namespace SignalBox.Infrastructure
             services.AddInterceptedScoped<IEnvironmentStore, EFEnvironmentStore, TimingInterceptor>();
 
             // recommenders
-            services.AddInterceptedScoped<IItemsRecommenderStore, EFItemsRecommenderStore, TimingInterceptor>();
-            services.AddInterceptedScoped<IParameterSetRecommenderStore, EFParameterSetRecommenderStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IPromotionsCampaignStore, EFPromotionsCampaignStore, TimingInterceptor>();
+            services.AddInterceptedScoped<IParameterSetCampaignStore, EFParameterSetCampaignStore, TimingInterceptor>();
 
             services.AddInterceptedScoped<IArgumentRuleStore, EFArgumentRuleStore, TimingInterceptor>();
 

@@ -7,10 +7,10 @@ namespace SignalBox.Infrastructure
 {
     public class InternalOptimiserClientFactory : IInternalOptimiserClientFactory
     {
-        private readonly IItemsRecommenderStore itemsRecommenderStore;
+        private readonly IPromotionsCampaignStore itemsRecommenderStore;
         private readonly ILogger<InternalOptimiserClientFactory> logger;
 
-        public InternalOptimiserClientFactory(IItemsRecommenderStore itemsRecommenderStore,
+        public InternalOptimiserClientFactory(IPromotionsCampaignStore itemsRecommenderStore,
                                               ILogger<InternalOptimiserClientFactory> logger)
         {
             this.itemsRecommenderStore = itemsRecommenderStore;

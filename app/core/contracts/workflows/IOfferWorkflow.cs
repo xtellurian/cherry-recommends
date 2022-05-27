@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using SignalBox.Core.Recommendations;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {
@@ -12,6 +12,6 @@ namespace SignalBox.Core
         /// <param name="customerEvent"></param>
         /// <returns></returns>
         Task UpdateOffer(CustomerEvent customerEvent);
-        Task<Paginated<Offer>> QueryOffers(ItemsRecommender recommender, IPaginate paginate, OfferState? state = null);
+        Task<Paginated<Offer>> QueryOffers(PromotionsCampaign campaign, IPaginate paginate, OfferState? state = null);
     }
 }

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
@@ -23,6 +23,8 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .WithMany()
                 .HasForeignKey(_ => _.BusinessId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Property("CampaignEntityBaseId").HasColumnName("RecommenderEntityBaseId"); // backwards compatibility
         }
     }
 }

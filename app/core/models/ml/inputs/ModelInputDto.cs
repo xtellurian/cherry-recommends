@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 #nullable enable
 namespace SignalBox.Core

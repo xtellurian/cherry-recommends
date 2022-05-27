@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 #nullable enable
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
     public class MetricsChangedTrigger : TriggerBase
     {

@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure.ML.Azure
 {
@@ -19,7 +19,7 @@ namespace SignalBox.Infrastructure.ML.Azure
             base.SetApplicationJsonHeader(this.httpClient);
         }
 
-        public async Task<ParameterSetRecommenderModelOutputV1> Invoke(IRecommender recommender, RecommendingContext recommendingContext, IModelInput input)
+        public async Task<ParameterSetRecommenderModelOutputV1> Invoke(ICampaign recommender, RecommendingContext recommendingContext, IModelInput input)
         {
             string body = null;
             try
@@ -41,7 +41,7 @@ namespace SignalBox.Infrastructure.ML.Azure
             }
         }
 
-        public Task Reward(IRecommender recommender, RewardingContext context)
+        public Task Reward(ICampaign campaign, RewardingContext context)
         {
             context.Logger.LogWarning("{type} cannot be rewarded", this.GetType());
             return Task.CompletedTask;

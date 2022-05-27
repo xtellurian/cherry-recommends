@@ -3,22 +3,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using SignalBox.Core;
 using SignalBox.Core.Optimisers;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure.ML
 {
     public class PromotionsOptimiserClient : IRecommenderModelClient<ItemsRecommenderModelOutputV1>
     {
-        private readonly IItemsRecommenderStore itemsRecommenderStore;
+        private readonly IPromotionsCampaignStore itemsRecommenderStore;
 
-        public PromotionsOptimiserClient(IItemsRecommenderStore itemsRecommenderStore)
+        public PromotionsOptimiserClient(IPromotionsCampaignStore itemsRecommenderStore)
         {
             this.itemsRecommenderStore = itemsRecommenderStore;
         }
-        public async Task<ItemsRecommenderModelOutputV1> Invoke(IRecommender recommender, RecommendingContext context, IModelInput input)
+        public async Task<ItemsRecommenderModelOutputV1> Invoke(ICampaign recommender, RecommendingContext context, IModelInput input)
         {
             // var randomSelector = new WeightedRandomSelector<PromotionOptimiserWeight>();
-            if (recommender is ItemsRecommender itemsRecommender)
+            if (recommender is PromotionsCampaign itemsRecommender)
             {
                 await itemsRecommenderStore.Load(itemsRecommender, _ => _.Optimiser);
                 if (!itemsRecommender.UseOptimiser)

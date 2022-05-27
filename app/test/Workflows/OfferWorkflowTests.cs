@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Moq;
 using SignalBox.Core;
 using SignalBox.Core.Recommendations;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 using SignalBox.Core.Workflows;
 using Xunit;
 
@@ -73,7 +73,7 @@ namespace SignalBox.Test.Workflows
             var customerEvent = new CustomerEvent(
                 customer, "test-event", DateTimeOffset.Now, source,
                 eventKind, "test-event", properties, recommendationCorrelatorId);
-            var recommender = new ItemsRecommender(
+            var recommender = new PromotionsCampaign(
                 "test-recommender", "Test Recommender", RecommendableItem.DefaultRecommendableItem,
                 new RecommendableItem[] { }, null, null, null);
             var recommendingContext = new RecommendingContext(
@@ -149,7 +149,7 @@ namespace SignalBox.Test.Workflows
             var customerEvent = new CustomerEvent(
                 customer, "test-event", DateTimeOffset.Now, source,
                 eventKind, "test-event", properties, recommendationCorrelatorId);
-            var recommender = new ItemsRecommender(
+            var recommender = new PromotionsCampaign(
                 "test-recommender", "Test Recommender", RecommendableItem.DefaultRecommendableItem,
                 new RecommendableItem[] { promotion }, null, null, null);
             var recommendingContext = new RecommendingContext(
@@ -231,7 +231,7 @@ namespace SignalBox.Test.Workflows
             var customerEvent = new CustomerEvent(
                 customer, "test-event", DateTimeOffset.Now, source,
                 EventKinds.Purchase, "test-event", properties, 1);
-            var recommender = new ItemsRecommender(
+            var recommender = new PromotionsCampaign(
                 "test-recommender", "Test Recommender", RecommendableItem.DefaultRecommendableItem,
                 new RecommendableItem[] { promotion }, null, null, null);
             var recommendingContext = new RecommendingContext(

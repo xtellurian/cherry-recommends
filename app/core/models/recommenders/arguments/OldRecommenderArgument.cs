@@ -1,4 +1,4 @@
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
     public class OldRecommenderArgument
     {

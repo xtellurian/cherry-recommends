@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {
@@ -29,6 +29,6 @@ namespace SignalBox.Core
         public DateTimeOffset? LastCompleted { get; set; }
         public abstract IDictionary<string, object>? Properties { get; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public ICollection<RecommenderEntityBase> Recommenders { get; set; } = new List<RecommenderEntityBase>();
+        public ICollection<CampaignEntityBase> Recommenders { get; set; } = new List<CampaignEntityBase>();
     }
 }

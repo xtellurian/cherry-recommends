@@ -39,7 +39,7 @@ export const Recommenders = ({ className, hasItems }) => {
     <>
       <div className={className}>
         <CardSection className="p-4">
-          <Label>Campaignss</Label>
+          <Label>Campaigns</Label>
           {loading && <Spinner />}
           {allRecommenders.map((r) => (
             <RecommenderRow key={r.uniqueId} recommender={r} />

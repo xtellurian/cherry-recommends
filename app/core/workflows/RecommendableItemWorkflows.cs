@@ -6,10 +6,10 @@ namespace SignalBox.Core.Workflows
     public class RecommendableItemWorkflows : IWorkflow
     {
         private readonly IRecommendableItemStore store;
-        private readonly IItemsRecommenderStore recommenderStore;
+        private readonly IPromotionsCampaignStore recommenderStore;
         private readonly IStorageContext storageContext;
 
-        public RecommendableItemWorkflows(IRecommendableItemStore store, IItemsRecommenderStore recommenderStore, IStorageContext storageContext)
+        public RecommendableItemWorkflows(IRecommendableItemStore store, IPromotionsCampaignStore recommenderStore, IStorageContext storageContext)
         {
             this.store = store;
             this.recommenderStore = recommenderStore;

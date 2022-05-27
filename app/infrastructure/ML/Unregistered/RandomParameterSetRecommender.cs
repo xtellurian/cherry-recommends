@@ -4,19 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure
 {
     public class RandomParameterSetRecommender : IRecommenderModelClient<ParameterSetRecommenderModelOutputV1>
     {
-        public Task<ParameterSetRecommenderModelOutputV1> Invoke(IRecommender recommender,
+        public Task<ParameterSetRecommenderModelOutputV1> Invoke(ICampaign recommender,
                                                                  RecommendingContext recommendingContext,
                                                                  IModelInput input)
         {
             // model should be null
 
-            var parameterSetRecommender = (ParameterSetRecommender)recommender;
+            var parameterSetRecommender = (ParameterSetCampaign)recommender;
             var random = new Random();
 
             var output = new ParameterSetRecommenderModelOutputV1
@@ -49,7 +49,7 @@ namespace SignalBox.Infrastructure
             return Task.FromResult(output);
         }
 
-        public Task Reward(IRecommender recommender, RewardingContext context)
+        public Task Reward(ICampaign campaign, RewardingContext context)
         {
             context.Logger.LogWarning("{type} cannot be rewarded", this.GetType());
             return Task.CompletedTask;

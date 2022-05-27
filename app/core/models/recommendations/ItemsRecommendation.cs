@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Recommendations
 {
@@ -10,10 +10,10 @@ namespace SignalBox.Core.Recommendations
         protected ItemsRecommendation()
         { }
 
-        public ItemsRecommendation(ItemsRecommender recommender,
+        public ItemsRecommendation(PromotionsCampaign recommender,
                                     RecommendingContext context,
                                    IEnumerable<ScoredRecommendableItem> items)
-         : base(context.Correlator, RecommenderTypes.Items, context.Trigger)
+         : base(context.Correlator, CampaignTypes.Items, context.Trigger)
         {
             Recommender = recommender;
             RecommenderId = recommender.Id;
@@ -29,7 +29,7 @@ namespace SignalBox.Core.Recommendations
 #nullable enable
         public long? RecommenderId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public ItemsRecommender? Recommender { get; set; }
+        public PromotionsCampaign? Recommender { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Offer? Offer { get; set; }
         [JsonIgnore]

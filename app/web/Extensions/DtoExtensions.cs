@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SignalBox.Core;
 using SignalBox.Core.Metrics;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 using SignalBox.Web.Dto;
 
 #nullable enable
@@ -11,7 +11,7 @@ namespace SignalBox.Web
     public static class DtoExtensions
     {
         public static List<CampaignArgument>? ToCoreRepresentation(
-            this IEnumerable<CreateOrUpdateRecommenderArgument>? dtoArguments)
+            this IEnumerable<CreateOrUpdateCampaignArgument>? dtoArguments)
         {
             return dtoArguments?.Select(a => new CampaignArgument(a.CommonId, a.ArgumentType, a.IsRequired))?.ToList();
         }

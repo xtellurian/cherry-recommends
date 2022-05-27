@@ -28,10 +28,10 @@ namespace SignalBox.Web.Controllers
         private readonly HubspotWorkflows hubspotWorkflows;
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ITrackedUserSystemMapStore systemMapStore;
-        private readonly IParameterSetRecommenderStore parameterSetRecommenderStore;
-        private readonly IItemsRecommenderStore itemsRecommenderStore;
-        private readonly ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation;
-        private readonly ItemsRecommenderInvokationWorkflows itemsRecommenderInvokation;
+        private readonly IParameterSetCampaignStore parameterSetRecommenderStore;
+        private readonly IPromotionsCampaignStore itemsRecommenderStore;
+        private readonly ParameterSetCampaignInvokationWorkflows parameterSetRecommenderInvokation;
+        private readonly PromotionsCampaignInvokationWorkflows itemsRecommenderInvokation;
         private readonly IHistoricCustomerMetricStore customerMetricStore;
 
         public HubspotMetricValueCrmCardsController(ILogger<HubspotMetricValueCrmCardsController> logger,
@@ -42,10 +42,10 @@ namespace SignalBox.Web.Controllers
                                          IOptions<HubspotAppCredentials> hubspotOptions,
                                          IIntegratedSystemStore integratedSystemStore,
                                          ITrackedUserSystemMapStore systemMapStore,
-                                         IParameterSetRecommenderStore parameterSetRecommenderStore,
-                                         IItemsRecommenderStore itemsRecommenderStore,
-                                         ParameterSetRecommenderInvokationWorkflows parameterSetRecommenderInvokation,
-                                         ItemsRecommenderInvokationWorkflows itemsRecommenderInvokation,
+                                         IParameterSetCampaignStore parameterSetRecommenderStore,
+                                         IPromotionsCampaignStore itemsRecommenderStore,
+                                         ParameterSetCampaignInvokationWorkflows parameterSetRecommenderInvokation,
+                                         PromotionsCampaignInvokationWorkflows itemsRecommenderInvokation,
                                          IHistoricCustomerMetricStore customerMetricStore)
                                           : base(logger, deploymentOptions, hasher, hubspotOptions)
         {
@@ -205,7 +205,7 @@ namespace SignalBox.Web.Controllers
                 {
                     CustomerId = customer.CustomerId
                 };
-                return await parameterSetRecommenderInvokation.InvokeParameterSetRecommender(recommender, input);
+                return await parameterSetRecommenderInvokation.InvokeParameterSetCampaign(recommender, input);
             }
             else if (behaviour.ItemsRecommenderId != null)
             {
@@ -214,7 +214,7 @@ namespace SignalBox.Web.Controllers
                 {
                     CustomerId = customer.CustomerId
                 };
-                return await itemsRecommenderInvokation.InvokeItemsRecommender(recommender, input);
+                return await itemsRecommenderInvokation.InvokePromotionsCampaign(recommender, input);
             }
             else
             {

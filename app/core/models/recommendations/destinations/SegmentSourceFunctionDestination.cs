@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Recommendations.Destinations
 {
     public class SegmentSourceFunctionDestination : RecommendationDestinationBase, IWebhookDestination
     {
         protected SegmentSourceFunctionDestination() { }
-        public SegmentSourceFunctionDestination(RecommenderEntityBase recommender, IntegratedSystem connectedSystem, string endpoint)
+        public SegmentSourceFunctionDestination(CampaignEntityBase recommender, IntegratedSystem connectedSystem, string endpoint)
          : base(recommender, connectedSystem)
         {
 

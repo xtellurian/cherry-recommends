@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
 #nullable enable
     public class ParameterBounds

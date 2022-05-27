@@ -3,12 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using SignalBox.Core;
 using SignalBox.Core.Recommendations;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure
 {
     public abstract class SimpleRecommendationCache<TRecommender, TRecommendation> : IRecommendationCache<TRecommender, TRecommendation>
-        where TRecommender : RecommenderEntityBase
+        where TRecommender : CampaignEntityBase
         where TRecommendation : RecommendationEntity
     {
         private readonly IRecommendationStore<TRecommendation> recommendationStore;

@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Recommendations
 {
@@ -8,8 +8,8 @@ namespace SignalBox.Core.Recommendations
         protected ParameterSetRecommendation()
         { }
 
-        public ParameterSetRecommendation(ParameterSetRecommender recommender, RecommendingContext context)
-        : base(context.Correlator, RecommenderTypes.ParameterSet, context.Trigger)
+        public ParameterSetRecommendation(ParameterSetCampaign recommender, RecommendingContext context)
+        : base(context.Correlator, CampaignTypes.ParameterSet, context.Trigger)
         {
             Recommender = recommender;
             Customer = context.Customer;
@@ -18,6 +18,6 @@ namespace SignalBox.Core.Recommendations
 #nullable enable
         public long? RecommenderId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public ParameterSetRecommender? Recommender { get; set; }
+        public ParameterSetCampaign? Recommender { get; set; }
     }
 }

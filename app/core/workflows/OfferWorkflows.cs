@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Recommendations;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Workflows
 {
@@ -111,7 +111,7 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        public async Task<Paginated<Offer>> QueryOffers(ItemsRecommender recommender, IPaginate paginate, OfferState? state = null)
+        public async Task<Paginated<Offer>> QueryOffers(PromotionsCampaign recommender, IPaginate paginate, OfferState? state = null)
         {
             List<Expression<Func<Offer, bool>>> expressions = new List<Expression<Func<Offer, bool>>>();
             Expression<Func<Offer, bool>> predicate = null;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using SignalBox.Core.Recommendations;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Adapters.Hubspot
 {
@@ -63,7 +64,7 @@ namespace SignalBox.Core.Adapters.Hubspot
 
             var properties = cardEntry["properties"] as List<Dictionary<string, string>>;
 
-            if (recommendation.RecommenderType == Recommenders.RecommenderTypes.ParameterSet)
+            if (recommendation.RecommenderType == CampaignTypes.ParameterSet)
             {
                 var parameterRecommendations = recommendation.GetOutput<ParameterSetRecommenderModelOutputV1>().RecommendedParameters;
                 foreach (var kvp in parameterRecommendations)
@@ -76,7 +77,7 @@ namespace SignalBox.Core.Adapters.Hubspot
                 });
                 }
             }
-            else if (recommendation.RecommenderType == Recommenders.RecommenderTypes.Product)
+            else if (recommendation.RecommenderType == CampaignTypes.Product)
             {
                 throw new NotImplementedException("Product Recommenders are no longer supported");
             }

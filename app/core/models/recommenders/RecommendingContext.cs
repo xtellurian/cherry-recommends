@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using SignalBox.Core.Recommendations;
 
 #nullable enable
-namespace SignalBox.Core.Recommenders
+namespace SignalBox.Core.Campaigns
 {
     public class RecommendingContext
     {

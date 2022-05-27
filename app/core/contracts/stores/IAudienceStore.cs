@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {
     public interface IAudienceStore : IEntityStore<Audience>
     {
-        Task<EntityResult<Audience>> GetAudience(RecommenderEntityBase recommender);
+        Task<EntityResult<Audience>> GetAudience(CampaignEntityBase recommender);
         Task<bool> IsCustomerInAudience(Customer customer, Audience audience);
     }
 }

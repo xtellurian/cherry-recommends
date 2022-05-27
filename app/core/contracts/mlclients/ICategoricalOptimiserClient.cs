@@ -5,6 +5,6 @@ namespace SignalBox.Core
 {
     public interface ICategoricalOptimiserClient
     {
-        Task<CategoricalOptimiser> Create(IRecommender recommender);
+        Task<CategoricalOptimiser> Create(ICampaign campaign);
     }
 }

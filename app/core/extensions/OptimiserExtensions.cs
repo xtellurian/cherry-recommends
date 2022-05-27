@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SignalBox.Core.Optimisers;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {
@@ -17,7 +17,7 @@ namespace SignalBox.Core
         /// <param name="recommender"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static PromotionOptimiser InitialiseWeights(this PromotionOptimiser optimiser, ItemsRecommender recommender)
+        public static PromotionOptimiser InitialiseWeights(this PromotionOptimiser optimiser, PromotionsCampaign recommender)
         {
             if (recommender.Items.IsNullOrEmpty())
             {
@@ -44,7 +44,7 @@ namespace SignalBox.Core
         /// <param name="recommender"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static PromotionOptimiser UpdateWeights(this PromotionOptimiser optimiser, ItemsRecommender recommender)
+        public static PromotionOptimiser UpdateWeights(this PromotionOptimiser optimiser, PromotionsCampaign recommender)
         {
             if (recommender.Items.IsNullOrEmpty())
             {

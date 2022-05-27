@@ -4,7 +4,7 @@ using SignalBox.Core.Metrics.Destinations;
 using SignalBox.Core.Integrations.Custom;
 using SignalBox.Core.Recommendations;
 using SignalBox.Core.Recommendations.Destinations;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 using SignalBox.Infrastructure.EntityFramework;
 using SignalBox.Core.Metrics;
 using SignalBox.Core.Segments;
@@ -42,10 +42,10 @@ namespace SignalBox.Infrastructure
         public DbSet<MetricDailyBinValueNumeric> MetricDailyBinNumericValues { get; set; } // DbSet for executing stored procedure
         public DbSet<MetricDailyBinValueString> MetricDailyBinStringValues { get; set; } // DbSet for executing stored procedure
 
-        // recommenders
-        public DbSet<RecommenderEntityBase> Recommenders { get; set; }
-        public DbSet<ParameterSetRecommender> ParameterSetRecommenders { get; set; }
-        public DbSet<ItemsRecommender> ItemsRecommenders { get; set; }
+        // campaigns
+        public DbSet<CampaignEntityBase> Campaigns { get; set; }
+        public DbSet<ParameterSetCampaign> ParameterSetCampaigns { get; set; }
+        public DbSet<PromotionsCampaign> PromotionsCampaigns { get; set; }
 
         // argument rules
         public DbSet<ArgumentRule> ArgumentRules { get; set; }

@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
-using SignalBox.Core.Recommenders;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core
 {
     public interface IRecommenderReportImageWorkflow
     {
-        Task<byte[]> DownloadImage(RecommenderEntityBase recommender);
+        Task<byte[]> DownloadImage(CampaignEntityBase recommender);
     }
 }
