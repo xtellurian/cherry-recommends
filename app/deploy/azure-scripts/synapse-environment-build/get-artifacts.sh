@@ -24,7 +24,7 @@ SqlServerUsername=$(pulumi stack output SqlServerUsername)
 SynapseWorkspaceName=$(pulumi stack output SynapseWorkspaceName)
 SynapseStorageAccountName=$(pulumi stack output SynapseStorageAccountName)
 
-cd ..\deploy\azure-scripts\synapse-environment-build
+cd ../deploy/azure-scripts/synapse-environment-build
 
 echo "Getting Linked Service"
 az synapse linked-service list --workspace-name $SynapseWorkspaceName | jq -r '.[].name' | while read linkedServiceName; do
