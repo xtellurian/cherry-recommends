@@ -8,7 +8,7 @@ interface ItemsRecommendationsRequest extends PaginatedEntityRequest {
 export declare const fetchItemsRecommendationsAsync: ({ token, page, pageSize, id, }: ItemsRecommendationsRequest) => Promise<any>;
 export declare const deleteItemsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
 interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
-    payload: components["schemas"]["CreatePromotionsRecommender"];
+    payload: components["schemas"]["CreatePromotionsCampaign"];
 }
 export declare const createItemsRecommenderAsync: ({ token, payload, useInternalId, }: CreateItemsRecommenderRequest) => Promise<any>;
 export declare const fetchItemsAsync: ({ token, id }: EntityRequest) => Promise<any>;
@@ -92,7 +92,7 @@ interface SetLearningMetricsRequest extends EntityRequest {
     metricIds: string[];
 }
 export declare const setLearningMetricsAsync: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest) => Promise<any>;
-declare type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
+declare type RecommenderStatistics = components["schemas"]["CampaignStatistics"];
 export declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
 export declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
 declare type PerformanceResponse = components["schemas"]["ItemsRecommenderPerformanceReport"];

@@ -17,9 +17,11 @@ import * as modelRegistrations from "./api/modelRegistrationsApi";
 import * as models from "./api/models/index";
 import * as parameters from "./api/parametersApi";
 import * as parameterSetRecommenders from "./api/recommenders/parameterSetRecommendersApi";
+import * as parameterSetCampaigns from "./api/campaigns/parameterSetCampaignsApi";
 import * as profile from "./api/profileApi";
 import * as itemsRecommenders from "./api/recommenders/itemsRecommendersApi";
 import * as promotionsRecommenders from "./api/recommenders/promotionsRecommendersApi";
+import * as promotionsCampaigns from "./api/campaigns/promotionsCampaignsApi";
 import * as reactConfig from "./api/reactConfigApi";
 import * as recommendableItems from "./api/recommendableItemsApi";
 import * as promotions from "./api/promotionsApi";
@@ -55,12 +57,14 @@ export {
   integratedSystems,
   itemsRecommenders,
   promotionsRecommenders,
+  promotionsCampaigns,
   metrics,
   metricGenerators,
   modelRegistrations,
   models,
   parameters,
   parameterSetRecommenders,
+  parameterSetCampaigns,
   profile,
   reactConfig,
   recommendableItems,

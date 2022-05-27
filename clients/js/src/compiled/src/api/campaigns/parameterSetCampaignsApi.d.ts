@@ -1,8 +1,8 @@
 import { components } from "../../model/api";
 import { AuthenticatedRequest, EntityRequest, EntitySearchRequest, PaginatedEntityRequest, PaginatedRequest } from "../../interfaces";
-export declare const fetchParameterSetRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
-export declare const fetchParameterSetRecommenderAsync: ({ token, id, searchTerm, }: EntitySearchRequest) => Promise<any>;
-interface CreateParameterSetRecommenderRequest extends AuthenticatedRequest {
+export declare const fetchParameterSetCampaignsAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
+export declare const fetchParameterSetCampaignAsync: ({ token, id, searchTerm, }: EntitySearchRequest) => Promise<any>;
+interface CreateParameterSetCampaignRequest extends AuthenticatedRequest {
     payload: {
         name: string;
         commonId: string;
@@ -12,16 +12,16 @@ interface CreateParameterSetRecommenderRequest extends AuthenticatedRequest {
         arguments: components["schemas"]["CreateOrUpdateCampaignArgument"][];
     };
 }
-export declare const createParameterSetRecommenderAsync: ({ token, payload, }: CreateParameterSetRecommenderRequest) => Promise<any>;
-export declare const deleteParameterSetRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+export declare const createParameterSetCampaignAsync: ({ token, payload, }: CreateParameterSetCampaignRequest) => Promise<any>;
+export declare const deleteParameterSetCampaignAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 export declare const fetchParameterSetRecommendationsAsync: ({ token, page, pageSize, id, }: PaginatedEntityRequest) => Promise<any>;
 declare type LinkRegisteredModelRequest = EntityRequest & components["schemas"]["LinkModel"];
 export declare const createLinkRegisteredModelAsync: ({ token, id, modelId, }: LinkRegisteredModelRequest) => Promise<any>;
 export declare const fetchLinkedRegisteredModelAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-interface InvokeParameterSetRecommenderRequest extends EntityRequest {
+interface InvokeParameterSetCampaignRequest extends EntityRequest {
     input: components["schemas"]["ModelInputDto"];
 }
-export declare const invokeParameterSetRecommenderAsync: ({ token, id, input, }: InvokeParameterSetRecommenderRequest) => Promise<any>;
+export declare const invokeParameterSetCampaignAsync: ({ token, id, input, }: InvokeParameterSetCampaignRequest) => Promise<any>;
 export declare const fetchInvokationLogsAsync: ({ id, token, page, pageSize, }: PaginatedEntityRequest) => Promise<any>;
 export declare const fetchTargetVariablesAsync: ({ id, token, name }: any) => Promise<any>;
 export declare const createTargetVariableAsync: ({ id, token, targetVariableValue, }: any) => Promise<any>;
@@ -60,7 +60,7 @@ interface SetLearningMetricsRequest extends EntityRequest {
     metricIds: string[];
 }
 export declare const setLearningMetricsAsync: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest) => Promise<any>;
-declare type RecommenderStatistics = components["schemas"]["CampaignStatistics"];
-export declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
+declare type CampaignStatistics = components["schemas"]["CampaignStatistics"];
+export declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<CampaignStatistics>;
 export declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
 export {};

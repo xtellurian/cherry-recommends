@@ -1,16 +1,16 @@
 import { components } from "../../model/api";
 import { PaginatedRequest, EntityRequest, DeleteRequest, AuthenticatedRequest, ModelInput, PaginatedEntityRequest, PromotionsRecommendation } from "../../interfaces";
-export declare const fetchPromotionsRecommendersAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
-export declare const fetchPromotionsRecommenderAsync: ({ token, id, }: EntityRequest) => Promise<any>;
+export declare const fetchPromotionsCampaignsAsync: ({ token, page, }: PaginatedRequest) => Promise<any>;
+export declare const fetchPromotionsCampaignAsync: ({ token, id, }: EntityRequest) => Promise<any>;
 interface PromotionsRecommendationsRequest extends PaginatedEntityRequest {
     page: number;
 }
 export declare const fetchPromotionsRecommendationsAsync: ({ token, page, pageSize, id, }: PromotionsRecommendationsRequest) => Promise<any>;
-export declare const deletePromotionsRecommenderAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
-interface CreatePromotionsRecommenderRequest extends AuthenticatedRequest {
+export declare const deletePromotionsCampaignAsync: ({ token, id, }: DeleteRequest) => Promise<any>;
+interface CreatePromotionsCampaignRequest extends AuthenticatedRequest {
     payload: components["schemas"]["CreatePromotionsCampaign"];
 }
-export declare const createPromotionsRecommenderAsync: ({ token, payload, useInternalId, }: CreatePromotionsRecommenderRequest) => Promise<any>;
+export declare const createPromotionsCampaignAsync: ({ token, payload, useInternalId, }: CreatePromotionsCampaignRequest) => Promise<any>;
 export declare const fetchPromotionsAsync: ({ token, id }: EntityRequest) => Promise<any>;
 declare type Audience = components["schemas"]["Audience"];
 export declare const fetchAudienceAsync: ({ token, id, }: EntityRequest) => Promise<Audience>;
@@ -34,20 +34,20 @@ export declare const getBaselinePromotionAsync: ({ token, id, }: EntityRequest) 
 declare type LinkRegisteredModelRequest = EntityRequest & components["schemas"]["LinkModel"];
 export declare const createLinkRegisteredModelAsync: ({ token, id, modelId, }: LinkRegisteredModelRequest) => Promise<any>;
 export declare const fetchLinkedRegisteredModelAsync: ({ token, id, }: EntityRequest) => Promise<any>;
-interface InvokePromotionRecommenderRequest extends EntityRequest {
+interface InvokePromotionCampaignRequest extends EntityRequest {
     input: ModelInput;
 }
-export declare const invokePromotionsRecommenderAsync: ({ token, id, input, }: InvokePromotionRecommenderRequest) => Promise<PromotionsRecommendation>;
+export declare const invokePromotionsCampaignAsync: ({ token, id, input, }: InvokePromotionCampaignRequest) => Promise<PromotionsRecommendation>;
 export declare const fetchInvokationLogsAsync: ({ id, token, page, pageSize, }: PaginatedEntityRequest) => Promise<any>;
 export declare const fetchTargetVariablesAsync: ({ id, token, name }: any) => Promise<any>;
 export declare const createTargetVariableAsync: ({ id, token, targetVariableValue, }: any) => Promise<any>;
-interface RecommenderSettings {
+interface CampaignSettings {
     requireConsumptionEvent: boolean;
     throwOnBadInput: boolean;
     recommendationCacheTime: string;
 }
 interface SetSettingsRequest extends EntityRequest {
-    settings: RecommenderSettings;
+    settings: CampaignSettings;
 }
 export declare const setSettingsAsync: ({ id, token, settings, }: SetSettingsRequest) => Promise<any>;
 declare type CreateArgument = components["schemas"]["CreateOrUpdateCampaignArgument"];
@@ -113,8 +113,8 @@ interface SetLearningMetricsRequest extends EntityRequest {
     metricIds: string[];
 }
 export declare const setLearningMetricsAsync: ({ id, token, metricIds, useInternalId, }: SetLearningMetricsRequest) => Promise<any>;
-declare type RecommenderStatistics = components["schemas"]["CampaignStatistics"];
-export declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<RecommenderStatistics>;
+declare type CampaignStatistics = components["schemas"]["CampaignStatistics"];
+export declare const fetchStatisticsAsync: ({ id, token, }: EntityRequest) => Promise<CampaignStatistics>;
 export declare const fetchReportImageBlobUrlAsync: ({ id, token, useInternalId, }: EntityRequest) => Promise<any>;
 declare type PerformanceResponse = components["schemas"]["ItemsRecommenderPerformanceReport"];
 interface PerformanceRequest extends EntityRequest {
@@ -136,17 +136,17 @@ interface SetUseOptimiserRequest extends EntityRequest {
     useOptimiser: boolean;
 }
 export declare const setUseOptimiserAsync: ({ token, useInternalId, id, useOptimiser, }: SetUseOptimiserRequest) => Promise<PromotionOptimiser>;
-export declare const fetchRecommenderChannelsAsync: ({ id, token, }: EntityRequest) => Promise<any>;
+export declare const fetchCampaignChannelsAsync: ({ id, token, }: EntityRequest) => Promise<any>;
 declare type Channel = components["schemas"]["ChannelBase"];
-interface AddRecommenderChannelRequest extends EntityRequest {
+interface AddCampaignChannelRequest extends EntityRequest {
     channel: components["schemas"]["AddCampaignChannelDto"];
 }
-export declare const addRecommenderChannelAsync: ({ token, id, channel, }: AddRecommenderChannelRequest) => Promise<Channel>;
-declare type PromotionsRecommenders = components["schemas"]["PromotionsCampaign"];
-interface RemoveRecommenderChannelRequest extends EntityRequest {
+export declare const addCampaignChannelAsync: ({ token, id, channel, }: AddCampaignChannelRequest) => Promise<Channel>;
+declare type PromotionsCampaigns = components["schemas"]["PromotionsCampaign"];
+interface RemoveCampaignChannelRequest extends EntityRequest {
     channelId: number;
 }
-export declare const removeRecommenderChannelAsync: ({ id, token, channelId, }: RemoveRecommenderChannelRequest) => Promise<PromotionsRecommenders>;
+export declare const removeCampaignChannelAsync: ({ id, token, channelId, }: RemoveCampaignChannelRequest) => Promise<PromotionsCampaigns>;
 interface RecommendationRequest extends EntityRequest {
     recommendationId: number;
 }

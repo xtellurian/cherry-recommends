@@ -3756,7 +3756,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ParameterSetRecommenderPaginated"];
+            "application/json": components["schemas"]["ParameterSetCampaignPaginated"];
           };
         };
         /** Bad Request */
@@ -3772,7 +3772,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ParameterSetRecommender"];
+            "application/json": components["schemas"]["ParameterSetCampaign"];
           };
         };
         /** Bad Request */
@@ -3784,14 +3784,115 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreateParameterSetRecommender"];
-          "text/json": components["schemas"]["CreateParameterSetRecommender"];
-          "application/*+json": components["schemas"]["CreateParameterSetRecommender"];
+          "application/json": components["schemas"]["CreateParameterSetCampaign"];
+          "text/json": components["schemas"]["CreateParameterSetCampaign"];
+          "application/*+json": components["schemas"]["CreateParameterSetCampaign"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns": {
+    get: {
+      parameters: {
+        query: {
+          page?: number;
+          pageSize?: number;
+          term?: string;
+          scope?: string;
+          weeksAgo?: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ParameterSetCampaignPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ParameterSetCampaign"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateParameterSetCampaign"];
+          "text/json": components["schemas"]["CreateParameterSetCampaign"];
+          "application/*+json": components["schemas"]["CreateParameterSetCampaign"];
         };
       };
     };
   };
   "/api/recommenders/ParameterSetRecommenders/{id}/ModelRegistration": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ModelRegistration"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ModelRegistration"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["LinkModel"];
+          "text/json": components["schemas"]["LinkModel"];
+          "application/*+json": components["schemas"]["LinkModel"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/ModelRegistration": {
     get: {
       parameters: {
         path: {
@@ -3856,7 +3957,33 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderStatistics"];
+            "application/json": components["schemas"]["CampaignStatistics"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/Statistics": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignStatistics"];
           };
         };
         /** Bad Request */
@@ -3869,6 +3996,39 @@ export interface paths {
     };
   };
   "/api/recommenders/ParameterSetRecommenders/{id}/invoke": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ParameterSetRecommendationDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["ModelInputDto"];
+          "text/json": components["schemas"]["ModelInputDto"];
+          "application/*+json": components["schemas"]["ModelInputDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/invoke": {
     post: {
       parameters: {
         path: {
@@ -3928,7 +4088,62 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/ParameterSetCampaigns/{id}/recommendations": {
+    get: {
+      parameters: {
+        path: {
+          id: number;
+        };
+        query: {
+          page?: number;
+          pageSize?: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ParameterSetRecommendationPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ParameterSetRecommenders/{id}/InvokationLogs": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          page?: number;
+          pageSize?: number;
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["InvokationLogEntryPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/InvokationLogs": {
     get: {
       parameters: {
         path: {
@@ -3967,7 +4182,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderErrorHandling"];
+            "application/json": components["schemas"]["CampaignErrorHandling"];
           };
         };
         /** Bad Request */
@@ -3979,9 +4194,39 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["RecommenderErrorHandling"];
-          "text/json": components["schemas"]["RecommenderErrorHandling"];
-          "application/*+json": components["schemas"]["RecommenderErrorHandling"];
+          "application/json": components["schemas"]["CampaignErrorHandling"];
+          "text/json": components["schemas"]["CampaignErrorHandling"];
+          "application/*+json": components["schemas"]["CampaignErrorHandling"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/ErrorHandling": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignErrorHandling"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CampaignErrorHandling"];
+          "text/json": components["schemas"]["CampaignErrorHandling"];
+          "application/*+json": components["schemas"]["CampaignErrorHandling"];
         };
       };
     };
@@ -3997,7 +4242,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderSettings"];
+            "application/json": components["schemas"]["CampaignSettings"];
           };
         };
         /** Bad Request */
@@ -4018,7 +4263,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderSettings"];
+            "application/json": components["schemas"]["CampaignSettings"];
           };
         };
         /** Bad Request */
@@ -4030,14 +4275,122 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["RecommenderSettingsDto"];
-          "text/json": components["schemas"]["RecommenderSettingsDto"];
-          "application/*+json": components["schemas"]["RecommenderSettingsDto"];
+          "application/json": components["schemas"]["CampaignSettingsDto"];
+          "text/json": components["schemas"]["CampaignSettingsDto"];
+          "application/*+json": components["schemas"]["CampaignSettingsDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/Settings": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignSettings"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignSettings"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CampaignSettingsDto"];
+          "text/json": components["schemas"]["CampaignSettingsDto"];
+          "application/*+json": components["schemas"]["CampaignSettingsDto"];
         };
       };
     };
   };
   "/api/recommenders/ParameterSetRecommenders/{id}/ChoosePromotionArgumentRules": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChoosePromotionArgumentRule"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+          "text/json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+          "application/*+json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/ChoosePromotionArgumentRules": {
     get: {
       parameters: {
         path: {
@@ -4128,7 +4481,98 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/ParameterSetCampaigns/{id}/ChoosePromotionArgumentRules/{ruleId}": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+          "text/json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+          "application/*+json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+        };
+      };
+    };
+  };
   "/api/recommenders/ParameterSetRecommenders/{id}/ChooseSegmentArgumentRules": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChooseSegmentArgumentRule"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+          "text/json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+          "application/*+json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/ChooseSegmentArgumentRules": {
     get: {
       parameters: {
         path: {
@@ -4219,7 +4663,68 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/ParameterSetCampaigns/{id}/ChooseSegmentArgumentRules/{ruleId}": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+          "text/json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+          "application/*+json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+        };
+      };
+    };
+  };
   "/api/recommenders/ParameterSetRecommenders/{id}/ArgumentRules/{ruleId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/ArgumentRules/{ruleId}": {
     delete: {
       parameters: {
         path: {
@@ -4296,14 +4801,122 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreateOrUpdateRecommenderArgument"][];
-          "text/json": components["schemas"]["CreateOrUpdateRecommenderArgument"][];
-          "application/*+json": components["schemas"]["CreateOrUpdateRecommenderArgument"][];
+          "application/json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+          "text/json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+          "application/*+json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/Arguments": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignArgument"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignArgument"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+          "text/json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+          "application/*+json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
         };
       };
     };
   };
   "/api/recommenders/ParameterSetRecommenders/{id}/Destinations": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendationDestinationBase"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendationDestinationBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateDestinationDto"];
+          "text/json": components["schemas"]["CreateDestinationDto"];
+          "application/*+json": components["schemas"]["CreateDestinationDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/Destinations": {
     get: {
       parameters: {
         path: {
@@ -4366,7 +4979,31 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderEntityBase"];
+            "application/json": components["schemas"]["CampaignEntityBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/Destinations/{destinationId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          destinationId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignEntityBase"];
           };
         };
         /** Bad Request */
@@ -4379,6 +5016,63 @@ export interface paths {
     };
   };
   "/api/recommenders/ParameterSetRecommenders/{id}/TriggerCollection": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["TriggerCollection"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["TriggerCollection"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["SetTriggersDto"];
+          "text/json": components["schemas"]["SetTriggersDto"];
+          "application/*+json": components["schemas"]["SetTriggersDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/TriggerCollection": {
     get: {
       parameters: {
         path: {
@@ -4492,7 +5186,121 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/ParameterSetCampaigns/{id}/LearningFeatures": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Metric"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Metric"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["SetLearningMetrics"];
+          "text/json": components["schemas"]["SetLearningMetrics"];
+          "application/*+json": components["schemas"]["SetLearningMetrics"];
+        };
+      };
+    };
+  };
   "/api/recommenders/ParameterSetRecommenders/{id}/LearningMetrics": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Metric"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Metric"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["SetLearningMetrics"];
+          "text/json": components["schemas"]["SetLearningMetrics"];
+          "application/*+json": components["schemas"]["SetLearningMetrics"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/LearningMetrics": {
     get: {
       parameters: {
         path: {
@@ -4571,7 +5379,52 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/ParameterSetCampaigns/{id}/ReportImage": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ParameterSetRecommenders/{id}/Audience": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Audience"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/Audience": {
     get: {
       parameters: {
         path: {
@@ -4638,9 +5491,60 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["AddRecommenderChannelDto"];
-          "text/json": components["schemas"]["AddRecommenderChannelDto"];
-          "application/*+json": components["schemas"]["AddRecommenderChannelDto"];
+          "application/json": components["schemas"]["AddCampaignChannelDto"];
+          "text/json": components["schemas"]["AddCampaignChannelDto"];
+          "application/*+json": components["schemas"]["AddCampaignChannelDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/Channels": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddCampaignChannelDto"];
+          "text/json": components["schemas"]["AddCampaignChannelDto"];
+          "application/*+json": components["schemas"]["AddCampaignChannelDto"];
         };
       };
     };
@@ -4657,7 +5561,31 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderEntityBase"];
+            "application/json": components["schemas"]["CampaignEntityBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/Channels/{channelId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          channelId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignEntityBase"];
           };
         };
         /** Bad Request */
@@ -4683,7 +5611,54 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ParameterSetRecommender"];
+            "application/json": components["schemas"]["ParameterSetCampaign"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          id: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ParameterSetCampaign"];
           };
         };
         /** Bad Request */
@@ -4731,7 +5706,34 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ParameterSetRecommender"];
+            "application/json": components["schemas"]["ParameterSetCampaign"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/name": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          name?: string;
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ParameterSetCampaign"];
           };
         };
         /** Bad Request */
@@ -4744,6 +5746,63 @@ export interface paths {
     };
   };
   "/api/recommenders/ParameterSetRecommenders/{id}/Properties": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": { [key: string]: unknown };
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": { [key: string]: unknown };
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": { [key: string]: unknown };
+          "text/json": { [key: string]: unknown };
+          "application/*+json": { [key: string]: unknown };
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/Properties": {
     get: {
       parameters: {
         path: {
@@ -4871,6 +5930,32 @@ export interface paths {
       };
     };
   };
+  "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PromotionOptimiser"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Weights": {
     post: {
       parameters: {
@@ -4904,7 +5989,74 @@ export interface paths {
       };
     };
   };
+  "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Weights": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PromotionOptimiser"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UpdateWeightDto"][];
+          "text/json": components["schemas"]["UpdateWeightDto"][];
+          "application/*+json": components["schemas"]["UpdateWeightDto"][];
+        };
+      };
+    };
+  };
   "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Weights/{weightId}": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+          weightId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PromotionOptimiser"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UpdateWeightDto"];
+          "text/json": components["schemas"]["UpdateWeightDto"];
+          "application/*+json": components["schemas"]["UpdateWeightDto"];
+        };
+      };
+    };
+  };
+  "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Weights/{weightId}": {
     post: {
       parameters: {
         path: {
@@ -5370,7 +6522,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ItemsRecommender"];
+            "application/json": components["schemas"]["PromotionsCampaign"];
           };
         };
         /** Bad Request */
@@ -5417,7 +6569,54 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ItemsRecommender"];
+            "application/json": components["schemas"]["PromotionsCampaign"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          id: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PromotionsCampaign"];
           };
         };
         /** Bad Request */
@@ -5465,7 +6664,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ItemsRecommenderPaginated"];
+            "application/json": components["schemas"]["PromotionsCampaignPaginated"];
           };
         };
         /** Bad Request */
@@ -5486,7 +6685,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ItemsRecommender"];
+            "application/json": components["schemas"]["PromotionsCampaign"];
           };
         };
         /** Bad Request */
@@ -5498,9 +6697,9 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreatePromotionsRecommender"];
-          "text/json": components["schemas"]["CreatePromotionsRecommender"];
-          "application/*+json": components["schemas"]["CreatePromotionsRecommender"];
+          "application/json": components["schemas"]["CreatePromotionsCampaign"];
+          "text/json": components["schemas"]["CreatePromotionsCampaign"];
+          "application/*+json": components["schemas"]["CreatePromotionsCampaign"];
         };
       };
     };
@@ -5520,7 +6719,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ItemsRecommenderPaginated"];
+            "application/json": components["schemas"]["PromotionsCampaignPaginated"];
           };
         };
         /** Bad Request */
@@ -5541,7 +6740,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ItemsRecommender"];
+            "application/json": components["schemas"]["PromotionsCampaign"];
           };
         };
         /** Bad Request */
@@ -5553,9 +6752,64 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreatePromotionsRecommender"];
-          "text/json": components["schemas"]["CreatePromotionsRecommender"];
-          "application/*+json": components["schemas"]["CreatePromotionsRecommender"];
+          "application/json": components["schemas"]["CreatePromotionsCampaign"];
+          "text/json": components["schemas"]["CreatePromotionsCampaign"];
+          "application/*+json": components["schemas"]["CreatePromotionsCampaign"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns": {
+    get: {
+      parameters: {
+        query: {
+          page?: number;
+          pageSize?: number;
+          term?: string;
+          scope?: string;
+          weeksAgo?: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PromotionsCampaignPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PromotionsCampaign"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreatePromotionsCampaign"];
+          "text/json": components["schemas"]["CreatePromotionsCampaign"];
+          "application/*+json": components["schemas"]["CreatePromotionsCampaign"];
         };
       };
     };
@@ -5618,6 +6872,63 @@ export interface paths {
     };
   };
   "/api/recommenders/PromotionsRecommenders/{id}/DefaultItem": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItem"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItem"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["BaselinePromotionDto"];
+          "text/json": components["schemas"]["BaselinePromotionDto"];
+          "application/*+json": components["schemas"]["BaselinePromotionDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/DefaultItem": {
     get: {
       parameters: {
         path: {
@@ -5788,6 +7099,63 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/BaselineItem": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItem"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItem"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["BaselinePromotionDto"];
+          "text/json": components["schemas"]["BaselinePromotionDto"];
+          "application/*+json": components["schemas"]["BaselinePromotionDto"];
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/BaselinePromotion": {
     get: {
       parameters: {
@@ -5902,6 +7270,63 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/BaselinePromotion": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItem"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItem"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["BaselinePromotionDto"];
+          "text/json": components["schemas"]["BaselinePromotionDto"];
+          "application/*+json": components["schemas"]["BaselinePromotionDto"];
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/ModelRegistration": {
     get: {
       parameters: {
@@ -5948,6 +7373,29 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/ModelRegistration": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ModelRegistration"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/Statistics": {
     get: {
       parameters: {
@@ -5962,7 +7410,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderStatistics"];
+            "application/json": components["schemas"]["CampaignStatistics"];
           };
         };
         /** Bad Request */
@@ -5988,7 +7436,33 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderStatistics"];
+            "application/json": components["schemas"]["CampaignStatistics"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Statistics": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignStatistics"];
           };
         };
         /** Bad Request */
@@ -6034,6 +7508,39 @@ export interface paths {
     };
   };
   "/api/recommenders/PromotionsRecommenders/{id}/invoke": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PromotionsRecommendationDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["ModelInputDto"];
+          "text/json": components["schemas"]["ModelInputDto"];
+          "application/*+json": components["schemas"]["ModelInputDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/invoke": {
     post: {
       parameters: {
         path: {
@@ -6122,6 +7629,34 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/Recommendations": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          page?: number;
+          pageSize?: number;
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ItemsRecommendationPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/Recommendations/{recommendationId}": {
     get: {
       parameters: {
@@ -6149,6 +7684,32 @@ export interface paths {
     };
   };
   "/api/recommenders/PromotionsRecommenders/Recommendations/{recommendationId}": {
+    get: {
+      parameters: {
+        path: {
+          recommendationId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ItemsRecommendation"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/Recommendations/{recommendationId}": {
     get: {
       parameters: {
         path: {
@@ -6203,6 +7764,34 @@ export interface paths {
     };
   };
   "/api/recommenders/PromotionsRecommenders/{id}/Offers": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          page?: number;
+          pageSize?: number;
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["OfferPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Offers": {
     get: {
       parameters: {
         path: {
@@ -6290,6 +7879,65 @@ export interface paths {
     };
   };
   "/api/recommenders/PromotionsRecommenders/{id}/Items": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          page?: number;
+          pageSize?: number;
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItemPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItem"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddPromotionDto"];
+          "text/json": components["schemas"]["AddPromotionDto"];
+          "application/*+json": components["schemas"]["AddPromotionDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Items": {
     get: {
       parameters: {
         path: {
@@ -6466,6 +8114,65 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/Promotions": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          page?: number;
+          pageSize?: number;
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItemPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItem"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddPromotionDto"];
+          "text/json": components["schemas"]["AddPromotionDto"];
+          "application/*+json": components["schemas"]["AddPromotionDto"];
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/Performance/{reportId}": {
     get: {
       parameters: {
@@ -6520,6 +8227,33 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/Performance/{reportId}": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+          reportId: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ItemsRecommenderPerformanceReport"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/UseOptimiser": {
     post: {
       parameters: {
@@ -6534,7 +8268,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ItemsRecommender"];
+            "application/json": components["schemas"]["PromotionsCampaign"];
           };
         };
         /** Bad Request */
@@ -6567,7 +8301,40 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ItemsRecommender"];
+            "application/json": components["schemas"]["PromotionsCampaign"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UseOptimiserDto"];
+          "text/json": components["schemas"]["UseOptimiserDto"];
+          "application/*+json": components["schemas"]["UseOptimiserDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/UseOptimiser": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PromotionsCampaign"];
           };
         };
         /** Bad Request */
@@ -6640,6 +8407,33 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/Items/{itemId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          itemId: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItem"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/Promotions/{itemId}": {
     delete: {
       parameters: {
@@ -6668,6 +8462,33 @@ export interface paths {
     };
   };
   "/api/recommenders/PromotionsRecommenders/{id}/Promotions/{itemId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          itemId: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendableItem"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Promotions/{itemId}": {
     delete: {
       parameters: {
         path: {
@@ -6750,6 +8571,34 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/InvokationLogs": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          page?: number;
+          pageSize?: number;
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["InvokationLogEntryPaginated"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/ErrorHandling": {
     post: {
       parameters: {
@@ -6761,7 +8610,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderErrorHandling"];
+            "application/json": components["schemas"]["CampaignErrorHandling"];
           };
         };
         /** Bad Request */
@@ -6773,9 +8622,9 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["RecommenderErrorHandling"];
-          "text/json": components["schemas"]["RecommenderErrorHandling"];
-          "application/*+json": components["schemas"]["RecommenderErrorHandling"];
+          "application/json": components["schemas"]["CampaignErrorHandling"];
+          "text/json": components["schemas"]["CampaignErrorHandling"];
+          "application/*+json": components["schemas"]["CampaignErrorHandling"];
         };
       };
     };
@@ -6791,7 +8640,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderErrorHandling"];
+            "application/json": components["schemas"]["CampaignErrorHandling"];
           };
         };
         /** Bad Request */
@@ -6803,9 +8652,39 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["RecommenderErrorHandling"];
-          "text/json": components["schemas"]["RecommenderErrorHandling"];
-          "application/*+json": components["schemas"]["RecommenderErrorHandling"];
+          "application/json": components["schemas"]["CampaignErrorHandling"];
+          "text/json": components["schemas"]["CampaignErrorHandling"];
+          "application/*+json": components["schemas"]["CampaignErrorHandling"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/ErrorHandling": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignErrorHandling"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CampaignErrorHandling"];
+          "text/json": components["schemas"]["CampaignErrorHandling"];
+          "application/*+json": components["schemas"]["CampaignErrorHandling"];
         };
       };
     };
@@ -6821,7 +8700,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderSettings"];
+            "application/json": components["schemas"]["CampaignSettings"];
           };
         };
         /** Bad Request */
@@ -6842,7 +8721,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderSettings"];
+            "application/json": components["schemas"]["CampaignSettings"];
           };
         };
         /** Bad Request */
@@ -6854,9 +8733,9 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["RecommenderSettingsDto"];
-          "text/json": components["schemas"]["RecommenderSettingsDto"];
-          "application/*+json": components["schemas"]["RecommenderSettingsDto"];
+          "application/json": components["schemas"]["CampaignSettingsDto"];
+          "text/json": components["schemas"]["CampaignSettingsDto"];
+          "application/*+json": components["schemas"]["CampaignSettingsDto"];
         };
       };
     };
@@ -6872,7 +8751,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderSettings"];
+            "application/json": components["schemas"]["CampaignSettings"];
           };
         };
         /** Bad Request */
@@ -6893,7 +8772,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderSettings"];
+            "application/json": components["schemas"]["CampaignSettings"];
           };
         };
         /** Bad Request */
@@ -6905,9 +8784,60 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["RecommenderSettingsDto"];
-          "text/json": components["schemas"]["RecommenderSettingsDto"];
-          "application/*+json": components["schemas"]["RecommenderSettingsDto"];
+          "application/json": components["schemas"]["CampaignSettingsDto"];
+          "text/json": components["schemas"]["CampaignSettingsDto"];
+          "application/*+json": components["schemas"]["CampaignSettingsDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Settings": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignSettings"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignSettings"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CampaignSettingsDto"];
+          "text/json": components["schemas"]["CampaignSettingsDto"];
+          "application/*+json": components["schemas"]["CampaignSettingsDto"];
         };
       };
     };
@@ -7026,6 +8956,63 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/ChoosePromotionArgumentRules": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChoosePromotionArgumentRule"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+          "text/json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+          "application/*+json": components["schemas"]["CreateChoosePromotionArgumentRuleDto"];
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/ChoosePromotionArgumentRules/{ruleId}": {
     post: {
       parameters: {
@@ -7061,6 +9048,40 @@ export interface paths {
     };
   };
   "/api/recommenders/PromotionsRecommenders/{id}/ChoosePromotionArgumentRules/{ruleId}": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+          "text/json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+          "application/*+json": components["schemas"]["UpdateChoosePromotionArgumentRuleDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/ChoosePromotionArgumentRules/{ruleId}": {
     post: {
       parameters: {
         path: {
@@ -7208,6 +9229,63 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/ChooseSegmentArgumentRules": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChooseSegmentArgumentRule"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+          "text/json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+          "application/*+json": components["schemas"]["CreateChooseSegmentArgumentRuleDto"];
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/ChooseSegmentArgumentRules/{ruleId}": {
     post: {
       parameters: {
@@ -7243,6 +9321,40 @@ export interface paths {
     };
   };
   "/api/recommenders/PromotionsRecommenders/{id}/ChooseSegmentArgumentRules/{ruleId}": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ArgumentRule"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+          "text/json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+          "application/*+json": components["schemas"]["UpdateChooseSegmentArgumentRuleDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/ChooseSegmentArgumentRules/{ruleId}": {
     post: {
       parameters: {
         path: {
@@ -7330,6 +9442,33 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/ArgumentRules/{ruleId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          ruleId: number;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/Arguments": {
     get: {
       parameters: {
@@ -7380,9 +9519,9 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreateOrUpdateRecommenderArgument"][];
-          "text/json": components["schemas"]["CreateOrUpdateRecommenderArgument"][];
-          "application/*+json": components["schemas"]["CreateOrUpdateRecommenderArgument"][];
+          "application/json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+          "text/json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+          "application/*+json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
         };
       };
     };
@@ -7437,9 +9576,66 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreateOrUpdateRecommenderArgument"][];
-          "text/json": components["schemas"]["CreateOrUpdateRecommenderArgument"][];
-          "application/*+json": components["schemas"]["CreateOrUpdateRecommenderArgument"][];
+          "application/json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+          "text/json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+          "application/*+json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Arguments": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignArgument"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignArgument"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+          "text/json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
+          "application/*+json": components["schemas"]["CreateOrUpdateCampaignArgument"][];
         };
       };
     };
@@ -7546,6 +9742,57 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/Destinations": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendationDestinationBase"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RecommendationDestinationBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateDestinationDto"];
+          "text/json": components["schemas"]["CreateDestinationDto"];
+          "application/*+json": components["schemas"]["CreateDestinationDto"];
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/Destinations/{destinationId}": {
     delete: {
       parameters: {
@@ -7558,7 +9805,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderEntityBase"];
+            "application/json": components["schemas"]["CampaignEntityBase"];
           };
         };
         /** Bad Request */
@@ -7582,7 +9829,31 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderEntityBase"];
+            "application/json": components["schemas"]["CampaignEntityBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Destinations/{destinationId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          destinationId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignEntityBase"];
           };
         };
         /** Bad Request */
@@ -7652,6 +9923,63 @@ export interface paths {
     };
   };
   "/api/recommenders/PromotionsRecommenders/{id}/TriggerCollection": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["TriggerCollection"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["TriggerCollection"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["SetTriggersDto"];
+          "text/json": components["schemas"]["SetTriggersDto"];
+          "application/*+json": components["schemas"]["SetTriggersDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/TriggerCollection": {
     get: {
       parameters: {
         path: {
@@ -7822,6 +10150,63 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/LearningFeatures": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Metric"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Metric"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["SetLearningMetrics"];
+          "text/json": components["schemas"]["SetLearningMetrics"];
+          "application/*+json": components["schemas"]["SetLearningMetrics"];
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/LearningMetrics": {
     get: {
       parameters: {
@@ -7936,6 +10321,63 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/LearningMetrics": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Metric"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Metric"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["SetLearningMetrics"];
+          "text/json": components["schemas"]["SetLearningMetrics"];
+          "application/*+json": components["schemas"]["SetLearningMetrics"];
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/ReportImage": {
     get: {
       parameters: {
@@ -7959,6 +10401,28 @@ export interface paths {
     };
   };
   "/api/recommenders/PromotionsRecommenders/{id}/ReportImage": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: unknown;
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/ReportImage": {
     get: {
       parameters: {
         path: {
@@ -8026,6 +10490,29 @@ export interface paths {
       };
     };
   };
+  "/api/campaigns/PromotionsCampaigns/{id}/Audience": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Audience"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/Channels": {
     get: {
       parameters: {
@@ -8070,9 +10557,9 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["AddRecommenderChannelDto"];
-          "text/json": components["schemas"]["AddRecommenderChannelDto"];
-          "application/*+json": components["schemas"]["AddRecommenderChannelDto"];
+          "application/json": components["schemas"]["AddCampaignChannelDto"];
+          "text/json": components["schemas"]["AddCampaignChannelDto"];
+          "application/*+json": components["schemas"]["AddCampaignChannelDto"];
         };
       };
     };
@@ -8121,9 +10608,60 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": components["schemas"]["AddRecommenderChannelDto"];
-          "text/json": components["schemas"]["AddRecommenderChannelDto"];
-          "application/*+json": components["schemas"]["AddRecommenderChannelDto"];
+          "application/json": components["schemas"]["AddCampaignChannelDto"];
+          "text/json": components["schemas"]["AddCampaignChannelDto"];
+          "application/*+json": components["schemas"]["AddCampaignChannelDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Channels": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ChannelBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddCampaignChannelDto"];
+          "text/json": components["schemas"]["AddCampaignChannelDto"];
+          "application/*+json": components["schemas"]["AddCampaignChannelDto"];
         };
       };
     };
@@ -8140,7 +10678,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderEntityBase"];
+            "application/json": components["schemas"]["CampaignEntityBase"];
           };
         };
         /** Bad Request */
@@ -8164,7 +10702,31 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["RecommenderEntityBase"];
+            "application/json": components["schemas"]["CampaignEntityBase"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Channels/{channelId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          channelId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["CampaignEntityBase"];
           };
         };
         /** Bad Request */
@@ -8191,7 +10753,7 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ItemsRecommender"];
+            "application/json": components["schemas"]["PromotionsCampaign"];
           };
         };
         /** Bad Request */
@@ -8218,7 +10780,34 @@ export interface paths {
         /** Success */
         200: {
           content: {
-            "application/json": components["schemas"]["ItemsRecommender"];
+            "application/json": components["schemas"]["PromotionsCampaign"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/name": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          name?: string;
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PromotionsCampaign"];
           };
         };
         /** Bad Request */
@@ -8288,6 +10877,63 @@ export interface paths {
     };
   };
   "/api/recommenders/PromotionsRecommenders/{id}/Properties": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": { [key: string]: unknown };
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": { [key: string]: unknown };
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": { [key: string]: unknown };
+          "text/json": { [key: string]: unknown };
+          "application/*+json": { [key: string]: unknown };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Properties": {
     get: {
       parameters: {
         path: {
@@ -8949,6 +11595,9 @@ export interface components {
       activityItems?: components["schemas"]["ObjectPaginated"];
     };
     ActivityKinds: "event" | "recommendation";
+    AddCampaignChannelDto: {
+      id?: number;
+    };
     AddMemberDto: {
       commonId: string;
       name?: string | null;
@@ -8957,9 +11606,6 @@ export interface components {
     AddPromotionDto: {
       id?: number | null;
       commonId?: string | null;
-    };
-    AddRecommenderChannelDto: {
-      id?: number;
     };
     AggregateCustomerMetric: {
       metricId?: number;
@@ -9000,7 +11646,7 @@ export interface components {
       lastUpdated?: string;
       discriminator?: string | null;
       campaignId?: number;
-      campaign?: components["schemas"]["RecommenderEntityBase"];
+      campaign?: components["schemas"]["CampaignEntityBase"];
       argumentId?: number;
       argument?: components["schemas"]["CampaignArgument"];
     };
@@ -9010,7 +11656,7 @@ export interface components {
       created?: string;
       lastUpdated?: string;
       recommenderId?: number;
-      recommender?: components["schemas"]["RecommenderEntityBase"];
+      recommender?: components["schemas"]["CampaignEntityBase"];
       segments?: components["schemas"]["Segment"][] | null;
     };
     Auth0ReactConfig: {
@@ -9101,11 +11747,55 @@ export interface components {
       created?: string;
       lastUpdated?: string;
       campaignId?: number;
-      campaign?: components["schemas"]["RecommenderEntityBase"];
+      campaign?: components["schemas"]["CampaignEntityBase"];
       commonId?: string | null;
       argumentType?: components["schemas"]["ArgumentTypes"];
       isRequired?: boolean;
     };
+    CampaignEntityBase: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      environmentId?: number | null;
+      environment?: components["schemas"]["Environment"];
+      name?: string | null;
+      commonId?: string | null;
+      properties?: { [key: string]: unknown } | null;
+      maxChannelCount?: number;
+      errorHandling?: components["schemas"]["CampaignErrorHandling"];
+      settings?: components["schemas"]["CampaignSettings"];
+      oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
+      triggerCollection?: components["schemas"]["TriggerCollection"];
+      modelRegistrationId?: number | null;
+      modelRegistration?: components["schemas"]["ModelRegistration"];
+    };
+    CampaignErrorHandling: {
+      enabled?: boolean;
+      throwOnBadInput?: boolean | null;
+      requireConsumptionEvent?: boolean | null;
+      recommendationCacheTime?: components["schemas"]["TimeSpan"];
+      expiryDate?: string | null;
+    };
+    CampaignSettings: {
+      enabled?: boolean;
+      throwOnBadInput?: boolean | null;
+      requireConsumptionEvent?: boolean | null;
+      recommendationCacheTime?: components["schemas"]["TimeSpan"];
+      expiryDate?: string | null;
+    };
+    CampaignSettingsDto: {
+      enabled?: boolean | null;
+      throwOnBadInput?: boolean | null;
+      requireConsumptionEvent?: boolean | null;
+      recommendationCacheTime?: components["schemas"]["TimeSpan"];
+      /** Date after which no more recommendations will be produced */
+      expiryDate?: string | null;
+    };
+    CampaignStatistics: {
+      numberCustomersRecommended?: number;
+      numberInvokations?: number;
+    };
+    CampaignTypes: "product" | "parameterSet" | "items" | "offer";
     CategoricalParameterBounds: {
       categories?: string[] | null;
     };
@@ -9128,7 +11818,7 @@ export interface components {
       lastEnqueued?: string | null;
       lastCompleted?: string | null;
       properties?: { [key: string]: unknown } | null;
-      recommenders?: components["schemas"]["RecommenderEntityBase"][] | null;
+      recommenders?: components["schemas"]["CampaignEntityBase"][] | null;
     };
     ChannelBasePaginated: {
       items?: components["schemas"]["ChannelBase"][] | null;
@@ -9152,7 +11842,7 @@ export interface components {
       lastUpdated?: string;
       discriminator?: string | null;
       campaignId?: number;
-      campaign?: components["schemas"]["RecommenderEntityBase"];
+      campaign?: components["schemas"]["CampaignEntityBase"];
       argumentId?: number;
       argument?: components["schemas"]["CampaignArgument"];
       argumentValue?: string | null;
@@ -9165,7 +11855,7 @@ export interface components {
       lastUpdated?: string;
       discriminator?: string | null;
       campaignId?: number;
-      campaign?: components["schemas"]["RecommenderEntityBase"];
+      campaign?: components["schemas"]["CampaignEntityBase"];
       argumentId?: number;
       argument?: components["schemas"]["CampaignArgument"];
       argumentValue?: string | null;
@@ -9237,6 +11927,11 @@ export interface components {
       joinTwoMetrics?: components["schemas"]["JoinTwoMetricsDto"];
       timeWindow?: components["schemas"]["MetricGeneratorTimeWindow"];
     };
+    CreateOrUpdateCampaignArgument: {
+      commonId: string;
+      argumentType?: components["schemas"]["ArgumentTypes"];
+      isRequired?: boolean;
+    };
     CreateOrUpdateCustomerDto: {
       commonUserId?: string | null;
       customerId?: string | null;
@@ -9244,11 +11939,6 @@ export interface components {
       email?: string | null;
       properties?: { [key: string]: unknown } | null;
       integratedSystemReference?: components["schemas"]["IntegratedSystemReference"];
-    };
-    CreateOrUpdateRecommenderArgument: {
-      commonId: string;
-      argumentType?: components["schemas"]["ArgumentTypes"];
-      isRequired?: boolean;
     };
     CreateParameter: {
       commonId: string;
@@ -9258,7 +11948,7 @@ export interface components {
       description?: string | null;
       defaultValue?: unknown | null;
     };
-    CreateParameterSetRecommender: {
+    CreateParameterSetCampaign: {
       commonId: string;
       name: string;
       cloneFromId?: number | null;
@@ -9266,9 +11956,9 @@ export interface components {
       throwOnBadInput?: boolean | null;
       /** @deprecated */
       requireConsumptionEvent?: boolean | null;
-      settings?: components["schemas"]["RecommenderSettingsDto"];
+      settings?: components["schemas"]["CampaignSettingsDto"];
       arguments?:
-        | components["schemas"]["CreateOrUpdateRecommenderArgument"][]
+        | components["schemas"]["CreateOrUpdateCampaignArgument"][]
         | null;
       targetMetricId?: string | null;
       segmentIds?: number[] | null;
@@ -9287,7 +11977,7 @@ export interface components {
       description?: string | null;
       properties?: { [key: string]: unknown } | null;
     };
-    CreatePromotionsRecommender: {
+    CreatePromotionsCampaign: {
       commonId: string;
       name: string;
       cloneFromId?: number | null;
@@ -9295,9 +11985,9 @@ export interface components {
       throwOnBadInput?: boolean | null;
       /** @deprecated */
       requireConsumptionEvent?: boolean | null;
-      settings?: components["schemas"]["RecommenderSettingsDto"];
+      settings?: components["schemas"]["CampaignSettingsDto"];
       arguments?:
-        | components["schemas"]["CreateOrUpdateRecommenderArgument"][]
+        | components["schemas"]["CreateOrUpdateCampaignArgument"][]
         | null;
       targetMetricId?: string | null;
       segmentIds?: number[] | null;
@@ -9308,7 +11998,7 @@ export interface components {
       baselinePromotionId?: string | null;
       numberOfItemsToRecommend?: number | null;
       useAutoAi?: boolean | null;
-      targetType?: components["schemas"]["PromotionRecommenderTargetTypes"];
+      targetType?: components["schemas"]["PromotionCampaignTargetTypes"];
     };
     CreateSegmentDto: {
       name?: string | null;
@@ -9656,7 +12346,7 @@ export interface components {
       lastUpdated?: string;
       environmentId?: number | null;
       environment?: components["schemas"]["Environment"];
-      recommenderType?: components["schemas"]["RecommenderTypes"];
+      recommenderType?: components["schemas"]["CampaignTypes"];
       customerId?: number | null;
       trackedUser?: components["schemas"]["Customer"];
       customer?: components["schemas"]["Customer"];
@@ -9672,44 +12362,13 @@ export interface components {
       modelOutputType?: string | null;
       isFromCache?: boolean;
       recommenderId?: number | null;
-      recommender?: components["schemas"]["ItemsRecommender"];
+      recommender?: components["schemas"]["PromotionsCampaign"];
       offer?: components["schemas"]["Offer"];
       maxScoreItemId?: number | null;
       scoredItems?: components["schemas"]["ScoredRecommendableItem"][] | null;
     };
     ItemsRecommendationPaginated: {
       items?: components["schemas"]["ItemsRecommendation"][] | null;
-      pagination?: components["schemas"]["PaginationInfo"];
-    };
-    ItemsRecommender: {
-      id?: number;
-      created?: string;
-      lastUpdated?: string;
-      environmentId?: number | null;
-      environment?: components["schemas"]["Environment"];
-      name?: string | null;
-      commonId?: string | null;
-      properties?: { [key: string]: unknown } | null;
-      maxChannelCount?: number;
-      errorHandling?: components["schemas"]["RecommenderErrorHandling"];
-      settings?: components["schemas"]["RecommenderSettings"];
-      oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
-      triggerCollection?: components["schemas"]["TriggerCollection"];
-      modelRegistrationId?: number | null;
-      modelRegistration?: components["schemas"]["ModelRegistration"];
-      baselineItemId?: number | null;
-      baselineItem?: components["schemas"]["RecommendableItem"];
-      defaultItem?: components["schemas"]["RecommendableItem"];
-      numberOfItemsToRecommend?: number | null;
-      items?: components["schemas"]["RecommendableItem"][] | null;
-      targetMetricId?: number | null;
-      targetMetric?: components["schemas"]["Metric"];
-      targetType?: components["schemas"]["PromotionRecommenderTargetTypes"];
-      optimiser?: components["schemas"]["PromotionOptimiser"];
-      useOptimiser?: boolean;
-    };
-    ItemsRecommenderPaginated: {
-      items?: components["schemas"]["ItemsRecommender"][] | null;
       pagination?: components["schemas"]["PaginationInfo"];
     };
     ItemsRecommenderPerformanceReport: {
@@ -9719,7 +12378,7 @@ export interface components {
       environmentId?: number | null;
       environment?: components["schemas"]["Environment"];
       recommenderId?: number;
-      recommender?: components["schemas"]["RecommenderEntityBase"];
+      recommender?: components["schemas"]["CampaignEntityBase"];
       discriminator?: string | null;
       itemsById?: {
         [key: string]: components["schemas"]["RecommendableItem"];
@@ -9727,7 +12386,7 @@ export interface components {
       itemsByCommonId?: {
         [key: string]: components["schemas"]["RecommendableItem"];
       } | null;
-      itemsRecommender?: components["schemas"]["ItemsRecommender"];
+      itemsRecommender?: components["schemas"]["PromotionsCampaign"];
       targetMetric?: components["schemas"]["Metric"];
       performanceByItem?: components["schemas"]["PerformanceByItem"][] | null;
     };
@@ -9977,13 +12636,36 @@ export interface components {
       items?: components["schemas"]["Parameter"][] | null;
       pagination?: components["schemas"]["PaginationInfo"];
     };
+    ParameterSetCampaign: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      environmentId?: number | null;
+      environment?: components["schemas"]["Environment"];
+      name?: string | null;
+      commonId?: string | null;
+      properties?: { [key: string]: unknown } | null;
+      maxChannelCount?: number;
+      errorHandling?: components["schemas"]["CampaignErrorHandling"];
+      settings?: components["schemas"]["CampaignSettings"];
+      oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
+      triggerCollection?: components["schemas"]["TriggerCollection"];
+      modelRegistrationId?: number | null;
+      modelRegistration?: components["schemas"]["ModelRegistration"];
+      parameters?: components["schemas"]["Parameter"][] | null;
+      parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
+    };
+    ParameterSetCampaignPaginated: {
+      items?: components["schemas"]["ParameterSetCampaign"][] | null;
+      pagination?: components["schemas"]["PaginationInfo"];
+    };
     ParameterSetRecommendation: {
       id?: number;
       created?: string;
       lastUpdated?: string;
       environmentId?: number | null;
       environment?: components["schemas"]["Environment"];
-      recommenderType?: components["schemas"]["RecommenderTypes"];
+      recommenderType?: components["schemas"]["CampaignTypes"];
       customerId?: number | null;
       trackedUser?: components["schemas"]["Customer"];
       customer?: components["schemas"]["Customer"];
@@ -9999,7 +12681,7 @@ export interface components {
       modelOutputType?: string | null;
       isFromCache?: boolean;
       recommenderId?: number | null;
-      recommender?: components["schemas"]["ParameterSetRecommender"];
+      recommender?: components["schemas"]["ParameterSetCampaign"];
     };
     ParameterSetRecommendationDto: {
       created?: string;
@@ -10014,29 +12696,6 @@ export interface components {
     };
     ParameterSetRecommendationPaginated: {
       items?: components["schemas"]["ParameterSetRecommendation"][] | null;
-      pagination?: components["schemas"]["PaginationInfo"];
-    };
-    ParameterSetRecommender: {
-      id?: number;
-      created?: string;
-      lastUpdated?: string;
-      environmentId?: number | null;
-      environment?: components["schemas"]["Environment"];
-      name?: string | null;
-      commonId?: string | null;
-      properties?: { [key: string]: unknown } | null;
-      maxChannelCount?: number;
-      errorHandling?: components["schemas"]["RecommenderErrorHandling"];
-      settings?: components["schemas"]["RecommenderSettings"];
-      oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
-      triggerCollection?: components["schemas"]["TriggerCollection"];
-      modelRegistrationId?: number | null;
-      modelRegistration?: components["schemas"]["ModelRegistration"];
-      parameters?: components["schemas"]["Parameter"][] | null;
-      parameterBounds?: components["schemas"]["ParameterBounds"][] | null;
-    };
-    ParameterSetRecommenderPaginated: {
-      items?: components["schemas"]["ParameterSetRecommender"][] | null;
       pagination?: components["schemas"]["PaginationInfo"];
     };
     ParameterTypes: "numerical" | "categorical";
@@ -10071,6 +12730,7 @@ export interface components {
       detail?: string | null;
       instance?: string | null;
     } & { [key: string]: unknown };
+    PromotionCampaignTargetTypes: "customer" | "business";
     PromotionOptimiser: {
       id?: number;
       created?: string;
@@ -10087,8 +12747,38 @@ export interface components {
       promotionId?: number;
       optimiserId?: number;
     };
-    PromotionRecommenderTargetTypes: "customer" | "business";
     PromotionType: "discount" | "gift" | "service" | "upgrade" | "other";
+    PromotionsCampaign: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      environmentId?: number | null;
+      environment?: components["schemas"]["Environment"];
+      name?: string | null;
+      commonId?: string | null;
+      properties?: { [key: string]: unknown } | null;
+      maxChannelCount?: number;
+      errorHandling?: components["schemas"]["CampaignErrorHandling"];
+      settings?: components["schemas"]["CampaignSettings"];
+      oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
+      triggerCollection?: components["schemas"]["TriggerCollection"];
+      modelRegistrationId?: number | null;
+      modelRegistration?: components["schemas"]["ModelRegistration"];
+      baselineItemId?: number | null;
+      baselineItem?: components["schemas"]["RecommendableItem"];
+      defaultItem?: components["schemas"]["RecommendableItem"];
+      numberOfItemsToRecommend?: number | null;
+      items?: components["schemas"]["RecommendableItem"][] | null;
+      targetMetricId?: number | null;
+      targetMetric?: components["schemas"]["Metric"];
+      targetType?: components["schemas"]["PromotionCampaignTargetTypes"];
+      optimiser?: components["schemas"]["PromotionOptimiser"];
+      useOptimiser?: boolean;
+    };
+    PromotionsCampaignPaginated: {
+      items?: components["schemas"]["PromotionsCampaign"][] | null;
+      pagination?: components["schemas"]["PaginationInfo"];
+    };
     PromotionsRecommendationDto: {
       created?: string;
       correlatorId?: number | null;
@@ -10132,7 +12822,7 @@ export interface components {
       created?: string;
       lastUpdated?: string;
       recommenderId?: number | null;
-      recommender?: components["schemas"]["RecommenderEntityBase"];
+      recommender?: components["schemas"]["CampaignEntityBase"];
       modelRegistrationId?: number | null;
       modelRegistration?: components["schemas"]["ModelRegistration"];
     };
@@ -10144,56 +12834,12 @@ export interface components {
       environment?: components["schemas"]["Environment"];
       properties?: { [key: string]: string } | null;
       destinationType?: string | null;
-      recommender?: components["schemas"]["RecommenderEntityBase"];
+      recommender?: components["schemas"]["CampaignEntityBase"];
       trigger?: components["schemas"]["DestinationTrigger"];
       connectedSystemId?: number;
       connectedSystem?: components["schemas"]["IntegratedSystem"];
       discriminator?: string | null;
     };
-    RecommenderEntityBase: {
-      id?: number;
-      created?: string;
-      lastUpdated?: string;
-      environmentId?: number | null;
-      environment?: components["schemas"]["Environment"];
-      name?: string | null;
-      commonId?: string | null;
-      properties?: { [key: string]: unknown } | null;
-      maxChannelCount?: number;
-      errorHandling?: components["schemas"]["RecommenderErrorHandling"];
-      settings?: components["schemas"]["RecommenderSettings"];
-      oldArguments?: components["schemas"]["OldRecommenderArgument"][] | null;
-      triggerCollection?: components["schemas"]["TriggerCollection"];
-      modelRegistrationId?: number | null;
-      modelRegistration?: components["schemas"]["ModelRegistration"];
-    };
-    RecommenderErrorHandling: {
-      enabled?: boolean;
-      throwOnBadInput?: boolean | null;
-      requireConsumptionEvent?: boolean | null;
-      recommendationCacheTime?: components["schemas"]["TimeSpan"];
-      expiryDate?: string | null;
-    };
-    RecommenderSettings: {
-      enabled?: boolean;
-      throwOnBadInput?: boolean | null;
-      requireConsumptionEvent?: boolean | null;
-      recommendationCacheTime?: components["schemas"]["TimeSpan"];
-      expiryDate?: string | null;
-    };
-    RecommenderSettingsDto: {
-      enabled?: boolean | null;
-      throwOnBadInput?: boolean | null;
-      requireConsumptionEvent?: boolean | null;
-      recommendationCacheTime?: components["schemas"]["TimeSpan"];
-      /** Date after which no more recommendations will be produced */
-      expiryDate?: string | null;
-    };
-    RecommenderStatistics: {
-      numberCustomersRecommended?: number;
-      numberInvokations?: number;
-    };
-    RecommenderTypes: "product" | "parameterSet" | "items" | "offer";
     RegisterNewModelDto: {
       name: string;
       scoringUrl: string;

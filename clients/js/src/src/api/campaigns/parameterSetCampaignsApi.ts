@@ -19,30 +19,26 @@ import {
   PaginatedRequest,
 } from "../../interfaces";
 
-const recommenderApiName = "ParameterSetRecommenders";
+const campaignApiName = "ParameterSetCampaigns";
 
-console.warn(
-  "Deprecation Notice: Parameter Set Recommenders are replaced by Parameter Set Campaigns."
-);
-
-export const fetchParameterSetRecommendersAsync = async ({
+export const fetchParameterSetCampaignsAsync = async ({
   token,
   page,
 }: PaginatedRequest) => {
   return await executeFetch({
-    path: "api/recommenders/ParameterSetRecommenders",
+    path: "api/campaigns/ParameterSetCampaigns",
     token,
     page,
   });
 };
 
-export const fetchParameterSetRecommenderAsync = async ({
+export const fetchParameterSetCampaignAsync = async ({
   token,
   id,
   searchTerm,
 }: EntitySearchRequest) => {
   return await executeFetch({
-    path: `api/recommenders/ParameterSetRecommenders/${id}`,
+    path: `api/campaigns/ParameterSetCampaigns/${id}`,
     token,
     query: {
       "q.term": searchTerm,
@@ -50,7 +46,7 @@ export const fetchParameterSetRecommenderAsync = async ({
   });
 };
 
-interface CreateParameterSetRecommenderRequest extends AuthenticatedRequest {
+interface CreateParameterSetCampaignRequest extends AuthenticatedRequest {
   payload: {
     name: string;
     commonId: string;
@@ -60,24 +56,24 @@ interface CreateParameterSetRecommenderRequest extends AuthenticatedRequest {
     arguments: components["schemas"]["CreateOrUpdateCampaignArgument"][];
   };
 }
-export const createParameterSetRecommenderAsync = async ({
+export const createParameterSetCampaignAsync = async ({
   token,
   payload,
-}: CreateParameterSetRecommenderRequest) => {
+}: CreateParameterSetCampaignRequest) => {
   return await executeFetch({
-    path: "api/recommenders/ParameterSetRecommenders",
+    path: "api/campaigns/ParameterSetCampaigns",
     token,
     method: "post",
     body: payload,
   });
 };
 
-export const deleteParameterSetRecommenderAsync = async ({
+export const deleteParameterSetCampaignAsync = async ({
   token,
   id,
 }: EntityRequest) => {
   return await executeFetch({
-    path: `api/recommenders/ParameterSetRecommenders/${id}`,
+    path: `api/campaigns/ParameterSetCampaigns/${id}`,
     token,
     method: "delete",
   });
@@ -90,7 +86,7 @@ export const fetchParameterSetRecommendationsAsync = async ({
   id,
 }: PaginatedEntityRequest) => {
   return await executeFetch({
-    path: `api/recommenders/ParameterSetRecommenders/${id}/recommendations`,
+    path: `api/campaigns/ParameterSetCampaigns/${id}/recommendations`,
     token,
     page,
     pageSize,
@@ -105,7 +101,7 @@ export const createLinkRegisteredModelAsync = async ({
   modelId,
 }: LinkRegisteredModelRequest) => {
   return await link.createLinkedRegisteredModelAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     modelId,
     token,
@@ -117,22 +113,22 @@ export const fetchLinkedRegisteredModelAsync = async ({
   id,
 }: EntityRequest) => {
   return await link.fetchLinkedRegisteredModelAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
   });
 };
 
-interface InvokeParameterSetRecommenderRequest extends EntityRequest {
+interface InvokeParameterSetCampaignRequest extends EntityRequest {
   input: components["schemas"]["ModelInputDto"];
 }
-export const invokeParameterSetRecommenderAsync = async ({
+export const invokeParameterSetCampaignAsync = async ({
   token,
   id,
   input,
-}: InvokeParameterSetRecommenderRequest) => {
+}: InvokeParameterSetCampaignRequest) => {
   return await executeFetch({
-    path: `api/recommenders/ParameterSetRecommenders/${id}/invoke`,
+    path: `api/campaigns/ParameterSetCampaigns/${id}/invoke`,
     token,
     method: "post",
     body: input,
@@ -145,8 +141,8 @@ export const fetchInvokationLogsAsync = async ({
   page,
   pageSize,
 }: PaginatedEntityRequest) => {
-  return await il.fetchRecommenderInvokationLogsAsync({
-    recommenderApiName,
+  return await il.fetchCampaignInvokationLogsAsync({
+    campaignApiName,
     id,
     token,
     page,
@@ -155,8 +151,8 @@ export const fetchInvokationLogsAsync = async ({
 };
 
 export const fetchTargetVariablesAsync = async ({ id, token, name }: any) => {
-  return await tv.fetchRecommenderTargetVariableValuesAsync({
-    recommenderApiName,
+  return await tv.fetchCampaignTargetVariableValuesAsync({
+    campaignApiName,
     id,
     token,
     name,
@@ -168,8 +164,8 @@ export const createTargetVariableAsync = async ({
   token,
   targetVariableValue,
 }: any) => {
-  return await tv.createRecommenderTargetVariableValueAsync({
-    recommenderApiName,
+  return await tv.createCampaignTargetVariableValueAsync({
+    campaignApiName,
     id,
     token,
     targetVariableValue,
@@ -185,7 +181,7 @@ export const setSettingsAsync = async ({
   settings,
 }: SetSettingsRequest) => {
   return await st.setSettingsAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
     settings,
@@ -200,7 +196,7 @@ interface SetArgumentsRequest extends EntityRequest {
 
 export const fetchArgumentsAsync = async ({ id, token }: EntityRequest) => {
   return await ar.fetchArgumentsAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
   });
@@ -212,7 +208,7 @@ export const setArgumentsAsync = async ({
   args,
 }: SetArgumentsRequest): Promise<Argument[]> => {
   return await ar.setArgumentsAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
     args,
@@ -220,7 +216,7 @@ export const setArgumentsAsync = async ({
 };
 export const fetchDestinationsAsync = async ({ id, token }: EntityRequest) => {
   return await ds.fetchDestinationsAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
   });
@@ -235,7 +231,7 @@ export const createDestinationAsync = async ({
   destination,
 }: CreateDestinationRequest) => {
   return await ds.createDestinationAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
     destination,
@@ -251,7 +247,7 @@ export const removeDestinationAsync = async ({
   destinationId,
 }: RemoveDestinationRequest) => {
   return await ds.removeDestinationAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
     destinationId,
@@ -260,7 +256,7 @@ export const removeDestinationAsync = async ({
 
 export const fetchTriggerAsync = async ({ id, token }: EntityRequest) => {
   return await trig.fetchTriggerAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
   });
@@ -275,7 +271,7 @@ export const setTriggerAsync = async ({
   trigger,
 }: SetTriggerRequest) => {
   return await trig.setTriggerAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
     trigger,
@@ -288,7 +284,7 @@ export const fetchLearningFeaturesAsync = async ({
   useInternalId,
 }: EntityRequest) => {
   return await lf.fetchLearningFeaturesAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
     useInternalId,
@@ -305,7 +301,7 @@ export const setLearningFeaturesAsync = async ({
   useInternalId,
 }: SetLearningFeaturesRequest) => {
   return await lf.setLearningFeaturesAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
     useInternalId,
@@ -319,7 +315,7 @@ export const fetchLearningMetricsAsync = async ({
   useInternalId,
 }: EntityRequest) => {
   return await lm.fetchLearningMetricsAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
     useInternalId,
@@ -336,7 +332,7 @@ export const setLearningMetricsAsync = async ({
   useInternalId,
 }: SetLearningMetricsRequest) => {
   return await lm.setLearningMetricsAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
     useInternalId,
@@ -344,13 +340,13 @@ export const setLearningMetricsAsync = async ({
   });
 };
 
-type RecommenderStatistics = components["schemas"]["CampaignStatistics"];
+type CampaignStatistics = components["schemas"]["CampaignStatistics"];
 export const fetchStatisticsAsync = async ({
   id,
   token,
-}: EntityRequest): Promise<RecommenderStatistics> => {
+}: EntityRequest): Promise<CampaignStatistics> => {
   return await executeFetch({
-    path: `api/recommenders/ParameterSetRecommenders/${id}/Statistics`,
+    path: `api/campaigns/ParameterSetCampaigns/${id}/Statistics`,
     token,
   });
 };
@@ -361,7 +357,7 @@ export const fetchReportImageBlobUrlAsync = async ({
   useInternalId,
 }: EntityRequest): Promise<any> => {
   return await ri.fetchReportImageBlobUrlAsync({
-    recommenderApiName,
+    campaignApiName,
     id,
     token,
     useInternalId,

@@ -79,7 +79,7 @@ export const deleteItemsRecommenderAsync = async ({
 };
 
 interface CreateItemsRecommenderRequest extends AuthenticatedRequest {
-  payload: components["schemas"]["CreatePromotionsRecommender"];
+  payload: components["schemas"]["CreatePromotionsCampaign"];
 }
 export const createItemsRecommenderAsync = async ({
   token,
@@ -420,7 +420,7 @@ export const setLearningMetricsAsync = async ({
   });
 };
 
-type RecommenderStatistics = components["schemas"]["RecommenderStatistics"];
+type RecommenderStatistics = components["schemas"]["CampaignStatistics"];
 export const fetchStatisticsAsync = async ({
   id,
   token,
