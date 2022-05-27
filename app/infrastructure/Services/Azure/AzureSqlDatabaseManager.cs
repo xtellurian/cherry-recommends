@@ -107,15 +107,18 @@ namespace SignalBox.Infrastructure.Azure
             var options = CreateDbContextOptions(server, database, manipulateConnectionString);
             using (var context = new SignalBoxDbContext(options.Options))
             {
-                foreach (var user in AzureDBUserNames.AzureDBUserNameList)
+                foreach (var user in AzureDBUserNames.AzureDBCredentials)
                 {
                     // related to: deploy/sql-database-scripts/cloud/create-db-principal.sql
                     StringBuilder query = new();
-                    query.AppendLine($"IF NOT EXISTS (SELECT name FROM sys.database_principals WHERE name='{user.Key}')");
+                    query.AppendLine($"IF NOT EXISTS (SELECT name FROM sys.database_principals WHERE name='{user.UserName}')");
                     query.AppendLine("BEGIN");
-                    query.AppendLine($"CREATE USER {user.Key} FROM LOGIN {user.Key} ;");
-                    query.AppendLine($"EXEC sp_addrolemember '{user.Value}','{user.Key}' ;");
+                    query.AppendLine($"CREATE USER {user.UserName} FROM LOGIN {user.UserName} ;");
                     query.AppendLine("END");
+                    foreach (var role in user.Roles)
+                    {
+                        query.AppendLine($"EXEC sp_addrolemember '{role}','{user.UserName}' ;");
+                    }
                     await context.Database.ExecuteSqlRawAsync(query.ToString());
                 }
 

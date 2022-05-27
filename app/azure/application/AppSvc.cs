@@ -190,8 +190,8 @@ namespace SignalBox.Azure
 
                     // azure
                     {"AzureEnvironment__SqlServerName", multiDb.ServerName},
-                    {"AzureEnvironment__SqlServerUserName", multiDb.UserName},
-                    {"AzureEnvironment__SqlServerPassword", multiDb.Password},
+                    {"AzureEnvironment__SqlServerUserName", multiDb.AdminUserName},
+                    {"AzureEnvironment__SqlServerPassword", multiDb.AdminPassword},
 
                     // event processing 
                     {"EventProcessing__Eventhub__ConnectionString", eventProcessing.PrimaryNamespaceWriteConnectionString},
