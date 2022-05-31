@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { setTenant } from "cherry.ai";
 
 export const PathTenantContext = React.createContext();
@@ -7,7 +7,7 @@ export const PathTenantContext = React.createContext();
 export const useTenantName = () => React.useContext(PathTenantContext);
 
 export const PathTenantProvider = ({ children }) => {
-  const { params } = useRouteMatch();
+  const params = useParams();
   const [tenantName, setTenantName] = React.useState(null);
 
   if (params.tenant) {

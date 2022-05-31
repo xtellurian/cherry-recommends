@@ -1,5 +1,6 @@
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
 import { useCustomer } from "../../api-hooks/customersApi";
 import { createOrUpdateCustomerAsync } from "../../api/customersApi";
 import { useIntegratedSystems } from "../../api-hooks/integratedSystemsApi";
@@ -24,7 +25,7 @@ const Top = ({ id }) => {
 };
 
 export const LinkToIntegratedSystem = () => {
-  const { params } = useRouteMatch();
+  const params = useParams();
   const id = params["id"];
   const trackedUser = useCustomer({ id });
   const integratedSystems = useIntegratedSystems();

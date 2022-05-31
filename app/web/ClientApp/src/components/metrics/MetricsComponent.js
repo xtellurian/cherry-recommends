@@ -1,67 +1,33 @@
 import React from "react";
-import { Redirect, Route } from "react-router";
-import { Switch, useRouteMatch } from "react-router-dom";
+import { Route, Navigate, Routes } from "react-router-dom";
 
-import AuthorizeRoute from "../auth0/ProtectedRoute";
 import MetricsSummary from "./MetricsSummary";
 import Create from "./CreateMetric";
 import Detail from "./MetricDetail";
 import SetMetricValue from "./SetMetricValue";
 import GeneratorsComponent from "./metric-generators/MetricGeneratorsComponent";
 import ActivityFeed from "./ActivityFeed";
-import { ErrorBoundary } from "../molecules/ErrorBoundary";
 
 const DefaultComponent = () => {
-  const { path } = useRouteMatch();
-
   return (
-    <React.Fragment>
-      <ErrorBoundary>
-        <Switch>
-          <AuthorizeRoute exact path={`${path}`} component={MetricsSummary} />
-          <AuthorizeRoute exact path={`${path}/create`} component={Create} />
-          <AuthorizeRoute
-            exact
-            path={`${path}/detail/:id`}
-            component={Detail}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/set-value/:id`}
-            component={SetMetricValue}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/generators`}
-            component={GeneratorsComponent}
-          />
-        </Switch>
-      </ErrorBoundary>
-    </React.Fragment>
+    <Routes>
+      <Route index element={<MetricsSummary />} />
+      <Route path="create" element={<Create />} />
+      <Route path="detail/:id" element={<Detail />} />
+      <Route path="set-value/:id" element={<SetMetricValue />} />
+      <Route path="generators/*" element={<GeneratorsComponent />} />
+    </Routes>
   );
 };
 
 const MetricsComponent = () => {
-  const { path } = useRouteMatch();
-
   return (
-    <React.Fragment>
-      <ErrorBoundary>
-        <Switch>
-          <AuthorizeRoute
-            path={`${path}/metrics`}
-            component={DefaultComponent}
-          />
-          <AuthorizeRoute
-            path={`${path}/activity-feed`}
-            component={ActivityFeed}
-          />
-          <Route path={path}>
-            <Redirect to={`${path}/metrics`} />
-          </Route>
-        </Switch>
-      </ErrorBoundary>
-    </React.Fragment>
+    <Routes>
+      <Route path="metrics/*" element={<DefaultComponent />} />
+      <Route path="activity-feed" element={<ActivityFeed />} />
+
+      <Route index element={<Navigate to="metrics" />} />
+    </Routes>
   );
 };
 

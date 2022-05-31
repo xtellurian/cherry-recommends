@@ -1,46 +1,20 @@
 import React from "react";
-import { Switch, useRouteMatch } from "react-router-dom";
-import AuthorizeRoute from "../auth0/ProtectedRoute";
+import { Routes, Route } from "react-router-dom";
+
 import { BusinessesSummary } from "./BusinessesSummary";
 import { BusinessDetail } from "./BusinessDetail";
 import { CreateBusiness } from "./CreateBusiness";
 import { EditBusinessProperties } from "./EditBusinessProperties";
 import { BusinessMetrics } from "./BusinessMetrics";
-import { ErrorBoundary } from "../molecules/ErrorBoundary";
 
-export const BusinessesComponent = (props) => {
-  let { path } = useRouteMatch();
+export const BusinessesComponent = () => {
   return (
-    <React.Fragment>
-      <ErrorBoundary>
-        <Switch>
-          <AuthorizeRoute
-            exact
-            path={`${path}`}
-            component={BusinessesSummary}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/detail/:id`}
-            component={BusinessDetail}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/create`}
-            component={CreateBusiness}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/edit-properties/:id`}
-            component={EditBusinessProperties}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/metrics/:id`}
-            component={BusinessMetrics}
-          />
-        </Switch>
-      </ErrorBoundary>
-    </React.Fragment>
+    <Routes>
+      <Route index element={<BusinessesSummary />} />
+      <Route path="detail/:id" element={<BusinessDetail />} />
+      <Route path="create" element={<CreateBusiness />} />
+      <Route path="edit-properties/:id" element={<EditBusinessProperties />} />,
+      <Route path="metrics/:id" element={<BusinessMetrics />} />,
+    </Routes>
   );
 };

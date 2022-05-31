@@ -1,18 +1,16 @@
 import React from "react";
-import { Switch, useRouteMatch } from "react-router-dom";
-import AuthorizeRoute from "../auth0/ProtectedRoute";
+import { Routes, Route } from "react-router-dom";
+
 import { CreateSegment } from "./CreateSegment";
 import { SegmentSummary } from "./SegmentSummary";
 import { SegmentDetail } from "./SegmentDetail";
 import { CreateButtonClassic } from "../molecules/CreateButton";
 import { useFeatureFlag } from "../launch-darkly/hooks";
-import { ErrorBoundary } from "../molecules/ErrorBoundary";
 
 const SegmentsHome = () => {
-  let { path } = useRouteMatch();
   return (
     <div>
-      <CreateButtonClassic to={`${path}/create`} className="float-right">
+      <CreateButtonClassic to="/segments/create" className="float-right">
         Create New Segment
       </CreateButtonClassic>
       <SegmentSummary />
@@ -21,7 +19,6 @@ const SegmentsHome = () => {
 };
 
 export const SegmentsComponent = () => {
-  let { path } = useRouteMatch();
   const flag = useFeatureFlag("segments", true);
 
   if (!flag) {
@@ -29,22 +26,10 @@ export const SegmentsComponent = () => {
   }
 
   return (
-    <React.Fragment>
-      <ErrorBoundary>
-        <Switch>
-          <AuthorizeRoute exact path={`${path}`} component={SegmentsHome} />
-          <AuthorizeRoute
-            exact
-            path={`${path}/detail/:id`}
-            component={SegmentDetail}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/create`}
-            component={CreateSegment}
-          />
-        </Switch>
-      </ErrorBoundary>
-    </React.Fragment>
+    <Routes>
+      <Route index element={<SegmentsHome />} />
+      <Route path="detail/:id" element={<SegmentDetail />} />
+      <Route path="create" element={<CreateSegment />} />
+    </Routes>
   );
 };

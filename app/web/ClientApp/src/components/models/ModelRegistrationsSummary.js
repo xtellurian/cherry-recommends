@@ -1,5 +1,4 @@
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
 import { useModelRegistrations } from "../../api-hooks/modelRegistrationsApi";
 import { deleteModelRegistrationAsync } from "../../api/modelRegistrationsApi";
 import { Title } from "../molecules/layout";
@@ -89,13 +88,12 @@ const ModelRow = ({ model, onDeleted }) => {
   );
 };
 export const ModelRegistrationsSummary = () => {
-  let { path } = useRouteMatch();
   const [trigger, setTrigger] = React.useState({});
   const result = useModelRegistrations({ trigger });
   return (
     <React.Fragment>
       <div>
-        <CreateButtonClassic to={`${path}/create`} className="float-right">
+        <CreateButtonClassic to="/admin/models/create" className="float-right">
           Register New Model
         </CreateButtonClassic>
 
@@ -113,7 +111,7 @@ export const ModelRegistrationsSummary = () => {
         {result.items && result.items.length === 0 && (
           <EmptyList>
             <div>There are no models registered.</div>
-            <CreateButtonClassic to={`${path}/create`} className="mt-4">
+            <CreateButtonClassic to="/admin/models/create" className="mt-4">
               Create New Model
             </CreateButtonClassic>
           </EmptyList>

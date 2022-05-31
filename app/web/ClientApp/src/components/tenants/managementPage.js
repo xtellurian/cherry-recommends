@@ -1,16 +1,16 @@
 import React from "react";
-import { Redirect, useRouteMatch } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+
 import { useMemberships } from "../../api-hooks/tenantsApi";
 import { Spinner, Title, Subtitle, Navigation } from "../molecules";
 import MembershipRow from "./MembershipRow";
 
 export const ManagementPage = () => {
   const memberships = useMemberships();
-  const { path } = useRouteMatch();
   if (!memberships.loading && memberships.length === 0) {
     return (
       <React.Fragment>
-        <Redirect to={`${path}/create-tenant`} />
+        <Navigate to="/_manage/create-tenant" />
       </React.Fragment>
     );
   }
@@ -23,7 +23,7 @@ export const ManagementPage = () => {
         </div>
 
         <div className="mb-5">
-          <Navigation to={`${path}/create-tenant`}>
+          <Navigation to="/_manage/create-tenant">
             <button className="btn btn-primary float-right">
               Create a new Tenant
             </button>

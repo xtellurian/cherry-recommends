@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Navigation } from "../Navigation";
 
 import "../css/nav.css";
@@ -16,8 +16,8 @@ export const PrimaryNavigationMenu = ({ children }) => {
 };
 
 export const NavListItem = ({ to, children }) => {
-  const { url } = useRouteMatch();
-  const active = to === url;
+  const location = useLocation();
+  const active = to === location.pathname;
 
   return (
     <li className="list-group-item primary-nav-item" style={{ border: "none" }}>

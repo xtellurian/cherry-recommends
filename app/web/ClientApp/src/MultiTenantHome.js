@@ -1,10 +1,11 @@
 import React from "react";
-import "./global-css/cherry.css";
+import { Navigate } from "react-router-dom";
 
 import { useMemberships } from "./api-hooks/tenantsApi";
 import { FunloaderContainer } from "./components/molecules/fullscreen/FunLoader";
 import { FunError } from "./components/molecules/fullscreen/FunError";
-import { Redirect } from "react-router-dom";
+
+import "./global-css/cherry.css";
 
 const MultiTenantHome = () => {
   const memberships = useMemberships();
@@ -15,10 +16,10 @@ const MultiTenantHome = () => {
   if (memberships.error) {
     return <FunError error={memberships.error.title} />;
   } else if (memberships.length === 0 || memberships.length > 1) {
-    return <Redirect to="/_manage" />;
+    return <Navigate to="/_manage" />;
   } else {
     // only 1 memberships
-    return <Redirect to={memberships[0].name} />;
+    return <Navigate to={memberships[0].name} />;
   }
 };
 

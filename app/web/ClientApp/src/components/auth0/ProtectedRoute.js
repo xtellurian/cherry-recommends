@@ -1,15 +1,14 @@
 import React from "react";
-import { Route } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
+
 import { Spinner } from "../molecules/Spinner";
 
-const ProtectedRoute = ({ component, ...args }) => (
-  <Route
-    component={withAuthenticationRequired(component, {
-      onRedirecting: () => <Spinner />,
-    })}
-    {...args}
-  />
-);
+const ProtectedRoute = ({ component }) => {
+  const Component = withAuthenticationRequired(component, {
+    onRedirecting: () => <Spinner />,
+  });
+
+  return <Component />;
+};
 
 export default ProtectedRoute;

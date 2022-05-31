@@ -1,24 +1,14 @@
 import React from "react";
-import { Switch, useRouteMatch } from "react-router-dom";
-import AuthorizeRoute from "../../auth0/ProtectedRoute";
+import { Routes, Route } from "react-router-dom";
+
 import { ListApiKeys } from "./ListApiKeys";
 import { CreateApiKey } from "./CreateApiKey";
-import { ErrorBoundary } from "../../molecules/ErrorBoundary";
 
-export const ApiKeyComponent = (params) => {
-  const { path } = useRouteMatch();
+export const ApiKeyComponent = () => {
   return (
-    <React.Fragment>
-      <ErrorBoundary>
-        <Switch>
-          <AuthorizeRoute exact path={`${path}`} component={ListApiKeys} />
-          <AuthorizeRoute
-            exact
-            path={`${path}/create`}
-            component={CreateApiKey}
-          />
-        </Switch>
-      </ErrorBoundary>
-    </React.Fragment>
+    <Routes>
+      <Route index element={<ListApiKeys />} />
+      <Route path="create" element={<CreateApiKey />} />
+    </Routes>
   );
 };

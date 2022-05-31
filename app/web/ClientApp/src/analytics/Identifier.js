@@ -1,10 +1,11 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
+
 import { useAuth } from "../utility/useAuth";
 import { useAnalytics } from "./analyticsHooks";
 
-const Identifier = ({ children }) => {
+const Identifier = () => {
   const { analytics } = useAnalytics();
-
   const { user, isAuthenticated } = useAuth();
 
   React.useEffect(() => {
@@ -16,7 +17,7 @@ const Identifier = ({ children }) => {
     }
   }, [user, isAuthenticated]);
 
-  return <>{children}</>;
+  return <Outlet />;
 };
 
 export default Identifier;

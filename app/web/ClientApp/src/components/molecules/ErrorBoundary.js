@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Outlet } from "react-router-dom";
+
 import { ErrorCard } from "./ErrorCard";
 import { Typography } from "./Typography";
 
@@ -28,7 +30,8 @@ export class ErrorBoundary extends Component {
         </div>
       );
     }
+
     // Normally, just render children
-    return this.props.children;
+    return <Outlet />;
   }
 }

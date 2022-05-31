@@ -1,13 +1,12 @@
 import React from "react";
 import { useAnalytics } from "../../analytics/analyticsHooks";
-import { Switch, useRouteMatch } from "react-router-dom";
-import AuthorizeRoute from "../auth0/ProtectedRoute";
+import { Route, Routes } from "react-router-dom";
+
 import { useAccessToken } from "../../api-hooks/token";
 import { useReports } from "../../api-hooks/reportsApi";
 import { downloadReportAsync } from "../../api/reportsApi";
 import { Title } from "../molecules/layout";
 import { Spinner } from "../molecules/Spinner";
-import { ErrorBoundary } from "../molecules/ErrorBoundary";
 
 const saveBlob = ({ blob, name }) => {
   var a = document.createElement("a");
@@ -79,14 +78,9 @@ const ReportsHome = () => {
 };
 
 export const ReportsComponent = () => {
-  let { path } = useRouteMatch();
   return (
-    <React.Fragment>
-      <ErrorBoundary>
-        <Switch>
-          <AuthorizeRoute exact path={`${path}`} component={ReportsHome} />
-        </Switch>
-      </ErrorBoundary>
-    </React.Fragment>
+    <Routes>
+      <Route index element={<ReportsHome />} />
+    </Routes>
   );
 };

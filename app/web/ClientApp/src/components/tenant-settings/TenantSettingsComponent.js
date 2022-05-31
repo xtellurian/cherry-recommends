@@ -1,22 +1,17 @@
 import React from "react";
-import { Switch, useRouteMatch } from "react-router-dom";
-import AuthorizeRoute from "../auth0/ProtectedRoute";
+import { Routes, Route } from "react-router-dom";
+
 import { EmptyState } from "../molecules";
 import { useHosting } from "../tenants/HostingProvider";
 import { TenantSettingsSummary } from "./TenantSettingsSummary";
 
 export const TenantSettingsComponent = () => {
-  const { path } = useRouteMatch();
   const hosting = useHosting();
   if (hosting.multitenant) {
     return (
-      <Switch>
-        <AuthorizeRoute
-          exact
-          path={`${path}`}
-          component={TenantSettingsSummary}
-        />
-      </Switch>
+      <Routes>
+        <Route index element={<TenantSettingsSummary />} />
+      </Routes>
     );
   } else if (hosting.loading) {
     return <React.Fragment />;

@@ -1,5 +1,6 @@
 import { useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import { useHosting } from "../components/tenants/HostingProvider";
 import { useTenantName } from "../components/tenants/PathTenantProvider";
 
@@ -20,7 +21,8 @@ const prefixIfRequired = (path, prefix) => {
 };
 
 export const useNavigation = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const hosting = useHosting();
   const { tenantName } = useTenantName();
 
@@ -28,12 +30,12 @@ export const useNavigation = () => {
     (to, withQueryParams) => {
       if (typeof to === "string") {
         to = {
-          ...history.location,
+          ...location,
           pathname: to,
         };
       }
 
-      const search = new URLSearchParams(history.location.search);
+      const search = new URLSearchParams(location.search);
       const newSearch = new URLSearchParams();
       if (withQueryParams && Array.isArray(withQueryParams)) {
         for (const p of withQueryParams) {
@@ -46,7 +48,7 @@ export const useNavigation = () => {
 
       if (typeof to === "object" && to !== null) {
         return {
-          ...history.location,
+          ...location,
           search: newSearch.toString(),
           ...to,
         };
@@ -54,12 +56,12 @@ export const useNavigation = () => {
 
       return "";
     },
-    [history.location]
+    [location]
   );
 
   const ensureAbsolutePathsHaveTenantNamePrefixed = useCallback(
     (to) => {
-      if (!hosting.multitenant) {
+      if (!hosting?.multitenant) {
         return to; // don't do it unless in multitenant mode
       }
       if (typeof to === "string") {
@@ -77,19 +79,19 @@ export const useNavigation = () => {
     [tenantName, hosting]
   );
 
-  const navigate = useCallback(
+  const onNavigate = useCallback(
     (to) => {
       const newURL = appendCurrentURL(
         ensureAbsolutePathsHaveTenantNamePrefixed(to)
       );
-      history.push(newURL);
+      navigate(newURL);
     },
-    [history, appendCurrentURL]
+    [appendCurrentURL, ensureAbsolutePathsHaveTenantNamePrefixed, navigate]
   );
 
   return {
     appendCurrentURL,
     ensureAbsolutePathsHaveTenantNamePrefixed,
-    navigate,
+    navigate: onNavigate,
   };
 };

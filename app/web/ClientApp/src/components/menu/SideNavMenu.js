@@ -63,7 +63,7 @@ export const SideNavMenu = ({ multitenant }) => {
         return newActiveMenu !== "integrations" ? newActiveMenu : null;
       }
 
-      if (oldActiveMenu === "recommenders") {
+      if (oldActiveMenu === "campaigns") {
         // list of menu where recommendation route exist
         const recommenderMenu = ["promotions", "parameters"];
         return !recommenderMenu.includes(newActiveMenu) ? newActiveMenu : null;
@@ -76,7 +76,7 @@ export const SideNavMenu = ({ multitenant }) => {
   const isActiveMenu = useCallback(
     (menu) => {
       // Note: this is a special condition for old routes
-      if (activeMenu === "recommenders") {
+      if (activeMenu === "campaigns") {
         return activeMenuItem.includes(menu.id.slice(0, -1));
       }
 

@@ -1,6 +1,6 @@
-import { Auth0Provider } from "@auth0/auth0-react";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 export const specialPaths = [
   "/settings/integrations/hubspotconnector",
@@ -18,9 +18,10 @@ export const isSpecialPath = (path) => {
 
 export const Auth0ProviderWrapper = ({ auth0Config, children }) => {
   // TODO: make this work for the new multi-tenant callbacks
-  const history = useHistory();
+  const navigate = useNavigate();
+
   const onRedirectCallback = (appState) => {
-    history.push(
+    navigate(
       appState && appState.returnTo
         ? appState.returnTo
         : window.location.pathname

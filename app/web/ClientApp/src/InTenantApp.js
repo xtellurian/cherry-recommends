@@ -1,9 +1,8 @@
 import React from "react";
-import { Redirect, Route } from "react-router";
-import { useRouteMatch } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+
 import { Home } from "./components/Home";
 import { CustomersComponent } from "./components/customers/CustomersComponent";
-import AuthorizeRoute from "./components/auth0/ProtectedRoute";
 import { ApiDocs } from "./components/docs/ApiDocs";
 import { Profile } from "./components/auth0/Profile";
 import { SettingsComponent } from "./components/settings/SettingsComponent";
@@ -16,86 +15,108 @@ import { EventsComponent } from "./components/events/EventsComponent";
 import { AdminComponent } from "./components/admin/AdminComponent";
 import { TenantSettingsComponent } from "./components/tenant-settings/TenantSettingsComponent";
 import Identifier from "./analytics/Identifier";
-import "./global-css/cherry.css";
 import { ChannelsComponent } from "./components/channels/ChannelsComponent";
 import { GettingStartedChecklistComponent } from "./components/onboarding/GettingStartedChecklist";
+import { Layout as PageLayout } from "./components/Layout";
+import ProtectedRoute from "./components/auth0/ProtectedRoute";
+import { ErrorBoundary } from "./components/molecules/ErrorBoundary";
+import { TenantProviderContainer } from "./components/tenants/TenantProviderContainer";
+
+import "./global-css/cherry.css";
 
 // TODO: if single tenant, path format must be `/<menu>/<submenu>`
 // TODO: if multi tenant, path format must be `/<tenant-name>/<menu>/<submenu>`
-
-const InTenantApp = ({ multitenant }) => {
-  const { params } = useRouteMatch();
-  let routePrefix = "";
-  if (multitenant) {
-    routePrefix = `/${params.tenant}`;
-  }
-
+export const InTenantApp = ({ multitenant, specialRoutes }) => {
   return (
-    <React.Fragment>
-      <Route exact path={`${routePrefix}/`} component={Home} />
-      <AuthorizeRoute
-        path={`${routePrefix}/admin`}
-        component={AdminComponent}
-      />
+    <Routes>
+      <Route path={multitenant ? "/:tenant" : "/"}>
+        <Route element={<TenantProviderContainer />}>
+          <Route element={<PageLayout multitenant={multitenant} />}>
+            <Route element={<Identifier />}>
+              <Route element={<ErrorBoundary />}>
+                <Route index element={<ProtectedRoute component={Home} />} />
+                <Route
+                  path="admin/*"
+                  element={<ProtectedRoute component={AdminComponent} />}
+                />
+                <Route
+                  path="customers/*"
+                  element={<ProtectedRoute component={CustomersComponent} />}
+                />
+                <Route
+                  path="metrics/*"
+                  element={<ProtectedRoute component={MetricsComponent} />}
+                />
+                <Route
+                  path="parameters/*"
+                  element={<ProtectedRoute component={ParametersComponent} />}
+                />
+                <Route
+                  path="campaigns/*"
+                  element={<ProtectedRoute component={CampaignsComponent} />}
+                />
+                <Route
+                  path="promotions/*"
+                  element={<ProtectedRoute component={PromotionsComponent} />}
+                />
+                <Route
+                  path="events/*"
+                  element={<ProtectedRoute component={EventsComponent} />}
+                />
+                <Route
+                  path="settings/*"
+                  element={<ProtectedRoute component={SettingsComponent} />}
+                />
+                <Route
+                  path="tenant-settings/*"
+                  element={
+                    <ProtectedRoute component={TenantSettingsComponent} />
+                  }
+                />
+                <Route
+                  path="reports/*"
+                  element={<ProtectedRoute component={ReportsComponent} />}
+                />
 
-      {/* TODO: move out of single tenant app?  */}
-      <AuthorizeRoute component={Profile} path={`${routePrefix}/profile`} />
+                {/* TODO: Create IntegrationComponent and replace ChannelsComponent with it */}
+                <Route
+                  path="integrations/*"
+                  element={<ProtectedRoute component={ChannelsComponent} />}
+                />
 
-      {/* TODO: move to CustomerComponent */}
-      <Route path={`${routePrefix}/tracked-users`}>
-        <Redirect to={`${routePrefix}/customers`} />
+                <Route
+                  path="getting-started"
+                  element={
+                    <ProtectedRoute
+                      component={GettingStartedChecklistComponent}
+                    />
+                  }
+                />
+                <Route
+                  path="docs/api"
+                  element={<ProtectedRoute component={ApiDocs} />}
+                />
+
+                {/* TODO: Move out of single tenant app? */}
+                <Route
+                  path={multitenant ? "_profile" : "profile"}
+                  element={<ProtectedRoute component={Profile} />}
+                />
+
+                <Route
+                  path="tracked-users"
+                  element={<Navigate to="/customers" />}
+                />
+              </Route>
+            </Route>
+          </Route>
+        </Route>
       </Route>
 
-      <AuthorizeRoute
-        path={`${routePrefix}/customers`}
-        component={CustomersComponent}
-      />
-
-      <AuthorizeRoute
-        path={`${routePrefix}/metrics`}
-        component={MetricsComponent}
-      />
-      <AuthorizeRoute
-        path={`${routePrefix}/parameters`}
-        component={ParametersComponent}
-      />
-      <AuthorizeRoute
-        path={`${routePrefix}/campaigns`}
-        component={CampaignsComponent}
-      />
-      <AuthorizeRoute
-        path={`${routePrefix}/promotions`}
-        component={PromotionsComponent}
-      />
-      <AuthorizeRoute
-        path={`${routePrefix}/events`}
-        component={EventsComponent}
-      />
-      <AuthorizeRoute
-        path={`${routePrefix}/settings`}
-        component={SettingsComponent}
-      />
-      <AuthorizeRoute
-        path={`${routePrefix}/tenant-settings`}
-        component={TenantSettingsComponent}
-      />
-      <AuthorizeRoute
-        path={`${routePrefix}/reports`}
-        component={ReportsComponent}
-      />
-      {/* Note: move to IntegrationsComponent */}
-      <AuthorizeRoute
-        path={`${routePrefix}/integrations/channels`}
-        component={ChannelsComponent}
-      />
-      <AuthorizeRoute
-        path={`${routePrefix}/getting-started`}
-        component={GettingStartedChecklistComponent}
-      />
-      <Route path={`${routePrefix}/docs/api`} component={ApiDocs} />
-
-      <Identifier />
-    </React.Fragment>
+      {/* special routes are not influenced by :tenant parameter */}
+      {/* special routes are outside the PageLayout wrapper */}
+      {specialRoutes}
+    </Routes>
   );
 };
 

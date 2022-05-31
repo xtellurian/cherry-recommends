@@ -1,8 +1,6 @@
 import React from "react";
-import { Redirect, Route } from "react-router";
-import { Switch, useRouteMatch } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import AuthorizeRoute from "../auth0/ProtectedRoute";
 import { UploadTrackedUserComponent } from "./UploadUsers";
 import { CustomersSummary } from "./CustomersSummary";
 import { CustomerDetail } from "./CustomerDetail";
@@ -11,88 +9,37 @@ import { LinkToIntegratedSystem } from "./LinkToIntegratedSystem";
 import { EditProperties } from "./EditProperties";
 import { CreateEvent } from "./CreateEvent";
 import Metrics from "./Metrics";
-import { ErrorBoundary } from "../molecules/ErrorBoundary";
 import { BusinessesComponent } from "../businesses/BusinessesComponent";
 import { SegmentsComponent } from "../segments/SegmentsComponent";
 import { DataViewComponent } from "../data/DataViewComponent";
 
 const DefaultComponent = () => {
-  let { path } = useRouteMatch();
-
   return (
-    <React.Fragment>
-      <ErrorBoundary>
-        <Switch>
-          <AuthorizeRoute exact path={`${path}`} component={CustomersSummary} />
-          <AuthorizeRoute
-            exact
-            path={`${path}/upload`}
-            component={UploadTrackedUserComponent}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/create`}
-            component={CreateCustomer}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/detail/:id`}
-            component={CustomerDetail}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/link-to-integrated-system/:id`}
-            component={LinkToIntegratedSystem}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/metrics/:id`}
-            component={Metrics}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/edit-properties/:id`}
-            component={EditProperties}
-          />
-          <AuthorizeRoute
-            exact
-            path={`${path}/create-event/:id`}
-            component={CreateEvent}
-          />
-        </Switch>
-      </ErrorBoundary>
-    </React.Fragment>
+    <Routes>
+      <Route index element={<CustomersSummary />} />
+      <Route path="upload" element={<UploadTrackedUserComponent />} />
+      <Route path="create" element={<CreateCustomer />} />
+      <Route path="detail/:id" element={<CustomerDetail />} />
+      <Route
+        path="link-to-integrated-system/:id"
+        element={<LinkToIntegratedSystem />}
+      />
+      <Route path="metrics/:id" element={<Metrics />} />
+      <Route path="edit-properties/:id" element={<EditProperties />} />
+      <Route path="create-event/:id" element={<CreateEvent />} />
+    </Routes>
   );
 };
 
-export const CustomersComponent = (props) => {
-  let { path } = useRouteMatch();
-
+export const CustomersComponent = () => {
   return (
-    <React.Fragment>
-      <ErrorBoundary>
-        <Switch>
-          <AuthorizeRoute
-            path={`${path}/customers`}
-            component={DefaultComponent}
-          />
-          <AuthorizeRoute
-            path={`${path}/businesses`}
-            component={BusinessesComponent}
-          />
-          <AuthorizeRoute
-            path={`${path}/segments`}
-            component={SegmentsComponent}
-          />
-          <AuthorizeRoute
-            path={`${path}/dataview`}
-            component={DataViewComponent}
-          />
-          <Route path={path}>
-            <Redirect to={`${path}/customers`} />
-          </Route>
-        </Switch>
-      </ErrorBoundary>
-    </React.Fragment>
+    <Routes>
+      <Route path="customers/*" element={<DefaultComponent />} />
+      <Route path="businesses/*" element={<BusinessesComponent />} />
+      <Route path="segments/*" element={<SegmentsComponent />} />
+      <Route path="dataview/*" element={<DataViewComponent />} />
+
+      <Route index element={<Navigate to="customers" />} />
+    </Routes>
   );
 };

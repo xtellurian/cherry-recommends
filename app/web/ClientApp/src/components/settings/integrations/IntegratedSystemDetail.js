@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useRouteMatch } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { Check } from "react-bootstrap-icons";
 import {
   renameAsync,
@@ -28,7 +28,7 @@ import { KlaviyoConfiguration } from "./klaviyo/KlaviyoConfiguration";
 export const IntegratedSystemDetail = () => {
   const token = useAccessToken();
   const { navigate } = useNavigation();
-  const { path } = useRouteMatch();
+  const location = useLocation();
   let { id } = useParams();
   const query = useQuery();
   const environmentId = query.get("environmentId");
@@ -75,14 +75,14 @@ export const IntegratedSystemDetail = () => {
 
   React.useEffect(() => {
     // Remove environmentId from the url
-    if (currentEnvironment && path && environmentId) {
-      console.debug("Navigation to", path);
+    if (currentEnvironment && location.pathname && environmentId) {
+      console.debug("Navigation to", location);
       navigate({
-        pathnmame: path,
+        pathnmame: location,
         search: null,
       });
     }
-  }, [currentEnvironment, path, environmentId]);
+  }, [currentEnvironment, location, environmentId]);
 
   return (
     <React.Fragment>
