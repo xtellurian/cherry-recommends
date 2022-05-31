@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using Pulumi;
 using Pulumi.AzureNative.Resources;
@@ -9,46 +8,10 @@ using SignalBox.Core.Constants;
 
 namespace SignalBox.Azure
 {
-    class MultitenantDatabaseComponent
+    class MultitenantDatabaseComponent : DatabaseComponentBase
     {
-        public MultitenantDatabaseComponent(ResourceGroup rg)
+        public MultitenantDatabaseComponent(ResourceGroup rg) : base(rg)
         {
-            var config = new Config();
-            var databaseConfig = new Config("database");
-            var username = config.Get("sqlAdmin") ?? "pulumi";
-            var password = config.RequireSecret("sqlPassword");
-            var adminusername = AzureDBUserNames.AppAdminUserName;
-            var readusername = AzureDBUserNames.AppReadUserName;
-            var adminpassword = new RandomPassword(adminusername, new RandomPasswordArgs
-            {
-                Length = 16,
-                MinLower = 2,
-                MinNumeric = 2,
-                MinSpecial = 2,
-                MinUpper = 2,
-                OverrideSpecial = "!$",
-            });
-            var readpassword = new RandomPassword(readusername, new RandomPasswordArgs
-            {
-                Length = 16,
-                MinLower = 2,
-                MinNumeric = 2,
-                MinSpecial = 2,
-                MinUpper = 2,
-                OverrideSpecial = "!$",
-            });
-
-            var sqlServer = new Server("multiSql", new ServerArgs
-            {
-                ResourceGroupName = rg.Name,
-                AdministratorLogin = username,
-                AdministratorLoginPassword = password,
-                Version = "12.0",
-            }, new CustomResourceOptions
-            {
-                Protect = string.Equals(config.Require("environment"), "Production") // protect the SQL Server
-            });
-
             var tenantDb = new Database("tenants", new DatabaseArgs
             {
                 DatabaseName = "tenants",
@@ -78,8 +41,8 @@ namespace SignalBox.Azure
                 Sku = new SkuArgs
                 {
                     Capacity = databaseConfig.GetInt32("poolCapacity") ?? 2,
-                    Name = "GP_Gen5",
-                    Tier = "GeneralPurpose",
+                    Name = databaseConfig.Get("poolSkuName") ?? "GP_Gen5",
+                    Tier = databaseConfig.Get("poolSkuTier") ?? "GeneralPurpose",
                 }
             }, new CustomResourceOptions
             {
@@ -120,35 +83,25 @@ namespace SignalBox.Azure
                 EndIpAddress = "0.0.0.0",
             });
 
-            this.TenantDbConnectionString = Output.Tuple<string, string, string>(sqlServer.Name, tenantDb.Name, password)
+            this.TenantDbConnectionString = Output.Tuple<string, string, string>(sqlServer.Name, tenantDb.Name, Password)
                 .Apply(t =>
                 {
                     (string server, string database, string pwd) = t;
                     return
-                        $"Server=tcp:{server}.database.windows.net,1433;Initial Catalog={database};User ID={username};Password={pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;";
+                        $"Server=tcp:{server}.database.windows.net,1433;Initial Catalog={database};User ID={UserName};Password={pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;";
                 });
 
-            this.UserName = username;
-            this.Password = password;
+
             this.Server = sqlServer;
             this.ElasticPool = elasticPool;
             this.ServerName = sqlServer.Name;
             this.TenantDbName = tenantDb.Name;
             this.ResourceGroup = rg;
-            this.AdminUserName = adminusername;
-            this.AdminPassword = adminpassword.Result;
-            this.ReadUserName = readusername;
-            this.ReadPassword = readpassword.Result;
+
         }
 
         public ResourceGroup ResourceGroup { get; }
         public Output<string> TenantDbConnectionString { get; }
-        public string UserName { get; }
-        public Output<string> Password { get; }
-        public string AdminUserName { get; }
-        public Output<string> AdminPassword { get; }
-        public string ReadUserName { get; }
-        public Output<string> ReadPassword { get; }
         public Server Server { get; }
         public ElasticPool ElasticPool { get; }
         public Output<string> ServerName { get; }

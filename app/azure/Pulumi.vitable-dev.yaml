@@ -17,6 +17,10 @@ config:
   azure-synapse:enable: "false"
   azure-synapse:sqlPassword:
     secure: AAABAMw5Y6E2Ng1bQRYJ+wOVAsTGdsscaZmJuacN0K1law59SN6IkLhF
+  database:poolCapacity: "50"
+  database:poolMaxCapacityPerDatabase: "50"
+  database:poolSkuName: StandardPool
+  database:poolSkuTier: Standard
   launch-darkly:clientSideId: 6227f1bfa0fd7014b02288e9
   signalbox:environment: Development
   signalbox:login-domain: canary.login.cherry.ai

@@ -14,6 +14,10 @@ config:
   azure-native:tenantId: 617bc365-674a-436e-8a27-5bacbe6df190
   azure-synapse:sqlPassword:
     secure: AAABADKCOUuSuQrrsxuI9AlFNmCWsDhMXcpvCg18/UikVnd8J+VjlYm0ng==
+  database:poolCapacity: "50"
+  database:poolMaxCapacityPerDatabase: "5"
+  database:poolSkuName: BasicPool
+  database:poolSkuTier: Basic
   hubspot:appId: "308459"
   hubspot:clientId: 05e9c9c1-dcc7-4415-b6ed-fc772f26de66
   hubspot:clientSecret:
