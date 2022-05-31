@@ -38,7 +38,7 @@ const WebhookConfiguration = ({ channel }) => {
       endpoint,
     })
       .then(() =>
-        navigate({ pathname: `/integrations/channels/detail/${channel.id}` })
+        navigate(`/integrations/channels/detail/${channel.id}`, ["tab"])
       )
       .catch((e) => setError(e))
       .finally(() => setSaving(false));
@@ -108,7 +108,7 @@ const WebConfiguration = ({ channel }) => {
       },
     })
       .then(() =>
-        navigate({ pathname: `/integrations/channels/detail/${channel.id}` })
+        navigate(`/integrations/channels/detail/${channel.id}`, ["tab"])
       )
       .catch((e) => setError(e))
       .finally(() => setSaving(false));

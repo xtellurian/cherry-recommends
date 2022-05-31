@@ -42,7 +42,9 @@ const CampaignChannelRow = ({ channel, remove }) => {
           <div className="mt-3">
             <CopyableField
               label="Enable Popup"
-              value={channel.PopupAskForEmail ? "Enabled" : "Disabled"}
+              value={
+                channel.properties?.popupAskForEmail ? "Enabled" : "Disabled"
+              }
             />
           </div>
         )}
