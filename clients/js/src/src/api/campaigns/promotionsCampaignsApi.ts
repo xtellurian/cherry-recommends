@@ -142,7 +142,7 @@ export const removePromotionAsync = async ({
   return await executeFetch({
     path: `api/campaigns/PromotionsCampaigns/${id}/Promotions/${promotionId}`,
     token,
-    method: "post",
+    method: "delete",
   });
 };
 

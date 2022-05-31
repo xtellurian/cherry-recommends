@@ -21,18 +21,24 @@ export const PromotionRow = ({ promotion, children }) => {
     }
   };
 
+  const stopPropagation = (e) => e.stopPropagation();
+
   return (
     <FlexRow
       className="clickable-row"
-      onClick={handleClick}
       style={{ cursor: "pointer" }}
+      onClick={handleClick}
     >
       <div className="flex-shrink-1">
         <Tag className="m-2" size={25} />
       </div>{" "}
       <div className="flex-grow-1 text-left">{promotion.name}</div>
       <div>{shortenDescription(promotion.description)}</div>
-      {children ? <div className="flex-shrink-1 p-2">{children}</div> : null}
+      {children ? (
+        <div className="flex-shrink-1 p-2" onClick={stopPropagation}>
+          {children}
+        </div>
+      ) : null}
     </FlexRow>
   );
 };
