@@ -87,6 +87,14 @@ namespace SignalBox.Azure
                 Status = EntityStatus.Active,
             });
 
+            var monitorCustomerUpdatedCg = new ConsumerGroup("monitorCusUpdCg", new ConsumerGroupArgs
+            {
+                ConsumerGroupName = AzureEventhubConsumerGroups.Monitoring,
+                EventHubName = customerHasUpdatedHub.Name,
+                NamespaceName = ns.Name,
+                ResourceGroupName = rg.Name,
+            });
+
             this.EventProcessingHubName = eventProcessingHub.Name;
             this.CustomerHasUpdatedHubName = customerHasUpdatedHub.Name;
 
