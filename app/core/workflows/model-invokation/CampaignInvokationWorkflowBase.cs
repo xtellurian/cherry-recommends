@@ -17,14 +17,14 @@ namespace SignalBox.Core.Workflows
         private readonly IChannelStore channelStore;
         private readonly IWebhookSenderClient webhookSender;
         protected readonly IDateTimeProvider dateTimeProvider;
-        private readonly IKlaviyoSystemWorkflow klaviyoWorkflow;
+        private readonly IChannelDeliveryWorkflow channelDeliveryWorkflow;
 
         public CampaignInvokationWorkflowBase(
                                                  ICampaignStore<T> store,
                                                  IStoreCollection storeCollection,
                                                  IWebhookSenderClient webhookSender,
                                                  IDateTimeProvider dateTimeProvider,
-                                                 IKlaviyoSystemWorkflow klaviyoWorkflow) // todo: refactor out klaviyo into channel workflow
+                                                 IChannelDeliveryWorkflow channelDeliveryWorkflow)
         {
             this.store = store;
             this.customerMetricStore = storeCollection.ResolveStore<IHistoricCustomerMetricStore, HistoricCustomerMetric>();
@@ -33,7 +33,7 @@ namespace SignalBox.Core.Workflows
             this.channelStore = storeCollection.ResolveStore<IChannelStore, ChannelBase>();
             this.webhookSender = webhookSender;
             this.dateTimeProvider = dateTimeProvider;
-            this.klaviyoWorkflow = klaviyoWorkflow;
+            this.channelDeliveryWorkflow = channelDeliveryWorkflow;
         }
 
 #nullable enable
@@ -184,6 +184,9 @@ namespace SignalBox.Core.Workflows
                 }
                 else if (channel is EmailChannel emailChannel)
                 {
+                    await channelDeliveryWorkflow.SendToChannel(emailChannel, recommendation);
+
+                    /*
                     await channelStore.Load(channel, _ => _.LinkedIntegratedSystem);
                     if (emailChannel.LinkedIntegratedSystem.SystemType == IntegratedSystemTypes.Klaviyo)
                     {
@@ -193,6 +196,7 @@ namespace SignalBox.Core.Workflows
                     {
                         context.LogMessage($"WARN: Unable to send email to channel {channel.Id}");
                     }
+                    */
                 }
             }
         }

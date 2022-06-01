@@ -38,7 +38,7 @@ namespace SignalBox.Test.Workflows
             public Mock<IAudienceStore> MockAudienceStore { get; set; } = new Mock<IAudienceStore>();
             public Mock<IInternalOptimiserClientFactory> MockInternalOptimiserClientFactory { get; set; } = new Mock<IInternalOptimiserClientFactory>();
             public Mock<IDiscountCodeWorkflow> MockDiscountCodeWorkflow { get; set; } = new Mock<IDiscountCodeWorkflow>();
-            public Mock<IKlaviyoSystemWorkflow> MockKlaviyoWorkflow { get; set; } = new Mock<IKlaviyoSystemWorkflow>();
+            public Mock<IChannelDeliveryWorkflow> MockChannelDeliveryWorkflow { get; set; } = new Mock<IChannelDeliveryWorkflow>();
             public Mock<IOfferStore> MockOfferStore { get; set; } = new Mock<IOfferStore>();
             public Mock<IArgumentRuleStore> MockArgumentRuleStore { get; set; } = new Mock<IArgumentRuleStore>();
             public MockStoreCollection MockStoreCollection => new MockStoreCollection()
@@ -71,7 +71,7 @@ namespace SignalBox.Test.Workflows
                 deps.MockWebhookSenderClient.Object,
                 deps.MockInternalOptimiserClientFactory.Object,
                 deps.MockDiscountCodeWorkflow.Object,
-                deps.MockKlaviyoWorkflow.Object
+                deps.MockChannelDeliveryWorkflow.Object
             );
 
             var baseline = new RecommendableItem("item1", "Item 1", 1, 1, BenefitType.Percent, 1, PromotionType.Discount, null);
@@ -106,7 +106,7 @@ namespace SignalBox.Test.Workflows
                 deps.MockWebhookSenderClient.Object,
                 deps.MockInternalOptimiserClientFactory.Object,
                 deps.MockDiscountCodeWorkflow.Object,
-                deps.MockKlaviyoWorkflow.Object
+                deps.MockChannelDeliveryWorkflow.Object
             );
 
             var baseline = new RecommendableItem("item1", "Item 1", 1, 1, BenefitType.Percent, 1, PromotionType.Discount, null);
@@ -144,7 +144,7 @@ namespace SignalBox.Test.Workflows
                 deps.MockWebhookSenderClient.Object,
                 deps.MockInternalOptimiserClientFactory.Object,
                 deps.MockDiscountCodeWorkflow.Object,
-                deps.MockKlaviyoWorkflow.Object
+                deps.MockChannelDeliveryWorkflow.Object
             );
             // setup dependency calls
             deps.MockItemsRecommendationStore.SetupStoreCreate<Mock<IItemsRecommendationStore>, IItemsRecommendationStore, ItemsRecommendation>();

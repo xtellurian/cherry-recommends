@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SignalBox.Core.Recommendations;
 
 namespace SignalBox.Core.Workflows
 {
@@ -134,6 +135,17 @@ namespace SignalBox.Core.Workflows
             channel.ListTriggerName = listName;
             await webhookChannelStore.Context.SaveChanges();
             return channel;
+        }
+
+        public Task<bool> CanSend(ChannelBase channel, RecommendationEntity recommendation)
+        {
+            var canSend = false;
+            if (channel is EmailChannel)
+            {
+                canSend = !string.IsNullOrEmpty(recommendation.Customer.Email);
+            }
+
+            return Task.FromResult(canSend);
         }
     }
 }

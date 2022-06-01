@@ -35,8 +35,8 @@ namespace SignalBox.Core.Workflows
                                     IWebhookSenderClient webhookSenderClient,
                                     IInternalOptimiserClientFactory optimiserClientFactory,
                                     IDiscountCodeWorkflow discountCodeWorkflow,
-                                    IKlaviyoSystemWorkflow klaviyoWorkflow)
-                                    : base(itemsRecommenderStore, storeCollection, webhookSenderClient, dateTimeProvider, klaviyoWorkflow)
+                                    IChannelDeliveryWorkflow channelDeliveryWorkflow)
+                                    : base(itemsRecommenderStore, storeCollection, webhookSenderClient, dateTimeProvider, channelDeliveryWorkflow)
         {
             this.logger = logger;
             this.recommendationCache = recommendationCache;
