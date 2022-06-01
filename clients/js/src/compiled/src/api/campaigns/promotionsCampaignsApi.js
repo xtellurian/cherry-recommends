@@ -384,3 +384,9 @@ export const fetchOffersAsync = async ({ token, page, pageSize, id, offerState, 
         query: { offerState },
     });
 };
+export const fetchARPOReportAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        token,
+        path: `api/campaigns/PromotionsCampaigns/${id}/ARPOReport`,
+    });
+};

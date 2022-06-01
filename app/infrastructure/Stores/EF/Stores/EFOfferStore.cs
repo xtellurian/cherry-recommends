@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using SignalBox.Core.Recommendations;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
@@ -30,6 +32,14 @@ namespace SignalBox.Infrastructure.EntityFramework
         public async Task<IEnumerable<Offer>> ReadOffersForCustomer(Customer customer)
         {
             var results = await QuerySet.Where(_ => _.Recommendation.CustomerId == customer.Id).ToListAsync();
+            return results;
+        }
+
+        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryARPOReportData(PromotionsCampaign campaign, ARPOReportType type, DateTimeOffset startDate, OfferState state)
+        {
+            var results = await context.OfferMeanGrossRevenues
+                .FromSqlInterpolated($"dbo.sp_OfferMeanGrossRevenue {campaign.Id}, {type}, {startDate}, {state.ToString()}")
+                .ToListAsync();
             return results;
         }
     }

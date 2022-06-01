@@ -13,9 +13,13 @@ namespace SignalBox.Infrastructure.EntityFramework
 #nullable enable
     public class EFHistoricCustomerMetricStore : EFEntityStoreBase<HistoricCustomerMetric>, IHistoricCustomerMetricStore
     {
-        public EFHistoricCustomerMetricStore(IDbContextProvider<SignalBoxDbContext> contextProvider)
+        private readonly IDateTimeProvider dateTimeProvider;
+
+        public EFHistoricCustomerMetricStore(IDbContextProvider<SignalBoxDbContext> contextProvider, IDateTimeProvider dateTimeProvider)
         : base(contextProvider, c => c.HistoricCustomerMetrics)
-        { }
+        {
+            this.dateTimeProvider = dateTimeProvider;
+        }
 
         public async Task<int> CurrentMaximumCustomerMetricVersion(Customer customer, Metric metric)
         {
@@ -113,8 +117,8 @@ namespace SignalBox.Infrastructure.EntityFramework
                 throw new ArgumentNullException(nameof(metric));
             }
             // past twelve weeks worth of aggregation
-            var WeeksAgoDt = DateTime.Today.AddDays(-7 * weeksAgo);
-            DateTimeOffset firstOfWeek = WeeksAgoDt.FirstDayOfWeek(DayOfWeek.Monday);
+            var weeksAgoDt = dateTimeProvider.Now.ToUniversalTime().AddDays(-7 * weeksAgo);
+            DateTimeOffset firstOfWeek = weeksAgoDt.FirstDayOfWeek(DayOfWeek.Monday);
             var numericAggregates = await context.CustomerMetricWeeklyNumericAggregates
                 .Where(_ => _.MetricId == metric.Id && _.FirstOfWeek >= firstOfWeek)
                 .OrderBy(_ => _.FirstOfWeek)
@@ -130,8 +134,8 @@ namespace SignalBox.Infrastructure.EntityFramework
                 throw new ArgumentNullException(nameof(metric));
             }
             // past twelve weeks worth of aggregation
-            var WeeksAgoDt = DateTime.Today.AddDays(-7 * weeksAgo);
-            DateTimeOffset firstOfWeek = WeeksAgoDt.FirstDayOfWeek(DayOfWeek.Monday);
+            var weeksAgoDt = dateTimeProvider.Now.ToUniversalTime().AddDays(-7 * weeksAgo);
+            DateTimeOffset firstOfWeek = weeksAgoDt.FirstDayOfWeek(DayOfWeek.Monday);
             var stringAggregates = await context.CustomerMetricWeeklyStringAggregates
                 .Where(_ => _.MetricId == metric.Id && _.FirstOfWeek >= firstOfWeek)
                 .OrderBy(_ => _.FirstOfWeek)

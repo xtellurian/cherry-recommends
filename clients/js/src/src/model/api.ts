@@ -7819,6 +7819,84 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ItemsRecommenders/{id}/ARPOReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ARPOReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/ARPOReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ARPOReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/ARPOReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ARPOReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/Items": {
     get: {
       parameters: {
@@ -11590,6 +11668,12 @@ export interface paths {
 
 export interface components {
   schemas: {
+    ARPOReportDto: {
+      campaignId?: number;
+      type?: components["schemas"]["ARPOReportType"];
+      data?: components["schemas"]["OfferMeanGrossRevenue"][] | null;
+    };
+    ARPOReportType: "daily" | "weekly" | "monthly";
     ActivityFeedEntity: {
       activityKind?: components["schemas"]["ActivityKinds"];
       activityItems?: components["schemas"]["ObjectPaginated"];
@@ -12587,6 +12671,15 @@ export interface components {
       redeemedAt?: string | null;
       grossRevenue?: number | null;
       redeemedPromotion?: components["schemas"]["RecommendableItem"];
+    };
+    OfferMeanGrossRevenue: {
+      startDate?: string;
+      endDate?: string;
+      totalGrossRevenue?: number;
+      meanGrossRevenue?: number;
+      baselineMeanGrossRevenue?: number;
+      distinctCustomerCount?: number;
+      offerCount?: number;
     };
     OfferPaginated: {
       items?: components["schemas"]["Offer"][] | null;

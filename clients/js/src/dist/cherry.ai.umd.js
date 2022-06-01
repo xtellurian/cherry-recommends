@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory((global.cherry = global.cherry || {}, global.cherry.ai = {})));
-}(this, (function (exports) { 'use strict';
+})(this, (function (exports) { 'use strict';
 
   var axios$2 = {exports: {}};
 
@@ -1933,7 +1933,7 @@
     handleErrorResponse: handleErrorResponse
   });
 
-  const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, } = { method: "get", path: "/" }) => {
+  const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, }) => {
       const baseUrl = getBaseUrl();
       const client = current({ baseUrl: baseUrl });
       const params = new URLSearchParams();
@@ -5032,6 +5032,12 @@
           query: { offerState },
       });
   };
+  const fetchARPOReportAsync = async ({ token, id, }) => {
+      return await executeFetch({
+          token,
+          path: `api/campaigns/PromotionsCampaigns/${id}/ARPOReport`,
+      });
+  };
 
   var promotionsCampaignsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -5082,7 +5088,8 @@
     addCampaignChannelAsync: addCampaignChannelAsync,
     removeCampaignChannelAsync: removeCampaignChannelAsync,
     fetchPromotionsRecommendationAsync: fetchPromotionsRecommendationAsync,
-    fetchOffersAsync: fetchOffersAsync
+    fetchOffersAsync: fetchOffersAsync,
+    fetchARPOReportAsync: fetchARPOReportAsync
   });
 
   let authConfig = undefined; // caches this because it rarely change
@@ -5592,4 +5599,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));

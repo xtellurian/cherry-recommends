@@ -104,3 +104,4 @@ export const removeCampaignChannelAsync =
   promotionsCampaigns.removeCampaignChannelAsync;
 
 export const fetchOffersAsync = promotionsCampaigns.fetchOffersAsync;
+export const fetchARPOReportAsync = promotionsCampaigns.fetchARPOReportAsync;

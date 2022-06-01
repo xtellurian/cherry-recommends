@@ -1,11 +1,11 @@
 import React, { Suspense } from "react";
-import { Spinner } from "..";
-import { useAggregateMetrics } from "../../../api-hooks/metricsApi";
+import { Spinner } from "../..";
+import { useAggregateMetrics } from "../../../../api-hooks/metricsApi";
 
-import "./AggregateMetricChart.css";
+import "../AggregateMetricChart.css";
 
-const NumericChart = React.lazy(() => import("./AggregateMetricChartNumeric"));
-const CategoryChart = React.lazy(() => import("./AggregateMetricChartString"));
+const NumericChart = React.lazy(() => import("../AggregateMetricChartNumeric"));
+const CategoryChart = React.lazy(() => import("../AggregateMetricChartString"));
 
 export const AggregateMetricChartLoader = ({ metric }) => {
   const { id, valueType } = metric;

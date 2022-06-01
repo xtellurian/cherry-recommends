@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router";
 import {
+  useARPOReport,
   usePerformance,
   usePromotionsCampaign,
   useReportImageBlobUrl,
@@ -15,6 +16,7 @@ import {
   TableRow,
   Cell,
 } from "../../molecules/Table";
+import CampaignARPOChart from "../../molecules/charts/CampaignARPOChart";
 
 const PerformanceTableRow = ({ data, itemsById }) => {
   const item = itemsById[data.itemId];
@@ -71,7 +73,7 @@ const Performance = () => {
   const { id } = useParams();
   const recommender = usePromotionsCampaign({ id });
   const performance = usePerformance({ id });
-  const [reportOpen, setReportOpen] = React.useState(false);
+  const arpoData = useARPOReport({ id });
   return (
     <React.Fragment>
       <PromotionCampaignLayout>
@@ -84,18 +86,23 @@ const Performance = () => {
             itemsById={performance.itemsById}
           />
         )}
-        <div className="row">
-          {!recommender.loading && !recommender.error && (
-            <React.Fragment>
+        {!recommender.loading && !recommender.error && (
+          <React.Fragment>
+            <div className="row">
               <div className="col text-center">
                 <DisplayReportImage
                   id={id}
                   useReportImageBlobUrl={useReportImageBlobUrl}
                 />
               </div>
-            </React.Fragment>
-          )}
-        </div>
+            </div>
+            <div className="row mt-2">
+              <div className="col text-center">
+                <CampaignARPOChart reportData={arpoData} />
+              </div>
+            </div>
+          </React.Fragment>
+        )}
       </PromotionCampaignLayout>
     </React.Fragment>
   );

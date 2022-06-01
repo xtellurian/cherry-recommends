@@ -12,6 +12,7 @@ using SignalBox.Core.Campaigns;
 using SignalBox.Core.Workflows;
 using SignalBox.Infrastructure.Dto;
 using SignalBox.Web.Dto;
+using System.Collections.Generic;
 
 namespace SignalBox.Web.Controllers
 {
@@ -196,6 +197,22 @@ namespace SignalBox.Web.Controllers
             };
 
             return await offerWorkflow.QueryOffers(recommender, p, state);
+        }
+
+        /// <summary>Get the Average Revenue per Offer report.</summary>
+        [HttpGet("{id}/ARPOReport")]
+        public async Task<ARPOReportDto> GetARPOReport(string id, bool? useInternalId = null)
+        {
+            var campaign = await base.GetResource(id, useInternalId);
+            var data = await offerWorkflow.QueryWeeklyARPOReportData(campaign);
+            var response = new ARPOReportDto
+            {
+                CampaignId = campaign.Id,
+                Type = ARPOReportType.Weekly,
+                Data = data
+            };
+
+            return response;
         }
 
         /// <summary>Get the promotions associated with a recommender.</summary>

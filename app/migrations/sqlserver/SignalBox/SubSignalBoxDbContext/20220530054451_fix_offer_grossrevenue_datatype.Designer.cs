@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220530054451_fix_offer_grossrevenue_datatype")]
+    partial class fix_offer_grossrevenue_datatype
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1476,26 +1478,6 @@ namespace sqlserver.SignalBox
                     b.HasIndex("RedeemedPromotionId");
 
                     b.ToTable("Offers");
-                });
-
-            modelBuilder.Entity("SignalBox.Core.OfferMeanGrossRevenue", b =>
-                {
-                    b.Property<DateTimeOffset>("EndDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<double>("MeanGrossRevenue")
-                        .HasColumnType("float");
-
-                    b.Property<int>("OfferCount")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("StartDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<double>("TotalGrossRevenue")
-                        .HasColumnType("float");
-
-                    b.ToTable("OfferMeanGrossRevenues", t => t.ExcludeFromMigrations());
                 });
 
             modelBuilder.Entity("SignalBox.Core.Optimisers.PromotionOptimiser", b =>

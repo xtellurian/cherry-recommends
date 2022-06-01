@@ -748,3 +748,14 @@ export const fetchOffersAsync = async ({
     query: { offerState },
   });
 };
+
+type ARPOReport = components["schemas"]["ARPOReportDto"];
+export const fetchARPOReportAsync = async ({
+  token,
+  id,
+}: EntityRequest): Promise<ARPOReport[]> => {
+  return await executeFetch({
+    token,
+    path: `api/campaigns/PromotionsCampaigns/${id}/ARPOReport`,
+  });
+};

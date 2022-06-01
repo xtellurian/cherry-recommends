@@ -1,7 +1,8 @@
 using System;
 using System.Text.Json.Serialization;
+using SignalBox.Core.Recommendations;
 
-namespace SignalBox.Core.Recommendations
+namespace SignalBox.Core
 {
     public class Offer : EnvironmentScopedEntity
     {
@@ -19,7 +20,7 @@ namespace SignalBox.Core.Recommendations
         public long? RedeemedPromotionId { get; set; }
         public OfferState State { get; set; }
         public DateTimeOffset? RedeemedAt { get; set; }
-        public float? GrossRevenue { get; set; }
+        public double? GrossRevenue { get; set; }
 
 #nullable enable
         [JsonIgnore]

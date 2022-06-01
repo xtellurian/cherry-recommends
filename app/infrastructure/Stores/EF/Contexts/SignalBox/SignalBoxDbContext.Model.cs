@@ -67,7 +67,10 @@ namespace SignalBox.Infrastructure
         public DbSet<RecommendationCorrelator> RecommendationCorrelators { get; set; }
         public DbSet<ParameterSetRecommendation> ParameterSetRecommendations { get; set; }
         public DbSet<ItemsRecommendation> ItemsRecommendations { get; set; }
+
+        // offers
         public DbSet<Offer> Offers { get; set; }
+        public DbSet<OfferMeanGrossRevenue> OfferMeanGrossRevenues { get; set; } // DbSet for executing stored procedure
 
         // discount codes
         public DbSet<DiscountCode> DiscountCodes { get; set; }

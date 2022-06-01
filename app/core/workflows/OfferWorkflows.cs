@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SignalBox.Core.Recommendations;
 using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Workflows
@@ -128,6 +127,25 @@ namespace SignalBox.Core.Workflows
             }
 
             return await offerStore.Query(paginate, predicate);
+        }
+
+        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryDailyARPOReportData(PromotionsCampaign campaign, int daysAgo = 7)
+        {
+            var startDate = dateTimeProvider.Now.ToUniversalTime().AddDays(-1 * daysAgo).TruncateToDayStart();
+            return await offerStore.QueryARPOReportData(campaign, ARPOReportType.Daily, startDate, OfferState.Redeemed);
+        }
+
+        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryWeeklyARPOReportData(PromotionsCampaign campaign, int weeksAgo = 11)
+        {
+            var weeksAgoDt = dateTimeProvider.Now.ToUniversalTime().AddDays(-7 * weeksAgo);
+            var startDate = weeksAgoDt.FirstDayOfWeek(DayOfWeek.Monday);
+            return await offerStore.QueryARPOReportData(campaign, ARPOReportType.Weekly, startDate, OfferState.Redeemed);
+        }
+
+        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryMonthlyARPOReportData(PromotionsCampaign campaign, int monthsAgo = 11)
+        {
+            var startDate = dateTimeProvider.Now.ToUniversalTime().AddMonths(-monthsAgo);
+            return await offerStore.QueryARPOReportData(campaign, ARPOReportType.Monthly, startDate, OfferState.Redeemed);
         }
     }
 }

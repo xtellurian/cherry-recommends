@@ -1,14 +1,14 @@
 import React from "react";
 
-import { AggregateMetricChartLoader } from "../molecules/charts/AggregateMetricChartLoader";
-import { MetricHistogramLoader } from "../molecules/charts/MetricHistogramLoader";
+import { AggregateMetricChartLoader } from "../molecules/charts/loaders/AggregateMetricChartLoader";
+import { MetricHistogramLoader } from "../molecules/charts/loaders/MetricHistogramLoader";
 import { BigPopup } from "../molecules/popups/BigPopup";
 import { DateTimeField } from "../molecules/DateTimeField";
 import { useAggregateMetricsNumeric } from "../../api-hooks/metricsApi";
 import {
   MetricQuartilesChartLoader,
   MetricQuartilesThumbnailChartLoader,
-} from "../molecules/charts/MetricQuartilesChartLoader";
+} from "../molecules/charts/loaders/MetricQuartilesChartLoader";
 import { Spinner } from "../molecules";
 
 const ReportCard = ({ name, lastUpdated, chart, chartThumbnail }) => {

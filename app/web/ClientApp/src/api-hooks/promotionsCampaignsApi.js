@@ -22,6 +22,7 @@ import {
   fetchArgumentsAsync,
   fetchChoosePromotionArgumentRulesAsync,
   fetchChooseSegmentArgumentRulesAsync,
+  fetchARPOReportAsync,
 } from "../api/promotionsCampaignsApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -442,7 +443,26 @@ export const useOffers = ({ id, pageSize, offerState }) => {
         .then(setState)
         .catch((error) => setState({ error }));
     }
-  }, [token, page, pageSize, environment]);
+  }, [token, id, page, pageSize, environment]);
+
+  return state;
+};
+
+export const useARPOReport = ({ id }) => {
+  const token = useAccessToken();
+  const [environment] = useEnvironmentReducer();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchARPOReportAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, environment]);
 
   return state;
 };

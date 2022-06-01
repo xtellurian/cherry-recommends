@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
 
-import { useMetricBin } from "../../../api-hooks/metricsApi";
+import { useMetricBin } from "../../../../api-hooks/metricsApi";
 
-import { Spinner } from "../Spinner";
+import { Spinner } from "../../Spinner";
 import {
   MetricQuartilesChart,
   MetricQuartilesThumbnailChart,
-} from "./MetricQuartilesChart";
+} from "../MetricQuartilesChart";
 
 export const MetricQuartilesThumbnailChartLoader = ({ metric }) => {
   const { id, valueType } = metric;

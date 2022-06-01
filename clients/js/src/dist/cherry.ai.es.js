@@ -1927,7 +1927,7 @@ var errorHandling = /*#__PURE__*/Object.freeze({
   handleErrorResponse: handleErrorResponse
 });
 
-const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, } = { method: "get", path: "/" }) => {
+const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, }) => {
     const baseUrl = getBaseUrl();
     const client = current({ baseUrl: baseUrl });
     const params = new URLSearchParams();
@@ -5026,6 +5026,12 @@ const fetchOffersAsync = async ({ token, page, pageSize, id, offerState, }) => {
         query: { offerState },
     });
 };
+const fetchARPOReportAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        token,
+        path: `api/campaigns/PromotionsCampaigns/${id}/ARPOReport`,
+    });
+};
 
 var promotionsCampaignsApi = /*#__PURE__*/Object.freeze({
   __proto__: null,
@@ -5076,7 +5082,8 @@ var promotionsCampaignsApi = /*#__PURE__*/Object.freeze({
   addCampaignChannelAsync: addCampaignChannelAsync,
   removeCampaignChannelAsync: removeCampaignChannelAsync,
   fetchPromotionsRecommendationAsync: fetchPromotionsRecommendationAsync,
-  fetchOffersAsync: fetchOffersAsync
+  fetchOffersAsync: fetchOffersAsync,
+  fetchARPOReportAsync: fetchARPOReportAsync
 });
 
 let authConfig = undefined; // caches this because it rarely change

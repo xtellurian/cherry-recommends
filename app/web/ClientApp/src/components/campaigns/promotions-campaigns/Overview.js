@@ -5,7 +5,7 @@ import { Row, Col } from "../../molecules/layout/Grid";
 import { ItemsRecommendationList } from "./RecommendationList";
 import { useStatistics } from "../../../api-hooks/promotionsCampaignsApi";
 import { useParams } from "react-router-dom";
-import { TargetMetricChartLoader } from "../../molecules/charts/TargetMetricChartLoader";
+import { TargetMetricChartLoader } from "../../molecules/charts/loaders/TargetMetricChartLoader";
 
 const LatestRecommendations = ({ id }) => {
   return (

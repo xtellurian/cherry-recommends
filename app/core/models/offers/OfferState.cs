@@ -1,5 +1,5 @@
 
-namespace SignalBox.Core.Recommendations
+namespace SignalBox.Core
 {
     public enum OfferState
     {

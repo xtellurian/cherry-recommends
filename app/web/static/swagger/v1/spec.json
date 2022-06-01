@@ -15968,6 +15968,147 @@
         }
       }
     },
+    "/api/recommenders/ItemsRecommenders/{id}/ARPOReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Average Revenue per Offer report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ARPOReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommenders/PromotionsRecommenders/{id}/ARPOReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Average Revenue per Offer report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ARPOReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/campaigns/PromotionsCampaigns/{id}/ARPOReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Average Revenue per Offer report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ARPOReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/recommenders/ItemsRecommenders/{id}/Items": {
       "get": {
         "tags": [
@@ -23616,6 +23757,36 @@
   },
   "components": {
     "schemas": {
+      "ARPOReportDto": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "description": "Campaign id.",
+            "format": "int64"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ARPOReportType"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferMeanGrossRevenue"
+            },
+            "description": "Data for the ARPO report.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ARPOReportType": {
+        "enum": [
+          "daily",
+          "weekly",
+          "monthly"
+        ],
+        "type": "string"
+      },
       "ActivityFeedEntity": {
         "type": "object",
         "properties": {
@@ -27411,11 +27582,45 @@
           },
           "grossRevenue": {
             "type": "number",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "redeemedPromotion": {
             "$ref": "#/components/schemas/RecommendableItem"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfferMeanGrossRevenue": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "meanGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "baselineMeanGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "distinctCustomerCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offerCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

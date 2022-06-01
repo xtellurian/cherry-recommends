@@ -28,7 +28,7 @@ namespace SignalBox.Core
         {
             return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
         }
-        public static DateTime FirstDayOfWeek(this DateTime dt, DayOfWeek day, bool toUtc = true)
+        public static DateTimeOffset FirstDayOfWeek(this DateTimeOffset dt, DayOfWeek day, bool toUtc = true)
         {
             if (toUtc)
             {

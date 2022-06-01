@@ -19,7 +19,7 @@ namespace SignalBox.Test.Workflows
         [InlineData(AggregationTypes.Sum, 10.5, 4, 42)]
         public async Task CanCalculateMeanOfNumericCustomerMetric(AggregationTypes aggType, double weeklyMean, int distinct, double expectedValue)
         {
-            var now = DateTime.Now;
+            var now = Utility.DateTimeProvider().Now;
             var mockStorageContext = new Mock<IStorageContext>();
             var mockHistoricCustomerMetricStore = new Mock<IHistoricCustomerMetricStore>();
             var mockGlobalMetricValueStore = new Mock<IGlobalMetricValueStore>();
@@ -83,7 +83,7 @@ namespace SignalBox.Test.Workflows
         [Fact]
         public async Task CanCalculateSumOfStringCustomerMetric()
         {
-            var now = DateTime.Now;
+            var now = Utility.DateTimeProvider().Now;
             var mockStorageContext = new Mock<IStorageContext>();
             var mockHistoricCustomerMetricStore = new Mock<IHistoricCustomerMetricStore>();
             var mockGlobalMetricValueStore = new Mock<IGlobalMetricValueStore>();

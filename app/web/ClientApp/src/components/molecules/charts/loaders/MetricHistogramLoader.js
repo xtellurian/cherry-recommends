@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
-import { Spinner } from "../Spinner";
-import { useMetricBin } from "../../../api-hooks/metricsApi";
+import { Spinner } from "../../Spinner";
+import { useMetricBin } from "../../../../api-hooks/metricsApi";
 
-import { MetricHistogram } from "./MetricHistogram";
+import { MetricHistogram } from "../MetricHistogram";
 
-import "./AggregateMetricChart.css";
+import "../AggregateMetricChart.css";
 
 export const MetricHistogramLoader = ({ metric }) => {
   const { id, valueType } = metric;

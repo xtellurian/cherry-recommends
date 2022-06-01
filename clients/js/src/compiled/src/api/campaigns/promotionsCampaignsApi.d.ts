@@ -156,4 +156,6 @@ interface OffersRequest extends PaginatedEntityRequest {
     offerState?: string;
 }
 export declare const fetchOffersAsync: ({ token, page, pageSize, id, offerState, }: OffersRequest) => Promise<any>;
+declare type ARPOReport = components["schemas"]["ARPOReportDto"];
+export declare const fetchARPOReportAsync: ({ token, id, }: EntityRequest) => Promise<ARPOReport[]>;
 export {};

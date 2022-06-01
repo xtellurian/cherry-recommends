@@ -90,6 +90,12 @@ interface Channel$2 extends Entity {
 
 interface components {
     schemas: {
+        ARPOReportDto: {
+            campaignId?: number;
+            type?: components["schemas"]["ARPOReportType"];
+            data?: components["schemas"]["OfferMeanGrossRevenue"][] | null;
+        };
+        ARPOReportType: "daily" | "weekly" | "monthly";
         ActivityFeedEntity: {
             activityKind?: components["schemas"]["ActivityKinds"];
             activityItems?: components["schemas"]["ObjectPaginated"];
@@ -1087,6 +1093,15 @@ interface components {
             redeemedAt?: string | null;
             grossRevenue?: number | null;
             redeemedPromotion?: components["schemas"]["RecommendableItem"];
+        };
+        OfferMeanGrossRevenue: {
+            startDate?: string;
+            endDate?: string;
+            totalGrossRevenue?: number;
+            meanGrossRevenue?: number;
+            baselineMeanGrossRevenue?: number;
+            distinctCustomerCount?: number;
+            offerCount?: number;
         };
         OfferPaginated: {
             items?: components["schemas"]["Offer"][] | null;
@@ -3011,6 +3026,8 @@ interface OffersRequest extends PaginatedEntityRequest {
     offerState?: string;
 }
 declare const fetchOffersAsync: ({ token, page, pageSize, id, offerState, }: OffersRequest) => Promise<any>;
+declare type ARPOReport = components["schemas"]["ARPOReportDto"];
+declare const fetchARPOReportAsync: ({ token, id, }: EntityRequest) => Promise<ARPOReport[]>;
 
 declare const promotionsCampaignsApi_d_fetchPromotionsCampaignsAsync: typeof fetchPromotionsCampaignsAsync;
 declare const promotionsCampaignsApi_d_fetchPromotionsCampaignAsync: typeof fetchPromotionsCampaignAsync;
@@ -3059,6 +3076,7 @@ declare const promotionsCampaignsApi_d_addCampaignChannelAsync: typeof addCampai
 declare const promotionsCampaignsApi_d_removeCampaignChannelAsync: typeof removeCampaignChannelAsync;
 declare const promotionsCampaignsApi_d_fetchPromotionsRecommendationAsync: typeof fetchPromotionsRecommendationAsync;
 declare const promotionsCampaignsApi_d_fetchOffersAsync: typeof fetchOffersAsync;
+declare const promotionsCampaignsApi_d_fetchARPOReportAsync: typeof fetchARPOReportAsync;
 declare namespace promotionsCampaignsApi_d {
   export {
     promotionsCampaignsApi_d_fetchPromotionsCampaignsAsync as fetchPromotionsCampaignsAsync,
@@ -3109,6 +3127,7 @@ declare namespace promotionsCampaignsApi_d {
     promotionsCampaignsApi_d_removeCampaignChannelAsync as removeCampaignChannelAsync,
     promotionsCampaignsApi_d_fetchPromotionsRecommendationAsync as fetchPromotionsRecommendationAsync,
     promotionsCampaignsApi_d_fetchOffersAsync as fetchOffersAsync,
+    promotionsCampaignsApi_d_fetchARPOReportAsync as fetchARPOReportAsync,
   };
 }
 

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SignalBox.Core.Recommendations;
+using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
@@ -21,7 +21,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasForeignKey(_ => _.RedeemedPromotionId);
 
             builder.Property(_ => _.State).HasConversion<string>();
-            builder.Property(_ => _.GrossRevenue).HasDefaultValue(1.0f);
+            builder.Property(_ => _.GrossRevenue).HasDefaultValue(1.0d);
         }
     }
 }
