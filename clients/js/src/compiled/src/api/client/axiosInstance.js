@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios = require("axios");
 import { getBaseUrl } from "./baseUrl";
 let currentInstance = null;
 let currentConfig = null;

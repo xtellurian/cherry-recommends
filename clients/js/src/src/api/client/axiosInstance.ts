@@ -1,4 +1,5 @@
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
+const axios = require("axios");
 import { getBaseUrl } from "./baseUrl";
 
 let currentInstance: AxiosInstance | null = null;
@@ -23,7 +24,7 @@ const initialise = (
     baseURL: config.baseUrl,
     timeout: config.timeout,
     headers: config.tenant ? { "x-tenant": config.tenant } : {},
-    validateStatus: function (status) {
+    validateStatus: function (status: number) {
       // return status < 500; // Resolve only if the status code is less than 500
       return true; // always resolve the promise
     },
