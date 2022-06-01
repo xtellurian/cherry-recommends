@@ -11,8 +11,10 @@ namespace SignalBox.Core.Workflows
         private readonly IDeferredDeliveryStore deferredDeliveryStore;
         private readonly IChannelWorkflow channelWorkflow;
         private readonly IKlaviyoSystemWorkflow klaviyoWorkflow;
+        private readonly IDateTimeProvider dateTimeProvider;
 
         public ChannelDeliveryWorkflow(ILogger<ChannelDeliveryWorkflow> logger,
+                                        IDateTimeProvider dateTimeProvider,
                                         IStoreCollection storeCollection,
                                         IChannelWorkflow channelWorkflow,
                                         IKlaviyoSystemWorkflow klaviyoWorkflow)
@@ -21,6 +23,7 @@ namespace SignalBox.Core.Workflows
             this.deferredDeliveryStore = storeCollection.ResolveStore<IDeferredDeliveryStore, DeferredDelivery>();
             this.channelWorkflow = channelWorkflow;
             this.klaviyoWorkflow = klaviyoWorkflow;
+            this.dateTimeProvider = dateTimeProvider;
             this.logger = logger;
         }
 
@@ -65,12 +68,18 @@ namespace SignalBox.Core.Workflows
             var deliveries = await deferredDeliveryStore.QueryForCustomer(customerId);
             foreach (var delivery in deliveries)
             {
+                if (delivery.LastAttemptedDelivery > dateTimeProvider.Now.AddMinutes(-5))
+                {
+                    throw new BadRequestException("Wait at least 5 minutes before attempting channel delivery.");
+                }
+
+                delivery.LastAttemptedDelivery = dateTimeProvider.Now;
                 var result = await SendRecommendationToChannel(delivery.Channel, delivery.Recommendation, false);
                 if (result)
                 {
                     await deferredDeliveryStore.Remove(delivery.Id);
-                    await deferredDeliveryStore.Context.SaveChanges();
                 }
+                await deferredDeliveryStore.Context.SaveChanges();
             }
         }
     }

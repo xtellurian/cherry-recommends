@@ -19,7 +19,7 @@ namespace dotnetFunctions
         public void Run(
             [EventHubTrigger(AzureEventhubNames.CustomerHasUpdated,
                 Connection = "CustomerHasUpdatedConnectionString",
-                ConsumerGroup = AzureEventhubConsumerGroups.Default)]
+                ConsumerGroup = AzureEventhubConsumerGroups.Monitoring)]
             SignalBox.Core.CustomerHasUpdated[] input)
         {
             _logger.LogInformation($"Received {input.Length} messages.");
