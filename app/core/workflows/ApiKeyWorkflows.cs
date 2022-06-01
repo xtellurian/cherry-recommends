@@ -81,13 +81,17 @@ namespace SignalBox.Core.Workflows
                 var hashedKey = hasher.Hash(apiKey);
                 // update the last exchanged time for the token.
                 var key = await keyStore.ReadFromHash(hashedKey);
+                if (key.ApiKeyType == ApiKeyTypes.Web)
+                {
+                    throw new BadRequestException("Web API Keys can not be exchanged for tokens.");
+                }
+
                 key.LastExchanged = dateTimeProvider.Now;
                 key.TotalExchanges++;
                 await storageContext.SaveChanges();
                 var token = await tokenCache.Get(apiKey, () => tokenFactory.GetM2MToken(key.Scope));
                 // var token = await tokenFactory.GetM2MToken(key.Scope);
                 return token;
-
             }
             else
             {

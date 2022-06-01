@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core;
@@ -40,6 +41,8 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Returns the resource with this Id.</summary>
         [HttpGet("{id}")]
+        [AllowApiKey]
+        [EnableCors(CorsPolicies.WebApiKeyPolicy)]
         public override async Task<ChannelBase> GetResource(long id)
         {
             var channel = await base.GetResource(id);
