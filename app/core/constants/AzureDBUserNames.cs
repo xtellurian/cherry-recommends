@@ -12,7 +12,7 @@ namespace SignalBox.Core.Constants
             {
                 UserName = AppAdminUserName,
                 Roles = new [] {
-                    "db_datawriter", "db_datareader"
+                    "db_datawriter", "db_datareader", "db_executor"
                 }
             },
             new DbCredential

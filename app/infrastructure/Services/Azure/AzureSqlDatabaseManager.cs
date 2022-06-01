@@ -111,6 +111,13 @@ namespace SignalBox.Infrastructure.Azure
                 {
                     // related to: deploy/sql-database-scripts/cloud/create-db-principal.sql
                     StringBuilder query = new();
+
+                    query.AppendLine("IF DATABASE_PRINCIPAL_ID('db_executor') IS NULL");
+                    query.AppendLine("BEGIN");
+                    query.AppendLine("CREATE ROLE [db_executor] AUTHORIZATION [dbo]");
+                    query.AppendLine("END");
+                    query.AppendLine("GRANT EXECUTE TO [db_executor]");
+
                     query.AppendLine($"IF NOT EXISTS (SELECT name FROM sys.database_principals WHERE name='{user.UserName}')");
                     query.AppendLine("BEGIN");
                     query.AppendLine($"CREATE USER {user.UserName} FROM LOGIN {user.UserName} ;");
