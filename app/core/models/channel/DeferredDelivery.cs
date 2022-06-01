@@ -13,8 +13,7 @@ namespace SignalBox.Core
             Recommendation = recommendation;
             RecommendationId = recommendation.Id;
         }
-
-        public DateTimeOffset? LastAttemptedDelivery { get; set; }
+        public bool? Sending { get; set; }
         public long ChannelId { get; set; }
         public ChannelBase Channel { get; set; }
         public long RecommendationId { get; set; }

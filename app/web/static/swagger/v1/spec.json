@@ -25888,9 +25888,8 @@
             "type": "string",
             "format": "date-time"
           },
-          "lastAttemptedDelivery": {
-            "type": "string",
-            "format": "date-time",
+          "sending": {
+            "type": "boolean",
             "nullable": true
           },
           "channelId": {

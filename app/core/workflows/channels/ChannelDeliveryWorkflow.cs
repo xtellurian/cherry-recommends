@@ -68,18 +68,34 @@ namespace SignalBox.Core.Workflows
             var deliveries = await deferredDeliveryStore.QueryForCustomer(customerId);
             foreach (var delivery in deliveries)
             {
-                if (delivery.LastAttemptedDelivery > dateTimeProvider.Now.AddMinutes(-5))
+                // check if we can send it
+                if (delivery.Sending != true && await channelWorkflow.CanSend(delivery.Channel, delivery.Recommendation))
                 {
-                    throw new BadRequestException("Wait at least 5 minutes before attempting channel delivery.");
+                    delivery.Sending = true;
+                    await deferredDeliveryStore.Context.SaveChanges();
+                    // mark this as sending
+                    try
+                    {
+                        var result = await SendRecommendationToChannel(delivery.Channel, delivery.Recommendation, false);
+                        if (result)
+                        {
+                            await deferredDeliveryStore.Remove(delivery.Id);
+                        }
+                        else
+                        {
+                            delivery.Sending = false;
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        logger.LogError(ex.Message);
+                        throw new WorkflowException("Error sending to channgel", ex);
+                    }
+                    finally
+                    {
+                        await deferredDeliveryStore.Context.SaveChanges();
+                    }
                 }
-
-                delivery.LastAttemptedDelivery = dateTimeProvider.Now;
-                var result = await SendRecommendationToChannel(delivery.Channel, delivery.Recommendation, false);
-                if (result)
-                {
-                    await deferredDeliveryStore.Remove(delivery.Id);
-                }
-                await deferredDeliveryStore.Context.SaveChanges();
             }
         }
     }
