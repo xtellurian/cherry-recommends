@@ -25,8 +25,8 @@
   background-color: var(--cherry-white);
   margin: auto;
   padding: 2em;
-  width: 350px;
-  max-width: 350px;
+  width: 400px;
+  max-width: 400px;
   border-radius: 3px;
   animation: zoom-in 250ms 1;
 }
@@ -116,6 +116,10 @@
   margin-right: auto;
   -webkit-animation: spin 2s linear infinite; /* Safari */
   animation: spin 2s linear infinite;
+}
+
+div.cherry-loader {
+  display: flex;
 }
 
 .cherry-modal-hide {
