@@ -173,6 +173,9 @@ namespace SignalBox.Infrastructure
             services.AddInterceptedScoped<IWebChannelStore, EFWebChannelStore, TimingInterceptor>();
             services.AddInterceptedScoped<IEmailChannelStore, EFEmailChannelStore, TimingInterceptor>();
 
+            // deliveries
+            services.AddInterceptedScoped<IDeferredDeliveryStore, EFCDeferredDeliveryStore, TimingInterceptor>();
+
             services.AddInterceptedScoped<IHashedApiKeyStore, EFHashedAPIKeyStore, TimingInterceptor>();
             services.AddInterceptedScoped<IModelRegistrationStore, EFModelRegistrationStore, TimingInterceptor>();
             services.AddInterceptedScoped<ITrackedUserSystemMapStore, EFTrackedUserSystemMapStore, TimingInterceptor>();

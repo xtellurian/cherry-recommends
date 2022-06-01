@@ -80,6 +80,10 @@ namespace SignalBox.Infrastructure
         public DbSet<WebhookChannel> WebhookChannels { get; set; }
         public DbSet<WebChannel> WebChannels { get; set; }
         public DbSet<EmailChannel> EmailChannels { get; set; }
+
+        // channel delivery
+        public DbSet<DeferredDelivery> DeferredDeliveries { get; set; }
+
         // optimisers
         public DbSet<PromotionOptimiser> PromotionOptimisers { get; set; }
 
