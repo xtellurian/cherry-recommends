@@ -1,7 +1,7 @@
 import { events } from "cherry.ai";
 import { emailValidator, generateId } from "./utilities";
 
-export const showEmailPopup = ({ header = "", subheader = "", token }) => {
+export const showEmailPopup = ({ header = "", subheader = "" }) => {
   const modalTemplate = `
       <div class="cherry-modal">
         <div class="cherry-modal-content">
@@ -11,7 +11,7 @@ export const showEmailPopup = ({ header = "", subheader = "", token }) => {
           <form class="cherry-modal-form">
             <input type="text" name="email" placeholder="Enter your email address" class="cherry-modal-input">
             <label class="cherry-error-message">Invalid email address</label>
-            <button class="cherry-modal-submit">Subscribe</button>
+            <button class="cherry-modal-submit">Submit</button>
           </form>
         </div>
       </div>
@@ -30,10 +30,6 @@ export const showEmailPopup = ({ header = "", subheader = "", token }) => {
   container.insertAdjacentHTML("beforeend", modalTemplate);
 
   const modalEl = document.getElementsByClassName("cherry-modal")[0];
-  const headerEl = document.getElementsByClassName("cherry-modal-header")[0];
-  const subheaderEl = document.getElementsByClassName(
-    "cherry-modal-subheader"
-  )[0];
   const formEl = document.getElementsByClassName("cherry-modal-form")[0];
   const submitEl = document.getElementsByClassName("cherry-modal-submit")[0];
   const closeIconEl = document.getElementsByClassName("cherry-modal-close")[0];
@@ -43,7 +39,7 @@ export const showEmailPopup = ({ header = "", subheader = "", token }) => {
   )[0];
 
   closeIconEl.addEventListener("click", () => {
-    modalEl.style.display = "none";
+    modalEl.classList.add("cherry-modal-hide");
   });
 
   formEl.addEventListener("submit", (e) => {
@@ -69,7 +65,6 @@ export const showEmailPopup = ({ header = "", subheader = "", token }) => {
 
     events
       .createEventsAsync({
-        token,
         events: [
           {
             commonUserId: sessionStorage.getItem("cherryid"),
@@ -86,13 +81,7 @@ export const showEmailPopup = ({ header = "", subheader = "", token }) => {
         ],
       })
       .then(() => {
-        formEl.remove();
-        subheaderEl.remove();
-        headerEl.textContent = "Thank you for subscribing!";
-
-        setTimeout(() => {
-          modalEl.style.display = "none";
-        }, 1000);
+        closeIconEl.click();
       });
   });
 };
