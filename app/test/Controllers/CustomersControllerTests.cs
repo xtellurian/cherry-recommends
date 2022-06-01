@@ -25,6 +25,7 @@ namespace SignalBox.Test.Controllers
             var mockIntegratedSystemStore = new Mock<IIntegratedSystemStore>();
             var mockLogger = Utility.MockLogger<CustomersController>();
             var mockIngestor = new Mock<ICustomerHasUpdatedIngestor>();
+            var mockTenantProvider = new Mock<ITenantProvider>();
 
             var customerWorkflow = new CustomerWorkflows(mockContext.Object,
                 mockWorkflowLogger.Object,
@@ -32,7 +33,8 @@ namespace SignalBox.Test.Controllers
                 mockTrackedUserSystemMapStore.Object,
                 mockIntegratedSystemStore.Object,
                 mockIngestor.Object,
-                dateTimeProvider);
+                dateTimeProvider,
+                mockTenantProvider.Object);
 
             var controller = new CustomersController(mockLogger.Object,
                                       dateTimeProvider,

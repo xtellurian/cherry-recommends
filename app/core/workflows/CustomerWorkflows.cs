@@ -17,6 +17,7 @@ namespace SignalBox.Core.Workflows
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ICustomerHasUpdatedIngestor ingestCustomerHasUpdated;
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly ITenantProvider tenantProvider;
 
         public CustomerWorkflows(IStorageContext storageContext,
             ILogger<CustomerWorkflows> logger,
@@ -24,7 +25,8 @@ namespace SignalBox.Core.Workflows
             ITrackedUserSystemMapStore trackedUserSystemMapStore,
             IIntegratedSystemStore integratedSystemStore,
             ICustomerHasUpdatedIngestor ingestCustomerHasUpdated,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            ITenantProvider tenantProvider)
         {
             this.storageContext = storageContext;
             this.logger = logger;
@@ -33,6 +35,7 @@ namespace SignalBox.Core.Workflows
             this.integratedSystemStore = integratedSystemStore;
             this.ingestCustomerHasUpdated = ingestCustomerHasUpdated;
             this.dateTimeProvider = dateTimeProvider;
+            this.tenantProvider = tenantProvider;
         }
 
         public async Task<Customer> MergeUpdateProperties(Customer customer, IDictionary<string, object> properties, bool? saveOnComplete = true)
@@ -53,7 +56,7 @@ namespace SignalBox.Core.Workflows
         {
             if (ingestCustomerHasUpdated.CanIngest)
             {
-                await ingestCustomerHasUpdated.Ingest(customers.Select(_ => new CustomerHasUpdated(_)));
+                await ingestCustomerHasUpdated.Ingest(customers.Select(_ => new CustomerHasUpdated(tenantProvider.RequestedTenantName, _)));
             }
             else
             {

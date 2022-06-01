@@ -25,6 +25,7 @@ namespace SignalBox.Test.Workflows
             var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
             var mockEventIngestor = new Mock<ICustomerEventIngestor>();
             var mockCustomerHasUpdatedIngestor = new Mock<ICustomerHasUpdatedIngestor>();
+            var mockTenantProvider = new Mock<ITenantProvider>();
 
             mockCustomerStore.Setup(_ => _.Context).Returns(mockContext.Object);
 
@@ -56,7 +57,8 @@ namespace SignalBox.Test.Workflows
                 mapStore.Object,
                 mockIntegratedSystemStore.Object,
                 mockCustomerHasUpdatedIngestor.Object,
-                dateTimeProvider
+                dateTimeProvider,
+                mockTenantProvider.Object
             );
 
             // act
@@ -85,8 +87,9 @@ namespace SignalBox.Test.Workflows
             var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
             var mockEventIngestor = new Mock<ICustomerEventIngestor>();
             var mockCustomerHasUpdatedIngestor = new Mock<ICustomerHasUpdatedIngestor>();
-            mockCustomerHasUpdatedIngestor.Setup(_ => _.CanIngest).Returns(true);
+            var mockTenantProvider = new Mock<ITenantProvider>();
 
+            mockCustomerHasUpdatedIngestor.Setup(_ => _.CanIngest).Returns(true);
             mockCustomerStore.Setup(_ => _.Context).Returns(mockContext.Object);
 
             var existingCustomer1Id = "existing";
@@ -119,7 +122,8 @@ namespace SignalBox.Test.Workflows
                 mapStore.Object,
                 mockIntegratedSystemStore.Object,
                 mockCustomerHasUpdatedIngestor.Object,
-                dateTimeProvider
+                dateTimeProvider,
+                mockTenantProvider.Object
             );
 
             // act
