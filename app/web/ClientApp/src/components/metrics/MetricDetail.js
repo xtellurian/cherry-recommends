@@ -69,7 +69,7 @@ const MetricDetail = () => {
     setIsExportLoading(true);
     fetchExportCustomers({ token, id })
       .then(async (response) => {
-        const blob = await response.blob();
+        const blob = response;
         const dateFormat = dayjs().format("YYYYMMDD");
         const fileName =
           `${metric.name}_cherry_customer_exports_${dateFormat}.csv`.toLowerCase();

@@ -82,6 +82,7 @@ export const fetchExportCustomers = async ({ token, id }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/ExportCustomers`,
         token,
+        responseType: "blob",
     });
 };
 export const fetchMetricBinValuesNumericAsync = async ({ token, id, binCount, }) => {

@@ -7,6 +7,7 @@ interface ExecuteFetchRequest {
     pageSize?: number | null;
     body?: object | string | null;
     query?: object;
+    responseType?: "json" | "blob" | "arraybuffer" | "document" | "text" | "stream" | undefined;
 }
-export declare const executeFetch: ({ token, apiKey, path, page, pageSize, body, method, query, }?: ExecuteFetchRequest) => Promise<any>;
+export declare const executeFetch: ({ token, apiKey, path, page, pageSize, body, method, query, responseType, }?: ExecuteFetchRequest) => Promise<any>;
 export {};

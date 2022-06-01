@@ -12,6 +12,14 @@ interface ExecuteFetchRequest {
   pageSize?: number | null;
   body?: object | string | null;
   query?: object;
+  responseType?:
+    | "json"
+    | "blob"
+    | "arraybuffer"
+    | "document"
+    | "text"
+    | "stream"
+    | undefined;
 }
 export const executeFetch = async (
   {
@@ -23,6 +31,7 @@ export const executeFetch = async (
     body,
     method,
     query,
+    responseType,
   }: ExecuteFetchRequest = { method: "get", path: "/" }
 ) => {
   const baseUrl = getBaseUrl();
@@ -50,6 +59,7 @@ export const executeFetch = async (
       params,
       headers: headers(token, null),
       data: body,
+      responseType: responseType,
     });
   } catch (ex) {
     // something failed. ther server responded outside of 2xx

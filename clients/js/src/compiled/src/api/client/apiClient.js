@@ -2,7 +2,7 @@ import { current } from "./axiosInstance";
 import { getBaseUrl } from "./baseUrl";
 import { headers } from "./headers";
 import { handleErrorResponse } from "../../utilities/errorHandling";
-export const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, } = { method: "get", path: "/" }) => {
+export const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, } = { method: "get", path: "/" }) => {
     const baseUrl = getBaseUrl();
     const client = current({ baseUrl: baseUrl });
     const params = new URLSearchParams();
@@ -28,6 +28,7 @@ export const executeFetch = async ({ token, apiKey, path, page, pageSize, body, 
             params,
             headers: headers(token, null),
             data: body,
+            responseType: responseType,
         });
     }
     catch (ex) {

@@ -185,7 +185,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .Select(_ => new MetricCustomerExport
                 {
                     CustomerId = _.customer.CommonId,
-                    Email = "",
+                    Email = _.customer.Email,
                     MetricName = _.metric.Name,
                     MetricValue = _.historic.NumericValue.HasValue ? _.historic.NumericValue.Value : _.historic.StringValue
                 }).ToListAsync();

@@ -1927,7 +1927,7 @@ var errorHandling = /*#__PURE__*/Object.freeze({
   handleErrorResponse: handleErrorResponse
 });
 
-const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, }) => {
+const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, }) => {
     const baseUrl = getBaseUrl();
     const client = current({ baseUrl: baseUrl });
     const params = new URLSearchParams();
@@ -1953,6 +1953,7 @@ const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method,
             params,
             headers: headers(token, null),
             data: body,
+            responseType: responseType,
         });
     }
     catch (ex) {
@@ -2715,6 +2716,7 @@ const fetchExportCustomers = async ({ token, id }) => {
     return await executeFetch({
         path: `api/Metrics/${id}/ExportCustomers`,
         token,
+        responseType: "blob",
     });
 };
 const fetchMetricBinValuesNumericAsync = async ({ token, id, binCount, }) => {

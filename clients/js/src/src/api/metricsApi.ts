@@ -147,6 +147,7 @@ export const fetchExportCustomers = async ({ token, id }: EntityRequest) => {
   return await executeFetch({
     path: `api/Metrics/${id}/ExportCustomers`,
     token,
+    responseType: "blob",
   });
 };
 
