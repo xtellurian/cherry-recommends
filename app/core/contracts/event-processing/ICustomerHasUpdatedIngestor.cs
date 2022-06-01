@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace SignalBox.Core
 {
-    public interface IEventIngestor
+    public interface ICustomerHasUpdatedIngestor
     {
         bool CanIngest { get; }
-        Task Ingest(IEnumerable<CustomerEventInput> inputs);
+        Task Ingest(IEnumerable<CustomerHasUpdated> inputs);
     }
 }

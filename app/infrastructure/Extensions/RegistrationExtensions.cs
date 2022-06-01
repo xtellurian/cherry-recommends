@@ -31,7 +31,8 @@ namespace SignalBox.Infrastructure
             services.AddScoped<IDiscountCodeGenerator, ShopifyDiscountCodeGenerator>();
             services.AddScoped<IKlaviyoService, KlaviyoService>();
             services.AddSingleton<IM2MTokenCache, Caches.TokenMemoryCache>();
-            services.AddSingleton<IEventIngestor, AzureEventHubEventIngestor>(); // singleton to re-use the same eventhub connection
+            services.AddSingleton<ICustomerEventIngestor, EventHubEventProcessingIngestor>(); // singleton to re-use the same eventhub connection
+            services.AddSingleton<ICustomerHasUpdatedIngestor, EventHubCustomerHasUpdatedIngestor>(); // singleton to re-use the same eventhub connection
             services.AddHttpClient();
             return services;
         }

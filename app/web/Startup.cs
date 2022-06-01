@@ -202,7 +202,8 @@ namespace SignalBox.Web
             services.Configure<Hosting>(Configuration.GetSection("Hosting"));
             services.Configure<PythonAzureFunctionsConnectionOptions>(Configuration.GetSection("PythonFunctions"));
             services.Configure<DotnetAzureFunctionsConnectionOptions>(Configuration.GetSection("DotnetFunctions"));
-            services.Configure<EventhubConfig>(Configuration.GetSection("EventProcessing").GetSection("Eventhub"));
+            services.Configure<EventProcessingEventHubConfig>(Configuration.GetSection("EventProcessing").GetSection("EventIngestion"));
+            services.Configure<CustomerHasUpdatedEventHubConfig>(Configuration.GetSection("EventProcessing").GetSection("CustomerHasUpdated"));
 
 
             services.AddScoped<ITenantAuthorizationStrategy, TokenClaimTenantAuthorizor>();

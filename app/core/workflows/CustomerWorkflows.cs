@@ -15,6 +15,7 @@ namespace SignalBox.Core.Workflows
         private readonly ICustomerStore customerStore;
         private readonly ITrackedUserSystemMapStore trackedUserSystemMapStore;
         private readonly IIntegratedSystemStore integratedSystemStore;
+        private readonly ICustomerHasUpdatedIngestor ingestCustomerHasUpdated;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public CustomerWorkflows(IStorageContext storageContext,
@@ -22,6 +23,7 @@ namespace SignalBox.Core.Workflows
             ICustomerStore customerStore,
             ITrackedUserSystemMapStore trackedUserSystemMapStore,
             IIntegratedSystemStore integratedSystemStore,
+            ICustomerHasUpdatedIngestor ingestCustomerHasUpdated,
             IDateTimeProvider dateTimeProvider)
         {
             this.storageContext = storageContext;
@@ -29,21 +31,10 @@ namespace SignalBox.Core.Workflows
             this.customerStore = customerStore;
             this.trackedUserSystemMapStore = trackedUserSystemMapStore;
             this.integratedSystemStore = integratedSystemStore;
+            this.ingestCustomerHasUpdated = ingestCustomerHasUpdated;
             this.dateTimeProvider = dateTimeProvider;
         }
 
-        // public async Task<IEnumerable<Customer>> CreateIfNotExist(IEnumerable<PendingCustomer> pendingCustomers)
-        // {
-        //     var newCustomers = await customerStore.CreateIfNotExists(pendingCustomers);
-
-        //     foreach (var u in newCustomers)
-        //     {
-        //         u.LastUpdated = dateTimeProvider.Now;
-        //     }
-
-        //     await storageContext.SaveChanges();
-        //     return newCustomers;
-        // }
         public async Task<Customer> MergeUpdateProperties(Customer customer, IDictionary<string, object> properties, bool? saveOnComplete = true)
         {
             var newProperties = new DynamicPropertyDictionary(properties);
@@ -56,6 +47,16 @@ namespace SignalBox.Core.Workflows
                 await storageContext.SaveChanges();
             }
             return customer;
+        }
+
+        public async Task NotifyCustomerHasUpdated(IEnumerable<Customer> customers)
+        {
+            await ingestCustomerHasUpdated.Ingest(customers.Select(_ => new CustomerHasUpdated(_)));
+        }
+        public async Task NotifyCustomerHasUpdated(params Customer[] customers)
+        {
+            // calls above
+            await NotifyCustomerHasUpdated((IEnumerable<Customer>)customers);
         }
 
         /// <summary>
@@ -111,6 +112,8 @@ namespace SignalBox.Core.Workflows
             {
                 await storageContext.SaveChanges();
             }
+
+            await NotifyCustomerHasUpdated(customer);
 
             return customer;
         }

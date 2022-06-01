@@ -25,7 +25,7 @@ namespace SignalBox.Test.Controllers
             var mockTelemetry = Utility.MockTelemetry();
             var mockCustomerWorkflow = new Mock<ICustomerWorkflow>();
             var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
-            var mockEventIngestor = new Mock<IEventIngestor>();
+            var mockEventIngestor = new Mock<ICustomerEventIngestor>();
             var mockOfferWorkflow = new Mock<IOfferWorkflow>();
 
             Customer customer = new(customerId);

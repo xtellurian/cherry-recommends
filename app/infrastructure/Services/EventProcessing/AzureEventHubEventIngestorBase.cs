@@ -14,15 +14,15 @@ using SignalBox.Infrastructure.Models;
 namespace SignalBox.Infrastructure.Services
 {
 #nullable enable
-    public class AzureEventHubEventIngestor : IEventIngestor, IAsyncDisposable
+    public abstract class AzureEventHubEventIngestorBase<T> : IAsyncDisposable where T : IIngestableEvent
     {
         private readonly EventHubProducerClient? producerClient;
 
-        public AzureEventHubEventIngestor(IOptions<EventhubConfig> eventhubConfig)
+        public AzureEventHubEventIngestorBase(EventhubConfig eventhubConfig)
         {
-            if (eventhubConfig.Value.ConnectionString != null)
+            if (eventhubConfig.ConnectionString != null)
             {
-                this.producerClient = new EventHubProducerClient(eventhubConfig.Value.ConnectionString, eventhubConfig.Value.EventhubName);
+                this.producerClient = new EventHubProducerClient(eventhubConfig.ConnectionString, eventhubConfig.EventhubName);
             }
 
         }
@@ -38,11 +38,11 @@ namespace SignalBox.Infrastructure.Services
             }
         }
 
-        public async Task Ingest(IEnumerable<CustomerEventInput> inputs)
+        public async Task Ingest(IEnumerable<T> inputs)
         {
             if (producerClient == null)
             {
-                throw new ConfigurationException("producerClient is not initialised");
+                throw new ConfigurationException($"producerClient is not initialised for type {typeof(T)}");
             }
             // Create a batch of events 
             using EventDataBatch eventBatch = await producerClient.CreateBatchAsync();

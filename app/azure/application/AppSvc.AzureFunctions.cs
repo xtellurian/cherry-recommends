@@ -44,7 +44,20 @@ namespace SignalBox.Azure
                         },
                         new NameValuePairArgs{
                             Name = "EventIngestionConnectionString",
-                            Value = eventProcessing.PrimaryNamespaceReadConnectionString // this must be a namespace scope connection string
+                            Value = eventProcessing.PrimaryNamespaceReadConnectionString
+                        },
+                        new NameValuePairArgs{
+                            Name = "CustomerHasUpdatedConnectionString", // for the event hubconsumer
+                            Value = eventProcessing.PrimaryNamespaceReadConnectionString
+                        },
+                        // customer has updated
+                        new NameValuePairArgs{
+                            Name = "EventProcessing__CustomerHasUpdated__ConnectionString",
+                            Value = eventProcessing.PrimaryNamespaceReadWriteConnectionString
+                        },
+                        new NameValuePairArgs{
+                            Name = "EventProcessing__CustomerHasUpdated__EventhubName",
+                            Value = eventProcessing.CustomerHasUpdatedHubName
                         },
                         new NameValuePairArgs{
                             Name = "AzureWebJobsStorage",

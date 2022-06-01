@@ -17,7 +17,7 @@ namespace SignalBox.Core.Workflows
         private readonly IIntegratedSystemStore integratedSystemStore;
         private readonly ICustomerEventStore customerEventStore;
         private readonly IBusinessWorkflow businessWorkflow;
-        private readonly IEventIngestor eventIngestor;
+        private readonly ICustomerEventIngestor eventIngestor;
         private readonly IOfferWorkflow offerWorkflow;
 
         public JsonSerializerOptions SerializerOptions => new JsonSerializerOptions();
@@ -30,7 +30,7 @@ namespace SignalBox.Core.Workflows
             IIntegratedSystemStore integratedSystemStore,
             ICustomerEventStore customerEventStore,
             IBusinessWorkflow businessWorkflow,
-            IEventIngestor eventIngestor,
+            ICustomerEventIngestor eventIngestor,
             IOfferWorkflow offerWorkflow)
         {
             this.dateTimeProvider = dateTimeProvider;

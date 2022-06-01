@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace SignalBox.Core
 {
 #nullable enable
-    public struct CustomerEventInput
+    public struct CustomerEventInput : IIngestableEvent
     {
         public CustomerEventInput(string tenantName,
                                   string customerId,

@@ -18,9 +18,9 @@ config:
   azure-synapse:sqlPassword:
     secure: AAABAGJOt73JkgfzCJXyjsrilC/NGGOFHQWN93e4SRS5UeQQl9yd1ds6
   database:poolCapacity: "50"
-  database:poolMaxCapacityPerDatabase: "5"
-  database:poolSkuName: BasicPool
-  database:poolSkuTier: Basic
+  database:poolMaxCapacityPerDatabase: "50"
+  database:poolSkuName: StandardPool
+  database:poolSkuTier: Standard
   hubspot:appId: "308459"
   hubspot:clientId: 05e9c9c1-dcc7-4415-b6ed-fc772f26de66
   hubspot:clientSecret:

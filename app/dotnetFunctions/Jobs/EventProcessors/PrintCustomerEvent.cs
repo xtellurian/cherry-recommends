@@ -15,7 +15,7 @@ namespace dotnetFunctions
             _logger = loggerFactory.CreateLogger<PrintCustomerEvent>();
         }
 
-        // event hub name is ignored
+        // event hub name is ignored ?? todo: verify that's true?
         [Function("EventProcessor_PrintCustomerEvent")]
         public void Run(
             [EventHubTrigger(AzureEventhubNames.EventIngestion,

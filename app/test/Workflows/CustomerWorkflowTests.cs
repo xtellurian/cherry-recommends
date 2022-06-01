@@ -23,7 +23,8 @@ namespace SignalBox.Test.Workflows
             var mockIntegratedSystemStore = new Mock<IIntegratedSystemStore>();
 
             var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
-            var mockEventIngestor = new Mock<IEventIngestor>();
+            var mockEventIngestor = new Mock<ICustomerEventIngestor>();
+            var mockCustomerHasUpdatedIngestor = new Mock<ICustomerHasUpdatedIngestor>();
 
             mockCustomerStore.Setup(_ => _.Context).Returns(mockContext.Object);
 
@@ -54,6 +55,7 @@ namespace SignalBox.Test.Workflows
                 mockCustomerStore.Object,
                 mapStore.Object,
                 mockIntegratedSystemStore.Object,
+                mockCustomerHasUpdatedIngestor.Object,
                 dateTimeProvider
             );
 
@@ -81,7 +83,8 @@ namespace SignalBox.Test.Workflows
             var mockIntegratedSystemStore = new Mock<IIntegratedSystemStore>();
 
             var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
-            var mockEventIngestor = new Mock<IEventIngestor>();
+            var mockEventIngestor = new Mock<ICustomerEventIngestor>();
+            var mockCustomerHasUpdatedIngestor = new Mock<ICustomerHasUpdatedIngestor>();
 
             mockCustomerStore.Setup(_ => _.Context).Returns(mockContext.Object);
 
@@ -114,6 +117,7 @@ namespace SignalBox.Test.Workflows
                 mockCustomerStore.Object,
                 mapStore.Object,
                 mockIntegratedSystemStore.Object,
+                mockCustomerHasUpdatedIngestor.Object,
                 dateTimeProvider
             );
 
@@ -124,6 +128,7 @@ namespace SignalBox.Test.Workflows
                 new PendingCustomer(existingCustomer2Id, null, "NotUpdatedName", false)
             });
 
+            mockCustomerHasUpdatedIngestor.Verify(_ => _.Ingest(It.IsAny<IEnumerable<CustomerHasUpdated>>()), Times.AtLeastOnce);
 
             Assert.Equal(2, createdCustomers.Count());
             Assert.Equal(1, createdCustomers.Count(_ => _.Name == "UpdatedName"));

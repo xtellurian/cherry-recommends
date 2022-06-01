@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using SignalBox.Infrastructure;
 using SignalBox.Core;
 using SignalBox.Core.Workflows;
-using SignalBox.Infrastructure.Services;
 using System.IO;
 using System;
 using SignalBox.Infrastructure.Files;
@@ -195,6 +194,7 @@ namespace SignalBox.Functions
             services.Configure<Auth0ManagementCredentials>(configuration.GetSection("Auth0").GetSection("Management"));
             services.Configure<Auth0M2MClient>(configuration.GetSection("Auth0").GetSection("M2M"));
             services.Configure<Hosting>(configuration.GetSection("Hosting"));
+            services.Configure<CustomerHasUpdatedEventHubConfig>(configuration.GetSection("EventProcessing").GetSection("CustomerHasUpdated"));
         }
 
         private static SqliteDatabasesConfig AutomagicFixSqliteDatabasePath(string provider, IConfiguration configuration)

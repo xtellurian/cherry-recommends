@@ -23,7 +23,7 @@ namespace SignalBox.Test.Workflows
             var mockIntegratedSystemStore = new Mock<IIntegratedSystemStore>();
             var mockCustomerEventStore = new Mock<ICustomerEventStore>();
             var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
-            var mockEventIngestor = new Mock<IEventIngestor>();
+            var mockEventIngestor = new Mock<ICustomerEventIngestor>();
             var mockOfferWorkflow = new Mock<IOfferWorkflow>();
 
             mockCustomerEventStore.Setup(_ => _.Context).Returns(mockContext.Object);

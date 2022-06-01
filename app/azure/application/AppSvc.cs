@@ -194,8 +194,10 @@ namespace SignalBox.Azure
                     {"AzureEnvironment__SqlServerPassword", multiDb.AdminPassword},
 
                     // event processing 
-                    {"EventProcessing__Eventhub__ConnectionString", eventProcessing.PrimaryNamespaceWriteConnectionString},
-                    {"EventProcessing__Eventhub__EventhubName", eventProcessing.EventhubName},
+                    {"EventProcessing__EventIngestion__ConnectionString", eventProcessing.PrimaryNamespaceWriteConnectionString},
+                    {"EventProcessing__EventIngestion__EventhubName", eventProcessing.EventProcessingHubName},
+                    {"EventProcessing__CustomerHasUpdated__ConnectionString", eventProcessing.PrimaryNamespaceWriteConnectionString},
+                    {"EventProcessing__CustomerHasUpdated__EventhubName", eventProcessing.CustomerHasUpdatedHubName},
 
                     // segment
                     {"Segment__WriteKey", segmentConfig.Get("writeKey") ?? ""},
