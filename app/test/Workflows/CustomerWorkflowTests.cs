@@ -85,6 +85,7 @@ namespace SignalBox.Test.Workflows
             var mockBusinessWorkflow = new Mock<IBusinessWorkflow>();
             var mockEventIngestor = new Mock<ICustomerEventIngestor>();
             var mockCustomerHasUpdatedIngestor = new Mock<ICustomerHasUpdatedIngestor>();
+            mockCustomerHasUpdatedIngestor.Setup(_ => _.CanIngest).Returns(true);
 
             mockCustomerStore.Setup(_ => _.Context).Returns(mockContext.Object);
 

@@ -4,6 +4,16 @@ steps:
     inputs:
       version: 6.0.x
 
+  - script: node --version
+    displayName: Check node version
+
+  - script: npm --version
+    displayName: Check NPM version
+
+  - script: npm install
+    displayName: NPM install for client/js app
+    workingDirectory: clients/js/src
+
   - script: dotnet tool restore
     displayName: Restore dotnet tools
     workingDirectory: app

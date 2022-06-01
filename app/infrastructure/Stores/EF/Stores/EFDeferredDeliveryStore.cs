@@ -14,7 +14,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 
         public async Task<IEnumerable<DeferredDelivery>> QueryForCustomer(long customerId)
         {
-            var results = await Set
+            var results = await QuerySet
                 .Where(_ => _.Recommendation.CustomerId == customerId)
                 .Include(_ => _.Channel)
                 .Include(_ => _.Recommendation)

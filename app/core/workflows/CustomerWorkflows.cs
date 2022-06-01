@@ -51,7 +51,15 @@ namespace SignalBox.Core.Workflows
 
         public async Task NotifyCustomerHasUpdated(IEnumerable<Customer> customers)
         {
-            await ingestCustomerHasUpdated.Ingest(customers.Select(_ => new CustomerHasUpdated(_)));
+            if (ingestCustomerHasUpdated.CanIngest)
+            {
+                await ingestCustomerHasUpdated.Ingest(customers.Select(_ => new CustomerHasUpdated(_)));
+            }
+            else
+            {
+                // todo - find a way to make this work in  local dev environment
+                logger.LogWarning("Ingestor CustomerHasUpdated cannot ingest");
+            }
         }
         public async Task NotifyCustomerHasUpdated(params Customer[] customers)
         {
