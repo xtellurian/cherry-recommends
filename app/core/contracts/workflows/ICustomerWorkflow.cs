@@ -7,5 +7,6 @@ namespace SignalBox.Core
     {
         Task<Customer> CreateOrUpdate(PendingCustomer pendingCustomer, bool saveOnComplete = true);
         Task<IEnumerable<Customer>> CreateOrUpdate(IEnumerable<PendingCustomer> pendingCustomers, bool saveOnComplete = true);
+        Task<IEnumerable<Customer>> UpdateAndSave(IEnumerable<Customer> customers);
     }
 }

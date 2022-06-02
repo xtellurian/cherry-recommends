@@ -18,6 +18,11 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .Where(_ => _.Recommendation.CustomerId == customerId)
                 .Include(_ => _.Channel)
                 .Include(_ => _.Recommendation)
+                .ThenInclude(_ => _.Customer)
+                .Include(_ => _.Recommendation)
+                .ThenInclude(_ => _.Items)
+                .Include(_ => _.Recommendation)
+                .ThenInclude(_ => _.DiscountCodes)
                 .ToListAsync();
             return results;
         }

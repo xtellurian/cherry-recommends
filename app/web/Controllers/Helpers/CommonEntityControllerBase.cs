@@ -87,6 +87,11 @@ namespace SignalBox.Web.Controllers
             return await store.GetEntity(id, useInternalId);
         }
 
+        protected virtual Task WillDelete(T entity)
+        {
+            return Task.CompletedTask;
+        }
+
         /// <summary>Deletes the resource with this Id.</summary>
         [HttpDelete("{id}")]
         public virtual async Task<DeleteResponse> DeleteResource(long id)
@@ -95,6 +100,7 @@ namespace SignalBox.Web.Controllers
             var (canDelete, message) = await CanDelete(entity);
             if (canDelete)
             {
+                await WillDelete(entity);
                 var result = await store.Remove(id);
                 await store.Context.SaveChanges();
                 return new DeleteResponse(id, Request.Path.Value, result);

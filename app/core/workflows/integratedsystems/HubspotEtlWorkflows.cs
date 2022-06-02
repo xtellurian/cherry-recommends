@@ -45,7 +45,7 @@ namespace SignalBox.Core.Workflows
                 var trackedUsers = await GetAndUpdateTrackedUsers(integratedSystem, null, propertyNames);
                 report.NumberOfHubspotRequests += 1;
                 report.NumberOfTrackedUsersUpdated += trackedUsers.Items.Count();
-                await customerStore.Context.SaveChanges();
+                await customerStore.Context.SaveChanges(); // todo: use customer workflow
                 var after = trackedUsers.Pagination.Next?.After;
                 // loop the above in case there are many
                 while (!string.IsNullOrEmpty(after) && trackedUsers.Items.Any())

@@ -9,6 +9,12 @@ namespace SignalBox.Core
     {
         IStorageContext Context { get; }
         Task<CustomerEvent> Read(string eventId);
+        /// <summary>
+        /// Deletes all events for a customer.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns>Number of events deleted</returns>
+        Task<int> RemoveForCustomer(Customer customer);
         Task<IEnumerable<CustomerEvent>> AddRange(IEnumerable<CustomerEvent> events);
         Task LoadMany<TProperty>(CustomerEvent entity, Expression<Func<CustomerEvent, IEnumerable<TProperty>>> propertyExpression) where TProperty : class;
         Task<IEnumerable<CustomerEvent>> Latest(DateTimeOffset after);

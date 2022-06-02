@@ -112,5 +112,11 @@ namespace SignalBox.Web.Controllers
         {
             return Task.FromResult((true, ""));
         }
+
+        protected override async Task WillDelete(Customer entity)
+        {
+            await eventStore.RemoveForCustomer(entity);
+            await base.WillDelete(entity);
+        }
     }
 }

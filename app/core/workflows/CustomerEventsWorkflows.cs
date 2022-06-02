@@ -73,7 +73,7 @@ namespace SignalBox.Core.Workflows
                 var stopwatch = telemetry.NewStopwatch(true);
 
                 var customers = await CreateOrGetCustomers(input);
-                SetCustomerProperties(input, customers);
+                await SetCustomerProperties(input, customers);
                 var events = await CreateCustomerEvents(input, customers);
 
                 // save changes
@@ -95,7 +95,7 @@ namespace SignalBox.Core.Workflows
             }
         }
 
-        private void SetCustomerProperties(IEnumerable<CustomerEventInput> input, IEnumerable<Customer> customers)
+        private async Task SetCustomerProperties(IEnumerable<CustomerEventInput> input, IEnumerable<Customer> customers)
         {
             foreach (var customer in customers)
             {
@@ -125,6 +125,8 @@ namespace SignalBox.Core.Workflows
                     }
                 }
             }
+
+            await customerWorkflow.UpdateAndSave(customers);
         }
 
         private async Task AddToBusinesses(IEnumerable<CustomerEventInput> input, IEnumerable<Customer> customers)

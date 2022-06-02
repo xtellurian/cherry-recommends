@@ -144,6 +144,7 @@ namespace SignalBox.Core.Workflows
             {
                 canSend = !string.IsNullOrEmpty(recommendation.Customer.Email);
             }
+            logger.LogInformation($"Can send returned {canSend} for recommendation {recommendation.Id} to channel {channel.Id}.");
 
             return Task.FromResult(canSend);
         }

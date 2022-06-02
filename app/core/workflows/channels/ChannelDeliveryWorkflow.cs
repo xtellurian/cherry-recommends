@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Recommendations;
@@ -66,6 +67,7 @@ namespace SignalBox.Core.Workflows
         {
             // get deferred delivery 
             var deliveries = await deferredDeliveryStore.QueryForCustomer(customerId);
+            logger.LogInformation($"Attempting {deliveries.Count()} deferred deliveries for customer {customerId}");
             foreach (var delivery in deliveries)
             {
                 // check if we can send it
@@ -73,6 +75,7 @@ namespace SignalBox.Core.Workflows
                 {
                     delivery.Sending = true;
                     await deferredDeliveryStore.Context.SaveChanges();
+                    logger.LogInformation($"Customer {customerId} Updated. Delivering to channel {delivery.ChannelId}");
                     // mark this as sending
                     try
                     {
@@ -81,20 +84,21 @@ namespace SignalBox.Core.Workflows
                         {
                             await deferredDeliveryStore.Remove(delivery.Id);
                         }
-                        else
-                        {
-                            delivery.Sending = false;
-                        }
                     }
                     catch (System.Exception ex)
                     {
                         logger.LogError(ex.Message);
-                        throw new WorkflowException("Error sending to channgel", ex);
+                        throw new WorkflowException("Error sending to channel", ex);
                     }
                     finally
                     {
+                        delivery.Sending = false;
                         await deferredDeliveryStore.Context.SaveChanges();
                     }
+                }
+                else
+                {
+                    logger.LogInformation($"Not sending delivery {delivery.Id}");
                 }
             }
         }

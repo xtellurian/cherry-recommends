@@ -252,5 +252,12 @@ namespace SignalBox.Infrastructure.EntityFramework
 
             return results;
         }
+
+        public async Task<int> RemoveForCustomer(Customer customer)
+        {
+            var count = await Set.Where(_ => _.Customer.Id == customer.Id).CountAsync();
+            Set.RemoveRange(Set.Where(_ => _.Customer.Id == customer.Id));
+            return count;
+        }
     }
 }

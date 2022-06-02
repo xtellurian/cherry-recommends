@@ -52,7 +52,7 @@ namespace SignalBox.Core.Workflows
             return customer;
         }
 
-        public async Task NotifyCustomerHasUpdated(IEnumerable<Customer> customers)
+        private async Task NotifyCustomerHasUpdated(IEnumerable<Customer> customers)
         {
             if (ingestCustomerHasUpdated.CanIngest)
             {
@@ -63,11 +63,6 @@ namespace SignalBox.Core.Workflows
                 // todo - find a way to make this work in  local dev environment
                 logger.LogWarning("Ingestor CustomerHasUpdated cannot ingest");
             }
-        }
-        public async Task NotifyCustomerHasUpdated(params Customer[] customers)
-        {
-            // calls above
-            await NotifyCustomerHasUpdated((IEnumerable<Customer>)customers);
         }
 
         /// <summary>
@@ -124,9 +119,21 @@ namespace SignalBox.Core.Workflows
                 await storageContext.SaveChanges();
             }
 
-            await NotifyCustomerHasUpdated(customer);
+            await NotifyCustomerHasUpdated(new Customer[1] { customer });
 
             return customer;
+        }
+
+        public async Task<IEnumerable<Customer>> UpdateAndSave(IEnumerable<Customer> customers)
+        {
+            foreach (var customer in customers)
+            {
+                await customerStore.Update(customer);
+            }
+
+            await customerStore.Context.SaveChanges();
+            await NotifyCustomerHasUpdated(customers);
+            return customers;
         }
 
         public async Task<IEnumerable<Customer>> CreateOrUpdate(
