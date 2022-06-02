@@ -35,8 +35,9 @@ namespace SignalBox.Core.Workflows
                                     IWebhookSenderClient webhookSenderClient,
                                     IInternalOptimiserClientFactory optimiserClientFactory,
                                     IDiscountCodeWorkflow discountCodeWorkflow,
+                                    ITelemetry telemetry,
                                     IChannelDeliveryWorkflow channelDeliveryWorkflow)
-                                    : base(itemsRecommenderStore, storeCollection, webhookSenderClient, dateTimeProvider, channelDeliveryWorkflow)
+                                    : base(itemsRecommenderStore, storeCollection, webhookSenderClient, dateTimeProvider, telemetry, channelDeliveryWorkflow)
         {
             this.logger = logger;
             this.recommendationCache = recommendationCache;
@@ -329,12 +330,12 @@ namespace SignalBox.Core.Workflows
 
             // TODO: delete ?? - channel already replaced destinations
             // send to any destinations
-            await base.SendToDestinations(recommender, context, recommendation);
+            await SendToDestinations(recommender, context, recommendation);
 
             // send to channels
-            await base.SendToChannels(recommender, context, recommendation);
+            await SendToChannels(recommender, context, recommendation);
 
-            await base.EndTrackInvokation(context,
+            await EndTrackInvokation(context,
                                           true,
                                           message: $"Invoked successfully for {context.Customer?.Name ?? context.Customer?.CommonId}",
                                           modelResponse: null,

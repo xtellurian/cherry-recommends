@@ -71,6 +71,7 @@ namespace SignalBox.Test.Workflows
                 deps.MockWebhookSenderClient.Object,
                 deps.MockInternalOptimiserClientFactory.Object,
                 deps.MockDiscountCodeWorkflow.Object,
+                Utility.MockTelemetry().Object,
                 deps.MockChannelDeliveryWorkflow.Object
             );
 
@@ -106,6 +107,7 @@ namespace SignalBox.Test.Workflows
                 deps.MockWebhookSenderClient.Object,
                 deps.MockInternalOptimiserClientFactory.Object,
                 deps.MockDiscountCodeWorkflow.Object,
+                Utility.MockTelemetry().Object,
                 deps.MockChannelDeliveryWorkflow.Object
             );
 
@@ -144,6 +146,7 @@ namespace SignalBox.Test.Workflows
                 deps.MockWebhookSenderClient.Object,
                 deps.MockInternalOptimiserClientFactory.Object,
                 deps.MockDiscountCodeWorkflow.Object,
+                Utility.MockTelemetry().Object,
                 deps.MockChannelDeliveryWorkflow.Object
             );
             // setup dependency calls

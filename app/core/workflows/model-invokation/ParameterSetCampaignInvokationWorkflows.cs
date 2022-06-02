@@ -34,8 +34,9 @@ namespace SignalBox.Core.Workflows
                                     IStoreCollection storeCollection,
                                     ICustomerWorkflow customerWorkflow,
                                     IRecommenderModelClientFactory modelClientFactory,
+                                    ITelemetry telemetry,
                                     IChannelDeliveryWorkflow channelDeliveryWorkflow)
-                                     : base(parameterSetRecommenderStore, storeCollection, webhookSenderClient, dateTimeProvider, channelDeliveryWorkflow)
+                                     : base(parameterSetRecommenderStore, storeCollection, webhookSenderClient, dateTimeProvider, telemetry, channelDeliveryWorkflow)
         {
             this.logger = logger;
             this.recommendationCache = recommendationCache;

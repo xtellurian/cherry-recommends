@@ -14,9 +14,9 @@ namespace SignalBox.Core.Workflows
         private readonly IHistoricCustomerMetricStore customerMetricStore;
         private readonly IArgumentRuleStore argumentRuleStore;
         private readonly ISegmentStore segmentStore;
-        private readonly IChannelStore channelStore;
         private readonly IWebhookSenderClient webhookSender;
         protected readonly IDateTimeProvider dateTimeProvider;
+        private readonly ITelemetry telemetry;
         private readonly IChannelDeliveryWorkflow channelDeliveryWorkflow;
 
         public CampaignInvokationWorkflowBase(
@@ -24,15 +24,16 @@ namespace SignalBox.Core.Workflows
                                                  IStoreCollection storeCollection,
                                                  IWebhookSenderClient webhookSender,
                                                  IDateTimeProvider dateTimeProvider,
+                                                 ITelemetry telemetry,
                                                  IChannelDeliveryWorkflow channelDeliveryWorkflow)
         {
             this.store = store;
             this.customerMetricStore = storeCollection.ResolveStore<IHistoricCustomerMetricStore, HistoricCustomerMetric>();
             this.argumentRuleStore = storeCollection.ResolveStore<IArgumentRuleStore, ArgumentRule>();
             this.segmentStore = storeCollection.ResolveStore<ISegmentStore, Segment>();
-            this.channelStore = storeCollection.ResolveStore<IChannelStore, ChannelBase>();
             this.webhookSender = webhookSender;
             this.dateTimeProvider = dateTimeProvider;
+            this.telemetry = telemetry;
             this.channelDeliveryWorkflow = channelDeliveryWorkflow;
         }
 
@@ -143,61 +144,66 @@ namespace SignalBox.Core.Workflows
 
         protected async Task SendToDestinations(T recommender, RecommendingContext context, RecommendationEntity recommendation)
         {
-            await store.LoadMany(recommender, _ => _.RecommendationDestinations);
-            if (recommender.RecommendationDestinations?.Count > 0)
+            try
             {
-                context.LogMessage($"Discovered {recommender.RecommendationDestinations.Count} destinations");
-                foreach (var d in recommender.RecommendationDestinations)
+                await store.LoadMany(recommender, _ => _.RecommendationDestinations);
+                if (recommender.RecommendationDestinations?.Count > 0)
                 {
-                    if (d is WebhookDestination webhookDestination)
+                    context.LogMessage($"Discovered {recommender.RecommendationDestinations.Count} destinations");
+                    foreach (var d in recommender.RecommendationDestinations)
                     {
-                        await webhookSender.Send(webhookDestination, recommendation);
-                        context.LogMessage($"Send to Webhook endpoint: {webhookDestination.Endpoint}");
-                    }
-                    else if (d is SegmentSourceFunctionDestination segDestination)
-                    {
-                        await webhookSender.Send(segDestination, recommendation);
-                        context.LogMessage($"Send to Segment endpoint: {segDestination.Endpoint}");
-                    }
-                    else
-                    {
-                        context.LogMessage($"Warning: Cannot handle destination Type {d.DestinationType}");
+                        if (d is WebhookDestination webhookDestination)
+                        {
+                            await webhookSender.Send(webhookDestination, recommendation);
+                            context.LogMessage($"Send to Webhook endpoint: {webhookDestination.Endpoint}");
+                        }
+                        else if (d is SegmentSourceFunctionDestination segDestination)
+                        {
+                            await webhookSender.Send(segDestination, recommendation);
+                            context.LogMessage($"Send to Segment endpoint: {segDestination.Endpoint}");
+                        }
+                        else
+                        {
+                            context.LogMessage($"Warning: Cannot handle destination Type {d.DestinationType}");
+                        }
                     }
                 }
+                else
+                {
+                    context.LogMessage("No destinations discovered.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                context.LogMessage("No destinations discovered.");
+                telemetry.TrackException(ex);
+                context.LogMessage("ERROR: Sending to destinations threw an exception.");
             }
         }
 
         protected async Task SendToChannels(T recommender, RecommendingContext context, RecommendationEntity recommendation)
         {
-            await store.LoadMany(recommender, _ => _.Channels);
-            context.LogMessage($"Discovered {recommender.Channels.Count} channels");
-            foreach (var channel in recommender.Channels)
+            try
             {
-                if (channel is WebhookChannel webhookChannel)
+                await store.LoadMany(recommender, _ => _.Channels);
+                context.LogMessage($"Discovered {recommender.Channels.Count} channels");
+                foreach (var channel in recommender.Channels)
                 {
-                    await webhookSender.Send(webhookChannel, recommendation);
-                    context.LogMessage($"Send to Webhook endpoint: {webhookChannel.Endpoint}");
-                }
-                else if (channel is EmailChannel emailChannel)
-                {
-                    await channelDeliveryWorkflow.SendToChannel(emailChannel, recommendation);
-
-                    /*
-                    await channelStore.Load(channel, _ => _.LinkedIntegratedSystem);
-                    if (emailChannel.LinkedIntegratedSystem.SystemType == IntegratedSystemTypes.Klaviyo)
+                    if (channel is WebhookChannel webhookChannel)
                     {
-                        await klaviyoWorkflow.SendRecommendation(emailChannel, recommendation);
+                        await webhookSender.Send(webhookChannel, recommendation);
+                        context.LogMessage($"Send to Webhook endpoint: {webhookChannel.Endpoint}");
                     }
-                    else
+                    else if (channel is EmailChannel emailChannel)
                     {
-                        context.LogMessage($"WARN: Unable to send email to channel {channel.Id}");
+                        await channelDeliveryWorkflow.SendToChannel(emailChannel, recommendation);
+                        context.LogMessage($"Sent to email channel: {emailChannel.Name}");
                     }
-                    */
                 }
+            }
+            catch (Exception ex)
+            {
+                telemetry.TrackException(ex);
+                context.LogMessage("ERROR: Sending to destinations threw an exception.");
             }
         }
 
