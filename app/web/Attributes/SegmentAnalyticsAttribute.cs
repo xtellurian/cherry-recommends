@@ -41,6 +41,20 @@ namespace SignalBox.Web
             {
                 if (context.Filters.Any(f => f.GetType() == typeof(SkipSegmentAnalyticsAttribute)))
                 {
+                    // don't track explicitly filtered endpoints
+                    return;
+                }
+
+                if (context.ActionDescriptor.EndpointMetadata.Any(f => f.GetType() == typeof(AllowApiKeyAttribute)))
+                {
+                    // don't track if the endpoint allows an API key. not a user action.
+                    return;
+                }
+
+                string httpMethod = context.HttpContext.Request.Method;
+                if (string.Equals(httpMethod, "GET", System.StringComparison.InvariantCultureIgnoreCase))
+                {
+                    // don't track GET. It happens too often and isn't useful
                     return;
                 }
 
@@ -50,7 +64,6 @@ namespace SignalBox.Web
                     string writeKey = segmentConfig?.WriteKey;
                     if (!string.IsNullOrEmpty(writeKey))
                     {
-                        string httpMethod = context.HttpContext.Request.Method;
                         // remove prefix Signalbox.Web.Controllers. - it's on everything
                         string eventName = $"[{httpMethod}]{context.ActionDescriptor.DisplayName.Replace("Signalbox.Web.Controllers.", "")}";
                         string tenant = tenantProvider.Current()?.Name;
