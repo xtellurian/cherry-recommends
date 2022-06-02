@@ -1,5 +1,11 @@
 import { events } from "cherry.ai";
-import { emailValidator, generateId } from "./utilities";
+import {
+  emailValidator,
+  generateId,
+  setCherrySession,
+  getCherrySession,
+} from "./utilities";
+import { storageKeys } from "./constants";
 
 export const showEmailPopup = ({ header = "", subheader = "" }) => {
   const modalTemplate = `
@@ -39,6 +45,7 @@ export const showEmailPopup = ({ header = "", subheader = "" }) => {
   )[0];
 
   closeIconEl.addEventListener("click", () => {
+    setCherrySession(storageKeys.HIDDEN, true);
     modalEl.classList.add("cherry-modal-hide");
   });
 
@@ -67,7 +74,7 @@ export const showEmailPopup = ({ header = "", subheader = "" }) => {
       .createEventsAsync({
         events: [
           {
-            commonUserId: sessionStorage.getItem("cherryid"),
+            commonUserId: getCherrySession(storageKeys.ID),
             eventId: generateId(),
             kind: "identify",
             eventType: "Customer name and email update",

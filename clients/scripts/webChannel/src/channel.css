@@ -18,6 +18,7 @@
   overflow: auto;
   background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.4);
+  color: var(--cherry-black) !important;
 }
 
 .cherry-modal-content {
@@ -60,12 +61,14 @@
 .cherry-modal-header {
   text-align: center;
   font-size: 1.5625em;
+  color: var(--cherry-black) !important;
 }
 
 .cherry-modal-subheader {
   text-align: center;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
+  color: var(--cherry-black) !important;
 }
 
 .cherry-modal-input {

@@ -10,7 +10,8 @@ import {
 } from "cherry.ai";
 
 import { showEmailPopup } from "./templates";
-import { generateId } from "./utilities";
+import { generateId, getCherrySession, setCherrySession } from "./utilities";
+import { storageKeys } from "./constants";
 
 const srcUrl = new URL(document.getElementById("cherry-channel").src);
 const params = new URLSearchParams(srcUrl.search);
@@ -24,11 +25,18 @@ setBaseUrl(baseUrl);
 setTenant(tenant);
 setDefaultApiKey(apiKey);
 
-if (!sessionStorage.getItem("cherryid")) {
-  sessionStorage.setItem("cherryid", generateId());
+if (!getCherrySession(storageKeys.ID)) {
+  setCherrySession(storageKeys.ID, generateId());
 }
 
 (async function () {
+  // don't show if:
+  // 1. the popup is closed
+  // 2. the user is already subscribed
+  if (getCherrySession(storageKeys.HIDDEN)) {
+    return;
+  }
+
   channels.fetchChannelAsync({ id: channelId }).then(({ properties }) => {
     const {
       popupAskForEmail,
@@ -48,18 +56,18 @@ if (!sessionStorage.getItem("cherryid")) {
     // add prefix to the customer id if:
     // 1. customerIdPrefix exists
     // 2. the customer id is not prefixed yet
-    if (customerIdPrefix && !sessionStorage.getItem("cherryid").includes("-")) {
-      const prefixedCherryId = `${customerIdPrefix}-${sessionStorage.getItem(
-        "cherryid"
+    if (customerIdPrefix && !getCherrySession(storageKeys.ID).includes("-")) {
+      const prefixedCherryId = `${customerIdPrefix}-${getCherrySession(
+        storageKeys.ID
       )}`;
-      sessionStorage.setItem("cherryid", prefixedCherryId);
+      setCherrySession(storageKeys.ID, prefixedCherryId);
     }
 
     // log UTM parameters of the customers (a.k.a visitors) if exist
     events.createEventsAsync({
       events: [
         {
-          commonUserId: sessionStorage.getItem("cherryid"),
+          commonUserId: getCherrySession(storageKeys.ID),
           eventId: generateId(),
           kind: "pageView",
           eventType: "Customer UTM parameters",
@@ -100,7 +108,7 @@ if (!sessionStorage.getItem("cherryid")) {
         .invokePromotionsRecommenderAsync({
           id: recommenderIdToInvoke,
           input: {
-            customerId: sessionStorage.getItem("cherryid"),
+            customerId: getCherrySession(storageKeys.ID),
             arguments: {},
           },
         })

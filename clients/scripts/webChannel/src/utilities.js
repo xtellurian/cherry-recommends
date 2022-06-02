@@ -1,3 +1,5 @@
+import { storageKeys } from "./constants";
+
 export const emailValidator = (value) => {
   const x = " ";
   x.indexOf();
@@ -23,4 +25,27 @@ export const setLocalStorageWithExpiry = (key, value, ttl) => {
     expiry: now.getTime() + _ttl,
   };
   localStorage.setItem(key, JSON.stringify(item));
+};
+
+export const getCherrySession = (key) => {
+  const currentCherrySession = JSON.parse(
+    localStorage.getItem(storageKeys.CHERRY) || "{}"
+  );
+
+  // returns the value of the specified key
+  if (key) {
+    return currentCherrySession?.[key];
+  }
+
+  // returns the whole object
+  return currentCherrySession;
+};
+
+export const setCherrySession = (key, value) => {
+  const currentCherrySession = getCherrySession();
+
+  localStorage.setItem(
+    storageKeys.CHERRY,
+    JSON.stringify({ ...currentCherrySession, [key]: value })
+  );
 };
