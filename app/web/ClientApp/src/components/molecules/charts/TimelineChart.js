@@ -64,7 +64,7 @@ const TimelineChart = ({
         >
           <Label value={xAxisLabel} position="insideBottomRight" offset={-15} />
         </XAxis>
-        <YAxis yAxisId="left">
+        <YAxis yAxisId="left" domain={["auto", "auto"]}>
           <Label
             value={yAxisLabel}
             offset={0}

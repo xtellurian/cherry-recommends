@@ -91,11 +91,12 @@ interface Channel$2 extends Entity {
 interface components {
     schemas: {
         ARPOReportDto: {
+            /** Campaign id. */
             campaignId?: number;
-            type?: components["schemas"]["ARPOReportType"];
+            type?: components["schemas"]["DateTimePeriod"];
+            /** Data for the ARPO report. */
             data?: components["schemas"]["OfferMeanGrossRevenue"][] | null;
         };
-        ARPOReportType: "daily" | "weekly" | "monthly";
         ActivityFeedEntity: {
             activityKind?: components["schemas"]["ActivityKinds"];
             activityItems?: components["schemas"]["ObjectPaginated"];
@@ -609,6 +610,7 @@ interface components {
             required?: string[] | null;
             properties?: components["schemas"]["ItemsProperties"];
         };
+        DateTimePeriod: "daily" | "weekly" | "monthly";
         Default: {
             description?: string | null;
             schema?: components["schemas"]["Schema"];
@@ -620,6 +622,16 @@ interface components {
         DefaultParameterValue: {
             parameterType?: components["schemas"]["ParameterTypes"];
             value?: unknown | null;
+        };
+        DeferredDelivery: {
+            id?: number;
+            created?: string;
+            lastUpdated?: string;
+            sending?: boolean | null;
+            channelId?: number;
+            channel?: components["schemas"]["ChannelBase"];
+            recommendationId?: number;
+            recommendation?: components["schemas"]["ItemsRecommendation"];
         };
         Definitions: {
             ServiceInput?: components["schemas"]["ServiceInput"];
@@ -1093,6 +1105,20 @@ interface components {
             redeemedAt?: string | null;
             grossRevenue?: number | null;
             redeemedPromotion?: components["schemas"]["RecommendableItem"];
+        };
+        OfferConversionRateData: {
+            startDate?: string;
+            endDate?: string;
+            redeemedCount?: number;
+            totalCount?: number;
+            conversionRate?: number;
+        };
+        OfferConversionRateReportDto: {
+            /** Campaign id. */
+            campaignId?: number;
+            type?: components["schemas"]["DateTimePeriod"];
+            /** Data for the report. */
+            data?: components["schemas"]["OfferConversionRateData"][] | null;
         };
         OfferMeanGrossRevenue: {
             startDate?: string;
@@ -3028,6 +3054,8 @@ interface OffersRequest extends PaginatedEntityRequest {
 declare const fetchOffersAsync: ({ token, page, pageSize, id, offerState, }: OffersRequest) => Promise<any>;
 declare type ARPOReport = components["schemas"]["ARPOReportDto"];
 declare const fetchARPOReportAsync: ({ token, id, }: EntityRequest) => Promise<ARPOReport[]>;
+declare type OfferConversionRateReport = components["schemas"]["OfferConversionRateReportDto"];
+declare const fetchOfferConversionRateReportAsync: ({ token, id, }: EntityRequest) => Promise<OfferConversionRateReport[]>;
 
 declare const promotionsCampaignsApi_d_fetchPromotionsCampaignsAsync: typeof fetchPromotionsCampaignsAsync;
 declare const promotionsCampaignsApi_d_fetchPromotionsCampaignAsync: typeof fetchPromotionsCampaignAsync;
@@ -3077,6 +3105,7 @@ declare const promotionsCampaignsApi_d_removeCampaignChannelAsync: typeof remove
 declare const promotionsCampaignsApi_d_fetchPromotionsRecommendationAsync: typeof fetchPromotionsRecommendationAsync;
 declare const promotionsCampaignsApi_d_fetchOffersAsync: typeof fetchOffersAsync;
 declare const promotionsCampaignsApi_d_fetchARPOReportAsync: typeof fetchARPOReportAsync;
+declare const promotionsCampaignsApi_d_fetchOfferConversionRateReportAsync: typeof fetchOfferConversionRateReportAsync;
 declare namespace promotionsCampaignsApi_d {
   export {
     promotionsCampaignsApi_d_fetchPromotionsCampaignsAsync as fetchPromotionsCampaignsAsync,
@@ -3128,6 +3157,7 @@ declare namespace promotionsCampaignsApi_d {
     promotionsCampaignsApi_d_fetchPromotionsRecommendationAsync as fetchPromotionsRecommendationAsync,
     promotionsCampaignsApi_d_fetchOffersAsync as fetchOffersAsync,
     promotionsCampaignsApi_d_fetchARPOReportAsync as fetchARPOReportAsync,
+    promotionsCampaignsApi_d_fetchOfferConversionRateReportAsync as fetchOfferConversionRateReportAsync,
   };
 }
 

@@ -35,10 +35,18 @@ namespace SignalBox.Infrastructure.EntityFramework
             return results;
         }
 
-        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryARPOReportData(PromotionsCampaign campaign, ARPOReportType type, DateTimeOffset startDate, OfferState state)
+        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryARPOReportData(PromotionsCampaign campaign, DateTimePeriod period, DateTimeOffset startDate, OfferState state)
         {
             var results = await context.OfferMeanGrossRevenues
-                .FromSqlInterpolated($"dbo.sp_OfferMeanGrossRevenue {campaign.Id}, {type}, {startDate}, {state.ToString()}")
+                .FromSqlInterpolated($"dbo.sp_OfferMeanGrossRevenue {campaign.Id}, {period}, {startDate}, {state.ToString()}")
+                .ToListAsync();
+            return results;
+        }
+
+        public async Task<IEnumerable<OfferConversionRateData>> QueryConversionRateData(PromotionsCampaign campaign, DateTimePeriod period, DateTimeOffset startDate, long? environmentId)
+        {
+            var results = await context.OfferConversionRates
+                .FromSqlInterpolated($"dbo.sp_OfferConversionRate {campaign.Id}, {period}, {startDate}, {environmentId}")
                 .ToListAsync();
             return results;
         }

@@ -52,5 +52,25 @@ namespace SignalBox.Core
                     return DateTimeOffset.MinValue;
             }
         }
+
+        /// <summary>
+        /// Get the date time offset based on the specified period.
+        /// <param name="period"></param>
+        /// <param name="periodAgo">periodAgo of 0 refers to current period</param>
+        /// </summary>
+        public static DateTimeOffset DateTimeSince(this DateTimeOffset dt, DateTimePeriod period, int periodAgo)
+        {
+            switch (period)
+            {
+                case DateTimePeriod.Daily:
+                    return dt.AddDays(-periodAgo);
+                case DateTimePeriod.Weekly:
+                    return dt.AddDays(-7 * periodAgo);
+                case DateTimePeriod.Monthly:
+                    return dt.AddMonths(-1 * periodAgo);
+                default:
+                    return dt;
+            }
+        }
     }
 }

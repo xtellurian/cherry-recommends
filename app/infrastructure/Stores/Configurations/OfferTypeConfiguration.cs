@@ -21,7 +21,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .HasForeignKey(_ => _.RedeemedPromotionId);
 
             builder.Property(_ => _.State).HasConversion<string>();
-            builder.Property(_ => _.GrossRevenue).HasDefaultValue(1.0d);
+            builder.Property(_ => _.GrossRevenue).HasDefaultValue(0d);
         }
     }
 }

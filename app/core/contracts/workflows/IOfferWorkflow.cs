@@ -16,5 +16,6 @@ namespace SignalBox.Core
         Task<IEnumerable<OfferMeanGrossRevenue>> QueryDailyARPOReportData(PromotionsCampaign campaign, int daysAgo = 7);
         Task<IEnumerable<OfferMeanGrossRevenue>> QueryWeeklyARPOReportData(PromotionsCampaign campaign, int weeksAgo = 11);
         Task<IEnumerable<OfferMeanGrossRevenue>> QueryMonthlyARPOReportData(PromotionsCampaign campaign, int monthsAgo = 11);
+        Task<IEnumerable<OfferConversionRateData>> QueryConversionRateReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11);
     }
 }

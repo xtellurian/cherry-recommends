@@ -19,6 +19,14 @@ namespace SignalBox.Core
         /// <param name="state"></param>
         /// <returns></returns>
         /// </summary>
-        Task<IEnumerable<OfferMeanGrossRevenue>> QueryARPOReportData(PromotionsCampaign campaign, ARPOReportType type, DateTimeOffset startDate, OfferState state);
+        Task<IEnumerable<OfferMeanGrossRevenue>> QueryARPOReportData(PromotionsCampaign campaign, DateTimePeriod type, DateTimeOffset startDate, OfferState state);
+        /// <summary>
+        /// Queries the Offer Conversion Rate report data.
+        /// <param name="campaign"></param>
+        /// <param name="period"></param>
+        /// <param name="startDate"></param>
+        /// <returns></returns>
+        /// </summary>
+        Task<IEnumerable<OfferConversionRateData>> QueryConversionRateData(PromotionsCampaign campaign, DateTimePeriod period, DateTimeOffset startDate, long? environmentId);
     }
 }

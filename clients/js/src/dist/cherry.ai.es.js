@@ -116,7 +116,7 @@ var errorHandling = /*#__PURE__*/Object.freeze({
     handleErrorResponse: handleErrorResponse
 });
 
-const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, } = { method: "get", path: "/" }) => {
+const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, }) => {
     const baseUrl = getBaseUrl();
     const client = current({ baseUrl: baseUrl });
     const params = new URLSearchParams();
@@ -3223,6 +3223,12 @@ const fetchARPOReportAsync = async ({ token, id, }) => {
         path: `api/campaigns/PromotionsCampaigns/${id}/ARPOReport`,
     });
 };
+const fetchOfferConversionRateReportAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        token,
+        path: `api/campaigns/PromotionsCampaigns/${id}/ConversionRateReport`,
+    });
+};
 
 var promotionsCampaignsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -3274,7 +3280,8 @@ var promotionsCampaignsApi = /*#__PURE__*/Object.freeze({
     removeCampaignChannelAsync: removeCampaignChannelAsync,
     fetchPromotionsRecommendationAsync: fetchPromotionsRecommendationAsync,
     fetchOffersAsync: fetchOffersAsync,
-    fetchARPOReportAsync: fetchARPOReportAsync
+    fetchARPOReportAsync: fetchARPOReportAsync,
+    fetchOfferConversionRateReportAsync: fetchOfferConversionRateReportAsync
 });
 
 let authConfig = undefined; // caches this because it rarely change

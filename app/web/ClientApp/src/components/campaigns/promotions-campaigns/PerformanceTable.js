@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router";
 import {
   useARPOReport,
+  useOfferConversionRateReport,
   usePerformance,
   usePromotionsCampaign,
   useReportImageBlobUrl,
@@ -17,6 +18,7 @@ import {
   Cell,
 } from "../../molecules/Table";
 import CampaignARPOChart from "../../molecules/charts/CampaignARPOChart";
+import CampaignConversionRateChart from "../../molecules/charts/CampaignConversionRateChart";
 
 const PerformanceTableRow = ({ data, itemsById }) => {
   const item = itemsById[data.itemId];
@@ -74,6 +76,7 @@ const Performance = () => {
   const recommender = usePromotionsCampaign({ id });
   const performance = usePerformance({ id });
   const arpoData = useARPOReport({ id });
+  const conversionRateData = useOfferConversionRateReport({ id });
   return (
     <React.Fragment>
       <PromotionCampaignLayout>
@@ -99,6 +102,11 @@ const Performance = () => {
             <div className="row mt-2">
               <div className="col text-center">
                 <CampaignARPOChart reportData={arpoData} />
+              </div>
+            </div>
+            <div className="row mt-2">
+              <div className="col text-center">
+                <CampaignConversionRateChart reportData={conversionRateData} />
               </div>
             </div>
           </React.Fragment>

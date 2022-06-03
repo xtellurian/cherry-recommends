@@ -759,6 +759,34 @@ export interface paths {
       };
     };
   };
+  "/api/Customers/{id}/DeferredDeliveries": {
+    get: {
+      parameters: {
+        query: {
+          page?: number;
+          pageSize?: number;
+          useInternalId?: boolean;
+        };
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeferredDelivery"][];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/TrackedUsers/{id}/features": {
     get: {
       parameters: {
@@ -7897,6 +7925,84 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ItemsRecommenders/{id}/ConversionRateReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["OfferConversionRateReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/ConversionRateReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["OfferConversionRateReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/ConversionRateReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["OfferConversionRateReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/Items": {
     get: {
       parameters: {
@@ -11669,11 +11775,12 @@ export interface paths {
 export interface components {
   schemas: {
     ARPOReportDto: {
+      /** Campaign id. */
       campaignId?: number;
-      type?: components["schemas"]["ARPOReportType"];
+      type?: components["schemas"]["DateTimePeriod"];
+      /** Data for the ARPO report. */
       data?: components["schemas"]["OfferMeanGrossRevenue"][] | null;
     };
-    ARPOReportType: "daily" | "weekly" | "monthly";
     ActivityFeedEntity: {
       activityKind?: components["schemas"]["ActivityKinds"];
       activityItems?: components["schemas"]["ObjectPaginated"];
@@ -12171,6 +12278,7 @@ export interface components {
       required?: string[] | null;
       properties?: components["schemas"]["ItemsProperties"];
     };
+    DateTimePeriod: "daily" | "weekly" | "monthly";
     Default: {
       description?: string | null;
       schema?: components["schemas"]["Schema"];
@@ -12182,6 +12290,16 @@ export interface components {
     DefaultParameterValue: {
       parameterType?: components["schemas"]["ParameterTypes"];
       value?: unknown | null;
+    };
+    DeferredDelivery: {
+      id?: number;
+      created?: string;
+      lastUpdated?: string;
+      sending?: boolean | null;
+      channelId?: number;
+      channel?: components["schemas"]["ChannelBase"];
+      recommendationId?: number;
+      recommendation?: components["schemas"]["ItemsRecommendation"];
     };
     Definitions: {
       ServiceInput?: components["schemas"]["ServiceInput"];
@@ -12671,6 +12789,20 @@ export interface components {
       redeemedAt?: string | null;
       grossRevenue?: number | null;
       redeemedPromotion?: components["schemas"]["RecommendableItem"];
+    };
+    OfferConversionRateData: {
+      startDate?: string;
+      endDate?: string;
+      redeemedCount?: number;
+      totalCount?: number;
+      conversionRate?: number;
+    };
+    OfferConversionRateReportDto: {
+      /** Campaign id. */
+      campaignId?: number;
+      type?: components["schemas"]["DateTimePeriod"];
+      /** Data for the report. */
+      data?: components["schemas"]["OfferConversionRateData"][] | null;
     };
     OfferMeanGrossRevenue: {
       startDate?: string;

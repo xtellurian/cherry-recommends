@@ -208,7 +208,23 @@ namespace SignalBox.Web.Controllers
             var response = new ARPOReportDto
             {
                 CampaignId = campaign.Id,
-                Type = ARPOReportType.Weekly,
+                Type = DateTimePeriod.Weekly,
+                Data = data
+            };
+
+            return response;
+        }
+
+        /// <summary>Get the Offer Conversion Rate report.</summary>
+        [HttpGet("{id}/ConversionRateReport")]
+        public async Task<OfferConversionRateReportDto> GetConversionRateReport(string id, bool? useInternalId = null)
+        {
+            var campaign = await base.GetResource(id, useInternalId);
+            var data = await offerWorkflow.QueryConversionRateReportData(campaign, DateTimePeriod.Weekly, 11); // 12 weeks ago minus 1 since 0 is current week
+            var response = new OfferConversionRateReportDto
+            {
+                CampaignId = campaign.Id,
+                Type = DateTimePeriod.Weekly,
                 Data = data
             };
 

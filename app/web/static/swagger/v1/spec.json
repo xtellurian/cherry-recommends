@@ -16179,6 +16179,147 @@
         }
       }
     },
+    "/api/recommenders/ItemsRecommenders/{id}/ConversionRateReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Offer Conversion Rate report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferConversionRateReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommenders/PromotionsRecommenders/{id}/ConversionRateReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Offer Conversion Rate report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferConversionRateReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/campaigns/PromotionsCampaigns/{id}/ConversionRateReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Offer Conversion Rate report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferConversionRateReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/recommenders/ItemsRecommenders/{id}/Items": {
       "get": {
         "tags": [
@@ -23836,7 +23977,7 @@
             "format": "int64"
           },
           "type": {
-            "$ref": "#/components/schemas/ARPOReportType"
+            "$ref": "#/components/schemas/DateTimePeriod"
           },
           "data": {
             "type": "array",
@@ -23848,14 +23989,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "ARPOReportType": {
-        "enum": [
-          "daily",
-          "weekly",
-          "monthly"
-        ],
-        "type": "string"
       },
       "ActivityFeedEntity": {
         "type": "object",
@@ -25836,6 +25969,14 @@
         },
         "additionalProperties": false
       },
+      "DateTimePeriod": {
+        "enum": [
+          "daily",
+          "weekly",
+          "monthly"
+        ],
+        "type": "string"
+      },
       "Default": {
         "type": "object",
         "properties": {
@@ -27693,6 +27834,54 @@
           },
           "redeemedPromotion": {
             "$ref": "#/components/schemas/RecommendableItem"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfferConversionRateData": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "redeemedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "conversionRate": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfferConversionRateReportDto": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "description": "Campaign id.",
+            "format": "int64"
+          },
+          "type": {
+            "$ref": "#/components/schemas/DateTimePeriod"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferConversionRateData"
+            },
+            "description": "Data for the report.",
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -3,13 +3,13 @@ using SignalBox.Core;
 
 namespace SignalBox.Web.Dto
 {
-    public class ARPOReportDto : DtoBase
+    public class OfferConversionRateReportDto : DtoBase
     {
         /// <summary> Campaign id. </summary>
         public long CampaignId { get; set; }
-        /// <summary> ARPO report type. </summary>
+        /// <summary> Report period type. </summary>
         public DateTimePeriod Type { get; set; }
-        /// <summary> Data for the ARPO report. </summary>
-        public IEnumerable<OfferMeanGrossRevenue> Data { get; set; }
+        /// <summary> Data for the report. </summary>
+        public IEnumerable<OfferConversionRateData> Data { get; set; }
     }
 }

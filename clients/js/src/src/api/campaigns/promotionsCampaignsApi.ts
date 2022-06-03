@@ -759,3 +759,15 @@ export const fetchARPOReportAsync = async ({
     path: `api/campaigns/PromotionsCampaigns/${id}/ARPOReport`,
   });
 };
+
+type OfferConversionRateReport =
+  components["schemas"]["OfferConversionRateReportDto"];
+export const fetchOfferConversionRateReportAsync = async ({
+  token,
+  id,
+}: EntityRequest): Promise<OfferConversionRateReport[]> => {
+  return await executeFetch({
+    token,
+    path: `api/campaigns/PromotionsCampaigns/${id}/ConversionRateReport`,
+  });
+};

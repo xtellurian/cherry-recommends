@@ -1,7 +1,7 @@
 
 namespace SignalBox.Core
 {
-    public enum ARPOReportType
+    public enum DateTimePeriod
     {
         Daily = 0,
         Weekly = 1,
