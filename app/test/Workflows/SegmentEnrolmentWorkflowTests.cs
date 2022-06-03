@@ -35,6 +35,7 @@ namespace SignalBox.Test.Workflows
                 mockEnrolmentRuleStore.Object,
                 mockCustomerSegmentWorkflow.Object,
                 mockCustomerStore.Object,
+                Utility.MockTelemetry().Object,
                 mockHistoricCustomerMetricStore.Object,
                 dtProvider,
                 mockLogger.Object);
@@ -71,8 +72,8 @@ namespace SignalBox.Test.Workflows
 
             var customers = new List<Customer> { customerToBeInSegment, customerNotToBeInSegment };
 
-            mockCustomerStore.Setup(_ => _.Read(It.IsAny<long>()))
-                .ReturnsAsync((long id) => customers.First(c => c.Id == id)); // return the requested customer
+            mockCustomerStore.Setup(_ => _.Read(It.IsAny<long>(), It.IsAny<EntityStoreReadOptions>()))
+                .ReturnsAsync((long id, EntityStoreReadOptions o) => customers.First(c => c.Id == id)); // return the requested customer
             mockHistoricCustomerMetricStore.Setup(_ => _.IterateLatest(It.Is<long>(m => m == metric.Id), It.IsAny<Expression<Func<LatestMetric, bool>>>()))
             .Returns(new List<LatestMetric>()
             {
@@ -105,6 +106,7 @@ namespace SignalBox.Test.Workflows
                 mockEnrolmentRuleStore.Object,
                 mockCustomerSegmentWorkflow.Object,
                 mockCustomerStore.Object,
+                Utility.MockTelemetry().Object,
                 mockHistoricCustomerMetricStore.Object,
                 dtProvider,
                 mockLogger.Object);

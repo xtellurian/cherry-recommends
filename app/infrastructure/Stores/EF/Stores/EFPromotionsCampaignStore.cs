@@ -15,7 +15,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, environmentService, (c) => c.PromotionsCampaigns)
         { }
 
-        public override async Task<PromotionsCampaign> Read(long id)
+        public override async Task<PromotionsCampaign> Read(long id, EntityStoreReadOptions options = null)
         {
             try
             {

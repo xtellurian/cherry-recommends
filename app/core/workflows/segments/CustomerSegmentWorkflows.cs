@@ -31,6 +31,8 @@ namespace SignalBox.Core.Workflows
 
         public async Task<CustomerSegment> AddToSegment(Segment segment, Customer customer)
         {
+            await customerStore.Update(customer); // ensure we're tracking the customer
+            await segmentStore.Update(segment); // ensure we're tracking the segment
             var customerSegment = await segmentStore.AddCustomer(segment, customer);
             logger.LogInformation("Added customer {customerId} to segment {segmentId}", customer.Id, segment.Id);
             await storageContext.SaveChanges();
@@ -39,6 +41,8 @@ namespace SignalBox.Core.Workflows
 
         public async Task RemoveFromSegment(Segment segment, Customer customer)
         {
+            await customerStore.Update(customer); // ensure we're tracking the customer
+            await segmentStore.Update(segment); // ensure we're tracking the segment
             var customerSegment = await segmentStore.RemoveCustomer(segment, customer);
             logger.LogInformation("Removed customer {customerId} from segment {segmentId}", customer.Id, segment.Id);
             await storageContext.SaveChanges();

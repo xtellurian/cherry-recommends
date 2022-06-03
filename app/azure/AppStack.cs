@@ -28,16 +28,7 @@ namespace SignalBox.Azure
             var appRg = new ResourceGroup("application", commonRgArgs);
             var analyticsRg = new ResourceGroup("analytics", commonRgArgs);
             var databasesRg = new ResourceGroup("databases", commonRgArgs);
-
-            var appInsights = new Pulumi.AzureNative.Insights.Component("Insights",
-                new Pulumi.AzureNative.Insights.ComponentArgs
-                {
-                    ApplicationType = "web",
-                    Kind = "web",
-                    ResourceGroupName = appRg.Name,
-                    Tags = tags,
-                });
-
+            var appObservation = new AppObservation(appRg, tags);
             var storage = new Storage(appRg);
             var multitenant = new MultitenantDatabaseComponent(databasesRg);
             var eventProcessing = new EventProcessing(appRg, tags);
@@ -47,7 +38,7 @@ namespace SignalBox.Azure
             var analytics = new AzureML(analyticsRg, synapse, multitenant);
 
             // create the app svcs
-            var appSvc = new AppSvc(appRg, multitenant, storage, analytics, eventProcessing, appInsights, tags);
+            var appSvc = new AppSvc(appRg, multitenant, storage, analytics, eventProcessing, appObservation, tags);
             // set the stack outputs
 
             this.SqlServerAzureId = multitenant.Server.Id;

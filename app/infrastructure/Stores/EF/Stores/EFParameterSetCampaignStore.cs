@@ -12,7 +12,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, environmentService, (c) => c.ParameterSetCampaigns)
         { }
 
-        public override async Task<ParameterSetCampaign> Read(long id)
+        public override async Task<ParameterSetCampaign> Read(long id, EntityStoreReadOptions options = null)
         {
             try
             {

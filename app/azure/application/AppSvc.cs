@@ -24,7 +24,7 @@ namespace SignalBox.Azure
                       Storage storage,
                       AzureML ml,
                       EventProcessing eventProcessing,
-                      Pulumi.AzureNative.Insights.Component insights,
+                      AppObservation observation,
                       Dictionary<string, string>? tags = null)
         {
             this.tags ??= new Dictionary<string, string>();
@@ -94,7 +94,7 @@ namespace SignalBox.Azure
                     HealthCheckPath = "/health",
                 }
             });
-            this.PythonFunctionApp = CreatePythonFunctions(rg, storage, insights, plan);
+            this.PythonFunctionApp = CreatePythonFunctions(rg, storage, observation.AppInsights, plan);
 
             if (multitenant && !string.IsNullOrEmpty(canonicalRootDomain))
             {
@@ -108,7 +108,7 @@ namespace SignalBox.Azure
             var dotnetFunctionApp = CreateDotnetFuncs(rg,
                                                       multiDb,
                                                       storage,
-                                                      insights,
+                                                      observation.AppInsights,
                                                       eventProcessing,
                                                       plan,
                                                       auth0);
@@ -130,7 +130,7 @@ namespace SignalBox.Azure
                     {"Deployment__Stack", Pulumi.Deployment.Instance.StackName},
                     {"Deployment__Project", Pulumi.Deployment.Instance.ProjectName},
                     {"Deployment__Environment", environment},
-                    {"ApplicationInsights__InstrumentationKey", insights.InstrumentationKey},
+                    {"ApplicationInsights__InstrumentationKey", observation.AppInsights.InstrumentationKey},
                     {"WEBSITE_HTTPLOGGING_RETENTION_DAYS", "1"},
 
                     // auth0

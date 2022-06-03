@@ -59,7 +59,7 @@ namespace SignalBox.Test
         where TStore : class, IEntityStore<TEntity>
         where TEntity : Entity
         {
-            mockStore.Setup(_ => _.Read(It.IsAny<long>())).ReturnsAsync((long id) => entities.First(e => e.Id == id));
+            mockStore.Setup(_ => _.Read(It.IsAny<long>(), It.IsAny<EntityStoreReadOptions>())).ReturnsAsync((long id) => entities.First(e => e.Id == id));
         }
 
         public static void SetupCommonStoreRead<TMock, TStore, TEntity>(this TMock mockStore, params TEntity[] entities)
@@ -68,7 +68,8 @@ namespace SignalBox.Test
         where TEntity : CommonEntity
         {
             mockStore.Setup(_ => _.ReadFromCommonId(It.IsAny<string>())).ReturnsAsync((string id) => entities.First(e => e.CommonId == id));
-            mockStore.Setup(_ => _.Read(It.IsAny<long>())).ReturnsAsync((long id) => entities.First(e => e.Id == id));
+            mockStore.Setup(_ => _.Read(It.IsAny<long>(), It.IsAny<EntityStoreReadOptions>()))
+            .ReturnsAsync((long id, EntityStoreReadOptions o) => entities.First(e => e.Id == id));
         }
     }
 }

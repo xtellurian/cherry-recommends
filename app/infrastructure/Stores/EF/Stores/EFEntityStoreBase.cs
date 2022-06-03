@@ -18,6 +18,17 @@ namespace SignalBox.Infrastructure.EntityFramework
         : base(contextProvider, selector)
         { }
 
+        protected QueryTrackingBehavior ToEntityFramework(ChangeTrackingOptions? changeTrackingOptions)
+        {
+            return changeTrackingOptions switch
+            {
+                ChangeTrackingOptions.TrackAll => QueryTrackingBehavior.TrackAll,
+                ChangeTrackingOptions.NoTrackingWithIdentityResolution => QueryTrackingBehavior.NoTrackingWithIdentityResolution,
+                ChangeTrackingOptions.NoTracking => QueryTrackingBehavior.NoTracking,
+                _ => QueryTrackingBehavior.TrackAll,
+            };
+        }
+
         public async Task<int> Count(Expression<Func<T, bool>>? predicate = null)
         {
             if (await QuerySet.AnyAsync(predicate ?? ((x) => true)))
@@ -114,11 +125,13 @@ namespace SignalBox.Infrastructure.EntityFramework
             return await this.Query<object>(null, queryOptions);
         }
 
-        public virtual async Task<T> Read(long id)
+        public virtual async Task<T> Read(long id, EntityStoreReadOptions? options = null)
         {
             try
             {
-                return await QuerySet.SingleAsync(_ => _.Id == id);
+                return await QuerySet
+                    .AsTracking(ToEntityFramework(options?.ChangeTracking))
+                    .SingleAsync(_ => _.Id == id);
             }
             catch (Exception ex)
             {
@@ -162,14 +175,14 @@ namespace SignalBox.Infrastructure.EntityFramework
             return entity;
         }
 
-        public async Task LoadMany<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class
+        public async Task LoadMany<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>?>> propertyExpression) where TProperty : class
         {
             await context.Entry(entity)
                 .Collection(propertyExpression)
                 .LoadAsync();
         }
 
-        public async Task Load<TProperty>(T entity, Expression<Func<T, TProperty>> propertyExpression) where TProperty : class
+        public async Task Load<TProperty>(T entity, Expression<Func<T, TProperty?>> propertyExpression) where TProperty : class
         {
             await context.Entry(entity)
                 .Reference(propertyExpression)

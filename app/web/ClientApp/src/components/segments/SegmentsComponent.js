@@ -10,7 +10,10 @@ import { useFeatureFlag } from "../launch-darkly/hooks";
 const SegmentsHome = () => {
   return (
     <div>
-      <CreateButtonClassic to="/segments/create" className="float-right">
+      <CreateButtonClassic
+        to="/customers/segments/create"
+        className="float-right"
+      >
         Create New Segment
       </CreateButtonClassic>
       <SegmentSummary />

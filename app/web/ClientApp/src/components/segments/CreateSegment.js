@@ -15,7 +15,9 @@ export const CreateSegment = () => {
   const { navigate } = useNavigation();
   const { analytics } = useAnalytics();
   const [loading, setLoading] = React.useState(false);
-  const [segment, setSegment] = React.useState();
+  const [segment, setSegment] = React.useState({
+    name: "",
+  });
   const [error, setError] = React.useState();
   const handleCreate = () => {
     setLoading(true);
@@ -57,7 +59,7 @@ export const CreateSegment = () => {
         <TextInput
           label="Segment Name"
           placeholder="Enter segment name here"
-          value={segment?.name}
+          value={segment.name}
           onChange={(e) =>
             setSegment({
               ...segment,

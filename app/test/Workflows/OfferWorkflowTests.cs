@@ -52,7 +52,7 @@ namespace SignalBox.Test.Workflows
             await workflow.UpdateOffer(customerEvent);
             // Assert
             mockOfferStore.Verify(_ => _.ReadOfferByRecommendationCorrelator(It.IsAny<long>()), Times.Never);
-            mockPromotionStore.Verify(_ => _.Read(It.IsAny<long>()), Times.Never);
+            mockPromotionStore.Verify(_ => _.Read(It.IsAny<long>(), It.IsAny<EntityStoreReadOptions>()), Times.Never);
             mockOfferStore.Verify(_ => _.Update(It.IsAny<Offer>()), Times.Never);
             mockOfferStore.Verify(_ => _.Context.SaveChanges(), Times.Never);
         }
@@ -113,7 +113,7 @@ namespace SignalBox.Test.Workflows
             await workflow.UpdateOffer(customerEvent); // offerRedeemed
             // Assert
             mockOfferStore.Verify(_ => _.ReadOfferByRecommendationCorrelator(It.IsAny<long>()), Times.Exactly(3));
-            mockPromotionStore.Verify(_ => _.Read(It.IsAny<long>()), Times.Never);
+            mockPromotionStore.Verify(_ => _.Read(It.IsAny<long>(), It.IsAny<EntityStoreReadOptions>()), Times.Never);
             mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Created)), Times.Never);
             mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Presented)), Times.Exactly(2));
             mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Redeemed)), Times.Once);
@@ -176,7 +176,7 @@ namespace SignalBox.Test.Workflows
                 .ReturnsAsync(new EntityResult<Offer>(offerCreated))
                 .ReturnsAsync(new EntityResult<Offer>(offerPresented))
                 .ReturnsAsync(new EntityResult<Offer>(offerRedeemed));
-            mockPromotionStore.Setup(_ => _.Read(It.Is<long>(_ => _ == promotionId))).ReturnsAsync(promotion);
+            mockPromotionStore.Setup(_ => _.Read(It.Is<long>(_ => _ == promotionId), It.IsAny<EntityStoreReadOptions>())).ReturnsAsync(promotion);
             // Act
             var workflow = new OfferWorkflows(
                 Utility.MockLogger<OfferWorkflows>().Object,
@@ -190,7 +190,7 @@ namespace SignalBox.Test.Workflows
             await workflow.UpdateOffer(customerEvent); // offerRedeemed
             // Assert
             mockOfferStore.Verify(_ => _.ReadOfferByRecommendationCorrelator(It.IsAny<long>()), Times.Exactly(3));
-            mockPromotionStore.Verify(_ => _.Read(It.IsAny<long>()), Times.Exactly(2));
+            mockPromotionStore.Verify(_ => _.Read(It.IsAny<long>(), It.IsAny<EntityStoreReadOptions>()), Times.Exactly(2));
             mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Created)), Times.Never);
             mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Presented)), Times.Never);
             mockOfferStore.Verify(_ => _.Update(It.Is<Offer>(_ => _.State == OfferState.Redeemed)), Times.Exactly(3));

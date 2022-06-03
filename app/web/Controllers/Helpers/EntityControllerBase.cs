@@ -29,7 +29,7 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}")]
         public virtual async Task<T> GetResource(long id)
         {
-            return await store.Read(id);
+            return await store.Read(id, new EntityStoreReadOptions { ChangeTracking = ChangeTrackingOptions.NoTracking });
         }
 
         /// <summary>Deletes the resource with this Id.</summary>

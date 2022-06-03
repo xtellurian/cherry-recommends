@@ -13,6 +13,7 @@ namespace SignalBox.Core.Workflows
         private readonly IEnrolmentRuleStore enrolmentRuleStore;
         private readonly ICustomerSegmentWorkflow customerSegmentWorkflow;
         private readonly ICustomerStore customerStore;
+        private readonly ITelemetry telemetry;
         private readonly IHistoricCustomerMetricStore historicCustomerMetricStore;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ILogger<SegmentEnrolmentWorkflow> logger;
@@ -27,6 +28,7 @@ namespace SignalBox.Core.Workflows
         public SegmentEnrolmentWorkflow(IEnrolmentRuleStore enrolmentRuleStore,
                                         ICustomerSegmentWorkflow customerSegmentWorkflow,
                                         ICustomerStore customerStore,
+                                        ITelemetry telemetry,
                                         IHistoricCustomerMetricStore historicCustomerMetricStore,
                                         IDateTimeProvider dateTimeProvider,
                                         ILogger<SegmentEnrolmentWorkflow> logger)
@@ -34,6 +36,7 @@ namespace SignalBox.Core.Workflows
             this.enrolmentRuleStore = enrolmentRuleStore;
             this.customerSegmentWorkflow = customerSegmentWorkflow;
             this.customerStore = customerStore;
+            this.telemetry = telemetry;
             this.historicCustomerMetricStore = historicCustomerMetricStore;
             this.dateTimeProvider = dateTimeProvider;
             this.logger = logger;
@@ -68,6 +71,7 @@ namespace SignalBox.Core.Workflows
         /// <returns></returns>
         private async Task<EnrolmentReport> RunMetricEnrolment(MetricEnrolmentRule rule, bool preview)
         {
+            var stopwatch = telemetry.NewStopwatch();
             if (rule.MetricId == null)
             {
                 throw new WorkflowException($"MetricId is null for rule {rule.Id}");
@@ -95,8 +99,12 @@ namespace SignalBox.Core.Workflows
                 if (latestValue.CustomerId.HasValue)
                 {
                     // these are the latest metric values that meet the requirements.
-                    await enrolmentRuleStore.Load(rule, _ => _.Segment);
-                    var customer = await customerStore.Read(latestValue.CustomerId.Value);
+                    if (rule.Segment == null)
+                    {
+                        await enrolmentRuleStore.Load(rule, _ => _.Segment);
+                    }
+                    var customer = await customerStore.Read(latestValue.CustomerId.Value,
+                        new EntityStoreReadOptions { ChangeTracking = ChangeTrackingOptions.NoTrackingWithIdentityResolution }); // todo: this could benefit from AsNoTracking query
                     if (!preview)
                     {
                         // actually add to segment if not preview
@@ -112,6 +120,9 @@ namespace SignalBox.Core.Workflows
                 rule.LastCompleted = dateTimeProvider.Now;
                 await enrolmentRuleStore.Context.SaveChanges();
             }
+
+            stopwatch.Stop();
+            telemetry.TrackTimingMetric(nameof(SegmentEnrolmentWorkflow) + "." + nameof(RunMetricEnrolment), stopwatch.Elapsed, "Enrolment rule for ruleId=" + rule.Id);
 
             return report;
         }

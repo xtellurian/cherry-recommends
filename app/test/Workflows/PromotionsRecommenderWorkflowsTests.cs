@@ -135,7 +135,7 @@ namespace SignalBox.Test.Workflows
                 Id = 1
             };
 
-            mockChannelStore.Setup(_ => _.Read(It.IsAny<long>())).ReturnsAsync(channel);
+            mockChannelStore.Setup(_ => _.Read(It.IsAny<long>(), It.IsAny<EntityStoreReadOptions>())).ReturnsAsync(channel);
             var result = await sut.AddChannel(recommender, channel.Id);
 
             Assert.NotNull(result);
@@ -199,7 +199,7 @@ namespace SignalBox.Test.Workflows
             recommender.Channels.Add(channel1);
             recommender.Channels.Add(channel2);
 
-            mockChannelStore.Setup(_ => _.Read(It.IsAny<long>())).ReturnsAsync(channel1);
+            mockChannelStore.Setup(_ => _.Read(It.IsAny<long>(), It.IsAny<EntityStoreReadOptions>())).ReturnsAsync(channel1);
 
             await Assert.ThrowsAsync<BadRequestException>(() => sut.AddChannel(recommender, channel1.Id));
         }
@@ -252,7 +252,7 @@ namespace SignalBox.Test.Workflows
                 Id = 1
             };
             recommender.Channels.Add(channel1);
-            mockChannelStore.Setup(_ => _.Read(It.IsAny<long>())).ReturnsAsync(channel1);
+            mockChannelStore.Setup(_ => _.Read(It.IsAny<long>(), It.IsAny<EntityStoreReadOptions>())).ReturnsAsync(channel1);
 
             await Assert.ThrowsAsync<BadRequestException>(() => sut.AddChannel(recommender, channel1.Id));
         }

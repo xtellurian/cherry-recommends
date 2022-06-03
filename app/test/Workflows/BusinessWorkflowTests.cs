@@ -58,7 +58,7 @@ namespace SignalBox.Test.Workflows
             var customer = new Customer("customer1", "customer1");
             customer.BusinessMembership = businessMembership;
 
-            mockCustomerStore.Setup(_ => _.Read(It.Is<long>(_ => _ == 1))).ReturnsAsync(customer);
+            mockCustomerStore.Setup(_ => _.Read(It.Is<long>(_ => _ == 1), It.IsAny<EntityStoreReadOptions>())).ReturnsAsync(customer);
 
             var business = new Business("test");
             var result = await workflow.RemoveBusinessMembership(business, 1);
@@ -76,7 +76,7 @@ namespace SignalBox.Test.Workflows
 
             var workflow = new BusinessWorkflows(mockStorageContext.Object, mockBusinessStore.Object, mockCustomerStore.Object, Utility.MockLogger<BusinessWorkflows>().Object);
 
-            mockCustomerStore.Setup(_ => _.Read(It.Is<long>(_ => _ == 1))).ReturnsAsync(new Customer("customer1", "customer1"));
+            mockCustomerStore.Setup(_ => _.Read(It.Is<long>(_ => _ == 1), It.IsAny<EntityStoreReadOptions>())).ReturnsAsync(new Customer("customer1", "customer1"));
             var business = new Business("test");
 
             var act = () => workflow.RemoveBusinessMembership(business, 1);
@@ -99,7 +99,7 @@ namespace SignalBox.Test.Workflows
             var customer = new Customer("customer1", "customer1");
             customer.BusinessMembership = businessMembership;
 
-            mockCustomerStore.Setup(_ => _.Read(It.Is<long>(_ => _ == 1))).ReturnsAsync(customer);
+            mockCustomerStore.Setup(_ => _.Read(It.Is<long>(_ => _ == 1), It.IsAny<EntityStoreReadOptions>())).ReturnsAsync(customer);
 
             var business = new Business("test"); // Id=0
 
@@ -230,7 +230,7 @@ namespace SignalBox.Test.Workflows
                 }
             };
             mockBusinessStore.Setup(_ => _.Context).Returns(mockStorageContext.Object);
-            mockBusinessStore.Setup(_ => _.Read(It.Is<long>(x => x == business.Id)))
+            mockBusinessStore.Setup(_ => _.Read(It.Is<long>(x => x == business.Id), It.IsAny<EntityStoreReadOptions>()))
                 .ReturnsAsync(business);
             mockBusinessStore.Setup(_ => _.ExistsFromCommonId(It.Is<string>(x => x == business.CommonId)))
                 .ReturnsAsync(true);
@@ -244,7 +244,7 @@ namespace SignalBox.Test.Workflows
             var membership = await workflow.AddToBusiness(newBusinessCommonId, customer, businessProperties);
 
             // assert
-            mockBusinessStore.Verify(_ => _.Read(It.Is<long>(s => s == business.Id)));
+            mockBusinessStore.Verify(_ => _.Read(It.Is<long>(s => s == business.Id), It.IsAny<EntityStoreReadOptions>()));
             mockStorageContext.Verify(_ => _.SaveChanges(), Times.Once);
             Assert.Equal(membership.BusinessId, newBusiness.Id);
             Assert.Equal(customer.BusinessMembership, membership);
