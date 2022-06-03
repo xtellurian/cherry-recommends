@@ -41,17 +41,19 @@ export const InviteMemberSection = ({ onNewMemberAdded }) => {
     <>
       <h6>Add a Team Member</h6>
       {error && <ErrorCard error={error} />}
-      <InputGroup>
-        <TextInput
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="wendy@example.com"
-          validator={joinValidators([
-            emailValidator,
-            createRequiredByServerValidator(error),
-          ])}
-          onReturn={handleInvite}
-        />
+
+      <TextInput
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="wendy@example.com"
+        validator={joinValidators([
+          emailValidator,
+          createRequiredByServerValidator(error),
+        ])}
+        onReturn={handleInvite}
+      />
+
+      <div className="d-flex flex-row-reverse">
         <AsyncButton
           loading={loading}
           disabled={email.length < 3}
@@ -60,7 +62,7 @@ export const InviteMemberSection = ({ onNewMemberAdded }) => {
         >
           Invite
         </AsyncButton>
-      </InputGroup>
+      </div>
     </>
   );
 };
