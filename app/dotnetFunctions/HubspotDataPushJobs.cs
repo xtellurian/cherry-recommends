@@ -66,7 +66,8 @@ namespace SignalBox.Functions
         private async Task<List<HubspotDataPushReport>> RunJob(ILogger logger)
         {
             var reports = new List<HubspotDataPushReport>();
-            await foreach (var s in integratedSystemStore.Iterate(_ => _.SystemType == IntegratedSystemTypes.Hubspot))
+            await foreach (var s in integratedSystemStore.Iterate(
+                new EntityStoreIterateOptions<IntegratedSystem>(_ => _.SystemType == IntegratedSystemTypes.Hubspot)))
             {
                 logger.LogInformation($"Starting Data Push for hubspot, portal ID (commonId) = {s.CommonId}");
                 var cache = s.GetCache<HubspotCache>();

@@ -76,7 +76,8 @@ namespace SignalBox.Core.Workflows
             var itemRecommendationCounts = new Dictionary<long, int>();
             var recommendations = new List<ItemsRecommendation>();
             // ascending forces the latest recommendations to win
-            await foreach (var recommendation in recommendationStore.Iterate(_ => _.RecommenderId == recommender.Id, IterateOrderBy.AscendingId))
+            await foreach (var recommendation in recommendationStore.Iterate(
+                new EntityStoreIterateOptions<ItemsRecommendation>(_ => _.RecommenderId == recommender.Id, IterateOrderBy.AscendingId)))
             {
                 recommendations.Add(recommendation);
                 // get customer IDs if this is a recommender targeting customers

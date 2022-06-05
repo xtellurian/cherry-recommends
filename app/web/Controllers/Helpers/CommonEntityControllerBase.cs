@@ -21,7 +21,13 @@ namespace SignalBox.Web.Controllers
             this.store = store;
         }
 
-        /// <summary>Returned a paginated list of items for this resource.</summary>
+
+        /// <summary>
+        /// Query entities of this type.
+        /// </summary>
+        /// <param name="p">Controls pagination.</param>
+        /// <param name="q">Controls querying</param>
+        /// <returns>A paginated collection of entities.</returns>
         [HttpGet]
         public virtual async Task<Paginated<T>> Query([FromQuery] PaginateRequest p, [FromQuery] SearchEntities q)
         {
@@ -31,10 +37,7 @@ namespace SignalBox.Web.Controllers
             }
             else
             {
-                return await store.Query(new EntityStoreQueryOptions<T>(p)
-                {
-                    SearchTerm = q.Term
-                });
+                return await store.NoTrackingQuery(p, q.Term);
             }
         }
 

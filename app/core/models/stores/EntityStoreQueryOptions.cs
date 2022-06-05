@@ -32,5 +32,9 @@ namespace SignalBox.Core
         /// Doesn't apply to the base Entity, because it has no text fields.
         /// </summary>
         public string? SearchTerm { get; set; }
+        /// <summary>
+        /// For EF Stores, controls change tracking for the returned entities.
+        /// </summary>
+        public ChangeTrackingOptions ChangeTracking { get; set; } = ChangeTrackingOptions.TrackAll;
     }
 }

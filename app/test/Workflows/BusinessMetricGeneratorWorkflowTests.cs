@@ -81,7 +81,7 @@ namespace SignalBox.Test.Workflows
             var mockAggregateLogger = Utility.MockLogger<FilterSelectAggregateWorkflow>();
             var aggregateWorkflow = new FilterSelectAggregateWorkflow(mockAggregateLogger.Object);
 
-            BusinessMetricGeneratorWorkflow workflow = new BusinessMetricGeneratorWorkflow(
+            BusinessMetricGeneratorWorkflow workflow = new(
                 mockBusinessMetricValueStore.Object,
                 mockBusinessStore.Object,
                 mockCustomerEventStore.Object,
@@ -93,7 +93,7 @@ namespace SignalBox.Test.Workflows
                 mockLogger.Object
             );
 
-            List<FilterSelectAggregateStep> steps = new List<FilterSelectAggregateStep>
+            List<FilterSelectAggregateStep> steps = new()
             {
                 new FilterSelectAggregateStep(1, new SelectStep(propertyMatch)),
                 new FilterSelectAggregateStep(2, new AggregateStep(){ AggregationType = aggregationType } )
@@ -102,7 +102,7 @@ namespace SignalBox.Test.Workflows
             var metric = new Metric("metric1", "metric1", metricValueType, MetricScopes.Business);
             var metricGenerator = MetricGenerator.CreateFilterSelectAggregateGenerator(metric, steps, MetricGeneratorTimeWindow.AllTime);
 
-            mockBusinessStore.Setup(_ => _.Iterate(It.IsAny<Expression<Func<Business, bool>>>(), It.IsAny<IterateOrderBy>()))
+            mockBusinessStore.Setup(_ => _.Iterate(It.IsAny<EntityStoreIterateOptions<Business>>()))
                 .Returns(GetBusinesses);
 
             mockCustomerEventStore.Setup(_ => _.ReadEventsForBusiness(It.Is<Business>(_ => _.CommonId == Business1.CommonId), It.IsAny<EventQueryOptions>(), It.IsAny<DateTimeOffset>()))

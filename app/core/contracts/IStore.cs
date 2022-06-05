@@ -17,6 +17,5 @@ namespace SignalBox.Core
         Task<bool> Remove(long id);
         Task LoadMany<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>?>> propertyExpression) where TProperty : class;
         Task Load<TProperty>(T entity, Expression<Func<T, TProperty?>> propertyExpression) where TProperty : class;
-        IAsyncEnumerable<T> Iterate(Expression<Func<T, bool>>? predicate = null, IterateOrderBy orderBy = IterateOrderBy.DescendingId);
     }
 }

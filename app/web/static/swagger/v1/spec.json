@@ -486,7 +486,7 @@
         "tags": [
           "Businesses"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -3183,7 +3183,7 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -3337,7 +3337,7 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -7460,7 +7460,7 @@
         "tags": [
           "Parameters"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -7836,7 +7836,7 @@
         "tags": [
           "ParameterSetCampaigns"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -7956,7 +7956,7 @@
         "tags": [
           "ParameterSetCampaigns"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -13705,7 +13705,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -13835,7 +13835,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -13965,7 +13965,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",

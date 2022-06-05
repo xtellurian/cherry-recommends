@@ -104,7 +104,8 @@ namespace SignalBox.Infrastructure.EntityFramework
                     .Where(predicateBuilder)
                     .OrderByDescending(defaultOrderBy)
                     .Skip((queryOptions.Page - 1) * pageSize)
-                    .Take(pageSize);
+                    .Take(pageSize)
+                    .AsTracking(ToEntityFramework(queryOptions.ChangeTracking));
 
                 if (include != null)
                 {
@@ -189,10 +190,10 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .LoadAsync();
         }
 
-        public virtual async IAsyncEnumerable<T> Iterate(Expression<Func<T, bool>>? predicate = null, IterateOrderBy orderBy = IterateOrderBy.DescendingId)
+        public virtual async IAsyncEnumerable<T> Iterate(EntityStoreIterateOptions<T>? options = null)
         {
-            predicate ??= _ => true;
-            bool hasMoreItems = await QuerySet.AnyAsync(predicate);
+            options ??= new EntityStoreIterateOptions<T>();
+            bool hasMoreItems = await QuerySet.AnyAsync(options.Predicate);
             if (!hasMoreItems)
             {
                 yield break;
@@ -201,7 +202,7 @@ namespace SignalBox.Infrastructure.EntityFramework
             var currentId = maxId + 1; // we query for ids less than this.
             while (hasMoreItems)
             {
-                List<T> results = await RunQueryWithOrderby(predicate, currentId, orderBy);
+                List<T> results = await RunQueryWithOrderby(options.Predicate, currentId, options.OrderBy, ToEntityFramework(options.ChangeTracking));
 
                 if (results.Any())
                 {
@@ -222,9 +223,8 @@ namespace SignalBox.Infrastructure.EntityFramework
             }
         }
 
-        private async Task<List<T>> RunQueryWithOrderby(Expression<Func<T, bool>> predicate, long currentId, IterateOrderBy orderBy)
+        private async Task<List<T>> RunQueryWithOrderby(Expression<Func<T, bool>> predicate, long currentId, IterateOrderBy orderBy, QueryTrackingBehavior queryTrackingBehavior)
         {
-
             return orderBy switch
             {
                 IterateOrderBy.AscendingId =>
@@ -233,6 +233,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                         .Where(_ => _.Id < currentId)
                         .OrderBy(_ => _.Id) // ascending here
                         .Take(DefaultPageSize) // use the default page size when running an iteration
+                        .AsTracking(queryTrackingBehavior)
                         .ToListAsync(),
                 _ =>
                     await QuerySet
@@ -240,6 +241,7 @@ namespace SignalBox.Infrastructure.EntityFramework
                         .Where(_ => _.Id < currentId)
                         .OrderByDescending(_ => _.Id) // descending here
                         .Take(DefaultPageSize) // use the default page size when running an iteration
+                        .AsTracking(queryTrackingBehavior)
                         .ToListAsync(),
             };
         }

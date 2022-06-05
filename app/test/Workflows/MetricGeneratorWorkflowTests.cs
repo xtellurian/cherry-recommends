@@ -87,7 +87,7 @@ namespace SignalBox.Test.Workflows
                 mockLogger.Object
             );
 
-            List<FilterSelectAggregateStep> steps = new List<FilterSelectAggregateStep>
+            List<FilterSelectAggregateStep> steps = new()
             {
                 new FilterSelectAggregateStep(1, new SelectStep(propertyMatch)),
                 new FilterSelectAggregateStep(2, new AggregateStep(){ AggregationType = aggregationType } )
@@ -96,7 +96,7 @@ namespace SignalBox.Test.Workflows
             var metric = new Metric("metric1", "metric1", MetricValueType.Numeric, MetricScopes.Customer);
             var metricGenerator = MetricGenerator.CreateFilterSelectAggregateGenerator(metric, steps, MetricGeneratorTimeWindow.AllTime);
 
-            mockCustomerStore.Setup(_ => _.Iterate(It.IsAny<Expression<Func<Customer, bool>>>(), It.IsAny<IterateOrderBy>()))
+            mockCustomerStore.Setup(_ => _.Iterate(It.IsAny<EntityStoreIterateOptions<Customer>>()))
                 .Returns(GetCustomers);
 
             mockCustomerEventStore.Setup(_ => _.ReadEventsForUser(It.Is<Customer>(_ => _.CommonId == Customer1.CommonId), It.IsAny<EventQueryOptions>(), It.IsAny<DateTimeOffset>()))

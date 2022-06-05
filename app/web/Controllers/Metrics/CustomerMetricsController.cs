@@ -50,7 +50,7 @@ namespace SignalBox.Web.Controllers
                                          bool? forceIncrementVersion = null)
         {
             var customer = await LoadCustomer(customerStore, id, useInternalId);
-            return await workflows.CreateMetricOnUser(customer, metricCommonId, dto.Value, forceIncrementVersion);
+            return await workflows.CreateMetricOnCustomer(customer, metricCommonId, dto.Value, forceIncrementVersion);
         }
 
         /// <summary>Returns the value set in the metric.</summary>

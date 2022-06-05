@@ -31,7 +31,7 @@ namespace SignalBox.Core.Workflows
             this.telemetry = telemetry;
             this.logger = logger;
         }
-        public async Task<HistoricCustomerMetric> CreateMetricOnUser(Customer customer,
+        public async Task<HistoricCustomerMetric> CreateMetricOnCustomer(Customer customer,
                                                                    string metricCommonId,
                                                                    object value,
                                                                    bool? forceIncrementVersion)

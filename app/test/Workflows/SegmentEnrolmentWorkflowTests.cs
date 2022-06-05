@@ -26,7 +26,7 @@ namespace SignalBox.Test.Workflows
             var mockCustomerSegmentWorkflow = new Mock<ICustomerSegmentWorkflow>();
             var dtProvider = Utility.DateTimeProvider();
 
-            mockEnrolmentRuleStore.Setup(_ => _.Iterate(It.IsAny<Expression<Func<EnrolmentRule, bool>>>(), It.IsAny<IterateOrderBy>()))
+            mockEnrolmentRuleStore.Setup(_ => _.Iterate(It.IsAny<EntityStoreIterateOptions<EnrolmentRule>>()))
                 .Returns(new List<MetricEnrolmentRule>().ToAsyncEnumerable()); // empty list
 
             // act
@@ -97,7 +97,7 @@ namespace SignalBox.Test.Workflows
                     NumericPredicate = new NumericPredicate(NumericPredicateOperators.None, 0)
                 }
             };
-            mockEnrolmentRuleStore.Setup(_ => _.Iterate(It.IsAny<Expression<Func<EnrolmentRule, bool>>>(), It.IsAny<IterateOrderBy>()))
+            mockEnrolmentRuleStore.Setup(_ => _.Iterate(It.IsAny<EntityStoreIterateOptions<EnrolmentRule>>()))
                 .Returns(rules.ToAsyncEnumerable());
 
             // act

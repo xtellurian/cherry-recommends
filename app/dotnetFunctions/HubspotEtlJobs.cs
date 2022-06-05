@@ -49,7 +49,8 @@ namespace SignalBox.Functions
         private async Task<List<HubspotEtlReport>> RunJob(ILogger logger)
         {
             var reports = new List<HubspotEtlReport>();
-            await foreach (var s in integratedSystemStore.Iterate(_ => _.SystemType == IntegratedSystemTypes.Hubspot))
+            await foreach (var s in integratedSystemStore.Iterate(
+                new EntityStoreIterateOptions<IntegratedSystem>(_ => _.SystemType == IntegratedSystemTypes.Hubspot)))
             {
                 logger.LogInformation($"Starting ETL for hubspot, portal ID (commonId) = {s.CommonId}");
                 var result = await workflows.RunHubspotContactEtlJob(s);

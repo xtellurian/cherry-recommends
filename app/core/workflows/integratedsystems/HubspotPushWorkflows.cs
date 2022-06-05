@@ -48,7 +48,8 @@ namespace SignalBox.Core.Workflows
                                                                                                          groupName));
 
             // do this for all tracked users
-            await foreach (var map in systemMapStore.Iterate(_ => _.IntegratedSystemId == system.Id))
+            await foreach (var map in systemMapStore.Iterate(
+                new EntityStoreIterateOptions<TrackedUserSystemMap>(_ => _.IntegratedSystemId == system.Id)))
             {
                 await systemMapStore.Load(map, _ => _.Customer);
                 if (await SetRecommendationProperty(system, recommender, map.Customer))

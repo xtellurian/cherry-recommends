@@ -17,7 +17,7 @@ namespace SignalBox.Core.Workflows
                 {
                     var minTimestamp = await trackedUserEventStore.Min(_ => _.TrackedUserId == customer.Id, _ => _.Timestamp);
                     var delta = CalcDeltaMonths(minTimestamp, now);
-                    await CreateMetricOnUser(customer, generator.Metric.CommonId, delta, false);
+                    await CreateMetricOnCustomer(customer, generator.Metric.CommonId, delta, false);
                     totalWrites++;
                 }
                 catch (InvalidStorageAccessException)

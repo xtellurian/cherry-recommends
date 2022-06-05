@@ -20,7 +20,7 @@ namespace SignalBox.Core.Workflows
             logger.LogInformation($"There are {steps.Count()} steps in generator {generator.Id}");
             var summary = new MetricGeneratorRunSummary(0);
 
-            await foreach (var customer in customerStore.Iterate())
+            await foreach (var customer in customerStore.Iterate(new EntityStoreIterateOptions<Customer> { ChangeTracking = ChangeTrackingOptions.NoTrackingWithIdentityResolution }))
             {
                 var context = new FilterSelectAggregateContext(customer, generator.Metric, trackedUserEventStore)
                 {
@@ -53,7 +53,7 @@ namespace SignalBox.Core.Workflows
             var finalValue = await aggregateWorkflow.RunFilterSelectAggregateWorkflow(context, since);
             if (finalValue != null)
             {
-                return await base.CreateMetricOnUser(context.Customer, context.Metric.CommonId, finalValue, false);
+                return await base.CreateMetricOnCustomer(context.Customer, context.Metric.CommonId, finalValue, false);
             }
 
             return null;

@@ -53,7 +53,8 @@ namespace SignalBox.Core.Workflows
         private async Task<IEnumerable<ItemsRecommendation>> HandleNewMetricValuePromotionsCampaigns(HistoricCustomerMetric metricValue)
         {
             var recommendations = new List<ItemsRecommendation>();
-            await foreach (var recommender in itemsRecommenderStore.Iterate(_ => _.TriggerCollection != null && _.TargetType == PromotionCampaignTargetTypes.Customer))
+            await foreach (var recommender in itemsRecommenderStore.Iterate(
+                new EntityStoreIterateOptions<PromotionsCampaign>(_ => _.TriggerCollection != null && _.TargetType == PromotionCampaignTargetTypes.Customer)))
             {
                 var isDisabled = await itemsRecommenderInvokationWorkflows.IsCampaignDisabled(recommender);
                 if (isDisabled)

@@ -1,14 +1,13 @@
 namespace SignalBox.Core
 {
-    public enum ChangeTrackingOptions
-    {
-        TrackAll,
-        NoTracking,
-        NoTrackingWithIdentityResolution
-    }
-
+    /// <summary>
+    /// Controls how the query will be handled by the store.
+    /// </summary>
     public class EntityStoreReadOptions
     {
+        /// <summary>
+        /// For EF stores, controls change tracking for the returned entity
+        /// </summary>
         public ChangeTrackingOptions ChangeTracking { get; set; } = ChangeTrackingOptions.TrackAll;
     }
 }

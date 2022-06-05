@@ -62,7 +62,8 @@ namespace SignalBox.Core.Workflows
             logger.LogInformation($"There are {steps.Count()} steps in generator {generator.Id}");
             var summary = new MetricGeneratorRunSummary(0);
 
-            await foreach (var business in businessStore.Iterate())
+            // we can use NoTracking because the business will not be updated in this process
+            await foreach (var business in businessStore.Iterate(new EntityStoreIterateOptions<Business> { ChangeTracking = ChangeTrackingOptions.NoTracking }))
             {
                 logger.LogInformation($"Running generator {generator.Id} for metric {generator.MetricId} and Business {business.Id}.");
                 var context = new FilterSelectAggregateContext(business, generator.Metric, customerEventStore)

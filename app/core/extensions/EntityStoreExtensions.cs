@@ -43,6 +43,18 @@ namespace SignalBox.Core
             return await store.Query(new EntityStoreQueryOptions<T>(paginate, predicate));
         }
 
+        public static async Task<Paginated<T>> NoTrackingQuery<T>(this IEntityStore<T> store,
+                                                        IPaginate paginate,
+                                                        string? searchTerm = null,
+                                                        Expression<Func<T, bool>>? predicate = null) where T : Entity
+        {
+            return await store.Query(new EntityStoreQueryOptions<T>(paginate, predicate)
+            {
+                ChangeTracking = ChangeTrackingOptions.NoTracking,
+                SearchTerm = searchTerm
+            });
+        }
+
         public static async Task<Paginated<T>> Query<T, TProperty>(this IEntityStore<T> store,
                                                                    IPaginate paginate,
                                                                    Expression<Func<T, TProperty>> include,
