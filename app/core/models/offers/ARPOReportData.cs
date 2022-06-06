@@ -2,9 +2,9 @@ using System;
 
 namespace SignalBox.Core
 {
-    public class OfferMeanGrossRevenue
+    public class ARPOReportData
     {
-        public OfferMeanGrossRevenue()
+        public ARPOReportData()
         { }
 
         public DateTime StartDate { get; set; }

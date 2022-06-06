@@ -15,22 +15,19 @@ namespace SignalBox.Core.Workflows
         private readonly IRecommendableItemStore promotionStore;
         private readonly IItemsRecommendationStore promotionsRecommendationStore;
         private readonly IDateTimeProvider dateTimeProvider;
-        private readonly IEnvironmentProvider environmentProvider;
 
         public OfferWorkflows(
             ILogger<OfferWorkflows> logger,
             IOfferStore offerStore,
             IRecommendableItemStore promotionStore,
             IItemsRecommendationStore promotionsRecommendationStore,
-            IDateTimeProvider dateTimeProvider,
-            IEnvironmentProvider environmentProvider)
+            IDateTimeProvider dateTimeProvider)
         {
             this.logger = logger;
             this.offerStore = offerStore;
             this.promotionStore = promotionStore;
             this.promotionsRecommendationStore = promotionsRecommendationStore;
             this.dateTimeProvider = dateTimeProvider;
-            this.environmentProvider = environmentProvider;
         }
 
         public async Task UpdateOffer(CustomerEvent customerEvent)
@@ -132,29 +129,16 @@ namespace SignalBox.Core.Workflows
             return await offerStore.Query(paginate, predicate);
         }
 
-        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryDailyARPOReportData(PromotionsCampaign campaign, int daysAgo = 7)
+        public async Task<IEnumerable<ARPOReportData>> QueryARPOReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11)
         {
-            var startDate = dateTimeProvider.Now.ToUniversalTime().AddDays(-1 * daysAgo).TruncateToDayStart();
-            return await offerStore.QueryARPOReportData(campaign, DateTimePeriod.Daily, startDate, OfferState.Redeemed);
-        }
-
-        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryWeeklyARPOReportData(PromotionsCampaign campaign, int weeksAgo = 11)
-        {
-            var weeksAgoDt = dateTimeProvider.Now.ToUniversalTime().AddDays(-7 * weeksAgo);
-            var startDate = weeksAgoDt.FirstDayOfWeek(DayOfWeek.Monday);
-            return await offerStore.QueryARPOReportData(campaign, DateTimePeriod.Weekly, startDate, OfferState.Redeemed);
-        }
-
-        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryMonthlyARPOReportData(PromotionsCampaign campaign, int monthsAgo = 11)
-        {
-            var startDate = dateTimeProvider.Now.ToUniversalTime().AddMonths(-monthsAgo);
-            return await offerStore.QueryARPOReportData(campaign, DateTimePeriod.Monthly, startDate, OfferState.Redeemed);
+            DateTimeOffset startDate = dateTimeProvider.Now.ToUniversalTime().DateTimeSince(period, periodAgo);
+            return await offerStore.QueryARPOReportData(campaign, period, startDate);
         }
 
         public async Task<IEnumerable<OfferConversionRateData>> QueryConversionRateReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11)
         {
             DateTimeOffset startDate = dateTimeProvider.Now.ToUniversalTime().DateTimeSince(period, periodAgo);
-            return await offerStore.QueryConversionRateData(campaign, period, startDate, environmentProvider.CurrentEnvironmentId);
+            return await offerStore.QueryConversionRateData(campaign, period, startDate);
         }
     }
 }

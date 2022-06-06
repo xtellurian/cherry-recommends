@@ -23968,6 +23968,40 @@
   },
   "components": {
     "schemas": {
+      "ARPOReportData": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "meanGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "baselineMeanGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "distinctCustomerCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offerCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ARPOReportDto": {
         "type": "object",
         "properties": {
@@ -23982,7 +24016,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/OfferMeanGrossRevenue"
+              "$ref": "#/components/schemas/ARPOReportData"
             },
             "description": "Data for the ARPO report.",
             "nullable": true
@@ -27882,40 +27916,6 @@
             },
             "description": "Data for the report.",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "OfferMeanGrossRevenue": {
-        "type": "object",
-        "properties": {
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "totalGrossRevenue": {
-            "type": "number",
-            "format": "double"
-          },
-          "meanGrossRevenue": {
-            "type": "number",
-            "format": "double"
-          },
-          "baselineMeanGrossRevenue": {
-            "type": "number",
-            "format": "double"
-          },
-          "distinctCustomerCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "offerCount": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false

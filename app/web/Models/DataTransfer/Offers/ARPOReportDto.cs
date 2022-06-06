@@ -10,6 +10,6 @@ namespace SignalBox.Web.Dto
         /// <summary> ARPO report type. </summary>
         public DateTimePeriod Type { get; set; }
         /// <summary> Data for the ARPO report. </summary>
-        public IEnumerable<OfferMeanGrossRevenue> Data { get; set; }
+        public IEnumerable<ARPOReportData> Data { get; set; }
     }
 }

@@ -4,7 +4,7 @@ namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     public partial class develop_offer_meangrossrevenue : Migration
     {
-        private readonly string sp_OfferMeanGrossRevenue = @"
+        public static readonly string sp_OfferMeanGrossRevenue = @"
             CREATE PROCEDURE [dbo].[sp_OfferMeanGrossRevenue]
                 @id BIGINT
                 ,@type INTEGER 

@@ -204,7 +204,7 @@ namespace SignalBox.Web.Controllers
         public async Task<ARPOReportDto> GetARPOReport(string id, bool? useInternalId = null)
         {
             var campaign = await base.GetResource(id, useInternalId);
-            var data = await offerWorkflow.QueryWeeklyARPOReportData(campaign);
+            var data = await offerWorkflow.QueryARPOReportData(campaign, DateTimePeriod.Weekly, 11); // 12 weeks ago minus 1 since 0 is current week
             var response = new ARPOReportDto
             {
                 CampaignId = campaign.Id,

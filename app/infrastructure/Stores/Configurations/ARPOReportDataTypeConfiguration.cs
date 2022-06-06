@@ -4,9 +4,9 @@ using SignalBox.Core;
 
 namespace SignalBox.Infrastructure.EntityFramework
 {
-    internal class OfferMeanGrossRevenueTypeConfiguration : IEntityTypeConfiguration<OfferMeanGrossRevenue>
+    internal class ARPOReportDataTypeConfiguration : IEntityTypeConfiguration<ARPOReportData>
     {
-        public void Configure(EntityTypeBuilder<OfferMeanGrossRevenue> builder)
+        public void Configure(EntityTypeBuilder<ARPOReportData> builder)
         {
             builder.HasNoKey();
             builder.Metadata.SetIsTableExcludedFromMigrations(true);

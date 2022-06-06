@@ -30,7 +30,6 @@ namespace SignalBox.Test.Workflows
             var mockOfferStore = new Mock<IOfferStore>();
             var mockPromotionStore = new Mock<IRecommendableItemStore>();
             var mockPromotionsRecommendationStore = new Mock<IItemsRecommendationStore>();
-            var mockEnvironmentProvider = new Mock<IEnvironmentProvider>();
             var customer = new Customer("customer-id", "John Smith");
             var source = new IntegratedSystem("test-source", "Test Source", IntegratedSystemTypes.Segment);
             var properties = new Dictionary<string, object>()
@@ -48,8 +47,7 @@ namespace SignalBox.Test.Workflows
                 mockOfferStore.Object,
                 mockPromotionStore.Object,
                 mockPromotionsRecommendationStore.Object,
-                Utility.DateTimeProvider(),
-                mockEnvironmentProvider.Object
+                Utility.DateTimeProvider()
             );
             await workflow.UpdateOffer(customerEvent);
             // Assert
@@ -69,7 +67,6 @@ namespace SignalBox.Test.Workflows
             var mockPromotionStore = new Mock<IRecommendableItemStore>();
             var mockPromotionsRecommendationStore = new Mock<IItemsRecommendationStore>();
             var dateTimeProvider = Utility.DateTimeProvider();
-            var mockEnvironmentProvider = new Mock<IEnvironmentProvider>();
             var customer = new Customer("customer-id", "John Smith");
             var source = new IntegratedSystem("test-source", "Test Source", IntegratedSystemTypes.Segment);
             var properties = new Dictionary<string, object>();
@@ -109,8 +106,7 @@ namespace SignalBox.Test.Workflows
                 mockOfferStore.Object,
                 mockPromotionStore.Object,
                 mockPromotionsRecommendationStore.Object,
-                dateTimeProvider,
-                mockEnvironmentProvider.Object
+                dateTimeProvider
             );
             await workflow.UpdateOffer(customerEvent); // offerCreated
             await workflow.UpdateOffer(customerEvent); // offerPresented
@@ -135,7 +131,6 @@ namespace SignalBox.Test.Workflows
             var mockPromotionStore = new Mock<IRecommendableItemStore>();
             var mockPromotionsRecommendationStore = new Mock<IItemsRecommendationStore>();
             var dateTimeProvider = Utility.DateTimeProvider();
-            var mockEnvironmentProvider = new Mock<IEnvironmentProvider>();
             var customer = new Customer("customer-id", "John Smith");
             var source = new IntegratedSystem("test-source", "Test Source", IntegratedSystemTypes.Segment);
             var properties = new Dictionary<string, object>()
@@ -188,8 +183,7 @@ namespace SignalBox.Test.Workflows
                 mockOfferStore.Object,
                 mockPromotionStore.Object,
                 mockPromotionsRecommendationStore.Object,
-                dateTimeProvider,
-                mockEnvironmentProvider.Object
+                dateTimeProvider
             );
             await workflow.UpdateOffer(customerEvent); // offerCreated
             await workflow.UpdateOffer(customerEvent); // offerPresented
@@ -221,7 +215,6 @@ namespace SignalBox.Test.Workflows
             var mockOfferStore = new Mock<IOfferStore>();
             var mockPromotionStore = new Mock<IRecommendableItemStore>();
             var mockPromotionsRecommendationStore = new Mock<IItemsRecommendationStore>();
-            var mockEnvironmentProvider = new Mock<IEnvironmentProvider>();
             var mockPaginate = new Mock<IPaginate>();
             var customer = new Customer("customer-id", "John Smith");
             var source = new IntegratedSystem("test-source", "Test Source", IntegratedSystemTypes.Segment);
@@ -265,8 +258,7 @@ namespace SignalBox.Test.Workflows
                 mockOfferStore.Object,
                 mockPromotionStore.Object,
                 mockPromotionsRecommendationStore.Object,
-                Utility.DateTimeProvider(),
-                mockEnvironmentProvider.Object
+                Utility.DateTimeProvider()
             );
             var results = await workflow.QueryOffers(recommender, mockPaginate.Object, state: null);
             // Assert
