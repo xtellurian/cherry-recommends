@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 
 import { useAuth } from "../../utility/useAuth";
-import { settingsItems } from "./MenuIA";
+import { settingsItems, helpItems } from "./MenuIA";
 import { LoadingPopup } from "../molecules/popups/LoadingPopup";
 import {
   useEnvironmentReducer,
@@ -65,6 +65,46 @@ const SmartMenuItem = ({ section }) => {
   } else {
     return <SingleMenuItem item={section} />;
   }
+};
+const ExternalLink = ({ children, ...props }) => {
+  return <a {...props}>{children}</a>;
+};
+const HelpMenu = () => {
+  return (
+    <UncontrolledDropdown nav inNavbar>
+      <DropdownToggle nav data-qa="settings" className="ml-md-2">
+        Help
+      </DropdownToggle>
+      <DropdownMenu right>
+        {helpItems.map((i) => (
+          <DropdownItem key={i.name}>
+            <NavItem>
+              {i.href ? (
+                <NavLink
+                  tag={ExternalLink}
+                  className="text-dark"
+                  href={i.href}
+                  target={i.target}
+                >
+                  {i.name}
+                </NavLink>
+              ) : null}
+              {i.to ? (
+                <NavLink
+                  tag={Navigation}
+                  className="text-dark"
+                  to={i.to}
+                  target={i.target}
+                >
+                  {i.name}
+                </NavLink>
+              ) : null}
+            </NavItem>
+          </DropdownItem>
+        ))}
+      </DropdownMenu>
+    </UncontrolledDropdown>
+  );
 };
 
 export const NavMenu = ({ children, multitenant }) => {
@@ -205,27 +245,7 @@ export const NavMenu = ({ children, multitenant }) => {
                       </DropdownMenu>
                     </UncontrolledDropdown>
 
-                    <UncontrolledDropdown nav inNavbar>
-                      <DropdownToggle nav className="ml-md-2">
-                        Help
-                      </DropdownToggle>
-                      <DropdownMenu right>
-                        <a
-                          className="text-dark"
-                          target="_blank"
-                          href={`http://docs.cherry.ai`}
-                        >
-                          <DropdownItem>Docs</DropdownItem>
-                        </a>
-                        <a
-                          className="text-dark"
-                          target="_blank"
-                          href={`http://docs.cherry.ai/contact`}
-                        >
-                          <DropdownItem>Contact Us</DropdownItem>
-                        </a>
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
+                    <HelpMenu />
                   </React.Fragment>
                 ) : null}
               </ul>

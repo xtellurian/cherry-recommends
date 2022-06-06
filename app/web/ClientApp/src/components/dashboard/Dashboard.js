@@ -46,7 +46,17 @@ export const Dashboard = () => {
       <hr />
       <div>
         <CardSection className="p-4 dashboard-this-is">
-          This is <span className="tenant-name">{tenant.name}</span>
+          {tenant.loading ? (
+            <Spinner noText />
+          ) : (
+            <React.Fragment>
+              {tenant.name ? (
+                <>
+                  This is <span className="tenant-name">{tenant.name}</span>
+                </>
+              ) : null}
+            </React.Fragment>
+          )}
         </CardSection>
       </div>
       <div className="row">

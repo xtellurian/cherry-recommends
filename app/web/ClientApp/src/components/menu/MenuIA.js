@@ -193,16 +193,29 @@ const getAuthenticatedIA = (scopes, flags) => {
 
 export const settingsItems = [
   {
-    name: "API Docs",
-    to: "/docs/api",
-  },
-  {
     name: "API Keys",
     to: "/settings/api-keys",
   },
   {
     name: "Tenant Settings",
     to: "/tenant-settings",
+  },
+];
+
+export const helpItems = [
+  {
+    name: "Developer Docs",
+    href: "http://docs.cherry.ai",
+    target: "_blank",
+  },
+  {
+    name: "API Docs",
+    to: "/docs/api",
+  },
+  {
+    name: "Contact Us",
+    href: "http://docs.cherry.ai/contact",
+    target: "_blank",
   },
   {
     name: "Deployment Information",
