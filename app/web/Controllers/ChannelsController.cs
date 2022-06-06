@@ -45,7 +45,7 @@ namespace SignalBox.Web.Controllers
         [EnableCors(CorsPolicies.WebApiKeyPolicy)]
         public override async Task<ChannelBase> GetResource(long id)
         {
-            var channel = await base.GetResource(id);
+            var channel = await store.Read(id);
             await channelStore.Load(channel, _ => _.LinkedIntegratedSystem);
             await channelStore.LoadMany(channel, _ => _.Recommenders);
             return channel;
@@ -55,7 +55,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost("{id}/endpoint")]
         public async Task<ChannelBase> UpdateEndpoint(long id, [FromBody] string endpoint)
         {
-            var channel = await base.GetResource(id);
+            var channel = await store.Read(id);
             channel = await workflow.UpdateChannelEndpoint(channel, endpoint);
             return channel;
         }
@@ -64,7 +64,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost("{id}/WebProperties")]
         public async Task<ChannelBase> UpdateProperties(long id, [FromBody] UpdateWebChannelPropertiesDto dto)
         {
-            var channel = await base.GetResource(id);
+            var channel = await store.Read(id);
             channel = await workflow.UpdateWebChannelProperties(channel, dto.Host, dto.PopupAskForEmail, dto.PopupDelay, dto.PopupHeader, dto.PopupSubheader, dto.RecommenderId, dto.CustomerIdPrefix);
             return channel;
         }
