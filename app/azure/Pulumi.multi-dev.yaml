@@ -26,6 +26,7 @@ config:
     secure: AAABAGh8zwPTkHWrlgGw0H1mgvEm7soykdfBChUT9iQsyfnd85azSzFgUApjwsEd1/JdKZ0/26Dn8aANnmYldIKEs7U=
   launch-darkly:clientSideId: 622802e7cc6fc7149d5348fd
   network:cherrySubdomain: dev
+  observations:exceptionsThreshold: "200"
   segment:writeKey:
     secure: AAABAHC4chfR87geNdfQ8S7Mr6TGqSXeOxpdmnk2BOilZ+lmUbvKw3bAjDRTVkGySVuPoxBbW1O3dNbRbDnomA==
   shopify:apiKey: 6c0da936f2fa7b325c2f51603150ba7c

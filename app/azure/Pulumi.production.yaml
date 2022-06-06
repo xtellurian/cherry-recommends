@@ -26,6 +26,7 @@ config:
   hubspot:clientId: todo
   launch-darkly:clientSideId: 6227e4523c1cba143cd8fa87
   network:cherrySubdomain: app
+  observations:exceptionsThreshold: "25"
   segment:writeKey:
     secure: AAABABXraw8QiY789EJ85SfK33gTwd+l+sAeQ3NJUswsJTaBvCkV2D2P90iH2JRKpmoekebIEm3fNMFO+6LWHA==
   shopify:apiKey: ec439be50721108d31a10646a97f9b85

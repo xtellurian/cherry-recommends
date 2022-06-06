@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using Pulumi;
 using Pulumi.AzureNative.Insights;
 using Pulumi.AzureNative.Insights.Inputs;
 using Pulumi.AzureNative.Resources;
@@ -10,6 +11,9 @@ namespace SignalBox.Azure
     {
         public AppObservation(ResourceGroup rg, Dictionary<string, string> tags)
         {
+            var observationsConfig = new Config("observations");
+            var threshold = observationsConfig.GetInt32("exceptionsThreshold") ?? 100;
+
             AppInsights = new Component("Insights",
                 new ComponentArgs
                 {
@@ -70,7 +74,7 @@ namespace SignalBox.Azure
                             MetricName = "exceptions/count",
                             Name = $"Exceptions are high in {Pulumi.Deployment.Instance.StackName}",
                             Operator = "GreaterThan",
-                            Threshold = 100,
+                            Threshold = threshold,
                             TimeAggregation = AggregationTypeEnum.Count,
                         }} },
                     },

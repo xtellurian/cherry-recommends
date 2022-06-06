@@ -21,6 +21,7 @@ config:
   hubspot:clientId: ""
   launch-darkly:clientSideId: 6227e4523c1cba143cd8fa86
   network:cherrySubdomain: canary
+  observations:exceptionsThreshold: "5"
   segment:writeKey:
     secure: AAABALR/oWB+tGefHknu+aBwFKjaEDep6p9mHYiVMs+cYLELG+6uzMqVc/huxgEPB5TsTHRatcq5NeP65MIs3Q==
   shopify:apiKey: 4575a64c10075d06efeccdde842fadd8
