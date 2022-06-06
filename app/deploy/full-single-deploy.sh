@@ -20,6 +20,10 @@ cd $APP_PATH/deploy/sql-database-scripts/cloud
 APP_PATH=$APP_PATH ./update-sql-database.sh single
 APP_PATH=$APP_PATH ./create-user-sqlcmd.sh
 
+# configure synapse
+cd $APP_PATH/deploy/azure-scripts/synapse-environment-build/
+zx setup-synapse.mjs
+
 cd $APP_PATH/deploy/webapp
 APP_PATH=$APP_PATH ./deploy.sh
 

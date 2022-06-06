@@ -8,6 +8,7 @@ steps:
     displayName: "Use .NET 6 sdk"
     inputs:
       version: 6.0.x
+
   - script: |
       sudo apt-get update
       sudo apt-get install azure-functions-core-tools-4
@@ -20,3 +21,6 @@ steps:
   - script: dotnet tool restore
     displayName: Restore dotnet tools
     workingDirectory: app
+
+  - script: npm i -g zx
+    displayName: install zx script runner

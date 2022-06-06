@@ -1,0 +1,341 @@
+{
+  "name": "copy_tenant_data",
+  "type": "Microsoft.Synapse/workspaces/pipelines",
+  "properties": {
+    "activities": [
+      {
+        "name": "LookupTenantNames",
+        "type": "Lookup",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "7.00:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderQuery": "SELECT Name from [dbo].[Tenants]",
+            "queryTimeout": "02:00:00",
+            "partitionOption": "None"
+          },
+          "dataset": {
+            "referenceName": "tenants_lookup",
+            "type": "DatasetReference",
+            "parameters": {
+              "tenants_db": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.tenant_db"
+              }
+            }
+          },
+          "firstRowOnly": false
+        }
+      },
+      {
+        "name": "ForEachTenant",
+        "type": "ForEach",
+        "dependsOn": [
+          {
+            "activity": "LookupTenantNames",
+            "dependencyConditions": ["Succeeded"]
+          }
+        ],
+        "userProperties": [],
+        "typeProperties": {
+          "items": {
+            "value": "@activity('LookupTenantNames').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "name": "TenantDbLookup",
+              "additionalProperties": null,
+              "dataset": {
+                "parameters": {
+                  "tenants_db": {
+                    "type": "Expression",
+                    "value": "@pipeline().parameters.tenant_db"
+                  }
+                },
+                "referenceName": "tenants_lookup",
+                "type": "DatasetReference"
+              },
+              "dependsOn": [],
+              "description": "",
+              "firstRowOnly": null,
+              "linkedServiceName": null,
+              "policy": {
+                "additionalProperties": null,
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false,
+                "timeout": "7.00:00:00"
+              },
+              "source": {
+                "additionalColumns": null,
+                "additionalProperties": null,
+                "maxConcurrentConnections": null,
+                "partitionOption": "None",
+                "partitionSettings": null,
+                "produceAdditionalTypes": null,
+                "queryTimeout": "02:00:00",
+                "sourceRetryCount": null,
+                "sourceRetryWait": null,
+                "sqlReaderQuery": {
+                  "type": "Expression",
+                  "value": "@concat(\u0027SELECT DatabaseName FROM dbo.Tenants WHERE Name = \u0027\u0027\u0027, item().Name, \u0027\u0027\u0027\u0027)"
+                },
+                "sqlReaderStoredProcedureName": null,
+                "storedProcedureParameters": null,
+                "type": "AzureSqlSource"
+              },
+              "type": "Lookup",
+              "userProperties": []
+            },
+            {
+              "name": "CopyTableAvro",
+              "additionalProperties": null,
+              "dataIntegrationUnits": null,
+              "dependsOn": [
+                {
+                  "activity": "TenantDbLookup",
+                  "additionalProperties": null,
+                  "dependencyConditions": ["Succeeded"]
+                }
+              ],
+              "description": null,
+              "enableSkipIncompatibleRow": null,
+              "enableStaging": false,
+              "inputs": [
+                {
+                  "parameters": {
+                    "db_name": {
+                      "type": "Expression",
+                      "value": "@activity(\u0027TenantDbLookup\u0027).output.firstRow.DatabaseName"
+                    }
+                  },
+                  "referenceName": "tenant_data",
+                  "type": "DatasetReference"
+                }
+              ],
+              "linkedServiceName": null,
+              "logSettings": null,
+              "logStorageSettings": null,
+              "outputs": [
+                {
+                  "parameters": {
+                    "tenant_name": {
+                      "type": "Expression",
+                      "value": "@item().Name"
+                    },
+                    "table_name": {
+                      "type": "Expression",
+                      "value": "@pipeline().parameters.table_name"
+                    }
+                  },
+                  "referenceName": "tenant_adls_data_avro",
+                  "type": "DatasetReference"
+                }
+              ],
+              "parallelCopies": null,
+              "policy": {
+                "additionalProperties": null,
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false,
+                "timeout": "7.00:00:00"
+              },
+              "preserve": null,
+              "preserveRules": null,
+              "redirectIncompatibleRowSettings": null,
+              "sink": {
+                "additionalProperties": null,
+                "formatSettings": {
+                  "additionalProperties": null,
+                  "fileExtension": ".txt",
+                  "fileNamePrefix": null,
+                  "maxRowsPerFile": null,
+                  "quoteAllText": true,
+                  "type": "DelimitedTextWriteSettings"
+                },
+                "maxConcurrentConnections": null,
+                "sinkRetryCount": null,
+                "sinkRetryWait": null,
+                "storeSettings": {
+                  "additionalProperties": null,
+                  "blockSizeInMB": 4,
+                  "copyBehavior": null,
+                  "maxConcurrentConnections": null,
+                  "type": "AzureBlobFSWriteSettings"
+                },
+                "type": "DelimitedTextSink",
+                "writeBatchSize": null,
+                "writeBatchTimeout": null
+              },
+              "skipErrorFile": null,
+              "source": {
+                "additionalColumns": null,
+                "additionalProperties": null,
+                "maxConcurrentConnections": null,
+                "partitionOption": "None",
+                "partitionSettings": null,
+                "produceAdditionalTypes": null,
+                "queryTimeout": "02:00:00",
+                "sourceRetryCount": null,
+                "sourceRetryWait": null,
+                "sqlReaderQuery": {
+                  "type": "Expression",
+                  "value": "@concat('SELECT * FROM [dbo].[' , pipeline().parameters.table_name, ']')"
+                },
+                "sqlReaderStoredProcedureName": null,
+                "storedProcedureParameters": null,
+                "type": "AzureSqlSource"
+              },
+              "stagingSettings": null,
+              "translator": {
+                "type": "TabularTranslator",
+                "typeConversion": true,
+                "typeConversionSettings": {
+                  "allowDataTruncation": true,
+                  "treatBooleanAsNumber": false
+                }
+              },
+              "type": "Copy",
+              "userProperties": [],
+              "validateDataConsistency": null
+            },
+            {
+              "name": "CopyTableParquet",
+              "additionalProperties": null,
+              "dataIntegrationUnits": null,
+              "dependsOn": [
+                {
+                  "activity": "TenantDbLookup",
+                  "additionalProperties": null,
+                  "dependencyConditions": ["Succeeded"]
+                }
+              ],
+              "description": null,
+              "enableSkipIncompatibleRow": null,
+              "enableStaging": false,
+              "inputs": [
+                {
+                  "parameters": {
+                    "db_name": {
+                      "type": "Expression",
+                      "value": "@activity(\u0027TenantDbLookup\u0027).output.firstRow.DatabaseName"
+                    }
+                  },
+                  "referenceName": "tenant_data",
+                  "type": "DatasetReference"
+                }
+              ],
+              "linkedServiceName": null,
+              "logSettings": null,
+              "logStorageSettings": null,
+              "outputs": [
+                {
+                  "parameters": {
+                    "tenant_name": {
+                      "type": "Expression",
+                      "value": "@item().Name"
+                    },
+                    "table_name": {
+                      "type": "Expression",
+                      "value": "@pipeline().parameters.table_name"
+                    }
+                  },
+                  "referenceName": "tenant_adls_data_parquet",
+                  "type": "DatasetReference"
+                }
+              ],
+              "parallelCopies": null,
+              "policy": {
+                "additionalProperties": null,
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false,
+                "timeout": "7.00:00:00"
+              },
+              "preserve": null,
+              "preserveRules": null,
+              "redirectIncompatibleRowSettings": null,
+              "sink": {
+                "additionalProperties": null,
+                "formatSettings": {
+                  "additionalProperties": null,
+                  "fileExtension": ".txt",
+                  "fileNamePrefix": null,
+                  "maxRowsPerFile": null,
+                  "quoteAllText": true,
+                  "type": "DelimitedTextWriteSettings"
+                },
+                "maxConcurrentConnections": null,
+                "sinkRetryCount": null,
+                "sinkRetryWait": null,
+                "storeSettings": {
+                  "additionalProperties": null,
+                  "blockSizeInMB": 4,
+                  "copyBehavior": null,
+                  "maxConcurrentConnections": null,
+                  "type": "AzureBlobFSWriteSettings"
+                },
+                "type": "DelimitedTextSink",
+                "writeBatchSize": null,
+                "writeBatchTimeout": null
+              },
+              "skipErrorFile": null,
+              "source": {
+                "additionalColumns": null,
+                "additionalProperties": null,
+                "maxConcurrentConnections": null,
+                "partitionOption": "None",
+                "partitionSettings": null,
+                "produceAdditionalTypes": null,
+                "queryTimeout": "02:00:00",
+                "sourceRetryCount": null,
+                "sourceRetryWait": null,
+                "sqlReaderQuery": {
+                  "type": "Expression",
+                  "value": "@concat('SELECT * FROM [dbo].[' , pipeline().parameters.table_name, ']')"
+                },
+                "sqlReaderStoredProcedureName": null,
+                "storedProcedureParameters": null,
+                "type": "AzureSqlSource"
+              },
+              "stagingSettings": null,
+              "translator": {
+                "type": "TabularTranslator",
+                "typeConversion": true,
+                "typeConversionSettings": {
+                  "allowDataTruncation": true,
+                  "treatBooleanAsNumber": false
+                }
+              },
+              "type": "Copy",
+              "userProperties": [],
+              "validateDataConsistency": null
+            }
+          ]
+        }
+      }
+    ],
+    "parameters": {
+      "tenant_db": {
+        "defaultValue": "tenants",
+        "type": "string"
+      },
+      "table_name": {
+        "defaultValue": "TrackedUserEvents",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "12HourEventsCopy",
+  "properties": {
+    "annotations": [],
+    "runtimeState": "Started",
+    "pipelines": [
+      {
+        "pipelineReference": {
+          "referenceName": "copy_tenant_data",
+          "type": "PipelineReference"
+        },
+        "parameters": {
+          "tenant_db": "tenants",
+          "table_name": "TrackedUserEvents"
+        }
+      }
+    ],
+    "type": "ScheduleTrigger",
+    "typeProperties": {
+      "recurrence": {
+        "frequency": "Hour",
+        "interval": 12,
+        "startTime": "2022-06-06T00:00:00Z",
+        "timeZone": "UTC"
+      }
+    }
+  }
+}

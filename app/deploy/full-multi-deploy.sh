@@ -18,6 +18,10 @@ APP_PATH=$APP_PATH ./deploy-dotnet-functions.sh
 APP_PATH=$APP_PATH ./deploy-python-functions.sh
 APP_PATH=$APP_PATH ./migrate-database-functions.sh
 
+# configure synapse
+cd $APP_PATH/deploy/azure-scripts/synapse-environment-build/
+zx setup-synapse.mjs
+
 cd $APP_PATH/deploy/webapp
 echo "OK. Deploying webapp..."
 APP_PATH=$APP_PATH ./deploy.sh

@@ -1,0 +1,13 @@
+{
+    "name": "AnalyticsKeyVault",
+    "type": "Microsoft.Synapse/workspaces/linkedservices",
+    "properties": {
+        "baseUrl": "https://{name}.vault.azure.net/",
+        "additionalProperties": null,
+        "type": "AzureKeyVault",
+        "annotations": [],
+        "typeProperties": {
+            "baseUrl": "https://{name}.vault.azure.net/"
+        }
+    }
+}

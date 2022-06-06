@@ -1,0 +1,39 @@
+{
+  "name": "tenant_adls_data_parquet",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "{{SynapseWorkspaceName}}-WorkspaceDefaultStorage",
+      "type": "LinkedServiceReference"
+    },
+    "annotations": [],
+    "location": {
+      "additionalProperties": null,
+      "fileName": {
+        "type": "Expression",
+        "value": "@concat(dataset().table_name, '.parquet' )"
+      },
+      "fileSystem": "tenants-sql-landing",
+      "folderPath": { "type": "Expression", "value": "@dataset().tenant_name" },
+      "type": "AzureBlobFSLocation"
+    },
+    "parameters": {
+      "tenant_name": {
+        "defaultValue": null,
+        "type": "String"
+      },
+      "table_name": {
+        "defaultValue": "TrackedUserEvents",
+        "type": "String"
+      }
+    },
+    "type": "Parquet",
+    "typeProperties": {
+      "location": {
+        "type": "AzureBlobFSLocation",
+        "fileSystem": "tenants-sql-landing"
+      },
+      "compressionCodec": "snappy"
+    },
+    "schema": []
+  }
+}

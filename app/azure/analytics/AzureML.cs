@@ -10,16 +10,16 @@ namespace SignalBox.Azure
 {
     class AzureML : ComponentWithStorage
     {
-        private static InputMap<string> tags = new InputMap<string>
+        private static readonly InputMap<string> tags = new InputMap<string>
             {
-                {"Component", "AzureML"}
+                {"Component", "Analytics"}
             };
 
         public AzureML(ResourceGroup rg, AzureSynapse synapse, MultitenantDatabaseComponent multitenant)
         {
             var azureConfig = new Config("azure-native");
             var config = new Config("azure-ml");
-            var multitenantDbSecretName = config.Get("dbSecretName") ?? "multitenantDbPassword";
+            var multitenantDbSecretName = "multitenantDbPassword";
 
             var storageAccount = new StorageAccount("sa", new StorageAccountArgs
             {

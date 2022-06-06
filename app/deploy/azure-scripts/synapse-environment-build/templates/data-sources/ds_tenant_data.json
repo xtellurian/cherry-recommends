@@ -1,0 +1,32 @@
+{
+    "name": "tenant_data",
+    "type": "Microsoft.Synapse/workspaces/datasets",
+    "properties": {
+      "additionalProperties": null,
+      "annotations": [],
+      "description": null,
+      "folder": null,
+      "linkedServiceName": {
+        "parameters": {
+          "db_name": {
+            "type": "Expression",
+            "value": "@dataset().db_name"
+          }
+        },
+        "referenceName": "multitenantdb",
+        "type": "LinkedServiceReference"
+      },
+      "parameters": {
+        "db_name": {
+          "defaultValue": null,
+          "type": "String"
+        }
+      },
+      "schemaTypePropertiesSchema": null,
+      "structure": null,
+      "table": null,
+      "tableName": null,
+      "type": "AzureSqlTable"
+    }
+  }
+  
