@@ -34,12 +34,27 @@ export const AddItemPopup = ({ isOpen, setIsOpen, recommender, onAdded }) => {
   };
   return (
     <React.Fragment>
-      <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Title>Add a Promotion</Title>
-        <Subtitle>{recommender.name}</Subtitle>
-        <hr />
+      <BigPopup
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        buttons={
+          <AsyncButton
+            loading={loading}
+            className="btn btn-primary w-50 float-right"
+            onClick={handleAdd}
+          >
+            Add
+          </AsyncButton>
+        }
+        header={
+          recommender.name
+            ? `Add Promotion to ${recommender.name}`
+            : "Add Promotion"
+        }
+        headerDivider
+      >
         {error && <ErrorCard error={error} />}
-        <div style={{ minHeight: "50vh" }}>
+        <div style={{ minHeight: "30vh" }}>
           <AsyncSelectItem
             isMulti={false}
             onChange={(v) => setSelectedItem(v.value)}
@@ -47,13 +62,6 @@ export const AddItemPopup = ({ isOpen, setIsOpen, recommender, onAdded }) => {
 
           <div className="mt-2">
             {selectedItem && <PromotionRow promotion={selectedItem} />}
-            <AsyncButton
-              loading={loading}
-              className="btn btn-primary btn-block"
-              onClick={handleAdd}
-            >
-              Add
-            </AsyncButton>
           </div>
         </div>
       </BigPopup>

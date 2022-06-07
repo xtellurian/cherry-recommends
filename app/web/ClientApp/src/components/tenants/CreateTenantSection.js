@@ -153,36 +153,39 @@ export const CreateTenantSection = () => {
 
   return (
     <div className="container">
-      <BigPopup isOpen={termsPopupOpen} setIsOpen={setTermsPopupOpen}>
+      <BigPopup
+        isOpen={termsPopupOpen}
+        setIsOpen={setTermsPopupOpen}
+        buttons={
+          <ButtonGroup className="w-100 mt-2">
+            <button
+              onClick={() => {
+                setTermsPopupOpen(false);
+                setCreating(false);
+                setTenant({ ...tenant, termsOfServiceVersion: null });
+              }}
+              className="btn btn-outline-danger"
+            >
+              Decline
+            </button>
+            <button
+              onClick={() => {
+                setTenant({ ...tenant, termsOfServiceVersion: termsVersion });
+                if (creating) {
+                  handleCreate(termsVersion); // call create again, because we must have been popup during create process
+                }
+                setTermsPopupOpen(false);
+              }}
+              className="btn btn-primary"
+            >
+              Accept
+            </button>
+          </ButtonGroup>
+        }
+      >
         <div>
           <div className="overflow-auto" style={{ maxHeight: "75vh" }}>
             <Markdown>{termsOfService}</Markdown>
-          </div>
-          <div>
-            <ButtonGroup className="w-100 mt-2">
-              <button
-                onClick={() => {
-                  setTermsPopupOpen(false);
-                  setCreating(false);
-                  setTenant({ ...tenant, termsOfServiceVersion: null });
-                }}
-                className="btn btn-outline-danger"
-              >
-                Decline
-              </button>
-              <button
-                onClick={() => {
-                  setTenant({ ...tenant, termsOfServiceVersion: termsVersion });
-                  if (creating) {
-                    handleCreate(termsVersion); // call create again, because we must have been popup during create process
-                  }
-                  setTermsPopupOpen(false);
-                }}
-                className="btn btn-primary"
-              >
-                Accept
-              </button>
-            </ButtonGroup>
           </div>
         </div>
       </BigPopup>

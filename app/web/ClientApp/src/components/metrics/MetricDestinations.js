@@ -128,8 +128,12 @@ export const MetricDestinations = ({ metric }) => {
         )}
       </div>
       <React.Fragment>
-        <BigPopup isOpen={createPopupOpen} setIsOpen={setCreatePopupOpen}>
-          <Subtitle>Add a new destination</Subtitle>
+        <BigPopup
+          isOpen={createPopupOpen}
+          setIsOpen={setCreatePopupOpen}
+          headerDivider
+          header="Add a Destination"
+        >
           <div style={{ minHeight: "200px" }}>
             <div>Select an integrated system</div>
             {!selectedIntegratedSystem && (

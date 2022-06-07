@@ -40,18 +40,23 @@ const RecommendationRow = ({ recommendation, size }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <React.Fragment>
-      <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
-        {recommendation.customer && (
-          <Navigation
-            to={`/customers/customers/detail/${recommendation.customer.id}`}
-          >
-            <button className="btn btn-primary float-right">
-              View Customer <Link45deg />
-            </button>
-          </Navigation>
-        )}
+      <BigPopup
+        header={label}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        buttons={
+          recommendation.customer && (
+            <Navigation
+              to={`/customers/customers/detail/${recommendation.customer.id}`}
+            >
+              <button className="btn btn-primary float-right">
+                View Customer <Link45deg />
+              </button>
+            </Navigation>
+          )
+        }
+      >
         <DateTimeField label="Created On" date={recommendation.created} />
-        {label}
         <ExpandableCard label="Data">
           <JsonView data={dataToShow} />
         </ExpandableCard>

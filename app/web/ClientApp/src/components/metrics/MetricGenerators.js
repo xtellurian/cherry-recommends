@@ -9,16 +9,14 @@ import { useAccessToken } from "../../api-hooks/token";
 import { SectionHeading } from "../molecules/layout";
 import { EmptyList, EmptyStateText } from "../molecules/empty";
 import { GeneratorDetail } from "./metric-generators/GeneratorDetail";
-import { EntityRow } from "../molecules/layout/EntityRow";
+import EntityRow from "../molecules/layout/EntityFlexRow";
 import { DeleteButton } from "../molecules/buttons/DeleteButton";
-import { DateTimeField } from "../molecules/DateTimeField";
 import { CreateGlobalScopeMetricGenerator } from "./metric-generators/CreateGlobalScopeMetricGenerator";
 // import { CreateButton } from "../molecules/CreateButton";
 
 const GeneratorTableRow = ({ generator, onDeleted, requestReload }) => {
   const token = useAccessToken();
   const [deleteOpen, setDeleteOpen] = React.useState(false);
-  const [generatorDetailOpen, setGeneratorDetailOpen] = React.useState(false);
   const [error, setError] = React.useState(false);
 
   const handleDelete = () => {
@@ -32,31 +30,13 @@ const GeneratorTableRow = ({ generator, onDeleted, requestReload }) => {
   return (
     <>
       <EntityRow>
-        <div className="col">
-          <button
-            className="btn btn-link btn-block"
-            onClick={() => setGeneratorDetailOpen(true)}
-          >
-            Generator for {generator.metric.name}
-          </button>
-          <div>
-            {generator.lastCompleted && (
-              <DateTimeField
-                label="Last Completed"
-                date={generator.lastCompleted}
-              />
-            )}
-            {generator.lastEnqueued && (
-              <DateTimeField
-                label="Last Enqueued"
-                date={generator.lastEnqueued}
-              />
-            )}
-          </div>
-        </div>
+        <div className="flex-grow-1">
+          <DeleteButton
+            onClick={() => setDeleteOpen(true)}
+            className="float-right"
+          />
 
-        <div className="col-2 text-right">
-          <DeleteButton onClick={() => setDeleteOpen(true)} />
+          <GeneratorDetail generator={generator} setTrigger={requestReload} />
         </div>
       </EntityRow>
       <ConfirmDeletePopup
@@ -66,18 +46,6 @@ const GeneratorTableRow = ({ generator, onDeleted, requestReload }) => {
         error={error}
         handleDelete={handleDelete}
       />
-      <BigPopup isOpen={generatorDetailOpen} setIsOpen={setGeneratorDetailOpen}>
-        {generator.loading && <Spinner />}
-        {generator.id && (
-          <GeneratorDetail
-            generator={generator}
-            requestClose={() => {
-              requestReload();
-              setGeneratorDetailOpen(false);
-            }}
-          />
-        )}
-      </BigPopup>
     </>
   );
 };
@@ -127,25 +95,24 @@ export const MetricGenerators = ({ metric }) => {
           ))}
       </div>
 
-      <BigPopup isOpen={generatorPopupOpen} setIsOpen={setGeneratorPopupOpen}>
+      <BigPopup
+        isOpen={generatorPopupOpen}
+        setIsOpen={setGeneratorPopupOpen}
+        header="Define new Metric Generator"
+        headerDivider
+      >
         <div style={{ minHeight: "65vh" }}>
           {metric.loading && <Spinner />}
           {!metric.loading && isCustomerOrBusiness && (
             <CreateOrEditFilterSelectAggregateGenerator
               metric={metric}
-              onCreated={(r) => {
-                setTrigger(r);
-                setGeneratorPopupOpen(false);
-              }}
+              onCreated={setTrigger}
             />
           )}
           {!metric.loading && metric.scope == "global" && (
             <CreateGlobalScopeMetricGenerator
               metric={metric}
-              onCreated={(r) => {
-                setTrigger(r);
-                setGeneratorPopupOpen(false);
-              }}
+              onCreated={setTrigger}
             />
           )}
         </div>

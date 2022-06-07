@@ -33,7 +33,12 @@ const ReportCard = ({ name, lastUpdated, chart, chartThumbnail }) => {
         >
           Show report
         </button>
-        <BigPopup isOpen={openReport} setIsOpen={setOpenReport}>
+        <BigPopup
+          isOpen={openReport}
+          setIsOpen={setOpenReport}
+          header={name}
+          headerDivider
+        >
           {chart}
         </BigPopup>
       </div>

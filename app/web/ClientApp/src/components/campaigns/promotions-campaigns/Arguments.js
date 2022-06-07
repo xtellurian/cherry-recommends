@@ -56,6 +56,8 @@ export const ArgumentsSection = ({ recommender, setTrigger }) => {
             <BigPopup
               isOpen={!!selectedArgId}
               setIsOpen={() => setSelectedArgId()}
+              header="Argument Rules"
+              headerDivider
             >
               {selectedArgId ? (
                 <ArgumentRules

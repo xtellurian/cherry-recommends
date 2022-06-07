@@ -18,7 +18,7 @@ export const LearnMore = ({ children, className, tooltip }) => {
           onClick={() => setIsOpen(true)}
         />
       </Tippy>
-      <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
+      <BigPopup isOpen={isOpen} setIsOpen={setIsOpen} header="More Information">
         <div className="m-3">{children}</div>
       </BigPopup>
     </React.Fragment>

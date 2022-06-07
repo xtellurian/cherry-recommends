@@ -45,26 +45,26 @@ export const TenantSettingsSummary = () => {
         <BigPopup
           isOpen={newUserInvitatonPopupOpen}
           setIsOpen={setNewUserInvitationPopupOpen}
+          headerDivider
+          header="New User Added"
+          buttons={
+            <button
+              className="btn btn-primary btn-block"
+              onClick={() => {
+                setNewUserInvitationPopupOpen(false);
+                setNewUserInfo(null);
+              }}
+            >
+              I've sent them the link
+            </button>
+          }
         >
-          <div style={{ minHeight: "50vh" }} className="pt-5">
-            <h5>New User Added</h5>
+          <div style={{ minHeight: "30vh" }} className="pt-5">
             <p>
               Send this link to your new team member to set up their account.
             </p>
 
             <CopyableField label="Link" value={newUserInfo.invitationUrl} />
-
-            <div className="mt-5">
-              <button
-                className="btn btn-primary btn-block"
-                onClick={() => {
-                  setNewUserInvitationPopupOpen(false);
-                  setNewUserInfo(null);
-                }}
-              >
-                I've sent them the link
-              </button>
-            </div>
           </div>
         </BigPopup>
       )}

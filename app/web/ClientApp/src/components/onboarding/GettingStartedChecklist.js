@@ -171,24 +171,3 @@ export const GettingStartedChecklistComponent = ({ requestClose }) => {
     </>
   );
 };
-
-export const ToggleGettingStartedChecklistButton = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  return (
-    <>
-      <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
-        <GettingStartedChecklistComponent
-          requestClose={() => setIsOpen(false)}
-        />
-      </BigPopup>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="btn btn-primary"
-        data-qa="get-started"
-      >
-        Get Started
-      </button>
-    </>
-  );
-};

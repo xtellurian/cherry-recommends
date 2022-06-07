@@ -253,7 +253,6 @@ export const CreateOrEditFilterSelectAggregateGenerator = ({
 
   return (
     <React.Fragment>
-      <Title>Metric Generation</Title>
       <LearnMore
         className="float-right"
         tooltip="Learn More about Metric Generators"

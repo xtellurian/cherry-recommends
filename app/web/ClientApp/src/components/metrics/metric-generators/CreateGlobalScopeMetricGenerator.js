@@ -23,7 +23,6 @@ export const CreateGlobalScopeMetricGenerator = ({ metric, onCreated }) => {
 
   return (
     <>
-      <Title>Metric Generation</Title>
       <Subtitle>{metric.name}</Subtitle>
       <StatefulTabs
         currentTabId={currentTabId}

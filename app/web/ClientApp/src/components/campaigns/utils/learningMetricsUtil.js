@@ -53,21 +53,25 @@ export const LearningMetricsUtil = ({
   };
   return (
     <React.Fragment>
-      <BigPopup isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Typography variant="h6" className="semi-bold border-bottom pb-2">
-          Add a Learning Metric
-        </Typography>
+      <BigPopup
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        header="Add a Learning Metric"
+        headerDivider
+        buttons={
+          <button
+            className="btn btn-block btn-primary"
+            onClick={handleUpdateLearningMetrics}
+          >
+            Add
+          </button>
+        }
+      >
         {error ? <ErrorCard error={error} /> : null}
 
         <div className="mt-4" style={{ minHeight: "200px" }}>
           <AsyncSelectMetric onChange={setNewMetricOption} />
         </div>
-        <button
-          className="btn btn-block btn-primary"
-          onClick={handleUpdateLearningMetrics}
-        >
-          Add
-        </button>
       </BigPopup>
 
       {error ? <ErrorCard error={error} /> : null}

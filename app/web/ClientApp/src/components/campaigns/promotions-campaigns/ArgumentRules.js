@@ -44,8 +44,6 @@ const ArgumentRuleList = ({ campaign, args, argumentId }) => {
   const combinedRules = [...argumentRules, newRule];
   return (
     <React.Fragment>
-      <Typography variant="h6"> Argument Rules </Typography>
-      <hr />
       {argumentRules.loading ? (
         <Spinner />
       ) : (

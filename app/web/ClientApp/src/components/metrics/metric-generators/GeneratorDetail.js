@@ -97,7 +97,7 @@ const JoinTwoMetrics = ({ joinTwoMetrics }) => {
     </>
   );
 };
-export const GeneratorDetail = ({ generator, requestClose }) => {
+export const GeneratorDetail = ({ generator, setTrigger }) => {
   const [error, setError] = React.useState();
   const [running, setRunning] = React.useState(false);
   const token = useAccessToken();
@@ -108,9 +108,13 @@ export const GeneratorDetail = ({ generator, requestClose }) => {
       token,
       id: generator.id,
     })
-      .then(requestClose)
       .catch(setError)
-      .finally(() => setRunning(false));
+      .finally(() => {
+        setRunning(false);
+        if (typeof setTrigger === "function") {
+          setTrigger({});
+        }
+      });
   };
 
   return (
@@ -164,12 +168,6 @@ export const GeneratorDetail = ({ generator, requestClose }) => {
             >
               Trigger Now
             </AsyncButton>
-            <button
-              className="btn btn-outline-secondary"
-              onClick={requestClose}
-            >
-              Cancel
-            </button>
           </ButtonGroup>
         </div>
       </div>

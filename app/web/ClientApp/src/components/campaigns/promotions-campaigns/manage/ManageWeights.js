@@ -64,6 +64,8 @@ const Weights = () => {
       <BigPopup
         isOpen={isManualControlPopupOpen}
         setIsOpen={setIsManualControlPopupOpen}
+        header="Edit Weights"
+        headerDivider
       >
         {optimiser && recommender && recommender.items ? (
           <ManualControlSetAll
