@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { usePromotions } from "../../api-hooks/promotionsApi";
-import { Title, Spinner, ErrorCard, Paginator } from "../molecules";
-import { CreateButtonClassic } from "../molecules/CreateButton";
+import { Spinner, Paginator } from "../molecules";
 import { PromotionRow } from "./PromotionRow";
 import { PromotionsFilter } from "./PromotionsFilter";
 import { SearchBox } from "../molecules/SearchBox";
+
+import Layout, {
+  CreateEntityButton,
+} from "../molecules/layout/EntitySummaryLayout";
 
 export const RecommendableItemsSummary = () => {
   const [trigger, setTrigger] = useState({});
@@ -17,7 +20,7 @@ export const RecommendableItemsSummary = () => {
     addedBy: [],
   });
 
-  const items = usePromotions({
+  const promos = usePromotions({
     trigger: trigger,
     searchTerm: trigger?.searchTerm,
     benefitType: trigger?.benefitType?.join(","),
@@ -34,37 +37,36 @@ export const RecommendableItemsSummary = () => {
     setTrigger({ ...filters, searchTerm: searchTerm });
   }, [filters]);
 
-  const isEmpty = items.items && items.items.length === 0;
+  const isEmpty = promos.items && promos.items.length === 0;
 
   return (
-    <React.Fragment>
-      <CreateButtonClassic
-        className="float-right"
-        to="/promotions/promotions/create"
-      >
-        Create Promotion
-      </CreateButtonClassic>
-      <Title>Promotion Catalogue</Title>
-      <hr />
-
+    <Layout
+      header="Promotions"
+      createButton={
+        <CreateEntityButton to="/promotions/promotions/create">
+          Create a Promotion
+        </CreateEntityButton>
+      }
+      error={promos.error}
+    >
       <SearchBox onSearch={onSearch} />
 
       <PromotionsFilter filters={filters} setFilters={setFilters} />
 
       <div className="mt-4">
-        {items.loading && <Spinner>Loading Promotions</Spinner>}
+        {promos.loading && <Spinner>Loading Promotions</Spinner>}
         {isEmpty && (
           <div className="text-center my-5">
             No results match your search. Please try again.
             {/* <div className="text-black-50 mt-2"></div> */}
           </div>
         )}
-        {items.error && <ErrorCard error={items.error} />}
-        {items.items &&
-          items.items.map((p) => <PromotionRow key={p.id} promotion={p} />)}
 
-        {!isEmpty && items.pagination && <Paginator {...items.pagination} />}
+        {promos.items &&
+          promos.items.map((p) => <PromotionRow key={p.id} promotion={p} />)}
+
+        {!isEmpty && promos.pagination && <Paginator {...promos.pagination} />}
       </div>
-    </React.Fragment>
+    </Layout>
   );
 };

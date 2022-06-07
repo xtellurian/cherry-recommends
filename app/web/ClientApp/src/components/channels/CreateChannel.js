@@ -6,7 +6,7 @@ import {
   MoveUpHierarchyPrimaryButton,
   PageHeading,
 } from "../molecules";
-import { InputGroup, TextInput } from "../molecules/TextInput";
+import { TextInput } from "../molecules/TextInput";
 import { useAnalytics } from "../../analytics/analyticsHooks";
 import { AsyncSelectIntegratedSystem } from "../molecules/selectors/AsyncSelectIntegratedSystem";
 import { useNavigation } from "../../utility/useNavigation";
@@ -98,22 +98,21 @@ export const CreateChannel = () => {
         header={<PageHeading title="Add a Channel" />}
         error={error}
       >
-        <InputGroup className="mb-1">
-          <TextInput
-            label="Name"
-            placeholder="Type the name of your channel"
-            value={newChannel.name}
-            onChange={(e) =>
-              setNewChannel({
-                ...newChannel,
-                name: e.target.value,
-              })
-            }
-          />
-        </InputGroup>
+        <TextInput
+          label="Name"
+          placeholder="Type the name of your channel"
+          value={newChannel.name}
+          onChange={(e) =>
+            setNewChannel({
+              ...newChannel,
+              name: e.target.value,
+            })
+          }
+        />
+
         <div>
-          <div>Choose a type</div>
           <Select
+            label="Channel Type"
             className="mb-1"
             placeholder="Select channel type"
             onChange={setSelectedChannelType}
@@ -122,8 +121,8 @@ export const CreateChannel = () => {
           />
         </div>
         <div>
-          <div>Choose an integrated system</div>
           <AsyncSelectIntegratedSystem
+            label="Connection"
             value={selectedIntegratedSystem}
             systemType={integratedSystemType}
             onChange={(v) => setSelectedIntegratedSystem(v.value)}

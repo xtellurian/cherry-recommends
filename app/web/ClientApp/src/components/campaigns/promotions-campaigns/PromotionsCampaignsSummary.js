@@ -1,34 +1,30 @@
 import React from "react";
-import {
-  Title,
-  ErrorCard,
-  Spinner,
-  Paginator,
-  EmptyList,
-} from "../../molecules";
+import { Spinner, Paginator, EmptyList } from "../../molecules";
 import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { usePromotionsCampaigns } from "../../../api-hooks/promotionsCampaignsApi";
 import { CampaignRow } from "../CampaignRow";
+
+import Layout, {
+  CreateEntityButton,
+} from "../../molecules/layout/EntitySummaryLayout";
 
 const PromotionsCampaignRow = ({ recommender }) => {
   return <CampaignRow recommender={recommender} />;
 };
 export const PromotionsCampaignsSummary = () => {
-  const itemsRecommenders = usePromotionsCampaigns();
+  const promoCampaigns = usePromotionsCampaigns();
   return (
-    <React.Fragment>
-      <CreateButtonClassic
-        className="float-right"
-        to="/campaigns/promotions-campaigns/create"
-      >
-        Create Promotion Campaign
-      </CreateButtonClassic>
-      <Title>Promotion Campaigns</Title>
-
-      <hr />
-      {itemsRecommenders.error && <ErrorCard error={itemsRecommenders.error} />}
-      {itemsRecommenders.loading && <Spinner />}
-      {itemsRecommenders.items && itemsRecommenders.items.length === 0 && (
+    <Layout
+      header="Promotion Campaigns"
+      createButton={
+        <CreateEntityButton to="/campaigns/promotions-campaigns/create">
+          Create a Campaign
+        </CreateEntityButton>
+      }
+      error={promoCampaigns.error}
+    >
+      {promoCampaigns.loading && <Spinner />}
+      {promoCampaigns.items && promoCampaigns.items.length === 0 && (
         <EmptyList>
           <div className="text-muted m-3">
             There are no promotion campaigns.
@@ -39,14 +35,14 @@ export const PromotionsCampaignsSummary = () => {
         </EmptyList>
       )}
 
-      {itemsRecommenders.items &&
-        itemsRecommenders.items.map((pr) => (
+      {promoCampaigns.items &&
+        promoCampaigns.items.map((pr) => (
           <PromotionsCampaignRow key={pr.id} recommender={pr} />
         ))}
 
-      {itemsRecommenders.pagination && (
-        <Paginator {...itemsRecommenders.pagination} />
+      {promoCampaigns.pagination && (
+        <Paginator {...promoCampaigns.pagination} />
       )}
-    </React.Fragment>
+    </Layout>
   );
 };

@@ -1,9 +1,7 @@
 import React from "react";
 import { useModelRegistrations } from "../../api-hooks/modelRegistrationsApi";
 import { deleteModelRegistrationAsync } from "../../api/modelRegistrationsApi";
-import { Title } from "../molecules/layout";
 import { JsonView } from "../molecules/JsonView";
-import { CreateButtonClassic } from "../molecules/CreateButton";
 import {
   EmptyList,
   Paginator,
@@ -18,6 +16,9 @@ import {
 } from "../molecules/buttons/ActionsButton";
 import { ConfirmationPopup } from "../molecules/popups/ConfirmationPopup";
 import { useAccessToken } from "../../api-hooks/token";
+import Layout, {
+  CreateEntityButton,
+} from "../molecules/layout/EntitySummaryLayout";
 
 const ModelRow = ({ model, onDeleted }) => {
   const token = useAccessToken();
@@ -91,15 +92,14 @@ export const ModelRegistrationsSummary = () => {
   const [trigger, setTrigger] = React.useState({});
   const result = useModelRegistrations({ trigger });
   return (
-    <React.Fragment>
-      <div>
-        <CreateButtonClassic to="/admin/models/create" className="float-right">
-          Register New Model
-        </CreateButtonClassic>
-
-        <Title>Models</Title>
-      </div>
-      <hr />
+    <Layout
+      header="Custom Models"
+      createButton={
+        <CreateEntityButton to="/admin/models/create">
+          Create a Custom Model
+        </CreateEntityButton>
+      }
+    >
       <div>
         {result &&
           result.items &&
@@ -110,15 +110,15 @@ export const ModelRegistrationsSummary = () => {
       <div>
         {result.items && result.items.length === 0 && (
           <EmptyList>
-            <div>There are no models registered.</div>
-            <CreateButtonClassic to="/admin/models/create" className="mt-4">
+            <div className="mb-4">There are no models registered.</div>
+            <CreateEntityButton to="/admin/models/create">
               Create New Model
-            </CreateButtonClassic>
+            </CreateEntityButton>
           </EmptyList>
         )}
       </div>
       {result.loading && <Spinner />}
       {result.pagination && <Paginator {...result.pagination} />}
-    </React.Fragment>
+    </Layout>
   );
 };

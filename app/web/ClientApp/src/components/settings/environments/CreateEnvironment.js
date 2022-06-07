@@ -4,14 +4,19 @@ import { useEnvironmentReducer } from "../../../api-hooks/environmentsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { createEnvironmentAsync } from "../../../api/environmentsApi";
 import { useNavigation } from "../../../utility/useNavigation";
-import { Title, AsyncButton, MoveUpHierarchyButton } from "../../molecules";
+import {
+  AsyncButton,
+  MoveUpHierarchyPrimaryButton,
+  PageHeading,
+} from "../../molecules";
 import {
   TextInput,
-  InputGroup,
   createRequiredByServerValidator,
   createLengthValidator,
   joinValidators,
 } from "../../molecules/TextInput";
+
+import Layout from "../../molecules/layout/CreatePageLayout";
 
 export const CreateEnvironment = () => {
   const { navigate } = useNavigation();
@@ -47,27 +52,14 @@ export const CreateEnvironment = () => {
       });
   };
   return (
-    <React.Fragment>
-      <MoveUpHierarchyButton
-        className="float-right"
-        to="/settings/environments"
-      >
-        Back
-      </MoveUpHierarchyButton>
-      <Title>Create New Environment</Title>
-
-      <hr />
-      <InputGroup>
-        <TextInput
-          label="Environment Name"
-          placeholder="e.g. Dev, Test, Production"
-          validator={joinValidators([
-            createLengthValidator(3),
-            createRequiredByServerValidator(error),
-          ])}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+    <Layout
+      header={<PageHeading title={"Create an Environment"} />}
+      backButton={
+        <MoveUpHierarchyPrimaryButton to="/settings/environments">
+          Environments
+        </MoveUpHierarchyPrimaryButton>
+      }
+      createButton={
         <AsyncButton
           loading={loading}
           onClick={handleCreate}
@@ -75,7 +67,19 @@ export const CreateEnvironment = () => {
         >
           Create
         </AsyncButton>
-      </InputGroup>
-    </React.Fragment>
+      }
+      error={error}
+    >
+      <TextInput
+        label="Environment Name"
+        placeholder="e.g. Dev, Test, Production"
+        validator={joinValidators([
+          createLengthValidator(3),
+          createRequiredByServerValidator(error),
+        ])}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+    </Layout>
   );
 };

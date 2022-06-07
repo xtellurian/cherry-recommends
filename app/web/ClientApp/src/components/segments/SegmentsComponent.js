@@ -4,22 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import { CreateSegment } from "./CreateSegment";
 import { SegmentSummary } from "./SegmentSummary";
 import { SegmentDetail } from "./SegmentDetail";
-import { CreateButtonClassic } from "../molecules/CreateButton";
 import { useFeatureFlag } from "../launch-darkly/hooks";
-
-const SegmentsHome = () => {
-  return (
-    <div>
-      <CreateButtonClassic
-        to="/customers/segments/create"
-        className="float-right"
-      >
-        Create New Segment
-      </CreateButtonClassic>
-      <SegmentSummary />
-    </div>
-  );
-};
 
 export const SegmentsComponent = () => {
   const flag = useFeatureFlag("segments", true);
@@ -30,7 +15,7 @@ export const SegmentsComponent = () => {
 
   return (
     <Routes>
-      <Route index element={<SegmentsHome />} />
+      <Route index element={<SegmentSummary />} />
       <Route path="detail/:id" element={<SegmentDetail />} />
       <Route path="create" element={<CreateSegment />} />
     </Routes>

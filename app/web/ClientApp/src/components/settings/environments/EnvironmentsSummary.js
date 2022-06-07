@@ -5,12 +5,15 @@ import {
 } from "../../../api-hooks/environmentsApi";
 import { useAccessToken } from "../../../api-hooks/token";
 import { deleteEnvironmentAsync } from "../../../api/environmentsApi";
-import { Title, Subtitle, Spinner, ErrorCard } from "../../molecules";
-import { CreateButtonClassic } from "../../molecules/CreateButton";
+import { Spinner } from "../../molecules";
 import { DateTimeField } from "../../molecules/DateTimeField";
 import { ConfirmDeletePopup } from "../../molecules/popups/ConfirmDeletePopup";
 import { CopyableField } from "../../molecules/fields/CopyableField";
 import { ActiveIndicator } from "../../molecules/ActiveIndicator";
+
+import Layout, {
+  CreateEntityButton,
+} from "../../molecules/layout/EntitySummaryLayout";
 
 const EnvironmentRow = ({ environment, reload }) => {
   const [currentEnviroment, setEnvironment] = useEnvironmentReducer();
@@ -82,20 +85,16 @@ export const EnvironmentsSummary = () => {
   const [trigger, setTrigger] = React.useState({});
   const environments = useEnvironments({ trigger });
   return (
-    <React.Fragment>
-      <CreateButtonClassic
-        className="float-right"
-        to="/settings/environments/create"
-      >
-        Create environment
-      </CreateButtonClassic>
-      <Title>Environments</Title>
-      <Subtitle></Subtitle>
-
-      <hr />
-
+    <Layout
+      header="Environments"
+      createButton={
+        <CreateEntityButton to="/settings/environments/create">
+          Create an Environment
+        </CreateEntityButton>
+      }
+      error={environments.error}
+    >
       {environments.loading && <Spinner />}
-      {environments.error && <ErrorCard error={environments.error} />}
 
       {environments.items &&
         environments.items.map((e) => (
@@ -105,6 +104,6 @@ export const EnvironmentsSummary = () => {
             reload={() => setTrigger({})}
           />
         ))}
-    </React.Fragment>
+    </Layout>
   );
 };

@@ -2,34 +2,33 @@ import React from "react";
 
 import { useMetrics } from "../../api-hooks/metricsApi";
 
-import { CreateButtonClassic } from "../molecules/CreateButton";
 import { MetricRow } from "./MetricRow";
-import { EmptyList, Paginator, Title, ErrorCard, Spinner } from "../molecules";
+import { EmptyList, Paginator, Spinner } from "../molecules";
+import Layout, {
+  CreateEntityButton,
+} from "../molecules/layout/EntitySummaryLayout";
 
 const MetricsSummary = () => {
   const metrics = useMetrics();
   return (
-    <React.Fragment>
-      <CreateButtonClassic
-        className="float-right"
-        to={{
-          pathname: "/metrics/metrics/create",
-        }}
-      >
-        Create Metric
-      </CreateButtonClassic>
-      <Title>Metrics</Title>
-      <hr />
+    <Layout
+      header="Metrics"
+      createButton={
+        <CreateEntityButton to="/metrics/metrics/create">
+          Create Metric
+        </CreateEntityButton>
+      }
+      error={metrics.error}
+    >
       {metrics.loading && <Spinner />}
       {metrics.items && metrics.items.length === 0 && (
         <EmptyList>There are no metrics.</EmptyList>
       )}
-      {metrics.error && <ErrorCard error={metrics.error} />}
       {metrics.items &&
         metrics.items.map((f) => <MetricRow key={f.id} metric={f} />)}
 
       {metrics.pagination && <Paginator {...metrics.pagination} />}
-    </React.Fragment>
+    </Layout>
   );
 };
 

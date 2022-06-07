@@ -5,7 +5,6 @@ import MetricsSummary from "./MetricsSummary";
 import Create from "./CreateMetric";
 import Detail from "./MetricDetail";
 import SetMetricValue from "./SetMetricValue";
-import GeneratorsComponent from "./metric-generators/MetricGeneratorsComponent";
 import ActivityFeed from "./ActivityFeed";
 
 const DefaultComponent = () => {
@@ -15,7 +14,6 @@ const DefaultComponent = () => {
       <Route path="create" element={<Create />} />
       <Route path="detail/:id" element={<Detail />} />
       <Route path="set-value/:id" element={<SetMetricValue />} />
-      <Route path="generators/*" element={<GeneratorsComponent />} />
     </Routes>
   );
 };

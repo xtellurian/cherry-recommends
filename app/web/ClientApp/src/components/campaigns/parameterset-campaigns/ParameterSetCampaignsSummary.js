@@ -1,12 +1,14 @@
 import React from "react";
-import { Title } from "../../molecules/layout";
 import { CreateButtonClassic } from "../../molecules/CreateButton";
 import { Spinner } from "../../molecules/Spinner";
-import { ErrorCard } from "../../molecules/ErrorCard";
 import { EmptyList, Navigation } from "../../molecules";
 import { Paginator } from "../../molecules/Paginator";
 import { useParameterSetCampaigns } from "../../../api-hooks/parameterSetCampaignsApi";
 import { EntityRow } from "../../molecules/layout/EntityRow";
+
+import Layout, {
+  CreateEntityButton,
+} from "../../molecules/layout/EntitySummaryLayout";
 
 const ParameterSetCampaignRow = ({ recommender }) => {
   return (
@@ -28,18 +30,15 @@ const ParameterSetCampaignRow = ({ recommender }) => {
 export const ParameterSetCampaignsSummary = () => {
   const parameterSetRecommenders = useParameterSetCampaigns();
   return (
-    <React.Fragment>
-      <CreateButtonClassic
-        className="float-right"
-        to="/campaigns/parameter-set-campaigns/create"
-      >
-        Create Parameter Campaign
-      </CreateButtonClassic>
-      <Title>Parameter Set Campaigns</Title>
-      <hr />
-      {parameterSetRecommenders.error && (
-        <ErrorCard error={parameterSetRecommenders.error} />
-      )}
+    <Layout
+      header="Parameter Campaigns"
+      createButton={
+        <CreateEntityButton to="/campaigns/parameter-set-campaigns/create">
+          Create a Campaign
+        </CreateEntityButton>
+      }
+      error={parameterSetRecommenders.error}
+    >
       {parameterSetRecommenders.loading && <Spinner />}
       {parameterSetRecommenders.items &&
         parameterSetRecommenders.items.length === 0 && (
@@ -57,6 +56,6 @@ export const ParameterSetCampaignsSummary = () => {
       {parameterSetRecommenders.pagination && (
         <Paginator {...parameterSetRecommenders.pagination} />
       )}
-    </React.Fragment>
+    </Layout>
   );
 };

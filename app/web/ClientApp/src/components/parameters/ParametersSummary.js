@@ -1,8 +1,11 @@
 import React from "react";
-import { Subtitle, Title, ErrorCard, Spinner, EmptyList } from "../molecules";
+import { Spinner, EmptyList } from "../molecules";
 import { useParameters } from "../../api-hooks/parametersApi";
 import { ParameterRow } from "./ParameterRow";
-import { CreateButtonClassic } from "../molecules/CreateButton";
+
+import Layout, {
+  CreateEntityButton,
+} from "../molecules/layout/EntitySummaryLayout";
 
 export const ParametersSummary = () => {
   const [created, setCreated] = React.useState();
@@ -10,17 +13,15 @@ export const ParametersSummary = () => {
   const parameters = useParameters({ trigger: created || deleted });
 
   return (
-    <React.Fragment>
-      <CreateButtonClassic
-        className="float-right"
-        to="/parameters/parameters/create"
-      >
-        Create Parameter
-      </CreateButtonClassic>
-      <Title>Parameters</Title>
-      <hr />
-
-      {parameters.error && <ErrorCard error={parameters.error} />}
+    <Layout
+      header="Parameters"
+      createButton={
+        <CreateEntityButton to="/parameters/parameters/create">
+          Create a Parameter
+        </CreateEntityButton>
+      }
+      error={parameters.error}
+    >
       {parameters.loading && <Spinner />}
       {parameters.items && parameters.items.length === 0 && (
         <EmptyList>No Parameters</EmptyList>
@@ -30,6 +31,6 @@ export const ParametersSummary = () => {
         parameters.items.map((p) => (
           <ParameterRow key={p.id} parameter={p} onDeleted={setDeleted} />
         ))}
-    </React.Fragment>
+    </Layout>
   );
 };

@@ -7,6 +7,7 @@ import { useAccessToken } from "../../../api-hooks/token";
 export const AsyncSelectIntegratedSystem = ({
   value,
   onChange,
+  label,
   placeholder,
   allowNone,
   systemType,
@@ -42,6 +43,7 @@ export const AsyncSelectIntegratedSystem = ({
 
   return (
     <AsyncSelector
+      label={label}
       value={newValue}
       defaultOptions={entitiesSelectable}
       placeholder={placeholder || "Search..."}

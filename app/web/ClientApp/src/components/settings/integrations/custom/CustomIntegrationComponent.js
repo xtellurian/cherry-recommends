@@ -1,16 +1,9 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { TabActivator, Tabs } from "../../../molecules/layout/Tabs";
 import { useIntegratedSystem } from "../../../../api-hooks/integratedSystemsApi";
 import { Spinner } from "../../../molecules";
-import { CustomIntegrationSummary } from "./CustomIntegrationSummary";
+import { CustomIntegrationDetail } from "./CustomIntegrationDetail";
 
-const tabs = [
-  {
-    id: "summary",
-    label: "Summary",
-  },
-];
 export const CustomIntegrationComponent = () => {
   const { id } = useParams();
   const integratedSystem = useIntegratedSystem({ id });
@@ -21,10 +14,7 @@ export const CustomIntegrationComponent = () => {
 
   return (
     <React.Fragment>
-      <Tabs tabs={tabs} defaultTabId={tabs[0].id} />
-      <TabActivator tabId={tabs[0].id} defaultTabId={tabs[0].id}>
-        <CustomIntegrationSummary integratedSystem={integratedSystem} />
-      </TabActivator>
+      <CustomIntegrationDetail integratedSystem={integratedSystem} />
     </React.Fragment>
   );
 };
