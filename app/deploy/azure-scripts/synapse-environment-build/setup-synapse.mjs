@@ -1,5 +1,12 @@
 #!/usr/bin/env zx
 
+// IMPORTANT. Permission to run this script.
+// For this to run in the pipeline, the executing ServicePrincipal must be given permission to act in Azure Synapse
+// That means going to Synapse Studio, then Manage > Access Control
+// Giving the user or Service Principal Synapse Contributor works
+// Dev deployment SP Object ID: 6f687f17-7b02-484a-8f87-88442b24fed2
+// Canary/ Prod deployment SP Object ID: 886c22ab-16af-47be-9fe6-b7dc44e7f200
+
 const fs = require("fs");
 const ls_keyVault = require("./templates/linked-services/ls_keyVault.json");
 const ls_multitenant = require("./templates/linked-services/ls_multitenantdb.json");
@@ -54,7 +61,7 @@ if (synapseEnabled?.value !== "true") {
   console.log("Synapse is not enabled.");
   process.exit(0);
 } else {
-  console.log("Synapse is enabled. Continuing.")
+  console.log("Synapse is enabled. Continuing.");
 }
 
 const stackVariableOutput = await $`pulumi stack output --show-secrets -j`;
