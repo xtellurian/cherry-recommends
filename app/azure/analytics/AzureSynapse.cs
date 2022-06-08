@@ -110,14 +110,15 @@ namespace SignalBox.Azure
                 });
 
                 var roles = new List<RoleAssignment>();
+
                 foreach (var user in AzureUsers.AzureUserList)
                 {
-                    roles.Add(new RoleAssignment("synapseUserAccess-" + user.Key, new RoleAssignmentArgs
+                    roles.Add(new RoleAssignment("synapseUserAccess-" + user.Name, new RoleAssignmentArgs
                     {
-                        RoleAssignmentName = new RandomUuid("userRoleName-" + user.Key).Result,
+                        RoleAssignmentName = new RandomUuid("userRoleName-" + user.Name).Result,
                         Scope = storageAccount.Id,
-                        PrincipalId = user.Value,
-                        PrincipalType = "User",
+                        PrincipalId = user.PrincipalId,
+                        PrincipalType = user.PrincipalType,
                         RoleDefinitionId = roleDefinitionId
                     }));
                 }

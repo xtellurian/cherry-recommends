@@ -84,7 +84,7 @@ namespace SignalBox.Azure
             {
                 new AzureNative.KeyVault.Inputs.AccessPolicyEntryArgs
                 {
-                    ObjectId = Output.Create(AzureNative.Authorization.GetClientConfig.InvokeAsync()).Apply(_ => _.ObjectId),
+                    ObjectId = Output.Create(Utility.GetClientServicePrincal()).Apply(_ => _.ObjectId),
                     Permissions = new AzureNative.KeyVault.Inputs.PermissionsArgs
                     {
                         Certificates =
