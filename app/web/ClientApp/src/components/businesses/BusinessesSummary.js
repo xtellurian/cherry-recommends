@@ -26,12 +26,7 @@ export const BusinessesSummary = () => {
       {businesses.loading && <Spinner />}
       <SearchBox onSearch={setSearchTerm} />
       {businesses.items && businesses.items.length === 0 && (
-        <EmptyList>
-          There are no Businesses.
-          <CreateEntityButton to="/customers/businesses/create">
-            Create Business
-          </CreateEntityButton>
-        </EmptyList>
+        <EmptyList>There are no Businesses.</EmptyList>
       )}
       <div className="mt-3">
         {businesses.items &&

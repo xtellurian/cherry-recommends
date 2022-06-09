@@ -13,8 +13,8 @@ export const BusinessesComponent = () => {
       <Route index element={<BusinessesSummary />} />
       <Route path="detail/:id" element={<BusinessDetail />} />
       <Route path="create" element={<CreateBusiness />} />
-      <Route path="edit-properties/:id" element={<EditBusinessProperties />} />,
-      <Route path="metrics/:id" element={<BusinessMetrics />} />,
+      <Route path="edit-properties/:id" element={<EditBusinessProperties />} />
+      <Route path="metrics/:id" element={<BusinessMetrics />} />
     </Routes>
   );
 };
