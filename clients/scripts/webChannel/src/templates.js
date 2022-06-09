@@ -9,15 +9,15 @@ import { storageKeys } from "./constants";
 
 export const showEmailPopup = ({ header = "", subheader = "" }) => {
   const modalTemplate = `
-      <div class="cherry-modal">
-        <div class="cherry-modal-content">
-          <span class="cherry-modal-close">&times;</span>
-          <div class="cherry-modal-header">${header}</div>
-          <div class="cherry-modal-subheader">${subheader}</div>
-          <form class="cherry-modal-form">
-            <input type="text" name="email" placeholder="Enter your email address" class="cherry-modal-input">
-            <label class="cherry-error-message">Invalid email address</label>
-            <button class="cherry-modal-submit">Submit</button>
+      <div id="cherry-modal">
+        <div id="cherry-modal-content">
+          <span id="cherry-modal-close">&times;</span>
+          <div id="cherry-modal-header">${header}</div>
+          <div id="cherry-modal-subheader">${subheader}</div>
+          <form id="cherry-modal-form">
+            <input id="cherry-modal-input" type="text" name="email" placeholder="Enter your email address">
+            <label id="cherry-error-message">Invalid email address</label>
+            <button id="cherry-modal-submit">Submit</button>
           </form>
         </div>
       </div>
@@ -35,18 +35,16 @@ export const showEmailPopup = ({ header = "", subheader = "" }) => {
 
   container.insertAdjacentHTML("beforeend", modalTemplate);
 
-  const modalEl = document.getElementsByClassName("cherry-modal")[0];
-  const formEl = document.getElementsByClassName("cherry-modal-form")[0];
-  const submitEl = document.getElementsByClassName("cherry-modal-submit")[0];
-  const closeIconEl = document.getElementsByClassName("cherry-modal-close")[0];
-  const emailFieldEl = document.getElementsByName("email")[0];
-  const errorMessage = document.getElementsByClassName(
-    "cherry-error-message"
-  )[0];
+  const modalEl = document.getElementById("cherry-modal");
+  const formEl = document.getElementById("cherry-modal-form");
+  const submitEl = document.getElementById("cherry-modal-submit");
+  const closeIconEl = document.getElementById("cherry-modal-close");
+  const emailFieldEl = document.getElementById("cherry-modal-input");
+  const errorMessage = document.getElementById("cherry-error-message");
 
   closeIconEl.addEventListener("click", () => {
     setCherrySession(storageKeys.HIDDEN, true);
-    modalEl.classList.add("cherry-modal-hide");
+    modalEl.style.display = "none";
   });
 
   formEl.addEventListener("submit", (e) => {
@@ -65,10 +63,7 @@ export const showEmailPopup = ({ header = "", subheader = "" }) => {
     emailFieldEl.classList.remove("error");
     errorMessage.style.display = "none";
     submitEl.textContent = "";
-    submitEl.insertAdjacentHTML(
-      "beforeend",
-      '<div class="cherry-loader"></div>'
-    );
+    submitEl.insertAdjacentHTML("beforeend", '<div id="cherry-loader"></div>');
 
     events
       .createEventsAsync({
