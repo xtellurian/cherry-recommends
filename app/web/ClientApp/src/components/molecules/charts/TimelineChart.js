@@ -33,6 +33,8 @@ const TimelineChart = ({
   toLocaleDateStringOptions,
   xAxisLabel,
   yAxisLabel,
+  xAxisDomain,
+  yAxisDomain,
 }) => {
   const lineKeys = Object.keys(data[0]).filter((_) => _ !== "timestamp");
 
@@ -46,7 +48,7 @@ const TimelineChart = ({
         height={300}
         data={data}
         margin={{
-          top: 5,
+          top: 10,
           right: 30,
           left: 20,
           bottom: 5,
@@ -61,10 +63,16 @@ const TimelineChart = ({
               toLocaleDateStringOptions || defaultToLocaleDateStringOptions
             )
           }
+          domain={xAxisDomain ?? ["auto", "auto"]}
         >
           <Label value={xAxisLabel} position="insideBottomRight" offset={-15} />
         </XAxis>
-        <YAxis yAxisId="left" domain={["auto", "auto"]}>
+        <YAxis
+          yAxisId="left"
+          domain={yAxisDomain ?? ["auto", "auto"]}
+          allowDataOverflow
+          allowDecimals
+        >
           <Label
             value={yAxisLabel}
             offset={0}

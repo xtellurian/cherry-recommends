@@ -129,10 +129,16 @@ namespace SignalBox.Core.Workflows
             return await offerStore.Query(paginate, predicate);
         }
 
-        public async Task<IEnumerable<ARPOReportData>> QueryARPOReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11)
+        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryARPOReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11)
         {
             DateTimeOffset startDate = dateTimeProvider.Now.ToUniversalTime().DateTimeSince(period, periodAgo);
             return await offerStore.QueryARPOReportData(campaign, period, startDate);
+        }
+
+        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryAPVReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11)
+        {
+            DateTimeOffset startDate = dateTimeProvider.Now.ToUniversalTime().DateTimeSince(period, periodAgo);
+            return await offerStore.QueryAPVReportData(campaign, period, startDate);
         }
 
         public async Task<IEnumerable<OfferConversionRateData>> QueryConversionRateReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11)

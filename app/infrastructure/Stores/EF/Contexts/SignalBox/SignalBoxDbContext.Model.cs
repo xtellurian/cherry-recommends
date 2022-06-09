@@ -70,7 +70,7 @@ namespace SignalBox.Infrastructure
 
         // offers
         public DbSet<Offer> Offers { get; set; }
-        public DbSet<ARPOReportData> OfferMeanGrossRevenues { get; set; } // DbSet for executing stored procedure
+        public DbSet<OfferMeanGrossRevenue> OfferMeanGrossRevenues { get; set; } // DbSet for executing stored procedure
         public DbSet<OfferConversionRateData> OfferConversionRates { get; set; } // DbSet for executing stored procedure
 
         // discount codes

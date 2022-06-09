@@ -90,6 +90,15 @@ interface Channel$2 extends Entity {
 
 interface components {
     schemas: {
+        /** Average Purchase Value report */
+        APVReportDto: {
+            /** Campaign id. */
+            campaignId?: number;
+            type?: components["schemas"]["DateTimePeriod"];
+            /** Data for the report. */
+            data?: components["schemas"]["OfferMeanGrossRevenue"][] | null;
+        };
+        /** Average Revenue Per Offer report */
         ARPOReportDto: {
             /** Campaign id. */
             campaignId?: number;
@@ -1110,8 +1119,14 @@ interface components {
             startDate?: string;
             endDate?: string;
             redeemedCount?: number;
+            nonBaselineRedeemedCount?: number;
+            baselineRedeemedCount?: number;
             totalCount?: number;
+            nonBaselineCount?: number;
+            baselineCount?: number;
             conversionRate?: number;
+            nonBaselineConversionRate?: number;
+            baselineConversionRate?: number;
         };
         OfferConversionRateReportDto: {
             /** Campaign id. */
@@ -1124,10 +1139,15 @@ interface components {
             startDate?: string;
             endDate?: string;
             totalGrossRevenue?: number;
+            nonBaselineTotalGrossRevenue?: number;
+            baselineTotalGrossRevenue?: number;
             meanGrossRevenue?: number;
+            nonBaselineMeanGrossRevenue?: number;
             baselineMeanGrossRevenue?: number;
             distinctCustomerCount?: number;
             offerCount?: number;
+            nonBaselineOfferCount?: number;
+            baselineOfferCount?: number;
         };
         OfferPaginated: {
             items?: components["schemas"]["Offer"][] | null;
@@ -3053,9 +3073,11 @@ interface OffersRequest extends PaginatedEntityRequest {
 }
 declare const fetchOffersAsync: ({ token, page, pageSize, id, offerState, }: OffersRequest) => Promise<any>;
 declare type ARPOReport = components["schemas"]["ARPOReportDto"];
-declare const fetchARPOReportAsync: ({ token, id, }: EntityRequest) => Promise<ARPOReport[]>;
+declare const fetchARPOReportAsync: ({ token, id, }: EntityRequest) => Promise<ARPOReport>;
+declare type APVReport = components["schemas"]["APVReportDto"];
+declare const fetchAPVReportAsync: ({ token, id, }: EntityRequest) => Promise<APVReport>;
 declare type OfferConversionRateReport = components["schemas"]["OfferConversionRateReportDto"];
-declare const fetchOfferConversionRateReportAsync: ({ token, id, }: EntityRequest) => Promise<OfferConversionRateReport[]>;
+declare const fetchOfferConversionRateReportAsync: ({ token, id, }: EntityRequest) => Promise<OfferConversionRateReport>;
 
 declare const promotionsCampaignsApi_d_fetchPromotionsCampaignsAsync: typeof fetchPromotionsCampaignsAsync;
 declare const promotionsCampaignsApi_d_fetchPromotionsCampaignAsync: typeof fetchPromotionsCampaignAsync;
@@ -3105,6 +3127,7 @@ declare const promotionsCampaignsApi_d_removeCampaignChannelAsync: typeof remove
 declare const promotionsCampaignsApi_d_fetchPromotionsRecommendationAsync: typeof fetchPromotionsRecommendationAsync;
 declare const promotionsCampaignsApi_d_fetchOffersAsync: typeof fetchOffersAsync;
 declare const promotionsCampaignsApi_d_fetchARPOReportAsync: typeof fetchARPOReportAsync;
+declare const promotionsCampaignsApi_d_fetchAPVReportAsync: typeof fetchAPVReportAsync;
 declare const promotionsCampaignsApi_d_fetchOfferConversionRateReportAsync: typeof fetchOfferConversionRateReportAsync;
 declare namespace promotionsCampaignsApi_d {
   export {
@@ -3157,6 +3180,7 @@ declare namespace promotionsCampaignsApi_d {
     promotionsCampaignsApi_d_fetchPromotionsRecommendationAsync as fetchPromotionsRecommendationAsync,
     promotionsCampaignsApi_d_fetchOffersAsync as fetchOffersAsync,
     promotionsCampaignsApi_d_fetchARPOReportAsync as fetchARPOReportAsync,
+    promotionsCampaignsApi_d_fetchAPVReportAsync as fetchAPVReportAsync,
     promotionsCampaignsApi_d_fetchOfferConversionRateReportAsync as fetchOfferConversionRateReportAsync,
   };
 }

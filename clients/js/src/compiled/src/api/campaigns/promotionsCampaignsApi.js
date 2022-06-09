@@ -390,6 +390,12 @@ export const fetchARPOReportAsync = async ({ token, id, }) => {
         path: `api/campaigns/PromotionsCampaigns/${id}/ARPOReport`,
     });
 };
+export const fetchAPVReportAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        token,
+        path: `api/campaigns/PromotionsCampaigns/${id}/APVReport`,
+    });
+};
 export const fetchOfferConversionRateReportAsync = async ({ token, id, }) => {
     return await executeFetch({
         token,

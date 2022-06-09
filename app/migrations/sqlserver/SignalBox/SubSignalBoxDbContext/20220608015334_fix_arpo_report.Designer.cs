@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220608015334_fix_arpo_report")]
+    partial class fix_arpo_report
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,6 +139,32 @@ namespace sqlserver.SignalBox
                     b.HasIndex("RecommendersId");
 
                     b.ToTable("ItemsRecommenderRecommendableItem");
+                });
+
+            modelBuilder.Entity("SignalBox.Core.ARPOReportData", b =>
+                {
+                    b.Property<double>("BaselineMeanGrossRevenue")
+                        .HasColumnType("float");
+
+                    b.Property<int>("DistinctCustomerCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("MeanGrossRevenue")
+                        .HasColumnType("float");
+
+                    b.Property<int>("OfferCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("TotalGrossRevenue")
+                        .HasColumnType("float");
+
+                    b.ToTable("OfferMeanGrossRevenues", t => t.ExcludeFromMigrations());
                 });
 
             modelBuilder.Entity("SignalBox.Core.Accounts.BillingAccount", b =>
@@ -1534,38 +1562,6 @@ namespace sqlserver.SignalBox
                         .HasColumnType("int");
 
                     b.ToTable("OfferConversionRates", t => t.ExcludeFromMigrations());
-                });
-
-            modelBuilder.Entity("SignalBox.Core.OfferMeanGrossRevenue", b =>
-                {
-                    b.Property<int>("BaselineOfferCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DistinctCustomerCount")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("MeanBaselineGrossRevenue")
-                        .HasColumnType("float");
-
-                    b.Property<double>("MeanGrossRevenue")
-                        .HasColumnType("float");
-
-                    b.Property<int>("OfferCount")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("TotalBaselineGrossRevenue")
-                        .HasColumnType("float");
-
-                    b.Property<double>("TotalGrossRevenue")
-                        .HasColumnType("float");
-
-                    b.ToTable("OfferMeanGrossRevenues", t => t.ExcludeFromMigrations());
                 });
 
             modelBuilder.Entity("SignalBox.Core.Optimisers.PromotionOptimiser", b =>

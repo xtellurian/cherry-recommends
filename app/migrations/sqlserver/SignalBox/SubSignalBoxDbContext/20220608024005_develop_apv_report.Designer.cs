@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220608024005_develop_apv_report")]
+    partial class develop_apv_report
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1538,17 +1540,14 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.OfferMeanGrossRevenue", b =>
                 {
-                    b.Property<int>("BaselineOfferCount")
-                        .HasColumnType("int");
+                    b.Property<double>("BaselineMeanGrossRevenue")
+                        .HasColumnType("float");
 
                     b.Property<int>("DistinctCustomerCount")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<double>("MeanBaselineGrossRevenue")
-                        .HasColumnType("float");
 
                     b.Property<double>("MeanGrossRevenue")
                         .HasColumnType("float");
@@ -1558,9 +1557,6 @@ namespace sqlserver.SignalBox
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<double>("TotalBaselineGrossRevenue")
-                        .HasColumnType("float");
 
                     b.Property<double>("TotalGrossRevenue")
                         .HasColumnType("float");

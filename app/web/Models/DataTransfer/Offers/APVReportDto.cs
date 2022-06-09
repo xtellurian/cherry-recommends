@@ -3,14 +3,14 @@ using SignalBox.Core;
 
 namespace SignalBox.Web.Dto
 {
-    /// <summary> Average Revenue Per Offer report </summary>
-    public class ARPOReportDto : DtoBase
+    /// <summary> Average Purchase Value report </summary>
+    public class APVReportDto : DtoBase
     {
         /// <summary> Campaign id. </summary>
         public long CampaignId { get; set; }
-        /// <summary> ARPO report type. </summary>
+        /// <summary> Report type. </summary>
         public DateTimePeriod Type { get; set; }
-        /// <summary> Data for the ARPO report. </summary>
+        /// <summary> Data for the report. </summary>
         public IEnumerable<OfferMeanGrossRevenue> Data { get; set; }
     }
 }

@@ -3,13 +3,13 @@ import { Spinner } from "../Spinner";
 
 const Chart = React.lazy(() => import("./TimelineChart"));
 
-const CampaignConversionRateChart = ({ reportData }) => {
-  const chartData = reportData?.data?.map((v) => {
+const CampaignAPVChart = ({ reportData }) => {
+  const chartData = reportData?.data?.map((v, i) => {
     return {
       timestamp: v.endDate,
-      Overall: (v.conversionRate * 100).toFixed(2),
-      Personalised: (v.nonBaselineConversionRate * 100).toFixed(2),
-      Control: (v.baselineConversionRate * 100).toFixed(2),
+      Overall: v.meanGrossRevenue.toFixed(2),
+      Personalised: v.nonBaselineMeanGrossRevenue.toFixed(2),
+      Control: v.baselineMeanGrossRevenue.toFixed(2),
     };
   });
   return (
@@ -21,9 +21,9 @@ const CampaignConversionRateChart = ({ reportData }) => {
           <Chart
             containerHeight={300}
             data={chartData}
-            yAxisLabel="Conversion Rate (%)"
+            yAxisLabel="Average basket size ($)"
             xAxisLabel="Week ending on"
-            yAxisDomain={[0, 100]}
+            yAxisDomain={[0, "auto"]}
           />
         </Suspense>
       )}
@@ -31,4 +31,4 @@ const CampaignConversionRateChart = ({ reportData }) => {
   );
 };
 
-export default CampaignConversionRateChart;
+export default CampaignAPVChart;

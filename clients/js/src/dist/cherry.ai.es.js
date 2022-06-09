@@ -3223,6 +3223,12 @@ const fetchARPOReportAsync = async ({ token, id, }) => {
         path: `api/campaigns/PromotionsCampaigns/${id}/ARPOReport`,
     });
 };
+const fetchAPVReportAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        token,
+        path: `api/campaigns/PromotionsCampaigns/${id}/APVReport`,
+    });
+};
 const fetchOfferConversionRateReportAsync = async ({ token, id, }) => {
     return await executeFetch({
         token,
@@ -3281,6 +3287,7 @@ var promotionsCampaignsApi = /*#__PURE__*/Object.freeze({
     fetchPromotionsRecommendationAsync: fetchPromotionsRecommendationAsync,
     fetchOffersAsync: fetchOffersAsync,
     fetchARPOReportAsync: fetchARPOReportAsync,
+    fetchAPVReportAsync: fetchAPVReportAsync,
     fetchOfferConversionRateReportAsync: fetchOfferConversionRateReportAsync
 });
 

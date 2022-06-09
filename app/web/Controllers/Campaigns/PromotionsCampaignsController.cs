@@ -215,6 +215,22 @@ namespace SignalBox.Web.Controllers
             return response;
         }
 
+        /// <summary>Get the Average Purchase Value report.</summary>
+        [HttpGet("{id}/APVReport")]
+        public async Task<APVReportDto> GetAPVReport(string id, bool? useInternalId = null)
+        {
+            var campaign = await base.GetResource(id, useInternalId);
+            var data = await offerWorkflow.QueryAPVReportData(campaign, DateTimePeriod.Weekly, 11); // 12 weeks ago minus 1 since 0 is current week
+            var response = new APVReportDto
+            {
+                CampaignId = campaign.Id,
+                Type = DateTimePeriod.Weekly,
+                Data = data
+            };
+
+            return response;
+        }
+
         /// <summary>Get the Offer Conversion Rate report.</summary>
         [HttpGet("{id}/ConversionRateReport")]
         public async Task<OfferConversionRateReportDto> GetConversionRateReport(string id, bool? useInternalId = null)

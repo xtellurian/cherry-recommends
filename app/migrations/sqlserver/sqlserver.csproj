@@ -6,6 +6,9 @@
 
   <ItemGroup>
     <None Update="Scripts/sp_ARPO_create.sql" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Scripts/sp_ARPO_alter_1.sql" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Scripts/sp_APV_create.sql" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Scripts/sp_OfferConversionRate_alter_1.sql" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

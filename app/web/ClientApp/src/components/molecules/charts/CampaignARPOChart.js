@@ -30,8 +30,9 @@ const CampaignARPOChart = ({ reportData }) => {
     ? reportData.data.map((v, i) => {
         return {
           timestamp: v.endDate,
-          personalized: v.meanGrossRevenue.toFixed(2),
-          control: v.baselineMeanGrossRevenue.toFixed(2),
+          Overall: v.meanGrossRevenue.toFixed(2),
+          Personalised: v.nonBaselineMeanGrossRevenue.toFixed(2),
+          Control: v.baselineMeanGrossRevenue.toFixed(2),
         };
       })
     : dummyData;
@@ -44,8 +45,9 @@ const CampaignARPOChart = ({ reportData }) => {
           <Chart
             containerHeight={300}
             data={chartData}
-            yAxisLabel="Average Revenue per Offer"
+            yAxisLabel="Average Revenue per Offer ($)"
             xAxisLabel="Week ending on"
+            yAxisDomain={[0, "auto"]}
           />
         </Suspense>
       )}

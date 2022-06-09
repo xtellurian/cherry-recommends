@@ -7925,6 +7925,84 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ItemsRecommenders/{id}/APVReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["APVReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/APVReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["APVReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/APVReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["APVReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/ConversionRateReport": {
     get: {
       parameters: {
@@ -11774,6 +11852,15 @@ export interface paths {
 
 export interface components {
   schemas: {
+    /** Average Purchase Value report */
+    APVReportDto: {
+      /** Campaign id. */
+      campaignId?: number;
+      type?: components["schemas"]["DateTimePeriod"];
+      /** Data for the report. */
+      data?: components["schemas"]["OfferMeanGrossRevenue"][] | null;
+    };
+    /** Average Revenue Per Offer report */
     ARPOReportDto: {
       /** Campaign id. */
       campaignId?: number;
@@ -12794,8 +12881,14 @@ export interface components {
       startDate?: string;
       endDate?: string;
       redeemedCount?: number;
+      nonBaselineRedeemedCount?: number;
+      baselineRedeemedCount?: number;
       totalCount?: number;
+      nonBaselineCount?: number;
+      baselineCount?: number;
       conversionRate?: number;
+      nonBaselineConversionRate?: number;
+      baselineConversionRate?: number;
     };
     OfferConversionRateReportDto: {
       /** Campaign id. */
@@ -12808,10 +12901,15 @@ export interface components {
       startDate?: string;
       endDate?: string;
       totalGrossRevenue?: number;
+      nonBaselineTotalGrossRevenue?: number;
+      baselineTotalGrossRevenue?: number;
       meanGrossRevenue?: number;
+      nonBaselineMeanGrossRevenue?: number;
       baselineMeanGrossRevenue?: number;
       distinctCustomerCount?: number;
       offerCount?: number;
+      nonBaselineOfferCount?: number;
+      baselineOfferCount?: number;
     };
     OfferPaginated: {
       items?: components["schemas"]["Offer"][] | null;

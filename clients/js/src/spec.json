@@ -486,7 +486,7 @@
         "tags": [
           "Businesses"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -3183,7 +3183,7 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -3337,7 +3337,7 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -7460,7 +7460,7 @@
         "tags": [
           "Parameters"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -7836,7 +7836,7 @@
         "tags": [
           "ParameterSetCampaigns"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -7956,7 +7956,7 @@
         "tags": [
           "ParameterSetCampaigns"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -13705,7 +13705,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -13835,7 +13835,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -13965,7 +13965,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Returned a paginated list of items for this resource.",
+        "summary": "Query entities of this type.",
         "parameters": [
           {
             "name": "page",
@@ -16162,6 +16162,147 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ARPOReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommenders/ItemsRecommenders/{id}/APVReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Average Purchase Value report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APVReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommenders/PromotionsRecommenders/{id}/APVReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Average Purchase Value report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APVReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/campaigns/PromotionsCampaigns/{id}/APVReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Average Purchase Value report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APVReportDto"
                 }
               }
             }
@@ -23968,6 +24109,29 @@
   },
   "components": {
     "schemas": {
+      "APVReportDto": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "description": "Campaign id.",
+            "format": "int64"
+          },
+          "type": {
+            "$ref": "#/components/schemas/DateTimePeriod"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferMeanGrossRevenue"
+            },
+            "description": "Data for the report.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Average Purchase Value report"
+      },
       "ARPOReportDto": {
         "type": "object",
         "properties": {
@@ -23988,7 +24152,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Average Revenue Per Offer report"
       },
       "ActivityFeedEntity": {
         "type": "object",
@@ -27853,11 +28018,35 @@
             "type": "integer",
             "format": "int32"
           },
+          "nonBaselineRedeemedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "baselineRedeemedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
           "totalCount": {
             "type": "integer",
             "format": "int32"
           },
+          "nonBaselineCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "baselineCount": {
+            "type": "integer",
+            "format": "int32"
+          },
           "conversionRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "nonBaselineConversionRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "baselineConversionRate": {
             "type": "number",
             "format": "double"
           }
@@ -27901,7 +28090,19 @@
             "type": "number",
             "format": "double"
           },
+          "nonBaselineTotalGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "baselineTotalGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
           "meanGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "nonBaselineMeanGrossRevenue": {
             "type": "number",
             "format": "double"
           },
@@ -27914,6 +28115,14 @@
             "format": "int32"
           },
           "offerCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nonBaselineOfferCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "baselineOfferCount": {
             "type": "integer",
             "format": "int32"
           }

@@ -753,10 +753,21 @@ type ARPOReport = components["schemas"]["ARPOReportDto"];
 export const fetchARPOReportAsync = async ({
   token,
   id,
-}: EntityRequest): Promise<ARPOReport[]> => {
+}: EntityRequest): Promise<ARPOReport> => {
   return await executeFetch({
     token,
     path: `api/campaigns/PromotionsCampaigns/${id}/ARPOReport`,
+  });
+};
+
+type APVReport = components["schemas"]["APVReportDto"];
+export const fetchAPVReportAsync = async ({
+  token,
+  id,
+}: EntityRequest): Promise<APVReport> => {
+  return await executeFetch({
+    token,
+    path: `api/campaigns/PromotionsCampaigns/${id}/APVReport`,
   });
 };
 
@@ -765,7 +776,7 @@ type OfferConversionRateReport =
 export const fetchOfferConversionRateReportAsync = async ({
   token,
   id,
-}: EntityRequest): Promise<OfferConversionRateReport[]> => {
+}: EntityRequest): Promise<OfferConversionRateReport> => {
   return await executeFetch({
     token,
     path: `api/campaigns/PromotionsCampaigns/${id}/ConversionRateReport`,

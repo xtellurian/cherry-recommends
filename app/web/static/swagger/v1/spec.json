@@ -16179,6 +16179,147 @@
         }
       }
     },
+    "/api/recommenders/ItemsRecommenders/{id}/APVReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Average Purchase Value report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APVReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommenders/PromotionsRecommenders/{id}/APVReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Average Purchase Value report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APVReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/campaigns/PromotionsCampaigns/{id}/APVReport": {
+      "get": {
+        "tags": [
+          "PromotionsCampaigns"
+        ],
+        "summary": "Get the Average Purchase Value report.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APVReportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/recommenders/ItemsRecommenders/{id}/ConversionRateReport": {
       "get": {
         "tags": [
@@ -23968,39 +24109,28 @@
   },
   "components": {
     "schemas": {
-      "ARPOReportData": {
+      "APVReportDto": {
         "type": "object",
         "properties": {
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "totalGrossRevenue": {
-            "type": "number",
-            "format": "double"
-          },
-          "meanGrossRevenue": {
-            "type": "number",
-            "format": "double"
-          },
-          "baselineMeanGrossRevenue": {
-            "type": "number",
-            "format": "double"
-          },
-          "distinctCustomerCount": {
+          "campaignId": {
             "type": "integer",
-            "format": "int32"
+            "description": "Campaign id.",
+            "format": "int64"
           },
-          "offerCount": {
-            "type": "integer",
-            "format": "int32"
+          "type": {
+            "$ref": "#/components/schemas/DateTimePeriod"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferMeanGrossRevenue"
+            },
+            "description": "Data for the report.",
+            "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Average Purchase Value report"
       },
       "ARPOReportDto": {
         "type": "object",
@@ -24016,13 +24146,14 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ARPOReportData"
+              "$ref": "#/components/schemas/OfferMeanGrossRevenue"
             },
             "description": "Data for the ARPO report.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Average Revenue Per Offer report"
       },
       "ActivityFeedEntity": {
         "type": "object",
@@ -27887,11 +28018,35 @@
             "type": "integer",
             "format": "int32"
           },
+          "nonBaselineRedeemedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "baselineRedeemedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
           "totalCount": {
             "type": "integer",
             "format": "int32"
           },
+          "nonBaselineCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "baselineCount": {
+            "type": "integer",
+            "format": "int32"
+          },
           "conversionRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "nonBaselineConversionRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "baselineConversionRate": {
             "type": "number",
             "format": "double"
           }
@@ -27916,6 +28071,60 @@
             },
             "description": "Data for the report.",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfferMeanGrossRevenue": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "nonBaselineTotalGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "baselineTotalGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "meanGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "nonBaselineMeanGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "baselineMeanGrossRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "distinctCustomerCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offerCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nonBaselineOfferCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "baselineOfferCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
