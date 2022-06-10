@@ -782,3 +782,14 @@ export const fetchOfferConversionRateReportAsync = async ({
     path: `api/campaigns/PromotionsCampaigns/${id}/ConversionRateReport`,
   });
 };
+
+type PerformanceReport = components["schemas"]["PerformanceReportDto"];
+export const fetchPerformanceReportAsync = async ({
+  token,
+  id,
+}: EntityRequest): Promise<PerformanceReport> => {
+  return await executeFetch({
+    token,
+    path: `api/campaigns/PromotionsCampaigns/${id}/PerformanceReport`,
+  });
+};

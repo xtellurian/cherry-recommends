@@ -1278,6 +1278,13 @@ interface components {
             businessCount?: number | null;
             recommendationCount?: number;
         };
+        PerformanceReportDto: {
+            /** Campaign id. */
+            campaignId?: number;
+            type?: components["schemas"]["DateTimePeriod"];
+            /** Data for the ARPO report. */
+            data?: components["schemas"]["OfferMeanGrossRevenue"][] | null;
+        };
         PlanTypes: "none" | "freeTrial" | "usage" | "performance" | "enterprise";
         Post: {
             operationId?: string | null;
@@ -3078,6 +3085,8 @@ declare type APVReport = components["schemas"]["APVReportDto"];
 declare const fetchAPVReportAsync: ({ token, id, }: EntityRequest) => Promise<APVReport>;
 declare type OfferConversionRateReport = components["schemas"]["OfferConversionRateReportDto"];
 declare const fetchOfferConversionRateReportAsync: ({ token, id, }: EntityRequest) => Promise<OfferConversionRateReport>;
+declare type PerformanceReport = components["schemas"]["PerformanceReportDto"];
+declare const fetchPerformanceReportAsync: ({ token, id, }: EntityRequest) => Promise<PerformanceReport>;
 
 declare const promotionsCampaignsApi_d_fetchPromotionsCampaignsAsync: typeof fetchPromotionsCampaignsAsync;
 declare const promotionsCampaignsApi_d_fetchPromotionsCampaignAsync: typeof fetchPromotionsCampaignAsync;
@@ -3129,6 +3138,7 @@ declare const promotionsCampaignsApi_d_fetchOffersAsync: typeof fetchOffersAsync
 declare const promotionsCampaignsApi_d_fetchARPOReportAsync: typeof fetchARPOReportAsync;
 declare const promotionsCampaignsApi_d_fetchAPVReportAsync: typeof fetchAPVReportAsync;
 declare const promotionsCampaignsApi_d_fetchOfferConversionRateReportAsync: typeof fetchOfferConversionRateReportAsync;
+declare const promotionsCampaignsApi_d_fetchPerformanceReportAsync: typeof fetchPerformanceReportAsync;
 declare namespace promotionsCampaignsApi_d {
   export {
     promotionsCampaignsApi_d_fetchPromotionsCampaignsAsync as fetchPromotionsCampaignsAsync,
@@ -3182,6 +3192,7 @@ declare namespace promotionsCampaignsApi_d {
     promotionsCampaignsApi_d_fetchARPOReportAsync as fetchARPOReportAsync,
     promotionsCampaignsApi_d_fetchAPVReportAsync as fetchAPVReportAsync,
     promotionsCampaignsApi_d_fetchOfferConversionRateReportAsync as fetchOfferConversionRateReportAsync,
+    promotionsCampaignsApi_d_fetchPerformanceReportAsync as fetchPerformanceReportAsync,
   };
 }
 

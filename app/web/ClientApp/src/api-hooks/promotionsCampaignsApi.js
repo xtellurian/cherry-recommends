@@ -25,6 +25,7 @@ import {
   fetchARPOReportAsync,
   fetchOfferConversionRateReportAsync,
   fetchAPVReportAsync,
+  fetchPerformanceReportAsync,
 } from "../api/promotionsCampaignsApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -496,6 +497,25 @@ export const useOfferConversionRateReport = ({ id }) => {
     setState({ loading: true });
     if (token && id) {
       fetchOfferConversionRateReportAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, environment]);
+
+  return state;
+};
+
+export const usePerformanceReport = ({ id }) => {
+  const token = useAccessToken();
+  const [environment] = useEnvironmentReducer();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id) {
+      fetchPerformanceReportAsync({
         token,
         id,
       })

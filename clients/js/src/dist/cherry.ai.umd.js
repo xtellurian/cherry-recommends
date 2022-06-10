@@ -2,7 +2,7 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory((global.cherry = global.cherry || {}, global.cherry.ai = {})));
-})(this, (function (exports) { 'use strict';
+}(this, (function (exports) { 'use strict';
 
     let storedBaseUrl = "";
     const setBaseUrl = (baseUrl) => {
@@ -122,7 +122,7 @@
         handleErrorResponse: handleErrorResponse
     });
 
-    const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, }) => {
+    const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, } = { method: "get", path: "/" }) => {
         const baseUrl = getBaseUrl();
         const client = current({ baseUrl: baseUrl });
         const params = new URLSearchParams();
@@ -3241,6 +3241,12 @@
             path: `api/campaigns/PromotionsCampaigns/${id}/ConversionRateReport`,
         });
     };
+    const fetchPerformanceReportAsync = async ({ token, id, }) => {
+        return await executeFetch({
+            token,
+            path: `api/campaigns/PromotionsCampaigns/${id}/PerformanceReport`,
+        });
+    };
 
     var promotionsCampaignsApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -3294,7 +3300,8 @@
         fetchOffersAsync: fetchOffersAsync,
         fetchARPOReportAsync: fetchARPOReportAsync,
         fetchAPVReportAsync: fetchAPVReportAsync,
-        fetchOfferConversionRateReportAsync: fetchOfferConversionRateReportAsync
+        fetchOfferConversionRateReportAsync: fetchOfferConversionRateReportAsync,
+        fetchPerformanceReportAsync: fetchPerformanceReportAsync
     });
 
     let authConfig = undefined; // caches this because it rarely change
@@ -3804,4 +3811,4 @@
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

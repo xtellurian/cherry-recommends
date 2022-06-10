@@ -8,6 +8,7 @@ using SignalBox.Core.Campaigns;
 
 namespace SignalBox.Core.Workflows
 {
+#nullable enable
     public class OfferWorkflows : IOfferWorkflow, IWorkflow
     {
         private readonly ILogger<OfferWorkflows> logger;
@@ -30,27 +31,50 @@ namespace SignalBox.Core.Workflows
             this.dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task UpdateOffer(CustomerEvent customerEvent)
+        private async Task<EntityResult<Offer>> TryLoadOffer(CustomerEvent customerEvent)
         {
             var offerEventKinds = new EventKinds[]
-            {
+           {
                 EventKinds.Purchase,
                 EventKinds.UsePromotion,
                 EventKinds.PromotionPresented
-            };
+           };
             bool isOfferEventKind = offerEventKinds.Any(_ => _ == customerEvent.EventKind);
-            bool isRedeemEvent = customerEvent.EventKind == EventKinds.Purchase ||
-                customerEvent.EventKind == EventKinds.UsePromotion;
-
             // Only process valid offer events
-            if (!isOfferEventKind ||
-                !customerEvent.RecommendationCorrelatorId.HasValue)
+            if (!isOfferEventKind)
             {
-                return;
+                return new EntityResult<Offer>(null);
+            }
+            if (customerEvent.RecommendationCorrelatorId.HasValue)
+            {
+                return await offerStore.ReadOfferByRecommendationCorrelator(customerEvent.RecommendationCorrelatorId.Value);
+            }
+            // now, try to load based properties
+            var offers = await offerStore.ReadOffersForCustomer(customerEvent.Customer, OfferState.Created, OfferState.Presented);
+
+            Offer? offer = null;
+            if (customerEvent.TryGetPromotionId(out var promotionId))
+            {
+                if (long.TryParse(promotionId, out var internalPromoId))
+                {
+                    offer = offers.FirstOrDefault(_ => _.Recommendation.Items.Any(_ => _.Id == internalPromoId || _.CommonId == promotionId));
+                }
+                else
+                {
+                    offer = offers.FirstOrDefault(_ => _.Recommendation.Items.Any(_ => _.CommonId == promotionId));
+                }
             }
 
-            var result = await offerStore.ReadOfferByRecommendationCorrelator(customerEvent.RecommendationCorrelatorId.Value);
-            if (result.Success)
+            return new EntityResult<Offer>(offer);
+        }
+
+        public async Task UpdateOffer(CustomerEvent customerEvent)
+        {
+            bool isRedeemEvent = customerEvent.EventKind == EventKinds.Purchase ||
+               customerEvent.EventKind == EventKinds.UsePromotion;
+            var result = await TryLoadOffer(customerEvent);
+
+            if (result.Success && result.Entity != null)
             {
                 var now = dateTimeProvider.Now;
                 var offer = result.Entity;
@@ -91,7 +115,7 @@ namespace SignalBox.Core.Workflows
         private T? TryGetValue<T>(DynamicPropertyDictionary properties, string key)
                 where T : struct
         {
-            object value = null;
+            object? value = null;
             if (properties.TryGetValue(key, out object _value))
             {
                 if (_value != null)
@@ -106,16 +130,16 @@ namespace SignalBox.Core.Workflows
             }
             catch
             {
-                return default(T?);
+                return default;
             }
         }
 
         public async Task<Paginated<Offer>> QueryOffers(PromotionsCampaign recommender, IPaginate paginate, OfferState? state = null)
         {
             List<Expression<Func<Offer, bool>>> expressions = new List<Expression<Func<Offer, bool>>>();
-            Expression<Func<Offer, bool>> predicate = null;
+            Expression<Func<Offer, bool>>? predicate = null;
 
-            expressions.Add(_ => _.Recommendation.Recommender.Id == recommender.Id);
+            expressions.Add(_ => _.Recommendation.Recommender!.Id == recommender.Id);
             if (state.HasValue)
             {
                 expressions.Add(_ => _.State == state);
@@ -139,6 +163,11 @@ namespace SignalBox.Core.Workflows
         {
             DateTimeOffset startDate = dateTimeProvider.Now.ToUniversalTime().DateTimeSince(period, periodAgo);
             return await offerStore.QueryAPVReportData(campaign, period, startDate);
+        }
+        public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryPerformanceReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11)
+        {
+            // we can actually use the same data for this 
+            return await QueryARPOReportData(campaign, period, periodAgo);
         }
 
         public async Task<IEnumerable<OfferConversionRateData>> QueryConversionRateReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11)

@@ -230,6 +230,21 @@ namespace SignalBox.Web.Controllers
 
             return response;
         }
+        /// <summary>Get the Average Revenue per Offer report.</summary>
+        [HttpGet("{id}/PerformanceReport")]
+        public async Task<PerformanceReportDto> GetPerformanceReport(string id, bool? useInternalId = null)
+        {
+            var campaign = await base.GetResource(id, useInternalId);
+            var data = await offerWorkflow.QueryPerformanceReportData(campaign, DateTimePeriod.Weekly, 11); // 12 weeks ago minus 1 since 0 is current week
+            var response = new PerformanceReportDto
+            {
+                CampaignId = campaign.Id,
+                Type = DateTimePeriod.Weekly,
+                Data = data
+            };
+
+            return response;
+        }
 
         /// <summary>Get the Offer Conversion Rate report.</summary>
         [HttpGet("{id}/ConversionRateReport")]

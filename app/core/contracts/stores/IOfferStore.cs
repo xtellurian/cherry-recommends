@@ -10,7 +10,7 @@ namespace SignalBox.Core
     {
         Task<EntityResult<Offer>> ReadOfferByRecommendation(ItemsRecommendation recommendation);
         Task<EntityResult<Offer>> ReadOfferByRecommendationCorrelator(long recommendationCorrelatorId);
-        Task<IEnumerable<Offer>> ReadOffersForCustomer(Customer customer);
+        Task<IEnumerable<Offer>> ReadOffersForCustomer(Customer customer, params OfferState[] offerStates);
         /// <summary>
         /// Queries the Average Revenue per Offer report data.
         /// <param name="campaign"></param>

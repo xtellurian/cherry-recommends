@@ -90,7 +90,7 @@ namespace SignalBox.Test.Workflows
             List<FilterSelectAggregateStep> steps = new()
             {
                 new FilterSelectAggregateStep(1, new SelectStep(propertyMatch)),
-                new FilterSelectAggregateStep(2, new AggregateStep(){ AggregationType = aggregationType } )
+                new FilterSelectAggregateStep(2, new AggregateStep() { AggregationType = aggregationType })
             };
 
             var metric = new Metric("metric1", "metric1", MetricValueType.Numeric, MetricScopes.Customer);

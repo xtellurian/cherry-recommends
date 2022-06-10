@@ -33,17 +33,6 @@ namespace SignalBox.Core
             RecommendationCorrelatorId = recommendationCorrelatorId;
         }
 
-        public void AddGoodFeedback()
-        {
-            this.Properties ??= new DynamicPropertyDictionary();
-            this.Properties[FEEDBACK] = 0.8;
-        }
-        public void AddBadFeedback()
-        {
-            this.Properties ??= new DynamicPropertyDictionary();
-            this.Properties[FEEDBACK] = -0.4;
-        }
-
         public string CommonUserId => CustomerId;
         public string CustomerId { get; set; }
         public string EventId { get; set; }

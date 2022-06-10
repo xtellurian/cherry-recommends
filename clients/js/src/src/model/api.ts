@@ -8003,6 +8003,84 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ItemsRecommenders/{id}/PerformanceReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PerformanceReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/PerformanceReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PerformanceReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/PerformanceReport": {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+        query: {
+          useInternalId?: boolean;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PerformanceReportDto"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/ConversionRateReport": {
     get: {
       parameters: {
@@ -13033,6 +13111,13 @@ export interface components {
       customerCount?: number | null;
       businessCount?: number | null;
       recommendationCount?: number;
+    };
+    PerformanceReportDto: {
+      /** Campaign id. */
+      campaignId?: number;
+      type?: components["schemas"]["DateTimePeriod"];
+      /** Data for the ARPO report. */
+      data?: components["schemas"]["OfferMeanGrossRevenue"][] | null;
     };
     PlanTypes: "none" | "freeTrial" | "usage" | "performance" | "enterprise";
     Post: {

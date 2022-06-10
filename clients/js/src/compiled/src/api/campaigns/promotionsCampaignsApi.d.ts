@@ -162,4 +162,6 @@ declare type APVReport = components["schemas"]["APVReportDto"];
 export declare const fetchAPVReportAsync: ({ token, id, }: EntityRequest) => Promise<APVReport>;
 declare type OfferConversionRateReport = components["schemas"]["OfferConversionRateReportDto"];
 export declare const fetchOfferConversionRateReportAsync: ({ token, id, }: EntityRequest) => Promise<OfferConversionRateReport>;
+declare type PerformanceReport = components["schemas"]["PerformanceReportDto"];
+export declare const fetchPerformanceReportAsync: ({ token, id, }: EntityRequest) => Promise<PerformanceReport>;
 export {};

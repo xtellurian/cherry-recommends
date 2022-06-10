@@ -19,5 +19,8 @@ namespace SignalBox.Core
         public int OfferCount { get; set; }
         public int NonBaselineOfferCount { get; set; }
         public int BaselineOfferCount { get; set; }
+
+        // safe possible divide by zero - whole things goes to null then zero
+        public double AdditionalRevenue => (NonBaselineMeanGrossRevenue - BaselineMeanGrossRevenue) * NonBaselineOfferCount;
     }
 }

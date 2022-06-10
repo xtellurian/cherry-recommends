@@ -16,7 +16,12 @@ const ViewAsEvents = ({ trackedUser }) => {
   return (
     <div className="m-2">
       <div className="mb-5">
-        <Navigation to={`/customers/customers/create-event/${trackedUser.id}`}>
+        <Navigation
+          to={{
+            search: null,
+            pathname: `/customers/customers/create-event/${trackedUser.id}`,
+          }}
+        >
           <button className="btn btn-outline-primary float-right">
             Log New Event
           </button>

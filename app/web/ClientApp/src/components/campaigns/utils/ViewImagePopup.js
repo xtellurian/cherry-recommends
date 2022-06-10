@@ -2,7 +2,7 @@ import React from "react";
 import Modal from "react-modal";
 import { Spinner } from "../../molecules/Spinner";
 import { big, closeButton } from "../../molecules/popups/styles";
-import { EmptyState } from "../../molecules";
+import { EmptyState, ExpandableCard } from "../../molecules";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
@@ -47,13 +47,15 @@ export const DisplayReportImage = ({ useReportImageBlobUrl, id }) => {
   const reportImgBlob = useReportImageBlobUrl({ id });
   return (
     <div className="m-2">
-      {reportImgBlob.loading && <Spinner>Loading Image</Spinner>}
-      {reportImgBlob.url && (
-        <img className="img-fluid" src={reportImgBlob.url} />
-      )}
-      {!reportImgBlob.loading && !reportImgBlob.url && (
-        <EmptyState>Report has not been generated.</EmptyState>
-      )}
+      <ExpandableCard label="Custom Reports">
+        {reportImgBlob.loading && <Spinner>Loading Image</Spinner>}
+        {reportImgBlob.url && (
+          <img className="img-fluid" src={reportImgBlob.url} />
+        )}
+        {!reportImgBlob.loading && !reportImgBlob.url && (
+          <EmptyState>Report has not been generated.</EmptyState>
+        )}
+      </ExpandableCard>
     </div>
   );
 };

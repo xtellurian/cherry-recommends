@@ -5,10 +5,16 @@ import {
   useARPOReport,
   useOfferConversionRateReport,
   usePerformance,
+  usePerformanceReport,
   usePromotionsCampaign,
   useReportImageBlobUrl,
 } from "../../../api-hooks/promotionsCampaignsApi";
-import { ErrorCard, Navigation, Spinner } from "../../molecules";
+import {
+  ErrorCard,
+  ExpandableCard,
+  Navigation,
+  Spinner,
+} from "../../molecules";
 import { DisplayReportImage } from "../utils/ViewImagePopup";
 import { PromotionCampaignLayout } from "./PromotionCampaignLayout";
 import {
@@ -21,6 +27,7 @@ import {
 import CampaignARPOChart from "../../molecules/charts/CampaignARPOChart";
 import CampaignConversionRateChart from "../../molecules/charts/CampaignConversionRateChart";
 import CampaignAPVChart from "../../molecules/charts/CampaignAPVChart";
+import CampaignPerformanceChart from "../../molecules/charts/CampaignPerformanceChart";
 
 const PerformanceTableRow = ({ data, itemsById }) => {
   const item = itemsById[data.itemId];
@@ -73,13 +80,14 @@ export const PerformanceTable = ({ reports, itemsById, targetMetric }) => {
   );
 };
 
-const Performance = () => {
+const Reports = () => {
   const { id } = useParams();
   const recommender = usePromotionsCampaign({ id });
   const performance = usePerformance({ id });
   const arpoData = useARPOReport({ id });
   const apvData = useAPVReport({ id });
   const conversionRateData = useOfferConversionRateReport({ id });
+  const performanceReportData = usePerformanceReport({ id });
   return (
     <React.Fragment>
       <PromotionCampaignLayout>
@@ -117,6 +125,11 @@ const Performance = () => {
                 <CampaignConversionRateChart reportData={conversionRateData} />
               </div>
             </div>
+            <div className="row mt-2">
+              <div className="col text-center">
+                <CampaignPerformanceChart reportData={performanceReportData} />
+              </div>
+            </div>
           </React.Fragment>
         )}
       </PromotionCampaignLayout>
@@ -124,4 +137,4 @@ const Performance = () => {
   );
 };
 
-export default Performance;
+export default Reports;

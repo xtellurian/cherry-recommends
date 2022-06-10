@@ -29,10 +29,26 @@ namespace SignalBox.Infrastructure.EntityFramework
             return new EntityResult<Offer>(offer);
         }
 
-        public async Task<IEnumerable<Offer>> ReadOffersForCustomer(Customer customer)
+        public async Task<IEnumerable<Offer>> ReadOffersForCustomer(Customer customer, params OfferState[] offerStates)
         {
-            var results = await QuerySet.Where(_ => _.Recommendation.CustomerId == customer.Id).ToListAsync();
-            return results;
+            if (offerStates.IsNullOrEmpty())
+            {
+                return await QuerySet
+                    .Where(_ => _.Recommendation.CustomerId == customer.Id)
+                    .Include(_ => _.RedeemedPromotion)
+                    .Include(_ => _.Recommendation)
+                    .ThenInclude(_ => _.Items)
+                    .ToListAsync();
+            }
+            else
+            {
+                return await QuerySet
+                    .Where(_ => _.Recommendation.CustomerId == customer.Id && offerStates.Contains(_.State))
+                    .Include(_ => _.RedeemedPromotion)
+                    .Include(_ => _.Recommendation)
+                    .ThenInclude(_ => _.Items)
+                    .ToListAsync();
+            }
         }
 
         public async Task<IEnumerable<OfferMeanGrossRevenue>> QueryARPOReportData(PromotionsCampaign campaign, DateTimePeriod period, DateTimeOffset startDate)
