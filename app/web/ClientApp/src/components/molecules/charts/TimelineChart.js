@@ -25,7 +25,13 @@ const defaultToLocaleDateStringOptions = {
   day: "numeric",
   month: "short",
 };
-const defaultLineColors = ["#e5008a", "#280938", "#cc047c", "#00b6bf"];
+const defaultLineColors = [
+  "#e5008a",
+  "#00dae5",
+  "#280938",
+  "#cc047c",
+  "#00b6bf",
+];
 const TimelineChart = ({
   containerWidth,
   containerHeight,

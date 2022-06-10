@@ -8,7 +8,6 @@ const CampaignAPVChart = ({ reportData }) => {
     return {
       timestamp: v.endDate,
       Overall: v.meanGrossRevenue.toFixed(2),
-      Personalised: v.nonBaselineMeanGrossRevenue.toFixed(2),
       Control: v.baselineMeanGrossRevenue.toFixed(2),
     };
   });

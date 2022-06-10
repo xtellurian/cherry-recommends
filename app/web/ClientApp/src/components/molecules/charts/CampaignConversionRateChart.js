@@ -8,7 +8,6 @@ const CampaignConversionRateChart = ({ reportData }) => {
     return {
       timestamp: v.endDate,
       Overall: (v.conversionRate * 100).toFixed(2),
-      Personalised: (v.nonBaselineConversionRate * 100).toFixed(2),
       Control: (v.baselineConversionRate * 100).toFixed(2),
     };
   });
