@@ -46,16 +46,14 @@ export const ViewReportImagePopup = ({
 export const DisplayReportImage = ({ useReportImageBlobUrl, id }) => {
   const reportImgBlob = useReportImageBlobUrl({ id });
   return (
-    <div className="m-2">
-      <ExpandableCard label="Custom Reports">
-        {reportImgBlob.loading && <Spinner>Loading Image</Spinner>}
-        {reportImgBlob.url && (
-          <img className="img-fluid" src={reportImgBlob.url} />
-        )}
-        {!reportImgBlob.loading && !reportImgBlob.url && (
-          <EmptyState>Report has not been generated.</EmptyState>
-        )}
-      </ExpandableCard>
-    </div>
+    <ExpandableCard label="Custom Reports">
+      {reportImgBlob.loading && <Spinner>Loading Image</Spinner>}
+      {reportImgBlob.url && (
+        <img className="img-fluid" src={reportImgBlob.url} />
+      )}
+      {!reportImgBlob.loading && !reportImgBlob.url && (
+        <EmptyState>Report has not been generated.</EmptyState>
+      )}
+    </ExpandableCard>
   );
 };

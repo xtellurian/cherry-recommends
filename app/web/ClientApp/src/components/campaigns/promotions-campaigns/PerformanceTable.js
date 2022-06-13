@@ -43,14 +43,9 @@ const PerformanceTableRow = ({ data, itemsById }) => {
           {item.name}
         </Navigation>
       </Cell>
-      <Cell>{data.targetMetricSum}</Cell>
       <Cell>{data.customerCount}</Cell>
       <Cell>{data.businessCount}</Cell>
       <Cell>{data.recommendationCount}</Cell>
-      <Cell>
-        {Math.round((100 * data.targetMetricSum) / data.recommendationCount) /
-          100}
-      </Cell>
     </TableRow>
   );
 };
@@ -62,14 +57,7 @@ export const PerformanceTable = ({ reports, itemsById, targetMetric }) => {
   return (
     <Table>
       <TableHead
-        headings={[
-          "Promotion",
-          `Sum ${targetMetricName}`,
-          "Customers",
-          "Businesses",
-          "Recommendations",
-          `Sum ${targetMetricName} / # Recommendations`,
-        ]}
+        headings={["Promotion", "Customers", "Businesses", "Recommendations"]}
       />
       <TableBody>
         {reports.map((r, i) => (
@@ -102,33 +90,31 @@ const Reports = () => {
         )}
         {!recommender.loading && !recommender.error && (
           <React.Fragment>
-            <div className="row">
-              <div className="col text-center">
-                <DisplayReportImage
-                  id={id}
-                  useReportImageBlobUrl={useReportImageBlobUrl}
-                />
-              </div>
+            <div className="mt-2">
+              <DisplayReportImage
+                id={id}
+                useReportImageBlobUrl={useReportImageBlobUrl}
+              />
             </div>
-            <div className="row mt-2">
-              <div className="col text-center">
+            <div className="mt-2">
+              <ExpandableCard label="Average Revenue per Offer">
                 <CampaignARPOChart reportData={arpoData} />
-              </div>
+              </ExpandableCard>
             </div>
-            <div className="row mt-2">
-              <div className="col text-center">
+            <div className="mt-2">
+              <ExpandableCard label="Average Basket Size">
                 <CampaignAPVChart reportData={apvData} />
-              </div>
+              </ExpandableCard>
             </div>
-            <div className="row mt-2">
-              <div className="col text-center">
+            <div className="mt-2">
+              <ExpandableCard label="Conversion Rate">
                 <CampaignConversionRateChart reportData={conversionRateData} />
-              </div>
+              </ExpandableCard>
             </div>
-            <div className="row mt-2">
-              <div className="col text-center">
+            <div className="mt-2">
+              <ExpandableCard label="Additional Revenue">
                 <CampaignPerformanceChart reportData={performanceReportData} />
-              </div>
+              </ExpandableCard>
             </div>
           </React.Fragment>
         )}

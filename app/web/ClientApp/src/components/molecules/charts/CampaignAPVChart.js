@@ -20,7 +20,7 @@ const CampaignAPVChart = ({ reportData }) => {
           <Chart
             containerHeight={300}
             data={chartData}
-            yAxisLabel="Average basket size ($)"
+            yAxisLabel="Average Basket Size ($)"
             xAxisLabel="Week ending on"
             yAxisDomain={[0, "auto"]}
           />
