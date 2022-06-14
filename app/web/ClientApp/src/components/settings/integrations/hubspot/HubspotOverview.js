@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useHubspotAccount } from "../../../../api-hooks/hubspotApi";
+import { Navigation } from "../../../molecules";
 
 export const HubspotOverview = ({ integratedSystem }) => {
   const hubspotAccount = useHubspotAccount({ id: integratedSystem.id });
@@ -13,7 +13,7 @@ export const HubspotOverview = ({ integratedSystem }) => {
         )}
       </div>
       <div className="col">
-        <Link
+        <Navigation
           to={`/settings/integrations/hubspotconnector?state=${integratedSystem.id}`}
         >
           <button
@@ -22,7 +22,7 @@ export const HubspotOverview = ({ integratedSystem }) => {
           >
             Connect to Hubspot
           </button>
-        </Link>
+        </Navigation>
       </div>
     </div>
   );
