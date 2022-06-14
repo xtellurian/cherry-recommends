@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220613070222_develop_webchannel_storagekey")]
+    partial class develop_webchannel_storagekey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1518,11 +1520,29 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.OfferConversionRateData", b =>
                 {
+                    b.Property<double>("BaselineConversionRate")
+                        .HasColumnType("float");
+
+                    b.Property<int>("BaselineCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BaselineRedeemedCount")
+                        .HasColumnType("int");
+
                     b.Property<double>("ConversionRate")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<double>("NonBaselineConversionRate")
+                        .HasColumnType("float");
+
+                    b.Property<int>("NonBaselineCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NonBaselineRedeemedCount")
+                        .HasColumnType("int");
 
                     b.Property<int>("RedeemedCount")
                         .HasColumnType("int");
@@ -1538,8 +1558,14 @@ namespace sqlserver.SignalBox
 
             modelBuilder.Entity("SignalBox.Core.OfferMeanGrossRevenue", b =>
                 {
+                    b.Property<double>("BaselineMeanGrossRevenue")
+                        .HasColumnType("float");
+
                     b.Property<int>("BaselineOfferCount")
                         .HasColumnType("int");
+
+                    b.Property<double>("BaselineTotalGrossRevenue")
+                        .HasColumnType("float");
 
                     b.Property<int>("DistinctCustomerCount")
                         .HasColumnType("int");
@@ -1547,10 +1573,16 @@ namespace sqlserver.SignalBox
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("MeanBaselineGrossRevenue")
+                    b.Property<double>("MeanGrossRevenue")
                         .HasColumnType("float");
 
-                    b.Property<double>("MeanGrossRevenue")
+                    b.Property<double>("NonBaselineMeanGrossRevenue")
+                        .HasColumnType("float");
+
+                    b.Property<int>("NonBaselineOfferCount")
+                        .HasColumnType("int");
+
+                    b.Property<double>("NonBaselineTotalGrossRevenue")
                         .HasColumnType("float");
 
                     b.Property<int>("OfferCount")
@@ -1558,9 +1590,6 @@ namespace sqlserver.SignalBox
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<double>("TotalBaselineGrossRevenue")
-                        .HasColumnType("float");
 
                     b.Property<double>("TotalGrossRevenue")
                         .HasColumnType("float");

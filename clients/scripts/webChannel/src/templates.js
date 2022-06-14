@@ -1,10 +1,7 @@
 import { events } from "cherry.ai";
-import {
-  emailValidator,
-  generateId,
-  setCherrySession,
-  getCherrySession,
-} from "./utilities";
+
+import { emailValidator, generateId } from "./utilities";
+import { setCherryStorageData, getCherryStorageData } from "./storage";
 import { storageKeys } from "./constants";
 
 export const showEmailPopup = ({ header = "", subheader = "" }) => {
@@ -43,7 +40,7 @@ export const showEmailPopup = ({ header = "", subheader = "" }) => {
   const errorMessage = document.getElementById("cherry-error-message");
 
   closeIconEl.addEventListener("click", () => {
-    setCherrySession(storageKeys.HIDDEN, true);
+    setCherryStorageData({ key: storageKeys.HIDDEN, value: true });
     modalEl.style.display = "none";
   });
 
@@ -69,7 +66,7 @@ export const showEmailPopup = ({ header = "", subheader = "" }) => {
       .createEventsAsync({
         events: [
           {
-            commonUserId: getCherrySession(storageKeys.ID),
+            commonUserId: getCherryStorageData({ key: storageKeys.ID }),
             eventId: generateId(),
             kind: "identify",
             eventType: "Customer name and email update",

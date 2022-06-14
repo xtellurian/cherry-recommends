@@ -29907,6 +29907,10 @@
           "customerIdPrefix": {
             "type": "string",
             "nullable": true
+          },
+          "storageType": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

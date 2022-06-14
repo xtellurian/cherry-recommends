@@ -80,11 +80,11 @@ namespace SignalBox.Core.Workflows
             return channel;
         }
 
-        public async Task<ChannelBase> UpdateWebChannelProperties(ChannelBase channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, string popupHeader = "", string popupSubheader = "", long? recommenderId = null, string customerIdPrefix = "")
+        public async Task<ChannelBase> UpdateWebChannelProperties(ChannelBase channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, string popupHeader = "", string popupSubheader = "", long? recommenderId = null, string customerIdPrefix = "", string storageType = "")
         {
             if (channel is WebChannel webChannel)
             {
-                return await UpdateWebChannelProperties(webChannel, host, popupAskForEmail, popupDelay, popupHeader, popupSubheader, recommenderId, customerIdPrefix);
+                return await UpdateWebChannelProperties(webChannel, host, popupAskForEmail, popupDelay, popupHeader, popupSubheader, recommenderId, customerIdPrefix, storageType);
             }
             else
             {
@@ -104,15 +104,16 @@ namespace SignalBox.Core.Workflows
             return channel;
         }
 
-        private async Task<WebChannel> UpdateWebChannelProperties(WebChannel channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, string popupHeader = "", string popupSubheader = "", long? recommenderId = null, string customerIdPrefix = "")
+        private async Task<WebChannel> UpdateWebChannelProperties(WebChannel channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, string popupHeader = "", string popupSubheader = "", long? recommenderId = null, string customerIdPrefix = "", string storageType = "")
         {
             channel.Host = host;
             channel.PopupAskForEmail = popupAskForEmail ?? channel.PopupAskForEmail;
             channel.PopupDelay = popupDelay ?? channel.PopupDelay;
             channel.PopupHeader = popupHeader ?? channel.PopupHeader;
             channel.PopupSubheader = popupSubheader ?? channel.PopupSubheader;
-            channel.RecommenderIdToInvoke = recommenderId ?? channel.RecommenderIdToInvoke;
+            channel.RecommenderIdToInvoke = recommenderId;
             channel.CustomerIdPrefix = customerIdPrefix ?? channel.CustomerIdPrefix;
+            channel.StorageType = storageType ?? channel.StorageType;
             await webChannelStore.Context.SaveChanges();
             return channel;
         }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using SignalBox.Core;
 using SignalBox.Core.Workflows;
 using SignalBox.Web.Dto;
+using Microsoft.AspNetCore.Cors;
 
 namespace SignalBox.Web.Controllers
 {
@@ -37,6 +38,8 @@ namespace SignalBox.Web.Controllers
             this.segmentStore = segmentStore;
         }
 
+        [AllowApiKey]
+        [EnableCors(CorsPolicies.WebApiKeyPolicy)]
         public override async Task<Customer> GetResource(string id, bool? useInternalId = null)
         {
             if ((useInternalId == null || useInternalId == true) && long.TryParse(id, out var internalId))
@@ -81,6 +84,8 @@ namespace SignalBox.Web.Controllers
 
         /// <summary>Adds a new Customer.</summary>
         [HttpPost]
+        [AllowApiKey]
+        [EnableCors(CorsPolicies.WebApiKeyPolicy)]
         public async Task<object> CreateOrUpdate([FromBody] CreateOrUpdateCustomerDto dto)
         {
             return await workflows.CreateOrUpdate(new PendingCustomer(dto.GetCustomerId())

@@ -7,7 +7,6 @@ import {
 } from "../../api/channelsApi";
 import { useNavigation } from "../../utility/useNavigation";
 import {
-  InputGroup,
   TextInput,
   createStartsWithValidator,
   numericValidator,
@@ -20,6 +19,7 @@ import { AsyncButton, ErrorCard, Selector, Typography } from "../molecules";
 import { ToggleSwitch } from "../molecules/ToggleSwitch";
 import { useTenantName } from "../tenants/PathTenantProvider";
 import { EmailConfiguration } from "./EmailConfiguration";
+import { FieldLabel } from "../molecules/FieldLabel";
 
 const WebhookConfiguration = ({ channel }) => {
   const token = useAccessToken();
@@ -55,15 +55,13 @@ const WebhookConfiguration = ({ channel }) => {
   return (
     <React.Fragment>
       {error ? <ErrorCard error={error} /> : null}
-      <InputGroup>
-        <TextInput
-          label="Webhook Endpoint"
-          placeholder="https://..."
-          value={endpoint}
-          validator={createStartsWithValidator("http")}
-          onChange={(e) => setEndpoint(e.target.value)}
-        />
-      </InputGroup>
+      <TextInput
+        label="Webhook Endpoint"
+        placeholder="https://..."
+        value={endpoint}
+        validator={createStartsWithValidator("http")}
+        onChange={(e) => setEndpoint(e.target.value)}
+      />
 
       <AsyncButton
         className="float-right mt-3 btn btn-primary"
@@ -76,6 +74,8 @@ const WebhookConfiguration = ({ channel }) => {
     </React.Fragment>
   );
 };
+
+const storageTypes = ["localStorage", "sessionStorage"];
 
 const WebConfiguration = ({ channel }) => {
   const token = useAccessToken();
@@ -90,6 +90,7 @@ const WebConfiguration = ({ channel }) => {
   const [popupDelay, setPopupDelay] = useState("");
   const [selectedRecommenderId, setSelectedRecommenderId] = useState("");
   const [customerIdPrefix, setCustomerIdPrefix] = useState("");
+  const [storageType, setStorageType] = useState("");
 
   const handleSave = () => {
     setError(null);
@@ -105,6 +106,7 @@ const WebConfiguration = ({ channel }) => {
         popupDelay,
         popupHeader,
         popupSubheader,
+        storageType,
       },
     })
       .then(() =>
@@ -114,8 +116,12 @@ const WebConfiguration = ({ channel }) => {
       .finally(() => setSaving(false));
   };
 
-  const handleSelectRecommender = ({ value }) => {
-    setSelectedRecommenderId(value);
+  const handleSelectRecommender = (data) => {
+    setSelectedRecommenderId(data?.value);
+  };
+
+  const handleSelectStorageType = ({ value }) => {
+    setStorageType(value);
   };
 
   const recommenderOptions = useMemo(
@@ -127,12 +133,26 @@ const WebConfiguration = ({ channel }) => {
     [channel]
   );
 
+  const storageTypeOptions = useMemo(
+    () =>
+      storageTypes.map((type) => ({
+        label: type,
+        value: type,
+      })),
+    []
+  );
+
   const selectedRecommenderValue = useMemo(
     () =>
       recommenderOptions.find(
         (option) => option.value === selectedRecommenderId
       ),
     [recommenderOptions, selectedRecommenderId]
+  );
+
+  const selectedStorageTypeValue = useMemo(
+    () => storageTypeOptions.find((option) => option.value === storageType),
+    [storageType, storageTypeOptions]
   );
 
   const jsScriptSnippet = `
@@ -161,6 +181,7 @@ const WebConfiguration = ({ channel }) => {
     setPopupSubheader(channel.popupSubheader || "");
     setSelectedRecommenderId(channel.recommenderIdToInvoke || "");
     setCustomerIdPrefix(channel.customerIdPrefix || "");
+    setStorageType(channel.storageType || "localStorage");
   }, [channel]);
 
   return (
@@ -197,67 +218,65 @@ const WebConfiguration = ({ channel }) => {
       </div>
 
       <div className="ml-1">
-        <div className="mt-3">
-          <ToggleSwitch
-            name="Ask For Email Popup"
-            id="ask-for-email-popup"
-            checked={popupAskForEmail}
-            onChange={() =>
-              setPopupAskForEmail((oldPopupAskForEmail) => !oldPopupAskForEmail)
-            }
-          />
-          <Typography className="ml-1" component="span">
-            Enable popup
-          </Typography>
-        </div>
+        <FieldLabel label="Enable popup">
+          <div className="w-100">
+            <ToggleSwitch
+              name="Ask For Email Popup"
+              id="ask-for-email-popup"
+              checked={popupAskForEmail}
+              onChange={() =>
+                setPopupAskForEmail(
+                  (oldPopupAskForEmail) => !oldPopupAskForEmail
+                )
+              }
+            />
+          </div>
+        </FieldLabel>
 
-        <div className="mt-3">
-          <Typography>Choose a campaign</Typography>
-          <Selector
-            className="mt-1"
-            value={selectedRecommenderValue}
-            options={recommenderOptions}
-            onChange={handleSelectRecommender}
-          />
-        </div>
+        <Selector
+          label="Choose a campaign"
+          value={selectedRecommenderValue}
+          options={recommenderOptions}
+          isClearable={true}
+          onChange={handleSelectRecommender}
+        />
 
-        <InputGroup className="mt-3">
-          <TextInput
-            label="Customer ID Prefix"
-            value={customerIdPrefix}
-            validator={joinValidators([
-              createLengthValidator(3),
-              commonIdFormatValidator,
-              lowercaseOnlyValidator,
-            ])}
-            onChange={(e) => setCustomerIdPrefix(e.target.value)}
-          />
-        </InputGroup>
+        <TextInput
+          label="Customer ID Prefix"
+          value={customerIdPrefix}
+          validator={joinValidators([
+            createLengthValidator(3),
+            commonIdFormatValidator,
+            lowercaseOnlyValidator,
+          ])}
+          onChange={(e) => setCustomerIdPrefix(e.target.value)}
+        />
 
-        <InputGroup className="mt-3">
-          <TextInput
-            label="Popup Delay (in millisecond)"
-            value={popupDelay}
-            validator={numericValidator(true, 100)}
-            onChange={(e) => setPopupDelay(e.target.value)}
-          />
-        </InputGroup>
+        <TextInput
+          label="Popup Delay (in millisecond)"
+          value={popupDelay}
+          validator={numericValidator(true, 100)}
+          onChange={(e) => setPopupDelay(e.target.value)}
+        />
 
-        <InputGroup className="mt-3">
-          <TextInput
-            label="Popup Header"
-            value={popupHeader}
-            onChange={(e) => setPopupHeader(e.target.value)}
-          />
-        </InputGroup>
+        <TextInput
+          label="Popup Header"
+          value={popupHeader}
+          onChange={(e) => setPopupHeader(e.target.value)}
+        />
 
-        <InputGroup className="mt-3">
-          <TextInput
-            label="Popup Subheader"
-            value={popupSubheader}
-            onChange={(e) => setPopupSubheader(e.target.value)}
-          />
-        </InputGroup>
+        <TextInput
+          label="Popup Subheader"
+          value={popupSubheader}
+          onChange={(e) => setPopupSubheader(e.target.value)}
+        />
+
+        <Selector
+          label="Storage Type"
+          value={selectedStorageTypeValue}
+          options={storageTypeOptions}
+          onChange={handleSelectStorageType}
+        />
       </div>
 
       <div className="clearfix">

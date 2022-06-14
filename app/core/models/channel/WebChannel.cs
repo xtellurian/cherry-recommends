@@ -42,6 +42,10 @@ namespace SignalBox.Core
         /// Prefix added to the random customer id
         /// </summary>
         public string CustomerIdPrefix { get; set; }
+        /// <summary>
+        /// Storage type to store the popup data (either localStorage or sessionStorage)
+        /// </summary>
+        public string StorageType { get; set; }
         public override IDictionary<string, object> Properties =>
         new Dictionary<string, object>
         {
@@ -51,7 +55,8 @@ namespace SignalBox.Core
             {"recommenderIdToInvoke", RecommenderIdToInvoke},
             {"popupHeader", PopupHeader},
             {"popupSubheader", PopupSubheader},
-            {"customerIdPrefix", CustomerIdPrefix}
+            {"customerIdPrefix", CustomerIdPrefix},
+            {"storageType", StorageType}
         };
 
 #nullable enable

@@ -10,5 +10,6 @@ namespace SignalBox.Web.Dto
         public string? PopupHeader { get; set; }
         public string? PopupSubheader { get; set; }
         public string? CustomerIdPrefix { get; set; }
+        public string? StorageType { get; set; }
     }
 }
