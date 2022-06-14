@@ -632,7 +632,6 @@ export const setAllPromotionOptimiserWeightsAsync = async ({
     body: weights,
   });
 };
-
 interface SetPromotionOptimiserWeightRequest extends EntityRequest {
   weightId: number;
   weight: number;
@@ -650,6 +649,123 @@ export const setPromotionOptimiserWeightAsync = async ({
     path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Weights/${weightId}`,
     method: "post",
     body: { weight },
+  });
+};
+
+type OptimiserWeights = components["schemas"]["PromotionOptimiserWeight"][];
+
+export const fetchPromotionOptimiserWeightsAsync = async ({
+  token,
+  useInternalId,
+  id,
+}: GetOptimiserWeightsRequest): Promise<OptimiserWeights> => {
+  return await executeFetch({
+    token,
+    query: { useInternalId },
+    path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Weights/`,
+  });
+};
+interface GetOptimiserWeightsRequest extends EntityRequest {
+  segmentId: string | number;
+}
+
+export const fetchPromotionOptimiserSegmentWeightsAsync = async ({
+  token,
+  useInternalId,
+  id,
+  segmentId,
+}: GetOptimiserWeightsRequest): Promise<OptimiserWeights> => {
+  return await executeFetch({
+    token,
+    query: { useInternalId },
+    path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/${segmentId}/Weights/`,
+  });
+};
+
+interface SetPromotionOptimiserSegmentWeightsRequest extends EntityRequest {
+  weights: components["schemas"]["UpdateWeightDto"][];
+  segmentId: string | number;
+}
+export const setPromotionOptimiserSegmentWeightsAsync = async ({
+  token,
+  useInternalId,
+  id,
+  segmentId,
+  weights,
+}: SetPromotionOptimiserSegmentWeightsRequest): Promise<PromotionOptimiser> => {
+  return await executeFetch({
+    token,
+    query: { useInternalId },
+    path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/${segmentId}/Weights/`,
+    method: "post",
+    body: weights,
+  });
+};
+
+interface SetPromotionOptimiserSegmentWeightRequest extends EntityRequest {
+  segmentId: number;
+  weightId: number;
+  weight: number;
+}
+export const setPromotionOptimiserSegmentWeightAsync = async ({
+  token,
+  useInternalId,
+  id,
+  segmentId,
+  weightId,
+  weight,
+}: SetPromotionOptimiserSegmentWeightRequest): Promise<PromotionOptimiser> => {
+  return await executeFetch({
+    token,
+    query: { useInternalId },
+    path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/${segmentId}/Weights/${weightId}`,
+    method: "post",
+    body: { weight },
+  });
+};
+
+export const fetchPromotionOptimiserSegmentsAsync = async ({
+  token,
+  useInternalId,
+  id,
+}: PaginatedEntityRequest) => {
+  return await executeFetch({
+    path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/`,
+    token,
+    query: { useInternalId },
+  });
+};
+
+interface AddPromotionOptimiserSegmentRequest extends EntityRequest {
+  segmentId: string | number;
+}
+export const addPromotionOptimiserSegmentAsync = async ({
+  token,
+  useInternalId,
+  id,
+  segmentId,
+}: AddPromotionOptimiserSegmentRequest): Promise<PromotionOptimiser> => {
+  return await executeFetch({
+    path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/`,
+    token,
+    query: { useInternalId },
+    method: "post",
+    body: { segmentId },
+  });
+};
+
+interface RemovePromotionOptimiserSegmentRequest extends EntityRequest {
+  segmentId: string | number;
+}
+export const removePromotionOptimiserSegmentAsync = async ({
+  token,
+  id,
+  segmentId,
+}: RemovePromotionOptimiserSegmentRequest) => {
+  return await executeFetch({
+    path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/${segmentId}`,
+    token,
+    method: "delete",
   });
 };
 

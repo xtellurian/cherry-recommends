@@ -54,15 +54,15 @@ namespace SignalBox.Web.Controllers
         [HttpGet("{id}")]
         public override async Task<PromotionsCampaign> GetResource(string id, bool? useInternalId = null)
         {
-            var recommender = await base.GetEntity(id, useInternalId);
-            await store.Load(recommender, _ => _.BaselineItem);
-            await store.Load(recommender, _ => _.TargetMetric);
-            await store.Load(recommender, _ => _.Optimiser);
-            await store.LoadMany(recommender, _ => _.Items);
-            return recommender;
+            var campaign = await base.GetEntity(id, useInternalId);
+            await store.Load(campaign, _ => _.BaselineItem);
+            await store.Load(campaign, _ => _.TargetMetric);
+            await store.Load(campaign, _ => _.Optimiser);
+            await store.LoadMany(campaign, _ => _.Items);
+            return campaign;
         }
 
-        /// <summary>Creates a new promotions recommender.</summary>
+        /// <summary>Creates a new promotions campaign.</summary>
         [HttpPost]
         public async Task<PromotionsCampaign> Create(CreatePromotionsCampaign dto, bool? useInternalId = null)
         {
@@ -89,25 +89,25 @@ namespace SignalBox.Web.Controllers
             return r;
         }
 
-        /// <summary>Sets the baseline promotion for the recommender.</summary>
+        /// <summary>Sets the baseline promotion for the campaign.</summary>
         [HttpPost("{id}/DefaultItem")]
         [HttpPost("{id}/BaselineItem")]
         [HttpPost("{id}/BaselinePromotion")]
         public async Task<RecommendableItem> SetBaselineItem(string id, [FromBody] BaselinePromotionDto dto, bool? useInternalId = null)
         {
-            var recommender = await GetEntity(id, useInternalId);
-            return await workflows.SetBaselineItem(recommender, dto.GetPromotionId());
+            var campaign = await GetEntity(id, useInternalId);
+            return await workflows.SetBaselineItem(campaign, dto.GetPromotionId());
         }
 
-        /// <summary>Gets the baseline promotion for the recommender.</summary>
+        /// <summary>Gets the baseline promotion for the campaign.</summary>
         [HttpGet("{id}/DefaultItem")]
         [HttpGet("{id}/BaselineItem")]
         [HttpGet("{id}/BaselinePromotion")]
         public async Task<RecommendableItem> GetBaselineItem(string id, bool? useInternalId = null)
         {
-            var recommender = await GetEntity(id, useInternalId);
-            await store.Load(recommender, _ => _.BaselineItem);
-            return recommender.BaselineItem ?? throw new BadRequestException("Recommender has no baseline promotion");
+            var campaign = await GetEntity(id, useInternalId);
+            await store.Load(campaign, _ => _.BaselineItem);
+            return campaign.BaselineItem ?? throw new BadRequestException("Campaign has no baseline promotion");
         }
 
         /// <summary>Set the backing model information.</summary>
@@ -115,8 +115,8 @@ namespace SignalBox.Web.Controllers
         [HttpPost("{id}/ModelRegistration")]
         public async Task<ModelRegistration> LinkModel(string id, LinkModel dto)
         {
-            var recommender = await base.GetResource(id);
-            return await workflows.LinkRegisteredModel(recommender, dto.ModelId);
+            var campaign = await base.GetResource(id);
+            return await workflows.LinkRegisteredModel(campaign, dto.ModelId);
         }
 
         /// <summary>Get the backing model information.</summary>
@@ -129,15 +129,15 @@ namespace SignalBox.Web.Controllers
 
         }
 
-        /// <summary>Get summary statistics about the recommender.</summary>
+        /// <summary>Get summary statistics about the campaign.</summary>
         [HttpGet("{id}/Statistics")]
         public async Task<CampaignStatistics> GetStatistics(string id, bool? useInternalId = null)
         {
-            var recommender = await base.GetEntity(id, useInternalId);
-            return await workflows.CalculateStatistics(recommender);
+            var campaign = await base.GetEntity(id, useInternalId);
+            return await workflows.CalculateStatistics(campaign);
         }
 
-        /// <summary>Invoke a model with some input. Id is the recommender Id.</summary>
+        /// <summary>Invoke a model with some input. Id is the campaign Id.</summary>
         [HttpPost("{id}/invoke")]
         [AllowApiKey]
         [EnableCors(CorsPolicies.WebApiKeyPolicy)]
@@ -147,7 +147,7 @@ namespace SignalBox.Web.Controllers
             bool? useInternalId = null)
         {
             ValidateInvokationDto(input);
-            var recommender = await base.GetResource(id, useInternalId);
+            var campaign = await base.GetResource(id, useInternalId);
             var convertedInput = new ItemsModelInputDto(input.Arguments)
             {
                 CustomerId = input.GetCustomerId(),
@@ -159,18 +159,18 @@ namespace SignalBox.Web.Controllers
                 throw new BadRequestException($"Promotions must not be set externally");
             }
 
-            var recommendation = await invokationWorkflows.InvokePromotionsCampaign(recommender, convertedInput);
+            var recommendation = await invokationWorkflows.InvokePromotionsCampaign(campaign, convertedInput);
             return new PromotionsRecommendationDto(recommendation);
         }
 
-        /// <summary>Get the latest recommendations made by a recommender.</summary>
+        /// <summary>Get the latest recommendations made by a campaign.</summary>
         [HttpGet("{id}/Recommendations")]
         public async Task<Paginated<ItemsRecommendation>> GetRecommendations(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
         {
             return await workflows.QueryRecommendations(id, p, useInternalId);
         }
 
-        /// <summary>Get a recommendation made by a recommender.</summary>
+        /// <summary>Get a recommendation made by a campaign.</summary>
         [HttpGet("Recommendations/{recommendationId}")]
         public async Task<ItemsRecommendation> GetRecommendation(long recommendationId, bool? useInternalId = null)
         {
@@ -183,11 +183,11 @@ namespace SignalBox.Web.Controllers
             return recommendation;
         }
 
-        /// <summary>Get the offers made by a recommender.</summary>
+        /// <summary>Get the offers made by a campaign.</summary>
         [HttpGet("{id}/Offers")]
         public async Task<Paginated<Offer>> GetOffers(string id, [FromQuery] PaginateRequest p, bool? useInternalId = null)
         {
-            var recommender = await base.GetResource(id, useInternalId);
+            var campaign = await base.GetResource(id, useInternalId);
             string qsOfferState = HttpContext.Request.Query["offerState"].ToString();
             OfferState? state = null;
 
@@ -196,7 +196,7 @@ namespace SignalBox.Web.Controllers
                 state = parsedState;
             };
 
-            return await offerWorkflow.QueryOffers(recommender, p, state);
+            return await offerWorkflow.QueryOffers(campaign, p, state);
         }
 
         /// <summary>Get the Average Revenue per Offer report.</summary>
@@ -270,15 +270,15 @@ namespace SignalBox.Web.Controllers
             return await workflows.QueryItems(p, id, useInternalId);
         }
 
-        /// <summary>Get the promotions associated with a recommender.</summary>
+        /// <summary>Get the promotions associated with a campaign.</summary>
         [HttpPost("{id}/Items")]
         [HttpPost("{id}/Promotions")]
         public async Task<RecommendableItem> AddItem(string id, [FromBody] AddPromotionDto dto, bool? useInternalId = null)
         {
-            var recommender = await GetEntity(id, useInternalId);
+            var campaign = await GetEntity(id, useInternalId);
             if (dto.Id.HasValue)
             {
-                return await workflows.AddItem(recommender, dto.Id.Value, useInternalId);
+                return await workflows.AddItem(campaign, dto.Id.Value, useInternalId);
             }
             else if (string.IsNullOrEmpty(dto.CommonId))
             {
@@ -286,15 +286,15 @@ namespace SignalBox.Web.Controllers
             }
             else
             {
-                return await workflows.AddItem(recommender, dto.CommonId, useInternalId);
+                return await workflows.AddItem(campaign, dto.CommonId, useInternalId);
             }
         }
 
-        /// <summary>Get the performance report of a recommender.</summary>
+        /// <summary>Get the performance report of a campaign.</summary>
         [HttpGet("{id}/Performance/{reportId}")]
         public async Task<ItemsRecommenderPerformanceReport> GetPerformanceReport(string id, string reportId, bool? useInternalId = null)
         {
-            var recommender = await GetEntity(id, useInternalId);
+            var campaign = await GetEntity(id, useInternalId);
             if (reportId == "latest")
             {
                 return await performanceWorkflows.GetOrCalculateLatestPerfomance(id, useInternalId);
@@ -302,9 +302,9 @@ namespace SignalBox.Web.Controllers
             else if (long.TryParse(reportId, out var reportInternalId))
             {
                 var report = await performanceWorkflows.PerformanceReportStore.Read(reportInternalId);
-                if (report.RecommenderId != recommender.Id)
+                if (report.RecommenderId != campaign.Id)
                 {
-                    throw new EntityNotFoundException(typeof(ItemsRecommenderPerformanceReport), reportId, "Report is not for selected recommender");
+                    throw new EntityNotFoundException(typeof(ItemsRecommenderPerformanceReport), reportId, "Report is not for selected campaign");
                 }
                 else
                 {
@@ -317,23 +317,23 @@ namespace SignalBox.Web.Controllers
             }
         }
 
-        /// <summary>Sets the UseOptimiser property of the Recommender.</summary>
+        /// <summary>Sets the UseOptimiser property of the campaign.</summary>
         [HttpPost("{id}/UseOptimiser")]
         public async Task<PromotionsCampaign> SetUseOptimiser(string id, [FromBody] UseOptimiserDto dto, bool? useInternalId = null)
         {
-            var recommender = await store.GetEntity(id, useInternalId);
-            recommender.UseOptimiser = dto.UseOptimiser;
+            var campaign = await store.GetEntity(id, useInternalId);
+            campaign.UseOptimiser = dto.UseOptimiser;
             await store.Context.SaveChanges();
-            return recommender;
+            return campaign;
         }
 
-        /// <summary>Remove a promotion association with a recommender.</summary>
+        /// <summary>Remove a promotion association with a campaign.</summary>
         [HttpDelete("{id}/Items/{itemId}")]
         [HttpDelete("{id}/Promotions/{itemId}")]
         public async Task<RecommendableItem> RemoveItem(string id, string itemId, bool? useInternalId = null)
         {
-            var recommender = await GetEntity(id, useInternalId);
-            return await workflows.RemoveItem(recommender, itemId, useInternalId);
+            var campaign = await GetEntity(id, useInternalId);
+            return await workflows.RemoveItem(campaign, itemId, useInternalId);
         }
 
         protected override Task<(bool, string)> CanDelete(PromotionsCampaign entity)

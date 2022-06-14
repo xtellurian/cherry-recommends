@@ -22,6 +22,7 @@ namespace SignalBox.Core.Workflows
         private readonly IAudienceStore audienceStore;
         private readonly IInternalOptimiserClientFactory optimiserClientFactory;
         private readonly IDiscountCodeWorkflow discountCodeWorkflow;
+        private readonly ICustomerStore customerStore;
         private readonly IOfferStore offerStore;
 
         public PromotionsCampaignInvokationWorkflows(ILogger<PromotionsCampaignInvokationWorkflows> logger,
@@ -52,6 +53,7 @@ namespace SignalBox.Core.Workflows
             this.offerStore = storeCollection.ResolveStore<IOfferStore, Offer>();
             this.optimiserClientFactory = optimiserClientFactory;
             this.discountCodeWorkflow = discountCodeWorkflow;
+            this.customerStore = storeCollection.ResolveStore<ICustomerStore, Customer>();
         }
 
         public async Task<ItemsRecommendation> InvokePromotionsCampaign(
@@ -150,6 +152,11 @@ namespace SignalBox.Core.Workflows
                 }
 
                 var segmentRule = await CheckArgumentRulesForSegment(recommender, context);
+                // try to load customer segments for optimiser
+                if (context.Customer != null && context.Customer.Segments == null)
+                {
+                    await customerStore.LoadMany(context.Customer, _ => _.Segments);
+                }
 
                 // load the metrics for the invokation
                 input.Metrics = await base.GetMetrics(recommender, context);

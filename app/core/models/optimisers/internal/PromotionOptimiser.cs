@@ -22,6 +22,6 @@ namespace SignalBox.Core.Optimisers
         /// <summary>
         /// These are configured as an Owned Entity collection in the database.
         /// </summary>
-        public ICollection<PromotionOptimiserWeight> Weights { get; set; } = null!;
+        public ICollection<PromotionOptimiserWeight> Weights { get; set; } = new List<PromotionOptimiserWeight>();
     }
 }

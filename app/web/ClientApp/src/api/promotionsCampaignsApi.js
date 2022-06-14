@@ -89,12 +89,28 @@ export const fetchPerformanceAsync = promotionsCampaigns.fetchPerformanceAsync;
 export const fetchAudienceAsync = promotionsCampaigns.fetchAudienceAsync;
 
 export const setUseOptimiserAsync = promotionsCampaigns.setUseOptimiserAsync;
+export const fetchPromotionOptimisersAsync =
+  promotionsCampaigns.fetchPromotionOptimisersAsync;
 export const fetchPromotionOptimiserAsync =
   promotionsCampaigns.fetchPromotionOptimiserAsync;
 export const setPromotionOptimiserWeightAsync =
   promotionsCampaigns.setPromotionOptimiserWeightAsync;
 export const setAllPromotionOptimiserWeightsAsync =
   promotionsCampaigns.setAllPromotionOptimiserWeightsAsync;
+export const fetchPromotionOptimiserWeightsAsync =
+  promotionsCampaigns.fetchPromotionOptimiserWeightsAsync;
+export const fetchPromotionOptimiserSegmentWeightsAsync =
+  promotionsCampaigns.fetchPromotionOptimiserSegmentWeightsAsync;
+export const setPromotionOptimiserSegmentWeightsAsync =
+  promotionsCampaigns.setPromotionOptimiserSegmentWeightsAsync;
+export const setPromotionOptimiserSegmentWeightAsync =
+  promotionsCampaigns.setPromotionOptimiserSegmentWeightAsync;
+export const fetchPromotionOptimiserSegmentsAsync =
+  promotionsCampaigns.fetchPromotionOptimiserSegmentsAsync;
+export const addPromotionOptimiserSegmentAsync =
+  promotionsCampaigns.addPromotionOptimiserSegmentAsync;
+export const removePromotionOptimiserSegmentAsync =
+  promotionsCampaigns.removePromotionOptimiserSegmentAsync;
 
 export const fetchCampaignChannelsAsync =
   promotionsCampaigns.fetchCampaignChannelsAsync;

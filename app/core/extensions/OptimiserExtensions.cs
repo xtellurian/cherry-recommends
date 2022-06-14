@@ -7,7 +7,6 @@ using SignalBox.Core.Campaigns;
 namespace SignalBox.Core
 {
 #nullable enable
-    // TODO: make this class Segment aware, i.e. deal with different segment distributions
     public static class OptimiserExtensions
     {
         /// <summary>
@@ -17,7 +16,7 @@ namespace SignalBox.Core
         /// <param name="recommender"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static PromotionOptimiser InitialiseWeights(this PromotionOptimiser optimiser, PromotionsCampaign recommender)
+        public static PromotionOptimiser InitialiseWeights(this PromotionOptimiser optimiser, PromotionsCampaign recommender, long? segmentId = null)
         {
             if (recommender.Items.IsNullOrEmpty())
             {
@@ -25,7 +24,7 @@ namespace SignalBox.Core
             }
 
             var initialWeight = 1 / (double)recommender.Items.Count();
-            var weights = recommender.Items.Select(i => new PromotionOptimiserWeight(i, optimiser, initialWeight)).ToList(); // ! needs to be a list.
+            var weights = recommender.Items.Select(i => new PromotionOptimiserWeight(i, optimiser, initialWeight, segmentId)).ToList(); // ! needs to be a list.
             if (recommender.BaselineItemId != null)
             {
                 // set the baseline item 1 to begin with, and we'll renormalise straight away.
@@ -33,7 +32,11 @@ namespace SignalBox.Core
                 baselinePromoWeight.Weight = 1;
             }
 
-            optimiser.Weights = weights.Normalize().ToList();
+            // create list for the original weights if any
+            var allWeights = optimiser.Weights.ToList();
+            // add the new weights 
+            allWeights.AddRange(weights.Normalize());
+            optimiser.Weights = allWeights;
             return optimiser;
         }
 
@@ -53,21 +56,34 @@ namespace SignalBox.Core
             var initialWeight = 1 / (double)recommender.Items.Count();
             // remove any weights that aren't in the recommender any more
             var promoIdsInRecommender = recommender.Items.Select(_ => _.Id);
-            var existingPromotionIds = optimiser.Weights.Select(_ => _.PromotionId);
+            var existingPromotionIds = optimiser.Weights.Select(_ => _.PromotionId).Distinct();
             // keep weights that are in the recommender.
             optimiser.Weights = optimiser.Weights.Where(_ => promoIdsInRecommender.Contains(_.PromotionId)).ToList();
-            // calculate new weights
-            var newWeights = recommender.Items
-                .Where(_ => !existingPromotionIds.Contains(_.Id))
-                .Select(i => new PromotionOptimiserWeight(i, optimiser, initialWeight));
 
-            foreach (var n in newWeights)
+            // get all segment Ids
+            var segmentIds = optimiser.Weights
+               .Select(_ => _.SegmentId).Distinct().ToList();
+
+            // add any new promotions to all segment weights
+            foreach (var segmentId in segmentIds)
             {
-                optimiser.Weights.Add(n);
+                // calculate new weights
+                var newWeights = recommender.Items
+                    .Where(_ => !existingPromotionIds.Contains(_.Id))
+                    .Select(i => new PromotionOptimiserWeight(i, optimiser, initialWeight, segmentId));
+
+                foreach (var n in newWeights)
+                {
+                    optimiser.Weights.Add(n);
+                }
+
+                if (optimiser.Weights.Any(_ => _.SegmentId == segmentId))
+                {
+                    // get weights associated with the segment Id then normalize
+                    var distributionWeights = optimiser.Weights.Where(_ => _.SegmentId == segmentId).ToList();
+                    distributionWeights.Normalize();
+                }
             }
-
-            optimiser.Weights = optimiser.Weights.Normalize().ToList();
-
             return optimiser;
         }
 
@@ -84,6 +100,27 @@ namespace SignalBox.Core
                 w.Weight /= sum;
             }
             return weights;
+        }
+
+        /// <summary>
+        /// Removes weights on the optimiser.
+        /// </summary>
+        /// <param name="optimiser"></param>
+        /// <param name="campaign"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static PromotionOptimiser RemoveWeights(this PromotionOptimiser optimiser, PromotionsCampaign campaign, long segmentId)
+        {
+            if (campaign.Items.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException(nameof(campaign.Items));
+            }
+
+            var allWeights = optimiser.Weights.ToList();
+            allWeights.RemoveAll(_ => _.SegmentId == segmentId);
+
+            optimiser.Weights = allWeights;
+            return optimiser;
         }
     }
 }

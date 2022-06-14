@@ -26,6 +26,7 @@ import {
   fetchOfferConversionRateReportAsync,
   fetchAPVReportAsync,
   fetchPerformanceReportAsync,
+  fetchPromotionOptimiserSegmentsAsync,
 } from "../api/promotionsCampaignsApi";
 import { useAccessToken } from "./token";
 import { usePagination } from "../utility/utility";
@@ -388,6 +389,24 @@ export const useOptimiser = ({ id }) => {
         .catch((error) => setState({ error }));
     }
   }, [token, id]);
+
+  return state;
+};
+
+export const useOptimiserSegments = ({ id, optimiser, trigger }) => {
+  const token = useAccessToken();
+  const [state, setState] = React.useState({ loading: true });
+  React.useEffect(() => {
+    setState({ loading: true });
+    if (token && id && optimiser) {
+      fetchPromotionOptimiserSegmentsAsync({
+        token,
+        id,
+      })
+        .then(setState)
+        .catch((error) => setState({ error }));
+    }
+  }, [token, id, trigger]);
 
   return state;
 };

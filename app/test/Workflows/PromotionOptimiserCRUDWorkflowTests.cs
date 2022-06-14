@@ -36,7 +36,11 @@ namespace SignalBox.Test.Workflows
             mockPromotionOptimiserStore.SetupStoreCreate<Mock<IPromotionOptimiserStore>, IPromotionOptimiserStore, PromotionOptimiser>();
             mockPromotionOptimiserStore.WithContext<Mock<IPromotionOptimiserStore>, IPromotionOptimiserStore, PromotionOptimiser>(mockStorageContext.Object);
             var mockItemsRecommenderStore = new Mock<IPromotionsCampaignStore>();
-            var sut = new PromotionOptimiserCRUDWorkflow(mockPromotionOptimiserStore.Object, mockItemsRecommenderStore.Object);
+            var mockStoreCollection = new MockStoreCollection()
+               .With<IPromotionOptimiserStore, PromotionOptimiser>(mockPromotionOptimiserStore)
+               .With<IPromotionsCampaignStore, PromotionsCampaign>(mockItemsRecommenderStore);
+
+            var sut = new PromotionOptimiserCRUDWorkflow(mockStoreCollection);
 
             // act
             var output = await sut.Create(recommender);

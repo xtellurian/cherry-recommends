@@ -34,6 +34,11 @@ namespace SignalBox.Infrastructure.EntityFramework
                         .WithMany()
                         .HasForeignKey(_ => _.PromotionId)
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    weight
+                        .HasIndex(_ => new { _.OptimiserId, _.SegmentId, _.PromotionId })
+                        .IsUnique()
+                        .HasFilter(null); // allow null SegmentId values to participate in uniqueness
                 });
 
         }

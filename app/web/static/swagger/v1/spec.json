@@ -12223,6 +12223,53 @@
       }
     },
     "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Weights": {
+      "get": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PromotionOptimiserWeight"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "PromotionOptimiser"
@@ -12297,6 +12344,53 @@
       }
     },
     "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Weights": {
+      "get": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PromotionOptimiserWeight"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "PromotionOptimiser"
@@ -12456,6 +12550,778 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "weightId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWeightDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWeightDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWeightDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionOptimiser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Segments": {
+      "get": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SegmentPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOptimiserSegmentDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOptimiserSegmentDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOptimiserSegmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionOptimiser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Segments": {
+      "get": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SegmentPaginated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOptimiserSegmentDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOptimiserSegmentDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOptimiserSegmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionOptimiser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Segments/{segmentId}": {
+      "delete": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "segmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Segments/{segmentId}": {
+      "delete": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "segmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Segments/{segmentId}/Weights": {
+      "get": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "segmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PromotionOptimiserWeight"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "segmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateWeightDto"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateWeightDto"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateWeightDto"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionOptimiser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Segments/{segmentId}/Weights": {
+      "get": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "segmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PromotionOptimiserWeight"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "segmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateWeightDto"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateWeightDto"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateWeightDto"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionOptimiser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Segments/{segmentId}/Weights/{weightId}": {
+      "post": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "segmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "weightId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "useInternalId",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWeightDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWeightDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWeightDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionOptimiser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Segments/{segmentId}/Weights/{weightId}": {
+      "post": {
+        "tags": [
+          "PromotionOptimiser"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "segmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -13649,7 +14515,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Creates a new promotions recommender.",
+        "summary": "Creates a new promotions campaign.",
         "parameters": [
           {
             "name": "useInternalId",
@@ -13779,7 +14645,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Creates a new promotions recommender.",
+        "summary": "Creates a new promotions campaign.",
         "parameters": [
           {
             "name": "useInternalId",
@@ -13909,7 +14775,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Creates a new promotions recommender.",
+        "summary": "Creates a new promotions campaign.",
         "parameters": [
           {
             "name": "useInternalId",
@@ -14039,7 +14905,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the baseline promotion for the recommender.",
+        "summary": "Sets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14103,7 +14969,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Gets the baseline promotion for the recommender.",
+        "summary": "Gets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14150,7 +15016,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the baseline promotion for the recommender.",
+        "summary": "Sets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14214,7 +15080,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Gets the baseline promotion for the recommender.",
+        "summary": "Gets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14261,7 +15127,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the baseline promotion for the recommender.",
+        "summary": "Sets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14325,7 +15191,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Gets the baseline promotion for the recommender.",
+        "summary": "Gets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14372,7 +15238,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the baseline promotion for the recommender.",
+        "summary": "Sets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14436,7 +15302,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Gets the baseline promotion for the recommender.",
+        "summary": "Gets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14483,7 +15349,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the baseline promotion for the recommender.",
+        "summary": "Sets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14547,7 +15413,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Gets the baseline promotion for the recommender.",
+        "summary": "Gets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14594,7 +15460,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the baseline promotion for the recommender.",
+        "summary": "Sets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14658,7 +15524,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Gets the baseline promotion for the recommender.",
+        "summary": "Gets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14705,7 +15571,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the baseline promotion for the recommender.",
+        "summary": "Sets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14769,7 +15635,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Gets the baseline promotion for the recommender.",
+        "summary": "Gets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14816,7 +15682,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the baseline promotion for the recommender.",
+        "summary": "Sets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14880,7 +15746,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Gets the baseline promotion for the recommender.",
+        "summary": "Gets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14927,7 +15793,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the baseline promotion for the recommender.",
+        "summary": "Sets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -14991,7 +15857,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Gets the baseline promotion for the recommender.",
+        "summary": "Gets the baseline promotion for the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -15158,7 +16024,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get summary statistics about the recommender.",
+        "summary": "Get summary statistics about the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -15205,7 +16071,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get summary statistics about the recommender.",
+        "summary": "Get summary statistics about the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -15252,7 +16118,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get summary statistics about the recommender.",
+        "summary": "Get summary statistics about the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -15299,7 +16165,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Invoke a model with some input. Id is the recommender Id.",
+        "summary": "Invoke a model with some input. Id is the campaign Id.",
         "parameters": [
           {
             "name": "id",
@@ -15365,7 +16231,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Invoke a model with some input. Id is the recommender Id.",
+        "summary": "Invoke a model with some input. Id is the campaign Id.",
         "parameters": [
           {
             "name": "id",
@@ -15431,7 +16297,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Invoke a model with some input. Id is the recommender Id.",
+        "summary": "Invoke a model with some input. Id is the campaign Id.",
         "parameters": [
           {
             "name": "id",
@@ -15497,7 +16363,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the latest recommendations made by a recommender.",
+        "summary": "Get the latest recommendations made by a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -15564,7 +16430,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the latest recommendations made by a recommender.",
+        "summary": "Get the latest recommendations made by a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -15631,7 +16497,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the latest recommendations made by a recommender.",
+        "summary": "Get the latest recommendations made by a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -15698,7 +16564,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get a recommendation made by a recommender.",
+        "summary": "Get a recommendation made by a campaign.",
         "parameters": [
           {
             "name": "recommendationId",
@@ -15746,7 +16612,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get a recommendation made by a recommender.",
+        "summary": "Get a recommendation made by a campaign.",
         "parameters": [
           {
             "name": "recommendationId",
@@ -15794,7 +16660,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get a recommendation made by a recommender.",
+        "summary": "Get a recommendation made by a campaign.",
         "parameters": [
           {
             "name": "recommendationId",
@@ -15842,7 +16708,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the offers made by a recommender.",
+        "summary": "Get the offers made by a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -15909,7 +16775,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the offers made by a recommender.",
+        "summary": "Get the offers made by a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -15976,7 +16842,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the offers made by a recommender.",
+        "summary": "Get the offers made by a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -16672,7 +17538,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the promotions associated with a recommender.",
+        "summary": "Get the promotions associated with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -16803,7 +17669,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the promotions associated with a recommender.",
+        "summary": "Get the promotions associated with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -16934,7 +17800,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the promotions associated with a recommender.",
+        "summary": "Get the promotions associated with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17065,7 +17931,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the promotions associated with a recommender.",
+        "summary": "Get the promotions associated with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17196,7 +18062,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the promotions associated with a recommender.",
+        "summary": "Get the promotions associated with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17327,7 +18193,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the promotions associated with a recommender.",
+        "summary": "Get the promotions associated with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17393,7 +18259,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the performance report of a recommender.",
+        "summary": "Get the performance report of a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17448,7 +18314,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the performance report of a recommender.",
+        "summary": "Get the performance report of a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17503,7 +18369,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Get the performance report of a recommender.",
+        "summary": "Get the performance report of a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17558,7 +18424,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the UseOptimiser property of the Recommender.",
+        "summary": "Sets the UseOptimiser property of the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17624,7 +18490,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the UseOptimiser property of the Recommender.",
+        "summary": "Sets the UseOptimiser property of the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17690,7 +18556,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Sets the UseOptimiser property of the Recommender.",
+        "summary": "Sets the UseOptimiser property of the campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17756,7 +18622,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Remove a promotion association with a recommender.",
+        "summary": "Remove a promotion association with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17811,7 +18677,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Remove a promotion association with a recommender.",
+        "summary": "Remove a promotion association with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17866,7 +18732,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Remove a promotion association with a recommender.",
+        "summary": "Remove a promotion association with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17921,7 +18787,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Remove a promotion association with a recommender.",
+        "summary": "Remove a promotion association with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -17976,7 +18842,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Remove a promotion association with a recommender.",
+        "summary": "Remove a promotion association with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -18031,7 +18897,7 @@
         "tags": [
           "PromotionsCampaigns"
         ],
-        "summary": "Remove a promotion association with a recommender.",
+        "summary": "Remove a promotion association with a campaign.",
         "parameters": [
           {
             "name": "id",
@@ -24344,6 +25210,17 @@
           "useInternalId": {
             "type": "boolean",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddOptimiserSegmentDto": {
+        "type": "object",
+        "properties": {
+          "segmentId": {
+            "type": "integer",
+            "description": "Segment Id of the Optimiser Distribution",
+            "format": "int64"
           }
         },
         "additionalProperties": false

@@ -132,6 +132,32 @@ interface SetPromotionOptimiserWeightRequest extends EntityRequest {
     weight: number;
 }
 export declare const setPromotionOptimiserWeightAsync: ({ token, useInternalId, id, weightId, weight, }: SetPromotionOptimiserWeightRequest) => Promise<PromotionOptimiser>;
+declare type OptimiserWeights = components["schemas"]["PromotionOptimiserWeight"][];
+export declare const fetchPromotionOptimiserWeightsAsync: ({ token, useInternalId, id, }: GetOptimiserWeightsRequest) => Promise<OptimiserWeights>;
+interface GetOptimiserWeightsRequest extends EntityRequest {
+    segmentId: string | number;
+}
+export declare const fetchPromotionOptimiserSegmentWeightsAsync: ({ token, useInternalId, id, segmentId, }: GetOptimiserWeightsRequest) => Promise<OptimiserWeights>;
+interface SetPromotionOptimiserSegmentWeightsRequest extends EntityRequest {
+    weights: components["schemas"]["UpdateWeightDto"][];
+    segmentId: string | number;
+}
+export declare const setPromotionOptimiserSegmentWeightsAsync: ({ token, useInternalId, id, segmentId, weights, }: SetPromotionOptimiserSegmentWeightsRequest) => Promise<PromotionOptimiser>;
+interface SetPromotionOptimiserSegmentWeightRequest extends EntityRequest {
+    segmentId: number;
+    weightId: number;
+    weight: number;
+}
+export declare const setPromotionOptimiserSegmentWeightAsync: ({ token, useInternalId, id, segmentId, weightId, weight, }: SetPromotionOptimiserSegmentWeightRequest) => Promise<PromotionOptimiser>;
+export declare const fetchPromotionOptimiserSegmentsAsync: ({ token, useInternalId, id, }: PaginatedEntityRequest) => Promise<any>;
+interface AddPromotionOptimiserSegmentRequest extends EntityRequest {
+    segmentId: string | number;
+}
+export declare const addPromotionOptimiserSegmentAsync: ({ token, useInternalId, id, segmentId, }: AddPromotionOptimiserSegmentRequest) => Promise<PromotionOptimiser>;
+interface RemovePromotionOptimiserSegmentRequest extends EntityRequest {
+    segmentId: string | number;
+}
+export declare const removePromotionOptimiserSegmentAsync: ({ token, id, segmentId, }: RemovePromotionOptimiserSegmentRequest) => Promise<any>;
 interface SetUseOptimiserRequest extends EntityRequest {
     useOptimiser: boolean;
 }

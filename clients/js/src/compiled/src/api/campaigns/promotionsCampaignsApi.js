@@ -339,6 +339,61 @@ export const setPromotionOptimiserWeightAsync = async ({ token, useInternalId, i
         body: { weight },
     });
 };
+export const fetchPromotionOptimiserWeightsAsync = async ({ token, useInternalId, id, }) => {
+    return await executeFetch({
+        token,
+        query: { useInternalId },
+        path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Weights/`,
+    });
+};
+export const fetchPromotionOptimiserSegmentWeightsAsync = async ({ token, useInternalId, id, segmentId, }) => {
+    return await executeFetch({
+        token,
+        query: { useInternalId },
+        path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/${segmentId}/Weights/`,
+    });
+};
+export const setPromotionOptimiserSegmentWeightsAsync = async ({ token, useInternalId, id, segmentId, weights, }) => {
+    return await executeFetch({
+        token,
+        query: { useInternalId },
+        path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/${segmentId}/Weights/`,
+        method: "post",
+        body: weights,
+    });
+};
+export const setPromotionOptimiserSegmentWeightAsync = async ({ token, useInternalId, id, segmentId, weightId, weight, }) => {
+    return await executeFetch({
+        token,
+        query: { useInternalId },
+        path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/${segmentId}/Weights/${weightId}`,
+        method: "post",
+        body: { weight },
+    });
+};
+export const fetchPromotionOptimiserSegmentsAsync = async ({ token, useInternalId, id, }) => {
+    return await executeFetch({
+        path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/`,
+        token,
+        query: { useInternalId },
+    });
+};
+export const addPromotionOptimiserSegmentAsync = async ({ token, useInternalId, id, segmentId, }) => {
+    return await executeFetch({
+        path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/`,
+        token,
+        query: { useInternalId },
+        method: "post",
+        body: { segmentId },
+    });
+};
+export const removePromotionOptimiserSegmentAsync = async ({ token, id, segmentId, }) => {
+    return await executeFetch({
+        path: `api/campaigns/PromotionsCampaigns/${id}/Optimiser/Segments/${segmentId}`,
+        token,
+        method: "delete",
+    });
+};
 export const setUseOptimiserAsync = async ({ token, useInternalId, id, useOptimiser, }) => {
     return await executeFetch({
         token,

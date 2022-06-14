@@ -119,6 +119,10 @@ interface components {
             name?: string | null;
             useInternalId?: boolean | null;
         };
+        AddOptimiserSegmentDto: {
+            /** Segment Id of the Optimiser Distribution */
+            segmentId?: number;
+        };
         AddPromotionDto: {
             id?: number | null;
             commonId?: string | null;
@@ -1148,6 +1152,7 @@ interface components {
             offerCount?: number;
             nonBaselineOfferCount?: number;
             baselineOfferCount?: number;
+            additionalRevenue?: number;
         };
         OfferPaginated: {
             items?: components["schemas"]["Offer"][] | null;
@@ -1579,6 +1584,7 @@ interface components {
             popupHeader?: string | null;
             popupSubheader?: string | null;
             customerIdPrefix?: string | null;
+            storageType?: string | null;
         };
         UpdateWeightDto: {
             id?: number;
@@ -3056,6 +3062,32 @@ interface SetPromotionOptimiserWeightRequest extends EntityRequest {
     weight: number;
 }
 declare const setPromotionOptimiserWeightAsync: ({ token, useInternalId, id, weightId, weight, }: SetPromotionOptimiserWeightRequest) => Promise<PromotionOptimiser>;
+declare type OptimiserWeights = components["schemas"]["PromotionOptimiserWeight"][];
+declare const fetchPromotionOptimiserWeightsAsync: ({ token, useInternalId, id, }: GetOptimiserWeightsRequest) => Promise<OptimiserWeights>;
+interface GetOptimiserWeightsRequest extends EntityRequest {
+    segmentId: string | number;
+}
+declare const fetchPromotionOptimiserSegmentWeightsAsync: ({ token, useInternalId, id, segmentId, }: GetOptimiserWeightsRequest) => Promise<OptimiserWeights>;
+interface SetPromotionOptimiserSegmentWeightsRequest extends EntityRequest {
+    weights: components["schemas"]["UpdateWeightDto"][];
+    segmentId: string | number;
+}
+declare const setPromotionOptimiserSegmentWeightsAsync: ({ token, useInternalId, id, segmentId, weights, }: SetPromotionOptimiserSegmentWeightsRequest) => Promise<PromotionOptimiser>;
+interface SetPromotionOptimiserSegmentWeightRequest extends EntityRequest {
+    segmentId: number;
+    weightId: number;
+    weight: number;
+}
+declare const setPromotionOptimiserSegmentWeightAsync: ({ token, useInternalId, id, segmentId, weightId, weight, }: SetPromotionOptimiserSegmentWeightRequest) => Promise<PromotionOptimiser>;
+declare const fetchPromotionOptimiserSegmentsAsync: ({ token, useInternalId, id, }: PaginatedEntityRequest) => Promise<any>;
+interface AddPromotionOptimiserSegmentRequest extends EntityRequest {
+    segmentId: string | number;
+}
+declare const addPromotionOptimiserSegmentAsync: ({ token, useInternalId, id, segmentId, }: AddPromotionOptimiserSegmentRequest) => Promise<PromotionOptimiser>;
+interface RemovePromotionOptimiserSegmentRequest extends EntityRequest {
+    segmentId: string | number;
+}
+declare const removePromotionOptimiserSegmentAsync: ({ token, id, segmentId, }: RemovePromotionOptimiserSegmentRequest) => Promise<any>;
 interface SetUseOptimiserRequest extends EntityRequest {
     useOptimiser: boolean;
 }
@@ -3130,6 +3162,13 @@ declare const promotionsCampaignsApi_d_fetchPerformanceAsync: typeof fetchPerfor
 declare const promotionsCampaignsApi_d_fetchPromotionOptimiserAsync: typeof fetchPromotionOptimiserAsync;
 declare const promotionsCampaignsApi_d_setAllPromotionOptimiserWeightsAsync: typeof setAllPromotionOptimiserWeightsAsync;
 declare const promotionsCampaignsApi_d_setPromotionOptimiserWeightAsync: typeof setPromotionOptimiserWeightAsync;
+declare const promotionsCampaignsApi_d_fetchPromotionOptimiserWeightsAsync: typeof fetchPromotionOptimiserWeightsAsync;
+declare const promotionsCampaignsApi_d_fetchPromotionOptimiserSegmentWeightsAsync: typeof fetchPromotionOptimiserSegmentWeightsAsync;
+declare const promotionsCampaignsApi_d_setPromotionOptimiserSegmentWeightsAsync: typeof setPromotionOptimiserSegmentWeightsAsync;
+declare const promotionsCampaignsApi_d_setPromotionOptimiserSegmentWeightAsync: typeof setPromotionOptimiserSegmentWeightAsync;
+declare const promotionsCampaignsApi_d_fetchPromotionOptimiserSegmentsAsync: typeof fetchPromotionOptimiserSegmentsAsync;
+declare const promotionsCampaignsApi_d_addPromotionOptimiserSegmentAsync: typeof addPromotionOptimiserSegmentAsync;
+declare const promotionsCampaignsApi_d_removePromotionOptimiserSegmentAsync: typeof removePromotionOptimiserSegmentAsync;
 declare const promotionsCampaignsApi_d_setUseOptimiserAsync: typeof setUseOptimiserAsync;
 declare const promotionsCampaignsApi_d_fetchCampaignChannelsAsync: typeof fetchCampaignChannelsAsync;
 declare const promotionsCampaignsApi_d_addCampaignChannelAsync: typeof addCampaignChannelAsync;
@@ -3184,6 +3223,13 @@ declare namespace promotionsCampaignsApi_d {
     promotionsCampaignsApi_d_fetchPromotionOptimiserAsync as fetchPromotionOptimiserAsync,
     promotionsCampaignsApi_d_setAllPromotionOptimiserWeightsAsync as setAllPromotionOptimiserWeightsAsync,
     promotionsCampaignsApi_d_setPromotionOptimiserWeightAsync as setPromotionOptimiserWeightAsync,
+    promotionsCampaignsApi_d_fetchPromotionOptimiserWeightsAsync as fetchPromotionOptimiserWeightsAsync,
+    promotionsCampaignsApi_d_fetchPromotionOptimiserSegmentWeightsAsync as fetchPromotionOptimiserSegmentWeightsAsync,
+    promotionsCampaignsApi_d_setPromotionOptimiserSegmentWeightsAsync as setPromotionOptimiserSegmentWeightsAsync,
+    promotionsCampaignsApi_d_setPromotionOptimiserSegmentWeightAsync as setPromotionOptimiserSegmentWeightAsync,
+    promotionsCampaignsApi_d_fetchPromotionOptimiserSegmentsAsync as fetchPromotionOptimiserSegmentsAsync,
+    promotionsCampaignsApi_d_addPromotionOptimiserSegmentAsync as addPromotionOptimiserSegmentAsync,
+    promotionsCampaignsApi_d_removePromotionOptimiserSegmentAsync as removePromotionOptimiserSegmentAsync,
     promotionsCampaignsApi_d_setUseOptimiserAsync as setUseOptimiserAsync,
     promotionsCampaignsApi_d_fetchCampaignChannelsAsync as fetchCampaignChannelsAsync,
     promotionsCampaignsApi_d_addCampaignChannelAsync as addCampaignChannelAsync,

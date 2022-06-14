@@ -1,9 +1,12 @@
 import React from "react";
 import { useAccessToken } from "../../../../api-hooks/token";
 import {
-  fetchPromotionOptimiserAsync,
+  fetchPromotionOptimiserWeightsAsync,
+  fetchPromotionOptimiserSegmentWeightsAsync,
   setPromotionOptimiserWeightAsync,
   setAllPromotionOptimiserWeightsAsync,
+  setPromotionOptimiserSegmentWeightAsync,
+  setPromotionOptimiserSegmentWeightsAsync,
 } from "../../../../api/promotionsCampaignsApi";
 import {
   AsyncButton,
@@ -22,18 +25,32 @@ const range = {
   step: 0.05,
 };
 
-const useUpdatableOptimiser = ({ id, useOptimiser, trigger }) => {
-  const [optimiser, setOptimiser] = React.useState();
+const useUpdatableOptimiser = ({
+  id,
+  useOptimiser,
+  segmentId,
+  trigger,
+  setTrigger,
+}) => {
+  const [weights, setWeights] = React.useState();
   const [error, setError] = React.useState();
   const [loading, setLoading] = React.useState(true);
   const token = useAccessToken();
   React.useEffect(() => {
     if (token && useOptimiser) {
       setError();
-      fetchPromotionOptimiserAsync({ id, token })
-        .then(setOptimiser)
-        .catch(setError(setError))
-        .finally(() => setLoading(false));
+      if (segmentId) {
+        fetchPromotionOptimiserSegmentWeightsAsync({ id, token, segmentId })
+          .then(setWeights)
+          .catch(setError(setError))
+          .finally(() => setLoading(false));
+      } else {
+        // get default
+        fetchPromotionOptimiserWeightsAsync({ id, token })
+          .then(setWeights)
+          .catch(setError(setError))
+          .finally(() => setLoading(false));
+      }
     }
   }, [token, trigger]);
 
@@ -41,24 +58,31 @@ const useUpdatableOptimiser = ({ id, useOptimiser, trigger }) => {
     if (token && id && weightId && useOptimiser) {
       setError();
       setLoading(true);
-      setPromotionOptimiserWeightAsync({ token, id, weightId, weight })
-        .then(setOptimiser)
-        .catch(setError)
-        .finally(() => setLoading(false));
+      if (segmentId) {
+        setPromotionOptimiserSegmentWeightAsync({
+          token,
+          id,
+          segmentId,
+          weightId,
+          weight,
+        })
+          .then(setTrigger)
+          .catch(setError)
+          .finally(() => setLoading(false));
+      } else {
+        // set for default segment
+        setPromotionOptimiserWeightAsync({ token, id, weightId, weight })
+          .then(setTrigger)
+          .catch(setError)
+          .finally(() => setLoading(false));
+      }
     }
   };
 
-  return { optimiser, loading, error, update };
+  return { weights, loading, error, update };
 };
 
-const ManualControlRow = ({
-  id,
-  weight,
-  segmentId,
-  promotionId,
-  setWeight,
-  promotions,
-}) => {
+const ManualControlRow = ({ weight, promotionId, setWeight, promotions }) => {
   const promotion = promotions.find((_) => _.id === promotionId);
   return (
     <React.Fragment>
@@ -76,9 +100,20 @@ const ManualControlRow = ({
     </React.Fragment>
   );
 };
-// this one lets you enter all teh values at once, without renormalising in between
-export const ManualControlSetAll = ({ optimiser, promotions, onSaved }) => {
-  const [weights, setWeights] = React.useState(optimiser.weights);
+// this one lets you enter all the values at once, without renormalising in between
+export const ManualControlSetAll = ({
+  recommender,
+  segmentId,
+  promotions,
+  onSaved,
+}) => {
+  const distribution = useUpdatableOptimiser({
+    id: recommender.id,
+    useOptimiser: recommender.useOptimiser,
+    segmentId,
+  });
+
+  const [weights, setWeights] = React.useState(distribution.weights);
   const handleSetWeight = (weightId, weight) => {
     weights.find((_) => _.id === weightId).weight = weight;
     setWeights([...weights]);
@@ -87,23 +122,40 @@ export const ManualControlSetAll = ({ optimiser, promotions, onSaved }) => {
   const [saving, setSaving] = React.useState(false);
   const [error, setError] = React.useState();
 
+  React.useEffect(() => {
+    setWeights(distribution.weights);
+  }, [distribution]);
+
   const handleSave = () => {
     setError();
     setSaving(true);
-    setAllPromotionOptimiserWeightsAsync({
-      token,
-      id: optimiser.recommenderId,
-      weights,
-    })
-      .then(onSaved)
-      .catch(setError)
-      .finally(() => setSaving(false));
+    if (segmentId) {
+      setPromotionOptimiserSegmentWeightsAsync({
+        token,
+        id: recommender.id,
+        segmentId,
+        weights,
+      })
+        .then(onSaved)
+        .catch(setError)
+        .finally(() => setSaving(false));
+    } else {
+      setAllPromotionOptimiserWeightsAsync({
+        token,
+        id: recommender.id,
+        weights,
+      })
+        .then(onSaved)
+        .catch(setError)
+        .finally(() => setSaving(false));
+    }
   };
+
   return (
     <React.Fragment>
       {error ? <ErrorCard error={error} /> : null}
       <div>
-        {weights
+        {weights && weights.length > 0
           ? weights.map((w) => (
               <ManualControlRow
                 key={w.id}
@@ -132,7 +184,6 @@ const WeightControl = ({
   id,
   loading,
   weight,
-  segmentId,
   promotionId,
   update,
   promotions,
@@ -187,11 +238,18 @@ const WeightControl = ({
   );
 };
 
-export const PromotionOptimiserWeightControl = ({ recommender, trigger }) => {
-  const { optimiser, loading, error, update } = useUpdatableOptimiser({
+export const PromotionOptimiserWeightControl = ({
+  recommender,
+  segmentId,
+  trigger,
+  setTrigger,
+}) => {
+  const { weights, loading, error, update } = useUpdatableOptimiser({
     id: recommender.id,
     useOptimiser: recommender.useOptimiser,
+    segmentId,
     trigger,
+    setTrigger,
   });
 
   if (recommender.useOptimiser) {
@@ -199,8 +257,8 @@ export const PromotionOptimiserWeightControl = ({ recommender, trigger }) => {
       <React.Fragment>
         {loading ? <Spinner /> : null}
         {error ? <ErrorCard error={error} /> : null}
-        {optimiser && optimiser.weights
-          ? optimiser.weights.map((w) => (
+        {weights && weights.length > 0
+          ? weights.map((w) => (
               <WeightControl
                 key={w.id}
                 {...w}

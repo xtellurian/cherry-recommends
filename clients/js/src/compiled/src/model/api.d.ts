@@ -6074,6 +6074,30 @@ export interface paths {
         };
     };
     "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Weights": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiserWeight"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
         post: {
             parameters: {
                 path: {
@@ -6107,6 +6131,30 @@ export interface paths {
         };
     };
     "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Weights": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiserWeight"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
         post: {
             parameters: {
                 path: {
@@ -6178,6 +6226,362 @@ export interface paths {
             parameters: {
                 path: {
                     id: string;
+                    weightId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiser"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateWeightDto"];
+                    "text/json": components["schemas"]["UpdateWeightDto"];
+                    "application/*+json": components["schemas"]["UpdateWeightDto"];
+                };
+            };
+        };
+    };
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Segments": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["SegmentPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiser"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AddOptimiserSegmentDto"];
+                    "text/json": components["schemas"]["AddOptimiserSegmentDto"];
+                    "application/*+json": components["schemas"]["AddOptimiserSegmentDto"];
+                };
+            };
+        };
+    };
+    "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Segments": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["SegmentPaginated"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiser"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AddOptimiserSegmentDto"];
+                    "text/json": components["schemas"]["AddOptimiserSegmentDto"];
+                    "application/*+json": components["schemas"]["AddOptimiserSegmentDto"];
+                };
+            };
+        };
+    };
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Segments/{segmentId}": {
+        delete: {
+            parameters: {
+                path: {
+                    id: string;
+                    segmentId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["DeleteResponse"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Segments/{segmentId}": {
+        delete: {
+            parameters: {
+                path: {
+                    id: string;
+                    segmentId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["DeleteResponse"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Segments/{segmentId}/Weights": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                    segmentId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiserWeight"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                    segmentId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiser"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateWeightDto"][];
+                    "text/json": components["schemas"]["UpdateWeightDto"][];
+                    "application/*+json": components["schemas"]["UpdateWeightDto"][];
+                };
+            };
+        };
+    };
+    "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Segments/{segmentId}/Weights": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                    segmentId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiserWeight"][];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                    segmentId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiser"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateWeightDto"][];
+                    "text/json": components["schemas"]["UpdateWeightDto"][];
+                    "application/*+json": components["schemas"]["UpdateWeightDto"][];
+                };
+            };
+        };
+    };
+    "/api/Recommenders/PromotionsRecommenders/{id}/Optimiser/Segments/{segmentId}/Weights/{weightId}": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                    segmentId: number;
+                    weightId: number;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["PromotionOptimiser"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateWeightDto"];
+                    "text/json": components["schemas"]["UpdateWeightDto"];
+                    "application/*+json": components["schemas"]["UpdateWeightDto"];
+                };
+            };
+        };
+    };
+    "/api/Campaigns/PromotionsCampaigns/{id}/Optimiser/Segments/{segmentId}/Weights/{weightId}": {
+        post: {
+            parameters: {
+                path: {
+                    id: string;
+                    segmentId: number;
                     weightId: number;
                 };
                 query: {
@@ -12097,6 +12501,10 @@ export interface components {
             name?: string | null;
             useInternalId?: boolean | null;
         };
+        AddOptimiserSegmentDto: {
+            /** Segment Id of the Optimiser Distribution */
+            segmentId?: number;
+        };
         AddPromotionDto: {
             id?: number | null;
             commonId?: string | null;
@@ -13126,6 +13534,7 @@ export interface components {
             offerCount?: number;
             nonBaselineOfferCount?: number;
             baselineOfferCount?: number;
+            additionalRevenue?: number;
         };
         OfferPaginated: {
             items?: components["schemas"]["Offer"][] | null;
@@ -13557,6 +13966,7 @@ export interface components {
             popupHeader?: string | null;
             popupSubheader?: string | null;
             customerIdPrefix?: string | null;
+            storageType?: string | null;
         };
         UpdateWeightDto: {
             id?: number;
