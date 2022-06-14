@@ -31,13 +31,13 @@ export const ErrorCard = ({ error }) => {
       }
     }
   }
-  let headerClassName = "bg-warning";
+  let backgroundColor = "bg-warning";
   switch (error.status) {
     case 404:
-      headerClassName = "bg-info";
+      backgroundColor = "bg-info";
       break;
     default:
-      headerClassName = "bg-warning";
+      backgroundColor = "bg-warning";
   }
   let title = error.title ? error.title : "Error";
   if (validationErrorList.length > 0) {
@@ -48,7 +48,7 @@ export const ErrorCard = ({ error }) => {
 
   return (
     <React.Fragment>
-      <ExpandableCard label={title} headerClassName={headerClassName}>
+      <ExpandableCard label={title} backgroundColor={backgroundColor}>
         {validationErrorList.map((e) => (
           <div key={e.label ?? e.message}>
             <strong>{e.label}:</strong>

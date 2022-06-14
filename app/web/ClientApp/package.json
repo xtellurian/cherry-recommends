@@ -60,6 +60,7 @@
     "react-router-dom": "^6.3.0",
     "react-select": "^4.3.0",
     "react-spring": "^9.1.1",
+    "react-use-measure": "^2.1.1",
     "reactstrap": "^8.4.1",
     "recharts": "^2.1.9",
     "redoc": "^2.0.0-rc.53",

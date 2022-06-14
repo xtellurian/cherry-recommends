@@ -19,6 +19,7 @@ import {
   MoveUpHierarchyPrimaryButton,
 } from "./MoveUpHierarchyButton";
 import { DatePicker } from "./DatePicker";
+import { Accordion } from "./Accordion";
 
 export {
   AsyncButton,
@@ -38,4 +39,5 @@ export {
   MoveUpHierarchyButton,
   MoveUpHierarchyPrimaryButton,
   DatePicker,
+  Accordion,
 };
