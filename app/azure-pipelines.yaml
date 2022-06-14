@@ -23,6 +23,7 @@ pool:
 stages:
   - stage: build_artifacts
     displayName: Build artifacts
+    condition: not(startsWith(variables['Build.SourceBranch'], 'refs/tags/deploy/'))
     jobs:
       - job: run_tests
         displayName: Run Tests
@@ -64,15 +65,13 @@ stages:
 
   - stage: deploy_single_multi_dev
     displayName: Deploy single and multi dev environment
-    dependsOn: build_artifacts
     condition: |
-      and(succeeded(),
-      startsWith(variables['Build.SourceBranch'], 'refs/tags/deploy/'))
+      startsWith(variables['Build.SourceBranch'], 'refs/tags/deploy/')
     jobs:
       - job: deploy_dev_env
         displayName: Deploy single and multi dev app
         variables:
-          - group: Azure_Docs_Dev
+          - group: Azure_Dev
         continueOnError: false
         steps:
           - task: Pulumi@1
@@ -113,7 +112,7 @@ stages:
         displayName: Canary Job Release
         environment: canary-app
         variables:
-          - group: Azure_Docs_Prod
+          - group: Azure_Prod
         continueOnError: false
         strategy:
           runOnce:
@@ -142,7 +141,7 @@ stages:
         displayName: Production Job Release
         environment: prod-app
         variables:
-          - group: Azure_Docs_Prod
+          - group: Azure_Prod
         continueOnError: false
         strategy:
           runOnce:
