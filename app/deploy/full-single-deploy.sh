@@ -13,8 +13,9 @@ az config set core.only_show_errors=false
 cd $APP_PATH/deploy
 
 cd azure-scripts/functions/
-APP_PATH=$APP_PATH ./deploy-dotnet-functions.sh 
 APP_PATH=$APP_PATH ./deploy-python-functions.sh
+APP_PATH=$APP_PATH ./deploy-dotnet-functions.sh
+APP_PATH=$APP_PATH ./wait-for-githash.sh
 
 cd $APP_PATH/deploy/sql-database-scripts/cloud
 APP_PATH=$APP_PATH ./update-sql-database.sh single

@@ -14,8 +14,9 @@ Hosting__Multitenant="true" APP_PATH=$APP_PATH ./update-tenant-sql-database.sh
 APP_PATH=$APP_PATH ./create-user-sqlcmd.sh
 
 cd $APP_PATH/deploy/azure-scripts/functions
-APP_PATH=$APP_PATH ./deploy-dotnet-functions.sh
 APP_PATH=$APP_PATH ./deploy-python-functions.sh
+APP_PATH=$APP_PATH ./deploy-dotnet-functions.sh
+APP_PATH=$APP_PATH ./wait-for-githash.sh
 APP_PATH=$APP_PATH ./migrate-database-functions.sh
 
 # configure synapse

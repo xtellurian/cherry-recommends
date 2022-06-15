@@ -23,8 +23,8 @@ echo "Publishing dotnet functions to $FUNCTIONAPPNAME"
 func azure functionapp publish $FUNCTIONAPPNAME
 
 echo "Waiting for warmup"
-sleep 10
-echo "Requesting warmup."
+sleep 5
+echo "Requesting a warmup."
 # start warming up the dotnet functions app
 check_dependency=`curl --request GET --url "https://$FUNCTIONAPPNAME.azurewebsites.net"`
 

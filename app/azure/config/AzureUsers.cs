@@ -26,8 +26,8 @@ namespace SignalBox.Azure
             },
             new AzureSynapseUser
             {
-                Name = "AzureDevopsApp",
-                PrincipalId = "6f687f17-7b02-484a-8f87-88442b24fed2",
+                Name = "azure-devops-dev",
+                PrincipalId = "aacb14dc-7cbc-48b0-8b24-3a99aff7a3b5",
                 PrincipalType = "ServicePrincipal"
             },
             new AzureSynapseUser
