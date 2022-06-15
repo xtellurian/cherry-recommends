@@ -7,6 +7,10 @@ namespace SignalBox.Web.Dto
     public class CreateOrUpdateCustomerDto : DtoBase
     {
         public string? GetCustomerId() => CustomerId ?? CommonUserId;
+        /// <summary>
+        /// If the Customer ID already exists, then overwrite the name, email, and properties
+        /// </summary>
+        public bool? Overwrite { get; set; }
         public string? CommonUserId { get; set; } = null!; // to be deprecated
         public string? CustomerId { get; set; } = null!;
         public string? Name { get; set; }

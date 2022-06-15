@@ -3104,15 +3104,6 @@
           "Customers"
         ],
         "summary": "Adds a new Customer.",
-        "parameters": [
-          {
-            "name": "overwriteExisting",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -3267,15 +3258,6 @@
           "Customers"
         ],
         "summary": "Adds a new Customer.",
-        "parameters": [
-          {
-            "name": "overwriteExisting",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -26556,6 +26538,11 @@
       "CreateOrUpdateCustomerDto": {
         "type": "object",
         "properties": {
+          "overwrite": {
+            "type": "boolean",
+            "description": "If the Customer ID already exists, then overwrite the name, email, and properties",
+            "nullable": true
+          },
           "commonUserId": {
             "type": "string",
             "nullable": true

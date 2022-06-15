@@ -86,7 +86,7 @@ namespace SignalBox.Web.Controllers
         [HttpPost]
         [AllowApiKey]
         [EnableCors(CorsPolicies.WebApiKeyPolicy)]
-        public async Task<object> CreateOrUpdate([FromBody] CreateOrUpdateCustomerDto dto, bool? overwriteExisting = null)
+        public async Task<object> CreateOrUpdate([FromBody] CreateOrUpdateCustomerDto dto)
         {
             return await workflows.CreateOrUpdate(new PendingCustomer(dto.GetCustomerId())
             {
@@ -94,7 +94,7 @@ namespace SignalBox.Web.Controllers
                 Email = dto.Email,
                 Properties = dto.Properties,
                 IntegratedSystemReference = dto.IntegratedSystemReference,
-                OverwriteExisting = overwriteExisting ?? false
+                OverwriteExisting = dto.Overwrite ?? false
             });
         }
 
