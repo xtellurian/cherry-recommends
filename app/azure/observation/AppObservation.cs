@@ -80,7 +80,7 @@ namespace SignalBox.Azure
                     },
                 Description = $"Check exceptions aren't too high in {Pulumi.Deployment.Instance.StackName}",
                 Enabled = true,
-                EvaluationFrequency = "PT30M",
+                EvaluationFrequency = "PT15M",
                 Location = "global",
                 ResourceGroupName = rg.Name,
                 RuleName = "CheckExceptions",
@@ -89,7 +89,7 @@ namespace SignalBox.Azure
                     AppInsights.Id,
                 },
                 Severity = 1,
-                WindowSize = "PT1H",
+                WindowSize = "PT30M",
             });
 
         }
