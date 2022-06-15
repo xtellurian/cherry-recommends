@@ -20,7 +20,7 @@ namespace SignalBox.Core.Workflows
             logger.LogInformation($"There are {steps.Count()} steps in generator {generator.Id}");
             var summary = new MetricGeneratorRunSummary(0);
 
-            await foreach (var customer in customerStore.Iterate(new EntityStoreIterateOptions<Customer> { ChangeTracking = ChangeTrackingOptions.NoTrackingWithIdentityResolution }))
+            await foreach (var customer in customerStore.Iterate()) // no-tracking will error if the customer is updated. So therefore we track.
             {
                 var context = new FilterSelectAggregateContext(customer, generator.Metric, trackedUserEventStore)
                 {
