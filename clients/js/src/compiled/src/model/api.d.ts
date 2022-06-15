@@ -1524,6 +1524,11 @@ export interface paths {
             };
         };
         post: {
+            parameters: {
+                query: {
+                    overwriteExisting?: boolean;
+                };
+            };
             responses: {
                 /** Success */
                 200: unknown;
@@ -1589,6 +1594,11 @@ export interface paths {
             };
         };
         post: {
+            parameters: {
+                query: {
+                    overwriteExisting?: boolean;
+                };
+            };
             responses: {
                 /** Success */
                 200: unknown;
