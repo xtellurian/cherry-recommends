@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
-import { useSpring, animated } from "react-spring";
-import useMeasure from "react-use-measure";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 
 import { Typography } from "./Typography";
+import { SliderAnimation } from "./Animations";
 
 export const ExpandableCard = ({
   children,
@@ -16,11 +15,6 @@ export const ExpandableCard = ({
   onToggle,
 }) => {
   const [expanded, setExpanded] = React.useState(open);
-  const [ref, { height: viewHeight }] = useMeasure();
-  const styles = useSpring({
-    from: { height: 0 },
-    to: { height: expanded ? viewHeight : 0 },
-  });
 
   const toggleOpen = () => {
     setExpanded((oldExpanded) => !oldExpanded);
@@ -63,11 +57,9 @@ export const ExpandableCard = ({
         </div>
       </div>
 
-      <animated.div style={{ overflow: "hidden", ...styles }}>
-        <div ref={ref} className="card-body">
-          {children}
-        </div>
-      </animated.div>
+      <SliderAnimation show={expanded}>
+        {expanded ? <div className="card-body">{children}</div> : null}
+      </SliderAnimation>
     </div>
   );
 };

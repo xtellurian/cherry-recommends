@@ -4,22 +4,25 @@ import { useLocation } from "react-router-dom";
 import { useAuth } from "../../utility/useAuth";
 import { useTokenScopes } from "../../api-hooks/token";
 import { useAuthenticatedIA } from "./MenuIA";
+import { useMemberships } from "../tenants/MembershipsProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Navigation } from "../molecules";
-import { useMemberships } from "../tenants/MembershipsProvider";
+import {
+  Animation,
+  SliderAnimation,
+  RotateAnimation,
+} from "../molecules/Animations";
 
 import "./SideNavMenu.css";
 
 const MenuItem = ({ active, label, icon, activeIcon = true }) => {
-  const activeClassName = active ? "active border-bottom-0" : "";
-  const activeIconSrc = active
-    ? "/icons/angle-down.svg"
-    : "/icons/angle-right.svg";
-
   return (
-    <div
-      className={`menu-item selectable p-3 d-flex align-items-center justify-content-between ${activeClassName}`}
+    <Animation
+      className="menu-item selectable p-3 d-flex align-items-center justify-content-between"
+      animatedStyles={{
+        borderRight: active ? "4px solid #e5008a" : "0px solid white",
+      }}
     >
       <div className="d-flex align-items-center">
         <div className="icon-wrapper mr-3">
@@ -27,10 +30,13 @@ const MenuItem = ({ active, label, icon, activeIcon = true }) => {
         </div>
         {label}
       </div>
+
       {activeIcon ? (
-        <img src={activeIconSrc} alt="Angle right" className="icon" />
+        <RotateAnimation rotateZ={active ? 90 : 0}>
+          <img src="/icons/angle-right.svg" alt="Angle icon" className="icon" />
+        </RotateAnimation>
       ) : null}
-    </div>
+    </Animation>
   );
 };
 
@@ -149,16 +155,16 @@ export const SideNavMenu = ({ multitenant }) => {
                 </div>
               )}
 
-              {isActiveMenu(item)
-                ? item.items.map((menuItem) => (
-                    <Navigation key={menuItem.id} to={menuItem.to}>
-                      <SubMenuItem
-                        active={isActiveMenuItem(menuItem)}
-                        label={menuItem.name}
-                      />
-                    </Navigation>
-                  ))
-                : null}
+              <SliderAnimation show={isActiveMenu(item)}>
+                {item.items.map((menuItem) => (
+                  <Navigation key={menuItem.id} to={menuItem.to}>
+                    <SubMenuItem
+                      active={isActiveMenuItem(menuItem)}
+                      label={menuItem.name}
+                    />
+                  </Navigation>
+                ))}
+              </SliderAnimation>
             </div>
           ))
         : null}
