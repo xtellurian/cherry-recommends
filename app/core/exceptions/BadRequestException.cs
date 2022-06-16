@@ -8,7 +8,7 @@ namespace SignalBox.Core
         public BadRequestException(string title, System.Exception inner) : base(title, inner)
         { }
 
-        public BadRequestException(string message) : base("Bad Request", message)
+        public BadRequestException(string title) : base(title)
         {
             this._status = 400;
         }
