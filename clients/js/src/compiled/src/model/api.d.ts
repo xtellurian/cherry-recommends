@@ -8682,6 +8682,84 @@ export interface paths {
             };
         };
     };
+    "/api/recommenders/ItemsRecommenders/{id}/SensitivityCurveReport": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["OfferSensitivityCurveReportDto"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/recommenders/PromotionsRecommenders/{id}/SensitivityCurveReport": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["OfferSensitivityCurveReportDto"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
+    "/api/campaigns/PromotionsCampaigns/{id}/SensitivityCurveReport": {
+        get: {
+            parameters: {
+                path: {
+                    id: string;
+                };
+                query: {
+                    useInternalId?: boolean;
+                };
+            };
+            responses: {
+                /** Success */
+                200: {
+                    content: {
+                        "application/json": components["schemas"]["OfferSensitivityCurveReportDto"];
+                    };
+                };
+                /** Bad Request */
+                400: {
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+    };
     "/api/recommenders/ItemsRecommenders/{id}/Items": {
         get: {
             parameters: {
@@ -13549,6 +13627,23 @@ export interface components {
         OfferPaginated: {
             items?: components["schemas"]["Offer"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
+        };
+        OfferSensitivityCurveData: {
+            promotionId?: number;
+            promotionName?: string | null;
+            totalGrossRevenue?: number;
+            meanGrossRevenue?: number;
+            totalCount?: number;
+            redeemedCount?: number;
+            conversionRate?: number;
+        };
+        OfferSensitivityCurveReportDto: {
+            /** Campaign id. */
+            campaignId?: number;
+            /** Start date of the report data. */
+            dataSinceDate?: string;
+            /** Data for the report. */
+            data?: components["schemas"]["OfferSensitivityCurveData"][] | null;
         };
         OfferState: "created" | "presented" | "redeemed" | "expired";
         OldRecommenderArgument: {

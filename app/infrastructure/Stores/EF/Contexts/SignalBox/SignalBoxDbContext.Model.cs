@@ -72,6 +72,7 @@ namespace SignalBox.Infrastructure
         public DbSet<Offer> Offers { get; set; }
         public DbSet<OfferMeanGrossRevenue> OfferMeanGrossRevenues { get; set; } // DbSet for executing stored procedure
         public DbSet<OfferConversionRateData> OfferConversionRates { get; set; } // DbSet for executing stored procedure
+        public DbSet<OfferSensitivityCurveData> OfferSensitivityCurveData { get; set; } // DbSet for executing stored procedure
 
         // discount codes
         public DbSet<DiscountCode> DiscountCodes { get; set; }

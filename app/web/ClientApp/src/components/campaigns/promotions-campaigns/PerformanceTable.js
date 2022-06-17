@@ -4,6 +4,7 @@ import {
   useAPVReport,
   useARPOReport,
   useOfferConversionRateReport,
+  useOfferSensitivityCurveReport,
   usePerformance,
   usePerformanceReport,
   usePromotionsCampaign,
@@ -28,6 +29,7 @@ import CampaignARPOChart from "../../molecules/charts/CampaignARPOChart";
 import CampaignConversionRateChart from "../../molecules/charts/CampaignConversionRateChart";
 import CampaignAPVChart from "../../molecules/charts/CampaignAPVChart";
 import CampaignPerformanceChart from "../../molecules/charts/CampaignPerformanceChart";
+import CampaignOfferSensitivityCurveChart from "../../molecules/charts/CampaignOfferSensitivityCurveChart";
 
 const PerformanceTableRow = ({ data, itemsById }) => {
   const item = itemsById[data.itemId];
@@ -76,6 +78,7 @@ const Reports = () => {
   const apvData = useAPVReport({ id });
   const conversionRateData = useOfferConversionRateReport({ id });
   const performanceReportData = usePerformanceReport({ id });
+  const offerSensitivityCurveData = useOfferSensitivityCurveReport({ id });
   return (
     <React.Fragment>
       <PromotionCampaignLayout>
@@ -114,6 +117,13 @@ const Reports = () => {
             <div className="mt-2">
               <ExpandableCard label="Additional Revenue">
                 <CampaignPerformanceChart reportData={performanceReportData} />
+              </ExpandableCard>
+            </div>
+            <div className="mt-2">
+              <ExpandableCard label="Promotion Sensitivity Curve">
+                <CampaignOfferSensitivityCurveChart
+                  reportData={offerSensitivityCurveData}
+                />
               </ExpandableCard>
             </div>
           </React.Fragment>

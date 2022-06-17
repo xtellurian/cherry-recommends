@@ -190,4 +190,6 @@ declare type OfferConversionRateReport = components["schemas"]["OfferConversionR
 export declare const fetchOfferConversionRateReportAsync: ({ token, id, }: EntityRequest) => Promise<OfferConversionRateReport>;
 declare type PerformanceReport = components["schemas"]["PerformanceReportDto"];
 export declare const fetchPerformanceReportAsync: ({ token, id, }: EntityRequest) => Promise<PerformanceReport>;
+declare type OfferSensitivityCurveReport = components["schemas"]["OfferSensitivityCurveReportDto"];
+export declare const fetchOfferSensitivityCurveReportAsync: ({ token, id, }: EntityRequest) => Promise<OfferSensitivityCurveReport>;
 export {};

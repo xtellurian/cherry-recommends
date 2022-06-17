@@ -1158,6 +1158,23 @@ interface components {
             items?: components["schemas"]["Offer"][] | null;
             pagination?: components["schemas"]["PaginationInfo"];
         };
+        OfferSensitivityCurveData: {
+            promotionId?: number;
+            promotionName?: string | null;
+            totalGrossRevenue?: number;
+            meanGrossRevenue?: number;
+            totalCount?: number;
+            redeemedCount?: number;
+            conversionRate?: number;
+        };
+        OfferSensitivityCurveReportDto: {
+            /** Campaign id. */
+            campaignId?: number;
+            /** Start date of the report data. */
+            dataSinceDate?: string;
+            /** Data for the report. */
+            data?: components["schemas"]["OfferSensitivityCurveData"][] | null;
+        };
         OfferState: "created" | "presented" | "redeemed" | "expired";
         OldRecommenderArgument: {
             commonId?: string | null;
@@ -3120,6 +3137,8 @@ declare type OfferConversionRateReport = components["schemas"]["OfferConversionR
 declare const fetchOfferConversionRateReportAsync: ({ token, id, }: EntityRequest) => Promise<OfferConversionRateReport>;
 declare type PerformanceReport = components["schemas"]["PerformanceReportDto"];
 declare const fetchPerformanceReportAsync: ({ token, id, }: EntityRequest) => Promise<PerformanceReport>;
+declare type OfferSensitivityCurveReport = components["schemas"]["OfferSensitivityCurveReportDto"];
+declare const fetchOfferSensitivityCurveReportAsync: ({ token, id, }: EntityRequest) => Promise<OfferSensitivityCurveReport>;
 
 declare const promotionsCampaignsApi_d_fetchPromotionsCampaignsAsync: typeof fetchPromotionsCampaignsAsync;
 declare const promotionsCampaignsApi_d_fetchPromotionsCampaignAsync: typeof fetchPromotionsCampaignAsync;
@@ -3179,6 +3198,7 @@ declare const promotionsCampaignsApi_d_fetchARPOReportAsync: typeof fetchARPORep
 declare const promotionsCampaignsApi_d_fetchAPVReportAsync: typeof fetchAPVReportAsync;
 declare const promotionsCampaignsApi_d_fetchOfferConversionRateReportAsync: typeof fetchOfferConversionRateReportAsync;
 declare const promotionsCampaignsApi_d_fetchPerformanceReportAsync: typeof fetchPerformanceReportAsync;
+declare const promotionsCampaignsApi_d_fetchOfferSensitivityCurveReportAsync: typeof fetchOfferSensitivityCurveReportAsync;
 declare namespace promotionsCampaignsApi_d {
   export {
     promotionsCampaignsApi_d_fetchPromotionsCampaignsAsync as fetchPromotionsCampaignsAsync,
@@ -3240,6 +3260,7 @@ declare namespace promotionsCampaignsApi_d {
     promotionsCampaignsApi_d_fetchAPVReportAsync as fetchAPVReportAsync,
     promotionsCampaignsApi_d_fetchOfferConversionRateReportAsync as fetchOfferConversionRateReportAsync,
     promotionsCampaignsApi_d_fetchPerformanceReportAsync as fetchPerformanceReportAsync,
+    promotionsCampaignsApi_d_fetchOfferSensitivityCurveReportAsync as fetchOfferSensitivityCurveReportAsync,
   };
 }
 

@@ -262,6 +262,23 @@ namespace SignalBox.Web.Controllers
             return response;
         }
 
+        /// <summary>Get the Offer Sensitivity Curve report.</summary>
+        [HttpGet("{id}/SensitivityCurveReport")]
+        public async Task<OfferSensitivityCurveReportDto> GetSensitivityCurveReport([FromServices] IDateTimeProvider dateTimeProvider, string id, bool? useInternalId = null)
+        {
+            var campaign = await base.GetResource(id, useInternalId);
+            DateTimeOffset dataSinceDate = dateTimeProvider.Now.ToUniversalTime().DateTimeSince(DateTimePeriod.Weekly, 11).FirstDayOfWeek(DayOfWeek.Monday); // 12 weeks ago minus 1 since 0 is current week
+            var data = await offerWorkflow.QuerySensitivityCurveReportData(campaign, dataSinceDate);
+            var response = new OfferSensitivityCurveReportDto
+            {
+                CampaignId = campaign.Id,
+                DataSinceDate = dataSinceDate,
+                Data = data
+            };
+
+            return response;
+        }
+
         /// <summary>Get the promotions associated with a recommender.</summary>
         [HttpGet("{id}/Items")]
         [HttpGet("{id}/Promotions")]

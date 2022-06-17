@@ -35,5 +35,12 @@ namespace SignalBox.Core
         /// <returns></returns>
         /// </summary>
         Task<IEnumerable<OfferConversionRateData>> QueryConversionRateData(PromotionsCampaign campaign, DateTimePeriod period, DateTimeOffset startDate);
+        /// <summary>
+        /// Queries the Offer Sensitivity Curve report data.
+        /// <param name="campaign"></param>
+        /// <param name="startDate"></param>
+        /// <returns></returns>
+        /// </summary>
+        Task<IEnumerable<OfferSensitivityCurveData>> QueryOfferSensitivityCurveData(PromotionsCampaign campaign, DateTimeOffset startDate);
     }
 }

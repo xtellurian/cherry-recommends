@@ -175,5 +175,10 @@ namespace SignalBox.Core.Workflows
             DateTimeOffset startDate = dateTimeProvider.Now.ToUniversalTime().DateTimeSince(period, periodAgo);
             return await offerStore.QueryConversionRateData(campaign, period, startDate);
         }
+
+        public async Task<IEnumerable<OfferSensitivityCurveData>> QuerySensitivityCurveReportData(PromotionsCampaign campaign, DateTimeOffset startDate)
+        {
+            return await offerStore.QueryOfferSensitivityCurveData(campaign, startDate);
+        }
     }
 }

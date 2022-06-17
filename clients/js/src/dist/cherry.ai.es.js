@@ -116,7 +116,7 @@ var errorHandling = /*#__PURE__*/Object.freeze({
     handleErrorResponse: handleErrorResponse
 });
 
-const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, } = { method: "get", path: "/" }) => {
+const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, }) => {
     const baseUrl = getBaseUrl();
     const client = current({ baseUrl: baseUrl });
     const params = new URLSearchParams();
@@ -3296,6 +3296,12 @@ const fetchPerformanceReportAsync = async ({ token, id, }) => {
         path: `api/campaigns/PromotionsCampaigns/${id}/PerformanceReport`,
     });
 };
+const fetchOfferSensitivityCurveReportAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        token,
+        path: `api/campaigns/PromotionsCampaigns/${id}/SensitivityCurveReport`,
+    });
+};
 
 var promotionsCampaignsApi = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -3357,7 +3363,8 @@ var promotionsCampaignsApi = /*#__PURE__*/Object.freeze({
     fetchARPOReportAsync: fetchARPOReportAsync,
     fetchAPVReportAsync: fetchAPVReportAsync,
     fetchOfferConversionRateReportAsync: fetchOfferConversionRateReportAsync,
-    fetchPerformanceReportAsync: fetchPerformanceReportAsync
+    fetchPerformanceReportAsync: fetchPerformanceReportAsync,
+    fetchOfferSensitivityCurveReportAsync: fetchOfferSensitivityCurveReportAsync
 });
 
 let authConfig = undefined; // caches this because it rarely change

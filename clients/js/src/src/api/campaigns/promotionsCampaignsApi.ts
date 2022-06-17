@@ -909,3 +909,15 @@ export const fetchPerformanceReportAsync = async ({
     path: `api/campaigns/PromotionsCampaigns/${id}/PerformanceReport`,
   });
 };
+
+type OfferSensitivityCurveReport =
+  components["schemas"]["OfferSensitivityCurveReportDto"];
+export const fetchOfferSensitivityCurveReportAsync = async ({
+  token,
+  id,
+}: EntityRequest): Promise<OfferSensitivityCurveReport> => {
+  return await executeFetch({
+    token,
+    path: `api/campaigns/PromotionsCampaigns/${id}/SensitivityCurveReport`,
+  });
+};

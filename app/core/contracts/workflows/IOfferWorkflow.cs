@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using SignalBox.Core.Campaigns;
 using System.Collections.Generic;
+using System;
 
 namespace SignalBox.Core
 {
@@ -17,5 +18,6 @@ namespace SignalBox.Core
         Task<IEnumerable<OfferMeanGrossRevenue>> QueryAPVReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11);
         Task<IEnumerable<OfferConversionRateData>> QueryConversionRateReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11);
         Task<IEnumerable<OfferMeanGrossRevenue>> QueryPerformanceReportData(PromotionsCampaign campaign, DateTimePeriod period, int periodAgo = 11);
+        Task<IEnumerable<OfferSensitivityCurveData>> QuerySensitivityCurveReportData(PromotionsCampaign campaign, DateTimeOffset startDate);
     }
 }

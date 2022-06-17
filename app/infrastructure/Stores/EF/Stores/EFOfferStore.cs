@@ -74,5 +74,13 @@ namespace SignalBox.Infrastructure.EntityFramework
                 .ToListAsync();
             return results;
         }
+
+        public async Task<IEnumerable<OfferSensitivityCurveData>> QueryOfferSensitivityCurveData(PromotionsCampaign campaign, DateTimeOffset startDate)
+        {
+            var results = await context.OfferSensitivityCurveData
+                .FromSqlInterpolated($"dbo.sp_OfferSensitivityCurve {campaign.Id}, {startDate}")
+                .ToListAsync();
+            return results;
+        }
     }
 }

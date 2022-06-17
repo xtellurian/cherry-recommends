@@ -126,3 +126,5 @@ export const fetchOfferConversionRateReportAsync =
   promotionsCampaigns.fetchOfferConversionRateReportAsync;
 export const fetchPerformanceReportAsync =
   promotionsCampaigns.fetchPerformanceReportAsync;
+export const fetchOfferSensitivityCurveReportAsync =
+  promotionsCampaigns.fetchOfferSensitivityCurveReportAsync;

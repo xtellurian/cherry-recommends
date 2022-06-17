@@ -463,3 +463,9 @@ export const fetchPerformanceReportAsync = async ({ token, id, }) => {
         path: `api/campaigns/PromotionsCampaigns/${id}/PerformanceReport`,
     });
 };
+export const fetchOfferSensitivityCurveReportAsync = async ({ token, id, }) => {
+    return await executeFetch({
+        token,
+        path: `api/campaigns/PromotionsCampaigns/${id}/SensitivityCurveReport`,
+    });
+};
