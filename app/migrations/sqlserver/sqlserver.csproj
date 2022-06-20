@@ -10,6 +10,7 @@
     <None Update="Scripts/sp_APV_create.sql" CopyToOutputDirectory="PreserveNewest" />
     <None Update="Scripts/sp_OfferConversionRate_alter_1.sql" CopyToOutputDirectory="PreserveNewest" />
     <None Update="Scripts/sp_OfferSensitivityCurve_create.sql" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Scripts/TrackedUserEvents_delete_duplicate_EventId_EnvironmentId.sql" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

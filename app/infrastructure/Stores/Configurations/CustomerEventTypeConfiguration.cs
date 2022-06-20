@@ -12,7 +12,7 @@ namespace SignalBox.Infrastructure.EntityFramework
 
             builder.Property(_ => _.EventType).IsRequired();
             builder.Property(_ => _.EventKind).HasConversion<string>();
-            builder.HasIndex(_ => new { _.EventId, _.EnvironmentId }).IsUnique();
+            builder.HasIndex(_ => new { _.EventId, _.EnvironmentId }).HasFilter(null).IsUnique();
             builder.HasIndex(_ => _.Timestamp);
             builder.HasIndex(_ => new { _.TrackedUserId, _.EnvironmentId, _.Timestamp });
             builder.Property(_ => _.Properties).HasJsonConversion();
