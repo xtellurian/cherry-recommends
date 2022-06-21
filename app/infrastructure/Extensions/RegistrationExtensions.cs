@@ -33,6 +33,8 @@ namespace SignalBox.Infrastructure
             services.AddSingleton<IM2MTokenCache, Caches.TokenMemoryCache>();
             services.AddSingleton<ICustomerEventIngestor, EventHubEventProcessingIngestor>(); // singleton to re-use the same eventhub connection
             services.AddSingleton<ICustomerHasUpdatedIngestor, EventHubCustomerHasUpdatedIngestor>(); // singleton to re-use the same eventhub connection
+            services.AddSingleton<IPlatformEmailService, SimplePlatformEmailService>();
+
             services.AddHttpClient();
             return services;
         }

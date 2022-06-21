@@ -20,6 +20,7 @@ namespace SignalBox.Web.Controllers
     public class TenantsController : SignalBoxControllerBase
     {
         private readonly ITenantProvider tenantProvider;
+        private readonly IPlatformEmailService emailService;
         private readonly ITenantStore tenantStore;
         private readonly INewTenantQueueStore newTenantQueue;
         private readonly INewTenantMembershipQueueStore newTenantMembersQueue;
@@ -29,6 +30,7 @@ namespace SignalBox.Web.Controllers
         private readonly IOptionsMonitor<Hosting> hostingOptions;
 
         public TenantsController(ITenantProvider tenantProvider,
+                                IPlatformEmailService emailService,
                                  ITenantStore tenantStore,
                                  INewTenantQueueStore newTenantQueue,
                                  ITenantMembershipStore membershipStore,
@@ -38,6 +40,7 @@ namespace SignalBox.Web.Controllers
                                  IOptionsMonitor<Hosting> hostingOptions)
         {
             this.tenantProvider = tenantProvider;
+            this.emailService = emailService;
             this.tenantStore = tenantStore;
             this.newTenantQueue = newTenantQueue;
             this.membershipStore = membershipStore;
@@ -148,12 +151,15 @@ namespace SignalBox.Web.Controllers
             {
                 Email = dto.Email
             });
+            // adds a job to be processed later to add the user to teh tenant db
             await newTenantMembersQueue.Enqueue(new NewTenantMembershipQueueMessage
             {
                 UserId = newUser.UserId,
                 TenantName = tenant.Name,
                 Email = newUser.Email
             });
+
+            await emailService.SendTenantInvitation(tenant, newUser.Email, newUser.InvitationUrl);
 
             return newUser;
         }

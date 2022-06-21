@@ -33,6 +33,7 @@ config:
   shopify:billing_test: "true"
   shopify:secretKey:
     secure: AAABABp/v6OxgB8kzcqw0ZNQLqKz1NYL2BDNTz5gUOnMyOD6Mdfzs+CFJaSRsDfnv8Rksr9z4/7/v+ooHa2KqA==
+  signalbox:awsStack: cherry/aws/dev
   signalbox:environment: Development
   signalbox:login-domain: dev.login.cherry.ai
   signalbox:sqlPassword:

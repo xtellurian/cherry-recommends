@@ -87,7 +87,7 @@ namespace SignalBox.Infrastructure.Services
             }
             catch (JsonSerializationException jsonEx)
             {
-                logger.LogWarning($"Unable to deserialize user metadata. UserId = ${userId}. " + jsonEx.Message);
+                logger.LogWarning("Unable to deserialize user metadata. UserId = {userId}. {jsonExMessage}", userId, jsonEx.Message);
             }
             catch (System.Exception ex)
             {
@@ -147,7 +147,7 @@ namespace SignalBox.Infrastructure.Services
             }
             else
             {
-                logger.LogInformation($"Creating role for tenant {tenant.Id}");
+                logger.LogInformation("Creating role for tenant {tenantId}", tenant.Id);
                 role = await ApiClient.Roles.CreateAsync(new RoleCreateRequest
                 {
                     Name = tenant.MemberRoleName(),
@@ -175,7 +175,7 @@ namespace SignalBox.Infrastructure.Services
 
         public async Task<UserInfo> AddUser(InviteRequest invite)
         {
-            logger.LogInformation($"Inviting {invite.Email}");
+            logger.LogInformation("Inviting {inviteEmail}", invite.Email);
             await Initialize();
 
             var connections = await ApiClient.Connections.GetAllAsync(new GetConnectionsRequest
@@ -207,12 +207,11 @@ namespace SignalBox.Infrastructure.Services
                 {
                     MarkEmailAsVerified = false,
                     UserId = user.UserId,
-                    ClientId = auth0ReactConfig.ClientId
+                    ClientId = auth0ReactConfig.ClientId,
+
                 });
 
-                // TODO: now edit the ticket link with some useful info to customise the Auth0 Reset Password page.
-                // TODO: Email the link to the new user
-                logger.LogInformation($"Ticket URL is {ticket.Value}");
+                logger.LogInformation("Ticket URL is {ticketValue}", ticket.Value);
                 userInfo.InvitationUrl = ticket.Value;
             }
 
@@ -272,12 +271,12 @@ namespace SignalBox.Infrastructure.Services
 
         private async Task EnsureTenantScopeExists(Tenant tenant)
         {
-            logger.LogInformation($"Ensuring tenant scope exists for tenant {tenant.Name}");
+            logger.LogInformation("Ensuring tenant scope exists for tenant {tenantName}", tenant.Name);
             var current = await ApiClient.ResourceServers.GetAsync(credentials.DefaultAudience);
             var scopes = current.Scopes.ToList();
             if (!scopes.Any(_ => _.Value == tenant.AccessScope()))
             {
-                logger.LogWarning($"Creating tenant scope for tenant {tenant.Name} with Id = {tenant.Id}");
+                logger.LogWarning("Creating tenant scope for tenant {tenantName} with Id = {tenantId}", tenant.Name, tenant.Id);
                 scopes.Add(new ResourceServerScope
                 {
                     Value = tenant.AccessScope(),

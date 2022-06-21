@@ -33,6 +33,7 @@ config:
   shopify:billing_skip: "true"
   shopify:secretKey:
     secure: AAABAHNUkFoqoOXYETjvMhCe87shje2c/ZaMJTM0VXRU1eKgturDWGyV+1MR35C7yyQN9Wv/8/8pDmifiIx1qJWNDIudAg==
+  signalbox:awsStack: cherry/aws/production
   signalbox:environment: Production
   signalbox:login-domain: login.cherry.ai
   signalbox:sqlPassword:

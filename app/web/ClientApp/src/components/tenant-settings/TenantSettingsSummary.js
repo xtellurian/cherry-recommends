@@ -1,73 +1,41 @@
 import React from "react";
-import { Spinner, Title } from "../molecules";
-import { BigPopup } from "../molecules/popups/BigPopup";
+import { Title } from "../molecules";
+import { SmallPopup } from "../molecules/popups/SmallPopup";
 import { TenantMembersSection } from "./TenantMembers";
 import { InviteMemberSection } from "./InviteMember";
-import { CopyableField } from "../molecules/fields/CopyableField";
 import { TenantBillingSection } from "./TenantBillingSection";
+import { TenantInfoSection } from "./TenantInfoSection";
 
 export const TenantSettingsSummary = () => {
-  const [loading, setLoading] = React.useState(false);
-  const [newUserInfo, setNewUserInfo] = React.useState();
-  const [newUserInvitatonPopupOpen, setNewUserInvitationPopupOpen] =
-    React.useState(false);
-  const handleNewMembderAdded = (s) => {
-    setLoading(true);
-    setNewUserInvitationPopupOpen(true);
-    setNewUserInfo(s);
-  };
-
-  React.useEffect(() => {
-    if (!newUserInfo) {
-      setLoading(false);
-    }
-  }, [newUserInfo]);
+  const [popupOpen, setPopupOpen] = React.useState(false);
   return (
     <>
       <div>
         <Title> Tenant Settings </Title>
         <hr />
 
-        {loading ? <Spinner /> : <TenantBillingSection />}
-        {loading ? (
-          <Spinner />
-        ) : (
-          <TenantMembersSection>
-            <div className="mt-4">
-              <InviteMemberSection onNewMemberAdded={handleNewMembderAdded} />
-            </div>
-          </TenantMembersSection>
-        )}
-        {loading && <Spinner />}
-      </div>
+        <TenantInfoSection />
+        <TenantBillingSection />
 
-      {newUserInfo && (
-        <BigPopup
-          isOpen={newUserInvitatonPopupOpen}
-          setIsOpen={setNewUserInvitationPopupOpen}
-          headerDivider
-          header="New User Added"
-          buttons={
-            <button
-              className="btn btn-primary btn-block"
-              onClick={() => {
-                setNewUserInvitationPopupOpen(false);
-                setNewUserInfo(null);
-              }}
-            >
-              I've sent them the link
-            </button>
-          }
-        >
-          <div style={{ minHeight: "30vh" }} className="pt-5">
-            <p>
-              Send this link to your new team member to set up their account.
-            </p>
-
-            <CopyableField label="Link" value={newUserInfo.invitationUrl} />
+        <TenantMembersSection>
+          <div className="mt-4">
+            <InviteMemberSection onNewMemberAdded={() => setPopupOpen(true)} />
+            <SmallPopup isOpen={popupOpen} setIsOpen={setPopupOpen}>
+              <div className="text-center p-3">
+                <div className="mb-3">
+                  We've sent an email inviting your new team member.
+                </div>
+                <button
+                  className="btn btn-primary m-auto"
+                  onClick={() => setPopupOpen(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </SmallPopup>
           </div>
-        </BigPopup>
-      )}
+        </TenantMembersSection>
+      </div>
     </>
   );
 };

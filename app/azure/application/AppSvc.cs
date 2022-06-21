@@ -10,10 +10,11 @@ namespace SignalBox.Azure
 {
     partial class AppSvc : ComponentWithStorage
     {
-        protected Pulumi.Config appSvcConfig;
-        protected Pulumi.Config auth0Config;
-        protected Pulumi.Config azureConfig;
-        protected Pulumi.Config launchDarklyConfig;
+        protected Config rootConfig;
+        protected Config appSvcConfig;
+        protected Config auth0Config;
+        protected Config azureConfig;
+        protected Config launchDarklyConfig;
         protected string environment;
         protected string? canonicalRootDomain;
         private readonly bool multitenant;
@@ -29,6 +30,7 @@ namespace SignalBox.Azure
         {
             this.tags ??= new Dictionary<string, string>();
             // create an app service plan
+            this.rootConfig = new Pulumi.Config();
             this.appSvcConfig = new Pulumi.Config("appsvc");
             this.auth0Config = new Pulumi.Config("auth0");
             this.azureConfig = new Pulumi.Config("azure-native");
@@ -42,6 +44,21 @@ namespace SignalBox.Azure
             var hotjarConfig = new Pulumi.Config("hotjar");
             var shopifyConfig = new Pulumi.Config("shopify");
             System.Console.WriteLine($"Canonical Root Domain is {canonicalRootDomain ?? "null"}");
+
+
+            Output<object>? awsSmtpUsername = Output.Create<object>("");
+            Output<object>? awsSmtpPassword = Output.Create<object>("");
+            Output<object>? awsRegion = Output.Create<object>("");
+            Output<object>? email = Output.Create<object>("");
+            var awsStackName = rootConfig.Get("awsStack");
+            if (awsStackName != null)
+            {
+                var awsStack = new StackReference(awsStackName);
+                awsSmtpPassword = awsStack.RequireOutput("SmtpPassword");
+                awsSmtpUsername = awsStack.RequireOutput("SmtpUsername");
+                email = awsStack.RequireOutput("Email");
+                awsRegion = awsStack.RequireOutput("Region");
+            }
 
             var plan = new AppServicePlan("asp", new AppServicePlanArgs
             {
@@ -146,6 +163,11 @@ namespace SignalBox.Azure
                     {"Auth0__M2M__ClientId", auth0.M2MClientId},
                     {"Auth0__M2M__ClientSecret", auth0.M2MClientSecret},
                     {"Auth0__M2M__Endpoint", auth0.M2MEndpoint},
+
+                    {"AWS__SES__SmtpUsername", Output.Format($"{awsSmtpUsername}")},
+                    {"AWS__SES__SmtpPassword", Output.Format($"{awsSmtpPassword }")},
+                    {"AWS__SES__Region", Output.Format($"{awsRegion}")},
+                    {"AWS__SES__Email", Output.Format($"{email}")},
 
                     {"Auth0__Management__DefaultAudience", auth0.DefaultAudience},
                     {"Auth0__Management__ClientId", auth0Config.Require("clientId")},

@@ -28,6 +28,7 @@ config:
   shopify:apiKey: 4575a64c10075d06efeccdde842fadd8
   shopify:secretKey:
     secure: AAABAJc1GuNzarRSysx4UfHW5lhSKnpDPtHnqdnNqFX6I3LVkS7VPobW7r1IK7pC5T6JxuAWSxNTYevSAjbBXw==
+  signalbox:awsStack: cherry/aws/production
   signalbox:environment: Production
   signalbox:login-domain: canary.login.cherry.ai
   signalbox:sqlPassword:

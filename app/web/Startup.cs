@@ -205,6 +205,8 @@ namespace SignalBox.Web
             services.Configure<EventProcessingEventHubConfig>(Configuration.GetSection("EventProcessing").GetSection("EventIngestion"));
             services.Configure<CustomerHasUpdatedEventHubConfig>(Configuration.GetSection("EventProcessing").GetSection("CustomerHasUpdated"));
 
+            // configure AWS
+            services.Configure<SesCredentials>(Configuration.GetSection("AWS").GetSection("SES"));
 
             services.AddScoped<ITenantAuthorizationStrategy, TokenClaimTenantAuthorizor>();
 
