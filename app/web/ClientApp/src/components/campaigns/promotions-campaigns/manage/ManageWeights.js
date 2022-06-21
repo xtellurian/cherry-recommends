@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { CampaignCard } from "../../CampaignCard";
 import {
@@ -16,8 +16,7 @@ import {
   ErrorCard,
   MoveUpHierarchyPrimaryButton,
   PageHeading,
-  ExpandableCard,
-  Typography,
+  Accordion,
 } from "../../../molecules";
 import { Spinner } from "reactstrap";
 import { ManageNav } from "./Tabs";
@@ -38,48 +37,46 @@ const DistributionRow = ({ recommender, segment, onRemoveClicked }) => {
 
   return (
     <div className="mb-2">
-      <ExpandableCard label={segment?.name || "Default"}>
-        <div className="text-right">
-          <button
-            disabled={!recommender.useOptimiser}
-            className="btn btn-primary mr-1"
-            onClick={() => setIsManualControlPopupOpen(true)}
-          >
-            Edit All
-          </button>
-          {segment?.id && (
-            <button
-              className="btn btn-outline-danger mr-1"
-              onClick={onRemoveClicked}
-            >
-              Remove
-            </button>
-          )}
-        </div>
-        <WeightsCard
-          recommender={recommender}
-          segmentId={segment?.id}
-          trigger={trigger}
-          setTrigger={setTrigger}
-        />
-        <BigPopup
-          isOpen={isManualControlPopupOpen}
-          setIsOpen={setIsManualControlPopupOpen}
-          header="Edit Weights"
-          headerDivider
+      <div className="text-right">
+        <button
+          disabled={!recommender.useOptimiser}
+          className="btn btn-primary mr-1"
+          onClick={() => setIsManualControlPopupOpen(true)}
         >
-          {recommender && recommender.items ? (
-            <ManualControlSetAll
-              recommender={recommender}
-              segmentId={segment?.id}
-              promotions={recommender.items}
-              onSaved={onManualSaved}
-            />
-          ) : (
-            <Spinner />
-          )}
-        </BigPopup>
-      </ExpandableCard>
+          Edit All
+        </button>
+        {segment?.id && (
+          <button
+            className="btn btn-outline-danger mr-1"
+            onClick={onRemoveClicked}
+          >
+            Remove
+          </button>
+        )}
+      </div>
+      <WeightsCard
+        recommender={recommender}
+        segmentId={segment?.id}
+        trigger={trigger}
+        setTrigger={setTrigger}
+      />
+      <BigPopup
+        isOpen={isManualControlPopupOpen}
+        setIsOpen={setIsManualControlPopupOpen}
+        header="Edit Weights"
+        headerDivider
+      >
+        {recommender && recommender.items ? (
+          <ManualControlSetAll
+            recommender={recommender}
+            segmentId={segment?.id}
+            promotions={recommender.items}
+            onSaved={onManualSaved}
+          />
+        ) : (
+          <Spinner />
+        )}
+      </BigPopup>
     </div>
   );
 };
@@ -120,6 +117,30 @@ const Weights = () => {
     setSegmentToRemove(segment);
     setIsRemoveDistributionPopupOpen(true);
   };
+
+  const distributionPanels = useMemo(() => {
+    const items = optimiserSegments?.items || [];
+
+    const distributionPanels = items.map((segment) => ({
+      label: segment.name,
+      content: (
+        <DistributionRow
+          key={segment.id}
+          recommender={recommender}
+          segment={segment}
+          onRemoveClicked={() => handleRemove(segment)}
+        />
+      ),
+    }));
+
+    return [
+      {
+        label: "Default",
+        content: <DistributionRow recommender={recommender}></DistributionRow>,
+      },
+      ...distributionPanels,
+    ];
+  }, [optimiserSegments.items, recommender]);
 
   return (
     <EntityDetailPageLayout
@@ -171,17 +192,8 @@ const Weights = () => {
           />
           <span className="p-3 text-center">Use Optimiser</span>
         </div>
-        <DistributionRow recommender={recommender}></DistributionRow>
-        {!optimiserSegments.loading &&
-          optimiserSegments.items?.length > 0 &&
-          optimiserSegments.items.map((f) => (
-            <DistributionRow
-              key={f.id}
-              recommender={recommender}
-              segment={f}
-              onRemoveClicked={() => handleRemove(f)}
-            ></DistributionRow>
-          ))}
+
+        <Accordion panels={distributionPanels} />
       </React.Fragment>
     </EntityDetailPageLayout>
   );
