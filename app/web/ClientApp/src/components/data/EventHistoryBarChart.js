@@ -15,7 +15,8 @@ import { Spinner } from "../molecules/Spinner";
  * @param {string} eventType
  */
 export const EventHistoryBarChart = ({ kind, eventType }) => {
-  const { result } = useEventTimeline({ kind, eventType });
+  const encodedType = encodeURIComponent(eventType);
+  const { result } = useEventTimeline({ kind, eventType: encodedType });
   if (!kind || !eventType) {
     return (
       <div className="text-muted text-center">

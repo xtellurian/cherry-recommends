@@ -60,6 +60,7 @@ export const ViewEventData = () => {
   const toggleKind = (k) => {
     if (selectedKind !== k) {
       setSelectedKind(k);
+      setSelectedType();
     } else {
       setSelectedKind();
     }
