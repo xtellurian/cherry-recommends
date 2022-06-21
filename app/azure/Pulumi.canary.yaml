@@ -18,8 +18,10 @@ config:
     secure: AAABACOKM/uSJeGIvRn+8Psbn7UoDraSviY3VOdlMyp9DOFQrfyxNDOvVds=
   hotjar:siteId: "2866572"
   hotjar:snippetVersion: "6"
-  hubspot:appId: ""
-  hubspot:clientId: ""
+  hubspot:appId: "941955"
+  hubspot:clientId: 5fa29440-8d87-4b3a-b681-36583c0d440a
+  hubspot:clientSecret:
+    secure: AAABAIDARzjfqH5J16h1aNRcAcOY3Ru3/LCcJGz4rEjyo1jlVCEIq8kQtpugSiL2fQcw3FMIVh91qOuND9bwyFWtuMc=
   launch-darkly:clientSideId: 6227e4523c1cba143cd8fa86
   network:cherrySubdomain: canary
   observations:exceptionsThreshold: "5"

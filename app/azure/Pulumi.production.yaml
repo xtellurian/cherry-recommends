@@ -22,8 +22,10 @@ config:
   database:poolMaxCapacityPerDatabase: "2"
   hotjar:siteId: "2866573"
   hotjar:snippetVersion: "6"
-  hubspot:appId: todo
-  hubspot:clientId: todo
+  hubspot:appId: "941956"
+  hubspot:clientId: a2355f3f-9ccf-4f58-a42a-52648bb31cc3
+  hubspot:clientSecret:
+    secure: AAABAPAWjM09ADJitDZAiybl8XVszS6J8aZxZK13diNhC4LsAPz7qhbxGbT0+uTLUI6zmUSxAK23SgDIjzwHBro2sz4=
   launch-darkly:clientSideId: 6227e4523c1cba143cd8fa87
   network:cherrySubdomain: app
   observations:exceptionsThreshold: "25"

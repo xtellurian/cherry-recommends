@@ -20,10 +20,10 @@ config:
   database:poolMaxCapacityPerDatabase: "50"
   database:poolSkuName: StandardPool
   database:poolSkuTier: Standard
-  hubspot:appId: "308459"
-  hubspot:clientId: 05e9c9c1-dcc7-4415-b6ed-fc772f26de66
+  hubspot:appId: "941746"
+  hubspot:clientId: 557bcd36-88a7-4956-a198-7e15ed704304
   hubspot:clientSecret:
-    secure: AAABAGh8zwPTkHWrlgGw0H1mgvEm7soykdfBChUT9iQsyfnd85azSzFgUApjwsEd1/JdKZ0/26Dn8aANnmYldIKEs7U=
+    secure: AAABACuKRQlZ9p2JZWgEiN+j52IDVUbBNK6Vw4JnfsDHmTsn2DdfIvibbG1LujDJVP0vFWg1kJzt+bLwB10m2f1WgB4=
   launch-darkly:clientSideId: 622802e7cc6fc7149d5348fd
   network:cherrySubdomain: dev
   observations:exceptionsThreshold: "200"
