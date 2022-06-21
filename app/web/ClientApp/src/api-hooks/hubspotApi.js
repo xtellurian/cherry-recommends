@@ -11,16 +11,19 @@ import {
   fetchHubspotConnectedContactPropertiesAsync,
   fetchHubspotContactsAsync,
 } from "../api/hubspotApi";
+import { useTenantName } from "../components/tenants/PathTenantProvider";
 
 export const useHubspotAppInformation = () => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
+  const { tenantName } = useTenantName();
 
   React.useEffect(() => {
     if (token) {
       setState({ loading: true });
       fetchHubspotAppInformationAsync({
         token,
+        tenant: tenantName,
       })
         .then((s) => {
           setState(s);
@@ -106,11 +109,14 @@ export const useHubspotCrmCardBehaviour = ({ id, trigger }) => {
 export const useHubspotAccount = ({ id }) => {
   const token = useAccessToken();
   const [result, setState] = React.useState({ loading: true });
+  const { tenantName } = useTenantName();
+
   React.useEffect(() => {
     if (token && id) {
       setState({ loading: true });
       fetchHubspotAccountAsync({
         token,
+        tenant: tenantName,
         id,
       })
         .then(setState)

@@ -39,7 +39,7 @@ namespace SignalBox.Core.Workflows
             var cache = integratedSystem.GetCache<HubspotCache>();
             var propertyNames = cache.ConnectedContactProperties?.PropertyNames?.ToList();
 
-            if (propertyNames.Any())
+            if (propertyNames != null && propertyNames.Any())
             {
                 // do it once.
                 var trackedUsers = await GetAndUpdateTrackedUsers(integratedSystem, null, propertyNames);

@@ -8,9 +8,10 @@ import { Title } from "../../../molecules/layout";
 import { Spinner } from "../../../molecules/Spinner";
 import { ErrorCard } from "../../../molecules/ErrorCard";
 import { MoveUpHierarchyButton, Navigation } from "../../../molecules";
+import { useTenantName } from "../../../tenants/PathTenantProvider";
 
 const basePath = `${window.location.protocol}//${window.location.host}`;
-const redirectUri = `${basePath}/settings/integrations/hubspotconnector`;
+const redirectUri = `${basePath}/_connect/hubspot/callback`;
 
 const stages = ["READY", "INSTALLING", "SAVING", "COMPLETE"];
 const Top = () => {
@@ -48,7 +49,10 @@ const SystemStateView = ({ integratedSystem }) => {
           Integration Status: {integratedSystem.integrationStatus}
           <div>
             <Navigation
-              to={`/settings/integrations/detail/${integratedSystem.id}`}
+              to={{
+                pathname: `/settings/integrations/detail/${integratedSystem.id}`,
+                search: null,
+              }}
             >
               <button className="btn btn-primary btn-block">
                 View Integration
@@ -71,28 +75,16 @@ const SystemStateView = ({ integratedSystem }) => {
 export const HubspotConnector = () => {
   const query = useQuery();
   const integratedSystemId = query.get("state");
-  const code = query.get("code");
-
-  const token = useAccessToken();
   const integratedSystem = useIntegratedSystem({ id: integratedSystemId });
   const [stage, setStage] = React.useState(stages[0]);
   const [error, setError] = React.useState();
   const { clientId, scope, loading } = useHubspotAppInformation();
+  const { tenantName } = useTenantName();
 
-  const installLink = `https://app.hubspot.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${integratedSystemId}`;
+  const jsonState = { id: `${integratedSystemId}`, tenant: `${tenantName}` };
+  const state = JSON.stringify(jsonState);
 
-  React.useEffect(() => {
-    if (code && token) {
-      saveHubspotCodeAsync({
-        code,
-        redirectUri,
-        integratedSystemId,
-        token,
-      })
-        .then(() => setStage(stages[3]))
-        .catch(setError);
-    }
-  }, [code, token, integratedSystemId]);
+  const installLink = `https://app.hubspot.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
 
   return (
     <React.Fragment>

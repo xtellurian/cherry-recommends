@@ -8,5 +8,9 @@ namespace SignalBox.Core.Constants
         public const string RunMetricGenerator = "run-metric-generator";
         public const string RunAllSegmentEnrolmentRules = "run-all-segment-enrolment-rules";
         public const string RunSegmentEnrolmentRule = "run-segment-enrolment-rule";
+        public const string RunAllHubspotDataPush = "run-all-hubspot-data-push";
+        public const string RunHubspotDataPush = "run-hubspot-data-push";
+        public const string RunAllHubspotEtl = "run-all-hubspot-etl";
+        public const string RunHubspotEtl = "run-hubspot-etl";
     }
 }

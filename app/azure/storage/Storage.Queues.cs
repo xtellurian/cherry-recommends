@@ -48,6 +48,34 @@ namespace SignalBox.Azure
                 AccountName = storageAccount.Name,
                 ResourceGroupName = rg.Name
             });
+
+            var runAllHubspotDataPush = new Queue("runAllHubspotDataPush", new QueueArgs
+            {
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.RunAllHubspotDataPush,
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name
+            });
+
+            var runHubspotDataPush = new Queue("runHubspotDataPush", new QueueArgs
+            {
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.RunHubspotDataPush,
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name
+            });
+
+            var runAllHubspotEtl = new Queue("runAllHubspotEtl", new QueueArgs
+            {
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.RunAllHubspotEtl,
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name
+            });
+
+            var runHubspotEtl = new Queue("runHubspotEtl", new QueueArgs
+            {
+                QueueName = SignalBox.Core.Constants.AzureQueueNames.RunHubspotEtl,
+                AccountName = storageAccount.Name,
+                ResourceGroupName = rg.Name
+            });
         }
     }
 }

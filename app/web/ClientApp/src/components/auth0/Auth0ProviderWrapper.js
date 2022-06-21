@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 export const specialPaths = [
-  "/settings/integrations/hubspotconnector",
-  "/settings/integrations/detail",
   "/_connect/shopify/callback",
   "/_connect/shopify/install",
+  "/_connect/hubspot/callback",
 ];
 
 export const isSpecialPath = (path) => {
