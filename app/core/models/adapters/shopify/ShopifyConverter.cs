@@ -5,6 +5,8 @@ namespace SignalBox.Core.Adapters.Shopify
 {
     public static class ShopifyConverter
     {
+        public static string OrdersPaidEvent = "Shopify|orders/paid";
+
         public static CustomerEventInput ToCustomerEventInput(this ShopifyOrder model, string webhookId, string topic, ITenantProvider tenantProvider, IntegratedSystem sys)
         {
             if (model == null)

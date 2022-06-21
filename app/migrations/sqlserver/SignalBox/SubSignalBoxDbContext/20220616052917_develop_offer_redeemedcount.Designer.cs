@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SignalBox.Infrastructure;
 
-namespace sqlserver.SignalBox
+namespace sqlserver.SignalBox.SubSignalBoxDbContext
 {
     [DbContext(typeof(SignalBoxDbContext))]
-    partial class SignalBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220616052917_develop_offer_redeemedcount")]
+    partial class develop_offer_redeemedcount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -730,7 +732,8 @@ namespace sqlserver.SignalBox
                     b.HasIndex("Timestamp");
 
                     b.HasIndex("EventId", "EnvironmentId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[EventId] IS NOT NULL AND [EnvironmentId] IS NOT NULL");
 
                     b.HasIndex("TrackedUserId", "EnvironmentId", "Timestamp");
 
@@ -1597,32 +1600,6 @@ namespace sqlserver.SignalBox
                     b.ToTable("OfferMeanGrossRevenues", t => t.ExcludeFromMigrations());
                 });
 
-            modelBuilder.Entity("SignalBox.Core.OfferSensitivityCurveData", b =>
-                {
-                    b.Property<double>("ConversionRate")
-                        .HasColumnType("float");
-
-                    b.Property<double>("MeanGrossRevenue")
-                        .HasColumnType("float");
-
-                    b.Property<long>("PromotionId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("PromotionName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RedeemedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalCount")
-                        .HasColumnType("int");
-
-                    b.Property<double>("TotalGrossRevenue")
-                        .HasColumnType("float");
-
-                    b.ToTable("OfferSensitivityCurveData", t => t.ExcludeFromMigrations());
-                });
-
             modelBuilder.Entity("SignalBox.Core.Optimisers.PromotionOptimiser", b =>
                 {
                     b.Property<long>("Id")
@@ -2470,9 +2447,6 @@ namespace sqlserver.SignalBox
                     b.Property<long?>("RecommenderIdToInvoke")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("StorageType")
-                        .HasColumnType("nvarchar(max)");
-
                     b.ToTable("Channels");
 
                     b.HasDiscriminator().HasValue("WebChannel");
@@ -3214,9 +3188,6 @@ namespace sqlserver.SignalBox
                             b1.HasIndex("PromotionId");
 
                             b1.HasIndex("SegmentId");
-
-                            b1.HasIndex("OptimiserId", "SegmentId", "PromotionId")
-                                .IsUnique();
 
                             b1.ToTable("PromotionOptimiserWeight");
 

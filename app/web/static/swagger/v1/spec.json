@@ -29161,6 +29161,10 @@
             "format": "double",
             "nullable": true
           },
+          "redeemedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
           "redeemedPromotion": {
             "$ref": "#/components/schemas/RecommendableItem"
           }

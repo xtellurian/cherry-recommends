@@ -21,6 +21,7 @@ namespace SignalBox.Core
         public OfferState State { get; set; }
         public DateTimeOffset? RedeemedAt { get; set; }
         public double? GrossRevenue { get; set; }
+        public int RedeemedCount { get; set; }
 
 #nullable enable
         [JsonIgnore]

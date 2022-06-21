@@ -87,7 +87,7 @@ namespace SignalBox.Core.Workflows
                 await shopifyAdminWorkflow.Disconnect(system);
                 logger.LogInformation("Shopify app uninstalled. Integrated system id={integratedSystemId} was not removed due to constraints; system disconnected.", system.Id);
             }
-            var res = await eventsWorkflows.Ingest(new List<CustomerEventInput> { });
+            var res = new EventLoggingResponse();
 
             return res;
         }
@@ -123,7 +123,7 @@ namespace SignalBox.Core.Workflows
                 await integratedSystemStore.Context.SaveChanges();
             }
 
-            var res = await eventsWorkflows.Ingest(new List<CustomerEventInput> { });
+            var res = new EventLoggingResponse();
 
             return res;
         }
