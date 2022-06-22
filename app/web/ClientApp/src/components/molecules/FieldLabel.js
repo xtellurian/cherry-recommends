@@ -16,7 +16,7 @@ export const HintTippy = ({ children, value }) => {
         value ? (
           <Typography
             variant="label"
-            className="text-white text-center border rounded px-3 py-2 field-label-popup shadow"
+            className="text-white text-center border rounded px-3 py-2 shadow"
             style={{ backgroundColor: "#212121" }}
           >
             {value}
@@ -51,14 +51,14 @@ export const FieldLabel = ({
 
   return (
     <div
-      className={`field-label-wrapper ${inline ? "d-md-flex" : ""} ${
+      className={`form-label-wrapper ${inline ? "d-md-flex" : ""} ${
         types[type] || "mb-4"
       } ${labelPositions[labelPosition]} ${className}`}
     >
       {label ? (
         <HintTippy value={hint}>
           <div
-            className={`field-label mb-1 mb-md-0 ${
+            className={`${inline ? "form-label-inline mb-1 mb-md-0" : "mb-1"} ${
               hint ? "cursor-pointer" : ""
             }`}
           >

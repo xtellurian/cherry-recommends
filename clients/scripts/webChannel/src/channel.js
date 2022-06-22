@@ -17,7 +17,11 @@ import {
   getCherryStorageData,
   setCherryStorageData,
 } from "./storage";
-import { storageKeys } from "./constants";
+import {
+  conditionalActions,
+  conditionOperators,
+  storageKeys,
+} from "./constants";
 
 const srcUrl = new URL(document.getElementById("cherry-channel").src);
 const params = new URLSearchParams(srcUrl.search);
@@ -31,15 +35,58 @@ setBaseUrl(baseUrl);
 setTenant(tenant);
 setDefaultApiKey(apiKey);
 
+// returns TRUE if all the conditions are met; otherwise it returns FALSE
+function evaluateConditions({ conditions, searchParams }) {
+  return conditions.every((condition) => {
+    if (condition.operator === conditionOperators.EQUAL) {
+      return searchParams.get(condition.parameter) === condition.value;
+    }
+
+    if (condition.operator === conditionOperators.NOT_EQUAL) {
+      return searchParams.get(condition.parameter) !== condition.value;
+    }
+
+    if (condition.operator === conditionOperators.CONTAINS) {
+      return searchParams.get(condition.parameter).includes(condition.value);
+    }
+
+    return true;
+  });
+}
+
 function executeCampaign({ customerId, channelProperties }) {
   const qs = new URLSearchParams(window.location.search);
 
   const {
-    popupDelay = 0,
+    popupDelay,
     popupHeader,
     popupSubheader,
     recommenderIdToInvoke,
+    conditionalAction,
+    conditions,
   } = channelProperties;
+
+  // check conditions and execute action (either block or allow) if ALL conditions are met
+  if (conditions.length > 0) {
+    const search = window.location.search.slice(1);
+
+    if (search) {
+      const searchParams = new URLSearchParams(qs);
+
+      const hasMetConditions = evaluateConditions({
+        conditions,
+        searchParams,
+      });
+
+      const isBlocked =
+        (conditionalAction === conditionalActions.BLOCK && hasMetConditions) ||
+        (conditionalAction === conditionalActions.ALLOW && !hasMetConditions);
+
+      if (isBlocked) {
+        return;
+      }
+    }
+  }
 
   // logs pageView event and appends UTM parameters of the customers (a.k.a visitors) if it exists,
   events.createEventsAsync({
@@ -67,14 +114,15 @@ function executeCampaign({ customerId, channelProperties }) {
 
   // show popup asking for email WITHOUT promotion
   if (!recommenderIdToInvoke) {
-    const defaultSubheader = "Don't miss any of our promotions. Subscribe now!";
+    const defaultPopupSubheader =
+      "Don't miss any of our promotions. Subscribe now!";
 
     setTimeout(() => {
       showEmailPopup({
         header: popupHeader || "",
-        subheader: popupSubheader || defaultSubheader,
+        subheader: popupSubheader || defaultPopupSubheader,
       });
-    }, popupDelay);
+    }, popupDelay || 0);
 
     return;
   }
@@ -91,22 +139,25 @@ function executeCampaign({ customerId, channelProperties }) {
       })
       .then(({ scoredItems, correlatorId }) => {
         const { item } = scoredItems[0];
+        const defaultPopupHeader = "GET %promotionName%";
+        const defaultPopupSubheader =
+          "Sign up for our newsletter to get your %promotionName% discount code!";
 
-        const header = popupHeader
+        const header = (popupHeader || defaultPopupHeader)
           .replace("%promotionName%", item.name)
           .toUpperCase();
 
-        const subheader = popupSubheader.replace(
+        const subheader = (popupSubheader || defaultPopupSubheader).replace(
           "%promotionName%",
           item.name.toLowerCase()
         );
 
         setTimeout(() => {
           showEmailPopup({
-            header: header || "",
-            subheader: subheader || item.name,
+            header: header,
+            subheader: subheader,
           });
-        }, popupDelay);
+        }, popupDelay || 0);
 
         events.createRecommendationConsumedEventAsync({
           customerId: customerId,

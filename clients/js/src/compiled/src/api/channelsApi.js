@@ -51,3 +51,8 @@ export const updateEmailChannelTriggerAsync = async ({ token, id, listTrigger, }
         body: listTrigger,
     });
 };
+export const conditionalActions = {
+    none: "none",
+    allow: "allow",
+    block: "block",
+};

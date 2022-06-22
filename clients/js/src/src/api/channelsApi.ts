@@ -78,8 +78,16 @@ interface UpdateChannelPropertiesRequest extends EntityRequest {
     recommenderId: number;
     customerIdPrefix: string;
     storageKey: string;
+    conditionalAction: string;
+    conditions: {
+      id: string,
+      parameter: string;
+      operator: string;
+      value: string;
+    }[]
   };
 }
+
 export const updateChannelPropertiesAsync = async ({
   token,
   id,
@@ -110,4 +118,18 @@ export const updateEmailChannelTriggerAsync = async ({
     method: "post",
     body: listTrigger,
   });
+};
+
+export type ConditionalActions = components["schemas"]["PopupConditionalActions"];
+
+interface ConditionalActionsConstants {
+  none: ConditionalActions;
+  allow: ConditionalActions;
+  block: ConditionalActions;
+}
+
+export const conditionalActions: ConditionalActionsConstants = {
+  none: "none",
+  allow: "allow",
+  block: "block",
 };

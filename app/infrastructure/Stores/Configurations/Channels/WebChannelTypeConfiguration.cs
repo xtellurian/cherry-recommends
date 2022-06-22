@@ -9,6 +9,7 @@ namespace SignalBox.Infrastructure.EntityFramework
         public override void Configure(EntityTypeBuilder<WebChannel> builder)
         {
             base.Configure(builder);
+            builder.Property((_) => _.Conditions).HasJsonConversion();
         }
     }
 }

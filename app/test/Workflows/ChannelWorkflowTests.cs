@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
 using SignalBox.Core;
@@ -106,8 +107,10 @@ namespace SignalBox.Test.Workflows
 
             var integratedSystem = new IntegratedSystem("abc", "Test", IntegratedSystemTypes.Website);
             WebChannel channel = new WebChannel("myChannel", integratedSystem);
+            var condition = new List<PopupCondition>();
+            condition.Add(new PopupCondition() { Id = "2b0d7b3dcb6d", Parameter = "utm_medium", Operator = "equal", Value = "email" });
 
-            var ret = await workflow.UpdateWebChannelProperties(channel, host, popupAskForEmail);
+            var ret = await workflow.UpdateWebChannelProperties(channel, host, condition, popupAskForEmail);
 
             mockWebChannelStore.Verify(_ => _.Context.SaveChanges(), Times.Once);
             Assert.Equal(host, channel.Host);

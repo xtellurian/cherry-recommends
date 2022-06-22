@@ -359,6 +359,11 @@
             body: listTrigger,
         });
     };
+    const conditionalActions = {
+        none: "none",
+        allow: "allow",
+        block: "block",
+    };
 
     var channelsApi = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -368,7 +373,8 @@
         deleteChannelAsync: deleteChannelAsync,
         updateChannelEndpointAsync: updateChannelEndpointAsync,
         updateChannelPropertiesAsync: updateChannelPropertiesAsync,
-        updateEmailChannelTriggerAsync: updateEmailChannelTriggerAsync
+        updateEmailChannelTriggerAsync: updateEmailChannelTriggerAsync,
+        conditionalActions: conditionalActions
     });
 
     /**

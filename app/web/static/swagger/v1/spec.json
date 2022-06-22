@@ -29873,6 +29873,36 @@
         ],
         "type": "string"
       },
+      "PopupCondition": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameter": {
+            "type": "string",
+            "nullable": true
+          },
+          "operator": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PopupConditionalActions": {
+        "enum": [
+          "none",
+          "allow",
+          "block"
+        ],
+        "type": "string"
+      },
       "Post": {
         "type": "object",
         "properties": {
@@ -30995,6 +31025,16 @@
           },
           "storageType": {
             "type": "string",
+            "nullable": true
+          },
+          "conditionalAction": {
+            "$ref": "#/components/schemas/PopupConditionalActions"
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PopupCondition"
+            },
             "nullable": true
           }
         },

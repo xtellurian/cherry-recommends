@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SignalBox.Core.Recommendations;
@@ -80,11 +81,35 @@ namespace SignalBox.Core.Workflows
             return channel;
         }
 
-        public async Task<ChannelBase> UpdateWebChannelProperties(ChannelBase channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, string popupHeader = "", string popupSubheader = "", long? recommenderId = null, string customerIdPrefix = "", string storageType = "")
+        public async Task<ChannelBase> UpdateWebChannelProperties(
+            ChannelBase channel,
+            string host,
+            List<PopupCondition> conditions,
+            bool? popupAskForEmail = null,
+            int? popupDelay = null,
+            string popupHeader = "",
+            string popupSubheader = "",
+            long? recommenderId = null,
+            string customerIdPrefix = "",
+            string storageType = "",
+            PopupConditionalActions conditionalAction = PopupConditionalActions.None
+        )
         {
             if (channel is WebChannel webChannel)
             {
-                return await UpdateWebChannelProperties(webChannel, host, popupAskForEmail, popupDelay, popupHeader, popupSubheader, recommenderId, customerIdPrefix, storageType);
+                return await UpdateWebChannelProperties(
+                    webChannel,
+                    host,
+                    conditions,
+                    popupAskForEmail,
+                    popupDelay,
+                    popupHeader,
+                    popupSubheader,
+                    recommenderId,
+                    customerIdPrefix,
+                    storageType,
+                    conditionalAction
+                );
             }
             else
             {
@@ -104,7 +129,19 @@ namespace SignalBox.Core.Workflows
             return channel;
         }
 
-        private async Task<WebChannel> UpdateWebChannelProperties(WebChannel channel, string host, bool? popupAskForEmail = null, int? popupDelay = null, string popupHeader = "", string popupSubheader = "", long? recommenderId = null, string customerIdPrefix = "", string storageType = "")
+        private async Task<WebChannel> UpdateWebChannelProperties(
+            WebChannel channel,
+            string host,
+            List<PopupCondition> conditions,
+            bool? popupAskForEmail = null,
+            int? popupDelay = null,
+            string popupHeader = "",
+            string popupSubheader = "",
+            long? recommenderId = null,
+            string customerIdPrefix = "",
+            string storageType = "",
+            PopupConditionalActions conditionalAction = PopupConditionalActions.None
+        )
         {
             channel.Host = host;
             channel.PopupAskForEmail = popupAskForEmail ?? channel.PopupAskForEmail;
@@ -114,6 +151,8 @@ namespace SignalBox.Core.Workflows
             channel.RecommenderIdToInvoke = recommenderId;
             channel.CustomerIdPrefix = customerIdPrefix ?? channel.CustomerIdPrefix;
             channel.StorageType = storageType ?? channel.StorageType;
+            channel.ConditionalAction = conditionalAction;
+            channel.Conditions = conditions ?? channel.Conditions;
             await webChannelStore.Context.SaveChanges();
             return channel;
         }

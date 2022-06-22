@@ -467,6 +467,8 @@ interface components {
             isRequired?: boolean;
         };
         CreateOrUpdateCustomerDto: {
+            /** If the Customer ID already exists, then overwrite the name, email, and properties */
+            overwrite?: boolean | null;
             commonUserId?: string | null;
             customerId?: string | null;
             name?: string | null;
@@ -1308,6 +1310,13 @@ interface components {
             data?: components["schemas"]["OfferMeanGrossRevenue"][] | null;
         };
         PlanTypes: "none" | "freeTrial" | "usage" | "performance" | "enterprise";
+        PopupCondition: {
+            id?: string | null;
+            parameter?: string | null;
+            operator?: string | null;
+            value?: string | null;
+        };
+        PopupConditionalActions: "none" | "allow" | "block";
         Post: {
             operationId?: string | null;
             description?: string | null;
@@ -1602,6 +1611,8 @@ interface components {
             popupSubheader?: string | null;
             customerIdPrefix?: string | null;
             storageType?: string | null;
+            conditionalAction?: components["schemas"]["PopupConditionalActions"];
+            conditions?: components["schemas"]["PopupCondition"][] | null;
         };
         UpdateWeightDto: {
             id?: number;
@@ -1747,6 +1758,13 @@ interface UpdateChannelPropertiesRequest extends EntityRequest {
         recommenderId: number;
         customerIdPrefix: string;
         storageKey: string;
+        conditionalAction: string;
+        conditions: {
+            id: string;
+            parameter: string;
+            operator: string;
+            value: string;
+        }[];
     };
 }
 declare const updateChannelPropertiesAsync: ({ token, id, properties, }: UpdateChannelPropertiesRequest) => Promise<any>;
@@ -1757,6 +1775,13 @@ interface UpdateEmailChannelTriggerRequest extends EntityRequest {
     };
 }
 declare const updateEmailChannelTriggerAsync: ({ token, id, listTrigger, }: UpdateEmailChannelTriggerRequest) => Promise<any>;
+declare type ConditionalActions = components["schemas"]["PopupConditionalActions"];
+interface ConditionalActionsConstants {
+    none: ConditionalActions;
+    allow: ConditionalActions;
+    block: ConditionalActions;
+}
+declare const conditionalActions: ConditionalActionsConstants;
 
 declare const channelsApi_d_fetchChannelsAsync: typeof fetchChannelsAsync;
 declare const channelsApi_d_createChannelAsync: typeof createChannelAsync;
@@ -1765,6 +1790,8 @@ declare const channelsApi_d_deleteChannelAsync: typeof deleteChannelAsync;
 declare const channelsApi_d_updateChannelEndpointAsync: typeof updateChannelEndpointAsync;
 declare const channelsApi_d_updateChannelPropertiesAsync: typeof updateChannelPropertiesAsync;
 declare const channelsApi_d_updateEmailChannelTriggerAsync: typeof updateEmailChannelTriggerAsync;
+type channelsApi_d_ConditionalActions = ConditionalActions;
+declare const channelsApi_d_conditionalActions: typeof conditionalActions;
 declare namespace channelsApi_d {
   export {
     channelsApi_d_fetchChannelsAsync as fetchChannelsAsync,
@@ -1774,6 +1801,8 @@ declare namespace channelsApi_d {
     channelsApi_d_updateChannelEndpointAsync as updateChannelEndpointAsync,
     channelsApi_d_updateChannelPropertiesAsync as updateChannelPropertiesAsync,
     channelsApi_d_updateEmailChannelTriggerAsync as updateEmailChannelTriggerAsync,
+    channelsApi_d_ConditionalActions as ConditionalActions,
+    channelsApi_d_conditionalActions as conditionalActions,
   };
 }
 

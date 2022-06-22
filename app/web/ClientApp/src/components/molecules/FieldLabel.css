@@ -1,7 +1,11 @@
-.field-label-wrapper > .form-field {
+.form-label-wrapper .form-field {
   font-size: 0.85rem;
 }
 
-.field-label {
+.form-label-wrapper input.form-field {
+  min-height: 38px !important;
+}
+
+.form-label-wrapper .form-label-inline {
   width: 14rem;
 }

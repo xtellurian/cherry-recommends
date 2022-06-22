@@ -46,6 +46,14 @@ namespace SignalBox.Core
         /// Storage type to store the popup data (either localStorage or sessionStorage)
         /// </summary>
         public string StorageType { get; set; }
+        /// <summary>
+        /// Allow/Block popup when conditions are met
+        /// </summary>
+        public PopupConditionalActions ConditionalAction { get; set; }
+        /// <summary>
+        /// List of popup conditions to allow/block a popup
+        /// </summary>
+        public List<PopupCondition> Conditions { get; set; }
         public override IDictionary<string, object> Properties =>
         new Dictionary<string, object>
         {
@@ -56,7 +64,9 @@ namespace SignalBox.Core
             {"popupHeader", PopupHeader},
             {"popupSubheader", PopupSubheader},
             {"customerIdPrefix", CustomerIdPrefix},
-            {"storageType", StorageType}
+            {"storageType", StorageType},
+            {"conditionalAction", ConditionalAction},
+            {"conditions", Conditions}
         };
 
 #nullable enable

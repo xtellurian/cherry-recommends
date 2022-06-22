@@ -65,7 +65,19 @@ namespace SignalBox.Web.Controllers
         public async Task<ChannelBase> UpdateProperties(long id, [FromBody] UpdateWebChannelPropertiesDto dto)
         {
             var channel = await store.Read(id);
-            channel = await workflow.UpdateWebChannelProperties(channel, dto.Host, dto.PopupAskForEmail, dto.PopupDelay, dto.PopupHeader, dto.PopupSubheader, dto.RecommenderId, dto.CustomerIdPrefix, dto.StorageType);
+            channel = await workflow.UpdateWebChannelProperties(
+                channel,
+                dto.Host,
+                dto.Conditions,
+                dto.PopupAskForEmail,
+                dto.PopupDelay,
+                dto.PopupHeader,
+                dto.PopupSubheader,
+                dto.RecommenderId,
+                dto.CustomerIdPrefix,
+                dto.StorageType,
+                dto.ConditionalAction
+            );
             return channel;
         }
 

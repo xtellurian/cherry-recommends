@@ -1,25 +1,12 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useAccessToken } from "../../api-hooks/token";
-import {
-  updateChannelPropertiesAsync,
-  updateChannelEndpointAsync,
-} from "../../api/channelsApi";
+import { updateChannelEndpointAsync } from "../../api/channelsApi";
 import { useNavigation } from "../../utility/useNavigation";
-import {
-  TextInput,
-  createStartsWithValidator,
-  numericValidator,
-  joinValidators,
-  createLengthValidator,
-  commonIdFormatValidator,
-  lowercaseOnlyValidator,
-} from "../molecules/TextInput";
-import { AsyncButton, ErrorCard, Selector, Typography } from "../molecules";
-import { ToggleSwitch } from "../molecules/ToggleSwitch";
-import { useTenantName } from "../tenants/PathTenantProvider";
+import { TextInput, createStartsWithValidator } from "../molecules/TextInput";
+import { AsyncButton, ErrorCard } from "../molecules";
 import { EmailConfiguration } from "./EmailConfiguration";
-import { FieldLabel } from "../molecules/FieldLabel";
+import { WebChannelConfiguration } from "./WebChannelConfiguration";
 
 const WebhookConfiguration = ({ channel }) => {
   const token = useAccessToken();
@@ -37,9 +24,7 @@ const WebhookConfiguration = ({ channel }) => {
       id: channel.id,
       endpoint,
     })
-      .then(() =>
-        navigate(`/integrations/channels/detail/${channel.id}`, ["tab"])
-      )
+      .then(() => navigate(`/integrations/channels/detail/${channel.id}`))
       .catch((e) => setError(e))
       .finally(() => setSaving(false));
   };
@@ -75,231 +60,13 @@ const WebhookConfiguration = ({ channel }) => {
   );
 };
 
-const storageTypes = ["localStorage", "sessionStorage"];
-
-const WebConfiguration = ({ channel }) => {
-  const token = useAccessToken();
-  const { navigate } = useNavigation();
-  const { tenantName } = useTenantName();
-  const [error, setError] = useState();
-  const [saving, setSaving] = useState(false);
-
-  const [popupAskForEmail, setPopupAskForEmail] = useState(false);
-  const [popupHeader, setPopupHeader] = useState("");
-  const [popupSubheader, setPopupSubheader] = useState("");
-  const [popupDelay, setPopupDelay] = useState("");
-  const [selectedRecommenderId, setSelectedRecommenderId] = useState("");
-  const [customerIdPrefix, setCustomerIdPrefix] = useState("");
-  const [storageType, setStorageType] = useState("");
-
-  const handleSave = () => {
-    setError(null);
-    setSaving(true);
-
-    updateChannelPropertiesAsync({
-      token,
-      id: channel.id,
-      properties: {
-        recommenderId: selectedRecommenderId || null,
-        customerIdPrefix,
-        popupAskForEmail,
-        popupDelay,
-        popupHeader,
-        popupSubheader,
-        storageType,
-      },
-    })
-      .then(() =>
-        navigate(`/integrations/channels/detail/${channel.id}`, ["tab"])
-      )
-      .catch((e) => setError(e))
-      .finally(() => setSaving(false));
-  };
-
-  const handleSelectRecommender = (data) => {
-    setSelectedRecommenderId(data?.value);
-  };
-
-  const handleSelectStorageType = ({ value }) => {
-    setStorageType(value);
-  };
-
-  const recommenderOptions = useMemo(
-    () =>
-      channel?.recommenders?.map((recommender) => ({
-        label: recommender.name,
-        value: recommender.id,
-      })) || [],
-    [channel]
-  );
-
-  const storageTypeOptions = useMemo(
-    () =>
-      storageTypes.map((type) => ({
-        label: type,
-        value: type,
-      })),
-    []
-  );
-
-  const selectedRecommenderValue = useMemo(
-    () =>
-      recommenderOptions.find(
-        (option) => option.value === selectedRecommenderId
-      ),
-    [recommenderOptions, selectedRecommenderId]
-  );
-
-  const selectedStorageTypeValue = useMemo(
-    () => storageTypeOptions.find((option) => option.value === storageType),
-    [storageType, storageTypeOptions]
-  );
-
-  const jsScriptSnippet = `
-    <!-- Start of Cherry Embed Code -->
-      <script
-        type="text/javascript"
-        id="cherry-channel"
-        async
-        src="https://jschannelscript.blob.core.windows.net/js-channel-script/channel.browser.js?apiKey=<YOUR_API_KEY>&channelId=${channel.id}&baseUrl=${window.location.origin}&tenant=${tenantName}"
-      ></script>
-    <!-- End of Cherry Embed Code -->
-  `;
-
-  const onCopyToClipboard = (value) => {
-    navigator.clipboard.writeText(value);
-  };
-
-  useEffect(() => {
-    if (channel.loading) {
-      return;
-    }
-
-    setPopupAskForEmail(channel.popupAskForEmail || false);
-    setPopupDelay(channel.popupDelay || 100);
-    setPopupHeader(channel.popupHeader || "");
-    setPopupSubheader(channel.popupSubheader || "");
-    setSelectedRecommenderId(channel.recommenderIdToInvoke || "");
-    setCustomerIdPrefix(channel.customerIdPrefix || "");
-    setStorageType(channel.storageType || "localStorage");
-  }, [channel]);
-
-  return (
-    <React.Fragment>
-      {error ? <ErrorCard error={error} /> : null}
-
-      <div className="mt-4">
-        <Typography variant="h6" className="bold">
-          Tracking Code
-        </Typography>
-        <hr />
-      </div>
-
-      <div className="mt-3">
-        <pre
-          className="rounded-sm"
-          style={{ backgroundColor: "var(--cherry-black-alpha)" }}
-        >
-          <button
-            className="btn btn-dark rounded-0 btn-sm float-right"
-            onClick={() => onCopyToClipboard(jsScriptSnippet)}
-          >
-            Copy
-          </button>
-          <code>{jsScriptSnippet}</code>
-        </pre>
-      </div>
-
-      <div className="mt-4">
-        <Typography variant="h6" className="bold">
-          Configuration
-        </Typography>
-        <hr />
-      </div>
-
-      <div className="ml-1">
-        <FieldLabel label="Enable popup">
-          <div className="w-100">
-            <ToggleSwitch
-              name="Ask For Email Popup"
-              id="ask-for-email-popup"
-              checked={popupAskForEmail}
-              onChange={() =>
-                setPopupAskForEmail(
-                  (oldPopupAskForEmail) => !oldPopupAskForEmail
-                )
-              }
-            />
-          </div>
-        </FieldLabel>
-
-        <Selector
-          label="Choose a campaign"
-          value={selectedRecommenderValue}
-          options={recommenderOptions}
-          isClearable={true}
-          onChange={handleSelectRecommender}
-        />
-
-        <TextInput
-          label="Customer ID Prefix"
-          value={customerIdPrefix}
-          validator={joinValidators([
-            createLengthValidator(3),
-            commonIdFormatValidator,
-            lowercaseOnlyValidator,
-          ])}
-          onChange={(e) => setCustomerIdPrefix(e.target.value)}
-        />
-
-        <TextInput
-          label="Popup Delay (in millisecond)"
-          value={popupDelay}
-          validator={numericValidator(true, 100)}
-          onChange={(e) => setPopupDelay(e.target.value)}
-        />
-
-        <TextInput
-          label="Popup Header"
-          value={popupHeader}
-          onChange={(e) => setPopupHeader(e.target.value)}
-        />
-
-        <TextInput
-          label="Popup Subheader"
-          value={popupSubheader}
-          onChange={(e) => setPopupSubheader(e.target.value)}
-        />
-
-        <Selector
-          label="Storage Type"
-          value={selectedStorageTypeValue}
-          options={storageTypeOptions}
-          onChange={handleSelectStorageType}
-        />
-      </div>
-
-      <div className="clearfix">
-        <AsyncButton
-          className="float-right mt-3 btn btn-primary"
-          loading={saving}
-          disabled={numericValidator(true, 100)(popupDelay).length > 0}
-          onClick={handleSave}
-        >
-          Save
-        </AsyncButton>
-      </div>
-    </React.Fragment>
-  );
-};
-
 export const ConfigureChannel = ({ channel }) => {
   if (channel.channelType === "webhook") {
     return <WebhookConfiguration channel={channel} />;
   }
 
   if (channel.channelType === "web") {
-    return <WebConfiguration channel={channel} />;
+    return <WebChannelConfiguration channel={channel} />;
   }
 
   if (channel.channelType === "email") {

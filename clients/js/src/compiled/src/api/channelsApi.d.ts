@@ -20,6 +20,13 @@ interface UpdateChannelPropertiesRequest extends EntityRequest {
         recommenderId: number;
         customerIdPrefix: string;
         storageKey: string;
+        conditionalAction: string;
+        conditions: {
+            id: string;
+            parameter: string;
+            operator: string;
+            value: string;
+        }[];
     };
 }
 export declare const updateChannelPropertiesAsync: ({ token, id, properties, }: UpdateChannelPropertiesRequest) => Promise<any>;
@@ -30,4 +37,11 @@ interface UpdateEmailChannelTriggerRequest extends EntityRequest {
     };
 }
 export declare const updateEmailChannelTriggerAsync: ({ token, id, listTrigger, }: UpdateEmailChannelTriggerRequest) => Promise<any>;
+export declare type ConditionalActions = components["schemas"]["PopupConditionalActions"];
+interface ConditionalActionsConstants {
+    none: ConditionalActions;
+    allow: ConditionalActions;
+    block: ConditionalActions;
+}
+export declare const conditionalActions: ConditionalActionsConstants;
 export {};

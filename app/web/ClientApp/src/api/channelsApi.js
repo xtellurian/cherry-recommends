@@ -9,3 +9,4 @@ export const updateChannelPropertiesAsync =
   channels.updateChannelPropertiesAsync;
 export const updateEmailChannelTriggerAsync =
   channels.updateEmailChannelTriggerAsync;
+export const conditionalActions = channels.conditionalActions;

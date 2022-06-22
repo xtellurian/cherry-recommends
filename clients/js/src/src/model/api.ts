@@ -1499,11 +1499,6 @@ export interface paths {
       };
     };
     post: {
-      parameters: {
-        query: {
-          overwriteExisting?: boolean;
-        };
-      };
       responses: {
         /** Success */
         200: unknown;
@@ -1569,11 +1564,6 @@ export interface paths {
       };
     };
     post: {
-      parameters: {
-        query: {
-          overwriteExisting?: boolean;
-        };
-      };
       responses: {
         /** Success */
         200: unknown;
@@ -12785,6 +12775,8 @@ export interface components {
       isRequired?: boolean;
     };
     CreateOrUpdateCustomerDto: {
+      /** If the Customer ID already exists, then overwrite the name, email, and properties */
+      overwrite?: boolean | null;
       commonUserId?: string | null;
       customerId?: string | null;
       name?: string | null;
@@ -13634,6 +13626,13 @@ export interface components {
       data?: components["schemas"]["OfferMeanGrossRevenue"][] | null;
     };
     PlanTypes: "none" | "freeTrial" | "usage" | "performance" | "enterprise";
+    PopupCondition: {
+      id?: string | null;
+      parameter?: string | null;
+      operator?: string | null;
+      value?: string | null;
+    };
+    PopupConditionalActions: "none" | "allow" | "block";
     Post: {
       operationId?: string | null;
       description?: string | null;
@@ -13918,6 +13917,8 @@ export interface components {
       popupSubheader?: string | null;
       customerIdPrefix?: string | null;
       storageType?: string | null;
+      conditionalAction?: components["schemas"]["PopupConditionalActions"];
+      conditions?: components["schemas"]["PopupCondition"][] | null;
     };
     UpdateWeightDto: {
       id?: number;
