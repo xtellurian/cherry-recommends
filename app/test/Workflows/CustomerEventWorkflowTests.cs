@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -67,6 +68,7 @@ namespace SignalBox.Test.Workflows
             Assert.Equal(1, response.EventsProcessed);
             Assert.Equal(customerEmail, customer.Email);
             Assert.Equal(customerFirstName, customer.Name);
+            Assert.Equal(dateTimeProvider.Now.DateTime, customer.LastUpdated.DateTime, new TimeSpan(0, 0, 60)); // up to 60 secs diff
         }
     }
 }
