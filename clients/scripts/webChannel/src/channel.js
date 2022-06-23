@@ -67,7 +67,7 @@ function executeCampaign({ customerId, channelProperties }) {
   } = channelProperties;
 
   // check conditions and execute action (either block or allow) if ALL conditions are met
-  if (conditions.length > 0) {
+  if (conditions?.length > 0) {
     const search = window.location.search.slice(1);
 
     if (search) {
