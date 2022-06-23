@@ -8,10 +8,6 @@ namespace sqlserver.SignalBox.SubSignalBoxDbContext
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "TrackedUserEvents_delete_duplicate_EventId_EnvironmentId.sql");
-            var sql = File.ReadAllText(path);
-            migrationBuilder.Sql(sql);
-
             migrationBuilder.DropIndex(
                 name: "IX_TrackedUserEvents_EventId_EnvironmentId",
                 table: "TrackedUserEvents");
