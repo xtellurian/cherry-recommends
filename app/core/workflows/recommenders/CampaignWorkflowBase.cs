@@ -15,6 +15,7 @@ namespace SignalBox.Core.Workflows
         private readonly IChannelStore channelStore;
         private readonly IRecommendableItemStore promotionStore;
         private readonly IArgumentRuleStore argumentRuleStore;
+        private readonly IAudienceStore audienceStore;
         private readonly IRecommenderReportImageWorkflow imageWorkflows;
 
         protected CampaignWorkflowBase(ICampaignStore<TCampaign> store,
@@ -28,6 +29,7 @@ namespace SignalBox.Core.Workflows
             this.channelStore = storeCollection.ResolveStore<IChannelStore, ChannelBase>();
             this.promotionStore = storeCollection.ResolveStore<IRecommendableItemStore, RecommendableItem>();
             this.argumentRuleStore = storeCollection.ResolveStore<IArgumentRuleStore, ArgumentRule>();
+            this.audienceStore = storeCollection.ResolveStore<IAudienceStore, Audience>();
             this.imageWorkflows = imageWorkflows;
         }
 
@@ -237,5 +239,59 @@ namespace SignalBox.Core.Workflows
             await argumentRuleStore.Context.SaveChanges();
             await store.Context.SaveChanges();
         }
+
+        public async Task<Audience> AddAudienceSegment(TCampaign campaign, long segmentId)
+        {
+            Segment segment = await segmentStore.Read(segmentId);
+            if (segment == null)
+            {
+                throw new BadRequestException($"Segment Id {segmentId} is not a valid segment");
+            }
+
+            var audienceResult = await audienceStore.GetAudience(campaign);
+            Audience audience;
+            if (!audienceResult.Success)
+            {
+                // create audience if not existing
+                audience = new Audience(campaign, new List<Segment>());
+                await audienceStore.Create(audience);
+            }
+            else
+            {
+                audience = audienceResult.Entity;
+            }
+
+            await audienceStore.LoadMany(audience, _ => _.Segments);
+            if (audience.Segments.Any(_ => _.Id == segmentId))
+            {
+                throw new BadRequestException($"Segment Id {segmentId} is already an audience segment of campaign Id {campaign.Id}");
+            }
+
+            audience.Segments.Add(segment);
+            await store.Context.SaveChanges();
+            return audience;
+        }
+
+        public async Task<CampaignEntityBase> RemoveAudienceSegment(TCampaign campaign, long segmentId)
+        {
+            var audienceResult = await audienceStore.GetAudience(campaign);
+            if (!audienceResult.Success)
+            {
+                throw new BadRequestException($"Segment Id {segmentId} is not an audience segment of campaign Id {campaign.Id}");
+            }
+
+            Audience audience = audienceResult.Entity;
+            await audienceStore.LoadMany(audience, _ => _.Segments);
+            var segment = audience.Segments.FirstOrDefault(_ => _.Id == segmentId);
+            if (segment == null)
+            {
+                throw new BadRequestException($"Segment Id {segmentId} is not an audience segment of campaign Id {campaign.Id}");
+            }
+
+            audience.Segments.Remove(segment);
+            await store.Context.SaveChanges();
+            return campaign;
+        }
+
     }
 }

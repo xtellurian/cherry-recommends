@@ -5475,6 +5475,114 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ParameterSetRecommenders/{id}/Audience/Segments": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Audience"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddAudienceSegmentDto"];
+          "text/json": components["schemas"]["AddAudienceSegmentDto"];
+          "application/*+json": components["schemas"]["AddAudienceSegmentDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/Audience/Segments": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Audience"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddAudienceSegmentDto"];
+          "text/json": components["schemas"]["AddAudienceSegmentDto"];
+          "application/*+json": components["schemas"]["AddAudienceSegmentDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/ParameterSetRecommenders/{id}/Audience/Segments/{segmentId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          segmentId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/ParameterSetCampaigns/{id}/Audience/Segments/{segmentId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          segmentId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ParameterSetRecommenders/{id}/Channels": {
     get: {
       parameters: {
@@ -11335,6 +11443,168 @@ export interface paths {
       };
     };
   };
+  "/api/recommenders/ItemsRecommenders/{id}/Audience/Segments": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Audience"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddAudienceSegmentDto"];
+          "text/json": components["schemas"]["AddAudienceSegmentDto"];
+          "application/*+json": components["schemas"]["AddAudienceSegmentDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/Audience/Segments": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Audience"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddAudienceSegmentDto"];
+          "text/json": components["schemas"]["AddAudienceSegmentDto"];
+          "application/*+json": components["schemas"]["AddAudienceSegmentDto"];
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Audience/Segments": {
+    post: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Audience"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["AddAudienceSegmentDto"];
+          "text/json": components["schemas"]["AddAudienceSegmentDto"];
+          "application/*+json": components["schemas"]["AddAudienceSegmentDto"];
+        };
+      };
+    };
+  };
+  "/api/recommenders/ItemsRecommenders/{id}/Audience/Segments/{segmentId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          segmentId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/recommenders/PromotionsRecommenders/{id}/Audience/Segments/{segmentId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          segmentId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/campaigns/PromotionsCampaigns/{id}/Audience/Segments/{segmentId}": {
+    delete: {
+      parameters: {
+        path: {
+          id: string;
+          segmentId: number;
+        };
+      };
+      responses: {
+        /** Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["DeleteResponse"];
+          };
+        };
+        /** Bad Request */
+        400: {
+          content: {
+            "application/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
   "/api/recommenders/ItemsRecommenders/{id}/Channels": {
     get: {
       parameters: {
@@ -12433,6 +12703,10 @@ export interface components {
       activityItems?: components["schemas"]["ObjectPaginated"];
     };
     ActivityKinds: "event" | "recommendation";
+    AddAudienceSegmentDto: {
+      /** Id of the segment to add to the Audience */
+      segmentId: number;
+    };
     AddCampaignChannelDto: {
       id?: number;
     };

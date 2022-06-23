@@ -249,6 +249,16 @@ const CampaignDetailSection = () => {
         {segmentFlag && (
           <div className="col">
             <div className="mb-4">
+              <Navigation
+                to={{
+                  pathname: `/campaigns/promotions-campaigns/audience/${id}`,
+                  search: null,
+                }}
+              >
+                <button className="float-right btn btn-outline-primary">
+                  Manage Audience
+                </button>
+              </Navigation>
               <Subtitle>Associated Audience</Subtitle>
             </div>
             {audience.segments &&

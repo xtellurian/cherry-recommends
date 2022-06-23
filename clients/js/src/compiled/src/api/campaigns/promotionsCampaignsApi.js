@@ -59,6 +59,22 @@ export const fetchAudienceAsync = async ({ token, id, }) => {
         token,
     });
 };
+export const addAudienceSegmentAsync = async ({ token, useInternalId, id, segmentId, }) => {
+    return await executeFetch({
+        path: `api/campaigns/PromotionsCampaigns/${id}/Audience/Segments/`,
+        token,
+        query: { useInternalId },
+        method: "post",
+        body: { segmentId },
+    });
+};
+export const removeAudienceSegmentAsync = async ({ token, id, segmentId, }) => {
+    return await executeFetch({
+        path: `api/campaigns/PromotionsCampaigns/${id}/Audience/Segments/${segmentId}`,
+        token,
+        method: "delete",
+    });
+};
 export const addPromotionAsync = async ({ token, id, promotion, }) => {
     return await executeFetch({
         path: `api/campaigns/PromotionsCampaigns/${id}/Promotions`,

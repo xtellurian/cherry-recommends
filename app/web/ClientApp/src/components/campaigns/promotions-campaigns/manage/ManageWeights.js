@@ -21,9 +21,14 @@ import {
 import { Spinner } from "reactstrap";
 import { ManageNav } from "./Tabs";
 import { UseOptimiserControl } from "../UseOptimiserControl";
-import { AddOptimiserSegmentPopup } from "../AddOptimiserSegmentPopup";
-import { RemoveOptimiserSegmentPopup } from "../RemoveOptimiserSegmentPopup";
+import { AddSegmentPopup } from "../AddSegmentPopup";
+import { RemoveSegmentPopup } from "../RemoveSegmentPopup";
 import EntityDetailPageLayout from "../../../molecules/layout/EntityDetailPageLayout";
+import { useAccessToken } from "../../../../api-hooks/token";
+import {
+  addPromotionOptimiserSegmentAsync,
+  removePromotionOptimiserSegmentAsync,
+} from "../../../../api/promotionsCampaignsApi";
 
 const DistributionRow = ({ recommender, segment, onRemoveClicked }) => {
   const [trigger, setTrigger] = React.useState({});
@@ -106,16 +111,59 @@ const Weights = () => {
   const recommender = usePromotionsCampaign({ id, trigger });
   const optimiser = useOptimiser({ id: recommender.useOptimiser ? id : null });
   const optimiserSegments = useOptimiserSegments({ id, optimiser, trigger });
+  const token = useAccessToken();
 
-  const [isAddDistributionPopupOpen, setIsAddDistributionPopupOpen] =
+  const [isAddSegmentPopupOpen, setIsAddSegmentPopupOpen] =
     React.useState(false);
-  const [isRemoveDistributionPopupOpen, setIsRemoveDistributionPopupOpen] =
+  const [isRemoveSegmentPopupOpen, setIsRemoveSegmentPopupOpen] =
     React.useState(false);
   const [segmentToRemove, setSegmentToRemove] = React.useState();
+  const [addError, setAddError] = React.useState();
+  const [removeError, setRemoveError] = React.useState();
+  const [adding, setAdding] = React.useState(false);
+  const [removing, setRemoving] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!isAddSegmentPopupOpen) {
+      setAddError(null);
+    }
+  }, [isAddSegmentPopupOpen]);
+
+  const onRemoveSegment = (segment) => {
+    setSegmentToRemove(segment);
+    setIsRemoveSegmentPopupOpen(true);
+  };
+
+  const handleAdd = (segment) => {
+    setAddError(null);
+    setAdding(true);
+    addPromotionOptimiserSegmentAsync({
+      token,
+      id: recommender.id,
+      segmentId: segment.id,
+    })
+      .then((r) => {
+        setTrigger(r);
+        setIsAddSegmentPopupOpen(false);
+      })
+      .catch(setAddError)
+      .finally(() => setAdding(false));
+  };
 
   const handleRemove = (segment) => {
-    setSegmentToRemove(segment);
-    setIsRemoveDistributionPopupOpen(true);
+    setRemoveError(null);
+    setRemoving(true);
+    removePromotionOptimiserSegmentAsync({
+      token,
+      id: recommender.id,
+      segmentId: segment.id,
+    })
+      .then((r) => {
+        setTrigger(r);
+        setIsRemoveSegmentPopupOpen(false);
+      })
+      .catch(setRemoveError)
+      .finally(() => setRemoving(false));
   };
 
   const distributionPanels = useMemo(() => {
@@ -128,7 +176,7 @@ const Weights = () => {
           key={segment.id}
           recommender={recommender}
           segment={segment}
-          onRemoveClicked={() => handleRemove(segment)}
+          onRemoveClicked={() => onRemoveSegment(segment)}
         />
       ),
     }));
@@ -163,7 +211,7 @@ const Weights = () => {
       options={
         <button
           disabled={!recommender.useOptimiser}
-          onClick={() => setIsAddDistributionPopupOpen(true)}
+          onClick={() => setIsAddSegmentPopupOpen(true)}
           className="float-right btn btn-primary"
         >
           Add Segment
@@ -171,18 +219,21 @@ const Weights = () => {
       }
     >
       <React.Fragment>
-        <AddOptimiserSegmentPopup
-          isOpen={isAddDistributionPopupOpen}
-          setIsOpen={setIsAddDistributionPopupOpen}
-          recommender={recommender}
-          onAdded={setTrigger}
+        <AddSegmentPopup
+          isOpen={isAddSegmentPopupOpen}
+          setIsOpen={setIsAddSegmentPopupOpen}
+          onAdd={handleAdd}
+          error={addError}
+          loading={adding}
         />
-        <RemoveOptimiserSegmentPopup
-          isOpen={isRemoveDistributionPopupOpen}
-          setIsOpen={setIsRemoveDistributionPopupOpen}
+        <RemoveSegmentPopup
+          isOpen={isRemoveSegmentPopupOpen}
+          setIsOpen={setIsRemoveSegmentPopupOpen}
           recommender={recommender}
-          onRemoved={setTrigger}
+          onRemove={handleRemove}
           segment={segmentToRemove}
+          error={removeError}
+          loading={removing}
         />
         <ManageNav id={id} />
         <div className="d-flex flex-row-reverse">

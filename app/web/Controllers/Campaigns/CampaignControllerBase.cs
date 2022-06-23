@@ -256,6 +256,21 @@ namespace SignalBox.Web.Controllers
             return audience.Entity;
         }
 
+        [HttpPost("{id}/Audience/Segments")]
+        public async Task<Audience> AddAudienceSegment(string id, [FromBody] AddAudienceSegmentDto dto)
+        {
+            var campaign = await base.GetResource(id);
+            return await workflows.AddAudienceSegment(campaign, dto.SegmentId);
+        }
+
+        [HttpDelete("{id}/Audience/Segments/{segmentId}")]
+        public async Task<DeleteResponse> RemoveAudienceSegment(string id, long segmentId)
+        {
+            var campaign = await base.GetResource(id);
+            await workflows.RemoveAudienceSegment(campaign, segmentId);
+            return new DeleteResponse(segmentId, Request.Path.Value, true); ;
+        }
+
         [HttpGet("{id}/Channels")]
         public async Task<IEnumerable<ChannelBase>> GetChannels(string id)
         {

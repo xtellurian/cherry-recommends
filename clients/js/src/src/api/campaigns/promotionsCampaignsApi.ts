@@ -110,6 +110,39 @@ export const fetchAudienceAsync = async ({
   });
 };
 
+interface AddAudienceSegmentRequest extends EntityRequest {
+  segmentId: string | number;
+}
+export const addAudienceSegmentAsync = async ({
+  token,
+  useInternalId,
+  id,
+  segmentId,
+}: AddAudienceSegmentRequest): Promise<Audience> => {
+  return await executeFetch({
+    path: `api/campaigns/PromotionsCampaigns/${id}/Audience/Segments/`,
+    token,
+    query: { useInternalId },
+    method: "post",
+    body: { segmentId },
+  });
+};
+
+interface RemoveAudienceSegmentRequest extends EntityRequest {
+  segmentId: string | number;
+}
+export const removeAudienceSegmentAsync = async ({
+  token,
+  id,
+  segmentId,
+}: RemoveAudienceSegmentRequest) => {
+  return await executeFetch({
+    path: `api/campaigns/PromotionsCampaigns/${id}/Audience/Segments/${segmentId}`,
+    token,
+    method: "delete",
+  });
+};
+
 interface AddPromotionPayload {
   id: number | undefined;
   commonId: string | undefined;

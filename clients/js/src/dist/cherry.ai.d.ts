@@ -111,6 +111,10 @@ interface components {
             activityItems?: components["schemas"]["ObjectPaginated"];
         };
         ActivityKinds: "event" | "recommendation";
+        AddAudienceSegmentDto: {
+            /** Id of the segment to add to the Audience */
+            segmentId: number;
+        };
         AddCampaignChannelDto: {
             id?: number;
         };
@@ -2990,6 +2994,14 @@ declare const createPromotionsCampaignAsync: ({ token, payload, useInternalId, }
 declare const fetchPromotionsAsync$1: ({ token, id }: EntityRequest) => Promise<any>;
 declare type Audience = components["schemas"]["Audience"];
 declare const fetchAudienceAsync: ({ token, id, }: EntityRequest) => Promise<Audience>;
+interface AddAudienceSegmentRequest extends EntityRequest {
+    segmentId: string | number;
+}
+declare const addAudienceSegmentAsync: ({ token, useInternalId, id, segmentId, }: AddAudienceSegmentRequest) => Promise<Audience>;
+interface RemoveAudienceSegmentRequest extends EntityRequest {
+    segmentId: string | number;
+}
+declare const removeAudienceSegmentAsync: ({ token, id, segmentId, }: RemoveAudienceSegmentRequest) => Promise<any>;
 interface AddPromotionPayload {
     id: number | undefined;
     commonId: string | undefined;
@@ -3175,6 +3187,8 @@ declare const promotionsCampaignsApi_d_fetchPromotionsRecommendationsAsync: type
 declare const promotionsCampaignsApi_d_deletePromotionsCampaignAsync: typeof deletePromotionsCampaignAsync;
 declare const promotionsCampaignsApi_d_createPromotionsCampaignAsync: typeof createPromotionsCampaignAsync;
 declare const promotionsCampaignsApi_d_fetchAudienceAsync: typeof fetchAudienceAsync;
+declare const promotionsCampaignsApi_d_addAudienceSegmentAsync: typeof addAudienceSegmentAsync;
+declare const promotionsCampaignsApi_d_removeAudienceSegmentAsync: typeof removeAudienceSegmentAsync;
 declare const promotionsCampaignsApi_d_addPromotionAsync: typeof addPromotionAsync;
 declare const promotionsCampaignsApi_d_removePromotionAsync: typeof removePromotionAsync;
 declare const promotionsCampaignsApi_d_setBaselinePromotionAsync: typeof setBaselinePromotionAsync;
@@ -3237,6 +3251,8 @@ declare namespace promotionsCampaignsApi_d {
     promotionsCampaignsApi_d_createPromotionsCampaignAsync as createPromotionsCampaignAsync,
     fetchPromotionsAsync$1 as fetchPromotionsAsync,
     promotionsCampaignsApi_d_fetchAudienceAsync as fetchAudienceAsync,
+    promotionsCampaignsApi_d_addAudienceSegmentAsync as addAudienceSegmentAsync,
+    promotionsCampaignsApi_d_removeAudienceSegmentAsync as removeAudienceSegmentAsync,
     promotionsCampaignsApi_d_addPromotionAsync as addPromotionAsync,
     promotionsCampaignsApi_d_removePromotionAsync as removePromotionAsync,
     promotionsCampaignsApi_d_setBaselinePromotionAsync as setBaselinePromotionAsync,

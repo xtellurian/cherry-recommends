@@ -87,6 +87,10 @@ export const fetchReportImageBlobUrlAsync =
 export const fetchPerformanceAsync = promotionsCampaigns.fetchPerformanceAsync;
 
 export const fetchAudienceAsync = promotionsCampaigns.fetchAudienceAsync;
+export const addAudienceSegmentAsync =
+  promotionsCampaigns.addAudienceSegmentAsync;
+export const removeAudienceSegmentAsync =
+  promotionsCampaigns.removeAudienceSegmentAsync;
 
 export const setUseOptimiserAsync = promotionsCampaigns.setUseOptimiserAsync;
 export const fetchPromotionOptimisersAsync =

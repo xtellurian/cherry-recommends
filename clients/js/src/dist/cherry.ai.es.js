@@ -116,7 +116,7 @@ var errorHandling = /*#__PURE__*/Object.freeze({
     handleErrorResponse: handleErrorResponse
 });
 
-const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, }) => {
+const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, } = { method: "get", path: "/" }) => {
     const baseUrl = getBaseUrl();
     const client = current({ baseUrl: baseUrl });
     const params = new URLSearchParams();
@@ -2898,6 +2898,22 @@ const fetchAudienceAsync = async ({ token, id, }) => {
         token,
     });
 };
+const addAudienceSegmentAsync = async ({ token, useInternalId, id, segmentId, }) => {
+    return await executeFetch({
+        path: `api/campaigns/PromotionsCampaigns/${id}/Audience/Segments/`,
+        token,
+        query: { useInternalId },
+        method: "post",
+        body: { segmentId },
+    });
+};
+const removeAudienceSegmentAsync = async ({ token, id, segmentId, }) => {
+    return await executeFetch({
+        path: `api/campaigns/PromotionsCampaigns/${id}/Audience/Segments/${segmentId}`,
+        token,
+        method: "delete",
+    });
+};
 const addPromotionAsync = async ({ token, id, promotion, }) => {
     return await executeFetch({
         path: `api/campaigns/PromotionsCampaigns/${id}/Promotions`,
@@ -3318,6 +3334,8 @@ var promotionsCampaignsApi = /*#__PURE__*/Object.freeze({
     createPromotionsCampaignAsync: createPromotionsCampaignAsync,
     fetchPromotionsAsync: fetchPromotionsAsync$1,
     fetchAudienceAsync: fetchAudienceAsync,
+    addAudienceSegmentAsync: addAudienceSegmentAsync,
+    removeAudienceSegmentAsync: removeAudienceSegmentAsync,
     addPromotionAsync: addPromotionAsync,
     removePromotionAsync: removePromotionAsync,
     setBaselinePromotionAsync: setBaselinePromotionAsync,

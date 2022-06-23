@@ -14,6 +14,14 @@ export declare const createPromotionsCampaignAsync: ({ token, payload, useIntern
 export declare const fetchPromotionsAsync: ({ token, id }: EntityRequest) => Promise<any>;
 declare type Audience = components["schemas"]["Audience"];
 export declare const fetchAudienceAsync: ({ token, id, }: EntityRequest) => Promise<Audience>;
+interface AddAudienceSegmentRequest extends EntityRequest {
+    segmentId: string | number;
+}
+export declare const addAudienceSegmentAsync: ({ token, useInternalId, id, segmentId, }: AddAudienceSegmentRequest) => Promise<Audience>;
+interface RemoveAudienceSegmentRequest extends EntityRequest {
+    segmentId: string | number;
+}
+export declare const removeAudienceSegmentAsync: ({ token, id, segmentId, }: RemoveAudienceSegmentRequest) => Promise<any>;
 interface AddPromotionPayload {
     id: number | undefined;
     commonId: string | undefined;

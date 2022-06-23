@@ -2,7 +2,7 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory((global.cherry = global.cherry || {}, global.cherry.ai = {})));
-})(this, (function (exports) { 'use strict';
+}(this, (function (exports) { 'use strict';
 
     let storedBaseUrl = "";
     const setBaseUrl = (baseUrl) => {
@@ -122,7 +122,7 @@
         handleErrorResponse: handleErrorResponse
     });
 
-    const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, }) => {
+    const executeFetch = async ({ token, apiKey, path, page, pageSize, body, method, query, responseType, } = { method: "get", path: "/" }) => {
         const baseUrl = getBaseUrl();
         const client = current({ baseUrl: baseUrl });
         const params = new URLSearchParams();
@@ -2904,6 +2904,22 @@
             token,
         });
     };
+    const addAudienceSegmentAsync = async ({ token, useInternalId, id, segmentId, }) => {
+        return await executeFetch({
+            path: `api/campaigns/PromotionsCampaigns/${id}/Audience/Segments/`,
+            token,
+            query: { useInternalId },
+            method: "post",
+            body: { segmentId },
+        });
+    };
+    const removeAudienceSegmentAsync = async ({ token, id, segmentId, }) => {
+        return await executeFetch({
+            path: `api/campaigns/PromotionsCampaigns/${id}/Audience/Segments/${segmentId}`,
+            token,
+            method: "delete",
+        });
+    };
     const addPromotionAsync = async ({ token, id, promotion, }) => {
         return await executeFetch({
             path: `api/campaigns/PromotionsCampaigns/${id}/Promotions`,
@@ -3324,6 +3340,8 @@
         createPromotionsCampaignAsync: createPromotionsCampaignAsync,
         fetchPromotionsAsync: fetchPromotionsAsync$1,
         fetchAudienceAsync: fetchAudienceAsync,
+        addAudienceSegmentAsync: addAudienceSegmentAsync,
+        removeAudienceSegmentAsync: removeAudienceSegmentAsync,
         addPromotionAsync: addPromotionAsync,
         removePromotionAsync: removePromotionAsync,
         setBaselinePromotionAsync: setBaselinePromotionAsync,
@@ -3886,4 +3904,4 @@
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

@@ -12,6 +12,7 @@ import { SettingsPage } from "./SettingsPage";
 import { MonitorCampaign } from "./MonitorPromotionsCampaign";
 import { ManageItems } from "./manage/ManagePromotions";
 import { ManageComponent } from "./manage/ManageComponent";
+import { ManageAudience } from "./manage/ManageAudience";
 // import { Destinations } from "./Destinations";
 import { Triggers } from "./Triggers";
 import { LearningMetrics } from "./LearningMetrics";
@@ -40,6 +41,7 @@ export const PromotionsCampaignsComponent = () => {
       <Route path="arguments/:id" element={<Arguments />} />
       <Route path="reports/:id" element={<Performance />} />
       <Route path="delivery/:id" element={<Delivery />} />
+      <Route path="audience/:id" element={<ManageAudience />} />
     </Routes>
   );
 };
