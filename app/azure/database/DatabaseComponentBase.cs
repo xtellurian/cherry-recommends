@@ -47,7 +47,8 @@ namespace SignalBox.Azure
                 Version = "12.0",
             }, new CustomResourceOptions
             {
-                Protect = string.Equals(config.Require("environment"), "Production") // protect the SQL Server
+                // Protect = string.Equals(config.Require("environment"), "Production") // protect the SQL Server
+                Protect = false
             });
 
             this.UserName = username;

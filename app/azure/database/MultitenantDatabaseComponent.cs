@@ -25,7 +25,8 @@ namespace SignalBox.Azure
                 }
             }, new CustomResourceOptions
             {
-                Protect = string.Equals(config.Require("environment"), "Production") // protect the tenants DB in Production
+                // Protect = string.Equals(config.Require("environment"), "Production") // protect the tenants DB in Production
+                Protect = false
             });
 
             var elasticPool = new ElasticPool("pool", new ElasticPoolArgs
@@ -46,7 +47,8 @@ namespace SignalBox.Azure
                 }
             }, new CustomResourceOptions
             {
-                Protect = string.Equals(config.Require("environment"), "Production") // protect the pool in Production
+                // Protect = string.Equals(config.Require("environment"), "Production") // protect the pool in Production
+                Protect = false
             });
 
             var database = new Database("single", new DatabaseArgs
